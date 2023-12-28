@@ -73,8 +73,7 @@ public class Opt<T> {
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 */
 	public static <T> Opt<T> ofNullable(final T value) {
-		return value == null ? empty()
-			: new Opt<>(value);
+		return value == null ? empty() : new Opt<>(value);
 	}
 
 	/**
@@ -108,7 +107,7 @@ public class Opt<T> {
 	 */
 	public static <T> Opt<T> ofTry(final SerSupplier<T> supplier) {
 		try {
-			return Opt.ofNullable(supplier.getting());
+			return ofNullable(supplier.getting());
 		} catch (final Throwable e) {
 			final Opt<T> empty = new Opt<>(null);
 			empty.throwable = e;
@@ -276,7 +275,7 @@ public class Opt<T> {
 	 */
 	public Opt<T> filter(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		if (isEmpty()) {
+		if (isEmpty() || isFail()) {
 			return this;
 		} else {
 			return predicate.test(value) ? this : empty();
@@ -293,9 +292,12 @@ public class Opt<T> {
 	 * 如果不存在，返回一个空的{@code Opt}
 	 * @throws NullPointerException 如果给定的操作为 {@code null}，抛出 {@code NPE}
 	 */
+	@SuppressWarnings("unchecked")
 	public <U> Opt<U> map(final Function<? super T, ? extends U> mapper) {
 		Objects.requireNonNull(mapper);
-		if (isEmpty()) {
+		if (isFail()) {
+			return (Opt<U>) this;
+		} else if (isEmpty()) {
 			return empty();
 		} else {
 			return Opt.ofNullable(mapper.apply(value));
@@ -313,9 +315,12 @@ public class Opt<T> {
 	 * 如果不存在，返回一个空的{@code Opt}
 	 * @throws NullPointerException 如果给定的操作为 {@code null}或者给定的操作执行结果为 {@code null}，抛出 {@code NPE}
 	 */
+	@SuppressWarnings("unchecked")
 	public <U> Opt<U> flatMap(final Function<? super T, ? extends Opt<? extends U>> mapper) {
 		Objects.requireNonNull(mapper);
-		if (isEmpty()) {
+		if (isFail()) {
+			return (Opt<U>) this;
+		} else if (isEmpty()) {
 			return empty();
 		} else {
 			@SuppressWarnings("unchecked") final Opt<U> r = (Opt<U>) mapper.apply(value);
@@ -336,9 +341,12 @@ public class Opt<T> {
 	 * @see Optional#flatMap(Function)
 	 * @since 5.7.16
 	 */
+	@SuppressWarnings("unchecked")
 	public <U> Opt<U> flattedMap(final Function<? super T, ? extends Optional<? extends U>> mapper) {
 		Objects.requireNonNull(mapper);
-		if (isEmpty()) {
+		if (isFail()) {
+			return (Opt<U>) this;
+		} else if (isEmpty()) {
 			return empty();
 		} else {
 			return ofNullable(mapper.apply(value).orElse(null));
@@ -456,7 +464,7 @@ public class Opt<T> {
 	 * @throws NullPointerException 如果之不存在，并且传入的操作为空，则抛出 {@code NPE}
 	 */
 	public Opt<T> orElseOpt(final Supplier<? extends T> supplier) {
-		return or(() -> Opt.ofNullable(supplier.get()));
+		return or(() -> ofNullable(supplier.get()));
 	}
 
 	/**
@@ -510,7 +518,16 @@ public class Opt<T> {
 	 * @since 5.7.16
 	 */
 	public Optional<T> toOptional() {
-		return Optional.ofNullable(this.value);
+		return Optional.ofNullable(value);
+	}
+
+	/**
+	 * 转换为 {@link EasyStream}对象
+	 *
+	 * @return {@link EasyStream}对象
+	 */
+	public EasyStream<T> toEasyStream() {
+		return EasyStream.of(value);
 	}
 
 	/**
@@ -558,6 +575,6 @@ public class Opt<T> {
 	 */
 	@Override
 	public String toString() {
-		return StrUtil.toStringOrNull(this.value);
+		return StrUtil.toStringOrNull(value);
 	}
 }
