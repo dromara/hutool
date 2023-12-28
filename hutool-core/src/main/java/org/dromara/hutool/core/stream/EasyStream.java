@@ -12,14 +12,15 @@
 
 package org.dromara.hutool.core.stream;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalDouble;
@@ -221,6 +222,55 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		Objects.requireNonNull(next);
 		Objects.requireNonNull(hasNext);
 		return new EasyStream<>(StreamUtil.iterate(seed, hasNext, next));
+	}
+
+	/**
+	 * <p>指定一个层级结构的根节点（通常是树或图），
+	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br />
+	 * 该方法用于以平铺的方式对图或树节点进行访问，可以使用并行流提高效率。
+	 *
+	 * <p>eg:
+	 * <pre>{@code
+	 * Tree root = // 构建树结构
+	 * // 搜索树结构中所有级别为3的节点，并按权重排序
+	 * List<Tree> thirdLevelNodes = StreamUtil.iterateHierarchies(root, Tree:getChildren)
+	 * 	.filter(node -> node.getLevel() == 3)
+	 * 	.sorted(Comparator.comparing(Tree::getWeight))
+	 * 	.toList();
+	 * }</pre>
+	 *
+	 * @param root 根节点
+	 * @param discoverer 下一层级节点的获取方法
+	 * @param filter 节点过滤器，不匹配的节点与以其作为根节点的子树将将会被忽略
+	 * @return 包含根节点在内，根节点所有层级结构中的节点组成的流
+	 */
+	public static <T> EasyStream<T> iterateHierarchies(
+		T root, final Function<T, Collection<T>> discoverer, Predicate<T> filter) {
+		return of(StreamUtil.iterateHierarchies(root, discoverer, filter));
+	}
+
+	/**
+	 * <p>指定一个层级结构的根节点（通常是树或图），
+	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br />
+	 * 该方法用于以平铺的方式对图或树节点进行访问，可以使用并行流提高效率。
+	 *
+	 * <p>eg:
+	 * <pre>{@code
+	 * Tree root = // 构建树结构
+	 * // 搜索树结构中所有级别为3的节点，并按权重排序
+	 * List<Tree> thirdLevelNodes = StreamUtil.iterateHierarchies(root, Tree:getChildren)
+	 * 	.filter(node -> node.getLevel() == 3)
+	 * 	.sorted(Comparator.comparing(Tree::getWeight))
+	 * 	.toList();
+	 * }</pre>
+	 *
+	 * @param root 根节点
+	 * @param discoverer 下一层级节点的获取方法
+	 * @return 包含根节点在内，根节点所有层级结构中的节点组成的流
+	 */
+	public static <T> EasyStream<T> iterateHierarchies(
+		T root, final Function<T, Collection<T>> discoverer) {
+		return of(StreamUtil.iterateHierarchies(root, discoverer));
 	}
 
 	/**

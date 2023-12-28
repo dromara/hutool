@@ -12,11 +12,13 @@
 
 package org.dromara.hutool.core.stream;
 
+import static java.util.Objects.requireNonNull;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.stream.spliterators.DropWhileSpliterator;
 import org.dromara.hutool.core.stream.spliterators.IterateSpliterator;
 import org.dromara.hutool.core.stream.spliterators.TakeWhileSpliterator;
+import org.dromara.hutool.core.tree.HierarchyIterator;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.File;
@@ -33,8 +35,6 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * {@link Stream} 工具类
@@ -208,6 +208,59 @@ public class StreamUtil {
 		requireNonNull(next);
 		requireNonNull(hasNext);
 		return StreamSupport.stream(IterateSpliterator.create(seed, hasNext, next), false);
+	}
+
+	/**
+	 * <p>指定一个层级结构的根节点（通常是树或图），
+	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br />
+	 * 该方法用于以平铺的方式按广度优先对图或树节点进行访问，可以使用并行流提高效率。
+	 *
+	 * <p>eg:
+	 * <pre>{@code
+	 * Tree root = // 构建树结构
+	 * // 搜索树结构中所有级别为3的节点，并按权重排序
+	 * List<Tree> thirdLevelNodes = StreamUtil.iterateHierarchies(root, Tree:getChildren)
+	 * 	.filter(node -> node.getLevel() == 3)
+	 * 	.sorted(Comparator.comparing(Tree::getWeight))
+	 * 	.toList();
+	 * }</pre>
+	 *
+	 * @param root 根节点，根节点不允许被{@code filter}过滤
+	 * @param discoverer 下一层级节点的获取方法
+	 * @param filter 节点过滤器，不匹配的节点与以其作为根节点的子树将将会被忽略
+	 * @return 包含根节点在内，根节点所有层级结构中的节点组成的流
+	 * @param <T> 元素类型
+	 * @see HierarchyIterator
+	 */
+	public static <T> Stream<T> iterateHierarchies(
+		T root, final Function<T, Collection<T>> discoverer, Predicate<T> filter) {
+		return ofIter(HierarchyIterator.breadthFirst(root, discoverer, filter));
+	}
+
+	/**
+	 * <p>指定一个层级结构的根节点（通常是树或图），
+	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br />
+	 * 该方法用于以平铺的方式按广度优先对图或树节点进行访问，可以使用并行流提高效率。
+	 *
+	 * <p>eg:
+	 * <pre>{@code
+	 * Tree root = // 构建树结构
+	 * // 搜索树结构中所有级别为3的节点，并按权重排序
+	 * List<Tree> thirdLevelNodes = StreamUtil.iterateHierarchies(root, Tree:getChildren)
+	 * 	.filter(node -> node.getLevel() == 3)
+	 * 	.sorted(Comparator.comparing(Tree::getWeight))
+	 * 	.toList();
+	 * }</pre>
+	 *
+	 * @param root 根节点，根节点不允许被{@code filter}过滤
+	 * @param discoverer 下一层级节点的获取方法
+	 * @return 包含根节点在内，根节点所有层级结构中的节点组成的流
+	 * @param <T> 元素类型
+	 * @see HierarchyIterator
+	 */
+	public static <T> Stream<T> iterateHierarchies(
+		T root, final Function<T, Collection<T>> discoverer) {
+		return ofIter(HierarchyIterator.breadthFirst(root, discoverer));
 	}
 
 	/**

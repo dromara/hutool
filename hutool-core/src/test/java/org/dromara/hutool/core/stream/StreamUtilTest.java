@@ -17,11 +17,43 @@ import org.dromara.hutool.core.collection.set.SetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamUtilTest {
+
+	@Test
+	void testIterateHierarchies() {
+		// 创建一个三层的树结构，每个节点都有两个子节点
+		Node node = new Node("1", Arrays.asList(
+			new Node("1-1", Arrays.asList(
+				new Node("1-1-1", null),
+				new Node("1-1-2", null)
+			)),
+			new Node("1-2", Arrays.asList(
+				new Node("1-2-1", null),
+				new Node("1-2-2", null)
+			))
+		));
+
+		// 按广度度优先遍历树结构
+		List<String> allNodes = new ArrayList<>();
+		StreamUtil.iterateHierarchies(node, node1 -> node1.children)
+			.forEach(node1 -> allNodes.add(node1.id));
+		Assertions.assertEquals(Arrays.asList("1", "1-1", "1-2", "1-1-1", "1-1-2", "1-2-1", "1-2-2"), allNodes);
+
+		// 按广度度优先遍历树结构，忽略id为1-1的节点与以其为根节点的子树
+		List<String> filteredNodes = new ArrayList<>();
+		StreamUtil.iterateHierarchies(node, node1 -> node1.children, node1 -> !node1.id.equals("1-1"))
+			.forEach(node1 -> filteredNodes.add(node1.id));
+		Assertions.assertEquals(Arrays.asList("1", "1-2", "1-2-1", "1-2-2"), filteredNodes);
+	}
 
 	@Test
 	public void ofTest(){
@@ -61,4 +93,19 @@ public class StreamUtilTest {
 		Assertions.assertEquals(0, stream.toArray().length);
 	}
 	// ================ stream test end ================
+
+	/**
+	 * 节点
+	 */
+	private static class Node {
+		private final String id;
+		private List<Node> children;
+		private Node(String id, List<Node> children) {
+			this.id = id;
+			this.children = children;
+		}
+		public Node(String id) {
+			this.id = id;
+		}
+	}
 }
