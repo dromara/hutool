@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.http.webservice;
 
-import javax.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPConstants;
 
 /**
  * SOAP协议版本枚举

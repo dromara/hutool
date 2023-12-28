@@ -505,10 +505,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!--JAXB (JSR 222) JAXBUtil javax.xml.bind xml相关依赖, 从javaEE（javax.xml.bind）变成jakartaEE（jakarta.xml.bind） -->
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>2.3.7</version>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>3.0.1</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -517,11 +518,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- JAXB (JSR 222) Reference Implementation -->
 		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.1.1</version>
-			<scope>provided</scope>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>3.0.2</version>
 		</dependency>
 	</dependencies>
 </project>

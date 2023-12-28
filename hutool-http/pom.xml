@@ -43,10 +43,17 @@
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!-- webservice SOAP， 从javaEE变成jakartaEE（javax.xml.soap） Jakarta XML SOAP(jakarta.xml.soap) -->
 		<dependency>
-			<groupId>javax.xml.soap</groupId>
-			<artifactId>javax.xml.soap-api</artifactId>
-			<version>1.4.0</version>
+			<groupId>jakarta.xml.soap</groupId>
+			<artifactId>jakarta.xml.soap-api</artifactId>
+			<version>2.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.messaging.saaj</groupId>
+			<artifactId>saaj-impl</artifactId>
+			<version>2.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
