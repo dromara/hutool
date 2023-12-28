@@ -15,8 +15,9 @@ package org.dromara.hutool.core.io;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
-import org.dromara.hutool.core.io.watch.SimpleWatcher;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.io.watch.WatchMonitor;
+import org.dromara.hutool.core.io.watch.WatchUtil;
 import org.dromara.hutool.core.io.watch.Watcher;
 import org.dromara.hutool.core.io.watch.watchers.DelayWatcher;
 import org.dromara.hutool.core.lang.Console;
@@ -56,7 +57,8 @@ public class WatchMonitorTest {
 			}
 		};
 
-		final WatchMonitor monitor = WatchMonitor.ofAll("d:/test/aaa.txt", new DelayWatcher(watcher, 500));
+		//noinspection resource
+		final WatchMonitor monitor = WatchUtil.ofAll("d:/test/aaa.txt", new DelayWatcher(watcher, 500));
 
 		monitor.setMaxDepth(0);
 		monitor.start();

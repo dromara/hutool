@@ -16,9 +16,10 @@ import org.dromara.hutool.core.date.DateUnit;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.watch.SimpleWatcher;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.io.watch.WatchKind;
 import org.dromara.hutool.core.io.watch.WatchMonitor;
+import org.dromara.hutool.core.io.watch.WatchUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.text.CharUtil;
@@ -158,7 +159,7 @@ public class Tailer implements Serializable {
 
 		// 监听删除
 		if(stopOnDelete){
-			fileDeleteWatchMonitor = WatchMonitor.of(this.filePath, WatchKind.DELETE.getValue());
+			fileDeleteWatchMonitor = WatchUtil.of(this.filePath, WatchKind.DELETE.getValue());
 			fileDeleteWatchMonitor.setWatcher(new SimpleWatcher(){
 				@Override
 				public void onDelete(final WatchEvent<?> event, final Path currentPath) {

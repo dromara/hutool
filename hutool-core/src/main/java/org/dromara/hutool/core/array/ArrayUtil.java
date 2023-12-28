@@ -30,6 +30,7 @@ import org.dromara.hutool.core.util.RandomUtil;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -467,6 +468,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// endregion
 
 	// region ----- newArray
+
 	/**
 	 * 新建一个空数组
 	 *
@@ -493,6 +495,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// endregion
 
 	// region ----- type
+
 	/**
 	 * 获取数组对象的元素类型，方法调用参数与返回结果举例：
 	 * <ul>
@@ -1048,6 +1051,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// endregion
 
 	// region ----- zip
+
 	/**
 	 * 映射键值（参考Python的zip()函数）<br>
 	 * 例如：<br>
@@ -1422,6 +1426,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	// region ----- join
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 *
@@ -1839,6 +1844,21 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <T, R> Set<R> mapToSet(final T[] array, final Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toSet());
+	}
+
+	/**
+	 * 按照指定规则，将一种类型的数组元素转换为另一种类型，并保存为 {@link Set}
+	 *
+	 * @param array     被转换的数组
+	 * @param func      转换规则函数
+	 * @param generator 数组生成器，如返回String[]，则传入String[]::new
+	 * @param <T>       原数组类型
+	 * @param <R>       目标数组类型
+	 * @return 集合
+	 */
+	public static <T, R> R[] mapToArray(final T[] array, final Function<? super T, ? extends R> func,
+										final IntFunction<R[]> generator) {
+		return Arrays.stream(array).map(func).toArray(generator);
 	}
 	// endregion
 

@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.io.file;
 
-import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -115,6 +114,7 @@ public class PathUtil {
 		return fileList;
 	}
 
+	// region ----- walkFiles
 	/**
 	 * 遍历指定path下的文件并做处理
 	 *
@@ -162,6 +162,7 @@ public class PathUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	// endregion
 
 	/**
 	 * 删除文件或者文件夹，不追踪软链<br>

@@ -18,7 +18,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.io.watch.SimpleWatcher;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.io.watch.WatchMonitor;
 import org.dromara.hutool.core.io.watch.WatchUtil;
 import org.dromara.hutool.core.lang.Assert;

@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.io.watch.SimpleWatcher;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.func.SerConsumer;
 
 import java.io.IOException;

@@ -31,6 +31,18 @@ public class CastUtil {
 	 * 将指定对象强制转换为指定类型
 	 *
 	 * @param <T>        目标类型
+	 * @param value      被转换的对象
+	 * @return 转换后的对象
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T cast(final Object value) {
+		return (T)value;
+	}
+
+	/**
+	 * 将指定对象强制转换为指定类型
+	 *
+	 * @param <T>        目标类型
 	 * @param targetType 指定目标类型
 	 * @param value      被转换的对象
 	 * @return 转换后的对象

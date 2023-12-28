@@ -164,11 +164,18 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void mapTest() {
+	public void zipTest() {
 		final String[] keys = {"a", "b", "c"};
 		final Integer[] values = {1, 2, 3};
 		final Map<String, Integer> map = ArrayUtil.zip(keys, values, true);
 		Assertions.assertEquals(Objects.requireNonNull(map).toString(), "{a=1, b=2, c=3}");
+	}
+
+	@Test
+	public void mapToArrayTest() {
+		final String[] keys = {"a", "b", "c"};
+		final Integer[] integers = ArrayUtil.mapToArray(keys, String::length, Integer[]::new);
+		Assertions.assertArrayEquals(integers, new Integer[]{1, 1, 1});
 	}
 
 	@Test
@@ -453,7 +460,7 @@ public class ArrayUtilTest {
 		final Object a = new int[]{1, 2, 3, 4};
 		final Object[] wrapA = ArrayUtil.wrap(a);
 		for (final Object o : wrapA) {
-			Assertions.assertTrue(o instanceof Integer);
+			Assertions.assertInstanceOf(Integer.class, o);
 		}
 	}
 

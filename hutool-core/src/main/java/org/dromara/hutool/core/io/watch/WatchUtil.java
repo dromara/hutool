@@ -34,6 +34,8 @@ import java.nio.file.Watchable;
  * @since 3.1.0
  */
 public class WatchUtil {
+
+	// region ----- of
 	/**
 	 * 创建并初始化监听
 	 *
@@ -148,8 +150,9 @@ public class WatchUtil {
 	public static WatchMonitor of(final Path path, final int maxDepth, final WatchEvent.Kind<?>... events) {
 		return new WatchMonitor(path, maxDepth, events);
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------- createAll
+	// region ----- ofAll
 	/**
 	 * 创建并初始化监听，监听所有事件
 	 *
@@ -266,8 +269,9 @@ public class WatchUtil {
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------- createModify
+	// region ----- createModify
 	/**
 	 * 创建并初始化监听，监听修改事件
 	 *
@@ -394,6 +398,7 @@ public class WatchUtil {
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
 	}
+	// endregion
 
 	/**
 	 * 注册Watchable对象到WatchService服务
