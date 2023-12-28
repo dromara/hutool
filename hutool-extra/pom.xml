@@ -523,6 +523,7 @@
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 			<version>3.0.2</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
