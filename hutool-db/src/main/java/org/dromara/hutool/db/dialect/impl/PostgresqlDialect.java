@@ -12,19 +12,18 @@
 
 package org.dromara.hutool.db.dialect.impl;
 
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.StatementUtil;
 import org.dromara.hutool.db.dialect.DialectName;
-import org.dromara.hutool.db.sql.SqlBuilder;
 import org.dromara.hutool.db.sql.QuoteWrapper;
+import org.dromara.hutool.db.sql.SqlBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 
 /**
@@ -48,7 +47,7 @@ public class PostgresqlDialect extends AnsiSqlDialect {
 	}
 
 	@Override
-	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
+	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, String... keys) {
 		Assert.notEmpty(keys, "Keys must be not empty for Postgres.");
 		SqlBuilder.validateEntity(entity);
 		final SqlBuilder builder = SqlBuilder.of(quoteWrapper);
@@ -78,6 +77,7 @@ public class PostgresqlDialect extends AnsiSqlDialect {
 		String tableName = entity.getTableName();
 		if (null != this.quoteWrapper) {
 			tableName = this.quoteWrapper.wrap(tableName);
+			keys = quoteWrapper.wrap(keys);
 		}
 		builder.append("INSERT INTO ").append(tableName)
 			// 字段列表
