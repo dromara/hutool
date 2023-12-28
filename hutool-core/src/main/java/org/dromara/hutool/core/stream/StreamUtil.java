@@ -212,7 +212,7 @@ public class StreamUtil {
 
 	/**
 	 * <p>指定一个层级结构的根节点（通常是树或图），
-	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br />
+	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br>
 	 * 该方法用于以平铺的方式按广度优先对图或树节点进行访问，可以使用并行流提高效率。
 	 *
 	 * <p>eg:
@@ -233,13 +233,13 @@ public class StreamUtil {
 	 * @see HierarchyIterator
 	 */
 	public static <T> Stream<T> iterateHierarchies(
-		T root, final Function<T, Collection<T>> discoverer, Predicate<T> filter) {
+			final T root, final Function<T, Collection<T>> discoverer, final Predicate<T> filter) {
 		return ofIter(HierarchyIterator.breadthFirst(root, discoverer, filter));
 	}
 
 	/**
 	 * <p>指定一个层级结构的根节点（通常是树或图），
-	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br />
+	 * 然后获取包含根节点在内，根节点所有层级结构中的节点组成的流。<br>
 	 * 该方法用于以平铺的方式按广度优先对图或树节点进行访问，可以使用并行流提高效率。
 	 *
 	 * <p>eg:
@@ -259,7 +259,7 @@ public class StreamUtil {
 	 * @see HierarchyIterator
 	 */
 	public static <T> Stream<T> iterateHierarchies(
-		T root, final Function<T, Collection<T>> discoverer) {
+			final T root, final Function<T, Collection<T>> discoverer) {
 		return ofIter(HierarchyIterator.breadthFirst(root, discoverer));
 	}
 

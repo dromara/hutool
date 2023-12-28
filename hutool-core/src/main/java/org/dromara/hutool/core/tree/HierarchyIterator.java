@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 
 /**
  * <p>用于迭代层级结构（比如树或图）的迭代器，
- * 支持{@link #depthFirst 广度优先}与{@link #breadthFirst 深度优先}两种遍历模式。<br />
+ * 支持{@link #depthFirst 广度优先}与{@link #breadthFirst 深度优先}两种遍历模式。<br>
  * 迭代器仅适用于访问层级结构，因此不支持{@link Iterator#remove}方法。
  * 要构建树或者操作数，请参见{@link BeanTree}或{@link TreeUtil}。
  *
  * <p>该迭代器侧重于打通图或树这类数据结构与传统集合间的隔阂，
- * 从而支持通过传统可迭代集合的方式对树或图中的节点进行操作。<br />
+ * 从而支持通过传统可迭代集合的方式对树或图中的节点进行操作。<br>
  * 比如：
  * <pre>{@code
  * Tree root = // 构建树结构
@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  * 	.toList();
  * }</pre>
  *
- * @author huangchengxing
  * @param <T> 元素类型
+ * @author huangchengxing
  * @see EasyStream#iterateHierarchies
  * @see StreamUtil#iterateHierarchies
  */
@@ -63,7 +63,7 @@ public abstract class HierarchyIterator<T> implements Iterator<T> {
 	 * @param root           根节点，根节点不允许被{@code filter}过滤
 	 * @param nextDiscoverer 下一层级节点的获取方法
 	 * @param filter         节点过滤器，不匹配的节点与以其作为根节点的子树将将会被忽略
-	 * @param <T> 元素类型
+	 * @param <T>            元素类型
 	 * @return 迭代器
 	 */
 	public static <T> HierarchyIterator<T> breadthFirst(
@@ -76,7 +76,7 @@ public abstract class HierarchyIterator<T> implements Iterator<T> {
 	 *
 	 * @param root           根节点，根节点不允许被{@code filter}过滤
 	 * @param nextDiscoverer 下一层级节点的获取方法
-	 * @param <T> 元素类型
+	 * @param <T>            元素类型
 	 * @return 迭代器
 	 */
 	public static <T> HierarchyIterator<T> breadthFirst(
@@ -90,7 +90,7 @@ public abstract class HierarchyIterator<T> implements Iterator<T> {
 	 * @param root           根节点，根节点不允许被{@code filter}过滤
 	 * @param nextDiscoverer 下一层级节点的获取方法
 	 * @param filter         节点过滤器，不匹配的节点与以其作为根节点的子树将将会被忽略
-	 * @param <T> 元素类型
+	 * @param <T>            元素类型
 	 * @return 迭代器
 	 */
 	public static <T> HierarchyIterator<T> depthFirst(
@@ -103,7 +103,7 @@ public abstract class HierarchyIterator<T> implements Iterator<T> {
 	 *
 	 * @param root           根节点，根节点不允许被{@code filter}过滤
 	 * @param nextDiscoverer 下一层级节点的获取方法
-	 * @param <T> 元素类型
+	 * @param <T>            元素类型
 	 * @return 迭代器
 	 */
 	public static <T> HierarchyIterator<T> depthFirst(
