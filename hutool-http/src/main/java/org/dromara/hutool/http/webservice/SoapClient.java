@@ -26,7 +26,7 @@ import org.dromara.hutool.http.client.Response;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
-import javax.xml.soap.*;
+import jakarta.xml.soap.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;

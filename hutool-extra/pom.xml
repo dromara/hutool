@@ -505,8 +505,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- 适配jdk升级到9及以上，移除了 javax.xml.bind (JAXB) 的问题; javax需要从外部引入 -->
-		<!--JAXB (JSR 222) JAXBUtil xml相关依赖-->
+		<!--JAXB (JSR 222) JAXBUtil javax.xml.bind xml相关依赖, 从javaEE（javax.xml.bind）变成jakartaEE（jakarta.xml.bind） -->
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
@@ -524,12 +523,6 @@
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 			<version>3.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.1.1</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
