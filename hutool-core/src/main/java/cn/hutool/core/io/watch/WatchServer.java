@@ -3,6 +3,7 @@ package cn.hutool.core.io.watch;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -128,7 +129,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	/**
 	 * 执行事件获取并处理
 	 *
-	 * @param action     监听回调函数，实现此函数接口用于处理WatchEvent事件
+	 * @param action      监听回调函数，实现此函数接口用于处理WatchEvent事件
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
 	 * @since 5.4.0
 	 */
@@ -163,7 +164,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
 	 */
 	public void watch(Watcher watcher, Filter<WatchEvent<?>> watchFilter) {
-		watch((event, currentPath)->{
+		watch((event, currentPath) -> {
 			final WatchEvent.Kind<?> kind = event.kind();
 
 			if (kind == WatchKind.CREATE.getValue()) {
@@ -176,6 +177,21 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 				watcher.onOverflow(event, currentPath);
 			}
 		}, watchFilter);
+	}
+
+	/**
+	 * 通过 path 获取 watchKey
+	 *
+	 * @param path path
+	 * @return 如果不存在则返回 null
+	 */
+	public WatchKey getWatchKey(Path path) {
+		for (Map.Entry<WatchKey, Path> entry : watchKeyPathMap.entrySet()) {
+			if (ObjectUtil.equals(path, entry.getValue())) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 
 	/**
