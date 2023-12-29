@@ -22,9 +22,9 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.io.watch.WatchMonitor;
 import org.dromara.hutool.core.io.watch.WatchUtil;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.getter.TypeGetter;
 import org.dromara.hutool.core.map.MapUtil;
@@ -39,8 +39,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -234,7 +234,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 			}
 			this.watchMonitor = WatchUtil.createModify(this.resource.getUrl(), new SimpleWatcher() {
 				@Override
-				public void onModify(final WatchEvent<?> event, final Path currentPath) {
+				public void onModify(final WatchEvent<?> event, final WatchKey key) {
 					load();
 				}
 			});

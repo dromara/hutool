@@ -12,15 +12,15 @@
 
 package org.dromara.hutool.core.io;
 
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
-
-import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.io.watch.WatchMonitor;
 import org.dromara.hutool.core.io.watch.WatchUtil;
 import org.dromara.hutool.core.io.watch.Watcher;
 import org.dromara.hutool.core.io.watch.watchers.DelayWatcher;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.lang.Console;
+
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
 
 /**
  * 文件监听单元测试
@@ -33,27 +33,27 @@ public class WatchMonitorTest {
 	public static void main(final String[] args) {
 		final Watcher watcher = new SimpleWatcher(){
 			@Override
-			public void onCreate(final WatchEvent<?> event, final Path currentPath) {
+			public void onCreate(final WatchEvent<?> event, final WatchKey key) {
 				final Object obj = event.context();
-				Console.log("创建：{}-> {}", currentPath, obj);
+				Console.log("创建：{}-> {}", key.watchable(), obj);
 			}
 
 			@Override
-			public void onModify(final WatchEvent<?> event, final Path currentPath) {
+			public void onModify(final WatchEvent<?> event, final WatchKey key) {
 				final Object obj = event.context();
-				Console.log("修改：{}-> {}", currentPath, obj);
+				Console.log("修改：{}-> {}", key.watchable(), obj);
 			}
 
 			@Override
-			public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+			public void onDelete(final WatchEvent<?> event, final WatchKey key) {
 				final Object obj = event.context();
-				Console.log("删除：{}-> {}", currentPath, obj);
+				Console.log("删除：{}-> {}", key.watchable(), obj);
 			}
 
 			@Override
-			public void onOverflow(final WatchEvent<?> event, final Path currentPath) {
+			public void onOverflow(final WatchEvent<?> event, final WatchKey key) {
 				final Object obj = event.context();
-				Console.log("Overflow：{}-> {}", currentPath, obj);
+				Console.log("Overflow：{}-> {}", key.watchable(), obj);
 			}
 		};
 

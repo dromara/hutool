@@ -12,8 +12,6 @@
 
 package org.dromara.hutool.core.io.watch.watchers;
 
-import org.dromara.hutool.core.io.watch.watchers.IgnoreWatcher;
-
 /**
  * 空白WatchListener<br>
  * 用户继承此类后实现需要监听的方法
@@ -21,5 +19,4 @@ import org.dromara.hutool.core.io.watch.watchers.IgnoreWatcher;
  *
  */
 public class SimpleWatcher extends IgnoreWatcher {
-
 }

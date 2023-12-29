@@ -17,10 +17,7 @@ import org.dromara.hutool.core.io.watch.Watcher;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.thread.ThreadUtil;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import java.util.Set;
 
 /**
@@ -59,37 +56,37 @@ public class DelayWatcher implements Watcher {
 	//---------------------------------------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public void onModify(final WatchEvent<?> event, final Path currentPath) {
+	public void onModify(final WatchEvent<?> event, final WatchKey key) {
 		if(this.delay < 1) {
-			this.watcher.onModify(event, currentPath);
+			this.watcher.onModify(event, key);
 		}else {
-			onDelayModify(event, currentPath);
+			onDelayModify(event, key);
 		}
 	}
 
 	@Override
-	public void onCreate(final WatchEvent<?> event, final Path currentPath) {
-		watcher.onCreate(event, currentPath);
+	public void onCreate(final WatchEvent<?> event, final WatchKey key) {
+		watcher.onCreate(event, key);
 	}
 
 	@Override
-	public void onDelete(final WatchEvent<?> event, final Path currentPath) {
-		watcher.onDelete(event, currentPath);
+	public void onDelete(final WatchEvent<?> event, final WatchKey key) {
+		watcher.onDelete(event, key);
 	}
 
 	@Override
-	public void onOverflow(final WatchEvent<?> event, final Path currentPath) {
-		watcher.onOverflow(event, currentPath);
+	public void onOverflow(final WatchEvent<?> event, final WatchKey key) {
+		watcher.onOverflow(event, key);
 	}
 
 	//---------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 触发延迟修改
 	 * @param event 事件
-	 * @param currentPath 事件发生的当前Path路径
+	 * @param key {@link WatchKey}
 	 */
-	private void onDelayModify(final WatchEvent<?> event, final Path currentPath) {
-		final Path eventPath = Paths.get(currentPath.toString(), event.context().toString());
+	private void onDelayModify(final WatchEvent<?> event, final WatchKey key) {
+		final Path eventPath = Paths.get(key.watchable().toString(), event.context().toString());
 		if(eventSet.contains(eventPath)) {
 			//此事件已经被触发过，后续事件忽略，等待统一处理。
 			return;
@@ -97,7 +94,7 @@ public class DelayWatcher implements Watcher {
 
 		//事件第一次触发，此时标记事件，并启动处理线程延迟处理，处理结束后会删除标记
 		eventSet.add(eventPath);
-		startHandleModifyThread(event, currentPath);
+		startHandleModifyThread(event, key);
 	}
 
 	/**
@@ -106,11 +103,11 @@ public class DelayWatcher implements Watcher {
 	 * @param event 事件
 	 * @param currentPath 事件发生的当前Path路径
 	 */
-	private void startHandleModifyThread(final WatchEvent<?> event, final Path currentPath) {
+	private void startHandleModifyThread(final WatchEvent<?> event, final WatchKey key) {
 		ThreadUtil.execute(() -> {
 			ThreadUtil.sleep(delay);
-			eventSet.remove(Paths.get(currentPath.toString(), event.context().toString()));
-			watcher.onModify(event, currentPath);
+			eventSet.remove(Paths.get(key.watchable().toString(), event.context().toString()));
+			watcher.onModify(event, key);
 		});
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method end

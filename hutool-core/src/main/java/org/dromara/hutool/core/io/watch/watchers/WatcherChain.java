@@ -15,8 +15,8 @@ package org.dromara.hutool.core.io.watch.watchers;
 import org.dromara.hutool.core.io.watch.Watcher;
 import org.dromara.hutool.core.lang.Chain;
 
-import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -51,30 +51,30 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain> {
 	}
 
 	@Override
-	public void onCreate(final WatchEvent<?> event, final Path currentPath) {
+	public void onCreate(final WatchEvent<?> event, final WatchKey key) {
 		for (final Watcher watcher : chain) {
-			watcher.onCreate(event, currentPath);
+			watcher.onCreate(event, key);
 		}
 	}
 
 	@Override
-	public void onModify(final WatchEvent<?> event, final Path currentPath) {
+	public void onModify(final WatchEvent<?> event, final WatchKey key) {
 		for (final Watcher watcher : chain) {
-			watcher.onModify(event, currentPath);
+			watcher.onModify(event, key);
 		}
 	}
 
 	@Override
-	public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+	public void onDelete(final WatchEvent<?> event, final WatchKey key) {
 		for (final Watcher watcher : chain) {
-			watcher.onDelete(event, currentPath);
+			watcher.onDelete(event, key);
 		}
 	}
 
 	@Override
-	public void onOverflow(final WatchEvent<?> event, final Path currentPath) {
+	public void onOverflow(final WatchEvent<?> event, final WatchKey key) {
 		for (final Watcher watcher : chain) {
-			watcher.onOverflow(event, currentPath);
+			watcher.onOverflow(event, key);
 		}
 	}
 

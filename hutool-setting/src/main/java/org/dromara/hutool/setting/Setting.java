@@ -14,18 +14,18 @@ package org.dromara.hutool.setting;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.resource.Resource;
-import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
-import org.dromara.hutool.core.io.watch.WatchMonitor;
-import org.dromara.hutool.core.io.watch.WatchUtil;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerSupplier;
-import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.io.resource.Resource;
+import org.dromara.hutool.core.io.resource.ResourceUtil;
+import org.dromara.hutool.core.io.watch.WatchMonitor;
+import org.dromara.hutool.core.io.watch.WatchUtil;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.log.LogUtil;
 import org.dromara.hutool.setting.props.Props;
@@ -33,15 +33,9 @@ import org.dromara.hutool.setting.props.Props;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.WatchEvent;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.nio.file.WatchKey;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -217,13 +211,11 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	public void autoLoad(final boolean autoReload, final Consumer<Boolean> callback) {
 		if (autoReload) {
 			Assert.notNull(this.resource, "Setting resource must be not null !");
-			if (null != this.watchMonitor) {
-				// 先关闭之前的监听
-				this.watchMonitor.close();
-			}
+			// 先关闭之前的监听
+			IoUtil.closeQuietly(this.watchMonitor);
 			this.watchMonitor = WatchUtil.createModify(resource.getUrl(), new SimpleWatcher() {
 				@Override
-				public void onModify(final WatchEvent<?> event, final Path currentPath) {
+				public void onModify(final WatchEvent<?> event, final WatchKey key) {
 					final boolean success = load();
 					// 如果有回调，加载完毕则执行回调
 					if (callback != null) {

@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.core.io.watch.watchers;
 
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
-
 import org.dromara.hutool.core.io.watch.Watcher;
+
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
 
 /**
  * 跳过所有事件处理Watcher<br>
@@ -27,18 +27,18 @@ import org.dromara.hutool.core.io.watch.Watcher;
 public class IgnoreWatcher implements Watcher {
 
 	@Override
-	public void onCreate(final WatchEvent<?> event, final Path currentPath) {
+	public void onCreate(final WatchEvent<?> event, final WatchKey key) {
 	}
 
 	@Override
-	public void onModify(final WatchEvent<?> event, final Path currentPath) {
+	public void onModify(final WatchEvent<?> event, final WatchKey key) {
 	}
 
 	@Override
-	public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+	public void onDelete(final WatchEvent<?> event, final WatchKey key) {
 	}
 
 	@Override
-	public void onOverflow(final WatchEvent<?> event, final Path currentPath) {
+	public void onOverflow(final WatchEvent<?> event, final WatchKey key) {
 	}
 }

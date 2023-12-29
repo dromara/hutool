@@ -202,7 +202,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		this.watchService.close();
 	}
 	//------------------------------------------------------ private method end

@@ -14,14 +14,14 @@ package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.date.DateUnit;
 import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.io.watch.WatchKind;
 import org.dromara.hutool.core.io.watch.WatchMonitor;
 import org.dromara.hutool.core.io.watch.WatchUtil;
+import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
@@ -30,14 +30,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
 import java.util.Stack;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * 文件内容跟随器，实现类似Linux下"tail -f"命令功能
@@ -162,8 +158,8 @@ public class Tailer implements Serializable {
 			fileDeleteWatchMonitor = WatchUtil.of(this.filePath, WatchKind.DELETE.getValue());
 			fileDeleteWatchMonitor.setWatcher(new SimpleWatcher(){
 				@Override
-				public void onDelete(final WatchEvent<?> event, final Path currentPath) {
-					super.onDelete(event, currentPath);
+				public void onDelete(final WatchEvent<?> event, final WatchKey key) {
+					super.onDelete(event, key);
 					stop();
 					throw new IORuntimeException("{} has been deleted", filePath);
 				}
