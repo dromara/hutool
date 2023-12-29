@@ -86,6 +86,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- 仅用于测试 -->
+		<dependency>
+			<groupId>org.dromara.hutool</groupId>
+			<artifactId>hutool-json</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.brotli</groupId>
 			<artifactId>dec</artifactId>
