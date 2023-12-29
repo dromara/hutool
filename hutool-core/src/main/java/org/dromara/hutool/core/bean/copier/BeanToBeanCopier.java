@@ -86,7 +86,7 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 
 			// 检查目标字段可写性
 			// 目标字段检查放在键值对编辑之后，因为键可能被编辑修改
-			final PropDesc tDesc = targetPropDescMap.get(sFieldName);
+			final PropDesc tDesc = this.copyOptions.findPropDesc(targetPropDescMap, sFieldName);
 			if (null == tDesc || !tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
 				return;

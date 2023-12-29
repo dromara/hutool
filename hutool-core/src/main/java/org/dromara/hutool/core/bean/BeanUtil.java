@@ -55,109 +55,6 @@ import java.util.stream.Collectors;
 public class BeanUtil {
 
 	/**
-	 * 判断是否为可读的Bean对象，判定方法是：
-	 *
-	 * <pre>
-	 *     1、是否存在只有无参数的getXXX方法或者isXXX方法
-	 *     2、是否存在public类型的字段
-	 * </pre>
-	 *
-	 * @param clazz 待测试类
-	 * @return 是否为可读的Bean对象
-	 * @see #hasGetter(Class)
-	 * @see #hasPublicField(Class)
-	 */
-	public static boolean isReadableBean(final Class<?> clazz) {
-		if (null == clazz) {
-			return false;
-		}
-		return hasGetter(clazz) || hasPublicField(clazz);
-	}
-
-	/**
-	 * 判断是否为可写Bean对象，判定方法是：
-	 *
-	 * <pre>
-	 *     1、是否存在只有一个参数的setXXX方法
-	 *     2、是否存在public类型的字段
-	 * </pre>
-	 *
-	 * @param clazz 待测试类
-	 * @return 是否为Bean对象
-	 * @see #hasSetter(Class)
-	 * @see #hasPublicField(Class)
-	 */
-	public static boolean isWritableBean(final Class<?> clazz) {
-		if (null == clazz) {
-			return false;
-		}
-		return hasSetter(clazz) || hasPublicField(clazz);
-	}
-
-	/**
-	 * 判断是否有Setter方法<br>
-	 * 判定方法是否存在只有一个参数的setXXX方法
-	 *
-	 * @param clazz 待测试类
-	 * @return 是否为Bean对象
-	 * @since 4.2.2
-	 */
-	public static boolean hasSetter(final Class<?> clazz) {
-		if (ClassUtil.isNormalClass(clazz)) {
-			for (final Method method : clazz.getMethods()) {
-				if (method.getParameterCount() == 1 && method.getName().startsWith("set")) {
-					// 检测包含标准的setXXX方法即视为标准的JavaBean
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 判断是否为Bean对象<br>
-	 * 判定方法是否存在只有无参数的getXXX方法或者isXXX方法
-	 *
-	 * @param clazz 待测试类
-	 * @return 是否为Bean对象
-	 * @since 4.2.2
-	 */
-	public static boolean hasGetter(final Class<?> clazz) {
-		if (ClassUtil.isNormalClass(clazz)) {
-			for (final Method method : clazz.getMethods()) {
-				if (method.getParameterCount() == 0) {
-					final String name = method.getName();
-					if (name.startsWith("get") || name.startsWith("is")) {
-						if (!"getClass".equals(name)) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 指定类中是否有public类型字段(static字段除外)
-	 *
-	 * @param clazz 待测试类
-	 * @return 是否有public类型字段
-	 * @since 5.1.0
-	 */
-	public static boolean hasPublicField(final Class<?> clazz) {
-		if (ClassUtil.isNormalClass(clazz)) {
-			for (final Field field : clazz.getFields()) {
-				if (ModifierUtil.isPublic(field) && !ModifierUtil.isStatic(field)) {
-					//非static的public字段
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 创建动态Bean
 	 *
 	 * @param bean 普通Bean或Map
@@ -200,8 +97,7 @@ public class BeanUtil {
 		getBeanDesc(clazz).getProps().forEach(action);
 	}
 
-	// --------------------------------------------------------------------------------------------------------- PropertyDescriptor
-
+	// region ----- getPropertyDescriptor
 	/**
 	 * 获得Bean字段描述数组
 	 *
@@ -278,6 +174,7 @@ public class BeanUtil {
 		final Map<String, PropertyDescriptor> map = getPropertyDescriptorMap(clazz, ignoreCase);
 		return (null == map) ? null : map.get(fieldName);
 	}
+	// endregion
 
 	/**
 	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
@@ -380,101 +277,7 @@ public class BeanUtil {
 		BeanPath.of(expression).setValue(bean, value);
 	}
 
-	// --------------------------------------------------------------------------------------------- mapToBean
-
-	/**
-	 * Map转换为Bean对象
-	 *
-	 * @param <T>           Bean类型
-	 * @param map           {@link Map}
-	 * @param beanClass     Bean Class
-	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
-	 * @param copyOptions   转Bean选项
-	 * @return Bean
-	 */
-	public static <T> T mapToBean(final Map<?, ?> map, final Class<T> beanClass, final boolean isToCamelCase, final CopyOptions copyOptions) {
-		return fillBeanWithMap(map, ConstructorUtil.newInstanceIfPossible(beanClass), isToCamelCase, copyOptions);
-	}
-
-	// --------------------------------------------------------------------------------------------- fillBeanWithMap
-
-	/**
-	 * 使用Map填充Bean对象
-	 *
-	 * @param <T>           Bean类型
-	 * @param map           Map
-	 * @param bean          Bean
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, final T bean, final boolean isIgnoreError) {
-		return fillBeanWithMap(map, bean, false, isIgnoreError);
-	}
-
-	/**
-	 * 使用Map填充Bean对象，可配置将下划线转换为驼峰
-	 *
-	 * @param <T>           Bean类型
-	 * @param map           Map
-	 * @param bean          Bean
-	 * @param isToCamelCase 是否将下划线模式转换为驼峰模式
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, final T bean, final boolean isToCamelCase, final boolean isIgnoreError) {
-		return fillBeanWithMap(map, bean, isToCamelCase, CopyOptions.of().setIgnoreError(isIgnoreError));
-	}
-
-	/**
-	 * 使用Map填充Bean对象，忽略大小写
-	 *
-	 * @param <T>           Bean类型
-	 * @param map           Map
-	 * @param bean          Bean
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 */
-	public static <T> T fillBeanWithMapIgnoreCase(final Map<?, ?> map, final T bean, final boolean isIgnoreError) {
-		return fillBeanWithMap(map, bean, CopyOptions.of().setIgnoreCase(true).setIgnoreError(isIgnoreError));
-	}
-
-	/**
-	 * 使用Map填充Bean对象
-	 *
-	 * @param <T>         Bean类型
-	 * @param map         Map
-	 * @param bean        Bean
-	 * @param copyOptions 属性复制选项 {@link CopyOptions}
-	 * @return Bean
-	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, final T bean, final CopyOptions copyOptions) {
-		return fillBeanWithMap(map, bean, false, copyOptions);
-	}
-
-	/**
-	 * 使用Map填充Bean对象
-	 *
-	 * @param <T>           Bean类型
-	 * @param map           Map
-	 * @param bean          Bean
-	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
-	 * @param copyOptions   属性复制选项 {@link CopyOptions}
-	 * @return Bean
-	 * @since 3.3.1
-	 */
-	public static <T> T fillBeanWithMap(Map<?, ?> map, final T bean, final boolean isToCamelCase, final CopyOptions copyOptions) {
-		if (MapUtil.isEmpty(map)) {
-			return bean;
-		}
-		if (isToCamelCase) {
-			map = MapUtil.toCamelCaseMap(map);
-		}
-		copyProperties(map, bean, copyOptions);
-		return bean;
-	}
-
-	// --------------------------------------------------------------------------------------------- fillBean
-
+	// region ----- toBean
 	/**
 	 * 对象或Map转Bean
 	 *
@@ -520,7 +323,9 @@ public class BeanUtil {
 		copyProperties(source, target, options);
 		return target;
 	}
+	// endregion
 
+	// region ----- fillBean
 	/**
 	 * 填充Bean的核心方法
 	 *
@@ -537,8 +342,25 @@ public class BeanUtil {
 
 		return BeanCopier.of(valueProvider, bean, copyOptions).copy();
 	}
-	// --------------------------------------------------------------------------------------------- beanToMap
 
+	/**
+	 * 使用Map填充Bean对象
+	 *
+	 * @param <T>         Bean类型
+	 * @param map         Map
+	 * @param bean        Bean
+	 * @param copyOptions 属性复制选项 {@link CopyOptions}
+	 * @return Bean
+	 */
+	public static <T> T fillBeanWithMap(final Map<?, ?> map, final T bean, final CopyOptions copyOptions) {
+		if (MapUtil.isEmpty(map)) {
+			return bean;
+		}
+		return copyProperties(map, bean, copyOptions);
+	}
+	// endregion
+
+	// region ----- beanToMap
 	/**
 	 * 将bean的部分属性转换成map<br>
 	 * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
@@ -657,8 +479,9 @@ public class BeanUtil {
 
 		return BeanCopier.of(bean, targetMap, copyOptions).copy();
 	}
+	// endregion
 
-	// --------------------------------------------------------------------------------------------- copyProperties
+	// region ----- copyProperties
 
 	/**
 	 * 按照Bean对象属性创建对应的Class对象，并忽略某些属性
@@ -731,6 +554,20 @@ public class BeanUtil {
 	 * 复制集合中的Bean属性<br>
 	 * 此方法遍历集合中每个Bean，复制其属性后加入一个新的{@link List}中。
 	 *
+	 * @param collection 原Bean集合
+	 * @param targetType 目标Bean类型
+	 * @param <T>        Bean类型
+	 * @return 复制后的List
+	 * @since 5.6.6
+	 */
+	public static <T> List<T> copyToList(final Collection<?> collection, final Class<T> targetType) {
+		return copyToList(collection, targetType, CopyOptions.of());
+	}
+
+	/**
+	 * 复制集合中的Bean属性<br>
+	 * 此方法遍历集合中每个Bean，复制其属性后加入一个新的{@link List}中。
+	 *
 	 * @param collection  原Bean集合
 	 * @param targetType  目标Bean类型
 	 * @param copyOptions 拷贝选项
@@ -758,20 +595,7 @@ public class BeanUtil {
 			return target;
 		}).collect(Collectors.toList());
 	}
-
-	/**
-	 * 复制集合中的Bean属性<br>
-	 * 此方法遍历集合中每个Bean，复制其属性后加入一个新的{@link List}中。
-	 *
-	 * @param collection 原Bean集合
-	 * @param targetType 目标Bean类型
-	 * @param <T>        Bean类型
-	 * @return 复制后的List
-	 * @since 5.6.6
-	 */
-	public static <T> List<T> copyToList(final Collection<?> collection, final Class<T> targetType) {
-		return copyToList(collection, targetType, CopyOptions.of());
-	}
+	// endregion
 
 	/**
 	 * 给定的Bean的类名是否匹配指定类名字符串<br>
@@ -882,6 +706,110 @@ public class BeanUtil {
 	}
 
 	/**
+	 * 判断是否为可读的Bean对象，判定方法是：
+	 *
+	 * <pre>
+	 *     1、是否存在只有无参数的getXXX方法或者isXXX方法
+	 *     2、是否存在public类型的字段
+	 * </pre>
+	 *
+	 * @param clazz 待测试类
+	 * @return 是否为可读的Bean对象
+	 * @see #hasGetter(Class)
+	 * @see #hasPublicField(Class)
+	 */
+	public static boolean isReadableBean(final Class<?> clazz) {
+		if (null == clazz) {
+			return false;
+		}
+		return hasGetter(clazz) || hasPublicField(clazz);
+	}
+
+	/**
+	 * 判断是否为可写Bean对象，判定方法是：
+	 *
+	 * <pre>
+	 *     1、是否存在只有一个参数的setXXX方法
+	 *     2、是否存在public类型的字段
+	 * </pre>
+	 *
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 * @see #hasSetter(Class)
+	 * @see #hasPublicField(Class)
+	 */
+	public static boolean isWritableBean(final Class<?> clazz) {
+		if (null == clazz) {
+			return false;
+		}
+		return hasSetter(clazz) || hasPublicField(clazz);
+	}
+
+	// region ----- hasXXX
+	/**
+	 * 判断是否有Setter方法<br>
+	 * 判定方法是否存在只有一个参数的setXXX方法
+	 *
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 * @since 4.2.2
+	 */
+	public static boolean hasSetter(final Class<?> clazz) {
+		if (ClassUtil.isNormalClass(clazz)) {
+			for (final Method method : clazz.getMethods()) {
+				if (method.getParameterCount() == 1 && method.getName().startsWith("set")) {
+					// 检测包含标准的setXXX方法即视为标准的JavaBean
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 判断是否为Bean对象<br>
+	 * 判定方法是否存在只有无参数的getXXX方法或者isXXX方法
+	 *
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 * @since 4.2.2
+	 */
+	public static boolean hasGetter(final Class<?> clazz) {
+		if (ClassUtil.isNormalClass(clazz)) {
+			for (final Method method : clazz.getMethods()) {
+				if (method.getParameterCount() == 0) {
+					final String name = method.getName();
+					if (name.startsWith("get") || name.startsWith("is")) {
+						if (!"getClass".equals(name)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 指定类中是否有public类型字段(static字段除外)
+	 *
+	 * @param clazz 待测试类
+	 * @return 是否有public类型字段
+	 * @since 5.1.0
+	 */
+	public static boolean hasPublicField(final Class<?> clazz) {
+		if (ClassUtil.isNormalClass(clazz)) {
+			for (final Field field : clazz.getFields()) {
+				if (ModifierUtil.isPublic(field) && !ModifierUtil.isStatic(field)) {
+					//非static的public字段
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * 判断Bean是否包含值为{@code null}的属性<br>
 	 * 对象本身为{@code null}也返回true
 	 *
@@ -912,6 +840,7 @@ public class BeanUtil {
 				&& StrUtil.isEmptyIfStr(FieldUtil.getFieldValue(bean, field))
 		);
 	}
+	// endregion
 
 	/**
 	 * 检查Bean<br>

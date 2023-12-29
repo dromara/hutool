@@ -90,7 +90,8 @@ public class BeanUtilTest {
 				.put("aGe", 12)
 				.put("openId", "DFDFSDFWERWER")
 				.build();
-		final SubPerson person = BeanUtil.fillBeanWithMapIgnoreCase(map, new SubPerson(), false);
+		final SubPerson person = BeanUtil.fillBeanWithMap(
+			map, new SubPerson(), CopyOptions.of().setIgnoreCase(true));
 		Assertions.assertEquals("Joe", person.getName());
 		Assertions.assertEquals(12, person.getAge());
 		Assertions.assertEquals("DFDFSDFWERWER", person.getOpenid());
