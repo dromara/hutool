@@ -19,7 +19,6 @@ import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -47,7 +46,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	/**
 	 * 监听的文件，对于单文件监听不为空
 	 */
-	private Path filePath;
+	private Path file;
 
 	/**
 	 * 递归目录的最大深度，当小于1时不递归下层目录
@@ -61,7 +60,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param dir   字符串路径
+	 * @param dir    字符串路径
 	 * @param events 监听事件列表
 	 */
 	public WatchMonitor(final Path dir, final WatchEvent.Kind<?>... events) {
@@ -77,7 +76,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * maxDepth = 3 表示监听当前目录以及下两层
 	 * </pre>
 	 *
-	 * @param dir     字符串路径
+	 * @param dir      路径
 	 * @param maxDepth 递归目录的最大深度，当小于2时不递归下层目录
 	 * @param events   监听事件列表
 	 */
@@ -150,6 +149,11 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 		return this;
 	}
 
+	@Override
+	public void close() {
+		this.watchService.close();
+	}
+
 	//------------------------------------------------------ private method start
 
 	/**
@@ -171,8 +175,8 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 				final String lastPathEleStr = lastPathEle.toString();
 				//带有点表示有扩展名，按照未创建的文件对待。Linux下.d的为目录，排除之
 				if (StrUtil.contains(lastPathEleStr, CharUtil.DOT) && !StrUtil.endWithIgnoreCase(lastPathEleStr, ".d")) {
-					this.filePath = this.dir;
-					this.dir = this.filePath.getParent();
+					this.file = this.dir;
+					this.dir = this.file.getParent();
 				}
 			}
 
@@ -180,8 +184,8 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 			PathUtil.mkdir(this.dir);
 		} else if (PathUtil.isFile(this.dir, false)) {
 			// 文件路径
-			this.filePath = this.dir;
-			this.dir = this.filePath.getParent();
+			this.file = this.dir;
+			this.dir = this.file.getParent();
 		}
 	}
 
@@ -191,19 +195,14 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * @param watcher {@link Watcher}
 	 */
 	private void doTakeAndWatch(final Watcher watcher) {
-		this.watchService.watch(watcher, watchEvent -> null == filePath || filePath.endsWith(watchEvent.context().toString()));
+		this.watchService.watch(watcher, watchEvent -> null == file || file.endsWith(watchEvent.context().toString()));
 	}
 
 	/**
 	 * 注册监听路径
 	 */
 	private void registerPath() {
-		this.watchService.registerPath(this.dir, (null != this.filePath) ? 0 : this.maxDepth);
-	}
-
-	@Override
-	public void close() {
-		this.watchService.close();
+		this.watchService.registerPath(this.dir, (null != this.file) ? 0 : this.maxDepth);
 	}
 	//------------------------------------------------------ private method end
 }

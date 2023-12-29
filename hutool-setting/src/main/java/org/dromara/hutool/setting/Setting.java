@@ -213,7 +213,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			Assert.notNull(this.resource, "Setting resource must be not null !");
 			// 先关闭之前的监听
 			IoUtil.closeQuietly(this.watchMonitor);
-			this.watchMonitor = WatchUtil.createModify(resource.getUrl(), new SimpleWatcher() {
+			this.watchMonitor = WatchUtil.ofModify(resource.getUrl(), new SimpleWatcher() {
 				@Override
 				public void onModify(final WatchEvent<?> event, final WatchKey key) {
 					final boolean success = load();

@@ -19,6 +19,7 @@ import org.dromara.hutool.core.io.watch.watchers.DelayWatcher;
 import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.lang.Console;
 
+import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 
@@ -35,6 +36,7 @@ public class WatchMonitorTest {
 			@Override
 			public void onCreate(final WatchEvent<?> event, final WatchKey key) {
 				final Object obj = event.context();
+				Console.log(((Path)obj).toAbsolutePath());
 				Console.log("创建：{}-> {}", key.watchable(), obj);
 			}
 

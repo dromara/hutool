@@ -25,7 +25,7 @@ public interface Watcher {
 	 * 文件创建时执行的方法
 	 *
 	 * @param event 事件
-	 * @param key   事件发生的{@link WatchKey}
+	 * @param key   事件发生的{@link WatchKey}，可以通过{@link WatchKey#watchable()}获取监听的Path路径
 	 */
 	void onCreate(WatchEvent<?> event, WatchKey key);
 
@@ -34,7 +34,7 @@ public interface Watcher {
 	 * 文件修改可能触发多次
 	 *
 	 * @param event 事件
-	 * @param key   事件发生的{@link WatchKey}
+	 * @param key   事件发生的{@link WatchKey}，可以通过{@link WatchKey#watchable()}获取监听的Path路径
 	 */
 	void onModify(WatchEvent<?> event, WatchKey key);
 
@@ -42,7 +42,7 @@ public interface Watcher {
 	 * 文件删除时执行的方法
 	 *
 	 * @param event 事件
-	 * @param key   事件发生的{@link WatchKey}
+	 * @param key   事件发生的{@link WatchKey}，可以通过{@link WatchKey#watchable()}获取监听的Path路径
 	 */
 	void onDelete(WatchEvent<?> event, WatchKey key);
 
@@ -50,7 +50,7 @@ public interface Watcher {
 	 * 事件丢失或出错时执行的方法
 	 *
 	 * @param event 事件
-	 * @param key   事件发生的{@link WatchKey}
+	 * @param key   事件发生的{@link WatchKey}，可以通过{@link WatchKey#watchable()}获取监听的Path路径
 	 */
 	void onOverflow(WatchEvent<?> event, WatchKey key);
 }

@@ -264,14 +264,13 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
+	@SuppressWarnings("resource")
 	public static WatchMonitor ofAll(final Path path, final int maxDepth, final Watcher watcher) {
-		final WatchMonitor watchMonitor = of(path, maxDepth, WatchKind.ALL);
-		watchMonitor.setWatcher(watcher);
-		return watchMonitor;
+		return of(path, maxDepth, WatchKind.ALL).setWatcher(watcher);
 	}
 	// endregion
 
-	// region ----- createModify
+	// region ----- ofModify
 	/**
 	 * 创建并初始化监听，监听修改事件
 	 *
@@ -280,8 +279,8 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final URL url, final Watcher watcher) {
-		return createModify(url, 0, watcher);
+	public static WatchMonitor ofModify(final URL url, final Watcher watcher) {
+		return ofModify(url, 0, watcher);
 	}
 
 	/**
@@ -293,8 +292,8 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final URL url, final int maxDepth, final Watcher watcher) {
-		return createModify(UrlUtil.toURI(url), maxDepth, watcher);
+	public static WatchMonitor ofModify(final URL url, final int maxDepth, final Watcher watcher) {
+		return ofModify(UrlUtil.toURI(url), maxDepth, watcher);
 	}
 
 	/**
@@ -305,8 +304,8 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final URI uri, final Watcher watcher) {
-		return createModify(uri, 0, watcher);
+	public static WatchMonitor ofModify(final URI uri, final Watcher watcher) {
+		return ofModify(uri, 0, watcher);
 	}
 
 	/**
@@ -318,8 +317,8 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final URI uri, final int maxDepth, final Watcher watcher) {
-		return createModify(Paths.get(uri), maxDepth, watcher);
+	public static WatchMonitor ofModify(final URI uri, final int maxDepth, final Watcher watcher) {
+		return ofModify(Paths.get(uri), maxDepth, watcher);
 	}
 
 	/**
@@ -330,8 +329,8 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final File file, final Watcher watcher) {
-		return createModify(file, 0, watcher);
+	public static WatchMonitor ofModify(final File file, final Watcher watcher) {
+		return ofModify(file, 0, watcher);
 	}
 
 	/**
@@ -343,8 +342,8 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final File file, final int maxDepth, final Watcher watcher) {
-		return createModify(file.toPath(), maxDepth, watcher);
+	public static WatchMonitor ofModify(final File file, final int maxDepth, final Watcher watcher) {
+		return ofModify(file.toPath(), maxDepth, watcher);
 	}
 
 	/**
@@ -355,33 +354,8 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final String path, final Watcher watcher) {
-		return createModify(path, 0, watcher);
-	}
-
-	/**
-	 * 创建并初始化监听，监听修改事件
-	 *
-	 * @param path 路径
-	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
-	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
-	 * @since 4.5.2
-	 */
-	public static WatchMonitor createModify(final String path, final int maxDepth, final Watcher watcher) {
-		return createModify(Paths.get(path), maxDepth, watcher);
-	}
-
-	/**
-	 * 创建并初始化监听，监听修改事件
-	 *
-	 * @param path 路径
-	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
-	 * @since 4.5.2
-	 */
-	public static WatchMonitor createModify(final Path path, final Watcher watcher) {
-		return createModify(path, 0, watcher);
+	public static WatchMonitor ofModify(final String path, final Watcher watcher) {
+		return ofModify(path, 0, watcher);
 	}
 
 	/**
@@ -393,7 +367,32 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(final Path path, final int maxDepth, final Watcher watcher) {
+	public static WatchMonitor ofModify(final String path, final int maxDepth, final Watcher watcher) {
+		return ofModify(Paths.get(path), maxDepth, watcher);
+	}
+
+	/**
+	 * 创建并初始化监听，监听修改事件
+	 *
+	 * @param path 路径
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 * @since 4.5.2
+	 */
+	public static WatchMonitor ofModify(final Path path, final Watcher watcher) {
+		return ofModify(path, 0, watcher);
+	}
+
+	/**
+	 * 创建并初始化监听，监听修改事件
+	 *
+	 * @param path 路径
+	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 * @since 4.5.2
+	 */
+	public static WatchMonitor ofModify(final Path path, final int maxDepth, final Watcher watcher) {
 		final WatchMonitor watchMonitor = of(path, maxDepth, WatchKind.MODIFY.getValue());
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;

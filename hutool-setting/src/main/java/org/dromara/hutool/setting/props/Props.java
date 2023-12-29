@@ -228,11 +228,9 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 	public void autoLoad(final boolean autoReload) {
 		if (autoReload) {
 			Assert.notNull(this.resource, "Properties resource must be not null!");
-			if (null != this.watchMonitor) {
-				// 先关闭之前的监听
-				this.watchMonitor.close();
-			}
-			this.watchMonitor = WatchUtil.createModify(this.resource.getUrl(), new SimpleWatcher() {
+			// 先关闭之前的监听
+			IoUtil.closeQuietly(this.watchMonitor);
+			this.watchMonitor = WatchUtil.ofModify(this.resource.getUrl(), new SimpleWatcher() {
 				@Override
 				public void onModify(final WatchEvent<?> event, final WatchKey key) {
 					load();
