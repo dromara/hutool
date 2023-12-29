@@ -324,7 +324,7 @@ public class CopyOptions implements Serializable {
 	 *
 	 * @param autoTransCamelCase 是否自动转换为驼峰方式
 	 * @return this
-	 * @since 6.0.0
+	 * @since 5.8.25
 	 */
 	public CopyOptions setAutoTransCamelCase(final boolean autoTransCamelCase) {
 		this.autoTransCamelCase = autoTransCamelCase;
