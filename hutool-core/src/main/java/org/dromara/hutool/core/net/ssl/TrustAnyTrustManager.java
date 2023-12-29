@@ -34,7 +34,7 @@ public class TrustAnyTrustManager extends X509ExtendedTrustManager {
 	 *
 	 * @since 5.7.8
 	 */
-	public static TrustAnyTrustManager INSTANCE = new TrustAnyTrustManager();
+	public static final TrustAnyTrustManager INSTANCE = new TrustAnyTrustManager();
 
 	@Override
 	public X509Certificate[] getAcceptedIssuers() {

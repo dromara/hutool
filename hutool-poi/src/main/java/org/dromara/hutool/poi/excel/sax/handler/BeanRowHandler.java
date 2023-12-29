@@ -26,6 +26,7 @@ import java.util.List;
  *
  * @author looly
  * @since 5.4.4
+ * @param <T> 结果类型
  */
 public abstract class BeanRowHandler<T> extends AbstractRowHandler<T> {
 

@@ -51,10 +51,4 @@ public class AnsjResult implements Result {
 	public void remove() {
 		result.remove();
 	}
-
-	@Override
-	public Iterator<Word> iterator() {
-		return this;
-	}
-
 }

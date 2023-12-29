@@ -355,7 +355,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	 * @throws UnsupportedOperationException 为空抛出此异常
 	 */
 	private void checkChainIntegrity() {
-		if (chain.size() == 0) {
+		if (chain.isEmpty()) {
 			throw new UnsupportedOperationException("ComparatorChains must contain at least one Comparator");
 		}
 	}

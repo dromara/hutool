@@ -33,7 +33,7 @@ public class SystemUtil {
 	/**
 	 * Hutool自定义系统属性：是否解析日期字符串采用严格模式
 	 */
-	public static String HUTOOL_DATE_LENIENT = "hutool.date.lenient";
+	public static final String HUTOOL_DATE_LENIENT = "hutool.date.lenient";
 
 	/**
 	 * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 defaultValue

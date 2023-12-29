@@ -26,7 +26,7 @@ public class TrustAnyHostnameVerifier implements HostnameVerifier {
 	/**
 	 * 单例对象
 	 */
-	public static TrustAnyHostnameVerifier INSTANCE = new TrustAnyHostnameVerifier();
+	public static final TrustAnyHostnameVerifier INSTANCE = new TrustAnyHostnameVerifier();
 
 	@Override
 	public boolean verify(final String hostname, final SSLSession session) {

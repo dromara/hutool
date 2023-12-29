@@ -392,7 +392,6 @@ public class JakartaServletUtil {
 	public static boolean isIE(final HttpServletRequest request) {
 		String userAgent = getHeaderIgnoreCase(request, "User-Agent");
 		if (StrUtil.isNotBlank(userAgent)) {
-			//noinspection ConstantConditions
 			userAgent = userAgent.toUpperCase();
 			return userAgent.contains("MSIE") || userAgent.contains("TRIDENT");
 		}

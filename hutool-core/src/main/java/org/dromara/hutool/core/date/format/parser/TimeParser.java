@@ -36,7 +36,7 @@ public class TimeParser extends DefaultDateBasic implements PredicateDateParser 
 	/**
 	 * 单例
 	 */
-	public static TimeParser INSTANCE = new TimeParser();
+	public static final TimeParser INSTANCE = new TimeParser();
 
 	@Override
 	public boolean test(final CharSequence dateStr) {

@@ -36,6 +36,11 @@ public class SetFromMap<E> extends AbstractSet<E> implements Serializable {
 	private final Map<E, Boolean> m;  // The backing map
 	private transient Set<E> s;       // Its keySet
 
+	/**
+	 * 构造
+	 *
+	 * @param map Map
+	 */
 	public SetFromMap(final Map<E, Boolean> map) {
 		m = map;
 		s = map.keySet();
@@ -82,7 +87,6 @@ public class SetFromMap<E> extends AbstractSet<E> implements Serializable {
 		return s.toArray();
 	}
 
-	@SuppressWarnings("SuspiciousToArrayCall")
 	@Override
 	public <T> T[] toArray(final T[] a) {
 		return super.toArray(a);

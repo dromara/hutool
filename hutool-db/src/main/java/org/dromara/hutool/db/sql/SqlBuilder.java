@@ -264,7 +264,7 @@ public class SqlBuilder implements Builder<String> {
 		sql.append("UPDATE ").append(tableName).append(" SET ");
 		entity.forEach((field, value) -> {
 			if (StrUtil.isNotBlank(field)) {
-				if (paramValues.size() > 0) {
+				if (!paramValues.isEmpty()) {
 					sql.append(", ");
 				}
 				sql.append((null != quoteWrapper) ? quoteWrapper.wrap(field) : field).append(" = ? ");

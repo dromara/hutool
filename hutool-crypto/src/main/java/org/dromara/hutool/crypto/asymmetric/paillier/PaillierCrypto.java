@@ -23,16 +23,16 @@ import java.security.*;
  * 同态加密算法Paillier<br>
  * 来自：https://github.com/peterstefanov/paillier<br>
  * 来自：https://github.com/dromara/hutool/pull/3131
- *
+ * <p>
  * 加法同态，存在有效算法+，E(x+y)=E(x)+E(y)或者 x+y=D(E(x)+E(y))成立，并且不泄漏 x 和 y。
  * 乘法同态，存在有效算法*，E(x×y)=E(x)*E(y)或者 xy=D(E(x)*E(y))成立，并且不泄漏 x 和 y。
- *
+ * <p>
  * 方案安全性可以归约到判定性合数剩余假设（Decisional Composite Residuosity Assumption, DCRA），即给定一个合数n和整数z，判定z是否在n^2下是否是n次剩余是困难的。
  * 这个假设经过了几十年的充分研究，到目前为止还没有多项式时间的算法可以攻破，所以Paillier加密方案的安全性被认为相当可靠。
- *
+ * <p>
  * 字符串文本加解密相互配对,此时无法使用同态加法和同态乘法
  * 数值类型不可使用字符串加解密
- *
+ * <p>
  * 公钥加密和同态加法/同态乘法运算
  * 私钥解密
  *
@@ -45,7 +45,6 @@ public class PaillierCrypto extends AbstractAsymmetricCrypto<PaillierCrypto> {
 
 	/**
 	 * 构造，使用随机密钥对
-	 *
 	 */
 	public PaillierCrypto() {
 		this(PaillierKeyPairGenerator.of().generateKeyPair());

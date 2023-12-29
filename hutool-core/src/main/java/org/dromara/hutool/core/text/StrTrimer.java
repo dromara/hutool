@@ -29,15 +29,15 @@ public class StrTrimer implements UnaryOperator<CharSequence>, Serializable {
 	/**
 	 * 去除两边空白符
 	 */
-	public static StrTrimer TRIM_BLANK = new StrTrimer(TrimMode.BOTH, CharUtil::isBlankChar);
+	public static final StrTrimer TRIM_BLANK = new StrTrimer(TrimMode.BOTH, CharUtil::isBlankChar);
 	/**
 	 * 去除头部空白符
 	 */
-	public static StrTrimer TRIM_PREFIX_BLANK = new StrTrimer(TrimMode.PREFIX, CharUtil::isBlankChar);
+	public static final StrTrimer TRIM_PREFIX_BLANK = new StrTrimer(TrimMode.PREFIX, CharUtil::isBlankChar);
 	/**
 	 * 去除尾部空白符
 	 */
-	public static StrTrimer TRIM_SUFFIX_BLANK = new StrTrimer(TrimMode.SUFFIX, CharUtil::isBlankChar);
+	public static final StrTrimer TRIM_SUFFIX_BLANK = new StrTrimer(TrimMode.SUFFIX, CharUtil::isBlankChar);
 
 	private final TrimMode mode;
 	private final Predicate<Character> predicate;

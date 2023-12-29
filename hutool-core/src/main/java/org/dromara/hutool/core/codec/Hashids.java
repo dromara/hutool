@@ -344,7 +344,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 
 		LongStream decoded = LongStream.empty();
 		// parse the hash
-		if (hash.length() > 0) {
+		if (!hash.isEmpty()) {
 			final char lottery = hash.charAt(startIdx);
 
 			// create the initial accumulation string

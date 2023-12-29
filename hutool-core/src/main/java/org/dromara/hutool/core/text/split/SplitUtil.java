@@ -36,7 +36,7 @@ public class SplitUtil {
 	/**
 	 * 无限制切分个数
 	 */
-	public static int UNLIMITED = -1;
+	public static final int UNLIMITED = -1;
 
 	// region ----- split to
 

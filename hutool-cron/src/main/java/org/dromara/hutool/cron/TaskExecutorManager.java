@@ -40,6 +40,11 @@ public class TaskExecutorManager implements Serializable {
 	 */
 	private final List<TaskExecutor> executors = new ArrayList<>();
 
+	/**
+	 * 构造
+	 *
+	 * @param scheduler {@link Scheduler}
+	 */
 	public TaskExecutorManager(final Scheduler scheduler) {
 		this.scheduler = scheduler;
 	}

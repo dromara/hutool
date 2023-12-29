@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class StrMatcher {
 
-	List<String> patterns;
+	private final List<String> patterns;
 
 	/**
 	 * 构造

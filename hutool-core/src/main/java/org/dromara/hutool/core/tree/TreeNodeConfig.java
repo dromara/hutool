@@ -25,7 +25,7 @@ public class TreeNodeConfig implements Serializable {
 	/**
 	 * 默认属性配置对象
 	 */
-	public static TreeNodeConfig DEFAULT_CONFIG = new TreeNodeConfig();
+	public static final TreeNodeConfig DEFAULT_CONFIG = new TreeNodeConfig();
 
 	// 属性名配置字段
 	private String idKey = "id";

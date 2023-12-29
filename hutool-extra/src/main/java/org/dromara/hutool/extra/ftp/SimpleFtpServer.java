@@ -48,8 +48,8 @@ public class SimpleFtpServer {
 		return new SimpleFtpServer();
 	}
 
-	FtpServerFactory serverFactory;
-	ListenerFactory listenerFactory;
+	private final FtpServerFactory serverFactory;
+	private final ListenerFactory listenerFactory;
 
 	/**
 	 * 构造

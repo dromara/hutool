@@ -51,7 +51,7 @@ public class Snowflake implements Generator<Long>, Serializable {
 	/**
 	 * 默认的起始时间，为Thu, 04 Nov 2010 01:42:54 GMT
 	 */
-	public static long DEFAULT_TWEPOCH = 1288834974657L;
+	public static final long DEFAULT_TWEPOCH = 1288834974657L;
 	private static final long WORKER_ID_BITS = 5L;
 	// 最大支持机器节点数0~31，一共32个
 	private static final long MAX_WORKER_ID = ~(-1L << WORKER_ID_BITS);

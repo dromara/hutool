@@ -43,7 +43,7 @@ public class SeataSnowflake implements Generator<Long>, Serializable {
 	/**
 	 * 默认的起始时间，为2020-05-03
 	 */
-	public static long DEFAULT_TWEPOCH = 1588435200000L;
+	public static final long DEFAULT_TWEPOCH = 1588435200000L;
 
 	// 节点ID长度
 	private static final int NODE_ID_BITS = 10;

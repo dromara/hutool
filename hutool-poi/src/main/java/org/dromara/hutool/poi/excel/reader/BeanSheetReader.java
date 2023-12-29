@@ -26,6 +26,7 @@ import java.util.Map;
  *
  * @author looly
  * @since 5.4.4
+ * @param <T> 结果类型
  */
 public class BeanSheetReader<T> implements SheetReader<List<T>> {
 

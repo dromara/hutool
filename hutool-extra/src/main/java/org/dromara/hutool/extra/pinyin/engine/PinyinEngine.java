@@ -37,7 +37,7 @@ public interface PinyinEngine {
 	/**
 	 * 获取字符串对应的完整拼音，非中文返回原字符
 	 *
-	 * @param str 字符串
+	 * @param str       字符串
 	 * @param separator 拼音之间的分隔符
 	 * @return 拼音
 	 */
@@ -56,13 +56,13 @@ public interface PinyinEngine {
 	/**
 	 * 将输入字符串转为拼音首字母，其它字符原样返回
 	 *
-	 * @param str 任意字符，汉字返回拼音，非汉字原样返回
+	 * @param str       任意字符，汉字返回拼音，非汉字原样返回
 	 * @param separator 分隔符
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
 	default String getFirstLetter(final String str, final String separator) {
 		final String splitSeparator = StrUtil.isEmpty(separator) ? "#" : separator;
 		final List<String> split = SplitUtil.split(getPinyin(str, splitSeparator), splitSeparator);
-		return CollUtil.join(split, separator, (s)->String.valueOf(s.length() > 0 ? s.charAt(0) : StrUtil.EMPTY));
+		return CollUtil.join(split, separator, (s) -> String.valueOf(!s.isEmpty() ? s.charAt(0) : StrUtil.EMPTY));
 	}
 }

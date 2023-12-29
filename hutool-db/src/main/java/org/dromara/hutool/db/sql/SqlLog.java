@@ -26,7 +26,7 @@ public class SqlLog {
 	/**
 	 * 单例
 	 */
-	public static SqlLog INSTANCE = new SqlLog();
+	public static final SqlLog INSTANCE = new SqlLog();
 
 	private final static Log log = Log.get();
 

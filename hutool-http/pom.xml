@@ -82,17 +82,10 @@
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
-			<version>4.11.0</version>
+			<version>4.12.0</version>
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- 仅用于测试 -->
-		<dependency>
-			<groupId>org.dromara.hutool</groupId>
-			<artifactId>hutool-json</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.brotli</groupId>
 			<artifactId>dec</artifactId>

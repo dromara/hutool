@@ -48,7 +48,6 @@ public class ConstructorLookupFactory implements LookupFactory {
 		}
 	}
 
-	@SuppressWarnings("JavaReflectionMemberAccess")
 	private static Constructor<MethodHandles.Lookup> createLookupConstructor() {
 		final Constructor<MethodHandles.Lookup> constructor;
 		try {

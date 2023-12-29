@@ -26,7 +26,7 @@ public abstract class AbsLogEngine implements LogEngine {
 	/**
 	 * 日志框架名，用于打印当前所用日志框架
 	 */
-	protected String name;
+	private final String name;
 
 	/**
 	 * 构造
