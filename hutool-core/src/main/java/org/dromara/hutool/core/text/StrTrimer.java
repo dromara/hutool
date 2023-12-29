@@ -104,6 +104,6 @@ public class StrTrimer implements UnaryOperator<CharSequence>, Serializable {
 		/**
 		 * 字符串两边
 		 */
-		BOTH;
+		BOTH
 	}
 }

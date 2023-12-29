@@ -157,6 +157,8 @@ public class Tailer implements Serializable {
 		if(stopOnDelete){
 			fileDeleteWatchMonitor = WatchUtil.of(this.filePath, WatchKind.DELETE.getValue());
 			fileDeleteWatchMonitor.setWatcher(new SimpleWatcher(){
+				private static final long serialVersionUID = 4497160994840060329L;
+
 				@Override
 				public void onDelete(final WatchEvent<?> event, final WatchKey key) {
 					super.onDelete(event, key);

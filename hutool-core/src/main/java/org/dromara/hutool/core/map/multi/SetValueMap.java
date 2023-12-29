@@ -34,7 +34,7 @@ public class SetValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 *
 	 * @param mapFactory 创建集合的工厂反方
 	 */
-	public SetValueMap(Supplier<Map<K, Collection<V>>> mapFactory) {
+	public SetValueMap(final Supplier<Map<K, Collection<V>>> mapFactory) {
 		super(mapFactory);
 	}
 
@@ -43,7 +43,7 @@ public class SetValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 *
 	 * @param map 提供数据的原始集合
 	 */
-	public SetValueMap(Map<K, Collection<V>> map) {
+	public SetValueMap(final Map<K, Collection<V>> map) {
 		super(map);
 	}
 

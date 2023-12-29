@@ -194,7 +194,7 @@ public class BetweenFormatter implements Serializable {
 	 * @param simpleMode 是否简化模式
 	 * @return this
 	 */
-	public BetweenFormatter setSimpleMode(boolean simpleMode) {
+	public BetweenFormatter setSimpleMode(final boolean simpleMode) {
 		this.simpleMode = simpleMode;
 		return this;
 	}

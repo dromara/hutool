@@ -13,7 +13,6 @@
 package org.dromara.hutool.swing.img;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 
 import java.awt.Dimension;

@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.thread;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -68,7 +67,7 @@ public class AsyncUtilTest {
 			return "真暖和";
 		});
 		// 等待完成
-		List<String> list = AsyncUtil.allOfGet(ListUtil.of(hutool, sweater, warm));
+		final List<String> list = AsyncUtil.allOfGet(ListUtil.of(hutool, sweater, warm));
 		// 获取结果
 		Assertions.assertEquals(Arrays.asList("hutool", "卫衣", "真暖和"), list);
 	}
@@ -81,7 +80,7 @@ public class AsyncUtilTest {
 			return "hutool";
 		});
 		final CompletableFuture<String> sweater = CompletableFuture.supplyAsync(() -> {
-			int a = 1 / 0;
+			final int a = 1 / 0;
 			ThreadUtil.sleep(2, TimeUnit.SECONDS);
 			return "卫衣";
 		});
@@ -90,7 +89,7 @@ public class AsyncUtilTest {
 			return "真暖和";
 		});
 		// 等待完成
-		List<String> list = AsyncUtil.allOfGet(ListUtil.of(hutool, sweater, warm), (e) -> "出错了");
+		final List<String> list = AsyncUtil.allOfGet(ListUtil.of(hutool, sweater, warm), (e) -> "出错了");
 		// 获取结果
 		Assertions.assertEquals(Arrays.asList("hutool", "卫衣", "真暖和"), list);
 	}
@@ -111,7 +110,7 @@ public class AsyncUtilTest {
 			return "真暖和";
 		});
 		// 等待完成
-		List<String> list = AsyncUtil.parallelAllOfGet(ListUtil.of(hutool, sweater, warm));
+		final List<String> list = AsyncUtil.parallelAllOfGet(ListUtil.of(hutool, sweater, warm));
 		// 获取结果
 		Assertions.assertEquals(Arrays.asList("hutool", "卫衣", "真暖和"), list);
 	}
@@ -124,7 +123,7 @@ public class AsyncUtilTest {
 			return "hutool";
 		});
 		final CompletableFuture<String> sweater = CompletableFuture.supplyAsync(() -> {
-			int a = 1 / 0;
+			final int a = 1 / 0;
 			ThreadUtil.sleep(2, TimeUnit.SECONDS);
 			return "卫衣";
 		});
@@ -133,7 +132,7 @@ public class AsyncUtilTest {
 			return "真暖和";
 		});
 		// 等待完成
-		List<String> list = AsyncUtil.parallelAllOfGet(ListUtil.of(hutool, sweater, warm), (e) -> "出错了");
+		final List<String> list = AsyncUtil.parallelAllOfGet(ListUtil.of(hutool, sweater, warm), (e) -> "出错了");
 		Assertions.assertEquals(Arrays.asList("hutool", "出错了", "真暖和"), list);
 	}
 }

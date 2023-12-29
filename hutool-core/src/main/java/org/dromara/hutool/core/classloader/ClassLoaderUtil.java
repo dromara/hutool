@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.classloader;
 
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.caller.CallerUtil;
 import org.dromara.hutool.core.reflect.ClassDescUtil;
 

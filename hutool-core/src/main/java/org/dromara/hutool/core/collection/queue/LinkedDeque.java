@@ -20,7 +20,7 @@ import java.util.*;
  * thread-safe; in the absence of external synchronization, they do not support
  * concurrent access by multiple threads. Null elements are prohibited.
  * <p>
- * Most <tt>LinkedDeque</tt> operations run in constant time by assuming that
+ * Most <b>LinkedDeque</b> operations run in constant time by assuming that
  * the {@link Linked} parameter is associated with the deque instance. Any usage
  * that violates this assumption will result in non-deterministic behavior.
  * <p>
@@ -428,7 +428,7 @@ public class LinkedDeque<E extends Linked<E>> extends AbstractCollection<E> impl
 		}
 
 		/**
-		 * Retrieves the next element to traverse to or <tt>null</tt> if there are
+		 * Retrieves the next element to traverse to or {@code null} if there are
 		 * no more elements.
 		 */
 		abstract E computeNext();

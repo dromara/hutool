@@ -65,7 +65,7 @@ public class StreamUtilTest {
 	// === iterator ===
 	@Test
 	public void streamTestNullIterator() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> StreamUtil.ofIter((Iterator<Object>) null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> StreamUtil.ofIter(null));
 	}
 
 	@SuppressWarnings({"RedundantOperationOnEmptyContainer", "RedundantCollectionOperation"})

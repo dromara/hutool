@@ -18,7 +18,7 @@ import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
 import org.dromara.hutool.core.date.Zodiac;
-import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.LocalDate;
@@ -62,7 +62,7 @@ public class ChineseDate {
 	 * @param date 公历日期
 	 */
 	public ChineseDate(final Date date) {
-		this(TimeUtil.ofDate(date.toInstant()));
+		this(TimeUtil.ofDate(Assert.notNull(date.toInstant())));
 	}
 
 	/**

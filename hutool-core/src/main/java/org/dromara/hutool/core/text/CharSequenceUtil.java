@@ -2032,7 +2032,7 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
-	 * 给定字符串是否与提供的中任一字符串相同（忽略大小写），相同则返回{@code true}，没有相同的返回{@code false}<br>
+	 * 给定字符串是否与提供的中任意一个字符串相同（忽略大小写），相同则返回{@code true}，没有相同的返回{@code false}<br>
 	 * 如果参与比对的字符串列表为空，返回{@code false}
 	 *
 	 * @param str1 给定需要检查的字符串
@@ -2831,7 +2831,7 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
-	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串<br>
+	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在前面添加起始字符串<br>
 	 * 不忽略大小写
 	 *
 	 * @param str      被检查的字符串

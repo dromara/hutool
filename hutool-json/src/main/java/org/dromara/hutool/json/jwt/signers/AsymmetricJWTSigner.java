@@ -80,7 +80,7 @@ public class AsymmetricJWTSigner implements JWTSigner {
 	 * @param data 数据
 	 * @return 签名
 	 */
-	protected byte[] sign(byte[] data) {
+	protected byte[] sign(final byte[] data) {
 		return sign.sign(data);
 	}
 
@@ -98,7 +98,7 @@ public class AsymmetricJWTSigner implements JWTSigner {
 	 * @param signed 签名
 	 * @return 是否通过
 	 */
-	protected boolean verify(byte[] data, byte[] signed) {
+	protected boolean verify(final byte[] data, final byte[] signed) {
 		return sign.verify(data, signed);
 	}
 

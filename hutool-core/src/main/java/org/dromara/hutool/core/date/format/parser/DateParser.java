@@ -15,7 +15,6 @@ package org.dromara.hutool.core.date.format.parser;
 import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.format.DateBasic;
 
-import java.text.ParseException;
 import java.util.Date;
 
 /**

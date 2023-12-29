@@ -23,6 +23,7 @@ public class SyncFinisherTest {
 	/**
 	 * https://gitee.com/dromara/hutool/issues/I716SX
 	 */
+	@SuppressWarnings("DataFlowIssue")
 	@Test
 	void executeExceptionTest() {
 		final AtomicBoolean hasException = new AtomicBoolean(false);

@@ -15,7 +15,6 @@ package org.dromara.hutool.cron;
 import org.dromara.hutool.core.date.DateUnit;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 import java.io.Serializable;
 

@@ -214,10 +214,9 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 * @param <A>            注解类型
 	 * @return 注解对象
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public <A extends Annotation> A[] getDeclaredAnnotationsByType(final Class<A> annotationType) {
-		return (A[]) getElementMappings().stream()
+		return getElementMappings().stream()
 			.map(element -> element.getDeclaredAnnotationsByType(annotationType))
 			.filter(ArrayUtil::isNotEmpty)
 			.flatMap(Stream::of)

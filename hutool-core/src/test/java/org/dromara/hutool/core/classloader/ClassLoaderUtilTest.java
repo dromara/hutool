@@ -12,20 +12,16 @@
 
 package org.dromara.hutool.core.classloader;
 
-import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.sql.Driver;
-import java.sql.DriverManager;
 
 public class ClassLoaderUtilTest {
 

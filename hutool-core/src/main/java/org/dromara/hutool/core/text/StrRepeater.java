@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.core.text;
 
+import java.util.Arrays;
+
 /**
  * 字符串或字符重复器<br>
  * 用于将给定字符串或字符赋值count次，然后拼接
@@ -60,9 +62,7 @@ public class StrRepeater {
 		}
 
 		final char[] result = new char[count];
-		for (int i = 0; i < count; i++) {
-			result[i] = c;
-		}
+		Arrays.fill(result, c);
 		return new String(result);
 	}
 

@@ -113,7 +113,7 @@ public abstract class TransMap<K, V> extends MapWrapper<K, V> {
 	}
 
 	@Override
-	public V putIfAbsent(K key, V value) {
+	public V putIfAbsent(final K key, final V value) {
 		return super.putIfAbsent(customKey(key), customValue(value));
 	}
 

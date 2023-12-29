@@ -14,14 +14,11 @@ package org.dromara.hutool.core.io.watch;
 
 import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.io.watch.watchers.DelayWatcher;
-import org.dromara.hutool.core.io.watch.watchers.SimpleWatcher;
 import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
 
 /**
  * 文件监听单元测试

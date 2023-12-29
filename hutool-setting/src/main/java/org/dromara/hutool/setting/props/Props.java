@@ -231,6 +231,8 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 			// 先关闭之前的监听
 			IoUtil.closeQuietly(this.watchMonitor);
 			this.watchMonitor = WatchUtil.ofModify(this.resource.getUrl(), new SimpleWatcher() {
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onModify(final WatchEvent<?> event, final WatchKey key) {
 					load();

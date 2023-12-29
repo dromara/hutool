@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.extra.aop.engine.spring;
 
-import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.extra.aop.Aspect;
 import org.dromara.hutool.extra.aop.SimpleInterceptor;
 import org.springframework.cglib.proxy.MethodInterceptor;

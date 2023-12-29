@@ -14,7 +14,6 @@ package org.dromara.hutool.http.client.engine.jdk;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.stream.EmptyInputStream;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
@@ -32,7 +31,6 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Http响应类<br>

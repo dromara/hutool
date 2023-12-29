@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.crypto.symmetric;
 
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.crypto.KeyUtil;

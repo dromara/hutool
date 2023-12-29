@@ -57,7 +57,7 @@ public class BlockPolicy implements RejectedExecutionHandler {
 		if (!e.isShutdown()) {
 			try {
 				e.getQueue().put(r);
-			} catch (InterruptedException ex) {
+			} catch (final InterruptedException ex) {
 				throw new RejectedExecutionException("Task " + r + " rejected from " + e);
 			}
 		} else if (null != handlerwhenshutdown) {

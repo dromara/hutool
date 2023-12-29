@@ -175,7 +175,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * @param filter 判断方法
 	 * @return 当前实例
 	 */
-	default MultiValueMap<K, V> filterAllValues(Predicate<V> filter) {
+	default MultiValueMap<K, V> filterAllValues(final Predicate<V> filter) {
 		return filterAllValues((k, v) -> filter.test(v));
 	}
 
@@ -193,7 +193,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * @param operate 替换方法
 	 * @return 当前实例
 	 */
-	default MultiValueMap<K, V> replaceAllValues(UnaryOperator<V> operate) {
+	default MultiValueMap<K, V> replaceAllValues(final UnaryOperator<V> operate) {
 		return replaceAllValues((k, v) -> operate.apply(v));
 	}
 
@@ -214,7 +214,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * @param index 第几个值的索引，越界返回null
 	 * @return 值或null
 	 */
-	default V getValue(K key, int index) {
+	default V getValue(final K key, final int index) {
 		final Collection<V> collection = get(key);
 		return CollUtil.get(collection, index);
 	}
@@ -256,7 +256,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 *
 	 * @param consumer 操作
 	 */
-	default void allForEach(BiConsumer<K, V> consumer) {
+	default void allForEach(final BiConsumer<K, V> consumer) {
 		forEach((k, coll) -> coll.forEach(v -> consumer.accept(k, v)));
 	}
 

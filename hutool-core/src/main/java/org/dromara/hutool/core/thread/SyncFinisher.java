@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.thread;
 
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.lang.Console;
 
 import java.io.Closeable;
 import java.util.LinkedHashSet;

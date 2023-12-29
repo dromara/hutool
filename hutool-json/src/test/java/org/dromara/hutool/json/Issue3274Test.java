@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 public class Issue3274Test {
 	@Test
-	public void toBeanTest(){
+	public void toBeanTest() {
 		final JSONObject entries = new JSONObject("{\n" +
 			"    \n" +
 			"    \"age\": 36,\n" +
@@ -33,20 +33,21 @@ public class Issue3274Test {
 	@Data
 	static class LarkCoreHrPersonal {
 		private String id;
-		private String age="";
+		private String age = "";
 		private Gender gender;
 	}
 
 	@Getter
 	enum Gender {
-		male("male","Male","男"),
-		female("female","Female","女"),
-		other("other","Other","其他");
-		private JSONArray display;
-		private  String enum_name;
-		Gender(final String enum_name, final String en_Us, final String zh_CN){
-			this.enum_name=enum_name;
-			this.display=new JSONArray("[{\"lang\": \"en-US\",\"value\": \""+en_Us+"\"},{\"lang\": \"zh-CN\",\"value\": \""+zh_CN+"\"}]");
+		male("male", "Male", "男"),
+		female("female", "Female", "女"),
+		other("other", "Other", "其他");
+		private final JSONArray display;
+		private final String enum_name;
+
+		Gender(final String enum_name, final String en_Us, final String zh_CN) {
+			this.enum_name = enum_name;
+			this.display = new JSONArray("[{\"lang\": \"en-US\",\"value\": \"" + en_Us + "\"},{\"lang\": \"zh-CN\",\"value\": \"" + zh_CN + "\"}]");
 		}
 	}
 }

@@ -44,7 +44,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 * @param mapFactory  生成集合的工厂方法
 	 * @param collFactory 生成值集合的工厂方法
 	 */
-	public CollectionValueMap(Supplier<Map<K, Collection<V>>> mapFactory, SerSupplier<Collection<V>> collFactory) {
+	public CollectionValueMap(final Supplier<Map<K, Collection<V>>> mapFactory, final SerSupplier<Collection<V>> collFactory) {
 		super(mapFactory);
 		this.collFactory = collFactory;
 	}
@@ -54,7 +54,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 *
 	 * @param collFactory 生成值集合的工厂方法
 	 */
-	public CollectionValueMap(SerSupplier<Collection<V>> collFactory) {
+	public CollectionValueMap(final SerSupplier<Collection<V>> collFactory) {
 		this.collFactory = collFactory;
 	}
 
@@ -70,7 +70,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 *
 	 * @param map 提供数据的原始集合
 	 */
-	public CollectionValueMap(Map<K, Collection<V>> map) {
+	public CollectionValueMap(final Map<K, Collection<V>> map) {
 		super(map);
 		this.collFactory = ArrayList::new;
 	}

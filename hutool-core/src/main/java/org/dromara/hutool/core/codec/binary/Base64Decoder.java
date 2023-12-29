@@ -105,7 +105,7 @@ public class Base64Decoder implements Decoder<byte[], byte[]>, Serializable {
 			return octet;
 		} else {
 			// 如果有非Base64字符混入，则实际结果比解析的要短，截取之
-			return (byte[]) ArrayUtil.copy(octet, new byte[octetId], octetId);
+			return ArrayUtil.copy(octet, new byte[octetId], octetId);
 		}
 	}
 

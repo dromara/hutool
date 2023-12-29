@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.lang.tuple.Tuple;

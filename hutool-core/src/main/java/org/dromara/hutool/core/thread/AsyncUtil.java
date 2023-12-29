@@ -118,7 +118,7 @@ public class AsyncUtil {
 	 * @param eHandler 异常处理方法
 	 * @return 任务结果集合
 	 */
-	public static <T> List<T> allOfGet(final CompletableFuture<T>[] tasks, Function<Exception, T> eHandler) {
+	public static <T> List<T> allOfGet(final CompletableFuture<T>[] tasks, final Function<Exception, T> eHandler) {
 		Assert.notEmpty(tasks);
 
 		return allOfGet(Arrays.asList(tasks), eHandler);
@@ -132,7 +132,7 @@ public class AsyncUtil {
 	 * @param eHandler 异常处理方法
 	 * @return 任务结果集合
 	 */
-	public static <T> List<T> allOfGet(final List<CompletableFuture<T>> tasks, Function<Exception, T> eHandler) {
+	public static <T> List<T> allOfGet(final List<CompletableFuture<T>> tasks, final Function<Exception, T> eHandler) {
 		Assert.notEmpty(tasks);
 
 		return execute(tasks, eHandler, false);
@@ -174,7 +174,7 @@ public class AsyncUtil {
 	 * @param eHandler 异常处理方法
 	 * @return 任务结果集合
 	 */
-	public static <T> List<T> parallelAllOfGet(final CompletableFuture<T>[] tasks, Function<Exception, T> eHandler) {
+	public static <T> List<T> parallelAllOfGet(final CompletableFuture<T>[] tasks, final Function<Exception, T> eHandler) {
 		Assert.notEmpty(tasks);
 
 		return parallelAllOfGet(Arrays.asList(tasks), eHandler);
@@ -188,7 +188,7 @@ public class AsyncUtil {
 	 * @param eHandler 异常处理方法
 	 * @return 任务结果集合
 	 */
-	public static <T> List<T> parallelAllOfGet(final List<CompletableFuture<T>> tasks, Function<Exception, T> eHandler) {
+	public static <T> List<T> parallelAllOfGet(final List<CompletableFuture<T>> tasks, final Function<Exception, T> eHandler) {
 		Assert.notEmpty(tasks);
 
 		return execute(tasks, eHandler, true);
@@ -203,12 +203,12 @@ public class AsyncUtil {
 	 * @param isParallel 是否是并行 {@link Stream}
 	 * @return 任务结果集合
 	 */
-	private static <T> List<T> execute(List<CompletableFuture<T>> tasks, Function<Exception, T> eHandler, boolean isParallel) {
+	private static <T> List<T> execute(final List<CompletableFuture<T>> tasks, final Function<Exception, T> eHandler, final boolean isParallel) {
 		return StreamUtil.of(tasks, isParallel)
 			.map(e -> {
 				try {
 					return e.get();
-				} catch (InterruptedException | ExecutionException ex) {
+				} catch (final InterruptedException | ExecutionException ex) {
 					if (eHandler != null) {
 						return eHandler.apply(ex);
 					} else {

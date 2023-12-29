@@ -22,7 +22,7 @@ import java.util.Deque;
 public interface Linked<T extends Linked<T>> {
 
 	/**
-	 * Retrieves the previous element or <tt>null</tt> if either the element is
+	 * Retrieves the previous element or {@code null} if either the element is
 	 * unlinked or the first element on the deque.
 	 *
 	 * @return 前一个值
@@ -30,14 +30,14 @@ public interface Linked<T extends Linked<T>> {
 	T getPrevious();
 
 	/**
-	 * Sets the previous element or <tt>null</tt> if there is no link.
+	 * Sets the previous element or {@code null} if there is no link.
 	 *
 	 * @param prev 前一个值
 	 */
 	void setPrevious(T prev);
 
 	/**
-	 * Retrieves the next element or <tt>null</tt> if either the element is
+	 * Retrieves the next element or {@code null} if either the element is
 	 * unlinked or the last element on the deque.
 	 *
 	 * @return 下一个值
@@ -45,7 +45,7 @@ public interface Linked<T extends Linked<T>> {
 	T getNext();
 
 	/**
-	 * Sets the next element or <tt>null</tt> if there is no link.
+	 * Sets the next element or {@code null} if there is no link.
 	 *
 	 * @param next 下一个值
 	 */

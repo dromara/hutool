@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.text.split;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.finder.PatternFinder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -56,7 +56,7 @@ class ClassUtilTest {
 	@Test
 	void testTraverseTypeHierarchy() {
 		// collect all superclass of child by bfs (include child)
-		List<Class<?>> superclasses = new ArrayList<>();
+		final List<Class<?>> superclasses = new ArrayList<>();
 		ClassUtil.traverseTypeHierarchy(
 			Child.class, t -> !t.isInterface(), superclasses::add, true
 		);
@@ -80,7 +80,7 @@ class ClassUtilTest {
 	@Test
 	void testTraverseTypeHierarchyWithTerminator() {
 		// collect all superclass of child until Parent by bfs (include child)
-		List<Class<?>> superclasses = new ArrayList<>();
+		final List<Class<?>> superclasses = new ArrayList<>();
 		ClassUtil.traverseTypeHierarchyWhile(
 			Child.class, t -> !t.isInterface(), t -> {
 				if (!Objects.equals(t, GrandParent.class)) {

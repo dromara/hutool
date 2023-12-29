@@ -72,6 +72,12 @@ public class SqlFormatter {
 	private static final String indentString = "    ";
 	private static final String initial = "\n    ";
 
+	/**
+	 * 格式化
+	 *
+	 * @param source SQL语句
+	 * @return 格式化后的SQL
+	 */
 	public static String format(final String source) {
 		return new FormatProcess(source).perform().trim();
 	}
@@ -110,24 +116,31 @@ public class SqlFormatter {
 				this.token = this.tokens.nextToken();
 				this.lcToken = this.token.toLowerCase();
 
-				if ("'".equals(this.token)) {
-					String t;
-					do {
-						t = this.tokens.nextToken();
-						this.token += t;
-					} while ((!"'".equals(t)) && (this.tokens.hasMoreTokens()));
-				} else if ("\"".equals(this.token)) {
-					String t;
-					do {
-						t = this.tokens.nextToken();
-						this.token += t;
-					} while (!"\"".equals(t));
-				} else if ("`".equals(this.token)) {
-					String t;
-					do {
-						t = this.tokens.nextToken();
-						this.token += t;
-					} while (!"`".equals(t));
+				switch (this.token) {
+					case "'": {
+						String t;
+						do {
+							t = this.tokens.nextToken();
+							this.token += t;
+						} while ((!"'".equals(t)) && (this.tokens.hasMoreTokens()));
+						break;
+					}
+					case "\"": {
+						String t;
+						do {
+							t = this.tokens.nextToken();
+							this.token += t;
+						} while (!"\"".equals(t));
+						break;
+					}
+					case "`": {
+						String t;
+						do {
+							t = this.tokens.nextToken();
+							this.token += t;
+						} while (!"`".equals(t));
+						break;
+					}
 				}
 
 				if ((this.afterByOrSetOrFromOrSelect) && (",".equals(this.token))) {

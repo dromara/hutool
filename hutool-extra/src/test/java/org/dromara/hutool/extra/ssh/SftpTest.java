@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.extra.ssh;
 
-import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.engine.sshj.SshjSftp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

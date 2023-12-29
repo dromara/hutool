@@ -214,6 +214,8 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			// 先关闭之前的监听
 			IoUtil.closeQuietly(this.watchMonitor);
 			this.watchMonitor = WatchUtil.ofModify(resource.getUrl(), new SimpleWatcher() {
+				private static final long serialVersionUID = 5190107321461226190L;
+
 				@Override
 				public void onModify(final WatchEvent<?> event, final WatchKey key) {
 					final boolean success = load();

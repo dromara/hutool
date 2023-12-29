@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

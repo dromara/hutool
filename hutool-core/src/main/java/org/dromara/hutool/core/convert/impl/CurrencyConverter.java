@@ -26,7 +26,7 @@ public class CurrencyConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Currency convertInternal(Class<?> targetClass, final Object value) {
+	protected Currency convertInternal(final Class<?> targetClass, final Object value) {
 		return Currency.getInstance(convertToStr(value));
 	}
 

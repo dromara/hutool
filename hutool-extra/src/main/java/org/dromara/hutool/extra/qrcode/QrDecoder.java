@@ -26,7 +26,6 @@ import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 

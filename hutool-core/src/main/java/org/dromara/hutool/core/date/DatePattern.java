@@ -22,7 +22,6 @@ import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.regex.Pattern;
 
 /**
  * 日期格式化类，提供常用的日期格式化对象<br>

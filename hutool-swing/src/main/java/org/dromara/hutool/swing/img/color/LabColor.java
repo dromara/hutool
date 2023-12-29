@@ -45,11 +45,21 @@ public class LabColor {
 	 */
 	private final double b;
 
-	public LabColor(Integer rgb) {
+	/**
+	 * 构造
+	 *
+	 * @param rgb RGB颜色
+	 */
+	public LabColor(final Integer rgb) {
 		this((rgb != null) ? new Color(rgb) : null);
 	}
 
-	public LabColor(Color color) {
+	/**
+	 * 构造
+	 *
+	 * @param color {@link Color}
+	 */
+	public LabColor(final Color color) {
 		Assert.notNull(color, "Color must not be null");
 		final float[] lab = fromXyz(color.getColorComponents(XYZ_COLOR_SPACE, null));
 		this.l = lab[0];
@@ -64,17 +74,17 @@ public class LabColor {
 	 * @return 颜色差
 	 */
 	// See https://en.wikipedia.org/wiki/Color_difference#CIE94
-	public double getDistance(LabColor other) {
-		double c1 = Math.sqrt(this.a * this.a + this.b * this.b);
-		double deltaC = c1 - Math.sqrt(other.a * other.a + other.b * other.b);
-		double deltaA = this.a - other.a;
-		double deltaB = this.b - other.b;
-		double deltaH = Math.sqrt(Math.max(0.0, deltaA * deltaA + deltaB * deltaB - deltaC * deltaC));
+	public double getDistance(final LabColor other) {
+		final double c1 = Math.sqrt(this.a * this.a + this.b * this.b);
+		final double deltaC = c1 - Math.sqrt(other.a * other.a + other.b * other.b);
+		final double deltaA = this.a - other.a;
+		final double deltaB = this.b - other.b;
+		final double deltaH = Math.sqrt(Math.max(0.0, deltaA * deltaA + deltaB * deltaB - deltaC * deltaC));
 		return Math.sqrt(Math.max(0.0, Math.pow((this.l - other.l), 2)
-				+ Math.pow(deltaC / (1 + 0.045 * c1), 2) + Math.pow(deltaH / (1 + 0.015 * c1), 2.0)));
+			+ Math.pow(deltaC / (1 + 0.045 * c1), 2) + Math.pow(deltaH / (1 + 0.015 * c1), 2.0)));
 	}
 
-	private float[] fromXyz(float[] xyz) {
+	private float[] fromXyz(final float[] xyz) {
 		return fromXyz(xyz[0], xyz[1], xyz[2]);
 	}
 
@@ -90,14 +100,14 @@ public class LabColor {
 	 * @param z Z
 	 * @return Lab
 	 */
-	private static float[] fromXyz(float x, float y, float z) {
+	private static float[] fromXyz(final float x, final float y, final float z) {
 		final double l = (f(y) - 16.0) * 116.0;
 		final double a = (f(x) - f(y)) * 500.0;
 		final double b = (f(y) - f(z)) * 200.0;
 		return new float[]{(float) l, (float) a, (float) b};
 	}
 
-	private static double f(double t) {
+	private static double f(final double t) {
 		return (t > (216.0 / 24389.0)) ? Math.cbrt(t) : (1.0 / 3.0) * Math.pow(29.0 / 6.0, 2) * t + (4.0 / 29.0);
 	}
 }

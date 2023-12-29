@@ -111,13 +111,13 @@ public class TimeUtilTest {
 		Assertions.assertEquals("2020-01-23", localDate.toString());
 
 		localDate = TimeUtil.parseDate("2020-01-23T12:23:56", DateTimeFormatter.ISO_DATE_TIME);
-		Assertions.assertEquals("2020-01-23", localDate.toString());
+		Assertions.assertEquals("2020-01-23", Objects.requireNonNull(localDate).toString());
 	}
 
 	@Test
 	public void parseSingleMonthAndDayTest() {
 		final LocalDate localDate = TimeUtil.parseDate("2020-1-1", "yyyy-M-d");
-		Assertions.assertEquals("2020-01-01", localDate.toString());
+		Assertions.assertEquals("2020-01-01", Objects.requireNonNull(localDate).toString());
 	}
 
 	@Test

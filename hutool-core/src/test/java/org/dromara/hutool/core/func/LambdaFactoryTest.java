@@ -47,7 +47,7 @@ public class LambdaFactoryTest {
 		try {
 			LambdaFactory.build(Function.class, Something.class, "setId", Long.class);
 		} catch (final Exception e) {
-			Assertions.assertTrue(e.getCause() instanceof LambdaConversionException);
+			Assertions.assertInstanceOf(LambdaConversionException.class, e.getCause());
 		}
 	}
 

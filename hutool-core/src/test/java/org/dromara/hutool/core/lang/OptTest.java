@@ -197,9 +197,9 @@ public class OptTest {
 			return list.get(0);
 		}).exceptionOrElse("hutool");
 
-		Assertions.assertTrue(Opt.ofTry(() -> {
+		Assertions.assertInstanceOf(AssertionError.class, Opt.ofTry(() -> {
 			throw new AssertionError("");
-		}).getThrowable() instanceof AssertionError);
+		}).getThrowable());
 		Assertions.assertEquals(npe, npeSituation);
 		Assertions.assertEquals(indexOut, indexOutSituation);
 		Assertions.assertEquals("hutool", npe);

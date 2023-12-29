@@ -506,7 +506,7 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 	/**
 	 * 规则
 	 */
-	private interface Rule {
+	public interface Rule {
 		/**
 		 * Returns the estimated length of the result.
 		 *
@@ -529,7 +529,7 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 	 * Inner class defining a numeric rule.
 	 * </p>
 	 */
-	private interface NumberRule extends Rule {
+	public interface NumberRule extends Rule {
 		/**
 		 * Appends the specified value to the output buffer based on the rule implementation.
 		 *

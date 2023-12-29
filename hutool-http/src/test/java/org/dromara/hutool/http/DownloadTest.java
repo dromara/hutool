@@ -47,6 +47,7 @@ public class DownloadTest {
 		Console.log("ok");
 	}
 
+	@SuppressWarnings("resource")
 	@Test
 	@Disabled
 	public void downloadSizeTest() {
@@ -123,9 +124,9 @@ public class DownloadTest {
 			Assertions.assertTrue(file.exists());
 			Assertions.assertTrue(file.isFile());
 			Assertions.assertTrue(file.length() > 0);
-			Assertions.assertTrue(file.getName().length() > 0);
+			Assertions.assertFalse(file.getName().isEmpty());
 		} catch (final Exception e) {
-			Assertions.assertTrue(e instanceof IORuntimeException);
+			Assertions.assertInstanceOf(IORuntimeException.class, e);
 		} finally {
 			FileUtil.del(file);
 		}
@@ -157,7 +158,7 @@ public class DownloadTest {
 			Assertions.assertTrue(file.exists());
 			Assertions.assertTrue(file.isFile());
 			Assertions.assertTrue(file.length() > 0);
-			Assertions.assertTrue(file.getName().length() > 0);
+			Assertions.assertFalse(file.getName().isEmpty());
 		} finally {
 			FileUtil.del(file);
 		}
@@ -174,9 +175,9 @@ public class DownloadTest {
 			Assertions.assertTrue(file.exists());
 			Assertions.assertTrue(file.isFile());
 			Assertions.assertTrue(file.length() > 0);
-			Assertions.assertTrue(file.getName().length() > 0);
+			Assertions.assertFalse(file.getName().isEmpty());
 		} catch (final Exception e) {
-			Assertions.assertTrue(e instanceof IORuntimeException);
+			Assertions.assertInstanceOf(IORuntimeException.class, e);
 		} finally {
 			FileUtil.del(file);
 		}

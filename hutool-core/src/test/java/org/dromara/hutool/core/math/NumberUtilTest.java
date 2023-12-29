@@ -489,7 +489,7 @@ public class NumberUtilTest {
 		final String numberStr = "429900013E20220812163344551";
 		final Number number = NumberUtil.parseNumber(numberStr);
 		Assertions.assertNotNull(number);
-		Assertions.assertTrue(number instanceof BigDecimal);
+		Assertions.assertInstanceOf(BigDecimal.class, number);
 	}
 
 	@Test

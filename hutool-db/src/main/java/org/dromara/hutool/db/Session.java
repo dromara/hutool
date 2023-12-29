@@ -18,7 +18,6 @@ import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectFactory;
 import org.dromara.hutool.db.ds.DSUtil;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 import javax.sql.DataSource;
 import java.io.Closeable;

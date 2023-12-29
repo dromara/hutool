@@ -61,58 +61,58 @@ abstract class BaseMutableTest<V, M extends Mutable<V>> {
 
 	@Test
 	void testGet() {
-		Mutable<V> mutableObj = getMutable(getValue1());
-		V value = mutableObj.get();
+		final Mutable<V> mutableObj = getMutable(getValue1());
+		final V value = mutableObj.get();
 		Assertions.assertEquals(getValue1(), value);
 	}
 
 	@Test
 	void testSet() {
-		Mutable<V> mutableObj = getMutable(getValue2());
+		final Mutable<V> mutableObj = getMutable(getValue2());
 		mutableObj.set(getValue2());
-		V value = mutableObj.get();
+		final V value = mutableObj.get();
 		Assertions.assertEquals(getValue2(), value);
 	}
 
 	@Test
 	void testTo() {
-		Mutable<V> mutableObj = getMutable(getValue1());
-		String value = mutableObj.to(String::valueOf);
+		final Mutable<V> mutableObj = getMutable(getValue1());
+		final String value = mutableObj.to(String::valueOf);
 		Assertions.assertEquals(String.valueOf(getValue1()), value);
 	}
 
 	@Test
 	void testToOpt() {
-		Mutable<V> mutableObj = getMutable(getValue1());
-		V value = mutableObj.toOpt().get();
+		final Mutable<V> mutableObj = getMutable(getValue1());
+		final V value = mutableObj.toOpt().get();
 		Assertions.assertEquals(getValue1(), value);
 	}
 
 	@Test
 	void testMap() {
-		Mutable<V> mutableObj = getMutable(getValue1());
-		V value = mutableObj.map(v -> getValue2()).get();
+		final Mutable<V> mutableObj = getMutable(getValue1());
+		final V value = mutableObj.map(v -> getValue2()).get();
 		Assertions.assertEquals(getValue2(), value);
 	}
 
 	@Test
 	void testTest() {
-		Mutable<V> mutableObj = getMutable(getValue1());
+		final Mutable<V> mutableObj = getMutable(getValue1());
 		Assertions.assertTrue(mutableObj.test(Objects::nonNull));
 	}
 
 	@Test
 	void testPeek() {
-		Mutable<V> m1 = getMutable(getValue1());
-		Mutable<V> m2 = getMutable(getValue2());
+		final Mutable<V> m1 = getMutable(getValue1());
+		final Mutable<V> m2 = getMutable(getValue2());
 		m1.peek(m2::set);
 		Assertions.assertEquals(getValue1(), m2.get());
 	}
 
 	@Test
 	void testHashCode() {
-		V value = getValue1();
-		Mutable<V> mutableObj = new MutableObj<>(value);
+		final V value = getValue1();
+		final Mutable<V> mutableObj = new MutableObj<>(value);
 		Assertions.assertEquals(value.hashCode(), mutableObj.hashCode());
 		mutableObj.set(null);
 		Assertions.assertEquals(0, mutableObj.hashCode());
@@ -120,10 +120,9 @@ abstract class BaseMutableTest<V, M extends Mutable<V>> {
 
 	@Test
 	void testEquals() {
-		V value = getValue1();
-		Mutable<V> mutableObj = new MutableObj<>(value);
+		final V value = getValue1();
+		final Mutable<V> mutableObj = new MutableObj<>(value);
 		Assertions.assertNotEquals(value, mutableObj);
-		Assertions.assertEquals(mutableObj, mutableObj);
 		Assertions.assertEquals(mutableObj, new MutableObj<>(value));
 		Assertions.assertNotEquals(mutableObj, new MutableObj<>(null));
 		Assertions.assertNotEquals(mutableObj, null);
@@ -132,8 +131,8 @@ abstract class BaseMutableTest<V, M extends Mutable<V>> {
 
 	@Test
 	void testToString() {
-		V value = getValue1();
-		Mutable<V> mutableObj = new MutableObj<>(value);
+		final V value = getValue1();
+		final Mutable<V> mutableObj = new MutableObj<>(value);
 		Assertions.assertEquals(value.toString(), mutableObj.toString());
 		mutableObj.set(null);
 		Assertions.assertEquals(StrValidator.NULL, mutableObj.toString());

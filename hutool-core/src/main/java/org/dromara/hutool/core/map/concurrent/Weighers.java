@@ -45,12 +45,12 @@ public final class Weighers {
 	public static <K, V> EntryWeigher<K, V> asEntryWeigher(
 		final Weigher<? super V> weigher) {
 		return (weigher == singleton())
-			? Weighers.<K, V>entrySingleton()
+			? Weighers.entrySingleton()
 			: new EntryWeigherView<K, V>(weigher);
 	}
 
 	/**
-	 * A weigher where an entry has a selector of <tt>1</tt>. A map bounded with
+	 * A weigher where an entry has a selector of <b>1</b>. A map bounded with
 	 * this weigher will evict when the number of key-value pairs exceeds the
 	 * capacity.
 	 *
@@ -64,7 +64,7 @@ public final class Weighers {
 	}
 
 	/**
-	 * A weigher where a value has a selector of <tt>1</tt>. A map bounded with
+	 * A weigher where a value has a selector of <b>1</b>. A map bounded with
 	 * this weigher will evict when the number of key-value pairs exceeds the
 	 * capacity.
 	 *
@@ -84,7 +84,7 @@ public final class Weighers {
 	 * and is primarily for usage by dedicated caching servers that hold the
 	 * serialized data.
 	 * <p>
-	 * A value with a selector of <tt>0</tt> will be rejected by the map. If a value
+	 * A value with a selector of <b>0</b> will be rejected by the map. If a value
 	 * with this selector can occur then the caller should eagerly evaluate the
 	 * value and treat it as a removal operation. Alternatively, a custom weigher
 	 * may be specified on the map to assign an empty value a positive selector.
@@ -102,7 +102,7 @@ public final class Weighers {
 	 * map bounded with this weigher will evict when the total number of elements
 	 * exceeds the capacity rather than the number of key-value pairs in the map.
 	 * <p>
-	 * A value with a selector of <tt>0</tt> will be rejected by the map. If a value
+	 * A value with a selector of <b>0</b> will be rejected by the map. If a value
 	 * with this selector can occur then the caller should eagerly evaluate the
 	 * value and treat it as a removal operation. Alternatively, a custom weigher
 	 * may be specified on the map to assign an empty value a positive selector.
@@ -110,9 +110,8 @@ public final class Weighers {
 	 * @param <E> 元素类型
 	 * @return A weigher where each element takes one unit of capacity.
 	 */
-	@SuppressWarnings({"cast", "unchecked"})
 	public static <E> Weigher<? super Iterable<E>> iterable() {
-		return (Weigher<Iterable<E>>) (Weigher<?>) IterableWeigher.INSTANCE;
+		return IterableWeigher.INSTANCE;
 	}
 
 	/**
@@ -121,7 +120,7 @@ public final class Weighers {
 	 * total number of elements exceeds the capacity rather than the number of
 	 * key-value pairs in the map.
 	 * <p>
-	 * A value with a selector of <tt>0</tt> will be rejected by the map. If a value
+	 * A value with a selector of <b>0</b> will be rejected by the map. If a value
 	 * with this selector can occur then the caller should eagerly evaluate the
 	 * value and treat it as a removal operation. Alternatively, a custom weigher
 	 * may be specified on the map to assign an empty value a positive selector.
@@ -129,9 +128,8 @@ public final class Weighers {
 	 * @param <E> 元素类型
 	 * @return A weigher where each element takes one unit of capacity.
 	 */
-	@SuppressWarnings({"cast", "unchecked"})
 	public static <E> Weigher<? super Collection<E>> collection() {
-		return (Weigher<Collection<E>>) (Weigher<?>) CollectionWeigher.INSTANCE;
+		return CollectionWeigher.INSTANCE;
 	}
 
 	/**
@@ -140,7 +138,7 @@ public final class Weighers {
 	 * number of elements exceeds the capacity rather than the number of
 	 * key-value pairs in the map.
 	 * <p>
-	 * A value with a selector of <tt>0</tt> will be rejected by the map. If a value
+	 * A value with a selector of <b>0</b> will be rejected by the map. If a value
 	 * with this selector can occur then the caller should eagerly evaluate the
 	 * value and treat it as a removal operation. Alternatively, a custom weigher
 	 * may be specified on the map to assign an empty value a positive selector.
@@ -159,7 +157,7 @@ public final class Weighers {
 	 * number of elements exceeds the capacity rather than the number of
 	 * key-value pairs in the map.
 	 * <p>
-	 * A value with a selector of <tt>0</tt> will be rejected by the map. If a value
+	 * A value with a selector of <b>0</b> will be rejected by the map. If a value
 	 * with this selector can occur then the caller should eagerly evaluate the
 	 * value and treat it as a removal operation. Alternatively, a custom weigher
 	 * may be specified on the map to assign an empty value a positive selector.
@@ -178,7 +176,7 @@ public final class Weighers {
 	 * entries across all values exceeds the capacity rather than the number of
 	 * key-value pairs in the map.
 	 * <p>
-	 * A value with a selector of <tt>0</tt> will be rejected by the map. If a value
+	 * A value with a selector of <b>0</b> will be rejected by the map. If a value
 	 * with this selector can occur then the caller should eagerly evaluate the
 	 * value and treat it as a removal operation. Alternatively, a custom weigher
 	 * may be specified on the map to assign an empty value a positive selector.

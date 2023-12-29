@@ -71,9 +71,7 @@ public class NFA {
 			needBuildAc = true;
 			Node p = root;
 			for (final char curr : word.toCharArray()) {
-				if (p.next.get((int) curr) == null) {
-					p.next.put((int) curr, new Node());
-				}
+				p.next.computeIfAbsent((int) curr, k -> new Node());
 				p = p.next.get((int) curr);
 			}
 			p.flag = true;

@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 public class TemporalAccessorConverterTest {
 
@@ -32,7 +33,7 @@ public class TemporalAccessorConverterTest {
 
 		// 通过转换获取的Instant为UTC时间
 		final Instant instant = Convert.convert(Instant.class, dateStr);
-		final Instant instant1 = DateUtil.parse(dateStr).toInstant();
+		final Instant instant1 = Objects.requireNonNull(DateUtil.parse(dateStr)).toInstant();
 		Assertions.assertEquals(instant1, instant);
 	}
 

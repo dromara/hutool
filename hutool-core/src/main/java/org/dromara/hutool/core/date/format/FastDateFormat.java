@@ -20,7 +20,6 @@ import org.dromara.hutool.core.date.format.parser.PositionDateParser;
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.Format;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;

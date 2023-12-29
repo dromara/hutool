@@ -24,7 +24,7 @@ public class ChaCha20Test {
 
 	@Test
 	public void encryptAndDecryptTest() {
-		// 32 for 256 bit key or 16 for 128 bit
+		// 32 for 256-bit key or 16 for 128 bit
 		final byte[] key = RandomUtil.randomBytes(32);
 		// 64 bit IV required by ChaCha20
 		final byte[] iv = RandomUtil.randomBytes(12);

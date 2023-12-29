@@ -13,7 +13,6 @@
 package org.dromara.hutool.crypto.symmetric;
 
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

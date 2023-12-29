@@ -454,6 +454,6 @@ public class UrlQuery {
 		/**
 		 * 严格模式，此模式下，非UNRESERVED的字符都会被转义
 		 */
-		STRICT;
+		STRICT
 	}
 }

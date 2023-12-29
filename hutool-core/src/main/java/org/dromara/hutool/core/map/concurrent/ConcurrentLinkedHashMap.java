@@ -1588,7 +1588,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		 */
 		public Builder<K, V> weigher(final Weigher<? super V> weigher) {
 			this.weigher = (weigher == Weighers.singleton())
-				? Weighers.<K, V>entrySingleton()
+				? Weighers.entrySingleton()
 				: new BoundedEntryWeigher<>(Weighers.asEntryWeigher(weigher));
 			return this;
 		}

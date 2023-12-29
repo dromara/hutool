@@ -13,7 +13,6 @@
 package org.dromara.hutool.setting.toml;
 
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

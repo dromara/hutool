@@ -28,12 +28,12 @@ import java.time.Instant;
  * <p>参考：https://github.com/jchambers/java-otp</p>
  * OTP基于具有时间戳计数器的OTP。
  * 通过定义纪元（T0）的开始并以时间间隔（TI）为单位计数，将当前时间戳变为整数时间计数器（TC）。 例如：
- *
+ * <p>
  * TC = floor,
  * TOTP = HOTP（SecretKey，TC），
  * TOTP-Value = TOTP mod 10d，其中d是一次性密码的所需位数。
  * 像google auth的二步认证使用了这种方式。
- *
+ * <p>
  * 认证过程
  * 生成二维码,带有otpauth链接的google地址
  * 生成公用密钥
@@ -42,8 +42,7 @@ import java.time.Instant;
  * app每30秒生成一个6位校验码,用户使用这个码来网站进行登陆
  * 服务器使用存储的密钥+fmac算法生成6位随机数,与客户端传来的数进行对比
  * 两个码相等,授权成功,反之,失败.（注意，服务端可以根据当前登陆的用户名拿到它的密钥，有了密钥，再进行totp的算法生成校验码）
- *
- *
+ * <p>
  * 登陆的过程整理
  * 用户和密码先登陆
  * session里存储了用户名等信息
@@ -53,7 +52,6 @@ import java.time.Instant;
  * 提交到服务端，服务端根据用户名取出对应的密钥，然后使用totp算法生成6位数字
  * 如果服务端与客户端数字相同，表示登陆成功！
  *
- * 
  * @author Looly
  */
 public class TOTP extends HOTP {

@@ -532,8 +532,8 @@ public class CollUtilTest {
 		final List<Object> list1 = ListUtil.of(false);
 		final List<Object> list2 = ListUtil.of(true);
 
-		Assertions.assertTrue(list1 instanceof ArrayList);
-		Assertions.assertTrue(list2 instanceof LinkedList);
+		Assertions.assertInstanceOf(ArrayList.class, list1);
+		Assertions.assertInstanceOf(LinkedList.class, list2);
 	}
 
 	@Test

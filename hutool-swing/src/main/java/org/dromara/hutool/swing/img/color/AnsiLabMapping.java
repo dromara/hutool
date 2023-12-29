@@ -31,7 +31,7 @@ public abstract class AnsiLabMapping {
 	 * @param color {@link LabColor}
 	 * @return 最接近的Ansi4BitColor
 	 */
-	public AnsiElement lookupClosest(Color color) {
+	public AnsiElement lookupClosest(final Color color) {
 		return lookupClosest(new LabColor(color));
 	}
 
@@ -41,11 +41,11 @@ public abstract class AnsiLabMapping {
 	 * @param color {@link LabColor}
 	 * @return 最接近的Ansi4BitColor
 	 */
-	public AnsiElement lookupClosest(LabColor color) {
+	public AnsiElement lookupClosest(final LabColor color) {
 		AnsiElement closest = null;
 		double closestDistance = Float.MAX_VALUE;
-		for (Map.Entry<AnsiElement, LabColor> entry : ansiLabMap.entrySet()) {
-			double candidateDistance = color.getDistance(entry.getValue());
+		for (final Map.Entry<AnsiElement, LabColor> entry : ansiLabMap.entrySet()) {
+			final double candidateDistance = color.getDistance(entry.getValue());
 			if (closest == null || candidateDistance < closestDistance) {
 				closestDistance = candidateDistance;
 				closest = entry.getKey();

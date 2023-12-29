@@ -15,6 +15,7 @@ package org.dromara.hutool.setting.toml;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.setting.SettingException;
 
 import java.io.IOException;
@@ -199,7 +200,7 @@ public class TomlWriter {
 					indent();
 					writeKey(name);
 					write(" = ");
-					writeString(ArrayUtil.toString(array));
+					writeString(StrUtil.emptyIfNull(ArrayUtil.toString(array)));
 				}
 			} else if (value instanceof Map) {// table
 				if (simpleValues) {

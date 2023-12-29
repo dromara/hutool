@@ -76,7 +76,7 @@ public interface TreeEntry<K, V> extends Map.Entry<K, V> {
 	 * @param key 指定父节点的key
 	 * @return 是否
 	 */
-	default boolean containsParent(K key) {
+	default boolean containsParent(final K key) {
 		return ObjUtil.isNotNull(getParent(key));
 	}
 
@@ -127,7 +127,7 @@ public interface TreeEntry<K, V> extends Map.Entry<K, V> {
 	 * @param key 指定子节点的key
 	 * @return 是否
 	 */
-	default boolean containsChild(K key) {
+	default boolean containsChild(final K key) {
 		return ObjUtil.isNotNull(getChild(key));
 	}
 
