@@ -22,7 +22,6 @@ import java.io.Closeable;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
-import java.nio.file.WatchService;
 
 /**
  * 路径监听器
@@ -61,7 +60,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * 构造
 	 *
 	 * @param dir    字符串路径
-	 * @param events 监听事件列表
+	 * @param events 监听事件列表，如创建、修改和删除等
 	 */
 	public WatchMonitor(final Path dir, final WatchEvent.Kind<?>... events) {
 		this(dir, 0, events);
@@ -78,10 +77,10 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 *
 	 * @param dir      路径
 	 * @param maxDepth 递归目录的最大深度，当小于2时不递归下层目录
-	 * @param events   监听事件列表
+	 * @param events   监听事件列表，如创建、修改和删除等
 	 */
 	public WatchMonitor(final Path dir, final int maxDepth, final WatchEvent.Kind<?>... events) {
-		this.watchService = new WatchServiceWrapper().setEvents(events);
+		this.watchService = WatchServiceWrapper.of(events);
 		this.dir = dir;
 		this.maxDepth = maxDepth;
 		this.init();
@@ -161,7 +160,6 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * 初始化包括：
 	 * <pre>
 	 * 1、解析传入的路径，判断其为目录还是文件
-	 * 2、创建{@link WatchService} 对象
 	 * </pre>
 	 *
 	 * @throws WatchException 监听异常，IO异常时抛出此异常
@@ -195,7 +193,9 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * @param watcher {@link Watcher}
 	 */
 	private void doTakeAndWatch(final Watcher watcher) {
-		this.watchService.watch(watcher, watchEvent -> null == file || file.endsWith(watchEvent.context().toString()));
+		this.watchService.watch(watcher,
+			// 对于文件监听，忽略目录下其他文件和目录的事件
+			watchEvent -> null == file || file.endsWith(watchEvent.context().toString()));
 	}
 
 	/**

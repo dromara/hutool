@@ -171,7 +171,7 @@ public interface RegexPool {
 	 * 车架号（车辆识别代号由世界制造厂识别代号(WMI、车辆说明部分(VDS)车辆指示部分(VIS)三部分组成，共 17 位字码。）<br>
 	 * 别名：车辆识别代号、车辆识别码、车架号、十七位码<br>
 	 * 标准号：GB 16735-2019<br>
-	 * 标准官方地址：https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=E2EBF667F8C032B1EDFD6DF9C1114E02
+	 * 标准官方地址：https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=E2EBF667F8C032B1EDFD6DF9C1114E02<br>
 	 * 对年产量大于或等于1 000 辆的完整车辆和/或非完整车辆制造厂：
 	 * <pre>
 	 *   第一部分为世界制造厂识别代号(WMI)，3位

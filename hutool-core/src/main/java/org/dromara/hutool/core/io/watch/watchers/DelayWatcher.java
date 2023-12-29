@@ -32,22 +32,30 @@ import java.util.Set;
  */
 public class DelayWatcher implements Watcher {
 
-	/** Path集合。此集合用于去重在指定delay内多次触发的文件Path */
+	/**
+	 * Path集合。此集合用于去重在指定delay内多次触发的文件Path
+	 */
 	private final Set<Path> eventSet = new ConcurrentHashSet<>();
-	/** 实际处理 */
+	/**
+	 * 实际处理
+	 */
 	private final Watcher watcher;
-	/** 延迟，单位毫秒 */
+	/**
+	 * 延迟，单位毫秒
+	 */
 	private final long delay;
 
 	//---------------------------------------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
+	 *
 	 * @param watcher 实际处理触发事件的监视器{@link Watcher}，不可以是{@code DelayWatcher}
-	 * @param delay 延迟时间，单位毫秒
+	 * @param delay   延迟时间，单位毫秒
 	 */
 	public DelayWatcher(final Watcher watcher, final long delay) {
 		Assert.notNull(watcher);
-		if(watcher instanceof DelayWatcher) {
+		if (watcher instanceof DelayWatcher) {
 			throw new IllegalArgumentException("Watcher must not be a DelayWatcher");
 		}
 		this.watcher = watcher;
@@ -57,9 +65,9 @@ public class DelayWatcher implements Watcher {
 
 	@Override
 	public void onModify(final WatchEvent<?> event, final WatchKey key) {
-		if(this.delay < 1) {
+		if (this.delay < 1) {
 			this.watcher.onModify(event, key);
-		}else {
+		} else {
 			onDelayModify(event, key);
 		}
 	}
@@ -80,14 +88,16 @@ public class DelayWatcher implements Watcher {
 	}
 
 	//---------------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 触发延迟修改
+	 *
 	 * @param event 事件
-	 * @param key {@link WatchKey}
+	 * @param key   {@link WatchKey}
 	 */
 	private void onDelayModify(final WatchEvent<?> event, final WatchKey key) {
 		final Path eventPath = Paths.get(key.watchable().toString(), event.context().toString());
-		if(eventSet.contains(eventPath)) {
+		if (eventSet.contains(eventPath)) {
 			//此事件已经被触发过，后续事件忽略，等待统一处理。
 			return;
 		}
@@ -101,7 +111,7 @@ public class DelayWatcher implements Watcher {
 	 * 开启处理线程
 	 *
 	 * @param event 事件
-	 * @param currentPath 事件发生的当前Path路径
+	 * @param key   事件发生的当前WatchKey
 	 */
 	private void startHandleModifyThread(final WatchEvent<?> event, final WatchKey key) {
 		ThreadUtil.execute(() -> {

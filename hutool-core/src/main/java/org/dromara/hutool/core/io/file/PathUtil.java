@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.io.file;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -32,6 +33,42 @@ import java.util.Set;
  * @since 5.4.1
  */
 public class PathUtil {
+	/**
+	 * 拼接多个路径
+	 *
+	 * @param firstPath 第一个路径
+	 * @param paths     其它路径
+	 * @return 拼接后的路径
+	 * @see Paths#get(String, String...)
+	 */
+	public static Path of(final String firstPath, final String... paths) {
+		return Paths.get(firstPath, paths);
+	}
+
+	/**
+	 * 拼接多个路径，
+	 *
+	 * @param firstPath 第一个路径
+	 * @param paths     其它路径
+	 * @return 拼接后的路径
+	 */
+	public static Path of(Path firstPath, final Path... paths) {
+		if (ArrayUtil.isEmpty(paths)) {
+			return firstPath;
+		}
+
+		for (final Path path : paths) {
+			if (null == path) {
+				continue;
+			}
+			if (null == firstPath) {
+				firstPath = path;
+			} else {
+				firstPath = firstPath.resolve(path);
+			}
+		}
+		return firstPath;
+	}
 
 	/**
 	 * 目录是否为空
@@ -115,6 +152,7 @@ public class PathUtil {
 	}
 
 	// region ----- walkFiles
+
 	/**
 	 * 遍历指定path下的文件并做处理
 	 *
@@ -580,7 +618,9 @@ public class PathUtil {
 	}
 
 	/**
-	 * 将Path路径转换为标准的绝对路径
+	 * 将Path路径转换为标准的绝对路径<br>
+	 * 如果{@link Path#isAbsolute()}为{@code true}，表示已经是绝对路径，返回本身<br>
+	 * 如果是相对路径，则返回相对于系统默认目录的路径（一般为项目路径）
 	 *
 	 * @param path 文件或目录Path
 	 * @return 转换后的Path
@@ -594,7 +634,10 @@ public class PathUtil {
 	}
 
 	/**
-	 * 获取实际路径，路径文件必须存在
+	 * 获取实际路径，路径文件必须存在<br>
+	 * 如果给定Path是软链接（符号链接），则返回指向的实际链接<br>
+	 * 如果路径不存在，会直接抛出NoSuchFileException异常<br>
+	 * 无论给定是何种类型的路径，返回都是唯一的路径（总是equals）
 	 *
 	 * @param path 路径
 	 * @return 实际路径

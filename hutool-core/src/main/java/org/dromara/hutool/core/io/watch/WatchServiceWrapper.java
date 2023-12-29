@@ -25,8 +25,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
- * {@link WatchEvent} 包装类，提供可选的监听事件和监听选项<br>
- * 通过多次调用{@link #registerPath(Path, int)} 可以递归注册多个路径
+ * {@link WatchEvent} 包装类，提供可选的监听事件和监听选项，实现方法包括：
+ * <ul>
+ *     <li>注册：{@link #registerPath(Path, int)}注册需要监听的路径。</li>
+ *     <li>监听：{@link #watch(Watcher, Predicate)} 启动监听并指定事件触发后的行为。</li>
+ * </ul>
  *
  * @author looly
  * @since 6.0.0
@@ -35,11 +38,21 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 创建WatchServiceWrapper
+	 *
+	 * @param events 监听事件列表，如新建、修改、删除等
+	 * @return WatchServiceWrapper
+	 */
+	public static WatchServiceWrapper of(final WatchEvent.Kind<?>... events) {
+		return new WatchServiceWrapper(events);
+	}
+
+	/**
 	 * 监听服务
 	 */
 	private final WatchService watchService;
 	/**
-	 * 监听事件列表
+	 * 监听事件列表，如新建、修改、删除等
 	 */
 	private WatchEvent.Kind<?>[] events;
 	/**
@@ -53,8 +66,10 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 
 	/**
 	 * 构造
+	 *
+	 * @param events 监听事件列表
 	 */
-	public WatchServiceWrapper() {
+	public WatchServiceWrapper(final WatchEvent.Kind<?>... events) {
 		//初始化监听
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
@@ -62,7 +77,7 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 			throw new WatchException(e);
 		}
 
-		isClosed = false;
+		this.events = events;
 	}
 
 	@Override
@@ -148,6 +163,8 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 	 *
 	 * @param watchable 可注册对象，如Path
 	 * @return {@link WatchKey}，如果为{@code null}，表示注册失败
+	 * @see Watchable#register(WatchService, WatchEvent.Kind[])
+	 * @see Watchable#register(WatchService, WatchEvent.Kind[], WatchEvent.Modifier...)
 	 */
 	public WatchKey register(final Watchable watchable) {
 		final WatchEvent.Kind<?>[] kinds = ArrayUtil.defaultIfEmpty(this.events, WatchKind.ALL);
@@ -174,17 +191,18 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 	 *
 	 * @param path     路径
 	 * @param maxDepth 递归下层目录的最大深度
+	 * @return this
 	 */
-	public void registerPath(final Path path, final int maxDepth) {
+	public WatchServiceWrapper registerPath(final Path path, final int maxDepth) {
 		// 注册当前目录或文件
-		final WatchKey watchKey = register(path);
-		if (null == watchKey) {
+		if (null == register(path)) {
 			// 注册失败，跳过（可能目录或文件无权限）
-			return;
+			return this;
 		}
 
 		// 递归注册下一层层级的目录和文件
 		PathUtil.walkFiles(path, maxDepth, new SimpleFileVisitor<Path>() {
+			@SuppressWarnings("resource")
 			@Override
 			public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
 				//继续添加目录
@@ -192,10 +210,14 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 				return super.postVisitDirectory(dir, exc);
 			}
 		});
+		return this;
 	}
 
 	/**
-	 * 执行事件获取并处理
+	 * 执行事件获取并处理<br>
+	 * {@link WatchEvent#context()}是实际操作的文件或目录的相对监听路径的Path，非绝对路径<br>
+	 * {@link WatchKey#watchable()}是监听的Path<br>
+	 * 此方法调用后阻塞线程，直到触发监听事件，执行后退出，无循环执行操作
 	 *
 	 * @param watcher     {@link Watcher}
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，{@link Predicate#test(Object)}为{@code true}保留，null表示不过滤
@@ -217,7 +239,22 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 	}
 
 	/**
-	 * 执行事件获取并处理
+	 * 执行事件获取并处理<br>
+	 * {@link WatchEvent#context()}是实际操作的文件或目录的相对监听路径的Path，非绝对路径<br>
+	 * {@link WatchKey#watchable()}是监听的Path<br>
+	 * 此方法调用后阻塞线程，直到触发监听事件，执行后退出，无循环执行操作
+	 *
+	 * @param action      监听回调函数，实现此函数接口用于处理WatchEvent事件
+	 */
+	public void watch(final BiConsumer<WatchEvent<?>, WatchKey> action) {
+		watch(action, null);
+	}
+
+	/**
+	 * 执行事件获取并处理<br>
+	 * {@link WatchEvent#context()}是实际操作的文件或目录的相对监听路径的Path，非绝对路径<br>
+	 * {@link WatchKey#watchable()}是监听的Path<br>
+	 * 此方法调用后阻塞线程，直到触发监听事件，执行后退出，无循环执行操作
 	 *
 	 * @param action      监听回调函数，实现此函数接口用于处理WatchEvent事件
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，{@link Predicate#test(Object)}为{@code true}保留，null表示不过滤

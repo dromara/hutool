@@ -12,11 +12,34 @@
 
 package org.dromara.hutool.core.io.watch.watchers;
 
+import org.dromara.hutool.core.io.watch.Watcher;
+
+import java.io.Serializable;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+
 /**
  * 空白WatchListener<br>
  * 用户继承此类后实现需要监听的方法
- * @author Looly
  *
+ * @author Looly
  */
-public class SimpleWatcher extends IgnoreWatcher {
+public class SimpleWatcher implements Watcher, Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void onCreate(final WatchEvent<?> event, final WatchKey key) {
+	}
+
+	@Override
+	public void onModify(final WatchEvent<?> event, final WatchKey key) {
+	}
+
+	@Override
+	public void onDelete(final WatchEvent<?> event, final WatchKey key) {
+	}
+
+	@Override
+	public void onOverflow(final WatchEvent<?> event, final WatchKey key) {
+	}
 }
