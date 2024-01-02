@@ -36,54 +36,54 @@ public class HierarchicalAnnotatedElementTest {
 	@Test
 	public void testCreateFromMethod() {
 		final Method method1 = Foo.class.getDeclaredMethod("method");
-		HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(method1);
+		HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(method1);
 		Assertions.assertEquals(3, elements.getElementMappings().size());
 
 		final Method method2 = Foo.class.getDeclaredMethod("method2");
-		elements = HierarchicalAnnotatedElements.create(method2);
+		elements = HierarchicalAnnotatedElements.of(method2);
 		Assertions.assertEquals(1, elements.getElementMappings().size());
 	}
 
 	@Test
 	public void testCreate() {
-		HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 		Assertions.assertNotNull(elements);
 		Assertions.assertEquals(3, elements.getElementMappings().size());
 
-		elements = HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY);
+		elements = HierarchicalAnnotatedElements.of(Foo.class, ELEMENT_MAPPING_FACTORY);
 		Assertions.assertNotNull(elements);
 		Assertions.assertEquals(3, elements.getElementMappings().size());
 
-		Assertions.assertEquals(elements, HierarchicalAnnotatedElements.create(elements, ELEMENT_MAPPING_FACTORY));
+		Assertions.assertEquals(elements, HierarchicalAnnotatedElements.of(elements, ELEMENT_MAPPING_FACTORY));
 	}
 
 	@Test
 	public void testEquals() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY);
-		Assertions.assertEquals(elements, HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY));
-		Assertions.assertNotEquals(elements, HierarchicalAnnotatedElements.create(Super.class, ELEMENT_MAPPING_FACTORY));
-		Assertions.assertNotEquals(elements, HierarchicalAnnotatedElements.create(Foo.class, (es, e) -> e));
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class, ELEMENT_MAPPING_FACTORY);
+		Assertions.assertEquals(elements, HierarchicalAnnotatedElements.of(Foo.class, ELEMENT_MAPPING_FACTORY));
+		Assertions.assertNotEquals(elements, HierarchicalAnnotatedElements.of(Super.class, ELEMENT_MAPPING_FACTORY));
+		Assertions.assertNotEquals(elements, HierarchicalAnnotatedElements.of(Foo.class, (es, e) -> e));
 		Assertions.assertNotEquals(elements, null);
 	}
 
 	@Test
 	public void testHashCode() {
-		final int hashCode = HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY).hashCode();
-		Assertions.assertEquals(hashCode, HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY).hashCode());
-		Assertions.assertNotEquals(hashCode, HierarchicalAnnotatedElements.create(Super.class, ELEMENT_MAPPING_FACTORY).hashCode());
-		Assertions.assertNotEquals(hashCode, HierarchicalAnnotatedElements.create(Foo.class, (es, e) -> e).hashCode());
+		final int hashCode = HierarchicalAnnotatedElements.of(Foo.class, ELEMENT_MAPPING_FACTORY).hashCode();
+		Assertions.assertEquals(hashCode, HierarchicalAnnotatedElements.of(Foo.class, ELEMENT_MAPPING_FACTORY).hashCode());
+		Assertions.assertNotEquals(hashCode, HierarchicalAnnotatedElements.of(Super.class, ELEMENT_MAPPING_FACTORY).hashCode());
+		Assertions.assertNotEquals(hashCode, HierarchicalAnnotatedElements.of(Foo.class, (es, e) -> e).hashCode());
 	}
 
 	@Test
 	public void testGetElement() {
 		final AnnotatedElement element = Foo.class;
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(element, ELEMENT_MAPPING_FACTORY);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(element, ELEMENT_MAPPING_FACTORY);
 		Assertions.assertSame(element, elements.getElement());
 	}
 
 	@Test
 	public void testIsAnnotationPresent() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 		Assertions.assertTrue(elements.isAnnotationPresent(Annotation1.class));
 		Assertions.assertTrue(elements.isAnnotationPresent(Annotation2.class));
 		Assertions.assertTrue(elements.isAnnotationPresent(Annotation3.class));
@@ -91,7 +91,7 @@ public class HierarchicalAnnotatedElementTest {
 
 	@Test
 	public void testGetAnnotations() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
 		final Annotation2 annotation2 = Super.class.getAnnotation(Annotation2.class);
@@ -103,7 +103,7 @@ public class HierarchicalAnnotatedElementTest {
 
 	@Test
 	public void testGetAnnotation() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
 		Assertions.assertEquals(annotation1, elements.getAnnotation(Annotation1.class));
@@ -117,7 +117,7 @@ public class HierarchicalAnnotatedElementTest {
 
 	@Test
 	public void testGetAnnotationsByType() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
 		Assertions.assertArrayEquals(new Annotation[]{ annotation1 }, elements.getAnnotationsByType(Annotation1.class));
@@ -131,7 +131,7 @@ public class HierarchicalAnnotatedElementTest {
 
 	@Test
 	public void testGetDeclaredAnnotationsByType() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
 		Assertions.assertArrayEquals(new Annotation[]{ annotation1 }, elements.getDeclaredAnnotationsByType(Annotation1.class));
@@ -145,7 +145,7 @@ public class HierarchicalAnnotatedElementTest {
 
 	@Test
 	public void testGetDeclaredAnnotation() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
 		Assertions.assertEquals(annotation1, elements.getDeclaredAnnotation(Annotation1.class));
@@ -159,7 +159,7 @@ public class HierarchicalAnnotatedElementTest {
 
 	@Test
 	public void testGetDeclaredAnnotations() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
 		final Annotation2 annotation2 = Super.class.getAnnotation(Annotation2.class);
@@ -171,7 +171,7 @@ public class HierarchicalAnnotatedElementTest {
 
 	@Test
 	public void testIterator() {
-		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
+		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.of(Foo.class);
 		final Iterator<AnnotatedElement> iterator = elements.iterator();
 		Assertions.assertNotNull(iterator);
 

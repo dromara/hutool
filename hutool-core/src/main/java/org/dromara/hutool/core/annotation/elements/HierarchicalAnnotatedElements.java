@@ -88,8 +88,8 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 * @return {@code HierarchicalAnnotatedElements}实例，
 	 * 当{@code element}也是一个{@code HierarchicalAnnotatedElements}时，返回{@code element}本身
 	 */
-	public static HierarchicalAnnotatedElements create(final AnnotatedElement element) {
-		return create(element, (es, e) -> e);
+	public static HierarchicalAnnotatedElements of(final AnnotatedElement element) {
+		return of(element, (es, e) -> e);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 * @return {@code HierarchicalAnnotatedElements}实例，
 	 * 当{@code element}也是一个{@code HierarchicalAnnotatedElements}时，返回{@code element}本身
 	 */
-	public static HierarchicalAnnotatedElements create(
+	public static HierarchicalAnnotatedElements of(
 		final AnnotatedElement element,
 		final BiFunction<Set<AnnotatedElement>, AnnotatedElement, AnnotatedElement> elementFactory) {
 		return element instanceof HierarchicalAnnotatedElements ?

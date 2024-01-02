@@ -537,9 +537,9 @@ public class AnnotatedElementUtil {
 			return emptyElement();
 		}
 		if (resolved) {
-			return HierarchicalAnnotatedElements.create(element, (es, e) -> getResolvedMetaElementCache(e));
+			return HierarchicalAnnotatedElements.of(element, (es, e) -> getResolvedMetaElementCache(e));
 		}
-		return HierarchicalAnnotatedElements.create(element, (es, e) -> getMetaElementCache(e));
+		return HierarchicalAnnotatedElements.of(element, (es, e) -> getMetaElementCache(e));
 	}
 
 	/**
@@ -560,9 +560,9 @@ public class AnnotatedElementUtil {
 			return emptyElement();
 		}
 		if (resolved) {
-			return HierarchicalAnnotatedElements.create(element, (es, e) -> getResolvedRepeatableMetaElementCache(e));
+			return HierarchicalAnnotatedElements.of(element, (es, e) -> getResolvedRepeatableMetaElementCache(e));
 		}
-		return HierarchicalAnnotatedElements.create(element, (es, e) -> getRepeatableMetaElementCache(e));
+		return HierarchicalAnnotatedElements.of(element, (es, e) -> getRepeatableMetaElementCache(e));
 	}
 
 	/**
@@ -575,7 +575,7 @@ public class AnnotatedElementUtil {
 	 */
 	public static AnnotatedElement toHierarchyElement(final AnnotatedElement element) {
 		return ObjUtil.defaultIfNull(
-			element, ele -> HierarchicalAnnotatedElements.create(ele, (es, e) -> e), emptyElement()
+			element, ele -> HierarchicalAnnotatedElements.of(ele, (es, e) -> e), emptyElement()
 		);
 	}
 
