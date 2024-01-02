@@ -19,7 +19,7 @@ public class NumberWordFormatter {
 			"FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
 	private static final String[] NUMBER_TEN = new String[]{"TEN", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY",
 			"SEVENTY", "EIGHTY", "NINETY"};
-	private static final String[] NUMBER_MORE = new String[]{"", "THOUSAND", "MILLION", "BILLION"};
+	private static final String[] NUMBER_MORE = new String[]{"", "THOUSAND", "MILLION", "BILLION", "TRILLION"};
 
 	private static final String[] NUMBER_SUFFIX = new String[]{"k", "w", "", "m", "", "", "b", "", "", "t", "", "", "p", "", "", "e"};
 
