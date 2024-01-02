@@ -14,6 +14,7 @@ package org.dromara.hutool.core.xml;
 
 import lombok.Data;
 import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -282,7 +283,7 @@ public class XmlUtilTest {
 		// 标准方式
 		final Map<String, Object> map = XmlUtil.xmlToMap(doc.getFirstChild());
 		final SmsRes res = new SmsRes();
-		BeanUtil.fillBeanWithMap(map, res, true);
+		BeanUtil.fillBeanWithMap(map, res, CopyOptions.of().setIgnoreError(true));
 
 		// toBean方式
 		final SmsRes res1 = XmlUtil.xmlToBean(doc.getFirstChild(), SmsRes.class);

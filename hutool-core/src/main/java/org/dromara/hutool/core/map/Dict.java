@@ -194,7 +194,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @return Bean
 	 */
 	public <T> T toBean(final T bean) {
-		return toBean(bean, false);
+		return BeanUtil.fillBeanWithMap(this, bean, CopyOptions.of());
 	}
 
 	/**
@@ -206,33 +206,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @since 3.3.1
 	 */
 	public <T> T toBeanIgnoreCase(final T bean) {
-		BeanUtil.fillBeanWithMapIgnoreCase(this, bean, false);
-		return bean;
-	}
-
-	/**
-	 * 转换为Bean对象
-	 *
-	 * @param <T>           Bean类型
-	 * @param bean          Bean
-	 * @param isToCamelCase 是否转换为驼峰模式
-	 * @return Bean
-	 */
-	public <T> T toBean(final T bean, final boolean isToCamelCase) {
-		BeanUtil.fillBeanWithMap(this, bean, isToCamelCase, false);
-		return bean;
-	}
-
-	/**
-	 * 转换为Bean对象,并使用驼峰法模式转换
-	 *
-	 * @param <T>  Bean类型
-	 * @param bean Bean
-	 * @return Bean
-	 */
-	public <T> T toBeanWithCamelCase(final T bean) {
-		BeanUtil.fillBeanWithMap(this, bean, true, false);
-		return bean;
+		return BeanUtil.fillBeanWithMap(this, bean, CopyOptions.of().setIgnoreCase(true));
 	}
 
 	/**

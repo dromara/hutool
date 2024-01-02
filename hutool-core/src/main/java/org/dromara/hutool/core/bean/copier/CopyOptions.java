@@ -12,12 +12,14 @@
 
 package org.dromara.hutool.core.bean.copier;
 
+import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -77,10 +79,15 @@ public class CopyOptions implements Serializable {
 	protected boolean override = true;
 
 	/**
+	 * 是否自动转换为驼峰方式
+	 */
+	protected boolean autoTransCamelCase = true;
+
+	/**
 	 * 自定义类型转换器，默认使用全局万能转换器转换
 	 */
 	protected Converter converter = (type, value) ->
-			Convert.convertWithCheck(type, value, null, ignoreError);
+		Convert.convertWithCheck(type, value, null, ignoreError);
 
 	//region create
 
@@ -178,7 +185,7 @@ public class CopyOptions implements Serializable {
 	 */
 	public CopyOptions setIgnoreProperties(final String... ignoreProperties) {
 		return setPropertiesFilter((field, o) -> {
-			if(ignoreCase){
+			if (ignoreCase) {
 				// issue#I80FP4
 				return !ArrayUtil.containsIgnoreCase(ignoreProperties, field.getName());
 			}
@@ -284,7 +291,7 @@ public class CopyOptions implements Serializable {
 	protected MutableEntry<String, Object> editField(final String fieldName, final Object fieldValue) {
 		final MutableEntry<String, Object> entry = new MutableEntry<>(fieldName, fieldValue);
 		return (null != this.fieldEditor) ?
-				this.fieldEditor.apply(entry) : entry;
+			this.fieldEditor.apply(entry) : entry;
 	}
 
 	/**
@@ -312,6 +319,19 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
+	 * 设置是否自动转换为驼峰方式<br>
+	 * 一般用于map转bean和bean转bean出现非驼峰格式时，在尝试转换失败的情况下，是否二次检查转为驼峰匹配
+	 *
+	 * @param autoTransCamelCase 是否自动转换为驼峰方式
+	 * @return this
+	 * @since 5.8.25
+	 */
+	public CopyOptions setAutoTransCamelCase(final boolean autoTransCamelCase) {
+		this.autoTransCamelCase = autoTransCamelCase;
+		return this;
+	}
+
+	/**
 	 * 设置自定义类型转换器，默认使用全局万能转换器转换。
 	 *
 	 * @param converter 转换器
@@ -334,7 +354,7 @@ public class CopyOptions implements Serializable {
 	 */
 	protected Object convertField(final Type targetType, final Object fieldValue) {
 		return (null != this.converter) ?
-				this.converter.convert(targetType, fieldValue) : fieldValue;
+			this.converter.convert(targetType, fieldValue) : fieldValue;
 	}
 
 	/**
@@ -347,5 +367,26 @@ public class CopyOptions implements Serializable {
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	protected boolean testPropertyFilter(final Field field, final Object value) {
 		return null == this.propertiesFilter || this.propertiesFilter.test(field, value);
+	}
+
+	/**
+	 * 查找Map对应Bean的名称<br>
+	 * 尝试原名称、转驼峰名称、isXxx去掉is的名称
+	 *
+	 * @param targetPropDescMap 目标bean的属性描述Map
+	 * @param sKeyStr           键或字段名
+	 * @return {@link PropDesc}
+	 */
+	protected PropDesc findPropDesc(final Map<String, PropDesc> targetPropDescMap, final String sKeyStr) {
+		PropDesc propDesc = targetPropDescMap.get(sKeyStr);
+		// 转驼峰尝试查找
+		if (null == propDesc && this.autoTransCamelCase) {
+			final String camelCaseKey = StrUtil.toCamelCase(sKeyStr);
+			if (!StrUtil.equals(sKeyStr, camelCaseKey)) {
+				// 只有转换为驼峰后与原key不同才重复查询，相同说明本身就是驼峰，不需要二次查询
+				propDesc = targetPropDescMap.get(camelCaseKey);
+			}
+		}
+		return propDesc;
 	}
 }
