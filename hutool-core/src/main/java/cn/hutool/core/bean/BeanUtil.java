@@ -408,7 +408,9 @@ public class BeanUtil {
 	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
 	 * @param copyOptions   转Bean选项
 	 * @return Bean
+	 * @deprecated isToCamelCase参数无效，请使用 {@link #toBean(Object, Class, CopyOptions)}
 	 */
+	@Deprecated
 	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, boolean isToCamelCase, CopyOptions copyOptions) {
 		return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), isToCamelCase, copyOptions);
 	}
@@ -437,7 +439,9 @@ public class BeanUtil {
 	 * @param isToCamelCase 是否将下划线模式转换为驼峰模式
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
+	 * @deprecated isToCamelCase参数无效，请使用{@link #fillBeanWithMap(Map, Object, boolean)}
 	 */
+	@Deprecated
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, boolean isIgnoreError) {
 		return fillBeanWithMap(map, bean, isToCamelCase, CopyOptions.create().setIgnoreError(isIgnoreError));
 	}
@@ -465,7 +469,11 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, CopyOptions copyOptions) {
-		return fillBeanWithMap(map, bean, false, copyOptions);
+		if (MapUtil.isEmpty(map)) {
+			return bean;
+		}
+		copyProperties(map, bean, copyOptions);
+		return bean;
 	}
 
 	/**
@@ -478,14 +486,18 @@ public class BeanUtil {
 	 * @param copyOptions   属性复制选项 {@link CopyOptions}
 	 * @return Bean
 	 * @since 3.3.1
+	 * @deprecated isToCamelCase参数无效，请使用{@link #fillBeanWithMap(Map, Object, CopyOptions)}
 	 */
+	@Deprecated
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, CopyOptions copyOptions) {
 		if (MapUtil.isEmpty(map)) {
 			return bean;
 		}
-		if (isToCamelCase) {
-			map = MapUtil.toCamelCaseMap(map);
-		}
+
+		// issue#3452，参数无效，MapToBeanCopier中已经有转驼峰逻辑
+//		if (isToCamelCase) {
+//			map = MapUtil.toCamelCaseMap(map);
+//		}
 		copyProperties(map, bean, copyOptions);
 		return bean;
 	}

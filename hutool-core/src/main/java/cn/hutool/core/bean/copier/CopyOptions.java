@@ -1,5 +1,6 @@
 package cn.hutool.core.bean.copier;
 
+import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.TypeConverter;
@@ -69,6 +70,11 @@ public class CopyOptions implements Serializable {
 	 * 是否覆盖目标值，如果不覆盖，会先读取目标对象的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
 	 */
 	protected boolean override = true;
+
+	/**
+	 * 是否自动转换为驼峰方式
+	 */
+	protected boolean autoTransCamelCase = true;
 
 	/**
 	 * 源对象和目标对象都是 {@code Map} 时, 需要忽略的源对象 {@code Map} key
@@ -322,6 +328,19 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
+	 * 设置是否自动转换为驼峰方式<br>
+	 * 一般用于map转bean和bean转bean出现非驼峰格式时，在尝试转换失败的情况下，是否二次检查转为驼峰匹配
+	 *
+	 * @param autoTransCamelCase 是否自动转换为驼峰方式
+	 * @return this
+	 * @since 5.8.25
+	 */
+	public CopyOptions setAutoTransCamelCase(final boolean autoTransCamelCase) {
+		this.autoTransCamelCase = autoTransCamelCase;
+		return this;
+	}
+
+	/**
 	 * 设置自定义类型转换器，默认使用全局万能转换器转换。
 	 *
 	 * @param converter 转换器
@@ -390,5 +409,26 @@ public class CopyOptions implements Serializable {
 		}
 
 		return false == this.ignoreKeySet.contains(key);
+	}
+
+	/**
+	 * 查找Map对应Bean的名称<br>
+	 * 尝试原名称、转驼峰名称、isXxx去掉is的名称
+	 *
+	 * @param targetPropDescMap 目标bean的属性描述Map
+	 * @param sKeyStr           键或字段名
+	 * @return {@link PropDesc}
+	 */
+	protected PropDesc findPropDesc(final Map<String, PropDesc> targetPropDescMap, final String sKeyStr) {
+		PropDesc propDesc = targetPropDescMap.get(sKeyStr);
+		// 转驼峰尝试查找
+		if (null == propDesc && this.autoTransCamelCase) {
+			final String camelCaseKey = StrUtil.toCamelCase(sKeyStr);
+			if (!StrUtil.equals(sKeyStr, camelCaseKey)) {
+				// 只有转换为驼峰后与原key不同才重复查询，相同说明本身就是驼峰，不需要二次查询
+				propDesc = targetPropDescMap.get(camelCaseKey);
+			}
+		}
+		return propDesc;
 	}
 }

@@ -66,7 +66,7 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 			}
 
 			// 检查目标字段可写性
-			final PropDesc tDesc = targetPropDescMap.get(sFieldName);
+			final PropDesc tDesc = this.copyOptions.findPropDesc(targetPropDescMap, sFieldName);
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
 				return;

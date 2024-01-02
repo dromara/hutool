@@ -6,6 +6,7 @@
 
 ### 🐣新特性
 * 【core  】      WatchServer新增通过Path获取WatchKey方法（pr#1145@Gitee）
+* 【core  】      CopyOptions中增加setAutoTransCamelCase方法（issue#3452@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复StrJoin当append内容后调用length()会出现空指针问题（issue#3444@Github）
