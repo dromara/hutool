@@ -77,6 +77,38 @@ public class DruidDSFactory extends AbstractDSFactory {
 			ds.setBreakAfterAcquireFailure(druidProps.getBool(breakAfterAcquireFailureKey));
 		}
 
+		// issue#I8STFC 补充
+		// validationQueryTimeout
+		final String validationQueryTimeout = "druid.validationQueryTimeout";
+		if(druidProps.containsKey(validationQueryTimeout)){
+			ds.setValidationQueryTimeout(druidProps.getInt(validationQueryTimeout));
+		}
+		// queryTimeout
+		final String queryTimeout = "druid.queryTimeout";
+		if(druidProps.containsKey(queryTimeout)){
+			ds.setQueryTimeout(druidProps.getInt(queryTimeout));
+		}
+		// connectTimeout
+		final String connectTimeout = "druid.connectTimeout";
+		if(druidProps.containsKey(connectTimeout)){
+			ds.setConnectTimeout(druidProps.getInt(connectTimeout));
+		}
+		// socketTimeout
+		final String socketTimeout = "druid.socketTimeout";
+		if(druidProps.containsKey(socketTimeout)){
+			ds.setSocketTimeout(druidProps.getInt(socketTimeout));
+		}
+		// transactionQueryTimeout
+		final String transactionQueryTimeout = "druid.transactionQueryTimeout";
+		if(druidProps.containsKey(transactionQueryTimeout)){
+			ds.setTransactionQueryTimeout(druidProps.getInt(transactionQueryTimeout));
+		}
+		// loginTimeout
+		final String loginTimeout = "druid.loginTimeout";
+		if(druidProps.containsKey(loginTimeout)){
+			ds.setLoginTimeout(druidProps.getInt(loginTimeout));
+		}
+
 		// 检查关联配置，在用户未设置某项配置时，设置默认值
 		if (null == ds.getValidationQuery()) {
 			// 在validationQuery未设置的情况下，以下三项设置都将无效
