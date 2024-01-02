@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.codec;
 
 import org.dromara.hutool.core.codec.binary.Base62;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -59,5 +60,11 @@ public class Base62Test {
 		final String encode = Base62.encodeInverted(a);
 		final String decodeStr = Base62.decodeStrInverted(encode);
 		Assertions.assertEquals(a, decodeStr);
+	}
+
+	@Test
+	void encodeNumbersTest() {
+		final String encode = Base62.encode("181338494");
+		Assertions.assertEquals("HRmWh8NiFvYi", encode);
 	}
 }

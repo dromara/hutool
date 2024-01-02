@@ -24,6 +24,9 @@ public class NumberWordFormatTest {
 
 		final String format2 = NumberWordFormatter.format("2100.00");
 		Assertions.assertEquals("TWO THOUSAND ONE HUNDRED AND CENTS  ONLY", format2);
+
+		final String format3 = NumberWordFormatter.format("1234567890123.12");
+		Assertions.assertEquals("ONE TRILLION TWO HUNDRED AND THIRTY FOUR BILLION FIVE HUNDRED AND SIXTY SEVEN MILLION EIGHT HUNDRED AND NINETY THOUSAND ONE HUNDRED AND TWENTY THREE AND CENTS TWELVE ONLY", format3);
 	}
 
 	@Test
