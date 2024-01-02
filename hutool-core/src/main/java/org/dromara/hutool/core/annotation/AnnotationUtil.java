@@ -291,15 +291,8 @@ public class AnnotationUtil {
 	public static ElementType[] getTargetType(final Class<? extends Annotation> annotationType) {
 		final Target target = annotationType.getAnnotation(Target.class);
 		if (null == target) {
-			return new ElementType[]{ElementType.TYPE, //
-					ElementType.FIELD, //
-					ElementType.METHOD, //
-					ElementType.PARAMETER, //
-					ElementType.CONSTRUCTOR, //
-					ElementType.LOCAL_VARIABLE, //
-					ElementType.ANNOTATION_TYPE, //
-					ElementType.PACKAGE//
-			};
+			// 如果没有定义@target元注解，则表示支持所有节点
+			return ElementType.values();
 		}
 		return target.value();
 	}

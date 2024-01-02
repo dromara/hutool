@@ -82,7 +82,7 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 	 * @param element        被注解元素
 	 * @param mappingFactory 创建{@link AnnotationMapping}的工厂方法，返回值为{@code null}时将忽略该注解
 	 */
-	MetaAnnotatedElement(final AnnotatedElement element, final BiFunction<T, Annotation, T> mappingFactory) {
+	public MetaAnnotatedElement(final AnnotatedElement element, final BiFunction<T, Annotation, T> mappingFactory) {
 		this.element = Objects.requireNonNull(element);
 		this.mappingFactory = Objects.requireNonNull(mappingFactory);
 		// 等待懒加载

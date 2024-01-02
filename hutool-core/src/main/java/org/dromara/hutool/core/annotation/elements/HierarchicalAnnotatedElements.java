@@ -14,6 +14,7 @@ package org.dromara.hutool.core.annotation.elements;
 
 import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
@@ -274,13 +275,13 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	// ========================= protected =========================
 
 	/**
-	 * 获取当前元素及层级结构中的关联元素的映射对象
+	 * 获取当前元素及层级结构中的关联元素的映射对象，结果只读
 	 *
 	 * @return 元素映射对象
 	 */
-	protected final Set<AnnotatedElement> getElementMappings() {
+	public final Set<AnnotatedElement> getElementMappings() {
 		initElementMappingsIfNecessary();
-		return elementMappings;
+		return SetUtil.view(this.elementMappings);
 	}
 
 	/**
