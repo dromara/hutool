@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,8 +10,9 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.annotation;
+package org.dromara.hutool.core.annotation.elements;
 
+import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.map.TableMap;
 
@@ -32,7 +33,7 @@ import java.util.function.Predicate;
  * @since 4.0.9
  **/
 
-public class CombinationAnnotationElement implements AnnotatedElement, Serializable {
+public class CombinationAnnotatedElement implements AnnotatedElement, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -43,20 +44,21 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @return CombinationAnnotationElement
 	 * @since 5.8.0
 	 */
-	public static CombinationAnnotationElement of(final AnnotatedElement element, final Predicate<Annotation> predicate) {
-		return new CombinationAnnotationElement(element, predicate);
+	public static CombinationAnnotatedElement of(final AnnotatedElement element, final Predicate<Annotation> predicate) {
+		return new CombinationAnnotatedElement(element, predicate);
 	}
 
 	/**
 	 * 元注解
 	 */
-	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = SetUtil.of(Target.class, //
-			Retention.class, //
-			Inherited.class, //
-			Documented.class, //
-			SuppressWarnings.class, //
-			Override.class, //
-			Deprecated.class//
+	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = SetUtil.of(
+		Target.class, //
+		Retention.class, //
+		Inherited.class, //
+		Documented.class, //
+		SuppressWarnings.class, //
+		Override.class, //
+		Deprecated.class//
 	);
 
 	/**
@@ -77,7 +79,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 *
 	 * @param element 需要解析注解的元素：可以是Class、Method、Field、Constructor、ReflectPermission
 	 */
-	public CombinationAnnotationElement(final AnnotatedElement element) {
+	public CombinationAnnotatedElement(final AnnotatedElement element) {
 		this(element, null);
 	}
 
@@ -88,7 +90,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @param predicate 过滤器，{@link Predicate#test(Object)}返回{@code true}保留，否则不保留
 	 * @since 5.8.0
 	 */
-	public CombinationAnnotationElement(final AnnotatedElement element, final Predicate<Annotation> predicate) {
+	public CombinationAnnotatedElement(final AnnotatedElement element, final Predicate<Annotation> predicate) {
 		this.predicate = predicate;
 		init(element);
 	}
@@ -147,9 +149,9 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		for (final Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
 			if (!META_ANNOTATIONS.contains(annotationType)
-					// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
-					&& !declaredAnnotationMap.containsKey(annotationType)) {
-				if(test(annotation)){
+				// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
+				&& !declaredAnnotationMap.containsKey(annotationType)) {
+				if (test(annotation)) {
 					declaredAnnotationMap.put(annotationType, annotation);
 				}
 				// 测试不通过的注解，不影响继续递归
@@ -168,9 +170,9 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		for (final Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
 			if (!META_ANNOTATIONS.contains(annotationType)
-					// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
-					&& !annotationMap.containsKey(annotationType)) {
-				if(test(annotation)){
+				// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
+				&& !annotationMap.containsKey(annotationType)) {
+				if (test(annotation)) {
 					annotationMap.put(annotationType, annotation);
 				}
 				// 测试不通过的注解，不影响继续递归

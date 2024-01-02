@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.annotation;
 
+import org.dromara.hutool.core.annotation.elements.MetaAnnotatedElement;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.multi.Graph;

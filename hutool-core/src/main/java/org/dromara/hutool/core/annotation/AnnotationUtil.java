@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.annotation;
 
+import org.dromara.hutool.core.annotation.elements.CombinationAnnotatedElement;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.exception.HutoolException;
@@ -68,11 +69,11 @@ public class AnnotationUtil {
 	 * @param annotationEle 注解元素
 	 * @return 组合注解元素
 	 */
-	public static CombinationAnnotationElement toCombination(final AnnotatedElement annotationEle) {
-		if (annotationEle instanceof CombinationAnnotationElement) {
-			return (CombinationAnnotationElement) annotationEle;
+	public static CombinationAnnotatedElement toCombination(final AnnotatedElement annotationEle) {
+		if (annotationEle instanceof CombinationAnnotatedElement) {
+			return (CombinationAnnotatedElement) annotationEle;
 		}
-		return new CombinationAnnotationElement(annotationEle);
+		return new CombinationAnnotatedElement(annotationEle);
 	}
 
 	/**
@@ -139,7 +140,7 @@ public class AnnotationUtil {
 			if (null == predicate) {
 				return toCombination(annotationEle).getAnnotations();
 			}
-			return CombinationAnnotationElement.of(annotationEle, predicate).getAnnotations();
+			return CombinationAnnotatedElement.of(annotationEle, predicate).getAnnotations();
 		}
 
 		final Annotation[] result = annotationEle.getAnnotations();

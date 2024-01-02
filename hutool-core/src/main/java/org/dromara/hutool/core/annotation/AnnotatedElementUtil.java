@@ -12,6 +12,9 @@
 
 package org.dromara.hutool.core.annotation;
 
+import org.dromara.hutool.core.annotation.elements.HierarchicalAnnotatedElements;
+import org.dromara.hutool.core.annotation.elements.MetaAnnotatedElement;
+import org.dromara.hutool.core.annotation.elements.RepeatableMetaAnnotatedElement;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -41,11 +44,11 @@ import java.util.stream.Stream;
  * eg: <br>
  * 若类<em>A</em>分别有父类和父接口<em>B</em>、<em>C</em>，
  * 则通过<em>getXXX</em>方法将只能获得<em>A</em>上的注解，
- * 而通过<em>getXXX</em>方法将能获得<em>A</em>、<em>B</em>、<em>C</em>上的注解。
+ * 而通过<em>findXXX</em>方法将能获得<em>A</em>、<em>B</em>、<em>C</em>上的注解。
  *
  * <p><strong>搜索元注解</strong>
  * <p>工具类支持搜索注解的元注解。在所有格式为<em>getXXX</em>或<em>findXXX</em>的静态方法中，
- * 若不带有<em>directly</em>关键字，则该方法支持搜索元注解，否则皆支持搜索元注解。<br>
+ * 若不带有<em>directly</em>关键字，则该方法支持搜索元注解，否则不支持搜索元注解。<br>
  * eg: <br>
  * 若类<em>A</em>分别有父类和父接口<em>B</em>、<em>C</em>，上面分别有注解<em>X</em>与其元注解<em>Y</em>，
  * 则此时基于<em>A</em>有：

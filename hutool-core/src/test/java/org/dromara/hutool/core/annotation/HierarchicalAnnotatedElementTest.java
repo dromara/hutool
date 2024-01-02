@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.annotation;
 
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.annotation.elements.HierarchicalAnnotatedElements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

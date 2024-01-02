@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.annotation;
 
+import org.dromara.hutool.core.annotation.elements.CombinationAnnotatedElement;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import lombok.SneakyThrows;
@@ -41,7 +42,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testToCombination() {
-		final CombinationAnnotationElement element = AnnotationUtil.toCombination(ClassForTest.class);
+		final CombinationAnnotatedElement element = AnnotationUtil.toCombination(ClassForTest.class);
 		Assertions.assertEquals(2, element.getAnnotations().length);
 	}
 

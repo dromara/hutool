@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,8 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.annotation;
+package org.dromara.hutool.core.annotation.elements;
 
+import org.dromara.hutool.core.annotation.AnnotationMapping;
+import org.dromara.hutool.core.annotation.AnnotationUtil;
+import org.dromara.hutool.core.annotation.RepeatableAnnotationCollector;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
 import org.dromara.hutool.core.array.ArrayUtil;

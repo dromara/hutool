@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.annotation;
 
+import org.dromara.hutool.core.annotation.elements.MetaAnnotatedElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
