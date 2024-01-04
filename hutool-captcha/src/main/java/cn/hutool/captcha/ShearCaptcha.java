@@ -1,5 +1,7 @@
 package cn.hutool.captcha;
 
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.img.GraphicsUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -51,7 +53,19 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param thickness 干扰线宽度
 	 */
 	public ShearCaptcha(int width, int height, int codeCount, int thickness) {
-		super(width, height, codeCount, thickness);
+		this(width, height, new RandomGenerator(codeCount), thickness);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 */
+	public ShearCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
+		super(width, height, generator, interfereCount);
 	}
 
 	@Override

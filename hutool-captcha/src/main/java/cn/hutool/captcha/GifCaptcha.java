@@ -1,6 +1,8 @@
 package cn.hutool.captcha;
 
 
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.img.gif.AnimatedGifEncoder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -47,7 +49,28 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param codeCount 验证码个数
 	 */
 	public GifCaptcha(int width, int height, int codeCount) {
-		super(width, height, codeCount, 10);
+		this(width, height, codeCount, 10);
+	}
+
+	/**
+	 * @param width     验证码宽度
+	 * @param height    验证码高度
+	 * @param codeCount 验证码个数
+	 */
+	public GifCaptcha(int width, int height, int codeCount, int interfereCount) {
+		this(width, height, new RandomGenerator(codeCount), interfereCount);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 */
+	public GifCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
+		super(width, height, generator, interfereCount);
 	}
 
 	/**

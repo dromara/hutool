@@ -1,16 +1,15 @@
 package cn.hutool.captcha;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.concurrent.ThreadLocalRandom;
-
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.img.GraphicsUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 使用干扰线方式生成的图形验证码
@@ -41,7 +40,19 @@ public class LineCaptcha extends AbstractCaptcha {
 	 * @param lineCount 干扰线条数
 	 */
 	public LineCaptcha(int width, int height, int codeCount, int lineCount) {
-		super(width, height, codeCount, lineCount);
+		this(width, height, new RandomGenerator(codeCount), lineCount);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 */
+	public LineCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
+		super(width, height, generator, interfereCount);
 	}
 	// -------------------------------------------------------------------- Constructor end
 
