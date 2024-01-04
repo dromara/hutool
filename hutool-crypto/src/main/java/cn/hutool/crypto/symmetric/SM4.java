@@ -1,10 +1,14 @@
 package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
+import org.bouncycastle.crypto.params.AEADParameters;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.crypto.params.ParametersWithIV;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -23,17 +27,17 @@ import javax.crypto.spec.IvParameterSpec;
  * @author Looly
  * @since 4.6.8
  */
-public class SM4 extends SymmetricCrypto{
+public class SM4 extends BCCipher {
 	private static final long serialVersionUID = 1L;
 
-	public static final String ALGORITHM_NAME = "SM4";
+	public static final String ALGORITHM_NAME = "SM4/ECB/PKCS7Padding";
 
 	//------------------------------------------------------------------------- Constrctor start
 	/**
 	 * 构造，使用随机密钥
 	 */
 	public SM4() {
-		super(ALGORITHM_NAME);
+		super(ALGORITHM_NAME, new KeyParameter(RandomUtil.randomBytes(16)));
 	}
 
 	/**
@@ -42,7 +46,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param key 密钥
 	 */
 	public SM4(byte[] key) {
-		super(ALGORITHM_NAME, key);
+		super(ALGORITHM_NAME, new KeyParameter(key));
 	}
 
 	/**
@@ -168,7 +172,22 @@ public class SM4 extends SymmetricCrypto{
 	 * @param iv      加盐
 	 */
 	public SM4(String mode, String padding, SecretKey key, IvParameterSpec iv) {
-		super(StrUtil.format("SM4/{}/{}", mode, padding), key, iv);
+		super(StrUtil.format("SM4/{}/{}", mode, padding),
+			Mode.ECB.name().equalsIgnoreCase(mode) ?
+				new KeyParameter(key.getEncoded()) :
+				new ParametersWithIV(new KeyParameter(key.getEncoded()),
+					iv == null ?
+						new byte[16] :
+						iv.getIV()));
+	}
+
+	/**
+	 * 构造 AEAD 参数
+	 *
+	 * @param parameters {@link AEADParameters}
+	 */
+	public SM4(AEADParameters parameters) {
+		super("SM4/GCM/NoPadding", parameters);
 	}
 	//------------------------------------------------------------------------- Constrctor end
 }
