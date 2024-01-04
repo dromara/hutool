@@ -17,6 +17,7 @@ import org.bouncycastle.crypto.io.CipherOutputStream;
 import org.bouncycastle.crypto.modes.*;
 import org.bouncycastle.crypto.paddings.PKCS7Padding;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
+import org.bouncycastle.crypto.paddings.ZeroBytePadding;
 import org.bouncycastle.crypto.params.AEADParameters;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
@@ -37,7 +38,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 支持
  * AES/SM4/Blowfish/DESede 算法
  * ECB/CBC/CFB/OFB/CTR/GCM 模式
- * NoPadding/PKCS5Padding/PKCS7Padding 填充
+ * NoPadding/ZeroPadding/PKCS5Padding/PKCS7Padding 填充
  *
  * @author changhr2013
  */
@@ -315,6 +316,8 @@ public class BCCipher implements SymmetricEncryptor, SymmetricDecryptor, Seriali
 			return new BufferedBlockCipher(blockCipher);
 		} else if ("PKCS7Padding".equalsIgnoreCase(padding) || "PKCS5Padding".equalsIgnoreCase(padding)) {
 			return new PaddedBufferedBlockCipher(blockCipher, new PKCS7Padding());
+		} else if ("ZeroPadding".equalsIgnoreCase(padding)) {
+			return new PaddedBufferedBlockCipher(blockCipher, new ZeroBytePadding());
 		} else {
 			throw new CryptoException("unsupported padding" + cipherAlgorithm);
 		}
