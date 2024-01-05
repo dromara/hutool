@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.core.xml;
 
+import org.dromara.hutool.core.text.CharUtil;
+
 import java.util.regex.Pattern;
 
 /**
@@ -30,6 +32,10 @@ public class XmlConstants {
 	 * 字符串常量：XML And 符转义 {@code "&amp;" -> "&"}
 	 */
 	public static final String AMP = "&amp;";
+	/**
+	 * The Character '&amp;'.
+	 */
+	public static final Character C_AMP = CharUtil.AMP;
 
 	/**
 	 * 字符串常量：XML 双引号转义 {@code "&quot;" -> "\""}
@@ -40,6 +46,10 @@ public class XmlConstants {
 	 * 字符串常量：XML 单引号转义 {@code "&apos" -> "'"}
 	 */
 	public static final String APOS = "&apos;";
+	/**
+	 * The Character '''.
+	 */
+	public static final Character C_APOS = CharUtil.SINGLE_QUOTE;
 
 	/**
 	 * 字符串常量：XML 小于号转义 {@code "&lt;" -> "<"}
@@ -47,9 +57,29 @@ public class XmlConstants {
 	public static final String LT = "&lt;";
 
 	/**
+	 * The Character '&lt;'.
+	 */
+	public static final Character C_LT = '<';
+
+	/**
 	 * 字符串常量：XML 大于号转义 {@code "&gt;" -> ">"}
 	 */
 	public static final String GT = "&gt;";
+
+	/**
+	 * The Character '&gt;'.
+	 */
+	public static final Character C_GT = '>';
+
+	/**
+	 * The Character '!'.
+	 */
+	public static final Character C_BANG = '!';
+
+	/**
+	 * The Character '?'.
+	 */
+	public static final Character C_QUEST = '?';
 
 	/**
 	 * 在XML中无效的字符 正则
