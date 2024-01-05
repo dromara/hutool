@@ -15,10 +15,19 @@ package org.dromara.hutool.crypto.bc;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.crypto.BlockCipher;
+import org.bouncycastle.crypto.BufferedBlockCipher;
+import org.bouncycastle.crypto.DefaultBufferedBlockCipher;
+import org.bouncycastle.crypto.modes.*;
+import org.bouncycastle.crypto.paddings.ISO10126d2Padding;
+import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
+import org.bouncycastle.crypto.paddings.ZeroBytePadding;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.crypto.Mode;
+import org.dromara.hutool.crypto.Padding;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -41,10 +50,10 @@ public class BCUtil {
 	 */
 	public static ECDomainParameters toDomainParams(final ECParameterSpec parameterSpec) {
 		return new ECDomainParameters(
-				parameterSpec.getCurve(),
-				parameterSpec.getG(),
-				parameterSpec.getN(),
-				parameterSpec.getH());
+			parameterSpec.getCurve(),
+			parameterSpec.getG(),
+			parameterSpec.getN(),
+			parameterSpec.getH());
 	}
 
 	/**
@@ -67,10 +76,10 @@ public class BCUtil {
 	 */
 	public static ECDomainParameters toDomainParams(final X9ECParameters x9ECParameters) {
 		return new ECDomainParameters(
-				x9ECParameters.getCurve(),
-				x9ECParameters.getG(),
-				x9ECParameters.getN(),
-				x9ECParameters.getH()
+			x9ECParameters.getCurve(),
+			x9ECParameters.getG(),
+			x9ECParameters.getN(),
+			x9ECParameters.getH()
 		);
 	}
 
@@ -81,7 +90,7 @@ public class BCUtil {
 	 * @return PKCS#1格式私钥
 	 * @since 5.5.9
 	 */
-	public static byte[] toPkcs1(final PrivateKey privateKey){
+	public static byte[] toPkcs1(final PrivateKey privateKey) {
 		final PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
 		try {
 			return pkInfo.parsePrivateKey().toASN1Primitive().getEncoded();
@@ -97,13 +106,53 @@ public class BCUtil {
 	 * @return PKCS#1格式公钥
 	 * @since 5.5.9
 	 */
-	public static byte[] toPkcs1(final PublicKey publicKey){
+	public static byte[] toPkcs1(final PublicKey publicKey) {
 		final SubjectPublicKeyInfo spkInfo = SubjectPublicKeyInfo
-				.getInstance(publicKey.getEncoded());
+			.getInstance(publicKey.getEncoded());
 		try {
 			return spkInfo.parsePublicKey().getEncoded();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 将{@link BlockCipher}包装为指定mode和padding的{@link BufferedBlockCipher}
+	 *
+	 * @param cipher  {@link BlockCipher}
+	 * @param mode    模式
+	 * @param padding 补码方式
+	 * @return {@link BufferedBlockCipher}，无对应Cipher返回{@code null}
+	 * @since 6.0.0
+	 */
+	public static BufferedBlockCipher wrap(BlockCipher cipher, final Mode mode, final Padding padding) {
+		switch (mode) {
+			case CBC:
+				cipher = CBCBlockCipher.newInstance(cipher);
+				break;
+			case CFB:
+				cipher = CFBBlockCipher.newInstance(cipher, cipher.getBlockSize() * 8);
+				break;
+			case CTR:
+				cipher = SICBlockCipher.newInstance(cipher);
+				break;
+			case OFB:
+				cipher = new OFBBlockCipher(cipher, cipher.getBlockSize() * 8);
+			case CTS:
+				return new CTSBlockCipher(cipher);
+		}
+
+		switch (padding) {
+			case NoPadding:
+				return new DefaultBufferedBlockCipher(cipher);
+			case PKCS5Padding:
+				return new PaddedBufferedBlockCipher(cipher);
+			case ZeroPadding:
+				return new PaddedBufferedBlockCipher(cipher, new ZeroBytePadding());
+			case ISO10126Padding:
+				return new PaddedBufferedBlockCipher(cipher, new ISO10126d2Padding());
+		}
+
+		return null;
 	}
 }

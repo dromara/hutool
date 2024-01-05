@@ -14,10 +14,7 @@ package org.dromara.hutool.crypto.asymmetric;
 
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
-import org.dromara.hutool.crypto.CipherWrapper;
-import org.dromara.hutool.crypto.CryptoException;
-import org.dromara.hutool.crypto.KeyUtil;
-import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.*;
 import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 import javax.crypto.BadPaddingException;
@@ -51,8 +48,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	/**
 	 * Cipher负责完成加密或解密工作
 	 */
-	protected CipherWrapper cipherWrapper;
-
+	protected JceCipher cipher;
 	/**
 	 * 加密的块大小
 	 */
@@ -61,6 +57,15 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 解密的块大小
 	 */
 	protected int decryptBlockSize = -1;
+
+	/**
+	 * 算法参数
+	 */
+	private AlgorithmParameterSpec algorithmParameterSpec;
+	/**
+	 * 自定义随机数
+	 */
+	private SecureRandom random;
 	// ------------------------------------------------------------------ Constructor start
 
 	/**
@@ -209,7 +214,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public AlgorithmParameterSpec getAlgorithmParameterSpec() {
-		return this.cipherWrapper.getParams();
+		return this.algorithmParameterSpec;
 	}
 
 	/**
@@ -217,10 +222,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 在某些算法中，需要特别的参数，例如在ECIES中，此处为IESParameterSpec
 	 *
 	 * @param algorithmParameterSpec {@link AlgorithmParameterSpec}
-	 * @since 5.4.3
+	 * @return this
 	 */
-	public void setAlgorithmParameterSpec(final AlgorithmParameterSpec algorithmParameterSpec) {
-		this.cipherWrapper.setParams(algorithmParameterSpec);
+	public AsymmetricCrypto setAlgorithmParameterSpec(final AlgorithmParameterSpec algorithmParameterSpec) {
+		this.algorithmParameterSpec = algorithmParameterSpec;
+		return this;
 	}
 
 	/**
@@ -231,7 +237,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.7.17
 	 */
 	public AsymmetricCrypto setRandom(final SecureRandom random) {
-		this.cipherWrapper.setRandom(random);
+		this.random = random;
 		return this;
 	}
 
@@ -301,7 +307,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public Cipher getCipher() {
-		return this.cipherWrapper.getRaw();
+		return this.cipher.getRaw();
 	}
 
 	/**
@@ -310,7 +316,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 4.5.2
 	 */
 	protected void initCipher() {
-		this.cipherWrapper = new CipherWrapper(this.algorithm);
+		this.cipher = new JceCipher(this.algorithm);
 	}
 
 	/**
@@ -376,6 +382,9 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @throws InvalidKeyException                异常KEY错误
 	 */
 	private Cipher initMode(final int mode, final Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
-		return this.cipherWrapper.initMode(mode, key).getRaw();
+		final JceCipher cipher = this.cipher;
+		cipher.init(mode,
+			new JceCipher.JceParameters(key, this.algorithmParameterSpec, this.random));
+		return cipher.getRaw();
 	}
 }

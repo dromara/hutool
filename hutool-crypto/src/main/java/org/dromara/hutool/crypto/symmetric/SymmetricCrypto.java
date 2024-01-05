@@ -52,7 +52,15 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private CipherWrapper cipherWrapper;
+	private JceCipher cipher;
+	/**
+	 * 算法参数
+	 */
+	private AlgorithmParameterSpec algorithmParameterSpec;
+	/**
+	 * 自定义随机数
+	 */
+	private SecureRandom random;
 	/**
 	 * SecretKey 负责保存对称密钥
 	 */
@@ -157,7 +165,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 			this.isZeroPadding = true;
 		}
 
-		this.cipherWrapper = new CipherWrapper(algorithm);
+		this.cipher = new JceCipher(algorithm);
 		return this;
 	}
 
@@ -176,17 +184,17 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 加密或解密
 	 */
 	public Cipher getCipher() {
-		return cipherWrapper.getRaw();
+		return cipher.getRaw();
 	}
 
 	/**
-	 * 设置 {@link AlgorithmParameterSpec}，通常用于加盐或偏移向量
+	 * 设置{@link AlgorithmParameterSpec}，通常用于加盐或偏移向量
 	 *
-	 * @param params {@link AlgorithmParameterSpec}
-	 * @return 自身
+	 * @param algorithmParameterSpec {@link AlgorithmParameterSpec}
+	 * @return this
 	 */
-	public SymmetricCrypto setParams(final AlgorithmParameterSpec params) {
-		this.cipherWrapper.setParams(params);
+	public SymmetricCrypto setAlgorithmParameterSpec(final AlgorithmParameterSpec algorithmParameterSpec) {
+		this.algorithmParameterSpec = algorithmParameterSpec;
 		return this;
 	}
 
@@ -197,7 +205,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 自身
 	 */
 	public SymmetricCrypto setIv(final IvParameterSpec iv) {
-		return setParams(iv);
+		return setAlgorithmParameterSpec(iv);
 	}
 
 	/**
@@ -218,7 +226,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @since 5.7.17
 	 */
 	public SymmetricCrypto setRandom(final SecureRandom random) {
-		this.cipherWrapper.setRandom(random);
+		this.random = random;
 		return this;
 	}
 
@@ -263,7 +271,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @since 5.6.8
 	 */
 	public byte[] update(final byte[] data) {
-		final Cipher cipher = cipherWrapper.getRaw();
+		final Cipher cipher = this.cipher.getRaw();
 		lock.lock();
 		try {
 			return cipher.update(paddingDataWithZero(data, cipher.getBlockSize()));
@@ -417,8 +425,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 */
 	private SymmetricCrypto initParams(final String algorithm, AlgorithmParameterSpec paramsSpec) {
 		if (null == paramsSpec) {
-			byte[] iv = Opt.ofNullable(cipherWrapper)
-				.map(CipherWrapper::getRaw).map(Cipher::getIV).get();
+			byte[] iv = Opt.ofNullable(cipher)
+				.map(JceCipher::getRaw).map(Cipher::getIV).get();
 
 			// 随机IV
 			if (StrUtil.startWithIgnoreCase(algorithm, "PBE")) {
@@ -435,7 +443,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 			}
 		}
 
-		return setParams(paramsSpec);
+		return setAlgorithmParameterSpec(paramsSpec);
 	}
 
 	/**
@@ -455,10 +463,14 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 				.getKeyAndIV(secretKey.getEncoded(), salt);
 			secretKey = KeyUtil.generateKey(algorithm, keyAndIV[0]);
 			if(ArrayUtil.isNotEmpty(keyAndIV[1])){
-				this.cipherWrapper.setParams(new IvParameterSpec(keyAndIV[1]));
+				setAlgorithmParameterSpec(new IvParameterSpec(keyAndIV[1]));
 			}
 		}
-		return this.cipherWrapper.initMode(mode, secretKey).getRaw();
+
+		final JceCipher cipher = this.cipher;
+		cipher.init(mode,
+			new JceCipher.JceParameters(secretKey, this.algorithmParameterSpec, this.random));
+		return cipher.getRaw();
 	}
 
 	/**

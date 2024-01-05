@@ -54,5 +54,10 @@ public enum Mode {
 	/**
 	 * Propagating Cipher Block
 	 */
-	PCBC
+	PCBC,
+	/**
+	 * GCM 全称为 Galois/Counter Mode。G是指GMAC，C是指CTR。
+	 * 它在 CTR 加密的基础上增加 GMAC 的特性，解决了 CTR 不能对加密消息进行完整性校验的问题。
+	 */
+	GCM
 }
