@@ -21,7 +21,7 @@ public class CaptchaUtilTest {
 	@Disabled
 	public void createTest() {
 		for(int i = 0; i < 1; i++) {
-			CaptchaUtil.createShearCaptcha(320, 240);
+			CaptchaUtil.ofShearCaptcha(320, 240);
 		}
 	}
 }
