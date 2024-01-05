@@ -1,13 +1,13 @@
 package cn.hutool.captcha;
 
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.img.GraphicsUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -51,7 +51,19 @@ public class CircleCaptcha extends AbstractCaptcha {
 	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public CircleCaptcha(int width, int height, int codeCount, int interfereCount) {
-		super(width, height, codeCount, interfereCount);
+		this(width, height, new RandomGenerator(codeCount), interfereCount);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 */
+	public CircleCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
+		super(width, height, generator, interfereCount);
 	}
 
 	@Override
