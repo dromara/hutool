@@ -44,7 +44,7 @@ public class ParseConfig implements Serializable {
 	/**
 	 * 最大嵌套深度，用于解析时限制解析层级，当大于这个层级时抛出异常，-1表示无限制
 	 */
-	private int maxNestingDepth;
+	private int maxNestingDepth = -1;
 
 	/**
 	 * 是否保持值为String类型，如果为{@code false}，则尝试转换为对应类型(numeric, boolean, string)

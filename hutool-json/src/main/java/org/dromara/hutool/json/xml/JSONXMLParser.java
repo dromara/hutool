@@ -39,20 +39,23 @@ public class JSONXMLParser {
 	public static void parseJSONObject(final String xmlStr, final JSONObject jo, final ParseConfig parseConfig) throws JSONException {
 		final XMLTokener x = new XMLTokener(xmlStr, jo.config());
 		while (x.more() && x.skipPast("<")) {
-			parse(x, jo, null, parseConfig);
+			parse(x, jo, null, parseConfig, 0);
 		}
 	}
 
 	/**
 	 * 扫描XML内容，并解析到JSONObject中。
 	 *
-	 * @param x       {@link XMLTokener}
-	 * @param context {@link JSONObject}
-	 * @param name    标签名，null表示从根标签开始解析
+	 * @param x                   {@link XMLTokener}
+	 * @param context             {@link JSONObject}
+	 * @param name                标签名，null表示从根标签开始解析
+	 * @param parseConfig         解析选项
+	 * @param currentNestingDepth 当前层级
 	 * @return {@code true}表示解析完成
 	 * @throws JSONException JSON异常
 	 */
-	private static boolean parse(final XMLTokener x, final JSONObject context, final String name, final ParseConfig parseConfig) throws JSONException {
+	private static boolean parse(final XMLTokener x, final JSONObject context, final String name,
+								 final ParseConfig parseConfig, final int currentNestingDepth) throws JSONException {
 		final char c;
 		int i;
 		final JSONObject jsonobject;
@@ -175,7 +178,14 @@ public class JSONXMLParser {
 
 						} else if (token == XmlConstants.C_LT) {
 							// Nested element
-							if (parse(x, jsonobject, tagName, parseConfig)) {
+							// issue#2748 of CVE-2022-45688
+							final int maxNestingDepth = parseConfig.getMaxNestingDepth();
+							if (maxNestingDepth > -1 && currentNestingDepth >= maxNestingDepth) {
+								throw x.syntaxError("Maximum nesting depth of " + maxNestingDepth + " reached");
+							}
+
+							// Nested element
+							if (parse(x, jsonobject, tagName, parseConfig, currentNestingDepth + 1)) {
 								if (jsonobject.isEmpty()) {
 									context.append(tagName, StrUtil.EMPTY);
 								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {
