@@ -24,9 +24,22 @@ public class JSONXMLParser {
 	 * @throws JSONException 解析异常
 	 */
 	public static void parseJSONObject(JSONObject jo, String xmlStr, boolean keepStrings) throws JSONException {
-		XMLTokener x = new XMLTokener(xmlStr, jo.getConfig());
+		parseJSONObject(jo, xmlStr, ParseConfig.of().setKeepStrings(keepStrings));
+	}
+
+	/**
+	 * 转换XML为JSONObject
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 *
+	 * @param xmlStr      XML字符串
+	 * @param jo          JSONObject
+	 * @param parseConfig 解析选项
+	 * @throws JSONException 解析异常
+	 */
+	public static void parseJSONObject(final JSONObject jo, final String xmlStr, final ParseConfig parseConfig) throws JSONException {
+		final XMLTokener x = new XMLTokener(xmlStr, jo.getConfig());
 		while (x.more() && x.skipPast("<")) {
-			parse(x, jo, null, keepStrings);
+			parse(x, jo, null, parseConfig, 0);
 		}
 	}
 
@@ -36,10 +49,12 @@ public class JSONXMLParser {
 	 * @param x       The XMLTokener containing the source string.
 	 * @param context The JSONObject that will include the new material.
 	 * @param name    The tag name.
+	 * @param parseConfig 解析选项
+	 * @param currentNestingDepth 当前层级
 	 * @return true if the close tag is processed.
 	 * @throws JSONException JSON异常
 	 */
-	private static boolean parse(XMLTokener x, JSONObject context, String name, boolean keepStrings) throws JSONException {
+	private static boolean parse(XMLTokener x, JSONObject context, String name, ParseConfig parseConfig, int currentNestingDepth) throws JSONException {
 		char c;
 		int i;
 		JSONObject jsonobject;
@@ -112,6 +127,7 @@ public class JSONXMLParser {
 			tagName = (String) token;
 			token = null;
 			jsonobject = new JSONObject();
+			final boolean keepStrings = parseConfig.isKeepStrings();
 			for (; ; ) {
 				if (token == null) {
 					token = x.nextToken();
@@ -155,14 +171,21 @@ public class JSONXMLParser {
 							return false;
 						} else if (token instanceof String) {
 							string = (String) token;
-							if (string.length() > 0) {
+							if (!string.isEmpty()) {
 								jsonobject.accumulate("content", keepStrings ? token : InternalJSONUtil.stringToValue(string));
 							}
 
 						} else if (token == XML.LT) {
 							// Nested element
-							if (parse(x, jsonobject, tagName, keepStrings)) {
-								if (jsonobject.size() == 0) {
+							// issue#2748 of CVE-2022-45688
+							final int maxNestingDepth = parseConfig.getMaxNestingDepth();
+							if (maxNestingDepth > -1 && currentNestingDepth >= maxNestingDepth) {
+								throw x.syntaxError("Maximum nesting depth of " + maxNestingDepth + " reached");
+							}
+
+							// Nested element
+							if (parse(x, jsonobject, tagName, parseConfig, currentNestingDepth + 1)) {
+								if (jsonobject.isEmpty()) {
 									context.accumulate(tagName, "");
 								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {
 									context.accumulate(tagName, jsonobject.get("content"));

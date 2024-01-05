@@ -15,6 +15,7 @@
 * 【core  】      修复RandomUtil.randomInt,RandomUtil.randomLong边界问题（pr#3450@Github）
 * 【db    】      修复Druid连接池无法设置部分属性问题（issue#I8STFC@Gitee）
 * 【core  】      修复金额转换为英文时缺少 trillion 单位问题（pr#3454@Github）
+* 【json  】      增加ParseConfig，通过增加maxNestingDepth参数避免StackOverflowError问题，修复CVE-2022-45688漏洞（issue#2748@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.24(2023-12-23)

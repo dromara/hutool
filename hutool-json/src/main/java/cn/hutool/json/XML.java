@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.json.xml.JSONXMLParser;
 import cn.hutool.json.xml.JSONXMLSerializer;
+import cn.hutool.json.xml.ParseConfig;
 
 /**
  * 提供静态方法在XML和JSONObject之间转换
@@ -89,6 +90,22 @@ public class XML {
 	/**
 	 * 转换XML为JSONObject
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and {@code <[ [ ]]>} are ignored.
+	 * All values are converted as strings, for 1, 01, 29.0 will not be coerced to numbers but will instead be the exact value as seen in the XML document.
+	 *
+	 * @param string      XML字符串
+	 * @param parseConfig XML解析选项
+	 * @return A JSONObject containing the structured data from the XML string.
+	 * @throws JSONException Thrown if there is an errors while parsing the string
+	 * @since 5.8.25
+	 */
+	public static JSONObject toJSONObject(final String string, final ParseConfig parseConfig) throws JSONException {
+		return toJSONObject(new JSONObject(), string, parseConfig);
+	}
+
+	/**
+	 * 转换XML为JSONObject
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
 	 *
 	 * @param jo          JSONObject
 	 * @param xmlStr      XML字符串
@@ -99,6 +116,22 @@ public class XML {
 	 */
 	public static JSONObject toJSONObject(JSONObject jo, String xmlStr, boolean keepStrings) throws JSONException {
 		JSONXMLParser.parseJSONObject(jo, xmlStr, keepStrings);
+		return jo;
+	}
+
+	/**
+	 * 转换XML为JSONObject
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 *
+	 * @param jo          JSONObject
+	 * @param xmlStr      XML字符串
+	 * @param parseConfig XML解析选项
+	 * @return A JSONObject 解析后的JSON对象，与传入的jo为同一对象
+	 * @throws JSONException 解析异常
+	 * @since 5.8.25
+	 */
+	public static JSONObject toJSONObject(final JSONObject jo, final String xmlStr, final ParseConfig parseConfig) throws JSONException {
+		JSONXMLParser.parseJSONObject(jo, xmlStr, parseConfig);
 		return jo;
 	}
 
