@@ -56,6 +56,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param width     验证码宽度
 	 * @param height    验证码高度
 	 * @param codeCount 验证码个数
+	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public GifCaptcha(int width, int height, int codeCount, int interfereCount) {
 		this(width, height, new RandomGenerator(codeCount), interfereCount);

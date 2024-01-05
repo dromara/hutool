@@ -154,6 +154,7 @@ public class CaptchaUtil {
 	 * @param width 宽
 	 * @param height 高
 	 * @param generator 验证码生成器
+	 * @param thickness 验证码干扰元素个数
 	 * @return {@link GifCaptcha}
 	 */
 	public static GifCaptcha createGifCaptcha(int width, int height, CodeGenerator generator, int thickness) {
