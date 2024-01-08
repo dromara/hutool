@@ -45,7 +45,7 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	 * @param cipher {@link javax.crypto.Cipher}
 	 */
 	public JceCipher(final javax.crypto.Cipher cipher) {
-		this.cipher = cipher;
+		this.cipher = Assert.notNull(cipher);
 	}
 
 	@Override

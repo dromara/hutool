@@ -38,7 +38,7 @@ public class BCCipher implements Cipher, Wrapper<BufferedBlockCipher> {
 	 * @param blockCipher {@link BufferedBlockCipher}
 	 */
 	public BCCipher(final BufferedBlockCipher blockCipher) {
-		this.blockCipher = blockCipher;
+		this.blockCipher = Assert.notNull(blockCipher);
 	}
 
 	@Override
