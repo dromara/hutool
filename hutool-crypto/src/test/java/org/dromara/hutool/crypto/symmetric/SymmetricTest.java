@@ -135,9 +135,9 @@ public class SymmetricTest {
 		final AES aes = new AES(Mode.CBC, Padding.PKCS5Padding, "0123456789ABHAEQ".getBytes(), "DYgjCEIMVrj2W9xN".getBytes());
 
 		// 加密为16进制表示
-		aes.setMode(CipherMode.encrypt);
+		aes.setMode(CipherMode.ENCRYPT);
 		final String randomData = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
-		aes.setMode(CipherMode.encrypt);
+		aes.setMode(CipherMode.ENCRYPT);
 		final String randomData2 = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
 		Assertions.assertEquals(randomData2, randomData);
 		Assertions.assertEquals(randomData, "cd0e3a249eaf0ed80c330338508898c4");

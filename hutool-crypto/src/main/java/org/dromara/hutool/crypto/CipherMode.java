@@ -24,19 +24,19 @@ public enum CipherMode {
 	/**
 	 * 加密模式
 	 */
-	encrypt(Cipher.ENCRYPT_MODE),
+	ENCRYPT(Cipher.ENCRYPT_MODE),
 	/**
 	 * 解密模式
 	 */
-	decrypt(Cipher.DECRYPT_MODE),
+	DECRYPT(Cipher.DECRYPT_MODE),
 	/**
 	 * 包装模式
 	 */
-	wrap(Cipher.WRAP_MODE),
+	WRAP(Cipher.WRAP_MODE),
 	/**
 	 * 拆包模式
 	 */
-	unwrap(Cipher.UNWRAP_MODE);
+	UNWRAP(Cipher.UNWRAP_MODE);
 
 
 	/**

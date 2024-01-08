@@ -15,6 +15,7 @@ package org.dromara.hutool.crypto;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
+import javax.crypto.ShortBufferException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -64,6 +65,11 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	}
 
 	@Override
+	public int getOutputSize(final int len) {
+		return this.cipher.getOutputSize(len);
+	}
+
+	@Override
 	public void init(final CipherMode mode, final Parameters parameters) {
 		Assert.isInstanceOf(JceParameters.class, parameters, "Only support JceParameters!");
 
@@ -100,8 +106,30 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	}
 
 	@Override
-	public byte[] process(final byte[] data) {
-		return new byte[0];
+	public int process(final byte[] in, final int inOff, final int len, final byte[] out, final int outOff) {
+		try {
+			return this.cipher.update(in, inOff, len, out, outOff);
+		} catch (final ShortBufferException e) {
+			throw new CryptoException(e);
+		}
+	}
+
+	@Override
+	public int doFinal(final byte[] out, final int outOff) {
+		try {
+			return this.cipher.doFinal(out, outOff);
+		} catch (final Exception e) {
+			throw new CryptoException(e);
+		}
+	}
+
+	@Override
+	public byte[] processFinal(final byte[] data) {
+		try {
+			return this.cipher.doFinal(data);
+		} catch (final Exception e) {
+			throw new CryptoException(e);
+		}
 	}
 
 	/**

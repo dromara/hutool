@@ -34,8 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.concurrent.locks.Lock;
@@ -253,9 +251,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	public SymmetricCrypto setMode(final CipherMode mode, final byte[] salt) {
 		lock.lock();
 		try {
-			initMode(mode.getValue(), salt);
-		} catch (final Exception e) {
-			throw new CryptoException(e);
+			initMode(mode, salt);
 		} finally {
 			lock.unlock();
 		}
@@ -313,10 +309,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		byte[] result;
 		lock.lock();
 		try {
-			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, salt);
-			result = cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
-		} catch (final Exception e) {
-			throw new CryptoException(e);
+			final JceCipher cipher = initMode(CipherMode.ENCRYPT, salt);
+			result = cipher.processFinal(paddingDataWithZero(data, cipher.getBlockSize()));
 		} finally {
 			lock.unlock();
 		}
@@ -328,8 +322,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		CipherOutputStream cipherOutputStream = null;
 		lock.lock();
 		try {
-			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, null);
-			cipherOutputStream = new CipherOutputStream(out, cipher);
+			final JceCipher cipher = initMode(CipherMode.ENCRYPT, null);
+			cipherOutputStream = new CipherOutputStream(out, cipher.getRaw());
 			final long length = IoUtil.copy(data, cipherOutputStream);
 			if (this.isZeroPadding) {
 				final int blockSize = cipher.getBlockSize();
@@ -367,9 +361,9 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		lock.lock();
 		try {
 			final byte[] salt = SaltMagic.getSalt(bytes);
-			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, salt);
+			final JceCipher cipher = initMode(CipherMode.DECRYPT, salt);
 			blockSize = cipher.getBlockSize();
-			decryptData = cipher.doFinal(SaltMagic.getData(bytes));
+			decryptData = cipher.processFinal(SaltMagic.getData(bytes));
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -384,8 +378,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		CipherInputStream cipherInputStream = null;
 		lock.lock();
 		try {
-			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, null);
-			cipherInputStream = new CipherInputStream(data, cipher);
+			final JceCipher cipher = initMode(CipherMode.DECRYPT, null);
+			cipherInputStream = new CipherInputStream(data, cipher.getRaw());
 			if (this.isZeroPadding) {
 				final int blockSize = cipher.getBlockSize();
 				if (blockSize > 0) {
@@ -447,14 +441,12 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	}
 
 	/**
-	 * 初始化{@link Cipher}为加密或者解密模式
+	 * 初始化{@link JceCipher}为加密或者解密模式
 	 *
-	 * @param mode 模式，见{@link Cipher#ENCRYPT_MODE} 或 {@link Cipher#DECRYPT_MODE}
+	 * @param mode 模式，见{@link CipherMode#ENCRYPT} 或 {@link CipherMode#DECRYPT}
 	 * @return {@link Cipher}
-	 * @throws InvalidKeyException                无效key
-	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
-	private Cipher initMode(final int mode, final byte[] salt) throws InvalidKeyException, InvalidAlgorithmParameterException {
+	private JceCipher initMode(final CipherMode mode, final byte[] salt) {
 		SecretKey secretKey = this.secretKey;
 		if (null != salt) {
 			// /issues#I6YWWD，提供OpenSSL格式兼容支持
@@ -462,7 +454,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 			final byte[][] keyAndIV = OpenSSLSaltParser.ofMd5(32, algorithm)
 				.getKeyAndIV(secretKey.getEncoded(), salt);
 			secretKey = KeyUtil.generateKey(algorithm, keyAndIV[0]);
-			if(ArrayUtil.isNotEmpty(keyAndIV[1])){
+			if (ArrayUtil.isNotEmpty(keyAndIV[1])) {
 				setAlgorithmParameterSpec(new IvParameterSpec(keyAndIV[1]));
 			}
 		}
@@ -470,7 +462,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		final JceCipher cipher = this.cipher;
 		cipher.init(mode,
 			new JceCipher.JceParameters(secretKey, this.algorithmParameterSpec, this.random));
-		return cipher.getRaw();
+		return cipher;
 	}
 
 	/**
