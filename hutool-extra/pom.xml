@@ -39,7 +39,7 @@
 		<thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
-		<sshj.version>0.37.0</sshj.version>
+		<sshj.version>0.38.0</sshj.version>
 		<zxing.version>3.5.2</zxing.version>
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
@@ -203,6 +203,14 @@
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcpkix-jdk18on</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk18on</artifactId>
+					<groupId>org.bouncycastle</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
