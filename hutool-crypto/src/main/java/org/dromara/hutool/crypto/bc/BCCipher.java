@@ -15,6 +15,7 @@ package org.dromara.hutool.crypto.bc;
 import org.bouncycastle.crypto.BufferedBlockCipher;
 import org.bouncycastle.crypto.CipherParameters;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.crypto.Cipher;
 import org.dromara.hutool.crypto.CipherMode;
 import org.dromara.hutool.crypto.CryptoException;
@@ -24,12 +25,17 @@ import org.dromara.hutool.crypto.CryptoException;
  *
  * @author Looly, changhr2013
  */
-public class BCCipher implements Cipher {
+public class BCCipher implements Cipher, Wrapper<BufferedBlockCipher> {
 
 	/**
 	 * {@link BufferedBlockCipher}，包含engine、mode、padding
 	 */
 	private final BufferedBlockCipher blockCipher;
+
+	@Override
+	public BufferedBlockCipher getRaw() {
+		return this.blockCipher;
+	}
 
 	/**
 	 * 构造
