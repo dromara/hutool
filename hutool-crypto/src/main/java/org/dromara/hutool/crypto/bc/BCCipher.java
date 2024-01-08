@@ -32,11 +32,6 @@ public class BCCipher implements Cipher, Wrapper<BufferedBlockCipher> {
 	 */
 	private final BufferedBlockCipher blockCipher;
 
-	@Override
-	public BufferedBlockCipher getRaw() {
-		return this.blockCipher;
-	}
-
 	/**
 	 * 构造
 	 *
@@ -44,6 +39,11 @@ public class BCCipher implements Cipher, Wrapper<BufferedBlockCipher> {
 	 */
 	public BCCipher(final BufferedBlockCipher blockCipher) {
 		this.blockCipher = blockCipher;
+	}
+
+	@Override
+	public BufferedBlockCipher getRaw() {
+		return this.blockCipher;
 	}
 
 	@Override
