@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.crypto.digest.mac;
 
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.SecureUtil;
@@ -23,18 +24,15 @@ import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
- * 默认的HMAC算法实现引擎，使用{@link Mac} 实现摘要<br>
+ * JDK提供的的MAC算法实现引擎，使用{@link Mac} 实现摘要<br>
  * 当引入BouncyCastle库时自动使用其作为Provider
  *
  * @author Looly
  * @since 4.5.13
  */
-public class DefaultHMacEngine implements MacEngine {
-
-	private Mac mac;
+public class JCEMacEngine extends SimpleWrapper<Mac> implements MacEngine {
 
 	// region ----- Constructor
-
 	/**
 	 * 构造
 	 *
@@ -42,7 +40,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param key       密钥
 	 * @since 4.5.13
 	 */
-	public DefaultHMacEngine(final String algorithm, final byte[] key) {
+	public JCEMacEngine(final String algorithm, final byte[] key) {
 		this(algorithm, (null == key) ? null : new SecretKeySpec(key, algorithm));
 	}
 
@@ -53,7 +51,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param key       密钥
 	 * @since 4.5.13
 	 */
-	public DefaultHMacEngine(final String algorithm, final Key key) {
+	public JCEMacEngine(final String algorithm, final Key key) {
 		this(algorithm, key, null);
 	}
 
@@ -65,34 +63,39 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param spec      {@link AlgorithmParameterSpec}
 	 * @since 5.7.12
 	 */
-	public DefaultHMacEngine(final String algorithm, final Key key, final AlgorithmParameterSpec spec) {
-		init(algorithm, key, spec);
+	public JCEMacEngine(final String algorithm, final Key key, final AlgorithmParameterSpec spec) {
+		super(initMac(algorithm, key, spec));
 	}
 	// endregion
 
-	// region ----- init
-
-	/**
-	 * 初始化
-	 *
-	 * @param algorithm 算法
-	 * @param key       密钥
-	 * @return this
-	 */
-	public DefaultHMacEngine init(final String algorithm, final byte[] key) {
-		return init(algorithm, (null == key) ? null : new SecretKeySpec(key, algorithm));
+	@Override
+	public void update(final byte[] in) {
+		getRaw().update(in);
 	}
 
-	/**
-	 * 初始化
-	 *
-	 * @param algorithm 算法
-	 * @param key       密钥 {@link SecretKey}
-	 * @return this
-	 * @throws CryptoException Cause by IOException
-	 */
-	public DefaultHMacEngine init(final String algorithm, final Key key) {
-		return init(algorithm, key, null);
+	@Override
+	public void update(final byte[] in, final int inOff, final int len) {
+		getRaw().update(in, inOff, len);
+	}
+
+	@Override
+	public byte[] doFinal() {
+		return getRaw().doFinal();
+	}
+
+	@Override
+	public void reset() {
+		getRaw().reset();
+	}
+
+	@Override
+	public int getMacLength() {
+		return getRaw().getMacLength();
+	}
+
+	@Override
+	public String getAlgorithm() {
+		return getRaw().getAlgorithm();
 	}
 
 	/**
@@ -103,9 +106,9 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param spec      {@link AlgorithmParameterSpec}
 	 * @return this
 	 * @throws CryptoException Cause by IOException
-	 * @since 5.7.12
 	 */
-	public DefaultHMacEngine init(final String algorithm, Key key, final AlgorithmParameterSpec spec) {
+	private static Mac initMac(final String algorithm, Key key, final AlgorithmParameterSpec spec) {
+		final Mac mac;
 		try {
 			mac = SecureUtil.createMac(algorithm);
 			if (null == key) {
@@ -119,46 +122,6 @@ public class DefaultHMacEngine implements MacEngine {
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
-		return this;
-	}
-	// endregion
-
-	/**
-	 * 获得 {@link Mac}
-	 *
-	 * @return {@link Mac}
-	 */
-	public Mac getMac() {
 		return mac;
-	}
-
-	@Override
-	public void update(final byte[] in) {
-		this.mac.update(in);
-	}
-
-	@Override
-	public void update(final byte[] in, final int inOff, final int len) {
-		this.mac.update(in, inOff, len);
-	}
-
-	@Override
-	public byte[] doFinal() {
-		return this.mac.doFinal();
-	}
-
-	@Override
-	public void reset() {
-		this.mac.reset();
-	}
-
-	@Override
-	public int getMacLength() {
-		return mac.getMacLength();
-	}
-
-	@Override
-	public String getAlgorithm() {
-		return this.mac.getAlgorithm();
 	}
 }

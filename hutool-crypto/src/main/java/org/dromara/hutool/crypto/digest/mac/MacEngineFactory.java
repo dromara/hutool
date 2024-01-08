@@ -50,6 +50,6 @@ public class MacEngineFactory {
 			// HmacSM3算法是BC库实现的，忽略加盐
 			return SmUtil.createHmacSm3Engine(key.getEncoded());
 		}
-		return new DefaultHMacEngine(algorithm, key, spec);
+		return new JCEMacEngine(algorithm, key, spec);
 	}
 }

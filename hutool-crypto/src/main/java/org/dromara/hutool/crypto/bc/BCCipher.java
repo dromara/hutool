@@ -12,10 +12,7 @@
 
 package org.dromara.hutool.crypto.bc;
 
-import org.bouncycastle.crypto.BufferedBlockCipher;
-import org.bouncycastle.crypto.CipherParameters;
-import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.crypto.StreamCipher;
+import org.bouncycastle.crypto.*;
 import org.bouncycastle.crypto.modes.AEADBlockCipher;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
@@ -23,10 +20,13 @@ import org.dromara.hutool.crypto.Cipher;
 import org.dromara.hutool.crypto.CipherMode;
 import org.dromara.hutool.crypto.CryptoException;
 
+import java.util.Arrays;
+
 /**
  * 基于BouncyCastle库封装的加密解密实现，包装包括：
  * <ul>
  *     <li>{@link BufferedBlockCipher}</li>
+ *     <li>{@link BlockCipher}</li>
  *     <li>{@link StreamCipher}</li>
  *     <li>{@link AEADBlockCipher}</li>
  * </ul>
@@ -38,7 +38,11 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 	/**
 	 * {@link BufferedBlockCipher}，块加密，包含engine、mode、padding
 	 */
-	private BufferedBlockCipher blockCipher;
+	private BufferedBlockCipher bufferedBlockCipher;
+	/**
+	 * {@link BlockCipher} 块加密，一般用于AES等对称加密
+	 */
+	private BlockCipher blockCipher;
 	/**
 	 * {@link AEADBlockCipher}, 关联数据的认证加密(Authenticated Encryption with Associated Data)
 	 */
@@ -53,9 +57,18 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 	/**
 	 * 构造
 	 *
-	 * @param blockCipher {@link BufferedBlockCipher}
+	 * @param bufferedBlockCipher {@link BufferedBlockCipher}
 	 */
-	public BCCipher(final BufferedBlockCipher blockCipher) {
+	public BCCipher(final BufferedBlockCipher bufferedBlockCipher) {
+		this.bufferedBlockCipher = Assert.notNull(bufferedBlockCipher);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param blockCipher {@link BlockCipher}
+	 */
+	public BCCipher(final BlockCipher blockCipher) {
 		this.blockCipher = Assert.notNull(blockCipher);
 	}
 
@@ -80,6 +93,9 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 
 	@Override
 	public Object getRaw() {
+		if (null != this.bufferedBlockCipher) {
+			return this.bufferedBlockCipher;
+		}
 		if (null != this.blockCipher) {
 			return this.blockCipher;
 		}
@@ -91,8 +107,11 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 
 	@Override
 	public String getAlgorithmName() {
+		if (null != this.bufferedBlockCipher) {
+			return this.bufferedBlockCipher.getUnderlyingCipher().getAlgorithmName();
+		}
 		if (null != this.blockCipher) {
-			return this.blockCipher.getUnderlyingCipher().getAlgorithmName();
+			return this.blockCipher.getAlgorithmName();
 		}
 		if (null != this.aeadBlockCipher) {
 			return this.aeadBlockCipher.getUnderlyingCipher().getAlgorithmName();
@@ -102,6 +121,9 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 
 	@Override
 	public int getBlockSize() {
+		if (null != this.bufferedBlockCipher) {
+			return this.bufferedBlockCipher.getBlockSize();
+		}
 		if (null != this.blockCipher) {
 			return this.blockCipher.getBlockSize();
 		}
@@ -115,21 +137,34 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 	public void init(final CipherMode mode, final Parameters parameters) {
 		Assert.isInstanceOf(BCParameters.class, parameters, "Only support BCParameters!");
 
-		if (null != this.blockCipher) {
-			this.blockCipher.init(mode == CipherMode.ENCRYPT, ((BCParameters) parameters).parameters);
+		final boolean forEncryption;
+		if (mode == CipherMode.ENCRYPT) {
+			forEncryption = true;
+		} else if (mode == CipherMode.DECRYPT) {
+			forEncryption = false;
+		} else {
+			throw new IllegalArgumentException("Invalid mode: " + mode.name());
+		}
+		final CipherParameters cipherParameters = ((BCParameters) parameters).parameters;
+
+		if (null != this.bufferedBlockCipher) {
+			this.bufferedBlockCipher.init(forEncryption, cipherParameters);
 			return;
+		}
+		if (null != this.blockCipher) {
+			this.blockCipher.init(forEncryption, cipherParameters);
 		}
 		if (null != this.aeadBlockCipher) {
-			this.aeadBlockCipher.init(mode == CipherMode.ENCRYPT, ((BCParameters) parameters).parameters);
+			this.aeadBlockCipher.init(forEncryption, cipherParameters);
 			return;
 		}
-		this.streamCipher.init(mode == CipherMode.ENCRYPT, ((BCParameters) parameters).parameters);
+		this.streamCipher.init(forEncryption, cipherParameters);
 	}
 
 	@Override
 	public int getOutputSize(final int len) {
-		if (null != this.blockCipher) {
-			return this.blockCipher.getOutputSize(len);
+		if (null != this.bufferedBlockCipher) {
+			return this.bufferedBlockCipher.getOutputSize(len);
 		}
 		if (null != this.aeadBlockCipher) {
 			return this.aeadBlockCipher.getOutputSize(len);
@@ -139,8 +174,17 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 
 	@Override
 	public int process(final byte[] in, final int inOff, final int len, final byte[] out, final int outOff) {
+		if (null != this.bufferedBlockCipher) {
+			return this.bufferedBlockCipher.processBytes(in, inOff, len, out, outOff);
+		}
 		if (null != this.blockCipher) {
-			return this.blockCipher.processBytes(in, inOff, len, out, outOff);
+			final byte[] subBytes;
+			if (inOff + len < in.length) {
+				subBytes = Arrays.copyOf(in, inOff + len);
+			} else {
+				subBytes = in;
+			}
+			return this.blockCipher.processBlock(subBytes, inOff, out, outOff);
 		}
 		if (null != this.aeadBlockCipher) {
 			return this.aeadBlockCipher.processBytes(in, inOff, len, out, outOff);
@@ -150,9 +194,9 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 
 	@Override
 	public int doFinal(final byte[] out, final int outOff) {
-		if (null != this.blockCipher) {
+		if (null != this.bufferedBlockCipher) {
 			try {
-				return this.blockCipher.doFinal(out, outOff);
+				return this.bufferedBlockCipher.doFinal(out, outOff);
 			} catch (final InvalidCipherTextException e) {
 				throw new CryptoException(e);
 			}

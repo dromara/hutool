@@ -75,16 +75,4 @@ public class BCHMacEngine extends BCMacEngine {
 		super(mac, params);
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
-
-	/**
-	 * 初始化
-	 *
-	 * @param digest 摘要算法
-	 * @param params 参数，例如密钥可以用{@link KeyParameter}
-	 * @return this
-	 * @see #init(Mac, CipherParameters)
-	 */
-	public BCHMacEngine init(final Digest digest, final CipherParameters params) {
-		return (BCHMacEngine) init(new HMac(digest), params);
-	}
 }

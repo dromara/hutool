@@ -13,7 +13,7 @@
 package org.dromara.hutool.crypto;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.wrapper.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 
 import javax.crypto.ShortBufferException;
 import java.security.InvalidAlgorithmParameterException;
@@ -27,9 +27,7 @@ import java.security.spec.AlgorithmParameterSpec;
  *
  * @author Looly
  */
-public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
-
-	private final javax.crypto.Cipher cipher;
+public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cipher {
 
 	/**
 	 * 构造
@@ -43,30 +41,25 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	/**
 	 * 构造
 	 *
-	 * @param cipher {@link javax.crypto.Cipher}
+	 * @param cipher {@link javax.crypto.Cipher}，可以通过{@link javax.crypto.Cipher#getInstance(String)}创建
 	 */
 	public JceCipher(final javax.crypto.Cipher cipher) {
-		this.cipher = Assert.notNull(cipher);
-	}
-
-	@Override
-	public javax.crypto.Cipher getRaw() {
-		return this.cipher;
+		super(Assert.notNull(cipher));
 	}
 
 	@Override
 	public String getAlgorithmName() {
-		return this.cipher.getAlgorithm();
+		return getRaw().getAlgorithm();
 	}
 
 	@Override
 	public int getBlockSize() {
-		return this.cipher.getBlockSize();
+		return getRaw().getBlockSize();
 	}
 
 	@Override
 	public int getOutputSize(final int len) {
-		return this.cipher.getOutputSize(len);
+		return getRaw().getOutputSize(len);
 	}
 
 	@Override
@@ -89,7 +82,7 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	 * @throws InvalidKeyException                无效key
 	 */
 	public void init(final int mode, final JceParameters jceParameters) throws InvalidAlgorithmParameterException, InvalidKeyException {
-		final javax.crypto.Cipher cipher = this.cipher;
+		final javax.crypto.Cipher cipher = getRaw();
 		if (null != jceParameters.parameterSpec) {
 			if (null != jceParameters.random) {
 				cipher.init(mode, jceParameters.key, jceParameters.parameterSpec, jceParameters.random);
@@ -108,7 +101,7 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	@Override
 	public int process(final byte[] in, final int inOff, final int len, final byte[] out, final int outOff) {
 		try {
-			return this.cipher.update(in, inOff, len, out, outOff);
+			return getRaw().update(in, inOff, len, out, outOff);
 		} catch (final ShortBufferException e) {
 			throw new CryptoException(e);
 		}
@@ -117,7 +110,7 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	@Override
 	public int doFinal(final byte[] out, final int outOff) {
 		try {
-			return this.cipher.doFinal(out, outOff);
+			return getRaw().doFinal(out, outOff);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
@@ -126,7 +119,7 @@ public class JceCipher implements Cipher, Wrapper<javax.crypto.Cipher> {
 	@Override
 	public byte[] processFinal(final byte[] data) {
 		try {
-			return this.cipher.doFinal(data);
+			return getRaw().doFinal(data);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}

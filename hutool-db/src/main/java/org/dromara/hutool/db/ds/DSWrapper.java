@@ -14,7 +14,7 @@ package org.dromara.hutool.db.ds;
 
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.wrapper.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
@@ -34,9 +34,8 @@ import java.util.logging.Logger;
  * @author looly
  * @since 4.3.2
  */
-public class DSWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cloneable {
+public class DSWrapper extends SimpleWrapper<DataSource> implements DataSource, Closeable, Cloneable {
 
-	private final DataSource ds;
 	private final String driver;
 
 	/**
@@ -57,7 +56,7 @@ public class DSWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cl
 	 * @param driver 数据库驱动类名
 	 */
 	public DSWrapper(final DataSource ds, final String driver) {
-		this.ds = ds;
+		super(ds);
 		this.driver = driver;
 	}
 
@@ -70,65 +69,56 @@ public class DSWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cl
 		return this.driver;
 	}
 
-	/**
-	 * 获取原始的数据源
-	 *
-	 * @return 原始数据源
-	 */
-	@Override
-	public DataSource getRaw() {
-		return this.ds;
-	}
-
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
-		return ds.getLogWriter();
+		return getRaw().getLogWriter();
 	}
 
 	@Override
 	public void setLogWriter(final PrintWriter out) throws SQLException {
-		ds.setLogWriter(out);
+		getRaw().setLogWriter(out);
 	}
 
 	@Override
 	public void setLoginTimeout(final int seconds) throws SQLException {
-		ds.setLoginTimeout(seconds);
+		getRaw().setLoginTimeout(seconds);
 	}
 
 	@Override
 	public int getLoginTimeout() throws SQLException {
-		return ds.getLoginTimeout();
+		return getRaw().getLoginTimeout();
 	}
 
 	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		return ds.getParentLogger();
+		return getRaw().getParentLogger();
 	}
 
 	@Override
 	public <T> T unwrap(final Class<T> iface) throws SQLException {
-		return ds.unwrap(iface);
+		return getRaw().unwrap(iface);
 	}
 
 	@Override
 	public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-		return ds.isWrapperFor(iface);
+		return getRaw().isWrapperFor(iface);
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		return ds.getConnection();
+		return getRaw().getConnection();
 	}
 
 	@Override
 	public Connection getConnection(final String username, final String password) throws SQLException {
-		return ds.getConnection(username, password);
+		return getRaw().getConnection(username, password);
 	}
 
 	@Override
 	public void close() {
-		if (this.ds instanceof AutoCloseable) {
-			IoUtil.closeQuietly((AutoCloseable) this.ds);
+		final DataSource ds = getRaw();
+		if (ds instanceof AutoCloseable) {
+			IoUtil.closeQuietly((AutoCloseable) ds);
 		}
 	}
 

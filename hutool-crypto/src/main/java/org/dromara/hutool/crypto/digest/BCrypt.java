@@ -545,7 +545,7 @@ public class BCrypt {
 		if (hashed_bytes.length != try_bytes.length) {
 			return false;
 		}
-		byte ret = 0;
+		int ret = 0;
 		for (int i = 0; i < try_bytes.length; i++)
 			ret |= hashed_bytes[i] ^ try_bytes[i];
 		return ret == 0;
