@@ -70,32 +70,32 @@ public class JCEMacEngine extends SimpleWrapper<Mac> implements MacEngine {
 
 	@Override
 	public void update(final byte[] in) {
-		getRaw().update(in);
+		this.raw.update(in);
 	}
 
 	@Override
 	public void update(final byte[] in, final int inOff, final int len) {
-		getRaw().update(in, inOff, len);
+		this.raw.update(in, inOff, len);
 	}
 
 	@Override
 	public byte[] doFinal() {
-		return getRaw().doFinal();
+		return this.raw.doFinal();
 	}
 
 	@Override
 	public void reset() {
-		getRaw().reset();
+		this.raw.reset();
 	}
 
 	@Override
 	public int getMacLength() {
-		return getRaw().getMacLength();
+		return this.raw.getMacLength();
 	}
 
 	@Override
 	public String getAlgorithm() {
-		return getRaw().getAlgorithm();
+		return this.raw.getAlgorithm();
 	}
 
 	/**

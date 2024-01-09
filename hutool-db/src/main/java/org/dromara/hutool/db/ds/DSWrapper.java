@@ -71,52 +71,52 @@ public class DSWrapper extends SimpleWrapper<DataSource> implements DataSource, 
 
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
-		return getRaw().getLogWriter();
+		return this.raw.getLogWriter();
 	}
 
 	@Override
 	public void setLogWriter(final PrintWriter out) throws SQLException {
-		getRaw().setLogWriter(out);
+		this.raw.setLogWriter(out);
 	}
 
 	@Override
 	public void setLoginTimeout(final int seconds) throws SQLException {
-		getRaw().setLoginTimeout(seconds);
+		this.raw.setLoginTimeout(seconds);
 	}
 
 	@Override
 	public int getLoginTimeout() throws SQLException {
-		return getRaw().getLoginTimeout();
+		return this.raw.getLoginTimeout();
 	}
 
 	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		return getRaw().getParentLogger();
+		return this.raw.getParentLogger();
 	}
 
 	@Override
 	public <T> T unwrap(final Class<T> iface) throws SQLException {
-		return getRaw().unwrap(iface);
+		return this.raw.unwrap(iface);
 	}
 
 	@Override
 	public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-		return getRaw().isWrapperFor(iface);
+		return this.raw.isWrapperFor(iface);
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		return getRaw().getConnection();
+		return this.raw.getConnection();
 	}
 
 	@Override
 	public Connection getConnection(final String username, final String password) throws SQLException {
-		return getRaw().getConnection(username, password);
+		return this.raw.getConnection(username, password);
 	}
 
 	@Override
 	public void close() {
-		final DataSource ds = getRaw();
+		final DataSource ds = this.raw;
 		if (ds instanceof AutoCloseable) {
 			IoUtil.closeQuietly((AutoCloseable) ds);
 		}

@@ -41,29 +41,29 @@ public class BCMacEngine extends SimpleWrapper<Mac> implements MacEngine {
 
 	@Override
 	public void update(final byte[] in, final int inOff, final int len) {
-		getRaw().update(in, inOff, len);
+		this.raw.update(in, inOff, len);
 	}
 
 	@Override
 	public byte[] doFinal() {
 		final byte[] result = new byte[getMacLength()];
-		getRaw().doFinal(result, 0);
+		this.raw.doFinal(result, 0);
 		return result;
 	}
 
 	@Override
 	public void reset() {
-		getRaw().reset();
+		this.raw.reset();
 	}
 
 	@Override
 	public int getMacLength() {
-		return getRaw().getMacSize();
+		return this.raw.getMacSize();
 	}
 
 	@Override
 	public String getAlgorithm() {
-		return getRaw().getAlgorithmName();
+		return this.raw.getAlgorithmName();
 	}
 
 	/**

@@ -253,7 +253,7 @@ public class Digester extends SimpleWrapper<MessageDigest> implements Serializab
 			// 加盐在末尾，自动忽略空盐值
 			result = doDigest(data, this.salt);
 		} else if (ArrayUtil.isNotEmpty(this.salt)) {
-			final MessageDigest digest = getRaw();
+			final MessageDigest digest = this.raw;
 			// 加盐在中间
 			digest.update(data, 0, this.saltPosition);
 			digest.update(this.salt);

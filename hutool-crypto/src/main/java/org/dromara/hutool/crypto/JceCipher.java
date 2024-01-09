@@ -49,17 +49,17 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 
 	@Override
 	public String getAlgorithmName() {
-		return getRaw().getAlgorithm();
+		return this.raw.getAlgorithm();
 	}
 
 	@Override
 	public int getBlockSize() {
-		return getRaw().getBlockSize();
+		return this.raw.getBlockSize();
 	}
 
 	@Override
 	public int getOutputSize(final int len) {
-		return getRaw().getOutputSize(len);
+		return this.raw.getOutputSize(len);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 	 * @throws InvalidKeyException                无效key
 	 */
 	public void init(final int mode, final JceParameters jceParameters) throws InvalidAlgorithmParameterException, InvalidKeyException {
-		final javax.crypto.Cipher cipher = getRaw();
+		final javax.crypto.Cipher cipher = this.raw;
 		if (null != jceParameters.parameterSpec) {
 			if (null != jceParameters.random) {
 				cipher.init(mode, jceParameters.key, jceParameters.parameterSpec, jceParameters.random);
@@ -101,7 +101,7 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 	@Override
 	public int process(final byte[] in, final int inOff, final int len, final byte[] out, final int outOff) {
 		try {
-			return getRaw().update(in, inOff, len, out, outOff);
+			return this.raw.update(in, inOff, len, out, outOff);
 		} catch (final ShortBufferException e) {
 			throw new CryptoException(e);
 		}
@@ -110,7 +110,7 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 	@Override
 	public int doFinal(final byte[] out, final int outOff) {
 		try {
-			return getRaw().doFinal(out, outOff);
+			return this.raw.doFinal(out, outOff);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
@@ -119,7 +119,7 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 	@Override
 	public byte[] processFinal(final byte[] data) {
 		try {
-			return getRaw().doFinal(data);
+			return this.raw.doFinal(data);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
