@@ -200,7 +200,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 			// 检查参数是否为命名方式的参数
 			final NamedSql namedSql = new NamedSql(sql, Convert.toMap(String.class, Object.class, params[0]));
 			sql = namedSql.getSql();
-			params = namedSql.getParams();
+			params = namedSql.getParamArray();
 		}
 
 		sqlLog.log(sql, ArrayUtil.isEmpty(params) ? null : params);
