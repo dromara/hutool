@@ -19,6 +19,7 @@ import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbUtil;
 import org.dromara.hutool.db.GlobalDbConfig;
 import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.log.LogUtil;
@@ -89,6 +90,7 @@ public class DSPool implements Closeable {
 	 */
 	public DSPool(final Setting setting, final DSFactory factory) {
 		this.setting = null != setting ? setting : GlobalDbConfig.createDbSetting();
+		DbUtil.setShowSqlGlobal(this.setting);
 		this.factory = null != factory ? factory : SpiUtil.loadFirstAvailable(DSFactory.class);
 		this.pool = new SafeConcurrentHashMap<>();
 	}

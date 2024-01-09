@@ -17,7 +17,6 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -46,7 +45,6 @@ public class NamedSql extends BoundSql {
 	 * @param paramMap 名和参数的对应Map
 	 */
 	public NamedSql(final String namedSql, final Map<String, Object> paramMap) {
-		super(null, new LinkedList<>());
 		this.namedSql = namedSql;
 		this.paramMap = paramMap;
 		parse(namedSql, paramMap);
@@ -78,7 +76,7 @@ public class NamedSql extends BoundSql {
 	 */
 	private void parse(final String namedSql, final Map<String, Object> paramMap) {
 		if (MapUtil.isEmpty(paramMap)) {
-			this.sql = namedSql;
+			setSql(namedSql);
 			return;
 		}
 
@@ -116,7 +114,7 @@ public class NamedSql extends BoundSql {
 			replaceVar(nameStartChar, name, sqlBuilder, paramMap);
 		}
 
-		this.sql = sqlBuilder.toString();
+		setSql(sqlBuilder.toString());
 	}
 
 	/**
@@ -155,11 +153,11 @@ public class NamedSql extends BoundSql {
 						sqlBuilder.append(',');
 					}
 					sqlBuilder.append('?');
-					this.params.add(ArrayUtil.get(paramValue, i));
+					addParam(ArrayUtil.get(paramValue, i));
 				}
 			} else {
 				sqlBuilder.append('?');
-				this.params.add(paramValue);
+				addParam(paramValue);
 			}
 		} else {
 			// 无变量对应值，原样输出

@@ -53,21 +53,21 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForInsert(final Connection conn, final Entity entity) throws SQLException {
+	public PreparedStatement psForInsert(final Connection conn, final Entity entity) {
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entity, this.dialectName());
 
 		return StatementUtil.prepareStatement(conn, insert);
 	}
 
 	@Override
-	public PreparedStatement psForInsertBatch(final Connection conn, final Entity... entities) throws SQLException {
+	public PreparedStatement psForInsertBatch(final Connection conn, final Entity... entities) {
 		if (ArrayUtil.isEmpty(entities)) {
 			throw new DbRuntimeException("Entities for batch insert is empty !");
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
 		final Set<String> fields = CollUtil.remove(entities[0].keySet(), StrUtil::isBlank);
-		return StatementUtil.prepareStatementForBatch(conn, insert.build(), fields, entities);
+		return StatementUtil.prepareStatementForBatch(conn, insert.build(), entities);
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForPage(final Connection conn, SqlBuilder sqlBuilder, final Page page) throws SQLException {
+	public PreparedStatement psForPage(final Connection conn, SqlBuilder sqlBuilder, final Page page) {
 		// 根据不同数据库在查询SQL语句基础上包装其分页的语句
 		if (null != page) {
 			sqlBuilder = wrapPageSql(sqlBuilder.orderBy(page.getOrders()), page);

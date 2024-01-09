@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.db.sql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,8 +23,13 @@ import java.util.List;
  */
 public class BoundSql {
 
-	protected String sql;
-	protected final List<Object> params;
+	private String sql;
+	private List<Object> params;
+
+	/**
+	 * 构造
+	 */
+	public BoundSql() {}
 
 	/**
 	 * 构造
@@ -46,6 +52,17 @@ public class BoundSql {
 	}
 
 	/**
+	 * 设置SQL语句
+	 *
+	 * @param sql SQL语句
+	 * @return this
+	 */
+	public BoundSql setSql(final String sql) {
+		this.sql = sql;
+		return this;
+	}
+
+	/**
 	 * 获取参数列表，按照占位符顺序
 	 *
 	 * @return 参数列表
@@ -61,5 +78,30 @@ public class BoundSql {
 	 */
 	public Object[] getParamArray() {
 		return this.params.toArray(new Object[0]);
+	}
+
+	/**
+	 * 设置参数列表
+	 *
+	 * @param params 参数列表
+	 * @return this
+	 */
+	public BoundSql setParams(final List<Object> params) {
+		this.params = params;
+		return this;
+	}
+
+	/**
+	 * 增加参数
+	 *
+	 * @param paramValue 参数值
+	 * @return this
+	 */
+	public BoundSql addParam(final Object paramValue){
+		if(null == this.params){
+			this.params = new ArrayList<>();
+		}
+		this.params.add(paramValue);
+		return this;
 	}
 }
