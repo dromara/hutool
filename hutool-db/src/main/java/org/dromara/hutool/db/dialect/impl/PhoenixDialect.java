@@ -29,6 +29,9 @@ import java.sql.SQLException;
 public class PhoenixDialect extends AnsiSqlDialect {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 构造
+	 */
 	public PhoenixDialect() {
 //		wrapper = new Wrapper('"');
 	}

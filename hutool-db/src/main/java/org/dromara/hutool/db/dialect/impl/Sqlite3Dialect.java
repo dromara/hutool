@@ -17,12 +17,15 @@ import org.dromara.hutool.db.sql.QuoteWrapper;
 
 /**
  * SqlLite3方言
- * @author loolly
  *
+ * @author Looly
  */
-public class Sqlite3Dialect extends AnsiSqlDialect{
+public class Sqlite3Dialect extends AnsiSqlDialect {
 	private static final long serialVersionUID = -3527642408849291634L;
 
+	/**
+	 * 构造
+	 */
 	public Sqlite3Dialect() {
 		quoteWrapper = new QuoteWrapper('[', ']');
 	}

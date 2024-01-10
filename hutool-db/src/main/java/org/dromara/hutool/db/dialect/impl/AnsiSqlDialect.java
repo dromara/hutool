@@ -66,7 +66,6 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
-		final Set<String> fields = CollUtil.remove(entities[0].keySet(), StrUtil::isBlank);
 		return StatementUtil.prepareStatementForBatch(conn, insert.build(), entities);
 	}
 
@@ -100,12 +99,12 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForFind(final Connection conn, final Query query) throws SQLException {
+	public PreparedStatement psForFind(final Connection conn, final Query query) {
 		return psForPage(conn, query);
 	}
 
 	@Override
-	public PreparedStatement psForPage(final Connection conn, final Query query) throws SQLException {
+	public PreparedStatement psForPage(final Connection conn, final Query query) {
 		Assert.notNull(query, "query must be not null !");
 		if (ArrayUtil.hasBlank(query.getTableNames())) {
 			throw new DbRuntimeException("Table name must be not empty !");

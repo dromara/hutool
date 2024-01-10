@@ -21,15 +21,17 @@ import org.dromara.hutool.db.sql.QuoteWrapper;
 /**
  * SQLServer2012 方言
  *
- * @author loolly
- *
+ * @author Looly
  */
 public class SqlServer2012Dialect extends AnsiSqlDialect {
 	private static final long serialVersionUID = -37598166015777797L;
 
+	/**
+	 * 构造
+	 */
 	public SqlServer2012Dialect() {
 		//双引号和中括号适用，双引号更广泛
-		 quoteWrapper = new QuoteWrapper('"');
+		quoteWrapper = new QuoteWrapper('"');
 	}
 
 	@Override
@@ -39,10 +41,10 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 			find.append(" order by current_timestamp");
 		}
 		return find.append(" offset ")
-				.append(page.getStartPosition())//
-				.append(" row fetch next ")//row和rows同义词
-				.append(page.getPageSize())//
-				.append(" row only");//
+			.append(page.getStartPosition())//
+			.append(" row fetch next ")//row和rows同义词
+			.append(page.getPageSize())//
+			.append(" row only");//
 	}
 
 	@Override

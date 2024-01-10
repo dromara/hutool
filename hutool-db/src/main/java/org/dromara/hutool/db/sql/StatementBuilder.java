@@ -18,6 +18,7 @@ import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.builder.Builder;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.Entity;
@@ -27,6 +28,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link PreparedStatement}构建器，构建结果为{@link StatementWrapper}
@@ -137,6 +139,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 		try {
 			ps = StatementWrapper.of(connection.prepareStatement(sql));
 			final Map<Integer, Integer> nullTypeMap = new HashMap<>();
+			Set<String> keys = null;
 			for (final Object params : paramsBatch) {
 				if (null == params) {
 					continue;
@@ -144,7 +147,14 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 				if (ArrayUtil.isArray(params)) {
 					ps.fillParams(new ArrayIter<>(params), nullTypeMap);
 				} else if (params instanceof Entity) {
-					ps.fillParams(((Entity) params).values(), nullTypeMap);
+					final Entity entity = (Entity) params;
+					// 对于多Entity批量插入的情况，为防止数据不对齐，故按照首行提供键值对筛选。
+					if(null == keys){
+						keys = entity.keySet();
+						ps.fillParams(entity.values(), nullTypeMap);
+					} else{
+						ps.fillParams(MapUtil.valuesOfKeys(entity, keys), nullTypeMap);
+					}
 				}
 				ps.addBatch();
 			}
