@@ -2226,7 +2226,7 @@ public class NumberUtil {
 		}
 
 		// Float、Double等有精度问题，转换为字符串后再转换
-		return toBigDecimal(number.toString());
+		return new BigDecimal(number.toString());
 	}
 
 	/**
