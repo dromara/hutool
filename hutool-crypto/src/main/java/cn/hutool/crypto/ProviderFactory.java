@@ -1,6 +1,7 @@
 package cn.hutool.crypto;
 
 import java.security.Provider;
+import java.security.Security;
 
 /**
  * Provider对象生产工厂类
@@ -14,6 +15,9 @@ import java.security.Provider;
  */
 public class ProviderFactory {
 
+	private ProviderFactory() {
+	}
+
 	/**
 	 * 创建Bouncy Castle 提供者<br>
 	 * 如果用户未引入bouncycastle库，则此方法抛出{@link NoClassDefFoundError} 异常
@@ -21,9 +25,12 @@ public class ProviderFactory {
 	 * @return {@link Provider}
 	 */
 	public static Provider createBouncyCastleProvider() {
-		final org.bouncycastle.jce.provider.BouncyCastleProvider provider = new org.bouncycastle.jce.provider.BouncyCastleProvider();
-		// issue#2631@Github
-		SecureUtil.addProvider(provider);
+		Provider provider = Security.getProvider(org.bouncycastle.jce.provider.BouncyCastleProvider.PROVIDER_NAME);
+		if (provider == null) {
+			provider = new org.bouncycastle.jce.provider.BouncyCastleProvider();
+			// issue#2631@Github
+			SecureUtil.addProvider(provider);
+		}
 		return provider;
 	}
 }
