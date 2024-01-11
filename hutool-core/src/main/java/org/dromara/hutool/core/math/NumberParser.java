@@ -297,6 +297,7 @@ public class NumberParser {
 			// issue#I79VS7
 			numberStr = StrUtil.subSuf(numberStr, 1);
 		}
+
 		try {
 			final NumberFormat format = NumberFormat.getInstance(locale);
 			if (format instanceof DecimalFormat) {

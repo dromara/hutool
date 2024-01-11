@@ -31,6 +31,9 @@ public class CronConfig {
 	 */
 	protected boolean matchSecond;
 
+	/**
+	 * 构造
+	 */
 	public CronConfig(){
 	}
 
