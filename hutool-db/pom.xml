@@ -23,11 +23,11 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.11.0</dbcp2.version>
 		<tomcat-jdbc.version>10.0.23</tomcat-jdbc.version>
-		<druid.version>1.2.20</druid.version>
+		<druid.version>1.2.21</druid.version>
 		<!-- 此处固定4.x，支持到JDK8 -->
 		<hikariCP.version>4.0.3</hikariCP.version>
 		<mongo4.version>4.9.1</mongo4.version>
-		<sqlite.version>3.43.2.2</sqlite.version>
+		<sqlite.version>3.44.1.0</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
 		<jedis.version>5.0.2</jedis.version>
@@ -151,7 +151,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.6.0</version>
+			<version>42.7.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>6.4.7</version>
+			<version>6.4.10</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

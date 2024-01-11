@@ -20,7 +20,7 @@
 		<Automatic-Module-Name>cn.hutool.jwt</Automatic-Module-Name>
 
 		<!-- versions -->
-		<bouncycastle.version>1.76</bouncycastle.version>
+		<bouncycastle.version>1.77</bouncycastle.version>
 		<jjwt.version>0.12.3</jjwt.version>
 	</properties>
 
