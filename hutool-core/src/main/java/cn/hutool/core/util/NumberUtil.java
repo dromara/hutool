@@ -2153,8 +2153,8 @@ public class NumberUtil {
 		if (number instanceof BigDecimal) {
 			return toStr((BigDecimal) number, isStripTrailingZeros);
 		}
-
 		Assert.isTrue(isValidNumber(number), "Number is non-finite!");
+
 		// 去掉小数点儿后多余的0
 		String string = number.toString();
 		if (isStripTrailingZeros) {
@@ -2212,6 +2212,8 @@ public class NumberUtil {
 		if (null == number) {
 			return BigDecimal.ZERO;
 		}
+		// issue#3423@Github of CVE-2023-51080
+		Assert.isTrue(isValidNumber(number), "Number is invalid!");
 
 		if (number instanceof BigDecimal) {
 			return (BigDecimal) number;
@@ -2247,7 +2249,8 @@ public class NumberUtil {
 		}
 
 		// 支持类似于 1,234.55 格式的数字
-		return toBigDecimal(parseNumber(numberStr));
+		final Number number = parseNumber(numberStr);
+		return toBigDecimal(number);
 	}
 
 	/**
@@ -2269,6 +2272,7 @@ public class NumberUtil {
 			return BigInteger.valueOf((Long) number);
 		}
 
+		Assert.isTrue(isValidNumber(number), "Number is invalid!");
 		return toBigInteger(number.longValue());
 	}
 
