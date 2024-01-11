@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.Console;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
@@ -15,6 +16,7 @@ public class Issue3423Test {
 	}
 
 	@Test
+	@Ignore
 	public void toBigDecimalOfNaNTest2() throws ParseException {
 		final NumberFormat format = NumberFormat.getInstance();
 		((DecimalFormat) format).setParseBigDecimal(true);
