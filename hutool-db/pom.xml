@@ -38,7 +38,7 @@
 		<druid.version>1.2.21</druid.version>
 		<!-- 固定4.x -->
 		<hikariCP.version>4.0.3</hikariCP.version>
-		<sqlite.version>3.43.0.0</sqlite.version>
+		<sqlite.version>3.44.1.0</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
 	</properties>

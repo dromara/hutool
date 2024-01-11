@@ -13,6 +13,7 @@
 package org.dromara.hutool.cron;
 
 import org.dromara.hutool.core.date.DateUnit;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.dromara.hutool.log.Log;
 
@@ -63,9 +64,14 @@ public class CronTimer extends Thread implements Serializable {
 					//等待直到下一个时间点，如果被中断直接退出Timer
 					break;
 				}
+
 				//执行点，时间记录为执行开始的时间，而非结束时间
-				thisTime = System.currentTimeMillis();
-				spawnLauncher(thisTime);
+				spawnLauncher(nextTime);
+
+				// issue#3460 采用叠加方式，确保正好是1分钟或1秒，避免sleep晚醒问题
+				// 此处无需校验，因为每次循环都是sleep与上触发点的时间差。
+				// 当上一次晚醒后，本次会减少sleep时间，保证误差在一个unit内，并不断修正。
+				thisTime = nextTime;
 			} else{
 				// 非正常时间重新计算（issue#1224@Github）
 				thisTime = System.currentTimeMillis();
