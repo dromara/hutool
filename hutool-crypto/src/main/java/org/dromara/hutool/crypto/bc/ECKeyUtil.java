@@ -435,6 +435,9 @@ public class ECKeyUtil {
 	 * @since 5.5.9
 	 */
 	public static ECPrivateKeyParameters decodePrivateKeyParams(final byte[] privateKeyBytes) {
+		if (null == privateKeyBytes) {
+			return null;
+		}
 		try {
 			// 尝试D值
 			return toSm2PrivateParams(privateKeyBytes);
@@ -468,6 +471,9 @@ public class ECKeyUtil {
 	 * @since 5.5.9
 	 */
 	public static ECPublicKeyParameters decodePublicKeyParams(final byte[] publicKeyBytes) {
+		if(null == publicKeyBytes){
+			return null;
+		}
 		try {
 			// 尝试Q值
 			return toSm2PublicParams(publicKeyBytes);

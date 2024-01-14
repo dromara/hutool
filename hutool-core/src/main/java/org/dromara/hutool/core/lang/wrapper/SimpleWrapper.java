@@ -13,7 +13,8 @@
 package org.dromara.hutool.core.lang.wrapper;
 
 /**
- * 简单包装对象
+ * 简单包装对象<br>
+ * 通过继承此类，可以直接使用被包装的对象，用于简化和统一封装。
  *
  * @param <T> 被包装对象类型
  * @author looly

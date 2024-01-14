@@ -12,13 +12,11 @@
 
 package org.dromara.hutool.db.sql;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,12 +31,12 @@ import java.util.Map;
  * @author looly
  * @since 4.0.10
  */
-public class NamedSql {
+public class NamedSql extends BoundSql {
 
 	private static final char[] NAME_START_CHARS = {':', '@', '?'};
 
-	private String sql;
-	private final List<Object> params;
+	private final String namedSql;
+	private final Map<String, Object> paramMap;
 
 	/**
 	 * 构造
@@ -47,35 +45,27 @@ public class NamedSql {
 	 * @param paramMap 名和参数的对应Map
 	 */
 	public NamedSql(final String namedSql, final Map<String, Object> paramMap) {
-		this.params = new LinkedList<>();
+		this.namedSql = namedSql;
+		this.paramMap = paramMap;
 		parse(namedSql, paramMap);
 	}
 
 	/**
-	 * 获取SQL
+	 * 获取原始地带名称占位符的SQL语句
 	 *
-	 * @return SQL
+	 * @return 名称占位符的SQL
 	 */
-	public String getSql() {
-		return this.sql;
+	public String getNamedSql() {
+		return namedSql;
 	}
 
 	/**
-	 * 获取参数列表，按照占位符顺序
+	 * 获取原始参数名和参数值对应关系参数表
 	 *
-	 * @return 参数数组
+	 * @return 参数名和参数值对应关系参数表
 	 */
-	public Object[] getParams() {
-		return this.params.toArray(new Object[0]);
-	}
-
-	/**
-	 * 获取参数列表，按照占位符顺序
-	 *
-	 * @return 参数列表
-	 */
-	public List<Object> getParamList() {
-		return this.params;
+	public Map<String, Object> getParamMap() {
+		return paramMap;
 	}
 
 	/**
@@ -86,7 +76,7 @@ public class NamedSql {
 	 */
 	private void parse(final String namedSql, final Map<String, Object> paramMap) {
 		if (MapUtil.isEmpty(paramMap)) {
-			this.sql = namedSql;
+			setSql(namedSql);
 			return;
 		}
 
@@ -124,7 +114,7 @@ public class NamedSql {
 			replaceVar(nameStartChar, name, sqlBuilder, paramMap);
 		}
 
-		this.sql = sqlBuilder.toString();
+		setSql(sqlBuilder.toString());
 	}
 
 	/**
@@ -163,11 +153,11 @@ public class NamedSql {
 						sqlBuilder.append(',');
 					}
 					sqlBuilder.append('?');
-					this.params.add(ArrayUtil.get(paramValue, i));
+					addParam(ArrayUtil.get(paramValue, i));
 				}
 			} else {
 				sqlBuilder.append('?');
-				this.params.add(paramValue);
+				addParam(paramValue);
 			}
 		} else {
 			// 无变量对应值，原样输出

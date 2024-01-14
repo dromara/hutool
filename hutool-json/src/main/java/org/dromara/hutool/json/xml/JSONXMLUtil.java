@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.json.xml;
 
-import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
 
@@ -26,51 +25,6 @@ import org.dromara.hutool.json.JSONObject;
 public class JSONXMLUtil {
 
 	/**
-	 * The Character '&amp;'.
-	 */
-	public static final Character AMP = CharUtil.AMP;
-
-	/**
-	 * The Character '''.
-	 */
-	public static final Character APOS = CharUtil.SINGLE_QUOTE;
-
-	/**
-	 * The Character '!'.
-	 */
-	public static final Character BANG = '!';
-
-	/**
-	 * The Character '='.
-	 */
-	public static final Character EQ = '=';
-
-	/**
-	 * The Character '&gt;'.
-	 */
-	public static final Character GT = '>';
-
-	/**
-	 * The Character '&lt;'.
-	 */
-	public static final Character LT = '<';
-
-	/**
-	 * The Character '?'.
-	 */
-	public static final Character QUEST = '?';
-
-	/**
-	 * The Character '"'.
-	 */
-	public static final Character QUOT = CharUtil.DOUBLE_QUOTES;
-
-	/**
-	 * The Character '/'.
-	 */
-	public static final Character SLASH = CharUtil.SLASH;
-
-	/**
 	 * 转换XML为JSONObject
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
 	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and {@code <[ [ ]]>} are ignored.
@@ -80,7 +34,7 @@ public class JSONXMLUtil {
 	 * @throws JSONException Thrown if there is an errors while parsing the string
 	 */
 	public static JSONObject toJSONObject(final String string) throws JSONException {
-		return toJSONObject(string, false);
+		return toJSONObject(string, ParseConfig.of());
 	}
 
 	/**
@@ -89,13 +43,13 @@ public class JSONXMLUtil {
 	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and {@code <[ [ ]]>} are ignored.
 	 * All values are converted as strings, for 1, 01, 29.0 will not be coerced to numbers but will instead be the exact value as seen in the XML document.
 	 *
-	 * @param string      The source string.
-	 * @param keepStrings If true, then values will not be coerced into boolean or numeric values and will instead be left as strings
+	 * @param string      XML字符串
+	 * @param parseConfig XML解析选项
 	 * @return A JSONObject containing the structured data from the XML string.
 	 * @throws JSONException Thrown if there is an errors while parsing the string
 	 */
-	public static JSONObject toJSONObject(final String string, final boolean keepStrings) throws JSONException {
-		return toJSONObject(new JSONObject(), string, keepStrings);
+	public static JSONObject toJSONObject(final String string, final ParseConfig parseConfig) throws JSONException {
+		return toJSONObject(string, new JSONObject(), parseConfig);
 	}
 
 	/**
@@ -104,13 +58,13 @@ public class JSONXMLUtil {
 	 *
 	 * @param jo          JSONObject
 	 * @param xmlStr      XML字符串
-	 * @param keepStrings 如果为{@code true}，则值保持String类型，不转换为数字或boolean
+	 * @param parseConfig XML解析选项
 	 * @return A JSONObject 解析后的JSON对象，与传入的jo为同一对象
 	 * @throws JSONException 解析异常
 	 * @since 5.3.1
 	 */
-	public static JSONObject toJSONObject(final JSONObject jo, final String xmlStr, final boolean keepStrings) throws JSONException {
-		JSONXMLParser.parseJSONObject(jo, xmlStr, keepStrings);
+	public static JSONObject toJSONObject(final String xmlStr, final JSONObject jo, final ParseConfig parseConfig) throws JSONException {
+		JSONXMLParser.parseJSONObject(xmlStr, jo, parseConfig);
 		return jo;
 	}
 

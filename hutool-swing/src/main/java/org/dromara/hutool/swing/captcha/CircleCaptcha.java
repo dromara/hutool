@@ -14,6 +14,8 @@ package org.dromara.hutool.swing.captcha;
 
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.util.RandomUtil;
+import org.dromara.hutool.swing.captcha.generator.CodeGenerator;
+import org.dromara.hutool.swing.captcha.generator.RandomGenerator;
 import org.dromara.hutool.swing.img.color.ColorUtil;
 import org.dromara.hutool.swing.img.GraphicsUtil;
 
@@ -63,7 +65,19 @@ public class CircleCaptcha extends AbstractCaptcha {
 	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public CircleCaptcha(final int width, final int height, final int codeCount, final int interfereCount) {
-		super(width, height, codeCount, interfereCount);
+		this(width, height, new RandomGenerator(codeCount), interfereCount);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 */
+	public CircleCaptcha(final int width, final int height, final CodeGenerator generator, final int interfereCount) {
+		super(width, height, generator, interfereCount);
 	}
 
 	@Override

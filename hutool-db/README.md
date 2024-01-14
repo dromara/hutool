@@ -28,7 +28,7 @@
 ### SQL相关工具（sql）
 提供SQL相关功能，包括SQL变量替换（NamedSql），通过对象完成SQL构建（SqlBuilder）等。
 
-`SqlSqlExecutor`提供SQL执行的静态方法。
+`SqlExecutor`提供SQL执行的静态方法。
 
 ### 数据库元信息（meta）
 通过`MetaUtil`提供数据库表、字段等信息的读取操作。

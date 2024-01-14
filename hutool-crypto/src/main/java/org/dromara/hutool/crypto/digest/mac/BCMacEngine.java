@@ -15,6 +15,7 @@ package org.dromara.hutool.crypto.digest.mac;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Mac;
 import org.bouncycastle.crypto.params.KeyParameter;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 
 /**
  * BouncyCastle的MAC算法实现引擎，使用{@link Mac} 实现摘要<br>
@@ -23,9 +24,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
  * @author Looly
  * @since 5.8.0
  */
-public class BCMacEngine implements MacEngine {
-
-	private Mac mac;
+public class BCMacEngine extends SimpleWrapper<Mac> implements MacEngine {
 
 	// ------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -36,9 +35,36 @@ public class BCMacEngine implements MacEngine {
 	 * @since 5.8.0
 	 */
 	public BCMacEngine(final Mac mac, final CipherParameters params) {
-		init(mac, params);
+		super(initMac(mac, params));
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
+
+	@Override
+	public void update(final byte[] in, final int inOff, final int len) {
+		this.raw.update(in, inOff, len);
+	}
+
+	@Override
+	public byte[] doFinal() {
+		final byte[] result = new byte[getMacLength()];
+		this.raw.doFinal(result, 0);
+		return result;
+	}
+
+	@Override
+	public void reset() {
+		this.raw.reset();
+	}
+
+	@Override
+	public int getMacLength() {
+		return this.raw.getMacSize();
+	}
+
+	@Override
+	public String getAlgorithm() {
+		return this.raw.getAlgorithmName();
+	}
 
 	/**
 	 * 初始化
@@ -46,47 +72,9 @@ public class BCMacEngine implements MacEngine {
 	 * @param mac    摘要算法
 	 * @param params 参数，例如密钥可以用{@link KeyParameter}
 	 * @return this
-	 * @since 5.8.0
 	 */
-	public BCMacEngine init(final Mac mac, final CipherParameters params) {
+	private static Mac initMac(final Mac mac, final CipherParameters params) {
 		mac.init(params);
-		this.mac = mac;
-		return this;
-	}
-
-	/**
-	 * 获得 {@link Mac}
-	 *
-	 * @return {@link Mac}
-	 */
-	public Mac ipgetMac() {
 		return mac;
-	}
-
-	@Override
-	public void update(final byte[] in, final int inOff, final int len) {
-		this.mac.update(in, inOff, len);
-	}
-
-	@Override
-	public byte[] doFinal() {
-		final byte[] result = new byte[getMacLength()];
-		this.mac.doFinal(result, 0);
-		return result;
-	}
-
-	@Override
-	public void reset() {
-		this.mac.reset();
-	}
-
-	@Override
-	public int getMacLength() {
-		return mac.getMacSize();
-	}
-
-	@Override
-	public String getAlgorithm() {
-		return this.mac.getAlgorithmName();
 	}
 }

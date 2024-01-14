@@ -44,7 +44,7 @@ public class SqlExecutor {
 	 */
 	public static int execute(final Connection conn, final String sql, final Map<String, Object> paramMap) throws DbRuntimeException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
-		return execute(conn, namedSql.getSql(), namedSql.getParams());
+		return execute(conn, namedSql.getSql(), namedSql.getParamArray());
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class SqlExecutor {
 	 */
 	public static Long executeForGeneratedKey(final Connection conn, final String sql, final Map<String, Object> paramMap) throws DbRuntimeException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
-		return executeForGeneratedKey(conn, namedSql.getSql(), namedSql.getParams());
+		return executeForGeneratedKey(conn, namedSql.getSql(), namedSql.getParamArray());
 	}
 
 	/**
@@ -241,7 +241,7 @@ public class SqlExecutor {
 	 */
 	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Map<String, Object> paramMap) throws DbRuntimeException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
-		return query(conn, namedSql.getSql(), rsh, namedSql.getParams());
+		return query(conn, namedSql.getSql(), rsh, namedSql.getParamArray());
 	}
 
 	/**

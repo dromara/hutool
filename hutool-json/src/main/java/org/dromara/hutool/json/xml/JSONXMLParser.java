@@ -12,7 +12,9 @@
 
 package org.dromara.hutool.json.xml;
 
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.xml.XmlConstants;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.mapper.JSONValueMapper;
@@ -29,28 +31,31 @@ public class JSONXMLParser {
 	 * 转换XML为JSONObject
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
 	 *
-	 * @param jo          JSONObject
 	 * @param xmlStr      XML字符串
-	 * @param keepStrings 如果为{@code true}，则值保持String类型，不转换为数字或boolean
+	 * @param jo          JSONObject
+	 * @param parseConfig 解析选项
 	 * @throws JSONException 解析异常
 	 */
-	public static void parseJSONObject(final JSONObject jo, final String xmlStr, final boolean keepStrings) throws JSONException {
+	public static void parseJSONObject(final String xmlStr, final JSONObject jo, final ParseConfig parseConfig) throws JSONException {
 		final XMLTokener x = new XMLTokener(xmlStr, jo.config());
 		while (x.more() && x.skipPast("<")) {
-			parse(x, jo, null, keepStrings);
+			parse(x, jo, null, parseConfig, 0);
 		}
 	}
 
 	/**
-	 * Scan the content following the named tag, attaching it to the context.
+	 * 扫描XML内容，并解析到JSONObject中。
 	 *
-	 * @param x       The XMLTokener containing the source string.
-	 * @param context The JSONObject that will include the new material.
-	 * @param name    The tag name.
-	 * @return true if the close tag is processed.
+	 * @param x                   {@link XMLTokener}
+	 * @param context             {@link JSONObject}
+	 * @param name                标签名，null表示从根标签开始解析
+	 * @param parseConfig         解析选项
+	 * @param currentNestingDepth 当前层级
+	 * @return {@code true}表示解析完成
 	 * @throws JSONException JSON异常
 	 */
-	private static boolean parse(final XMLTokener x, final JSONObject context, final String name, final boolean keepStrings) throws JSONException {
+	private static boolean parse(final XMLTokener x, final JSONObject context, final String name,
+								 final ParseConfig parseConfig, final int currentNestingDepth) throws JSONException {
 		final char c;
 		int i;
 		final JSONObject jsonobject;
@@ -60,7 +65,7 @@ public class JSONXMLParser {
 
 		token = x.nextToken();
 
-		if (token == JSONXMLUtil.BANG) {
+		if (token == XmlConstants.C_BANG) {
 			c = x.next();
 			if (c == '-') {
 				if (x.next() == '-') {
@@ -86,19 +91,19 @@ public class JSONXMLParser {
 				token = x.nextMeta();
 				if (token == null) {
 					throw x.syntaxError("Missing '>' after '<!'.");
-				} else if (token == JSONXMLUtil.LT) {
+				} else if (token == XmlConstants.C_LT) {
 					i += 1;
-				} else if (token == JSONXMLUtil.GT) {
+				} else if (token == XmlConstants.C_GT) {
 					i -= 1;
 				}
 			} while (i > 0);
 			return false;
-		} else if (token == JSONXMLUtil.QUEST) {
+		} else if (token == XmlConstants.C_QUEST) {
 
 			// <?
 			x.skipPast("?>");
 			return false;
-		} else if (token == JSONXMLUtil.SLASH) {
+		} else if (token == Character.valueOf(CharUtil.SLASH)) {
 
 			// Close tag </
 
@@ -109,7 +114,7 @@ public class JSONXMLParser {
 			if (!token.equals(name)) {
 				throw x.syntaxError("Mismatched " + name + " and " + token);
 			}
-			if (x.nextToken() != JSONXMLUtil.GT) {
+			if (x.nextToken() != XmlConstants.C_GT) {
 				throw x.syntaxError("Misshaped close tag");
 			}
 			return true;
@@ -123,6 +128,7 @@ public class JSONXMLParser {
 			tagName = (String) token;
 			token = null;
 			jsonobject = new JSONObject();
+			final boolean keepStrings = parseConfig.isKeepStrings();
 			for (; ; ) {
 				if (token == null) {
 					token = x.nextToken();
@@ -132,7 +138,7 @@ public class JSONXMLParser {
 				if (token instanceof String) {
 					string = (String) token;
 					token = x.nextToken();
-					if (token == JSONXMLUtil.EQ) {
+					if (token == Character.valueOf(CharUtil.EQUAL)) {
 						token = x.nextToken();
 						if (!(token instanceof String)) {
 							throw x.syntaxError("Missing value");
@@ -143,9 +149,9 @@ public class JSONXMLParser {
 						jsonobject.append(string, "");
 					}
 
-				} else if (token == JSONXMLUtil.SLASH) {
+				} else if (token == Character.valueOf(CharUtil.SLASH)) {
 					// Empty tag <.../>
-					if (x.nextToken() != JSONXMLUtil.GT) {
+					if (x.nextToken() != XmlConstants.C_GT) {
 						throw x.syntaxError("Misshaped tag");
 					}
 					if (!jsonobject.isEmpty()) {
@@ -155,7 +161,7 @@ public class JSONXMLParser {
 					}
 					return false;
 
-				} else if (token == JSONXMLUtil.GT) {
+				} else if (token == XmlConstants.C_GT) {
 					// Content, between <...> and </...>
 					for (; ; ) {
 						token = x.nextContent();
@@ -170,9 +176,16 @@ public class JSONXMLParser {
 								jsonobject.append("content", keepStrings ? token : JSONValueMapper.toJsonValue(string));
 							}
 
-						} else if (token == JSONXMLUtil.LT) {
+						} else if (token == XmlConstants.C_LT) {
 							// Nested element
-							if (parse(x, jsonobject, tagName, keepStrings)) {
+							// issue#2748 of CVE-2022-45688
+							final int maxNestingDepth = parseConfig.getMaxNestingDepth();
+							if (maxNestingDepth > -1 && currentNestingDepth >= maxNestingDepth) {
+								throw x.syntaxError("Maximum nesting depth of " + maxNestingDepth + " reached");
+							}
+
+							// Nested element
+							if (parse(x, jsonobject, tagName, parseConfig, currentNestingDepth + 1)) {
 								if (jsonobject.isEmpty()) {
 									context.append(tagName, StrUtil.EMPTY);
 								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {

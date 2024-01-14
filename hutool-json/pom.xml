@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0-M10</version>
+		<version>6.0.0-M11</version>
 	</parent>
 
 	<artifactId>hutool-json</artifactId>
@@ -31,7 +31,7 @@
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.json</Automatic-Module-Name>
 		<!-- versions -->
-		<bouncycastle.version>1.76</bouncycastle.version>
+		<bouncycastle.version>1.77</bouncycastle.version>
 		<jjwt.version>0.12.3</jjwt.version>
 	</properties>
 

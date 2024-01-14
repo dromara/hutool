@@ -14,18 +14,13 @@ package org.dromara.hutool.crypto.asymmetric;
 
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
-import org.dromara.hutool.crypto.CipherWrapper;
-import org.dromara.hutool.crypto.CryptoException;
-import org.dromara.hutool.crypto.KeyUtil;
-import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.*;
 import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -51,8 +46,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	/**
 	 * Cipher负责完成加密或解密工作
 	 */
-	protected CipherWrapper cipherWrapper;
-
+	protected JceCipher cipher;
 	/**
 	 * 加密的块大小
 	 */
@@ -61,6 +55,15 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 解密的块大小
 	 */
 	protected int decryptBlockSize = -1;
+
+	/**
+	 * 算法参数
+	 */
+	private AlgorithmParameterSpec algorithmParameterSpec;
+	/**
+	 * 自定义随机数
+	 */
+	private SecureRandom random;
 	// ------------------------------------------------------------------ Constructor start
 
 	/**
@@ -144,8 +147,8 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 */
 	public AsymmetricCrypto(final String algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm, //
-				KeyUtil.generatePrivateKey(algorithm, privateKey), //
-				KeyUtil.generatePublicKey(algorithm, publicKey)//
+			KeyUtil.generatePrivateKey(algorithm, privateKey), //
+			KeyUtil.generatePublicKey(algorithm, publicKey)//
 		);
 	}
 
@@ -209,7 +212,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public AlgorithmParameterSpec getAlgorithmParameterSpec() {
-		return this.cipherWrapper.getParams();
+		return this.algorithmParameterSpec;
 	}
 
 	/**
@@ -217,10 +220,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 在某些算法中，需要特别的参数，例如在ECIES中，此处为IESParameterSpec
 	 *
 	 * @param algorithmParameterSpec {@link AlgorithmParameterSpec}
-	 * @since 5.4.3
+	 * @return this
 	 */
-	public void setAlgorithmParameterSpec(final AlgorithmParameterSpec algorithmParameterSpec) {
-		this.cipherWrapper.setParams(algorithmParameterSpec);
+	public AsymmetricCrypto setAlgorithmParameterSpec(final AlgorithmParameterSpec algorithmParameterSpec) {
+		this.algorithmParameterSpec = algorithmParameterSpec;
+		return this;
 	}
 
 	/**
@@ -231,7 +235,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.7.17
 	 */
 	public AsymmetricCrypto setRandom(final SecureRandom random) {
-		this.cipherWrapper.setRandom(random);
+		this.random = random;
 		return this;
 	}
 
@@ -249,7 +253,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, key);
+			final JceCipher cipher = initMode(CipherMode.ENCRYPT, key);
 
 			if (this.encryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
@@ -274,7 +278,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, key);
+			final JceCipher cipher = initMode(CipherMode.DECRYPT, key);
 
 			if (this.decryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
@@ -301,7 +305,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public Cipher getCipher() {
-		return this.cipherWrapper.getRaw();
+		return this.cipher.getRaw();
 	}
 
 	/**
@@ -310,7 +314,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 4.5.2
 	 */
 	protected void initCipher() {
-		this.cipherWrapper = new CipherWrapper(this.algorithm);
+		this.cipher = new JceCipher(this.algorithm);
 	}
 
 	/**
@@ -346,9 +350,10 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @throws BadPaddingException       padding错误异常
 	 * @throws IOException               IO异常，不会被触发
 	 */
+	@SuppressWarnings("resource")
 	private byte[] doFinalWithBlock(final byte[] data, final int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
 		final int dataLength = data.length;
-		@SuppressWarnings("resource") final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 
 		int offSet = 0;
 		// 剩余长度
@@ -367,15 +372,15 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	}
 
 	/**
-	 * 初始化{@link Cipher}的模式，如加密模式或解密模式
+	 * 初始化{@link JceCipher}的模式，如加密模式或解密模式
 	 *
-	 * @param mode 模式，可选{@link Cipher#ENCRYPT_MODE}或者{@link Cipher#DECRYPT_MODE}
+	 * @param mode 模式，可选{@link CipherMode#ENCRYPT}或者{@link CipherMode#DECRYPT}
 	 * @param key  密钥
-	 * @return {@link Cipher}
-	 * @throws InvalidAlgorithmParameterException 异常算法错误
-	 * @throws InvalidKeyException                异常KEY错误
+	 * @return {@link JceCipher}
 	 */
-	private Cipher initMode(final int mode, final Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
-		return this.cipherWrapper.initMode(mode, key).getRaw();
+	private JceCipher initMode(final CipherMode mode, final Key key) {
+		final JceCipher cipher = this.cipher;
+		cipher.init(mode, new JceCipher.JceParameters(key, this.algorithmParameterSpec, this.random));
+		return cipher;
 	}
 }

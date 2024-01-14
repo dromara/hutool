@@ -21,6 +21,12 @@
  * Truncate：是一个函数，就是怎么截取加密后的串，并取加密后串的哪些字段组成一个数字。
  * </pre>
  *
+ * 实现包括：
+ * <ul>
+ *     <li>HMAC-based one-time passwords (HOTP) 基于HMAC算法一次性密码生成器</li>
+ *     <li>time-based one-time passwords (TOTP) 基于时间戳算法的一次性密码生成器</li>
+ * </ul>
+ *
  * @author looly
  */
 package org.dromara.hutool.crypto.digest.otp;

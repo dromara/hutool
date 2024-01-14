@@ -27,7 +27,7 @@ import java.security.Provider;
 public class DigesterFactory {
 
 	/**
-	 * 创建工厂
+	 * 创建工厂，只使用JDK提供的算法
 	 *
 	 * @param algorithm 算法
 	 * @return DigesterFactory

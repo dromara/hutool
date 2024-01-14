@@ -15,7 +15,6 @@ package org.dromara.hutool.crypto.digest.mac;
 import org.bouncycastle.crypto.BlockCipher;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Digest;
-import org.bouncycastle.crypto.Mac;
 import org.bouncycastle.crypto.macs.CBCBlockCipherMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
@@ -96,17 +95,5 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 */
 	public CBCBlockCipherMacEngine(final CBCBlockCipherMac mac, final CipherParameters params) {
 		super(mac, params);
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param cipher {@link BlockCipher}
-	 * @param params 参数，例如密钥可以用{@link KeyParameter}
-	 * @return this
-	 * @see #init(Mac, CipherParameters)
-	 */
-	public CBCBlockCipherMacEngine init(final BlockCipher cipher, final CipherParameters params) {
-		return (CBCBlockCipherMacEngine) init(new CBCBlockCipherMac(cipher), params);
 	}
 }

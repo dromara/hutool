@@ -898,12 +898,12 @@ public class NumberUtil extends NumberValidator {
 		}
 
 		// Float、Double等有精度问题，转换为字符串后再转换
-		return toBigDecimal(number.toString());
+		return new BigDecimal(number.toString());
 	}
 
 	/**
 	 * 数字转{@link BigDecimal}<br>
-	 * null或""或空白符转换为0
+	 * null或""或"NaN"或空白符转换为0
 	 *
 	 * @param numberStr 数字字符串
 	 * @return {@link BigDecimal}
@@ -927,7 +927,7 @@ public class NumberUtil extends NumberValidator {
 
 	/**
 	 * 数字转{@link BigInteger}<br>
-	 * null转换为0
+	 * null或"NaN"转换为0
 	 *
 	 * @param number 数字
 	 * @return {@link BigInteger}

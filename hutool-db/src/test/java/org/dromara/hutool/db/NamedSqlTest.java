@@ -36,8 +36,8 @@ public class NamedSqlTest {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		//未指定参数原样输出
 		Assertions.assertEquals("select * from table where id=@id and name = ? and nickName = ?", namedSql.getSql());
-		Assertions.assertEquals("张三", namedSql.getParams()[0]);
-		Assertions.assertEquals("小豆豆", namedSql.getParams()[1]);
+		Assertions.assertEquals("张三", namedSql.getParamArray()[0]);
+		Assertions.assertEquals("小豆豆", namedSql.getParamArray()[1]);
 	}
 
 	@Test
@@ -54,9 +54,9 @@ public class NamedSqlTest {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assertions.assertEquals("select * from table where id=? and name = ? and nickName = ?", namedSql.getSql());
 		//指定了null参数的依旧替换，参数值为null
-		Assertions.assertNull(namedSql.getParams()[0]);
-		Assertions.assertEquals("张三", namedSql.getParams()[1]);
-		Assertions.assertEquals("小豆豆", namedSql.getParams()[2]);
+		Assertions.assertNull(namedSql.getParamArray()[0]);
+		Assertions.assertEquals("张三", namedSql.getParamArray()[1]);
+		Assertions.assertEquals("小豆豆", namedSql.getParamArray()[2]);
 	}
 
 	@Test
@@ -92,9 +92,9 @@ public class NamedSqlTest {
 
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assertions.assertEquals("select * from user where id in (?,?,?)", namedSql.getSql());
-		Assertions.assertEquals(1, namedSql.getParams()[0]);
-		Assertions.assertEquals(2, namedSql.getParams()[1]);
-		Assertions.assertEquals(3, namedSql.getParams()[2]);
+		Assertions.assertEquals(1, namedSql.getParamArray()[0]);
+		Assertions.assertEquals(2, namedSql.getParamArray()[1]);
+		Assertions.assertEquals(3, namedSql.getParamArray()[2]);
 	}
 
 	@Test

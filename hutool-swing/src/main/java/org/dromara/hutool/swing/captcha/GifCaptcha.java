@@ -16,6 +16,8 @@ package org.dromara.hutool.swing.captcha;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
+import org.dromara.hutool.swing.captcha.generator.CodeGenerator;
+import org.dromara.hutool.swing.captcha.generator.RandomGenerator;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -59,7 +61,29 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param codeCount 验证码个数
 	 */
 	public GifCaptcha(final int width, final int height, final int codeCount) {
-		super(width, height, codeCount, 10);
+		this(width, height, codeCount, 10);
+	}
+
+	/**
+	 * @param width          验证码宽度
+	 * @param height         验证码高度
+	 * @param codeCount      验证码个数
+	 * @param interfereCount 干扰个数
+	 */
+	public GifCaptcha(final int width, final int height, final int codeCount, final int interfereCount) {
+		this(width, height, new RandomGenerator(codeCount), interfereCount);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 */
+	public GifCaptcha(final int width, final int height, final CodeGenerator generator, final int interfereCount) {
+		super(width, height, generator, interfereCount);
 	}
 
 	/**
@@ -178,9 +202,9 @@ public class GifCaptcha extends AbstractCaptcha {
 			g2d.setComposite(ac);
 			g2d.setColor(fontColor[i]);
 			g2d.drawOval(
-					RandomUtil.randomInt(width),
-					RandomUtil.randomInt(height),
-					RandomUtil.randomInt(5, 30), 5 + RandomUtil.randomInt(5, 30)
+				RandomUtil.randomInt(width),
+				RandomUtil.randomInt(height),
+				RandomUtil.randomInt(5, 30), 5 + RandomUtil.randomInt(5, 30)
 			);//绘制椭圆边框
 			g2d.drawString(words[i] + "", x + (font.getSize() + m) * i, y);
 		}
@@ -223,8 +247,8 @@ public class GifCaptcha extends AbstractCaptcha {
 			max = 255;
 		}
 		return new Color(
-				RandomUtil.randomInt(min, max),
-				RandomUtil.randomInt(min, max),
-				RandomUtil.randomInt(min, max));
+			RandomUtil.randomInt(min, max),
+			RandomUtil.randomInt(min, max),
+			RandomUtil.randomInt(min, max));
 	}
 }

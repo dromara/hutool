@@ -29,6 +29,7 @@ import org.dromara.hutool.json.JSONTokener;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONSerializer;
+import org.dromara.hutool.json.xml.ParseConfig;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -170,7 +171,7 @@ public class JSONObjectMapper {
 		final String jsonStr = StrUtil.trim(source);
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
-			JSONXMLUtil.toJSONObject(jsonObject, jsonStr, false);
+			JSONXMLUtil.toJSONObject(jsonStr, jsonObject, ParseConfig.of());
 			return;
 		}
 		mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonObject.config()), jsonObject);

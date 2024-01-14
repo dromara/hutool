@@ -13,6 +13,7 @@
 package org.dromara.hutool.db.sql;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
@@ -21,10 +22,13 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.Entity;
+import org.dromara.hutool.db.sql.filter.SqlFilter;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link PreparedStatement}构建器，构建结果为{@link StatementWrapper}
@@ -44,20 +48,19 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 		return new StatementBuilder();
 	}
 
-	private SqlLog sqlLog;
+	private final BoundSql boundSql = new BoundSql();
 	private Connection connection;
-	private String sql;
-	private Object[] params;
 	private boolean returnGeneratedKey = true;
+	private SqlFilter sqlFilter;
 
 	/**
 	 * 设置SQL日志
 	 *
-	 * @param sqlLog {@link SqlLog}
+	 * @param sqlFilter {@link SqlFilter}
 	 * @return this
 	 */
-	public StatementBuilder setSqlLog(final SqlLog sqlLog) {
-		this.sqlLog = sqlLog;
+	public StatementBuilder setSqlFilter(final SqlFilter sqlFilter) {
+		this.sqlFilter = sqlFilter;
 		return this;
 	}
 
@@ -79,7 +82,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 	 * @return this
 	 */
 	public StatementBuilder setSql(final String sql) {
-		this.sql = StrUtil.trim(sql);
+		this.boundSql.setSql(sql);
 		return this;
 	}
 
@@ -90,7 +93,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 	 * @return this
 	 */
 	public StatementBuilder setParams(final Object... params) {
-		this.params = params;
+		this.boundSql.setParams(ListUtil.of(params));
 		return this;
 	}
 
@@ -105,6 +108,11 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 		return this;
 	}
 
+	/**
+	 * 构建{@link StatementWrapper}
+	 *
+	 * @return {@link StatementWrapper}，{@code null}表示不执行
+	 */
 	@Override
 	public StatementWrapper build() {
 		try {
@@ -117,48 +125,37 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 	/**
 	 * 创建批量操作的{@link StatementWrapper}
 	 *
-	 * @param paramsBatch "?"对应参数批次列表
-	 * @return {@link StatementWrapper}
+	 * @return {@link StatementWrapper}，{@code null}表示不执行
 	 * @throws DbRuntimeException SQL异常
 	 */
-	public StatementWrapper buildForBatch(final Iterable<Object[]> paramsBatch) throws DbRuntimeException {
+	public StatementWrapper buildForBatch() throws DbRuntimeException {
+		final String sql = this.boundSql.getSql();
 		Assert.notBlank(sql, "Sql String must be not blank!");
+		final List<Object> paramsBatch = this.boundSql.getParams();
 
-		sqlLog.log(sql, paramsBatch);
+		sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
 
 		final StatementWrapper ps;
 		try {
 			ps = StatementWrapper.of(connection.prepareStatement(sql));
 			final Map<Integer, Integer> nullTypeMap = new HashMap<>();
-			for (final Object[] params : paramsBatch) {
-				ps.fillParams(new ArrayIter<>(params), nullTypeMap);
-				ps.addBatch();
-			}
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
-		}
-		return ps;
-	}
-
-	/**
-	 * 创建批量操作的{@link StatementWrapper}
-	 *
-	 * @param fields   字段列表，用于获取对应值
-	 * @param entities "?"对应参数批次列表
-	 * @return {@link StatementWrapper}
-	 * @throws DbRuntimeException SQL异常
-	 */
-	public StatementWrapper buildForBatch(final Iterable<String> fields, final Entity... entities) throws DbRuntimeException {
-		Assert.notBlank(sql, "Sql String must be not blank!");
-
-		sqlLog.logForBatch(sql);
-
-		final StatementWrapper ps;
-		try {
-			ps = StatementWrapper.of(connection.prepareStatement(sql));
-			final Map<Integer, Integer> nullTypeMap = new HashMap<>();
-			for (final Entity entity : entities) {
-				ps.fillParams(MapUtil.valuesOfKeys(entity, fields), nullTypeMap);
+			Set<String> keys = null;
+			for (final Object params : paramsBatch) {
+				if (null == params) {
+					continue;
+				}
+				if (ArrayUtil.isArray(params)) {
+					ps.fillParams(new ArrayIter<>(params), nullTypeMap);
+				} else if (params instanceof Entity) {
+					final Entity entity = (Entity) params;
+					// 对于多Entity批量插入的情况，为防止数据不对齐，故按照首行提供键值对筛选。
+					if(null == keys){
+						keys = entity.keySet();
+						ps.fillParams(entity.values(), nullTypeMap);
+					} else{
+						ps.fillParams(MapUtil.valuesOfKeys(entity, keys), nullTypeMap);
+					}
+				}
 				ps.addBatch();
 			}
 		} catch (final SQLException e) {
@@ -170,12 +167,15 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 	/**
 	 * 创建存储过程或函数调用的{@link StatementWrapper}
 	 *
-	 * @return StatementWrapper
+	 * @return StatementWrapper，{@code null}表示不执行
 	 * @since 6.0.0
 	 */
 	public CallableStatement buildForCall() {
+		final String sql = this.boundSql.getSql();
+		final Object[] params = this.boundSql.getParamArray();
 		Assert.notBlank(sql, "Sql String must be not blank!");
-		sqlLog.log(sql, ArrayUtil.isEmpty(params) ? null : params);
+
+		sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
 
 		try {
 			return (CallableStatement) StatementWrapper
@@ -190,20 +190,23 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 	/**
 	 * 构建{@link StatementWrapper}
 	 *
-	 * @return {@link StatementWrapper}
+	 * @return {@link StatementWrapper}，{@code null}表示不执行
 	 * @throws SQLException SQL异常
 	 */
 	private StatementWrapper _build() throws SQLException {
+		String sql = this.boundSql.getSql();
+		Object[] params = this.boundSql.getParamArray();
 		Assert.notBlank(sql, "Sql String must be not blank!");
 
 		if (ArrayUtil.isNotEmpty(params) && 1 == params.length && params[0] instanceof Map) {
 			// 检查参数是否为命名方式的参数
-			final NamedSql namedSql = new NamedSql(sql, Convert.toMap(String.class, Object.class, params[0]));
+			final NamedSql namedSql =  new NamedSql(sql, Convert.toMap(String.class, Object.class, params[0]));
 			sql = namedSql.getSql();
-			params = namedSql.getParams();
+			params = namedSql.getParamArray();
 		}
 
-		sqlLog.log(sql, ArrayUtil.isEmpty(params) ? null : params);
+		sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
+
 		final PreparedStatement ps;
 		if (returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
 			// 插入默认返回主键

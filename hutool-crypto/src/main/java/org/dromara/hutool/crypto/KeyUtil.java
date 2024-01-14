@@ -64,6 +64,7 @@ public class KeyUtil {
 	public static final int DEFAULT_KEY_SIZE = 1024;
 
 	// region ----- generateKey
+
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 *
@@ -196,7 +197,24 @@ public class KeyUtil {
 	}
 	// endregion
 
+	/**
+	 * 检查{@link KeyPair} 是否为空，空的条件是：
+	 * <ul>
+	 *     <li>keyPair本身为{@code null}</li>
+	 *     <li>{@link KeyPair#getPrivate()}和{@link KeyPair#getPublic()}都为{@code null}</li>
+	 * </ul>
+	 *
+	 * @param keyPair 密钥对
+	 * @return 是否为空
+	 */
 	// region ----- keyPair
+	public static boolean isEmpty(final KeyPair keyPair) {
+		if (null == keyPair) {
+			return false;
+		}
+		return null != keyPair.getPrivate() || null != keyPair.getPublic();
+	}
+
 	/**
 	 * 生成RSA私钥，仅用于非对称加密<br>
 	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>

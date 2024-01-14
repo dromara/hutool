@@ -14,6 +14,7 @@ package org.dromara.hutool.cron.demo;
 
 import java.util.concurrent.TimeUnit;
 
+import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.thread.ThreadUtil;
 
@@ -29,7 +30,7 @@ public class TestJob2 {
 	 * 执行定时任务内容
 	 */
 	public void doTest() {
-		Console.log("TestJob2.doTest开始执行……");
+		Console.log("TestJob2.doTest开始执行…… at [{}]", DateUtil.formatNow());
 		ThreadUtil.sleep(20, TimeUnit.SECONDS);
 		Console.log("延迟20s打印testJob2");
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -12,14 +12,15 @@
 
 package org.dromara.hutool.db;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.db.handler.ResultSetUtil;
 import org.dromara.hutool.db.handler.RsHandler;
 import org.dromara.hutool.db.sql.SqlBuilder;
-import org.dromara.hutool.db.sql.SqlLog;
 import org.dromara.hutool.db.sql.StatementBuilder;
 import org.dromara.hutool.db.sql.StatementWrapper;
+import org.dromara.hutool.db.sql.filter.SqlLogFilter;
 
 import java.sql.*;
 import java.util.Collection;
@@ -87,7 +88,7 @@ public class StatementUtil {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(returnGeneratedKey)
-			.setSqlLog(SqlLog.INSTANCE)
+			.setSqlFilter(SqlLogFilter.INSTANCE)
 			.setSql(sql)
 			.setParams(params)
 			.build();
@@ -120,29 +121,10 @@ public class StatementUtil {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(false)
-			.setSqlLog(SqlLog.INSTANCE)
+			.setSqlFilter(SqlLogFilter.INSTANCE)
 			.setSql(sql)
-			.buildForBatch(paramsBatch);
-	}
-
-	/**
-	 * 创建批量操作的{@link PreparedStatement}
-	 *
-	 * @param conn     数据库连接
-	 * @param sql      SQL语句，使用"?"做为占位符
-	 * @param fields   字段列表，用于获取对应值
-	 * @param entities "?"对应参数批次列表
-	 * @return {@link PreparedStatement}
-	 * @since 4.6.7
-	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql,
-															 final Iterable<String> fields, final Entity... entities) {
-		return StatementBuilder.of()
-			.setConnection(conn)
-			.setReturnGeneratedKey(false)
-			.setSqlLog(SqlLog.INSTANCE)
-			.setSql(sql)
-			.buildForBatch(fields, entities);
+			.setParams(ArrayUtil.ofArray(paramsBatch, Object.class))
+			.buildForBatch();
 	}
 
 	/**
@@ -158,7 +140,7 @@ public class StatementUtil {
 	public static CallableStatement prepareCall(final Connection conn, final String sql, final Object... params) throws SQLException {
 		return StatementBuilder.of()
 			.setConnection(conn)
-			.setSqlLog(SqlLog.INSTANCE)
+			.setSqlFilter(SqlLogFilter.INSTANCE)
 			.setSql(sql)
 			.setParams(params)
 			.buildForCall();

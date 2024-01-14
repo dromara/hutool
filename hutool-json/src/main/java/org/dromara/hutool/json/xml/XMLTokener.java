@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.json.xml;
 
+import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.xml.XmlConstants;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONTokener;
@@ -31,11 +33,11 @@ public class XMLTokener extends JSONTokener {
 
 	static {
 		entity = new java.util.HashMap<>(8);
-		entity.put("amp", JSONXMLUtil.AMP);
-		entity.put("apos", JSONXMLUtil.APOS);
-		entity.put("gt", JSONXMLUtil.GT);
-		entity.put("lt", JSONXMLUtil.LT);
-		entity.put("quot", JSONXMLUtil.QUOT);
+		entity.put("amp", XmlConstants.C_AMP);
+		entity.put("apos", XmlConstants.C_APOS);
+		entity.put("gt", XmlConstants.C_GT);
+		entity.put("lt", XmlConstants.C_LT);
+		entity.put("quot", CharUtil.DOUBLE_QUOTES);
 	}
 
 	/**
@@ -89,7 +91,7 @@ public class XMLTokener extends JSONTokener {
 			return null;
 		}
 		if (c == '<') {
-			return JSONXMLUtil.LT;
+			return XmlConstants.C_LT;
 		}
 		sb = new StringBuilder();
 		for (; ; ) {
@@ -175,17 +177,17 @@ public class XMLTokener extends JSONTokener {
 			case 0:
 				throw syntaxError("Misshaped meta tag");
 			case '<':
-				return JSONXMLUtil.LT;
+				return XmlConstants.C_LT;
 			case '>':
-				return JSONXMLUtil.GT;
+				return XmlConstants.C_GT;
 			case '/':
-				return JSONXMLUtil.SLASH;
+				return CharUtil.SLASH;
 			case '=':
-				return JSONXMLUtil.EQ;
+				return CharUtil.EQUAL;
 			case '!':
-				return JSONXMLUtil.BANG;
+				return XmlConstants.C_BANG;
 			case '?':
-				return JSONXMLUtil.QUEST;
+				return XmlConstants.C_QUEST;
 			case '"':
 			case '\'':
 				q = c;
@@ -242,15 +244,15 @@ public class XMLTokener extends JSONTokener {
 			case '<':
 				throw syntaxError("Misplaced '<'");
 			case '>':
-				return JSONXMLUtil.GT;
+				return XmlConstants.C_GT;
 			case '/':
-				return JSONXMLUtil.SLASH;
+				return CharUtil.SLASH;
 			case '=':
-				return JSONXMLUtil.EQ;
+				return CharUtil.EQUAL;
 			case '!':
-				return JSONXMLUtil.BANG;
+				return XmlConstants.C_BANG;
 			case '?':
-				return JSONXMLUtil.QUEST;
+				return XmlConstants.C_QUEST;
 
 			// Quoted string
 

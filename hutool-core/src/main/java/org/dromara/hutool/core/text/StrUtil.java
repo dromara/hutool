@@ -15,6 +15,7 @@ package org.dromara.hutool.core.text;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.func.FunctionPool;
 import org.dromara.hutool.core.text.placeholder.StrFormatter;
+import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.StringReader;
@@ -26,6 +27,13 @@ import java.util.Map;
 /**
  * 字符串工具类<br>
  * 此工具主要针对单个字符串的操作
+ *
+ * <p>本工具类，v6.x进行了拆分。
+ * 字符串分割<strong>split</strong>参考：{@link SplitUtil} &nbsp;&nbsp;<br>
+ * 多字符串判空<strong>hasBlank</strong>参考：{@link ArrayUtil}
+ * </p>
+ * @see SplitUtil#split(CharSequence, CharSequence)  对字符串分割
+ * @see ArrayUtil#hasBlank(CharSequence...) 对多个字符串判空
  *
  * @author Looly
  */
