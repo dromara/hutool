@@ -15,6 +15,7 @@ package org.dromara.hutool.core.text.dfa;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.*;
@@ -324,7 +325,44 @@ public class WordTree extends HashMap<Character, WordTree> {
 		}
 		return foundWords;
 	}
+
+	/**
+	 * 扁平化WordTree
+	 * 例如：红领巾，红河 构建树后为：
+	 * <pre>
+	 *            红
+	 *            /\
+	 *          领  河
+	 *         /
+	 *       巾
+	 * </pre>
+	 * 扁平化后得到
+	 * <pre>
+	 *     红河
+	 *     红领巾
+	 * </pre>
+	 *
+	 * @return 扁平化后的结果，不保证顺序
+	 */
+	public List<String> flatten() {
+		return EasyStream.of(this.entrySet()).flat(this::innerFlatten).toList();
+	}
+
 	//--------------------------------------------------------------------------------------- Private method start
+
+	/**
+	 * 递归扁平化WordTree每个entry节点
+	 *
+	 * @param entry WordTree每个entry节点
+	 * @return 递归扁平化后的结果
+	 */
+	private Iterable<String> innerFlatten(Entry<Character, WordTree> entry) {
+		List<String> list = EasyStream.of(entry.getValue().entrySet()).flat(this::innerFlatten).map(v -> entry.getKey() + v).toList();
+		if (list.isEmpty()) {
+			return EasyStream.of(entry.getKey().toString());
+		}
+		return list;
+	}
 
 	/**
 	 * 是否末尾

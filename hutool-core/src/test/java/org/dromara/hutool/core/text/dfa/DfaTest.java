@@ -16,6 +16,8 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -208,5 +210,15 @@ public class DfaTest {
 		// 密集，贪婪
 		strings = wordTree.matchAll("abab", -1, true, true);
 		Assertions.assertEquals("[ab, b, ab, b]", strings.toString());
+	}
+
+	@Test
+	void flattenTest() {
+		final WordTree wordTree = new WordTree();
+		final List<String> list = Arrays.asList("阿帕奇", "阿超", "HuTool", "HuTao");
+		wordTree.addWords(list);
+		final List<String> flattened = wordTree.flatten();
+		flattened.sort(Comparator.comparingInt(list::indexOf));
+		Assertions.assertEquals(list, flattened);
 	}
 }
