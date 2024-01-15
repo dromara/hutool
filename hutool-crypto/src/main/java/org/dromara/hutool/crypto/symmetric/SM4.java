@@ -27,9 +27,9 @@ import javax.crypto.spec.IvParameterSpec;
  * <p>
  * 国密算法包括：
  * <ol>
- *     <li>非对称加密和签名：SM2</li>
- *     <li>摘要签名算法：SM3</li>
- *     <li>对称加密：SM4</li>
+ *     <li>非对称加密和签名：SM2，asymmetric</li>
+ *     <li>摘要签名算法：SM3，digest</li>
+ *     <li>对称加密：SM4，symmetric</li>
  * </ol>
  *
  * @author Looly
