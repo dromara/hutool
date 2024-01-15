@@ -46,9 +46,9 @@ import java.security.PublicKey;
  *
  * <p>封装包括：</p>
  * <ul>
- *     <li>SM2 椭圆曲线非对称加密和签名 asymmetric，国际RSA</li>
- *     <li>SM3 杂凑算法 哈希算法 摘要算法 digest，国际MD5</li>
- *     <li>SM4 对称加密 symmetric，国际DES、AES</li>
+ *     <li>SM2 椭圆曲线非对称加密和签名 asymmetric</li>
+ *     <li>SM3 杂凑算法 哈希算法 摘要算法 digest</li>
+ *     <li>SM4 对称加密 symmetric</li>
  * </ul>
  * @see SM2 sm2,asymmetric,不对称
  * @see SM3 sm3,digest,摘要
