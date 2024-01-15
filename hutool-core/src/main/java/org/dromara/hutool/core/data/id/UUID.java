@@ -23,6 +23,22 @@ import java.util.Random;
 /**
  * 提供通用唯一识别码（universally unique identifier）（UUID）实现，UUID表示一个128位的值。<br>
  * 此类拷贝自java.util.UUID，用于生成不带-的UUID字符串
+ * <p>
+ *     <h3>Generate UUID 不同版本UUID在线生成和参考：<a href="https://idtools.co/uuid/v4">Generate UUID</a></h3>
+ *     <h3>UUID 的 5 个版本：<a href="https://juejin.cn/post/7297225106203689001">UUID 5 version 区别</a></h3>
+ *     <h3>UUID代码实现参考：<a href="https://github.com/sake/uuid4j">sake/uuid4j实现</a></h3>
+ * </p>
+ * <ul>
+ * 		<li>UUIDv1: Structure,形如：xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx，UUID v1 表示为 32 个字符的十六进制字符串，分五组显示，并用连字符分隔; <strong>基于时间</strong>，同时访问主机的 MAC 地址； generate a time based UUID (V1)</li>
+ * 		<li>UUIDv2: Structure,形如：xxxxxxxx-xxxx-2xxx-yxxx-xxxxxxxxxxxx，UUID v2 的结构与其他 UUID 相同;需要<strong> DCE–分布式计算机环境 </strong>生成唯一标识符;由于基于计算主机名，有隐私风险，未大规模使用</li>
+ * 		<li>UUIDv3: Structure,形如：xxxxxxxx-xxxx-3xxx-yxxx-xxxxxxxxxxxx，UUID v3 的结构与其他 UUID 相同;需要<strong> 基于命名·使用MD5哈希加密 </strong>生成唯一标识符;</li>
+ * 		<li>UUIDv4: Structure,形如：xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx，UUID v4 的结构与其他 UUID 相同,<strong>使用最多的版本</strong>，使用<strong>随机数生成</strong>。 hutool中默认实现都是该版本； generate a random UUID (V4)</li>
+ * 		<li>UUIDv5: Structure,形如：xxxxxxxx-xxxx-5xxx-yxxx-xxxxxxxxxxxx，UUID v5 的结构与其他 UUID 相同,需要根据<strong> 基于命名·使用SHA-1哈希加密 </strong>生成唯一标识符； generate name based UUID with SHA1 hashing (v5)</li>
+ * 		<li>UUIDv6: Structure,形如：xxxxxxxx-xxxx-6xxx-yxxx-xxxxxxxxxxxx，UUID v6 的结构与其他 UUID 相同,<strong>与 UUIDv1 的字段兼容版本</strong>,<strong>结合 UUIDv1 和 UUIDv4 的优点</strong>，确保基于时间的自然排序和更好的隐私;</li>
+ * 		<li>UUIDv7: Structure,形如：xxxxxxxx-xxxx-7xxx-yxxx-xxxxxxxxxxxx，UUID v7 的结构与其他 UUID 相同,提供了从 <strong>Unix Epoch 时间戳</strong>派生的时间排序值，以及改进的熵特性。如果可能，<strong>建议使用版本 1 和 6</strong>； generate a ordered time based UUID (V7)</li>
+ * </ul>
+ * version 字段保存描述此 UUID 类型的值。有 7 种不同的基本 UUID 类型：基于时间的 UUIDv1、DCE 安全 UUIDv2、基于名称的 UUIDv3 、随机生成的 UUIDv4、基于名称的SHA-1算法的 UUIDv5、基于时间的随机生成的 UUIDv6 和 基于时间戳的 UUIDv7。<br>
+ * 这些类型的 version 值分别为 1、2、3、4、5、6 和 7。最常用的V4
  *
  * <p>
  * 这些通用标识符具有不同的变体。此类的方法用于操作 Leach-Salz 变体，不过构造方法允许创建任何 UUID 变体（将在下面进行描述）。
@@ -47,8 +63,6 @@ import java.util.Random;
  * <p>
  * variant 字段包含一个表示 UUID 布局的值。以上描述的位布局仅在 UUID 的 variant 值为 2（表示 Leach-Salz 变体）时才有效。 *
  * <p>
- * version 字段保存描述此 UUID 类型的值。有 4 种不同的基本 UUID 类型：基于时间的 UUID、DCE 安全 UUID、基于名称的 UUID 和随机生成的 UUID。<br>
- * 这些类型的 version 值分别为 1、2、3 和 4。
  *
  * @since 4.1.11
  */
@@ -105,7 +119,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	/**
-	 * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的本地线程伪随机数生成器生成该 UUID。
+	 * 获取类型 4 UUIDv4（伪随机生成的）UUID 的静态工厂。 使用加密的本地线程伪随机数生成器生成该 UUID。
 	 *
 	 * @return 随机生成的 {@code UUID}
 	 */
@@ -114,7 +128,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	/**
-	 * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
+	 * 获取类型 4 UUIDv4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
 	 *
 	 * @return 随机生成的 {@code UUID}
 	 */
@@ -123,7 +137,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	/**
-	 * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
+	 * 获取类型 4 UUIDv4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
 	 *
 	 * @param isSecure 是否使用{@link SecureRandom}如果是可以获得更安全的随机码，否则可以得到更好的性能
 	 * @return 随机生成的 {@code UUID}
@@ -143,7 +157,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	/**
-	 * 根据指定的字节数组获取类型 3（基于名称的）UUID 的静态工厂。
+	 * 根据指定的字节数组获取类型 3 UUIDv3（基于名称的·使用MD5哈希加密）UUID 的静态工厂。
 	 *
 	 * @param name 用于构造 UUID 的字节数组。
 	 * @return 根据指定数组生成的 {@code UUID}
@@ -215,10 +229,13 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * <p>
 	 * 版本号具有以下含意:
 	 * <ul>
-	 * <li>1 基于时间的 UUID
-	 * <li>2 DCE 安全 UUID
-	 * <li>3 基于名称的 UUID
-	 * <li>4 随机生成的 UUID
+	 * <li>UUIDv1 基于时间的 UUID
+	 * <li>UUIDv2 DCE 安全 UUID
+	 * <li>UUIDv3 基于名称的MD5散列算法的 UUID
+	 * <li>UUIDv4 随机生成的 UUID
+	 * <li>UUIDv5 基于名称的SHA-1散列算法的 UUID
+	 * <li>UUIDv6 基于时间的随机生成的 UUID （UUIDv1 + UUIDv4）
+	 * <li>UUIDv7 基于时间戳Unix epoch的 UUID
 	 * </ul>
 	 *
 	 * @return 此 {@code UUID} 的版本号

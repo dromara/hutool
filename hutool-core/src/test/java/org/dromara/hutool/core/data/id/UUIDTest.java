@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.collection.ConcurrentHashSet;
-import org.dromara.hutool.core.data.id.UUID;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,7 @@ public class UUIDTest {
 		final Set<String> set = new ConcurrentHashSet<>(100);
 		ThreadUtil.concurrencyTest(100, ()-> set.add(UUID.fastUUID().toString()));
 		Assertions.assertEquals(100, set.size());
+		Console.log(set);
 	}
 
 
