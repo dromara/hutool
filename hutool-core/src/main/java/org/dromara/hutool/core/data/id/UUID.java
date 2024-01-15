@@ -23,11 +23,11 @@ import java.util.Random;
 /**
  * 提供通用唯一识别码（universally unique identifier）（UUID）实现，UUID表示一个128位的值。<br>
  * 此类拷贝自java.util.UUID，用于生成不带-的UUID字符串
- * <p>
- *     <h3>Generate UUID 不同版本UUID在线生成和参考：<a href="https://idtools.co/uuid/v4">Generate UUID</a></h3>
- *     <h3>UUID 的 5 个版本：<a href="https://juejin.cn/post/7297225106203689001">UUID 5 version 区别</a></h3>
- *     <h3>UUID代码实现参考：<a href="https://github.com/sake/uuid4j">sake/uuid4j实现</a></h3>
- * </p>
+ * <ul>
+ *     <li>Generate UUID 不同版本UUID在线生成和参考：<a href="https://idtools.co/uuid/v4">Generate UUID</a></li>
+ *     <li>UUID 的 5 个版本：<a href="https://juejin.cn/post/7297225106203689001">UUID 5 version 区别</a></li>
+ *     <li>UUID代码实现参考：<a href="https://github.com/sake/uuid4j">sake/uuid4j实现</a></li>
+ * </ul>
  * <ul>
  * 		<li>UUIDv1: Structure,形如：xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx，UUID v1 表示为 32 个字符的十六进制字符串，分五组显示，并用连字符分隔; <strong>基于时间</strong>，同时访问主机的 MAC 地址； generate a time based UUID (V1)</li>
  * 		<li>UUIDv2: Structure,形如：xxxxxxxx-xxxx-2xxx-yxxx-xxxxxxxxxxxx，UUID v2 的结构与其他 UUID 相同;需要<strong> DCE–分布式计算机环境 </strong>生成唯一标识符;由于基于计算主机名，有隐私风险，未大规模使用</li>
@@ -62,7 +62,6 @@ import java.util.Random;
  *
  * <p>
  * variant 字段包含一个表示 UUID 布局的值。以上描述的位布局仅在 UUID 的 variant 值为 2（表示 Leach-Salz 变体）时才有效。 *
- * <p>
  *
  * @since 4.1.11
  */
@@ -151,7 +150,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		randomBytes[6] &= 0x0f; /* clear version */
 		randomBytes[6] |= 0x40; /* set to version 4 */
 		randomBytes[8] &= 0x3f; /* clear variant */
-		randomBytes[8] |= 0x80; /* set to IETF variant */
+		randomBytes[8] |= (byte) 0x80; /* set to IETF variant */
 
 		return new UUID(randomBytes);
 	}
@@ -173,7 +172,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		md5Bytes[6] &= 0x0f; /* clear version */
 		md5Bytes[6] |= 0x30; /* set to version 3 */
 		md5Bytes[8] &= 0x3f; /* clear variant */
-		md5Bytes[8] |= 0x80; /* set to IETF variant */
+		md5Bytes[8] |= (byte) 0x80; /* set to IETF variant */
 		return new UUID(md5Bytes);
 	}
 
