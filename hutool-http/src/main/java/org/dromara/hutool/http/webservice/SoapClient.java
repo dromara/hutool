@@ -26,7 +26,10 @@ import org.dromara.hutool.http.client.Response;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+
 import jakarta.xml.soap.*;
+import org.dromara.hutool.http.meta.Method;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -586,10 +589,11 @@ public class SoapClient implements HeaderOperation<SoapClient> {
 	 */
 	public Response sendForResponse() {
 		final Request request = Request.of(this.url)
-				.setMaxRedirectCount(2)
-				.contentType(getXmlContentType())
-				.header(this.headers, false)
-				.body(getMsgStr(false));
+			.method(Method.POST)
+			.setMaxRedirectCount(2)
+			.contentType(getXmlContentType())
+			.header(this.headers, false)
+			.body(getMsgStr(false));
 		return request.send();
 	}
 

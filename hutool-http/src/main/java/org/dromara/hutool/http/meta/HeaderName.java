@@ -71,7 +71,13 @@ public enum HeaderName {
 	 */
 	PRAGMA("Pragma"),
 	/**
-	 * 请求表示提交内容类型或返回返回内容的MIME类型
+	 * 请求表示提交内容类型或返回返回内容的MIME类型，例如：
+	 * <ul>
+	 *     <li>Content-Type:application/json; charset=utf-8</li>
+	 *     <li>Content-Type:application/x-www-form-urlencoded; charset=utf-8</li>
+	 *     <li>Content-Type:text/xml; charset=utf-8</li>
+	 *     <li>Content-Type:application/soap+xml</li>
+	 * </ul>
 	 */
 	CONTENT_TYPE("Content-Type"),
 
