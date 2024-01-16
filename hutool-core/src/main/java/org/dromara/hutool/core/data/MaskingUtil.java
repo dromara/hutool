@@ -17,7 +17,8 @@ import org.dromara.hutool.core.text.CharUtil;
 
 /**
  * 数据脱敏（Data Masking）工具类，对某些敏感信息（比如，身份证号、手机号、卡号、姓名、地址、邮箱等 ）屏蔽敏感数据。<br>
- * 支持以下类型信息的脱敏自动处理：
+ * 原名称：DesensitizedUtil <br>
+ * <p>支持以下类型信息的脱敏自动处理：</p>
  *
  * <ul>
  *     <li>用户ID</li>

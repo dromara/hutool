@@ -784,4 +784,16 @@ public class ArrayUtilTest {
 		Assertions.assertFalse(ArrayUtil.regionMatches(a, 2, b, 0, 2));
 		Assertions.assertFalse(ArrayUtil.regionMatches(a, 3, b, 0, 2));
 	}
+
+	@Test
+	public void hasEmptyVarargsTest() {
+		Assertions.assertFalse(ArrayUtil.hasEmptyVarargs(1,2,3,4,5));
+		Assertions.assertTrue(ArrayUtil.hasEmptyVarargs("", " ", "	"));
+		Assertions.assertTrue(ArrayUtil.hasEmptyVarargs("", "apple", "pear"));
+	}
+
+	@Test
+	public void isAllEmptyTest() {
+        Assertions.assertFalse(ArrayUtil.isAllEmptyVarargs("apple", "pear", "", "orange"));
+	}
 }

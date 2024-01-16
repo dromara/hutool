@@ -39,7 +39,8 @@ public class ListUtil {
 
 	/**
 	 * 新建一个{@link ArrayList}<br>
-	 * 如果提供的初始化数组为空，新建默认初始长度的List
+	 * 如果提供的初始化数组为空，新建默认初始长度的List<br>
+	 * 替换之前的：CollUtil.newArrayList()
 	 *
 	 * @param <T>    集合元素类型
 	 * @param values 数组，可以为{@code null}

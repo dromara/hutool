@@ -307,6 +307,41 @@ public class MapUtil extends MapGetUtil {
 	}
 
 	/**
+	 * 根据给定的键值对数组创建HashMap对象，传入参数必须为key,value,key,value...
+	 *
+	 * <p>奇数参数必须为key，key最后会转换为String类型。</p>
+	 * <p>偶数参数必须为value，可以为任意类型。</p>
+	 *
+	 * <pre>
+	 * LinkedHashMap map = MapUtil.of(true,
+	 * 	"RED", "#FF0000",
+	 * 	"GREEN", "#00FF00",
+	 * 	"BLUE", "#0000FF"
+	 * );
+	 * </pre>
+	 * @see Dict#ofKvs(Object...)
+	 * @param keysAndValues 键值对列表，必须奇数参数为key，偶数参数为value
+	 * @see Dict#ofKvs(Object...)
+	 * @since 6.0.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> LinkedHashMap<K, V> ofKvs(final Object... keysAndValues) {
+		final int initialCapacity = (int) (DEFAULT_INITIAL_CAPACITY / DEFAULT_LOAD_FACTOR) + 1;
+		LinkedHashMap<K, V> map =  new LinkedHashMap<>(initialCapacity);
+
+		Object key = null;
+		for (int i = 0; i < keysAndValues.length; i++) {
+			// 偶数
+			if ((i & 1) == 0) {
+				key = keysAndValues[i];
+			} else {
+				map.put((K) key, (V) keysAndValues[i]);
+			}
+		}
+		return map;
+	}
+
+	/**
 	 * 根据给定的Pair数组创建Map对象
 	 *
 	 * @param <K>     键类型

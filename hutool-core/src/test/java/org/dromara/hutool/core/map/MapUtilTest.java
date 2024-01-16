@@ -20,13 +20,7 @@ import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -318,5 +312,15 @@ public class MapUtilTest {
 		Assertions.assertEquals(2, filtered.size());
 		Assertions.assertEquals("1", filtered.get("a"));
 		Assertions.assertEquals("2", filtered.get("b"));
+	}
+
+	@Test
+	public void ofKvsLinkTest() {
+		LinkedHashMap<String,Long> map2 = MapUtil.ofKvs(
+			"RED", 0xFF0000,
+			"GREEN", 0x00FF00,
+			"BLUE", 0x0000FF);
+		Assertions.assertEquals(3, map2.size());
+		Assertions.assertEquals(LinkedHashMap.class, map2.getClass());
 	}
 }

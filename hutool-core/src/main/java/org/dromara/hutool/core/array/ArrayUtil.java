@@ -298,6 +298,33 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
+	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素<br>
+	 * <p>如果提供的数组本身为空，则返回{@code false}</p>
+	 * <p><strong>限制条件：args的每个item不能是数组、不能是集合</strong></p>
+	 *
+	 * @param <T>  元素类型
+	 * @param args 被检查对象
+	 * @return 是否存在 {@code null} 或空对象
+	 * @since 6.0.0
+	 * @author dazer
+	 * @throws IllegalArgumentException 如果提供的args的item存在数组或集合，抛出异常
+	 */
+	@SafeVarargs
+	public static <T> boolean hasEmptyVarargs(final T... args) {
+		if (Arrays.stream(args).anyMatch(en -> isArray(en) || en instanceof Iterator || en instanceof Map)) {
+			throw new IllegalArgumentException("request that input parameters cannot be arrays or collection or map!");
+		}
+		if (isNotEmpty(args)) {
+			for (final T element : args) {
+				if (ObjUtil.isEmpty(element)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * 是否所有元素都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
 	 *
@@ -307,6 +334,31 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.5.18
 	 */
 	public static <T> boolean isAllEmpty(final T[] args) {
+		for (final T obj : args) {
+			if (!ObjUtil.isEmpty(obj)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否所有元素都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
+	 * <p><strong>限制条件：args的每个item不能是数组、不能是集合</strong></p>
+	 *
+	 * @param <T>  元素类型
+	 * @param args 被检查的对象,一个或者多个
+	 * @return 是否都为空
+	 * @since 6.0.0
+	 * @author dazer
+	 * @throws IllegalArgumentException 如果提供的args的item存在数组或集合，抛出异常
+	 */
+	@SafeVarargs
+	public static <T> boolean isAllEmptyVarargs(final T... args) {
+		if (Arrays.stream(args).anyMatch(en -> isArray(en) || en instanceof Iterator || en instanceof Map)) {
+			throw new IllegalArgumentException("request that input parameters cannot be arrays or collection or map!");
+		}
 		for (final T obj : args) {
 			if (!ObjUtil.isEmpty(obj)) {
 				return false;

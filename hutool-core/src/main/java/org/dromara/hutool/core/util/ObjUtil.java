@@ -34,7 +34,8 @@ import java.util.function.Supplier;
 
 /**
  * 对象工具类，包括判空、克隆、序列化等操作
- *
+ * <br>
+ * 原数组相关操作见：{@link ArrayUtil#hasBlank(CharSequence...)}、{@link ArrayUtil#isAllBlank(CharSequence...)}等等
  * @author Looly
  */
 public class ObjUtil {
