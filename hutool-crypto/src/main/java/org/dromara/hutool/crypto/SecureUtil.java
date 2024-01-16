@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.crypto;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.codec.HexUtil;
 import org.dromara.hutool.core.lang.Validator;
@@ -503,6 +504,10 @@ public class SecureUtil {
 	 * @since 4.1.22
 	 */
 	public static void addProvider(final Provider provider) {
+		if(ArrayUtil.contains(Security.getProviders(), provider)){
+			// 如果已经注册过Provider，不再重新注册
+			return;
+		}
 		Security.insertProviderAt(provider, 0);
 	}
 

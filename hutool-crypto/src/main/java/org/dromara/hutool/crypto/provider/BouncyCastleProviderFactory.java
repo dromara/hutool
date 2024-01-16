@@ -15,6 +15,7 @@ package org.dromara.hutool.crypto.provider;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Provider;
+import java.security.Security;
 
 /**
  * {@link BouncyCastleProvider} 工厂类
@@ -26,8 +27,16 @@ public class BouncyCastleProviderFactory implements ProviderFactory {
 
 	@Override
 	public Provider create() {
-		
-		return new BouncyCastleProvider();
+		// pr#3464，Graalvm打包后注册会导致
+		// Trying to verify a provider that was not registered at build time: BC version
+		// All providers must be registered and verified in the Native Image builder
+		// 因此此处对于已经注册过的Provider，直接复用之
+		Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
+		if(null == provider){
+			provider = new BouncyCastleProvider();
+		}
+
+		return provider;
 	}
 
 }
