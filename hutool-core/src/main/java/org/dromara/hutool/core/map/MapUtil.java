@@ -17,6 +17,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.collection.iter.IterUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -255,19 +256,19 @@ public class MapUtil extends MapGetUtil {
 	public static <K, V> Map<K, V> createMap(final Class<?> mapType, final Supplier<Map<K, V>> defaultMap) {
 		Map<K, V> result = null;
 		if (null != mapType && !mapType.isAssignableFrom(AbstractMap.class)) {
-			try{
+			try {
 				result = (Map<K, V>) ConstructorUtil.newInstanceIfPossible(mapType);
-			} catch (final Exception ignore){
+			} catch (final Exception ignore) {
 				// JDK9+抛出java.lang.reflect.InaccessibleObjectException
 				// 跳过
 			}
 		}
 
-		if(null == result){
+		if (null == result) {
 			result = defaultMap.get();
 		}
 
-		if(!result.isEmpty()){
+		if (!result.isEmpty()) {
 			// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
 			result.clear();
 		}
@@ -313,30 +314,33 @@ public class MapUtil extends MapGetUtil {
 	 * <p>偶数参数必须为value，可以为任意类型。</p>
 	 *
 	 * <pre>
-	 * LinkedHashMap map = MapUtil.of(true,
+	 * LinkedHashMap map = MapUtil.ofKvs(false,
 	 * 	"RED", "#FF0000",
 	 * 	"GREEN", "#00FF00",
 	 * 	"BLUE", "#0000FF"
 	 * );
 	 * </pre>
-	 * @see Dict#ofKvs(Object...)
+	 *
+	 * @param isLinked      是否使用{@link LinkedHashMap}
 	 * @param keysAndValues 键值对列表，必须奇数参数为key，偶数参数为value
+	 * @param <K>           键类型
+	 * @param <V>           值类型
+	 * @return LinkedHashMap
+	 * @see Dict#ofKvs(Object...)
 	 * @see Dict#ofKvs(Object...)
 	 * @since 6.0.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> LinkedHashMap<K, V> ofKvs(final Object... keysAndValues) {
-		final int initialCapacity = (int) (DEFAULT_INITIAL_CAPACITY / DEFAULT_LOAD_FACTOR) + 1;
-		LinkedHashMap<K, V> map =  new LinkedHashMap<>(initialCapacity);
+	public static <K, V> Map<K, V> ofKvs(final boolean isLinked, final Object... keysAndValues) {
+		if (ArrayUtil.isEmpty(keysAndValues)) {
+			return newHashMap(0, isLinked);
+		}
 
-		Object key = null;
-		for (int i = 0; i < keysAndValues.length; i++) {
-			// 偶数
-			if ((i & 1) == 0) {
-				key = keysAndValues[i];
-			} else {
-				map.put((K) key, (V) keysAndValues[i]);
-			}
+		Assert.isTrue(keysAndValues.length % 2 == 0, "keysAndValues not in pairs!");
+
+		final Map<K, V> map = newHashMap(keysAndValues.length / 2, isLinked);
+		for (int i = 0; i < keysAndValues.length; i += 2) {
+			map.put((K) keysAndValues[i], (V) keysAndValues[i + 1]);
 		}
 		return map;
 	}
@@ -707,7 +711,7 @@ public class MapUtil extends MapGetUtil {
 			return map;
 		}
 
-		final Map<K, V> map2 = createMap(map.getClass(), ()-> new HashMap<>(map.size(), 1f));
+		final Map<K, V> map2 = createMap(map.getClass(), () -> new HashMap<>(map.size(), 1f));
 		if (isEmpty(map)) {
 			return map2;
 		}
@@ -721,7 +725,6 @@ public class MapUtil extends MapGetUtil {
 		}
 		return map2;
 	}
-
 
 
 	/**
@@ -782,7 +785,7 @@ public class MapUtil extends MapGetUtil {
 			return map;
 		}
 
-		final Map<K, V> map2 = createMap(map.getClass(), ()-> new HashMap<>(map.size(), 1f));
+		final Map<K, V> map2 = createMap(map.getClass(), () -> new HashMap<>(map.size(), 1f));
 		if (isEmpty(map)) {
 			return map2;
 		}

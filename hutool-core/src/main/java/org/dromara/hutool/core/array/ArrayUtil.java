@@ -311,17 +311,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SafeVarargs
 	public static <T> boolean hasEmptyVarargs(final T... args) {
-		if (Arrays.stream(args).anyMatch(en -> isArray(en) || en instanceof Iterator || en instanceof Map)) {
-			throw new IllegalArgumentException("request that input parameters cannot be arrays or collection or map!");
-		}
-		if (isNotEmpty(args)) {
-			for (final T element : args) {
-				if (ObjUtil.isEmpty(element)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return hasEmpty(args);
 	}
 
 	/**
@@ -356,15 +346,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SafeVarargs
 	public static <T> boolean isAllEmptyVarargs(final T... args) {
-		if (Arrays.stream(args).anyMatch(en -> isArray(en) || en instanceof Iterator || en instanceof Map)) {
-			throw new IllegalArgumentException("request that input parameters cannot be arrays or collection or map!");
-		}
-		for (final T obj : args) {
-			if (!ObjUtil.isEmpty(obj)) {
-				return false;
-			}
-		}
-		return true;
+		return isAllEmpty(args);
 	}
 
 	/**

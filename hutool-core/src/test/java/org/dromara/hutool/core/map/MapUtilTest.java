@@ -72,10 +72,10 @@ public class MapUtilTest {
 	void mapTest() {
 		// Add test like a foreigner
 		final Map<Integer, String> adjectivesMap = MapUtil.<Integer, String>builder()
-				.put(0, "lovely")
-				.put(1, "friendly")
-				.put(2, "happily")
-				.build();
+			.put(0, "lovely")
+			.put(1, "friendly")
+			.put(2, "happily")
+			.build();
 
 		final Map<Integer, String> resultMap = MapUtil.map(adjectivesMap, (k, v) -> v + " " + PeopleEnum.values()[k].name().toLowerCase());
 
@@ -199,11 +199,11 @@ public class MapUtilTest {
 	}
 
 	@Test
-	void sortJoinTest(){
+	void sortJoinTest() {
 		final Map<String, String> build = MapUtil.builder(new HashMap<String, String>())
-				.put("key1", "value1")
-				.put("key3", "value3")
-				.put("key2", "value2").build();
+			.put("key1", "value1")
+			.put("key3", "value3")
+			.put("key2", "value2").build();
 
 		final String join1 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false);
 		Assertions.assertEquals("key1value1key2value2key3value3", join1);
@@ -216,7 +216,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	void ofEntriesTest(){
+	void ofEntriesTest() {
 		final Map<String, Integer> map = MapUtil.ofEntries(MapUtil.entry("a", 1), MapUtil.entry("b", 2));
 		Assertions.assertEquals(2, map.size());
 
@@ -225,8 +225,8 @@ public class MapUtilTest {
 	}
 
 	@Test
-	void getIntTest(){
-		Assertions.assertThrows(NumberFormatException.class, ()->{
+	void getIntTest() {
+		Assertions.assertThrows(NumberFormatException.class, () -> {
 			final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "d"));
 			final Integer a = MapUtil.getInt(map, "a");
 			Assertions.assertNotNull(a);
@@ -234,7 +234,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	void getIntValueTest(){
+	void getIntValueTest() {
 		final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "1"), MapUtil.entry("b", null));
 		final int a = MapUtil.get(map, "a", int.class);
 		Assertions.assertEquals(1, a);
@@ -270,9 +270,9 @@ public class MapUtilTest {
 	@Test
 	void computeIfAbsentForJdk8Test() {
 		// https://github.com/apache/dubbo/issues/11986
-		final ConcurrentHashMap<String,Integer> map=new ConcurrentHashMap<>();
+		final ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
 		// // map.computeIfAbsent("AaAa", key->map.computeIfAbsent("BBBB",key2->42));
-		MapUtil.computeIfAbsentForJdk8(map, "AaAa", key->map.computeIfAbsent("BBBB",key2->42));
+		MapUtil.computeIfAbsentForJdk8(map, "AaAa", key -> map.computeIfAbsent("BBBB", key2 -> 42));
 
 		Assertions.assertEquals(2, map.size());
 		Assertions.assertEquals(Integer.valueOf(42), map.get("AaAa"));
@@ -303,11 +303,13 @@ public class MapUtilTest {
 	public void issue3162Test() {
 		final Map<String, Object> map = new HashMap<String, Object>() {
 			private static final long serialVersionUID = 1L;
+
 			{
 				put("a", "1");
 				put("b", "2");
 				put("c", "3");
-			}};
+			}
+		};
 		final Map<String, Object> filtered = MapUtil.filter(map, "a", "b");
 		Assertions.assertEquals(2, filtered.size());
 		Assertions.assertEquals("1", filtered.get("a"));
@@ -316,7 +318,7 @@ public class MapUtilTest {
 
 	@Test
 	public void ofKvsLinkTest() {
-		LinkedHashMap<String,Long> map2 = MapUtil.ofKvs(
+		final Map<String, Long> map2 = MapUtil.ofKvs(true,
 			"RED", 0xFF0000,
 			"GREEN", 0x00FF00,
 			"BLUE", 0x0000FF);

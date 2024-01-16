@@ -36,6 +36,7 @@ import java.util.function.Supplier;
  * 对象工具类，包括判空、克隆、序列化等操作
  * <br>
  * 原数组相关操作见：{@link ArrayUtil#hasBlank(CharSequence...)}、{@link ArrayUtil#isAllBlank(CharSequence...)}等等
+ *
  * @author Looly
  */
 public class ObjUtil {
@@ -363,19 +364,19 @@ public class ObjUtil {
 	 */
 	public static <T> T clone(final T obj) {
 		final T result = ArrayUtil.clone(obj);
-		if(null != result){
+		if (null != result) {
 			// 数组
 			return result;
 		}
 
 		if (obj instanceof Cloneable) {
-			try{
+			try {
 				return MethodUtil.invoke(obj, "clone");
-			} catch (final HutoolException e){
-				if(e.getCause() instanceof IllegalAccessException){
+			} catch (final HutoolException e) {
+				if (e.getCause() instanceof IllegalAccessException) {
 					// JDK9+下可能无权限
 					return cloneByStream(obj);
-				}else {
+				} else {
 					throw e;
 				}
 			}

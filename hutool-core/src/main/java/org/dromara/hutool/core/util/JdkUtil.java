@@ -31,11 +31,6 @@ public class JdkUtil {
 	 */
 	public static final boolean IS_JDK8;
 	/**
-	 * 是否大于JDK8<br>
-	 * 由于大于jdk8的部分功能，jdk有变化，需要做版本判断
-	 */
-	public static final boolean IS_GT_JDK8;
-	/**
 	 * 是否大于等于JDK17
 	 */
 	public static final boolean IS_AT_LEAST_JDK17;
@@ -49,7 +44,6 @@ public class JdkUtil {
 		// JVM版本
 		JVM_VERSION = _getJvmVersion();
 		IS_JDK8 = 8 == JVM_VERSION;
-		IS_GT_JDK8 = JVM_VERSION > 8;
 		IS_AT_LEAST_JDK17 = JVM_VERSION >= 17;
 
 		// JVM名称
