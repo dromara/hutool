@@ -612,11 +612,9 @@ public class SecureUtil {
 	}
 
 	/**
-	 * 强制关闭Bouncy Castle库的使用，全局有效
-	 *
-	 * @since 4.5.2
+	 * 强制关闭自定义{@link Provider}的使用，如Bouncy Castle库，全局有效
 	 */
-	public static void disableBouncyCastle() {
+	public static void disableCustomProvider() {
 		GlobalProviderFactory.setUseCustomProvider(false);
 	}
 
