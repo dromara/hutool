@@ -23,7 +23,6 @@ import org.dromara.hutool.db.sql.StatementWrapper;
 import org.dromara.hutool.db.sql.filter.SqlLogFilter;
 
 import java.sql.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -45,19 +44,6 @@ public class StatementUtil {
 	 */
 	public static PreparedStatement prepareStatement(final Connection conn, final SqlBuilder sqlBuilder) {
 		return prepareStatement(conn, sqlBuilder.build(), sqlBuilder.getParamValueArray());
-	}
-
-	/**
-	 * 创建{@link PreparedStatement}
-	 *
-	 * @param conn   数据库连接
-	 * @param sql    SQL语句，使用"?"做为占位符
-	 * @param params "?"对应参数列表
-	 * @return {@link PreparedStatement}
-	 * @since 3.2.3
-	 */
-	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Collection<Object> params) {
-		return prepareStatement(conn, sql, params.toArray(new Object[0]));
 	}
 
 	/**
