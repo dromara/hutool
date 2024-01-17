@@ -14,6 +14,7 @@ package org.dromara.hutool.http;
 
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.http.client.Request;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("resource")
 public class HttpUtilTest {
@@ -186,6 +188,102 @@ public class HttpUtilTest {
 		final String url = "https://p3-sign.douyinpic.com/tos-cn-i-0813/f41afb2e79a94dcf80970affb9a69415~noop.webp?x-expires=1647738000&x-signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D&from=4257465056&s=PackSourceEnum_DOUYIN_REFLOW&se=false&sh=&sc=&l=2022021809224601020810013524310DD3&biz_tag=aweme_images";
 
 		final String body = HttpUtil.send(Request.of(url)).bodyStr();
+		Console.log(body);
+	}
+
+
+	@Test
+	@Disabled
+	public void httpUtilCreateRequest1PostSoap11Test(){
+		String requestBody = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+			"<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n" +
+			"  xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+			"  <soap:Body>\n" +
+			"    <getCountryCityByIp xmlns=\"http://WebXml.com.cn/\">\n" +
+			"      <theIpAddress>222.91.66.232</theIpAddress>\n" +
+			"    </getCountryCityByIp>\n" +
+			"  </soap:Body>\n" +
+			"</soap:Envelope>";
+
+		String body = HttpUtil.createRequest("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx", Method.POST)
+			.header(HeaderName.CONTENT_TYPE, "text/xml; charset=utf-8")
+			.header("Accept", "application/xml")
+			.header("accessId", "")
+			.header("Authorization", "")
+			.header("Cookie", "")
+			///.timeout(1, TimeUnit.SECONDS)
+			.body(requestBody)
+			.send()
+			.body().
+			getString();
+		Console.log(body);
+	}
+
+	@Test
+	@Disabled
+	public void httpUtilCreateRequest2PostSoap12Test(){
+		String requestBody = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+			"<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n" +
+			"  xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n" +
+			"  <soap12:Body>\n" +
+			"    <getCountryCityByIp xmlns=\"http://WebXml.com.cn/\">\n" +
+			"      <theIpAddress>222.91.66.232</theIpAddress>\n" +
+			"    </getCountryCityByIp>\n" +
+			"  </soap12:Body>\n" +
+			"</soap12:Envelope>";
+
+		String body = HttpUtil.createPost("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
+			.header(HeaderName.CONTENT_TYPE, "application/soap+xml; charset=utf-8")
+			.header("Accept", "application/xml")
+			.header("accessId", "")
+			.header("Authorization", "")
+			.header("Cookie", "")
+			///.timeout(1, TimeUnit.SECONDS)
+			.body(requestBody)
+			.send()
+			.body().
+			getString();
+		Console.log(body);
+	}
+
+	@Test
+	@Disabled
+	public void httpUtilCreateRequest3GetTest(){
+		final Map<String, Object> formMap = Dict.ofKvs(
+			"q1", "v1",
+			"q2", "v2")
+			;
+		//设置超时
+		HttpGlobalConfig.setTimeout(1);
+		String body = HttpUtil.createGet("https://echo.apifox.com/get")
+			.header(HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded; charset=utf-8")
+			.header("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
+			.header("Accept", "*/*")
+			.header("Host", "echo.apifox.com")
+			.header("Connection", "keep-alive")
+			//.timeout(1, TimeUnit.SECONDS)
+			.form(formMap)
+			.send()
+			.body().
+			getString();
+		Console.log(body);
+	}
+
+	@Test
+	@Disabled
+	public void httpUtilCreateRequest4PostTest(){
+		String requestBodyJson = "{\n\"username\": \"张三\",\n    \"password\": \"abcdefg@123\"\n}";
+		String body = HttpUtil.createPost("https://echo.apifox.com/post?q1=v1&q2=v2")
+			.header("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
+			.header("Content-Type", "application/json")
+			.header("Accept", "*/*")
+			.header("Host", "echo.apifox.com")
+			.header("Connection", "keep-alive")
+			///.timeout(1, TimeUnit.SECONDS)
+			.body(requestBodyJson)
+			.send()
+			.body()
+			.getString();
 		Console.log(body);
 	}
 }

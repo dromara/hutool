@@ -55,6 +55,40 @@ public class HttpUtil {
 	}
 
 	/**
+	 * 创建Http请求对象
+	 *
+	 * @param method 方法枚举{@link Method}
+	 * @param url    请求的URL，可以使HTTP或者HTTPS
+	 * @return {@link Request}
+	 * @since 3.0.9
+	 */
+	public static Request createRequest(String url, Method method) {
+		return Request.of(url).method(method);
+	}
+
+	/**
+	 * 创建Http GET请求对象
+	 *
+	 * @param url 请求的URL，可以使HTTP或者HTTPS
+	 * @return {@link Request}
+	 * @since 3.2.0
+	 */
+	public static Request createGet(String url) {
+		return createRequest(url, Method.GET);
+	}
+
+	/**
+	 * 创建Http POST请求对象
+	 *
+	 * @param url 请求的URL，可以使HTTP或者HTTPS
+	 * @return {@link Request}
+	 * @since 3.2.0
+	 */
+	public static Request createPost(String url) {
+		return createRequest(url, Method.POST);
+	}
+
+	/**
 	 * 发送get请求
 	 *
 	 * @param urlString     网址
