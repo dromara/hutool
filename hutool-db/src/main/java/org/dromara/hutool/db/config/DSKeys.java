@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.db.ds;
+package org.dromara.hutool.db.config;
 
 /**
  * 数据源配置的字段名
@@ -36,6 +36,14 @@ public interface DSKeys {
 	 * 配置文件中配置属性名：显示的日志级别
 	 */
 	String KEY_SQL_LEVEL = "sqlLevel";
+	/**
+	 * 配置文件中配置属性名：是否忽略大小写
+	 */
+	String KEY_CASE_INSENSITIVE = "caseInsensitive";
+	/**
+	 * 配置文件中配置属性名：INSERT是否返回主键
+	 */
+	String KEY_RETURN_GENERATED_KEY = "returnGeneratedKey";
 
 	/**
 	 * 某些数据库需要的特殊配置项需要的配置项

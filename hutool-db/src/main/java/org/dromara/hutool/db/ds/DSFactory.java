@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.db.ds;
 
+import org.dromara.hutool.db.config.DbConfig;
+
 import javax.sql.DataSource;
 import java.io.Serializable;
 

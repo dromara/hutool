@@ -15,7 +15,7 @@ package org.dromara.hutool.db.ds.tomcat;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.dromara.hutool.db.ds.DSFactory;
-import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 /**

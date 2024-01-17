@@ -13,7 +13,7 @@
 package org.dromara.hutool.db.ds.simple;
 
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;

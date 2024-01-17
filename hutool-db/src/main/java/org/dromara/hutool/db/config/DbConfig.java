@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.db.ds;
+package org.dromara.hutool.db.config;
 
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.driver.DriverUtil;
@@ -30,9 +30,9 @@ import java.util.Properties;
 public class DbConfig {
 
 	/**
-	 * 创建DbConfig
+	 * 创建DsConfig
 	 *
-	 * @return DbConfig
+	 * @return DsConfig
 	 */
 	public static DbConfig of() {
 		return new DbConfig();
@@ -47,6 +47,16 @@ public class DbConfig {
 	private Properties connProps;
 	// 连接池配置
 	private Properties poolProps;
+
+	// 其它配置
+	/**
+	 * 是否大小写不敏感（默认大小写不敏感）
+	 */
+	private boolean caseInsensitive = true;
+	/**
+	 * 是否INSERT语句中默认返回主键（默认返回主键）
+	 */
+	private boolean returnGeneratedKey = true;
 
 	/**
 	 * 构造
@@ -233,6 +243,49 @@ public class DbConfig {
 			this.poolProps = new Properties();
 		}
 		this.poolProps.setProperty(key, value);
+		return this;
+	}
+
+	/**
+	 * 获取是否在结果中忽略大小写
+	 *
+	 * @return 是否在结果中忽略大小写
+	 */
+	public boolean isCaseInsensitive() {
+		return this.caseInsensitive;
+	}
+
+	/**
+	 * 设置是否在结果中忽略大小写<br>
+	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
+	 *
+	 * @param isCaseInsensitive 是否在结果中忽略大小写
+	 * @return this
+	 */
+	public DbConfig setCaseInsensitive(final boolean isCaseInsensitive) {
+		this.caseInsensitive = isCaseInsensitive;
+		return this;
+	}
+
+	/**
+	 * INSERT语句中是否返回主键
+	 *
+	 * @return 是否返回主键
+	 */
+	public boolean isReturnGeneratedKey() {
+		return this.returnGeneratedKey;
+	}
+
+	/**
+	 * 设置是否INSERT语句中默认返回主键（默认返回主键）<br>
+	 * 如果false，则在Insert操作后，返回影响行数
+	 * 主要用于某些数据库不支持返回主键的情况
+	 *
+	 * @param isReturnGeneratedKey 是否INSERT语句中默认返回主键
+	 * @return this
+	 */
+	public DbConfig setReturnGeneratedKey(final boolean isReturnGeneratedKey) {
+		returnGeneratedKey = isReturnGeneratedKey;
 		return this;
 	}
 }

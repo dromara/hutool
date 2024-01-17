@@ -15,7 +15,7 @@ package org.dromara.hutool.db.ds.hikari;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.dromara.hutool.db.ds.DSFactory;
-import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;

@@ -15,7 +15,7 @@ package org.dromara.hutool.db.ds.pooled;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.pool.Poolable;
 import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;

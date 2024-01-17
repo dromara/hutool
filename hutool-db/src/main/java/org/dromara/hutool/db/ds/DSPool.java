@@ -18,19 +18,15 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.DbUtil;
-import org.dromara.hutool.db.GlobalDbConfig;
-import org.dromara.hutool.db.driver.DriverUtil;
+import org.dromara.hutool.db.config.ConfigParser;
+import org.dromara.hutool.db.config.DbConfig;
+import org.dromara.hutool.db.config.SettingConfigParser;
 import org.dromara.hutool.log.LogUtil;
-import org.dromara.hutool.setting.Setting;
-import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 数据源池，用于支持多数据源。<br>
@@ -42,8 +38,6 @@ import java.util.Set;
  */
 public class DSPool implements Closeable {
 
-	private static final String CONNECTION_PREFIX = "connection.";
-
 	/**
 	 * 获取单例池对象
 	 *
@@ -53,10 +47,7 @@ public class DSPool implements Closeable {
 		return Singleton.get(DSPool.class.getName(), DSPool::new);
 	}
 
-	/**
-	 * 数据库连接配置文件
-	 */
-	private final Setting setting;
+	private final ConfigParser configParser;
 	/**
 	 * 数据源池
 	 */
@@ -76,33 +67,31 @@ public class DSPool implements Closeable {
 	/**
 	 * 构造，通过SPI方式自动获取用户引入的连接池
 	 *
-	 * @param setting 数据库配置，支持多数据源，{@code null}表示读取classpath:db.setting
+	 * @param configParser 数据库配置解析器
 	 */
-	public DSPool(final Setting setting) {
-		this(setting, null);
+	public DSPool(final ConfigParser configParser) {
+		this(configParser, null);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param setting 数据库配置，支持多数据源，{@code null}表示读取classpath:db.setting
-	 * @param factory 数据源工厂，用于创建数据源，{@code null}表示使用SPI自动获取
+	 * @param configParser 数据库配置解析器
+	 * @param factory      数据源工厂，用于创建数据源，{@code null}表示使用SPI自动获取
 	 */
-	public DSPool(final Setting setting, final DSFactory factory) {
-		this.setting = null != setting ? setting : GlobalDbConfig.createDbSetting();
-		DbUtil.setShowSqlGlobal(this.setting);
+	public DSPool(final ConfigParser configParser, final DSFactory factory) {
+		this.configParser = null != configParser ? configParser : SettingConfigParser.of();
 		this.factory = null != factory ? factory : SpiUtil.loadFirstAvailable(DSFactory.class);
 		this.pool = new SafeConcurrentHashMap<>();
 	}
 
 	/**
-	 * 获取配置，用于自定义添加配置项
+	 * 获取配置解析器
 	 *
-	 * @return Setting
-	 * @since 4.0.3
+	 * @return ConfigParser
 	 */
-	public Setting getSetting() {
-		return this.setting;
+	public ConfigParser getConfigParser() {
+		return this.configParser;
 	}
 
 	/**
@@ -184,81 +173,7 @@ public class DSPool implements Closeable {
 			group = StrUtil.EMPTY;
 		}
 
-		final Setting subSetting = setting.getSetting(group);
-		if (MapUtil.isEmpty(subSetting)) {
-			throw new DbRuntimeException("No config for group: [{}]", group);
-		}
-
-		final DbConfig dbConfig = toDbConfig(subSetting);
-
+		final DbConfig dbConfig = this.configParser.parse(group);
 		return DSWrapper.wrap(factory.createDataSource(dbConfig), dbConfig.getDriver());
-	}
-
-	/**
-	 * {@link Setting}数据库配置 转 {@link DbConfig}
-	 *
-	 * @param setting {@link Setting}数据库配置
-	 * @return {@link DbConfig}
-	 */
-	private static DbConfig toDbConfig(final Setting setting) {
-		// 基本信息
-		final String url = setting.getAndRemove(DSKeys.KEY_ALIAS_URL);
-		if (StrUtil.isBlank(url)) {
-			throw new DbRuntimeException("No JDBC URL!");
-		}
-
-		// 移除用户可能误加入的show sql配置项
-		// issue#I3VW0R@Gitee
-		removeShowSqlParams(setting);
-
-		// 自动识别Driver
-		String driver = setting.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
-		if (StrUtil.isBlank(driver)) {
-			driver = DriverUtil.identifyDriver(url);
-		}
-
-		final DbConfig dbConfig = DbConfig.of()
-			.setUrl(url)
-			.setDriver(driver)
-			.setUser(setting.getAndRemove(DSKeys.KEY_ALIAS_USER))
-			.setPass(setting.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
-
-		// remarks等连接配置，since 5.3.8
-		String connValue;
-		for (final String key : DSKeys.KEY_CONN_PROPS) {
-			connValue = setting.getAndRemove(key);
-			if (StrUtil.isNotBlank(connValue)) {
-				dbConfig.addConnProps(key, connValue);
-			}
-		}
-
-		// 自定义连接属性
-		final Props connProps = new Props();
-		final Set<String> keys = setting.keySet();
-		for (final String key : keys) {
-			if (key.startsWith(CONNECTION_PREFIX)) {
-				connProps.set(StrUtil.subSuf(key, CONNECTION_PREFIX.length()), setting.remove(key));
-			}
-		}
-		dbConfig.setConnProps(connProps);
-
-		// 池属性
-		dbConfig.setPoolProps(setting.toProps());
-
-		return dbConfig;
-	}
-
-	/**
-	 * 移除配置文件中的Show SQL相关配置项<br>
-	 * 此方法用于移除用户配置在分组下的配置项目
-	 *
-	 * @param setting 配置项
-	 * @since 5.7.2
-	 */
-	private static void removeShowSqlParams(final Setting setting) {
-		setting.remove(DSKeys.KEY_SHOW_SQL);
-		setting.remove(DSKeys.KEY_FORMAT_SQL);
-		setting.remove(DSKeys.KEY_SHOW_PARAMS);
-		setting.remove(DSKeys.KEY_SQL_LEVEL);
 	}
 }

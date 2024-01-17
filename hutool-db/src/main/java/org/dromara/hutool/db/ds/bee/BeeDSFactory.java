@@ -16,7 +16,7 @@ import cn.beecp.BeeDataSource;
 import cn.beecp.BeeDataSourceConfig;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.db.ds.DSFactory;
-import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;

@@ -13,7 +13,7 @@
 package org.dromara.hutool.db.ds.pooled;
 
 import org.dromara.hutool.db.ds.DSFactory;
-import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.db.config.DbConfig;
 
 import javax.sql.DataSource;
 

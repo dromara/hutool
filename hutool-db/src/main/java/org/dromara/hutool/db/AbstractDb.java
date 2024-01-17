@@ -46,7 +46,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	/**
 	 * 是否大小写不敏感（默认大小写不敏感）
 	 */
-	protected boolean caseInsensitive = GlobalDbConfig.caseInsensitive;
+	protected boolean caseInsensitive = true;
 	protected DialectRunner runner;
 
 	// ------------------------------------------------------- Constructor start

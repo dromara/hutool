@@ -70,7 +70,7 @@ public class StatementUtil {
 	 * @since 3.2.3
 	 */
 	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Object... params) {
-		return prepareStatement(GlobalDbConfig.returnGeneratedKey, conn, sql, params);
+		return prepareStatement(true, conn, sql, params);
 	}
 
 	/**

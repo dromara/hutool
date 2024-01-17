@@ -16,7 +16,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.ds.DSFactory;
 import org.dromara.hutool.db.ds.DSUtil;
-import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.db.config.DbConfig;
 
 import javax.sql.DataSource;
 

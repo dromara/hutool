@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.db.ds;
 
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.ds.simple.SimpleDataSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
