@@ -60,9 +60,8 @@ public class HttpUtil {
 	 * @param method 方法枚举{@link Method}
 	 * @param url    请求的URL，可以使HTTP或者HTTPS
 	 * @return {@link Request}
-	 * @since 3.0.9
 	 */
-	public static Request createRequest(String url, Method method) {
+	public static Request createRequest(final String url, final Method method) {
 		return Request.of(url).method(method);
 	}
 
@@ -71,9 +70,8 @@ public class HttpUtil {
 	 *
 	 * @param url 请求的URL，可以使HTTP或者HTTPS
 	 * @return {@link Request}
-	 * @since 3.2.0
 	 */
-	public static Request createGet(String url) {
+	public static Request createGet(final String url) {
 		return createRequest(url, Method.GET);
 	}
 
@@ -82,9 +80,8 @@ public class HttpUtil {
 	 *
 	 * @param url 请求的URL，可以使HTTP或者HTTPS
 	 * @return {@link Request}
-	 * @since 3.2.0
 	 */
-	public static Request createPost(String url) {
+	public static Request createPost(final String url) {
 		return createRequest(url, Method.POST);
 	}
 
