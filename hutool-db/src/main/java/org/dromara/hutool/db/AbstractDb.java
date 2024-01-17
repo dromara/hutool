@@ -14,6 +14,7 @@ package org.dromara.hutool.db;
 
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.db.dialect.Dialect;
+import org.dromara.hutool.db.ds.DSWrapper;
 import org.dromara.hutool.db.handler.*;
 import org.dromara.hutool.db.sql.*;
 import org.dromara.hutool.db.sql.Condition.LikeType;
@@ -59,6 +60,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 */
 	public AbstractDb(final DataSource ds, final Dialect dialect) {
 		super(ds);
+		if(ds instanceof DSWrapper){
+			this.caseInsensitive = ((DSWrapper) ds).getDbConfig().isCaseInsensitive();
+		}
 		this.runner = new DialectRunner(dialect);
 	}
 	// ------------------------------------------------------- Constructor end

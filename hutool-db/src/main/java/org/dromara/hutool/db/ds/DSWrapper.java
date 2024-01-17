@@ -15,6 +15,7 @@ package org.dromara.hutool.db.ds;
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
+import org.dromara.hutool.db.config.DbConfig;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
@@ -36,28 +37,37 @@ import java.util.logging.Logger;
  */
 public class DSWrapper extends SimpleWrapper<DataSource> implements DataSource, Closeable, Cloneable {
 
-	private final String driver;
+	private final DbConfig dbConfig;
 
 	/**
 	 * 包装指定的DataSource
 	 *
 	 * @param ds     原始的DataSource
-	 * @param driver 数据库驱动类名
+	 * @param dbConfig 数据库驱动类名
 	 * @return DataSourceWrapper
 	 */
-	public static DSWrapper wrap(final DataSource ds, final String driver) {
-		return new DSWrapper(ds, driver);
+	public static DSWrapper wrap(final DataSource ds, final DbConfig dbConfig) {
+		return new DSWrapper(ds, dbConfig);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param ds     原始的DataSource
-	 * @param driver 数据库驱动类名
+	 * @param ds       原始的DataSource
+	 * @param dbConfig 数据库配置
 	 */
-	public DSWrapper(final DataSource ds, final String driver) {
+	public DSWrapper(final DataSource ds, final DbConfig dbConfig) {
 		super(ds);
-		this.driver = driver;
+		this.dbConfig = dbConfig;
+	}
+
+	/**
+	 * 获取数据库配置
+	 *
+	 * @return 数据库配置
+	 */
+	public DbConfig getDbConfig(){
+		return this.dbConfig;
 	}
 
 	/**
@@ -66,7 +76,7 @@ public class DSWrapper extends SimpleWrapper<DataSource> implements DataSource, 
 	 * @return 驱动名
 	 */
 	public String getDriver() {
-		return this.driver;
+		return this.dbConfig.getDriver();
 	}
 
 	@Override

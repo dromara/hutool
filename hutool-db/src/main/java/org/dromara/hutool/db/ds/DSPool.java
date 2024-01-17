@@ -23,7 +23,6 @@ import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.config.SettingConfigParser;
 import org.dromara.hutool.log.LogUtil;
 
-import javax.sql.DataSource;
 import java.io.Closeable;
 import java.util.Collection;
 import java.util.Map;
@@ -121,7 +120,7 @@ public class DSPool implements Closeable {
 	 * @param group 分组，{@code null}表示默认分组
 	 * @return 数据源
 	 */
-	public DataSource getDataSource(String group) {
+	public DSWrapper getDataSource(String group) {
 		if (group == null) {
 			group = StrUtil.EMPTY;
 		}
@@ -168,12 +167,8 @@ public class DSPool implements Closeable {
 	 * @param group 分组，{@code null}表示默认分组
 	 * @return {@link DSWrapper} 数据源包装
 	 */
-	private DSWrapper createDSWrapper(String group) {
-		if (group == null) {
-			group = StrUtil.EMPTY;
-		}
-
-		final DbConfig dbConfig = this.configParser.parse(group);
-		return DSWrapper.wrap(factory.createDataSource(dbConfig), dbConfig.getDriver());
+	private DSWrapper createDSWrapper(final String group) {
+		final DbConfig dbConfig = this.configParser.parse(StrUtil.emptyIfNull(group));
+		return DSWrapper.wrap(factory.createDataSource(dbConfig), dbConfig);
 	}
 }

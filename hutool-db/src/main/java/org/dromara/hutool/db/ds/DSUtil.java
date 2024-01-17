@@ -63,7 +63,7 @@ public class DSUtil {
 	 *
 	 * @return 数据源
 	 */
-	public static DataSource getDS() {
+	public static DSWrapper getDS() {
 		return getDS(null);
 	}
 
@@ -73,7 +73,7 @@ public class DSUtil {
 	 * @param group 配置文件中对应的分组
 	 * @return 数据源
 	 */
-	public static DataSource getDS(final String group) {
+	public static DSWrapper getDS(final String group) {
 		return DSPool.getInstance().getDataSource(group);
 	}
 

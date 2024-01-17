@@ -12,8 +12,9 @@
 
 package org.dromara.hutool.db.config;
 
-import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.driver.DriverUtil;
+import org.dromara.hutool.db.sql.filter.SqlFilter;
+import org.dromara.hutool.db.sql.filter.SqlFilterChain;
 
 import java.util.Properties;
 
@@ -29,6 +30,19 @@ import java.util.Properties;
  */
 public class DbConfig {
 
+	// region ----- of
+	/**
+	 * 创建DsConfig
+	 *
+	 * @param url  jdbc url
+	 * @param user 用户名
+	 * @param pass 密码
+	 * @return DsConfig
+	 */
+	public static DbConfig of(final String url, final String user, final String pass) {
+		return of().setUrl(url).setUser(user).setPass(pass).setDriver(DriverUtil.identifyDriver(url));
+	}
+
 	/**
 	 * 创建DsConfig
 	 *
@@ -37,6 +51,7 @@ public class DbConfig {
 	public static DbConfig of() {
 		return new DbConfig();
 	}
+	// endregion
 
 	private String driver;        //数据库驱动
 	private String url;            //jdbc url
@@ -59,39 +74,14 @@ public class DbConfig {
 	private boolean returnGeneratedKey = true;
 
 	/**
+	 * SQL过滤器，用于在生成SQL前对SQL做操作，如记录日志等
+	 */
+	private SqlFilterChain sqlFilters;
+
+	/**
 	 * 构造
 	 */
 	public DbConfig() {
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param url  jdbc url
-	 * @param user 用户名
-	 * @param pass 密码
-	 */
-	public DbConfig(final String url, final String user, final String pass) {
-		init(url, user, pass);
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param url  jdbc url
-	 * @param user 用户名
-	 * @param pass 密码
-	 */
-	public void init(final String url, final String user, final String pass) {
-		this.url = url;
-		this.user = user;
-		this.pass = pass;
-		this.driver = DriverUtil.identifyDriver(url);
-		try {
-			Class.forName(this.driver);
-		} catch (final ClassNotFoundException e) {
-			throw new DbRuntimeException(e, "Get jdbc driver from [{}] error!", url);
-		}
 	}
 
 	/**
@@ -286,6 +276,20 @@ public class DbConfig {
 	 */
 	public DbConfig setReturnGeneratedKey(final boolean isReturnGeneratedKey) {
 		returnGeneratedKey = isReturnGeneratedKey;
+		return this;
+	}
+
+	/**
+	 * 增加SQL过滤器
+	 *
+	 * @param filter SQL过滤器
+	 * @return this
+	 */
+	public DbConfig addSqlFilter(final SqlFilter filter){
+		if(null == this.sqlFilters){
+			this.sqlFilters = new SqlFilterChain();
+		}
+		this.sqlFilters.addChain(filter);
 		return this;
 	}
 }

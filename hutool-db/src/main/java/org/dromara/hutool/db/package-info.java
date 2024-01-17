@@ -13,6 +13,19 @@
 /**
  * Hutool-db是一个在JDBC基础上封装的数据库操作工具类，通过包装，使用ActiveRecord思想操作数据库。<br>
  * 在Hutool-db中，使用Entity（本质上是个Map）代替Bean来使数据库操作更加灵活，同时提供Bean和Entity的转换提供传统ORM的兼容支持。
+ * <pre>{@code
+ *     数据库配置文件(db.setting)
+ *           | <ConfigParser> 可选配置来源
+ *        DbConfig
+ *           | <DSFactory>    可选连接池
+ *       DataSource
+ *           |
+ *       Connection
+ *           | <DialectRunner> 可选数据库方言
+ *          Db
+ *          | <Entity>
+ *       RsHandler
+ * }</pre>
  *
  * @author looly
  *

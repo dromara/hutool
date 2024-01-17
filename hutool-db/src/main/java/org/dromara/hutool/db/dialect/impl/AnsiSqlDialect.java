@@ -12,10 +12,8 @@
 
 package org.dromara.hutool.db.dialect.impl;
 
-import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
@@ -24,13 +22,12 @@ import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.Condition;
 import org.dromara.hutool.db.sql.Query;
-import org.dromara.hutool.db.sql.SqlBuilder;
 import org.dromara.hutool.db.sql.QuoteWrapper;
+import org.dromara.hutool.db.sql.SqlBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Set;
 
 /**
  * ANSI SQL 方言
