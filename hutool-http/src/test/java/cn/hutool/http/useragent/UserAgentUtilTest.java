@@ -472,4 +472,20 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("iPhone", ua2.getPlatform().toString());
 		Assert.assertTrue(ua2.isMobile());
 	}
+
+	@Test
+	public void issueI8X5XQTest() {
+		final String s = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 " +
+			"Safari/537.36 Core/1.94.218.400 QQBrowser/12.1.5496.400";
+		final UserAgent ua2 = UserAgentUtil.parse(s);
+
+		Assert.assertEquals("QQBrowser", ua2.getBrowser().toString());
+		Assert.assertEquals("12.1.5496.400", ua2.getVersion());
+		Assert.assertEquals("Webkit", ua2.getEngine().toString());
+		Assert.assertEquals("537.36", ua2.getEngineVersion());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua2.getOs().toString());
+		Assert.assertEquals("10.0", ua2.getOsVersion());
+		Assert.assertEquals("Windows", ua2.getPlatform().toString());
+		Assert.assertFalse(ua2.isMobile());
+	}
 }
