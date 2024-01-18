@@ -32,6 +32,7 @@ import org.apache.hc.core5.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.net.url.UrlBuilder;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
@@ -113,13 +114,11 @@ public class HttpClient5Engine implements ClientEngine {
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
 
-		final ClientConfig config = this.config;
-		if (null != config) {
-			clientBuilder.setConnectionManager(buildConnectionManager(config));
-			clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
-			if(config.isDisableCache()){
-				clientBuilder.disableAuthCaching();
-			}
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		clientBuilder.setConnectionManager(buildConnectionManager(config));
+		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
+		if(config.isDisableCache()){
+			clientBuilder.disableAuthCaching();
 		}
 
 		// 设置默认头信息

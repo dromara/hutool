@@ -14,6 +14,7 @@ package org.dromara.hutool.http.client.engine.okhttp;
 
 import okhttp3.OkHttpClient;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
@@ -84,30 +85,28 @@ public class OkHttpEngine implements ClientEngine {
 
 		final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-		final ClientConfig config = this.config;
-		if (null != config) {
-			// 连接超时
-			final int connectionTimeout = config.getConnectionTimeout();
-			if (connectionTimeout > 0) {
-				builder.connectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
-			}
-			// 读写超时
-			final int readTimeout = config.getReadTimeout();
-			if (readTimeout > 0) {
-				// 读写共用读取超时
-				builder.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS)
-					.writeTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
-			}
-
-			// SSL
-			final SSLInfo sslInfo = config.getSslInfo();
-			if (null != sslInfo) {
-				builder.sslSocketFactory(sslInfo.getSocketFactory(), sslInfo.getTrustManager());
-			}
-
-			// 设置代理
-			setProxy(builder, config);
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		// 连接超时
+		final int connectionTimeout = config.getConnectionTimeout();
+		if (connectionTimeout > 0) {
+			builder.connectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 		}
+		// 读写超时
+		final int readTimeout = config.getReadTimeout();
+		if (readTimeout > 0) {
+			// 读写共用读取超时
+			builder.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS)
+				.writeTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
+		}
+
+		// SSL
+		final SSLInfo sslInfo = config.getSslInfo();
+		if (null != sslInfo) {
+			builder.sslSocketFactory(sslInfo.getSocketFactory(), sslInfo.getTrustManager());
+		}
+
+		// 设置代理
+		setProxy(builder, config);
 
 		// 默认关闭自动跳转
 		builder.setFollowRedirects$okhttp(false);

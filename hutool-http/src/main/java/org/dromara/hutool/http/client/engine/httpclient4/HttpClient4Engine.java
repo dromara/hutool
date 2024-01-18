@@ -29,6 +29,7 @@ import org.apache.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.net.url.UrlBuilder;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
@@ -108,19 +109,17 @@ public class HttpClient4Engine implements ClientEngine {
 		}
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
-		final ClientConfig config = this.config;
-		if (null != config) {
-			// SSL配置
-			final SSLInfo sslInfo = config.getSslInfo();
-			if (null != sslInfo) {
-				clientBuilder.setSSLSocketFactory(buildSocketFactory(sslInfo));
-			}
-			if(config.isDisableCache()){
-				clientBuilder.disableAuthCaching();
-			}
-
-			clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		// SSL配置
+		final SSLInfo sslInfo = config.getSslInfo();
+		if (null != sslInfo) {
+			clientBuilder.setSSLSocketFactory(buildSocketFactory(sslInfo));
 		}
+		if(config.isDisableCache()){
+			clientBuilder.disableAuthCaching();
+		}
+
+		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
 
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
