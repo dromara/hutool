@@ -83,16 +83,6 @@ public class Session extends AbstractDb<Session> implements Closeable {
 	 * 构造
 	 *
 	 * @param ds 数据源
-	 * @param driverClassName 数据库连接驱动类名，用于识别方言
-	 */
-	public Session(final DataSource ds, final String driverClassName) {
-		this(ds, DialectFactory.newDialect(driverClassName));
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param ds 数据源
 	 * @param dialect 方言
 	 */
 	public Session(final DataSource ds, final Dialect dialect) {
@@ -278,21 +268,6 @@ public class Session extends AbstractDb<Session> implements Closeable {
 	}
 
 	// ---------------------------------------------------------------------------- Transaction method end
-
-	@Override
-	public void closeConnection(final Connection conn) {
-		try {
-			if(conn != null && false == conn.getAutoCommit()) {
-				// 事务中的Session忽略关闭事件
-				return;
-			}
-		} catch (final SQLException e) {
-			log.error(e);
-		}
-
-		// 普通请求关闭（或归还）连接
-		ThreadLocalConnection.INSTANCE.close(this.ds);
-	}
 
 	@Override
 	public void close() {

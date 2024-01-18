@@ -18,12 +18,15 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.Dialect;
-import org.dromara.hutool.db.dialect.DialectFactory;
 import org.dromara.hutool.db.handler.NumberHandler;
 import org.dromara.hutool.db.handler.PageResultHandler;
 import org.dromara.hutool.db.handler.RsHandler;
-import org.dromara.hutool.db.sql.*;
+import org.dromara.hutool.db.sql.Query;
+import org.dromara.hutool.db.sql.QuoteWrapper;
+import org.dromara.hutool.db.sql.SqlBuilder;
+import org.dromara.hutool.db.sql.SqlUtil;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -41,30 +44,19 @@ import java.util.regex.Pattern;
 public class DialectRunner implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Dialect dialect;
-	/**
-	 * 是否大小写不敏感（默认大小写不敏感）
-	 */
-	protected boolean caseInsensitive = true;
+	private final DbConfig config;
+	private final Dialect dialect;
 
 	/**
 	 * 构造
 	 *
+	 * @param config  数据库配置
 	 * @param dialect 方言
 	 */
-	public DialectRunner(final Dialect dialect) {
+	public DialectRunner(final DbConfig config, final Dialect dialect) {
+		this.config = config;
 		this.dialect = dialect;
 	}
-
-	/**
-	 * 构造
-	 *
-	 * @param driverClassName 驱动类名，用于识别方言
-	 */
-	public DialectRunner(final String driverClassName) {
-		this(DialectFactory.newDialect(driverClassName));
-	}
-
 	//---------------------------------------------------------------------------- CRUD start
 
 	/**
@@ -114,10 +106,10 @@ public class DialectRunner implements Serializable {
 	 * @since 5.7.20
 	 */
 	public int upsert(final Connection conn, final Entity record, final String... keys) throws DbException {
-		PreparedStatement ps = null;
+		PreparedStatement ps = this.dialect.psForUpsert(conn, record, keys);
 		try {
-			ps = getDialect().psForUpsert(conn, record, keys);
-		} catch (final SQLException ignore) {
+			ps = this.dialect.psForUpsert(conn, record, keys);
+		} catch (final DbException ignore) {
 			// 方言不支持，使用默认
 		}
 		if (null != ps) {
@@ -264,11 +256,7 @@ public class DialectRunner implements Serializable {
 	public <T> T find(final Connection conn, final Query query, final RsHandler<T> rsh) throws DbException {
 		checkConn(conn);
 		Assert.notNull(query, "[query] is null !");
-		try {
-			return SqlExecutor.queryAndClosePs(dialect.psForFind(conn, query), rsh);
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
+		return StatementUtil.executeQuery(dialect.psForFind(conn, query), rsh);
 	}
 
 	/**
@@ -281,11 +269,7 @@ public class DialectRunner implements Serializable {
 	 */
 	public long count(final Connection conn, final Query query) throws DbException {
 		checkConn(conn);
-		try {
-			return SqlExecutor.queryAndClosePs(dialect.psForCount(conn, query), new NumberHandler()).longValue();
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
+		return StatementUtil.executeQuery(dialect.psForCount(conn, query), NumberHandler.INSTANCE).longValue();
 	}
 
 	/**
@@ -309,13 +293,8 @@ public class DialectRunner implements Serializable {
 			selectSql = matcher.group(1);
 		}
 
-		try {
-			return SqlExecutor.queryAndClosePs(dialect.psForCount(conn,
-					SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())),
-				new NumberHandler()).longValue();
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
+		return StatementUtil.executeQuery(dialect.psForCount(conn,
+			SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())), NumberHandler.INSTANCE).longValue();
 	}
 
 	/**
@@ -333,7 +312,7 @@ public class DialectRunner implements Serializable {
 			// 分页查询中总数的查询要去掉分页信息
 			new PageResult<>(page, (int) count(conn, query.clone().setPage(null))));
 
-		return page(conn, query, entityResultHandler.setCaseInsensitive(caseInsensitive));
+		return page(conn, query, entityResultHandler.setCaseInsensitive(this.config.isCaseInsensitive()));
 	}
 
 	/**
@@ -353,11 +332,7 @@ public class DialectRunner implements Serializable {
 			return this.find(conn, query, rsh);
 		}
 
-		try {
-			return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, query), rsh);
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
+		return StatementUtil.executeQuery(dialect.psForPage(conn, query), rsh);
 	}
 
 	/**
@@ -374,7 +349,7 @@ public class DialectRunner implements Serializable {
 		final PageResultHandler<Entity> entityResultHandler = PageResultHandler.of(
 			new PageResult<>(page, (int) count(conn, sqlBuilder)));
 
-		return page(conn, sqlBuilder, page, entityResultHandler.setCaseInsensitive(caseInsensitive));
+		return page(conn, sqlBuilder, page, entityResultHandler.setCaseInsensitive(this.config.isCaseInsensitive()));
 	}
 
 	/**
@@ -392,48 +367,9 @@ public class DialectRunner implements Serializable {
 	 */
 	public <T> T page(final Connection conn, final SqlBuilder sqlBuilder, final Page page, final RsHandler<T> rsh) throws DbException {
 		checkConn(conn);
-		if (null == page) {
-			return SqlExecutor.query(conn, sqlBuilder, rsh);
-		}
-
-		final PreparedStatement ps;
-		try {
-			ps = dialect.psForPage(conn, sqlBuilder, page);
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
-		return SqlExecutor.queryAndClosePs(ps, rsh);
+		return StatementUtil.executeQuery(dialect.psForPage(conn, sqlBuilder, page), rsh);
 	}
 	//---------------------------------------------------------------------------- CRUD end
-
-	//---------------------------------------------------------------------------- Getters and Setters start
-
-	/**
-	 * 设置是否在结果中忽略大小写<br>
-	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
-	 *
-	 * @param caseInsensitive 否在结果中忽略大小写
-	 * @since 5.2.4
-	 */
-	public void setCaseInsensitive(final boolean caseInsensitive) {
-		this.caseInsensitive = caseInsensitive;
-	}
-
-	/**
-	 * @return SQL方言
-	 */
-	public Dialect getDialect() {
-		return dialect;
-	}
-
-	/**
-	 * 设置SQL方言
-	 *
-	 * @param dialect 方言
-	 */
-	public void setDialect(final Dialect dialect) {
-		this.dialect = dialect;
-	}
 
 	/**
 	 * 设置包装器，包装器用于对表名、字段名进行符号包装（例如双引号），防止关键字与这些表名或字段冲突
@@ -452,11 +388,12 @@ public class DialectRunner implements Serializable {
 	public void setWrapper(final QuoteWrapper quoteWrapper) {
 		this.dialect.setWrapper(quoteWrapper);
 	}
-	//---------------------------------------------------------------------------- Getters and Setters end
 
-	//---------------------------------------------------------------------------- Private method start
+	/**
+	 * 检查{@link Connection} 可用性
+	 * @param conn 数据库连接
+	 */
 	private void checkConn(final Connection conn) {
 		Assert.notNull(conn, "Connection object must be not null!");
 	}
-	//---------------------------------------------------------------------------- Private method start
 }

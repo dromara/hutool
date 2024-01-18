@@ -66,7 +66,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 			this.dbConfig = ((DSWrapper) ds).getDbConfig();
 			this.caseInsensitive = this.dbConfig.isCaseInsensitive();
 		}
-		this.runner = new DialectRunner(dialect);
+		this.runner = new DialectRunner(this.dbConfig, dialect);
 	}
 	// ------------------------------------------------------- Constructor end
 
@@ -134,7 +134,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbException SQL执行异常
 	 */
 	public Number queryNumber(final String sql, final Object... params) throws DbException {
-		return query(sql, new NumberHandler(), params);
+		return query(sql, NumberHandler.INSTANCE, params);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.query(conn, sql, rsh, params);
+			return SqlExecutor.of(this.dbConfig, conn).query(sql, rsh, params);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -184,7 +184,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.query(conn, sql, rsh, paramMap);
+			return SqlExecutor.of(this.dbConfig, conn).query(sql, rsh, paramMap);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -205,7 +205,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.query(conn, statementFunc, rsh);
+			return SqlExecutor.of(this.dbConfig, conn).query(statementFunc, rsh);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -227,7 +227,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.execute(conn, sql, params);
+			return SqlExecutor.of(this.dbConfig, conn).execute(sql, params);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -246,7 +246,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.executeForGeneratedKey(conn, sql, params);
+			return SqlExecutor.of(this.dbConfig, conn).executeForGeneratedKey(sql, params);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -265,7 +265,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.executeBatch(conn, sql, paramsBatch);
+			return SqlExecutor.of(this.dbConfig, conn).executeBatch(sql, paramsBatch);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -283,7 +283,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.executeBatch(conn, sqls);
+			return SqlExecutor.of(this.dbConfig, conn).executeBatch(sqls);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -301,7 +301,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return SqlExecutor.executeBatch(conn, sqls);
+			return SqlExecutor.of(this.dbConfig, conn).executeBatch(sqls);
 		} finally {
 			this.closeConnection(conn);
 		}

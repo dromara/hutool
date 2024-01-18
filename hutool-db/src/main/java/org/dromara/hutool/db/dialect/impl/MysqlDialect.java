@@ -16,6 +16,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 import org.dromara.hutool.db.StatementUtil;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.QuoteWrapper;
 import org.dromara.hutool.db.sql.SqlBuilder;
@@ -33,8 +34,11 @@ public class MysqlDialect extends AnsiSqlDialect {
 
 	/**
 	 * 构造
+	 *
+	 * @param dbConfig 数据库配置
 	 */
-	public MysqlDialect() {
+	public MysqlDialect(final DbConfig dbConfig) {
+		super(dbConfig);
 		quoteWrapper = new QuoteWrapper('`');
 	}
 
@@ -100,6 +104,6 @@ public class MysqlDialect extends AnsiSqlDialect {
 			// 主键冲突后的更新操作
 			.append(") ON DUPLICATE KEY UPDATE ").append(updateHolder);
 
-		return StatementUtil.prepareStatement(conn, builder);
+		return StatementUtil.prepareStatement(false, this.dbConfig, conn, builder.build(), builder.getParamValueArray());
 	}
 }

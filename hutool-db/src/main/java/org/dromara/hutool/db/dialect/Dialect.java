@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.db.dialect;
 
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 import org.dromara.hutool.db.sql.Order;
@@ -54,9 +55,9 @@ public interface Dialect extends Serializable {
 	 * @param conn   数据库连接对象
 	 * @param entity 数据实体类（包含表名）
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException;
+	PreparedStatement psForInsert(Connection conn, Entity entity) throws DbException;
 
 	/**
 	 * 构建用于批量插入的PreparedStatement<br>
@@ -65,9 +66,9 @@ public interface Dialect extends Serializable {
 	 * @param conn     数据库连接对象
 	 * @param entities 数据实体，实体的结构必须全部一致，否则插入结果将不可预知
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	PreparedStatement psForInsertBatch(Connection conn, Entity... entities) throws SQLException;
+	PreparedStatement psForInsertBatch(Connection conn, Entity... entities) throws DbException;
 
 	/**
 	 * 构建用于删除的{@link PreparedStatement}<br>
@@ -77,9 +78,9 @@ public interface Dialect extends Serializable {
 	 * @param conn  数据库连接对象
 	 * @param query 查找条件（包含表名）
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	PreparedStatement psForDelete(Connection conn, Query query) throws SQLException;
+	PreparedStatement psForDelete(Connection conn, Query query) throws DbException;
 
 	/**
 	 * 构建用于更新的{@link PreparedStatement}<br>
@@ -90,9 +91,9 @@ public interface Dialect extends Serializable {
 	 * @param entity 数据实体类（包含表名）
 	 * @param query  查找条件（包含表名）
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws SQLException;
+	PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws DbException;
 
 	// -------------------------------------------- Query
 
@@ -104,9 +105,9 @@ public interface Dialect extends Serializable {
 	 * @param conn  数据库连接对象
 	 * @param query 查询条件（包含表名）
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	PreparedStatement psForFind(Connection conn, Query query) throws SQLException;
+	PreparedStatement psForFind(Connection conn, Query query) throws DbException;
 
 	/**
 	 * 构建用于分页查询的{@link PreparedStatement}<br>
@@ -116,9 +117,9 @@ public interface Dialect extends Serializable {
 	 * @param conn  数据库连接对象
 	 * @param query 查询条件（包含表名）
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	PreparedStatement psForPage(Connection conn, Query query) throws SQLException;
+	PreparedStatement psForPage(Connection conn, Query query) throws DbException;
 
 	/**
 	 * 构建用于分页查询的{@link PreparedStatement}<br>
@@ -129,10 +130,10 @@ public interface Dialect extends Serializable {
 	 * @param sqlBuilder SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
 	 * @param page       分页对象
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 5.5.3
 	 */
-	PreparedStatement psForPage(Connection conn, SqlBuilder sqlBuilder, Page page) throws SQLException;
+	PreparedStatement psForPage(Connection conn, SqlBuilder sqlBuilder, Page page) throws DbException;
 
 	/**
 	 * 构建用于查询行数的{@link PreparedStatement}<br>
@@ -142,9 +143,9 @@ public interface Dialect extends Serializable {
 	 * @param conn  数据库连接对象
 	 * @param query 查询条件（包含表名）
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	default PreparedStatement psForCount(final Connection conn, final Query query) throws SQLException {
+	default PreparedStatement psForCount(final Connection conn, final Query query) throws DbException {
 		return psForCount(conn, SqlBuilder.of().query(query));
 	}
 
@@ -156,10 +157,10 @@ public interface Dialect extends Serializable {
 	 * @param conn       数据库连接对象
 	 * @param sqlBuilder 查询语句，应该包含分页等信息
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 5.7.2
 	 */
-	default PreparedStatement psForCount(final Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+	default PreparedStatement psForCount(final Connection conn, SqlBuilder sqlBuilder) throws DbException {
 		// https://gitee.com/dromara/hutool/issues/I713XQ
 		// 为了兼容informix等数据库，此处使用count(*)而非count(1)
 		sqlBuilder = sqlBuilder
@@ -177,11 +178,11 @@ public interface Dialect extends Serializable {
 	 * @param entity 数据实体类（包含表名）
 	 * @param keys   查找字段，某些数据库此字段必须，如H2，某些数据库无需此字段，如MySQL（通过主键）
 	 * @return PreparedStatement
-	 * @throws SQLException SQL执行异常，或方言数据不支持此操作
+	 * @throws DbException SQL执行异常，或方言数据不支持此操作
 	 * @since 5.7.20
 	 */
-	default PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
-		throw new SQLException("Unsupported upsert operation of " + dialectName());
+	default PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws DbException {
+		throw new DbException("Unsupported upsert operation of " + dialectName());
 	}
 
 

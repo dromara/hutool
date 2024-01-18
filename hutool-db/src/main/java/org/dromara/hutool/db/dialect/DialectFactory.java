@@ -14,19 +14,12 @@ package org.dromara.hutool.db.dialect;
 
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.driver.DriverUtil;
-import org.dromara.hutool.db.dialect.impl.AnsiSqlDialect;
-import org.dromara.hutool.db.dialect.impl.H2Dialect;
-import org.dromara.hutool.db.dialect.impl.MysqlDialect;
-import org.dromara.hutool.db.dialect.impl.OracleDialect;
-import org.dromara.hutool.db.dialect.impl.PhoenixDialect;
-import org.dromara.hutool.db.dialect.impl.PostgresqlDialect;
-import org.dromara.hutool.db.dialect.impl.SqlServer2012Dialect;
-import org.dromara.hutool.db.dialect.impl.Sqlite3Dialect;
+import org.dromara.hutool.db.config.DbConfig;
+import org.dromara.hutool.db.dialect.impl.*;
+import org.dromara.hutool.db.ds.DSWrapper;
 import org.dromara.hutool.log.LogUtil;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.util.Map;
 
 /**
@@ -45,11 +38,11 @@ public class DialectFactory implements DriverNamePool {
 	 * 根据驱动名创建方言<br>
 	 * 驱动名是不分区大小写完全匹配的
 	 *
-	 * @param driverName JDBC驱动类名
+	 * @param dbConfig 数据库配置
 	 * @return 方言
 	 */
-	public static Dialect newDialect(final String driverName) {
-		final Dialect dialect = internalNewDialect(driverName);
+	public static Dialect newDialect(final DbConfig dbConfig) {
+		final Dialect dialect = internalNewDialect(dbConfig);
 		LogUtil.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
 		return dialect;
 	}
@@ -58,29 +51,31 @@ public class DialectFactory implements DriverNamePool {
 	 * 根据驱动名创建方言<br>
 	 * 驱动名是不分区大小写完全匹配的
 	 *
-	 * @param driverName JDBC驱动类名
+	 * @param dbConfig 数据库配置
 	 * @return 方言
 	 */
-	private static Dialect internalNewDialect(final String driverName) {
+	private static Dialect internalNewDialect(final DbConfig dbConfig) {
+		final String driverName = dbConfig.getDriver();
+
 		if (StrUtil.isNotBlank(driverName)) {
 			if (DRIVER_MYSQL.equalsIgnoreCase(driverName) || DRIVER_MYSQL_V6.equalsIgnoreCase(driverName)) {
-				return new MysqlDialect();
+				return new MysqlDialect(dbConfig);
 			} else if (DRIVER_ORACLE.equalsIgnoreCase(driverName) || DRIVER_ORACLE_OLD.equalsIgnoreCase(driverName)) {
-				return new OracleDialect();
+				return new OracleDialect(dbConfig);
 			} else if (DRIVER_SQLLITE3.equalsIgnoreCase(driverName)) {
-				return new Sqlite3Dialect();
+				return new Sqlite3Dialect(dbConfig);
 			} else if (DRIVER_POSTGRESQL.equalsIgnoreCase(driverName)) {
-				return new PostgresqlDialect();
+				return new PostgresqlDialect(dbConfig);
 			} else if (DRIVER_H2.equalsIgnoreCase(driverName)) {
-				return new H2Dialect();
+				return new H2Dialect(dbConfig);
 			} else if (DRIVER_SQLSERVER.equalsIgnoreCase(driverName)) {
-				return new SqlServer2012Dialect();
+				return new SqlServer2012Dialect(dbConfig);
 			} else if (DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
-				return new PhoenixDialect();
+				return new PhoenixDialect(dbConfig);
 			}
 		}
 		// 无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句
-		return new AnsiSqlDialect();
+		return new AnsiSqlDialect(dbConfig);
 	}
 
 	/**
@@ -108,17 +103,6 @@ public class DialectFactory implements DriverNamePool {
 	 * @return 方言
 	 */
 	public static Dialect newDialect(final DataSource ds) {
-		return newDialect(DriverUtil.identifyDriver(ds));
+		return newDialect(ds instanceof DSWrapper ? ((DSWrapper) ds).getDbConfig() : DbConfig.of());
 	}
-
-	/**
-	 * 创建方言
-	 *
-	 * @param conn 数据库连接对象
-	 * @return 方言
-	 */
-	public static Dialect newDialect(final Connection conn) {
-		return newDialect(DriverUtil.identifyDriver(conn));
-	}
-
 }

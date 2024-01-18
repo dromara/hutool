@@ -18,6 +18,9 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.driver.DriverUtil;
+import org.dromara.hutool.db.sql.SqlLog;
+import org.dromara.hutool.db.sql.filter.SqlLogFilter;
+import org.dromara.hutool.log.level.Level;
 import org.dromara.hutool.setting.Setting;
 import org.dromara.hutool.setting.props.Props;
 
@@ -61,15 +64,18 @@ public class SettingConfigParser implements ConfigParser {
 	}
 
 	@Override
-	public DbConfig parse(String group) {
-		if (group == null) {
-			group = StrUtil.EMPTY;
-		}
-
-		final Setting subSetting = setting.getSetting(group);
+	public DbConfig parse(final String group) {
+		final Setting setting = this.setting;
+		final Setting subSetting = setting.getSetting(StrUtil.emptyIfNull(group));
 		if (MapUtil.isEmpty(subSetting)) {
 			throw new DbException("No config for group: [{}]", group);
 		}
+
+		// 继承属性
+		subSetting.putIfAbsent(DSKeys.KEY_SHOW_SQL, setting.get(DSKeys.KEY_SHOW_SQL));
+		subSetting.putIfAbsent(DSKeys.KEY_FORMAT_SQL, setting.get(DSKeys.KEY_FORMAT_SQL));
+		subSetting.putIfAbsent(DSKeys.KEY_SHOW_PARAMS, setting.get(DSKeys.KEY_SHOW_PARAMS));
+		subSetting.putIfAbsent(DSKeys.KEY_SQL_LEVEL, setting.get(DSKeys.KEY_SQL_LEVEL));
 
 		return toDbConfig(subSetting);
 	}
@@ -108,9 +114,7 @@ public class SettingConfigParser implements ConfigParser {
 			throw new DbException("No JDBC URL!");
 		}
 
-		// 移除用户可能误加入的show sql配置项
-		// issue#I3VW0R@Gitee
-		removeShowSqlParams(setting);
+		final SqlLogFilter sqlLogFilter = getSqlLogFilter(setting);
 
 		// 自动识别Driver
 		String driver = setting.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
@@ -122,7 +126,8 @@ public class SettingConfigParser implements ConfigParser {
 			.setUrl(url)
 			.setDriver(driver)
 			.setUser(setting.getAndRemove(DSKeys.KEY_ALIAS_USER))
-			.setPass(setting.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
+			.setPass(setting.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD))
+			.addSqlFilter(sqlLogFilter);
 
 		// 大小写等配置
 		final String caseInsensitive = setting.getAndRemove(DSKeys.KEY_CASE_INSENSITIVE);
@@ -164,12 +169,22 @@ public class SettingConfigParser implements ConfigParser {
 	 * 此方法用于移除用户配置在分组下的配置项目
 	 *
 	 * @param setting 配置项
-	 * @since 5.7.2
+	 * @return {@link SqlLogFilter}
 	 */
-	private static void removeShowSqlParams(final Setting setting) {
-		setting.remove(DSKeys.KEY_SHOW_SQL);
-		setting.remove(DSKeys.KEY_FORMAT_SQL);
-		setting.remove(DSKeys.KEY_SHOW_PARAMS);
-		setting.remove(DSKeys.KEY_SQL_LEVEL);
+	private static SqlLogFilter getSqlLogFilter(final Setting setting) {
+		// 初始化SQL显示
+		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL), false);
+		final boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL), false);
+		final boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS), false);
+		String sqlLevelStr = setting.remove(DSKeys.KEY_SQL_LEVEL);
+		if (null != sqlLevelStr) {
+			sqlLevelStr = sqlLevelStr.toUpperCase();
+		}
+		final Level level = Convert.toEnum(Level.class, sqlLevelStr, Level.DEBUG);
+
+		final SqlLog sqlLog = new SqlLog();
+		sqlLog.init(isShowSql, isFormatSql, isShowParams, level);
+
+		return new SqlLogFilter(sqlLog);
 	}
 }

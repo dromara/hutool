@@ -15,6 +15,7 @@ package org.dromara.hutool.db.dialect.impl;
 import org.dromara.hutool.core.text.StrPool;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Page;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.SqlBuilder;
 
@@ -43,8 +44,11 @@ public class OracleDialect extends AnsiSqlDialect {
 
 	/**
 	 * 构造
+	 *
+	 * @param dbConfig 数据库配置
 	 */
-	public OracleDialect() {
+	public OracleDialect(final DbConfig dbConfig) {
+		super(dbConfig);
 		//Oracle所有字段名用双引号包围，防止字段名或表名与系统关键字冲突
 		//wrapper = new Wrapper('"');
 	}

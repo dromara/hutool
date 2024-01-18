@@ -18,6 +18,7 @@ import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.StatementUtil;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.QuoteWrapper;
 import org.dromara.hutool.db.sql.SqlBuilder;
@@ -36,8 +37,10 @@ public class PostgresqlDialect extends AnsiSqlDialect {
 
 	/**
 	 * 构造
+	 * @param dbConfig 数据库配置
 	 */
-	public PostgresqlDialect() {
+	public PostgresqlDialect(final DbConfig dbConfig) {
+		super(dbConfig);
 		quoteWrapper = new QuoteWrapper(CharUtil.DOUBLE_QUOTES);
 	}
 
@@ -89,6 +92,6 @@ public class PostgresqlDialect extends AnsiSqlDialect {
 			// 主键冲突后的更新操作
 			.append(") DO UPDATE SET ").append(updateHolder);
 
-		return StatementUtil.prepareStatement(conn, builder);
+		return StatementUtil.prepareStatement(false, this.dbConfig, conn, builder.build(), builder.getParamValueArray());
 	}
 }

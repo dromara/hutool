@@ -205,14 +205,16 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 			params = namedSql.getParamArray();
 		}
 
-		sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
+		if(null != this.sqlFilter){
+			this.sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
+		}
 
 		final PreparedStatement ps;
-		if (returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
+		if (this.returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
 			// 插入默认返回主键
-			ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		} else {
-			ps = connection.prepareStatement(sql);
+			ps = this.connection.prepareStatement(sql);
 		}
 
 		return StatementWrapper.of(ps).fillArrayParam(params);

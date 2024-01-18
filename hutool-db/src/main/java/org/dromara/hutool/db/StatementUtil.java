@@ -14,7 +14,9 @@ package org.dromara.hutool.db;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.handler.ResultSetUtil;
 import org.dromara.hutool.db.handler.RsHandler;
 import org.dromara.hutool.db.sql.SqlBuilder;
@@ -37,44 +39,19 @@ public class StatementUtil {
 	/**
 	 * 创建{@link PreparedStatement}
 	 *
-	 * @param conn       数据库连接
-	 * @param sqlBuilder {@link SqlBuilder}包括SQL语句和参数
-	 * @return {@link PreparedStatement}
-	 * @since 4.1.3
-	 */
-	public static PreparedStatement prepareStatement(final Connection conn, final SqlBuilder sqlBuilder) {
-		return prepareStatement(conn, sqlBuilder.build(), sqlBuilder.getParamValueArray());
-	}
-
-	/**
-	 * 创建{@link PreparedStatement}
-	 *
-	 * @param conn   数据库连接
-	 * @param sql    SQL语句，使用"?"做为占位符
-	 * @param params "?"对应参数列表或者Map表示命名参数
-	 * @return {@link PreparedStatement}
-	 * @since 3.2.3
-	 */
-	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Object... params) {
-		return prepareStatement(true, conn, sql, params);
-	}
-
-	/**
-	 * 创建{@link PreparedStatement}
-	 *
 	 * @param returnGeneratedKey 当为insert语句时，是否返回主键
-	 * @param conn   数据库连接
-	 * @param sql    SQL语句，使用"?"做为占位符
-	 * @param params "?"对应参数列表或者Map表示命名参数
+	 * @param config               数据库配置
+	 * @param conn                 数据库连接
+	 * @param sql                  SQL语句，使用"?"做为占位符
+	 * @param params               "?"对应参数列表或者Map表示命名参数
 	 * @return {@link PreparedStatement}
 	 * @since 5.8.19
 	 */
-	public static PreparedStatement prepareStatement(final boolean returnGeneratedKey,
-													 final Connection conn, final String sql, final Object... params) {
+	public static PreparedStatement prepareStatement(final boolean returnGeneratedKey, final DbConfig config, final Connection conn, final String sql, final Object... params) {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(returnGeneratedKey)
-			.setSqlFilter(SqlLogFilter.INSTANCE)
+			.setSqlFilter(config.getSqlFilters())
 			.setSql(sql)
 			.setParams(params)
 			.build();
@@ -83,31 +60,33 @@ public class StatementUtil {
 	/**
 	 * 创建批量操作的{@link PreparedStatement}
 	 *
+	 * @param config      数据库配置
 	 * @param conn        数据库连接
 	 * @param sql         SQL语句，使用"?"做为占位符
 	 * @param paramsBatch "?"对应参数批次列表
 	 * @return {@link PreparedStatement}
 	 * @since 4.1.13
 	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Object[]... paramsBatch) {
-		return prepareStatementForBatch(conn, sql, new ArrayIter<>(paramsBatch));
+	public static PreparedStatement prepareStatementForBatch(final DbConfig config, final Connection conn, final String sql, final Object[]... paramsBatch) {
+		return prepareStatementForBatch(config, conn, sql, new ArrayIter<>(paramsBatch));
 	}
 
 	/**
 	 * 创建批量操作的{@link PreparedStatement}
 	 *
+	 * @param config      数据库配置
 	 * @param conn        数据库连接
 	 * @param sql         SQL语句，使用"?"做为占位符
 	 * @param paramsBatch "?"对应参数批次列表
 	 * @return {@link PreparedStatement}
 	 * @since 4.1.13
 	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql,
+	public static PreparedStatement prepareStatementForBatch(final DbConfig config, final Connection conn, final String sql,
 															 final Iterable<Object[]> paramsBatch) {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(false)
-			.setSqlFilter(SqlLogFilter.INSTANCE)
+			.setSqlFilter(config.getSqlFilters())
 			.setSql(sql)
 			.setParams(ArrayUtil.ofArray(paramsBatch, Object.class))
 			.buildForBatch();
@@ -116,6 +95,7 @@ public class StatementUtil {
 	/**
 	 * 创建{@link CallableStatement}
 	 *
+	 * @param config 数据库配置
 	 * @param conn   数据库连接
 	 * @param sql    SQL语句，使用"?"做为占位符
 	 * @param params "?"对应参数列表
@@ -123,10 +103,10 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static CallableStatement prepareCall(final Connection conn, final String sql, final Object... params) throws SQLException {
+	public static CallableStatement prepareCall(final DbConfig config, final Connection conn, final String sql, final Object... params) throws SQLException {
 		return StatementBuilder.of()
 			.setConnection(conn)
-			.setSqlFilter(SqlLogFilter.INSTANCE)
+			.setSqlFilter(config.getSqlFilters())
 			.setSql(sql)
 			.setParams(params)
 			.buildForCall();
@@ -249,5 +229,48 @@ public class StatementUtil {
 	 */
 	public static void setParam(final PreparedStatement ps, final int paramIndex, final Object param) throws SQLException {
 		StatementWrapper.of(ps).setParam(paramIndex, param);
+	}
+
+	/**
+	 * 执行查询
+	 *
+	 * @param ps  {@link PreparedStatement}
+	 * @param rsh 结果集处理对象
+	 * @param <T> 结果类型
+	 * @return 结果对象
+	 * @throws DbException SQL执行异常
+	 * @since 4.1.13
+	 */
+	public static <T> T executeQuery(final PreparedStatement ps, final RsHandler<T> rsh) throws DbException {
+		ResultSet rs = null;
+		try {
+			rs = ps.executeQuery();
+			return rsh.handle(rs);
+		} catch (final SQLException e) {
+			throw new DbException(e);
+		} finally {
+			IoUtil.closeQuietly(rs);
+		}
+	}
+
+	/**
+	 * 用于执行 INSERT、UPDATE 或 DELETE 语句以及 SQL DDL（数据定义语言）语句，例如 CREATE TABLE 和 DROP TABLE。<br>
+	 * INSERT、UPDATE 或 DELETE 语句的效果是修改表中零行或多行中的一列或多列。<br>
+	 * executeUpdate 的返回值是一个整数（int），指示受影响的行数（即更新计数）。<br>
+	 * 对于 CREATE TABLE 或 DROP TABLE 等不操作行的语句，executeUpdate 的返回值总为零。<br>
+	 * 此方法不会关闭PreparedStatement
+	 *
+	 * @param ps     PreparedStatement对象
+	 * @param params 参数
+	 * @return 影响的行数
+	 * @throws DbException SQL执行异常
+	 */
+	public static int executeUpdate(final PreparedStatement ps, final Object... params) throws DbException {
+		try {
+			StatementUtil.fillArrayParam(ps, params);
+			return ps.executeUpdate();
+		} catch (final SQLException e) {
+			throw new DbException(e);
+		}
 	}
 }

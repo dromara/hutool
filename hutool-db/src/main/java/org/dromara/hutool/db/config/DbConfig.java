@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.db.config;
 
+import org.dromara.hutool.db.Db;
 import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.db.sql.filter.SqlFilter;
 import org.dromara.hutool.db.sql.filter.SqlFilterChain;
@@ -278,6 +279,15 @@ public class DbConfig {
 	public DbConfig setReturnGeneratedKey(final boolean isReturnGeneratedKey) {
 		returnGeneratedKey = isReturnGeneratedKey;
 		return this;
+	}
+
+	/**
+	 * 获取SQL过滤器
+	 *
+	 * @return SQL过滤器
+	 */
+	public SqlFilterChain getSqlFilters(){
+		return this.sqlFilters;
 	}
 
 	/**

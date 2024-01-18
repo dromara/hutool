@@ -18,6 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 import org.dromara.hutool.db.StatementUtil;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.SqlBuilder;
 
@@ -34,8 +35,11 @@ public class H2Dialect extends AnsiSqlDialect {
 
 	/**
 	 * 构造
+	 *
+	 * @param config 数据库配置
 	 */
-	public H2Dialect() {
+	public H2Dialect(final DbConfig config) {
+		super(config);
 //		wrapper = new Wrapper('"');
 	}
 
@@ -87,6 +91,6 @@ public class H2Dialect extends AnsiSqlDialect {
 			// 更新值列表
 			.append(") VALUES (").append(placeHolder).append(")");
 
-		return StatementUtil.prepareStatement(conn, builder);
+		return StatementUtil.prepareStatement(false, this.dbConfig, conn, builder.build(), builder.getParamValueArray());
 	}
 }

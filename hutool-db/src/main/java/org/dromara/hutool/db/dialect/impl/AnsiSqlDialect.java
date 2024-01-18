@@ -18,6 +18,7 @@ import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 import org.dromara.hutool.db.StatementUtil;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.Condition;
@@ -27,7 +28,6 @@ import org.dromara.hutool.db.sql.SqlBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * ANSI SQL 方言
@@ -37,7 +37,17 @@ import java.sql.SQLException;
 public class AnsiSqlDialect implements Dialect {
 	private static final long serialVersionUID = 2088101129774974580L;
 
+	protected DbConfig dbConfig;
 	protected QuoteWrapper quoteWrapper = new QuoteWrapper();
+
+	/**
+	 * 构造
+	 *
+	 * @param dbConfig 数据库配置
+	 */
+	public AnsiSqlDialect(final DbConfig dbConfig) {
+		this.dbConfig = dbConfig;
+	}
 
 	@Override
 	public QuoteWrapper getWrapper() {
@@ -53,7 +63,7 @@ public class AnsiSqlDialect implements Dialect {
 	public PreparedStatement psForInsert(final Connection conn, final Entity entity) {
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entity, this.dialectName());
 
-		return StatementUtil.prepareStatement(conn, insert);
+		return StatementUtil.prepareStatement(this.dbConfig.isReturnGeneratedKey(), this.dbConfig, conn, insert.build(), insert.getParamValueArray());
 	}
 
 	@Override
@@ -63,36 +73,35 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
-		return StatementUtil.prepareStatementForBatch(conn, insert.build(), entities);
+		return StatementUtil.prepareStatementForBatch(this.dbConfig, conn, insert.build(), entities);
 	}
 
 	@Override
-	public PreparedStatement psForDelete(final Connection conn, final Query query) throws SQLException {
+	public PreparedStatement psForDelete(final Connection conn, final Query query) throws DbException {
 		Assert.notNull(query, "query must be not null !");
 
 		final Condition[] where = query.getWhere();
 		if (ArrayUtil.isEmpty(where)) {
 			// 对于无条件删除语句直接抛出异常禁止，防止误删除
-			throw new SQLException("No 'WHERE' condition, we can't prepared statement for delete everything.");
+			throw new DbException("No 'WHERE' condition, we can't prepared statement for delete everything.");
 		}
 		final SqlBuilder delete = SqlBuilder.of(quoteWrapper).delete(query.getFirstTableName()).where(where);
-
-		return StatementUtil.prepareStatement(conn, delete);
+		return StatementUtil.prepareStatement(false, this.dbConfig, conn, delete.build(), delete.getParamValueArray());
 	}
 
 	@Override
-	public PreparedStatement psForUpdate(final Connection conn, final Entity entity, final Query query) throws SQLException {
+	public PreparedStatement psForUpdate(final Connection conn, final Entity entity, final Query query) throws DbException {
 		Assert.notNull(query, "query must be not null !");
 
 		final Condition[] where = query.getWhere();
 		if (ArrayUtil.isEmpty(where)) {
 			// 对于无条件地删除语句直接抛出异常禁止，防止误删除
-			throw new SQLException("No 'WHERE' condition, we can't prepare statement for update everything.");
+			throw new DbException("No 'WHERE' condition, we can't prepare statement for update everything.");
 		}
 
 		final SqlBuilder update = SqlBuilder.of(quoteWrapper).update(entity).where(where);
 
-		return StatementUtil.prepareStatement(conn, update);
+		return StatementUtil.prepareStatement(false, this.dbConfig, conn, update.build(), update.getParamValueArray());
 	}
 
 	@Override
@@ -117,7 +126,7 @@ public class AnsiSqlDialect implements Dialect {
 		if (null != page) {
 			sqlBuilder = wrapPageSql(sqlBuilder.orderBy(page.getOrders()), page);
 		}
-		return StatementUtil.prepareStatement(conn, sqlBuilder);
+		return StatementUtil.prepareStatement(false, this.dbConfig, conn, sqlBuilder.build(), sqlBuilder.getParamValueArray());
 	}
 
 	/**

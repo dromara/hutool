@@ -14,6 +14,7 @@ package org.dromara.hutool.db.dialect.impl;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Page;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.SqlBuilder;
 import org.dromara.hutool.db.sql.QuoteWrapper;
@@ -28,8 +29,10 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 
 	/**
 	 * 构造
+	 * @param dbConfig 数据库配置
 	 */
-	public SqlServer2012Dialect() {
+	public SqlServer2012Dialect(final DbConfig dbConfig) {
+		super(dbConfig);
 		//双引号和中括号适用，双引号更广泛
 		quoteWrapper = new QuoteWrapper('"');
 	}

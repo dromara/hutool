@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.db.dialect.impl;
 
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.QuoteWrapper;
 
@@ -25,8 +26,11 @@ public class Sqlite3Dialect extends AnsiSqlDialect {
 
 	/**
 	 * 构造
+	 *
+	 * @param dbConfig 数据库配置
 	 */
-	public Sqlite3Dialect() {
+	public Sqlite3Dialect(final DbConfig dbConfig) {
+		super(dbConfig);
 		quoteWrapper = new QuoteWrapper('[', ']');
 	}
 

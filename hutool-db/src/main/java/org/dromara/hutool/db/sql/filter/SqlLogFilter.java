@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.db.sql.filter;
 
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.db.sql.BoundSql;
 import org.dromara.hutool.db.sql.SqlLog;
 
@@ -25,19 +24,7 @@ import java.sql.Connection;
  */
 public class SqlLogFilter implements SqlFilter {
 
-	/**
-	 * 单例
-	 */
-	public static final SqlLogFilter INSTANCE = new SqlLogFilter();
-
 	private final SqlLog sqlLog;
-
-	/**
-	 * 构造，使用默认SqlLog
-	 */
-	public SqlLogFilter() {
-		this(SqlLog.INSTANCE);
-	}
 
 	/**
 	 * 构造
