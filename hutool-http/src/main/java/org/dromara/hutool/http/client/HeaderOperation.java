@@ -14,12 +14,15 @@ package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.meta.HeaderName;
 
 import java.net.HttpCookie;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -131,6 +134,25 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 			}
 		}
 		return (T) this;
+	}
+
+	/**
+	 * 设置请求头<br>
+	 * 覆盖原有请求头，请求参数为普通Map,简化使用
+	 *
+	 * @param headerMap  请求头
+	 * @return this
+	 * @author dazer
+	 */
+	default T header(final Map<String, String> headerMap) {
+		if (MapUtil.isEmpty(headerMap)) {
+			return (T) this;
+		}
+		final Map<String, List<String>> headerMaps = new LinkedHashMap<>(headers().size());
+		headerMap.forEach((key, value) -> {
+			headerMaps.put(key, ListUtil.of(value));
+		});
+		return header(headerMaps, true);
 	}
 
 	/**
