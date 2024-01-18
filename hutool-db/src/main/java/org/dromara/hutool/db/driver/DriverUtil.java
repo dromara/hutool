@@ -14,7 +14,7 @@ package org.dromara.hutool.db.driver;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.ds.DSWrapper;
 
 import javax.sql.DataSource;
@@ -60,9 +60,9 @@ public class DriverUtil {
 			try {
 				conn = ds.getConnection();
 			} catch (final SQLException e) {
-				throw new DbRuntimeException("Get Connection error !", e);
+				throw new DbException("Get Connection error !", e);
 			} catch (final NullPointerException e) {
-				throw new DbRuntimeException("Unexpected NullPointException, maybe [jdbcUrl] or [url] is empty!", e);
+				throw new DbException("Unexpected NullPointException, maybe [jdbcUrl] or [url] is empty!", e);
 			}
 			driver = identifyDriver(conn);
 		} finally {
@@ -77,9 +77,9 @@ public class DriverUtil {
 	 *
 	 * @param conn 数据库连接对象
 	 * @return 驱动
-	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
+	 * @throws DbException SQL异常包装，获取元数据信息失败
 	 */
-	public static String identifyDriver(final Connection conn) throws DbRuntimeException {
+	public static String identifyDriver(final Connection conn) throws DbException {
 		String driver;
 		final DatabaseMetaData meta;
 		try {
@@ -89,7 +89,7 @@ public class DriverUtil {
 				driver = identifyDriver(meta.getDriverName());
 			}
 		} catch (final SQLException e) {
-			throw new DbRuntimeException("Identify driver error!", e);
+			throw new DbException("Identify driver error!", e);
 		}
 
 		return driver;

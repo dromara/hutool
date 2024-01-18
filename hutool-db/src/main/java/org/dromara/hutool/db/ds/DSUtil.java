@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.ds;
 
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.log.LogUtil;
 
 import javax.naming.InitialContext;
@@ -37,7 +37,7 @@ public class DSUtil {
 	public static DataSource getJndiDSWithLog(final String jndiName) {
 		try {
 			return getJndiDS(jndiName);
-		} catch (final DbRuntimeException e) {
+		} catch (final DbException e) {
 			LogUtil.error(e.getCause(), "Find JNDI datasource error!");
 		}
 		return null;
@@ -53,7 +53,7 @@ public class DSUtil {
 		try {
 			return (DataSource) new InitialContext().lookup(jndiName);
 		} catch (final NamingException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 

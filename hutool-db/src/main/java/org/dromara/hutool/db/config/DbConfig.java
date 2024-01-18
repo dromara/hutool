@@ -24,6 +24,7 @@ import java.util.Properties;
  *     <li>基本配置项，如driver、url、user、password等</li>
  *     <li>连接配置，如remarks、useInformationSchema等</li>
  *     <li>连接池配置，如初始容量、最大容量等，取决于连接池库具体要求</li>
+ *     <li>其它配置，如是否大小写敏感、SQL过滤器等</li>
  * </ul>
  *
  * @author Looly

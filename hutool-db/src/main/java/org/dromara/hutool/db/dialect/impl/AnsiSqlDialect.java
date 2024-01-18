@@ -14,7 +14,7 @@ package org.dromara.hutool.db.dialect.impl;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 import org.dromara.hutool.db.StatementUtil;
@@ -59,7 +59,7 @@ public class AnsiSqlDialect implements Dialect {
 	@Override
 	public PreparedStatement psForInsertBatch(final Connection conn, final Entity... entities) {
 		if (ArrayUtil.isEmpty(entities)) {
-			throw new DbRuntimeException("Entities for batch insert is empty !");
+			throw new DbException("Entities for batch insert is empty !");
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
@@ -104,7 +104,7 @@ public class AnsiSqlDialect implements Dialect {
 	public PreparedStatement psForPage(final Connection conn, final Query query) {
 		Assert.notNull(query, "query must be not null !");
 		if (ArrayUtil.hasBlank(query.getTableNames())) {
-			throw new DbRuntimeException("Table name must be not empty !");
+			throw new DbException("Table name must be not empty !");
 		}
 
 		final SqlBuilder find = SqlBuilder.of(quoteWrapper).query(query);

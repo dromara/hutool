@@ -14,7 +14,7 @@ package org.dromara.hutool.db.ds.c3p0;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.ds.DSFactory;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
@@ -45,7 +45,7 @@ public class C3p0DSFactory implements DSFactory {
 		try {
 			ds.setDriverClass(config.getDriver());
 		} catch (final PropertyVetoException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 		ds.setUser(config.getUser());
 		ds.setPassword(config.getPass());

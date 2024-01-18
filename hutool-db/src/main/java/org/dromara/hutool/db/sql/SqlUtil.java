@@ -15,7 +15,7 @@ package org.dromara.hutool.db.sql;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.sql.Condition.LikeType;
 
@@ -171,7 +171,7 @@ public class SqlUtil {
 			reader = clob.getCharacterStream();
 			return IoUtil.read(reader);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(reader);
 		}
@@ -191,7 +191,7 @@ public class SqlUtil {
 			in = blob.getBinaryStream();
 			return IoUtil.read(in, charset);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(in);
 		}
@@ -214,7 +214,7 @@ public class SqlUtil {
 			out = blob.setBinaryStream(1);
 			IoUtil.copy(dataStream, out);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(out);
 			if (closeAfterUse) {
@@ -238,7 +238,7 @@ public class SqlUtil {
 			blob = conn.createBlob();
 			blob.setBytes(0, data);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 		return blob;
 	}

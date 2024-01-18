@@ -35,11 +35,11 @@ public class DefaultConnectionHolder implements ConnectionHolder {
 	}
 
 	@Override
-	public Connection getConnection() throws DbRuntimeException {
+	public Connection getConnection() throws DbException {
 		try {
 			return ThreadLocalConnection.INSTANCE.get(this.ds);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 

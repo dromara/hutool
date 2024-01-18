@@ -15,7 +15,7 @@ package org.dromara.hutool.db.sql;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 
@@ -212,11 +212,11 @@ public class Query implements Cloneable {
 	 * 获得第一个表名
 	 *
 	 * @return 表名
-	 * @throws DbRuntimeException 没有表
+	 * @throws DbException 没有表
 	 */
-	public String getFirstTableName() throws DbRuntimeException {
+	public String getFirstTableName() throws DbException {
 		if (ArrayUtil.isEmpty(this.tableNames)) {
-			throw new DbRuntimeException("No tableName!");
+			throw new DbException("No tableName!");
 		}
 		return this.tableNames[0];
 	}

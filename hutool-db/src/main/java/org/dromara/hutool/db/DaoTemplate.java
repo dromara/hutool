@@ -110,9 +110,9 @@ public class DaoTemplate {
 	 *
 	 * @param entity 实体对象
 	 * @return 插入行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public int add(final Entity entity) throws DbRuntimeException {
+	public int add(final Entity entity) throws DbException {
 		return db.insert(fixEntity(entity));
 	}
 
@@ -121,9 +121,9 @@ public class DaoTemplate {
 	 *
 	 * @param entity 实体对象
 	 * @return 主键列表
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public List<Object> addForGeneratedKeys(final Entity entity) throws DbRuntimeException {
+	public List<Object> addForGeneratedKeys(final Entity entity) throws DbException {
 		return db.insertForGeneratedKeys(fixEntity(entity));
 	}
 
@@ -132,9 +132,9 @@ public class DaoTemplate {
 	 *
 	 * @param entity 实体对象
 	 * @return 自增主键
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public Long addForGeneratedKey(final Entity entity) throws DbRuntimeException {
+	public Long addForGeneratedKey(final Entity entity) throws DbException {
 		return db.insertForGeneratedKey(fixEntity(entity));
 	}
 	// endregion
@@ -147,9 +147,9 @@ public class DaoTemplate {
 	 * @param <T> 主键类型
 	 * @param pk  主键
 	 * @return 删除行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public <T> int del(final T pk) throws DbRuntimeException {
+	public <T> int del(final T pk) throws DbException {
 		if (pk == null) {
 			return 0;
 		}
@@ -163,9 +163,9 @@ public class DaoTemplate {
 	 * @param field 字段名
 	 * @param value 字段值
 	 * @return 删除行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public <T> int del(final String field, final T value) throws DbRuntimeException {
+	public <T> int del(final String field, final T value) throws DbException {
 		if (StrUtil.isBlank(field)) {
 			return 0;
 		}
@@ -178,9 +178,9 @@ public class DaoTemplate {
 	 *
 	 * @param where 删除条件，当条件为空时，返回0（防止误删全表）
 	 * @return 删除行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public int del(final Entity where) throws DbRuntimeException {
+	public int del(final Entity where) throws DbException {
 		if (MapUtil.isEmpty(where)) {
 			return 0;
 		}
@@ -196,9 +196,9 @@ public class DaoTemplate {
 	 * @param record 更新的内容
 	 * @param where  条件
 	 * @return 更新条目数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public int update(final Entity record, final Entity where) throws DbRuntimeException {
+	public int update(final Entity record, final Entity where) throws DbException {
 		if (MapUtil.isEmpty(record)) {
 			return 0;
 		}
@@ -210,16 +210,16 @@ public class DaoTemplate {
 	 *
 	 * @param entity 实体对象，必须包含主键
 	 * @return 更新行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public int update(Entity entity) throws DbRuntimeException {
+	public int update(Entity entity) throws DbException {
 		if (MapUtil.isEmpty(entity)) {
 			return 0;
 		}
 		entity = fixEntity(entity);
 		final Object pk = entity.get(primaryKeyField);
 		if (null == pk) {
-			throw new DbRuntimeException(StrUtil.format("Please determine `{}` for update", primaryKeyField));
+			throw new DbException(StrUtil.format("Please determine `{}` for update", primaryKeyField));
 		}
 
 		final Entity where = Entity.of(tableName).set(primaryKeyField, pk);
@@ -234,9 +234,9 @@ public class DaoTemplate {
 	 *
 	 * @param entity 实体，当包含主键时更新，否则新增
 	 * @return 新增或更新条数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public int addOrUpdate(final Entity entity) throws DbRuntimeException {
+	public int addOrUpdate(final Entity entity) throws DbException {
 		return null == entity.get(primaryKeyField) ? add(entity) : update(entity);
 	}
 	// endregion
@@ -248,9 +248,9 @@ public class DaoTemplate {
 	 * @param <T> 主键类型
 	 * @param pk  主键值
 	 * @return 记录
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public <T> Entity get(final T pk) throws DbRuntimeException {
+	public <T> Entity get(final T pk) throws DbException {
 		return this.get(primaryKeyField, pk);
 	}
 
@@ -262,9 +262,9 @@ public class DaoTemplate {
 	 * @param field 字段名
 	 * @param value 字段值
 	 * @return 记录
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public <T> Entity get(final String field, final T value) throws DbRuntimeException {
+	public <T> Entity get(final String field, final T value) throws DbException {
 		return this.get(Entity.of(tableName).set(field, value));
 	}
 
@@ -273,9 +273,9 @@ public class DaoTemplate {
 	 *
 	 * @param where 条件
 	 * @return 记录
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public Entity get(final Entity where) throws DbRuntimeException {
+	public Entity get(final Entity where) throws DbException {
 		return db.get(fixEntity(where));
 	}
 	// endregion
@@ -289,9 +289,9 @@ public class DaoTemplate {
 	 * @param field 字段名
 	 * @param value 字段值
 	 * @return 记录
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public <T> List<Entity> find(final String field, final T value) throws DbRuntimeException {
+	public <T> List<Entity> find(final String field, final T value) throws DbException {
 		return this.find(Entity.of(tableName).set(field, value));
 	}
 
@@ -299,9 +299,9 @@ public class DaoTemplate {
 	 * 查询当前表的所有记录
 	 *
 	 * @return 记录
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public List<Entity> findAll() throws DbRuntimeException {
+	public List<Entity> findAll() throws DbException {
 		return this.find(Entity.of(tableName));
 	}
 
@@ -310,9 +310,9 @@ public class DaoTemplate {
 	 *
 	 * @param where 查询条件
 	 * @return 记录
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public List<Entity> find(final Entity where) throws DbRuntimeException {
+	public List<Entity> find(final Entity where) throws DbException {
 		return db.find(null, fixEntity(where));
 	}
 
@@ -324,9 +324,9 @@ public class DaoTemplate {
 	 * @param sql    SQL语句
 	 * @param params SQL占位符中对应的参数
 	 * @return 记录
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public List<Entity> findBySql(String sql, final Object... params) throws DbRuntimeException {
+	public List<Entity> findBySql(String sql, final Object... params) throws DbException {
 		final String selectKeyword = StrUtil.subPre(sql.trim(), 6).toLowerCase();
 		if (!"select".equals(selectKeyword)) {
 			sql = "SELECT * FROM " + this.tableName + " " + sql;
@@ -341,9 +341,9 @@ public class DaoTemplate {
 	 * @param page         分页对象
 	 * @param selectFields 查询的字段列表
 	 * @return 分页结果集
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public PageResult<Entity> page(final Entity where, final Page page, final String... selectFields) throws DbRuntimeException {
+	public PageResult<Entity> page(final Entity where, final Page page, final String... selectFields) throws DbException {
 		return db.page(Arrays.asList(selectFields), fixEntity(where), page);
 	}
 
@@ -353,9 +353,9 @@ public class DaoTemplate {
 	 * @param where 条件
 	 * @param page  分页对象
 	 * @return 分页结果集
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public PageResult<Entity> page(final Entity where, final Page page) throws DbRuntimeException {
+	public PageResult<Entity> page(final Entity where, final Page page) throws DbException {
 		return db.page(fixEntity(where), page);
 	}
 
@@ -364,9 +364,9 @@ public class DaoTemplate {
 	 *
 	 * @param where 条件
 	 * @return 数量
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public long count(final Entity where) throws DbRuntimeException {
+	public long count(final Entity where) throws DbException {
 		return db.count(fixEntity(where));
 	}
 
@@ -375,9 +375,9 @@ public class DaoTemplate {
 	 *
 	 * @param where 条件
 	 * @return 是否存在
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public boolean exist(final Entity where) throws DbRuntimeException {
+	public boolean exist(final Entity where) throws DbException {
 		return this.count(where) > 0;
 	}
 	// endregion

@@ -16,7 +16,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 
 import javax.sql.DataSource;
@@ -108,7 +108,7 @@ public class MetaUtil {
 				}
 			}
 		} catch (final Exception e) {
-			throw new DbRuntimeException("Get tables error!", e);
+			throw new DbException("Get tables error!", e);
 		} finally {
 			IoUtil.closeQuietly(conn);
 		}
@@ -120,9 +120,9 @@ public class MetaUtil {
 	 *
 	 * @param rs 结果集
 	 * @return 列名数组
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static String[] getColumnNames(final ResultSet rs) throws DbRuntimeException {
+	public static String[] getColumnNames(final ResultSet rs) throws DbException {
 		try {
 			final ResultSetMetaData rsmd = rs.getMetaData();
 			final int columnCount = rsmd.getColumnCount();
@@ -132,7 +132,7 @@ public class MetaUtil {
 			}
 			return labelNames;
 		} catch (final Exception e) {
-			throw new DbRuntimeException("Get colunms error!", e);
+			throw new DbException("Get colunms error!", e);
 		}
 	}
 
@@ -142,7 +142,7 @@ public class MetaUtil {
 	 * @param ds        数据源
 	 * @param tableName 表名
 	 * @return 列数组
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
 	public static String[] getColumnNames(final DataSource ds, final String tableName) {
 		final List<String> columnNames = new ArrayList<>();
@@ -164,7 +164,7 @@ public class MetaUtil {
 			}
 			return columnNames.toArray(new String[0]);
 		} catch (final Exception e) {
-			throw new DbRuntimeException("Get columns error!", e);
+			throw new DbException("Get columns error!", e);
 		} finally {
 			IoUtil.closeQuietly(conn);
 		}
@@ -283,7 +283,7 @@ public class MetaUtil {
 				table.setIndexInfoList(ListUtil.of(indexInfoMap.values()));
 			}
 		} catch (final SQLException e) {
-			throw new DbRuntimeException("Get columns error!", e);
+			throw new DbException("Get columns error!", e);
 		} finally {
 			IoUtil.closeQuietly(conn);
 		}

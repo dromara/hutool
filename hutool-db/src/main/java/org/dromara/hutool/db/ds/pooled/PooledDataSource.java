@@ -17,7 +17,7 @@ import org.dromara.hutool.core.pool.ObjectFactory;
 import org.dromara.hutool.core.pool.ObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionPoolConfig;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.ds.simple.AbstractDataSource;
 import org.dromara.hutool.setting.props.Props;
@@ -102,7 +102,7 @@ public class PooledDataSource extends AbstractDataSource {
 					return null != connection
 						&& connection.isValid(maxWait);
 				} catch (final SQLException e) {
-					throw new DbRuntimeException(e);
+					throw new DbException(e);
 				}
 			}
 

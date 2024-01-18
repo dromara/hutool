@@ -25,9 +25,9 @@ public interface ConnectionHolder {
 	 * 获得链接。根据实现不同，可以自定义获取连接的方式
 	 *
 	 * @return {@link Connection}
-	 * @throws DbRuntimeException 连接获取异常
+	 * @throws DbException 连接获取异常
 	 */
-	Connection getConnection() throws DbRuntimeException;
+	Connection getConnection() throws DbException;
 
 	/**
 	 * 关闭连接<br>

@@ -409,7 +409,7 @@ public class Entity extends Dict {
 		if (obj instanceof RowId) {
 			return (RowId) obj;
 		}
-		throw new DbRuntimeException("Value of field [{}] is not a rowid!", field);
+		throw new DbException("Value of field [{}] is not a rowid!", field);
 	}
 
 	// -------------------------------------------------------------------- Get end

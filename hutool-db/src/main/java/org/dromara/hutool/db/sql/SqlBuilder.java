@@ -16,7 +16,7 @@ import org.dromara.hutool.core.lang.builder.Builder;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.dialect.impl.OracleDialect;
@@ -73,17 +73,17 @@ public class SqlBuilder implements Builder<String> {
 	 * 验证实体类对象的有效性
 	 *
 	 * @param entity 实体类对象
-	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
+	 * @throws DbException SQL异常包装，获取元数据信息失败
 	 */
-	public static void validateEntity(final Entity entity) throws DbRuntimeException {
+	public static void validateEntity(final Entity entity) throws DbException {
 		if (null == entity) {
-			throw new DbRuntimeException("Entity is null !");
+			throw new DbException("Entity is null !");
 		}
 		if (StrUtil.isBlank(entity.getTableName())) {
-			throw new DbRuntimeException("Entity`s table name is null !");
+			throw new DbException("Entity`s table name is null !");
 		}
 		if (entity.isEmpty()) {
-			throw new DbRuntimeException("No filed and value in this entity !");
+			throw new DbException("No filed and value in this entity !");
 		}
 	}
 
@@ -232,7 +232,7 @@ public class SqlBuilder implements Builder<String> {
 	 */
 	public SqlBuilder delete(String tableName) {
 		if (StrUtil.isBlank(tableName)) {
-			throw new DbRuntimeException("Table name is blank !");
+			throw new DbException("Table name is blank !");
 		}
 
 		if (null != quoteWrapper) {
@@ -339,7 +339,7 @@ public class SqlBuilder implements Builder<String> {
 	 */
 	public SqlBuilder from(String... tableNames) {
 		if (ArrayUtil.isEmpty(tableNames) || ArrayUtil.hasBlank(tableNames)) {
-			throw new DbRuntimeException("Table name is blank in table names !");
+			throw new DbException("Table name is blank in table names !");
 		}
 
 		if (null != quoteWrapper) {
@@ -489,7 +489,7 @@ public class SqlBuilder implements Builder<String> {
 	 */
 	public SqlBuilder join(String tableName, final Join join) {
 		if (StrUtil.isBlank(tableName)) {
-			throw new DbRuntimeException("Table name is blank !");
+			throw new DbException("Table name is blank !");
 		}
 
 		if (null != join) {

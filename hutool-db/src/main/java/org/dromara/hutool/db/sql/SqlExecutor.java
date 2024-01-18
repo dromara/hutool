@@ -15,7 +15,7 @@ package org.dromara.hutool.db.sql;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.func.SerFunction;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.StatementUtil;
 import org.dromara.hutool.db.handler.RsHandler;
 
@@ -39,10 +39,10 @@ public class SqlExecutor {
 	 * @param sql      SQL，使用name做为占位符，例如:name
 	 * @param paramMap 参数Map
 	 * @return 影响的行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public static int execute(final Connection conn, final String sql, final Map<String, Object> paramMap) throws DbRuntimeException {
+	public static int execute(final Connection conn, final String sql, final Map<String, Object> paramMap) throws DbException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return execute(conn, namedSql.getSql(), namedSql.getParamArray());
 	}
@@ -56,15 +56,15 @@ public class SqlExecutor {
 	 * @param sql    SQL
 	 * @param params 参数
 	 * @return 影响的行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static int execute(final Connection conn, final String sql, final Object... params) throws DbRuntimeException {
+	public static int execute(final Connection conn, final String sql, final Object... params) throws DbException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatement(false, conn, sql, params);
 			return ps.executeUpdate();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(ps);
 		}
@@ -78,15 +78,15 @@ public class SqlExecutor {
 	 * @param sql    SQL
 	 * @param params 参数
 	 * @return 如果执行后第一个结果是ResultSet，则返回true，否则返回false。
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static boolean call(final Connection conn, final String sql, final Object... params) throws DbRuntimeException {
+	public static boolean call(final Connection conn, final String sql, final Object... params) throws DbException {
 		CallableStatement call = null;
 		try {
 			call = StatementUtil.prepareCall(conn, sql, params);
 			return call.execute();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(call);
 		}
@@ -100,14 +100,14 @@ public class SqlExecutor {
 	 * @param sql    SQL
 	 * @param params 参数
 	 * @return ResultSet
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 4.1.4
 	 */
-	public static ResultSet callQuery(final Connection conn, final String sql, final Object... params) throws DbRuntimeException {
+	public static ResultSet callQuery(final Connection conn, final String sql, final Object... params) throws DbException {
 		try {
 			return StatementUtil.prepareCall(conn, sql, params).executeQuery();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 
@@ -120,10 +120,10 @@ public class SqlExecutor {
 	 * @param sql      SQL
 	 * @param paramMap 参数Map
 	 * @return 主键
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public static Long executeForGeneratedKey(final Connection conn, final String sql, final Map<String, Object> paramMap) throws DbRuntimeException {
+	public static Long executeForGeneratedKey(final Connection conn, final String sql, final Map<String, Object> paramMap) throws DbException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return executeForGeneratedKey(conn, namedSql.getSql(), namedSql.getParamArray());
 	}
@@ -137,9 +137,9 @@ public class SqlExecutor {
 	 * @param sql    SQL
 	 * @param params 参数
 	 * @return 主键
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static Long executeForGeneratedKey(final Connection conn, final String sql, final Object... params) throws DbRuntimeException {
+	public static Long executeForGeneratedKey(final Connection conn, final String sql, final Object... params) throws DbException {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
@@ -155,7 +155,7 @@ public class SqlExecutor {
 			}
 			return null;
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(ps);
 			IoUtil.closeQuietly(rs);
@@ -171,15 +171,15 @@ public class SqlExecutor {
 	 * @param sql         SQL
 	 * @param paramsBatch 批量的参数
 	 * @return 每个SQL执行影响的行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static int[] executeBatch(final Connection conn, final String sql, final Iterable<Object[]> paramsBatch) throws DbRuntimeException {
+	public static int[] executeBatch(final Connection conn, final String sql, final Iterable<Object[]> paramsBatch) throws DbException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatementForBatch(conn, sql, paramsBatch);
 			return ps.executeBatch();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(ps);
 		}
@@ -193,10 +193,10 @@ public class SqlExecutor {
 	 * @param conn 数据库连接对象
 	 * @param sqls SQL列表
 	 * @return 每个SQL执行影响的行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 4.5.6
 	 */
-	public static int[] executeBatch(final Connection conn, final String... sqls) throws DbRuntimeException {
+	public static int[] executeBatch(final Connection conn, final String... sqls) throws DbException {
 		return executeBatch(conn, new ArrayIter<>(sqls));
 	}
 
@@ -208,10 +208,10 @@ public class SqlExecutor {
 	 * @param conn 数据库连接对象
 	 * @param sqls SQL列表
 	 * @return 每个SQL执行影响的行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 4.5.6
 	 */
-	public static int[] executeBatch(final Connection conn, final Iterable<String> sqls) throws DbRuntimeException {
+	public static int[] executeBatch(final Connection conn, final Iterable<String> sqls) throws DbException {
 		Statement statement = null;
 		try {
 			statement = conn.createStatement();
@@ -220,7 +220,7 @@ public class SqlExecutor {
 			}
 			return statement.executeBatch();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(statement);
 		}
@@ -236,10 +236,10 @@ public class SqlExecutor {
 	 * @param rsh      结果集处理对象
 	 * @param paramMap 参数对
 	 * @return 结果对象
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Map<String, Object> paramMap) throws DbRuntimeException {
+	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Map<String, Object> paramMap) throws DbException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return query(conn, namedSql.getSql(), rsh, namedSql.getParamArray());
 	}
@@ -253,10 +253,10 @@ public class SqlExecutor {
 	 * @param sqlBuilder SQL构建器，包含参数
 	 * @param rsh        结果集处理对象
 	 * @return 结果对象
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public static <T> T query(final Connection conn, final SqlBuilder sqlBuilder, final RsHandler<T> rsh) throws DbRuntimeException {
+	public static <T> T query(final Connection conn, final SqlBuilder sqlBuilder, final RsHandler<T> rsh) throws DbException {
 		return query(conn, sqlBuilder.build(), rsh, sqlBuilder.getParamValueArray());
 	}
 
@@ -270,9 +270,9 @@ public class SqlExecutor {
 	 * @param rsh    结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Object... params) throws DbRuntimeException {
+	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Object... params) throws DbException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatement(false, conn, sql, params);
@@ -291,10 +291,10 @@ public class SqlExecutor {
 	 * @param statementFunc 自定义{@link PreparedStatement}创建函数
 	 * @param rsh           自定义结果集处理
 	 * @return 结果
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 5.7.17
 	 */
-	public static <T> T query(final Connection conn, final SerFunction<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws DbRuntimeException {
+	public static <T> T query(final Connection conn, final SerFunction<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws DbException {
 		PreparedStatement ps = null;
 		try {
 			ps = statementFunc.apply(conn);
@@ -316,14 +316,14 @@ public class SqlExecutor {
 	 * @param ps     PreparedStatement对象
 	 * @param params 参数
 	 * @return 影响的行数
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static int executeUpdate(final PreparedStatement ps, final Object... params) throws DbRuntimeException {
+	public static int executeUpdate(final PreparedStatement ps, final Object... params) throws DbException {
 		try {
 			StatementUtil.fillArrayParam(ps, params);
 			return ps.executeUpdate();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 
@@ -335,14 +335,14 @@ public class SqlExecutor {
 	 * @param ps     PreparedStatement对象
 	 * @param params 参数
 	 * @return 如果执行后第一个结果是ResultSet，则返回true，否则返回false。
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static boolean execute(final PreparedStatement ps, final Object... params) throws DbRuntimeException {
+	public static boolean execute(final PreparedStatement ps, final Object... params) throws DbException {
 		try {
 			StatementUtil.fillArrayParam(ps, params);
 			return ps.execute();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 
@@ -355,14 +355,14 @@ public class SqlExecutor {
 	 * @param rsh    结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static <T> T query(final PreparedStatement ps, final RsHandler<T> rsh, final Object... params) throws DbRuntimeException {
+	public static <T> T query(final PreparedStatement ps, final RsHandler<T> rsh, final Object... params) throws DbException {
 		try {
 			StatementUtil.fillArrayParam(ps, params);
 			return executeQuery(ps, rsh);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 
@@ -374,9 +374,9 @@ public class SqlExecutor {
 	 * @param rsh    结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 */
-	public static <T> T queryAndClosePs(final PreparedStatement ps, final RsHandler<T> rsh, final Object... params) throws DbRuntimeException {
+	public static <T> T queryAndClosePs(final PreparedStatement ps, final RsHandler<T> rsh, final Object... params) throws DbException {
 		try {
 			return query(ps, rsh, params);
 		} finally {
@@ -392,16 +392,16 @@ public class SqlExecutor {
 	 * @param ps  {@link PreparedStatement}
 	 * @param rsh 结果集处理对象
 	 * @return 结果对象
-	 * @throws DbRuntimeException SQL执行异常
+	 * @throws DbException SQL执行异常
 	 * @since 4.1.13
 	 */
-	private static <T> T executeQuery(final PreparedStatement ps, final RsHandler<T> rsh) throws DbRuntimeException {
+	private static <T> T executeQuery(final PreparedStatement ps, final RsHandler<T> rsh) throws DbException {
 		ResultSet rs = null;
 		try {
 			rs = ps.executeQuery();
 			return rsh.handle(rs);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(rs);
 		}

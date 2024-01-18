@@ -14,7 +14,7 @@ package org.dromara.hutool.db.ds.pooled;
 
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.pool.Poolable;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
@@ -61,7 +61,7 @@ public class PooledConnection extends ConnectionWrapper implements Poolable<Conn
 		try {
 			this.raw = DriverManager.getConnection(config.getUrl(), info);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 
 		this.dataSource = dataSource;

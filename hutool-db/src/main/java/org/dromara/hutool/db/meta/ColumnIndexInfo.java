@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.meta;
 
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -39,7 +39,7 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 					rs.getString("COLUMN_NAME"),
 					rs.getString("ASC_OR_DESC"));
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 

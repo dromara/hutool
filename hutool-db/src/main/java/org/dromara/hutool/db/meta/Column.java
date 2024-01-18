@@ -14,7 +14,7 @@ package org.dromara.hutool.db.meta;
 
 import org.dromara.hutool.core.util.BooleanUtil;
 import org.dromara.hutool.core.regex.ReUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -108,7 +108,7 @@ public class Column implements Serializable, Cloneable {
 		try {
 			init(table, columnMetaRs);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e, "Get table [{}] meta info error!", tableName);
+			throw new DbException(e, "Get table [{}] meta info error!", tableName);
 		}
 	}
 	// ----------------------------------------------------- Constructor end

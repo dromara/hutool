@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.meta;
 
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -50,9 +50,9 @@ public class ResultColumn {
 	 *
 	 * @param metaData         {@link ResultSetMetaData}
 	 * @param columnIndexBase1 列序号，从1开始。即第一列为1，第二列为2。。。
-	 * @throws DbRuntimeException SQLException包装
+	 * @throws DbException SQLException包装
 	 */
-	public ResultColumn(final ResultSetMetaData metaData, final int columnIndexBase1) throws DbRuntimeException {
+	public ResultColumn(final ResultSetMetaData metaData, final int columnIndexBase1) throws DbException {
 		try {
 			this.autoIncrement = metaData.isAutoIncrement(columnIndexBase1);
 			this.caseSensitive = metaData.isCaseSensitive(columnIndexBase1);
@@ -75,7 +75,7 @@ public class ResultColumn {
 			this.definitelyWritable = metaData.isDefinitelyWritable(columnIndexBase1);
 			this.className = metaData.getColumnClassName(columnIndexBase1);
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 

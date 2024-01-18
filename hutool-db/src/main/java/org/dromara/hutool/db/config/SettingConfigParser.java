@@ -16,7 +16,7 @@ import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.resource.NoResourceException;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.setting.Setting;
 import org.dromara.hutool.setting.props.Props;
@@ -68,7 +68,7 @@ public class SettingConfigParser implements ConfigParser {
 
 		final Setting subSetting = setting.getSetting(group);
 		if (MapUtil.isEmpty(subSetting)) {
-			throw new DbRuntimeException("No config for group: [{}]", group);
+			throw new DbException("No config for group: [{}]", group);
 		}
 
 		return toDbConfig(subSetting);
@@ -105,7 +105,7 @@ public class SettingConfigParser implements ConfigParser {
 		// 基本信息
 		final String url = setting.getAndRemove(DSKeys.KEY_ALIAS_URL);
 		if (StrUtil.isBlank(url)) {
-			throw new DbRuntimeException("No JDBC URL!");
+			throw new DbException("No JDBC URL!");
 		}
 
 		// 移除用户可能误加入的show sql配置项

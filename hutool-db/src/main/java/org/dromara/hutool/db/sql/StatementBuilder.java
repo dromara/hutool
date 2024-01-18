@@ -20,7 +20,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.builder.Builder;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.sql.filter.SqlFilter;
 
@@ -118,7 +118,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 		try {
 			return _build();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 
@@ -126,9 +126,9 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 	 * 创建批量操作的{@link StatementWrapper}
 	 *
 	 * @return {@link StatementWrapper}，{@code null}表示不执行
-	 * @throws DbRuntimeException SQL异常
+	 * @throws DbException SQL异常
 	 */
-	public StatementWrapper buildForBatch() throws DbRuntimeException {
+	public StatementWrapper buildForBatch() throws DbException {
 		final String sql = this.boundSql.getSql();
 		Assert.notBlank(sql, "Sql String must be not blank!");
 		final List<Object> paramsBatch = this.boundSql.getParams();
@@ -159,7 +159,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 				ps.addBatch();
 			}
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 		return ps;
 	}
@@ -183,7 +183,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 				.fillArrayParam(params)
 				.getRaw();
 		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+			throw new DbException(e);
 		}
 	}
 

@@ -15,7 +15,7 @@ package org.dromara.hutool.db.handler;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.handler.row.*;
 
@@ -147,7 +147,7 @@ public class ResultSetUtil {
 		if (rs != null && rs.next()) {
 			try {
 				generatedKey = rs.getLong(1);
-			} catch (final DbRuntimeException e) {
+			} catch (final DbException e) {
 				// 自增主键不为数字或者为Oracle的rowid，跳过
 			}
 		}
