@@ -48,7 +48,7 @@ public class Browser extends UserAgentInfo {
 		// 微信小程序
 		new Browser("miniProgram", "miniProgram", Other_Version),
 		// QQ浏览器
-		new Browser("QQBrowser", "MQQBrowser", "MQQBrowser\\/([\\d\\w\\.\\-]+)"),
+		new Browser("QQBrowser", "QQBrowser", "QQBrowser\\/([\\d\\w\\.\\-]+)"),
 		// 钉钉PC端浏览器
 		new Browser("DingTalk-win", "dingtalk-win", "DingTalk\\(([\\d\\w\\.\\-]+)\\)"),
 		// 钉钉内置浏览器
