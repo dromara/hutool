@@ -23,8 +23,12 @@ import java.util.regex.Pattern;
 
 /**
  * 统一社会信用代码（GB32100-2015）工具类<br>
- * 标准见：<a href="https://www.cods.org.cn/c/2020-10-29/12575.html">https://www.cods.org.cn/c/2020-10-29/12575.html</a>
+ * 标准见：<a href="https://www.cods.org.cn/c/2020-10-29/12575.html">https://www.cods.org.cn/c/2020-10-29/12575.html</a><br><br>
  *
+ * 三证合一、一照一码政策之后，纳税人识别号 == 统一社会信用代码<br>
+ * 政策见国家税务总局：<a href="https://www.chinatax.gov.cn/n810219/n810724/c1838941/content.html?from=singlemessagel">“三证合一”后纳税人识别号有何变化？</a><br><br>
+ *
+ * <b>规则：</b>
  * <pre>
  * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
  * 第二部分：机构类别代码1位 (数字或大写英文字母)
@@ -61,8 +65,10 @@ public class CreditCodeUtil {
 	}
 
 	/**
-	 * 正则校验统一社会信用代码（18位）
+	 * 正则校验统一社会信用代码（18位）<br>
+	 * 注意：此方法是简化版本，并未严格判断校验码是否符合规则，严格校验参考{@link #isCreditCode(CharSequence)}<br>
 	 *
+	 * <b>规则：</b>
 	 * <pre>
 	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
 	 * 第二部分：机构类别代码1位 (数字或大写英文字母)
