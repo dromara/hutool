@@ -49,7 +49,17 @@ public class SettingConfigParser implements ConfigParser {
 	 * @return SettingConfigParser
 	 */
 	public static SettingConfigParser of() {
-		return new SettingConfigParser(null);
+		return of(null);
+	}
+
+	/**
+	 * 创建默认配置解析器
+	 *
+	 * @param setting 配置文件
+	 * @return SettingConfigParser
+	 */
+	public static SettingConfigParser of(final Setting setting) {
+		return new SettingConfigParser(setting);
 	}
 
 	private final Setting setting;
@@ -128,7 +138,7 @@ public class SettingConfigParser implements ConfigParser {
 
 		// SQL日志
 		final SqlLogFilter sqlLogFilter = getSqlLogFilter(setting);
-		if(null != sqlLogFilter){
+		if (null != sqlLogFilter) {
 			dbConfig.addSqlFilter(sqlLogFilter);
 		}
 
@@ -173,7 +183,7 @@ public class SettingConfigParser implements ConfigParser {
 	private static SqlLogFilter getSqlLogFilter(final Setting setting) {
 		// 初始化SQL显示
 		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL), false);
-		if(!isShowSql){
+		if (!isShowSql) {
 			return null;
 		}
 

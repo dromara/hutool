@@ -12,9 +12,9 @@
 
 package org.dromara.hutool.db.sql;
 
-import java.io.Serializable;
-
 import org.dromara.hutool.core.text.StrUtil;
+
+import java.io.Serializable;
 
 /**
  * SQL排序对象
@@ -30,6 +30,9 @@ public class Order implements Serializable{
 	private Direction direction;
 
 	//---------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 */
 	public Order() {
 	}
 

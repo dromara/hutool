@@ -16,7 +16,6 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
-import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.config.ConfigParser;
 import org.dromara.hutool.db.config.DbConfig;
