@@ -1554,4 +1554,37 @@ public class NumberUtil extends NumberValidator {
 		}
 		return equals(toBigDecimal(n), BigDecimal.ZERO);
 	}
+
+	/**
+	 * 整数转罗马数字<br>
+	 * 限制：[1,3999]的正整数
+	 * <ul>
+	 *     <li>I 1</li>
+	 *     <li>V 5</li>
+	 *     <li>X 10</li>
+	 *     <li>L 50</li>
+	 *     <li>C 100</li>
+	 *     <li>D 500</li>
+	 *     <li>M 1000</li>
+	 * </ul>
+	 *
+	 * @param num [1,3999]的正整数
+	 * @return 罗马数字
+	 * @since 6.0.0
+	 * @author dazer
+	 */
+	public static String intToRoman(int num) {
+		if (num > 3999 || num < 1 ){
+			return "";
+		}
+		String[] thousands = {"", "M", "MM", "MMM"};
+		String[] hundreds = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+		String[] tens = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+		String[] ones = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+
+		return thousands[num / 1000] +
+			hundreds[(num % 1000) / 100] +
+			tens[(num % 100) / 10] +
+			ones[num % 10];
+	}
 }
