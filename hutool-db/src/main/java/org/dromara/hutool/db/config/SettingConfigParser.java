@@ -114,8 +114,6 @@ public class SettingConfigParser implements ConfigParser {
 			throw new DbException("No JDBC URL!");
 		}
 
-		final SqlLogFilter sqlLogFilter = getSqlLogFilter(setting);
-
 		// 自动识别Driver
 		String driver = setting.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
 		if (StrUtil.isBlank(driver)) {
@@ -126,17 +124,18 @@ public class SettingConfigParser implements ConfigParser {
 			.setUrl(url)
 			.setDriver(driver)
 			.setUser(setting.getAndRemove(DSKeys.KEY_ALIAS_USER))
-			.setPass(setting.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD))
-			.addSqlFilter(sqlLogFilter);
+			.setPass(setting.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
+
+		// SQL日志
+		final SqlLogFilter sqlLogFilter = getSqlLogFilter(setting);
+		if(null != sqlLogFilter){
+			dbConfig.addSqlFilter(sqlLogFilter);
+		}
 
 		// 大小写等配置
 		final String caseInsensitive = setting.getAndRemove(DSKeys.KEY_CASE_INSENSITIVE);
 		if (StrUtil.isNotBlank(caseInsensitive)) {
 			dbConfig.setCaseInsensitive(Convert.toBoolean(caseInsensitive));
-		}
-		final String returnGeneratedKey = setting.getAndRemove(DSKeys.KEY_RETURN_GENERATED_KEY);
-		if (StrUtil.isNotBlank(returnGeneratedKey)) {
-			dbConfig.setReturnGeneratedKey(Convert.toBoolean(returnGeneratedKey));
 		}
 
 		// remarks等连接配置，since 5.3.8
@@ -174,6 +173,10 @@ public class SettingConfigParser implements ConfigParser {
 	private static SqlLogFilter getSqlLogFilter(final Setting setting) {
 		// 初始化SQL显示
 		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL), false);
+		if(!isShowSql){
+			return null;
+		}
+
 		final boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL), false);
 		final boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS), false);
 		String sqlLevelStr = setting.remove(DSKeys.KEY_SQL_LEVEL);

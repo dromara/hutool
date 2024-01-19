@@ -15,8 +15,8 @@ package org.dromara.hutool.db.ds.bee;
 import cn.beecp.BeeDataSource;
 import cn.beecp.BeeDataSourceConfig;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.db.ds.DSFactory;
-import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
@@ -36,7 +36,7 @@ public class BeeDSFactory implements DSFactory {
 	}
 
 	@Override
-	public DataSource createDataSource(final DbConfig config) {
+	public DataSource createDataSource(final ConnectionConfig<?> config) {
 		final BeeDataSourceConfig beeConfig = new BeeDataSourceConfig(
 			config.getDriver(), config.getUrl(), config.getUser(), config.getPass());
 

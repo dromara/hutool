@@ -16,7 +16,6 @@ import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.db.DbException;
-import org.dromara.hutool.db.StatementUtil;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.handler.RsHandler;
 

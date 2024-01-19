@@ -13,10 +13,12 @@
 package org.dromara.hutool.db;
 
 import org.dromara.hutool.core.func.SerConsumer;
-import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectFactory;
 import org.dromara.hutool.db.ds.DSUtil;
+import org.dromara.hutool.db.ds.DSWrapper;
 import org.dromara.hutool.db.transaction.TransactionLevel;
 import org.dromara.hutool.log.LogUtil;
 
@@ -65,6 +67,18 @@ public class Db extends AbstractDb<Db> {
 	 */
 	public static Db of(final DataSource ds) {
 		return of(ds, DialectFactory.getDialect(ds));
+	}
+
+	/**
+	 * 创建Db
+	 *
+	 * @param config 数据库配置
+	 * @return Db
+	 */
+	public static Db of(final DbConfig config){
+		final DSWrapper ds = DSUtil.createDS(config);
+		final Dialect dialect = ObjUtil.defaultIfNull(config.getDialect(), DialectFactory.newDialect(ds));
+		return of(ds, dialect);
 	}
 
 	/**

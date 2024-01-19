@@ -52,12 +52,13 @@ public interface Dialect extends Serializable {
 	 * 构建用于插入的{@link PreparedStatement}<br>
 	 * 用户实现需按照数据库方言格式，将{@link Entity}转换为带有占位符的SQL语句及参数列表
 	 *
+	 * @param returnGeneratedKey 是否返回自增主键
 	 * @param conn   数据库连接对象
 	 * @param entity 数据实体类（包含表名）
 	 * @return PreparedStatement
 	 * @throws DbException SQL执行异常
 	 */
-	PreparedStatement psForInsert(Connection conn, Entity entity) throws DbException;
+	PreparedStatement psForInsert(boolean returnGeneratedKey, Connection conn, Entity entity) throws DbException;
 
 	/**
 	 * 构建用于批量插入的PreparedStatement<br>

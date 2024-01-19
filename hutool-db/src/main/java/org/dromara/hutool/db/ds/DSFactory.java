@@ -12,14 +12,14 @@
 
 package org.dromara.hutool.db.ds;
 
-import org.dromara.hutool.db.config.DbConfig;
+import org.dromara.hutool.db.config.ConnectionConfig;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
 
 /**
  * 多数据源{@link DataSource}工厂方法接口，借助不同配置，同一个工厂可以连接多个相同或不同的数据库，但是连接池只能使用一种。<br>
- * 通过实现{@link #createDataSource(DbConfig)} 方法完成数据源的创建。关系如下：<br>
+ * 通过实现{@link #createDataSource(ConnectionConfig)} 方法完成数据源的创建。关系如下：<br>
  * <pre>
  *                            DSFactory
  *            _____________________|____________________
@@ -47,5 +47,5 @@ public interface DSFactory extends Serializable {
 	 * @param config 数据库配置
 	 * @return {@link DataSource}
 	 */
-	DataSource createDataSource(DbConfig config);
+	DataSource createDataSource(ConnectionConfig<?> config);
 }

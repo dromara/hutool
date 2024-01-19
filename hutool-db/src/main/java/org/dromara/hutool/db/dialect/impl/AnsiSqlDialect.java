@@ -17,7 +17,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
-import org.dromara.hutool.db.StatementUtil;
+import org.dromara.hutool.db.sql.StatementUtil;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectName;
@@ -60,10 +60,10 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForInsert(final Connection conn, final Entity entity) {
+	public PreparedStatement psForInsert(final boolean returnGeneratedKey, final Connection conn, final Entity entity) {
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entity, this.dialectName());
 
-		return StatementUtil.prepareStatement(this.dbConfig.isReturnGeneratedKey(), this.dbConfig, conn, insert.build(), insert.getParamValueArray());
+		return StatementUtil.prepareStatement(returnGeneratedKey, this.dbConfig, conn, insert.build(), insert.getParamValueArray());
 	}
 
 	@Override

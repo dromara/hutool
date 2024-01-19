@@ -13,7 +13,7 @@
 package org.dromara.hutool.db.ds.simple;
 
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.db.config.DbConfig;
+import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
@@ -32,20 +32,20 @@ public class SimpleDataSource extends AbstractDataSource {
 	/** 默认的数据库连接配置文件路径 */
 	public final static String DEFAULT_DB_CONFIG_PATH = "config/db.setting";
 
-	private final DbConfig config;
+	private final ConnectionConfig<?> config;
 
 	/**
 	 * 构造
 	 *
 	 * @param config 数据库连接配置
 	 */
-	public SimpleDataSource(final DbConfig config) {
+	public SimpleDataSource(final ConnectionConfig<?> config) {
 		this.config = config;
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		final DbConfig config = this.config;
+		final ConnectionConfig<?> config = this.config;
 		final Props info = new Props();
 
 		final String user = config.getUser();

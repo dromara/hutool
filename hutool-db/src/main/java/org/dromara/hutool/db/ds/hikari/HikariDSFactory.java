@@ -14,11 +14,13 @@ package org.dromara.hutool.db.ds.hikari;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.db.ds.DSFactory;
-import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * HikariCP数据源工厂类
@@ -35,7 +37,7 @@ public class HikariDSFactory implements DSFactory {
 	}
 
 	@Override
-	public DataSource createDataSource(final DbConfig config) {
+	public DataSource createDataSource(final ConnectionConfig<?> config) {
 		final Props props = new Props();
 
 		// 基本信息
@@ -54,11 +56,17 @@ public class HikariDSFactory implements DSFactory {
 		}
 
 		// 连接池信息
-		props.putAll(config.getPoolProps());
+		final Properties poolProps = config.getPoolProps();
+		if(MapUtil.isNotEmpty(poolProps)){
+			props.putAll(poolProps);
+		}
 
 		final HikariConfig hikariConfig = new HikariConfig(props);
 		// 连接信息
-		hikariConfig.setDataSourceProperties(config.getConnProps());
+		final Properties connProps = config.getConnProps();
+		if(MapUtil.isNotEmpty(connProps)){
+			hikariConfig.setDataSourceProperties(connProps);
+		}
 
 		return new HikariDataSource(hikariConfig);
 	}

@@ -12,7 +12,9 @@
 
 package org.dromara.hutool.db.ds;
 
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.db.DbException;
+import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.log.LogUtil;
 
 import javax.naming.InitialContext;
@@ -27,6 +29,15 @@ import javax.sql.DataSource;
  * @since 6.0.0
  */
 public class DSUtil {
+
+	/**
+	 * 获取默认数据源工厂
+	 *
+	 * @return 默认数据源工厂
+	 */
+	public static DSFactory getDefaultDsFactory() {
+		return SpiUtil.loadFirstAvailable(DSFactory.class);
+	}
 
 	/**
 	 * 获得JNDI数据源
@@ -55,6 +66,21 @@ public class DSUtil {
 		} catch (final NamingException e) {
 			throw new DbException(e);
 		}
+	}
+
+	/**
+	 * 根据已有配置文件，创建数据源
+	 *
+	 * @param dbConfig 数据库配置
+	 * @return 数据源
+	 */
+	public static DSWrapper createDS(final DbConfig dbConfig){
+		DSFactory dsFactory = dbConfig.getDsFactory();
+		if(null == dsFactory){
+			dsFactory = getDefaultDsFactory();
+		}
+
+		return DSWrapper.wrap(dsFactory.createDataSource(dbConfig), dbConfig);
 	}
 
 	/**

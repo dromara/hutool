@@ -14,9 +14,9 @@ package org.dromara.hutool.db.ds.jndi;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbException;
+import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.db.ds.DSFactory;
 import org.dromara.hutool.db.ds.DSUtil;
-import org.dromara.hutool.db.config.DbConfig;
 
 import javax.sql.DataSource;
 
@@ -40,7 +40,7 @@ public class JndiDSFactory implements DSFactory {
 	}
 
 	@Override
-	public DataSource createDataSource(final DbConfig config) {
+	public DataSource createDataSource(final ConnectionConfig<?> config) {
 		final String jndiName = config.getPoolProps().getProperty("jndi");
 		if (StrUtil.isEmpty(jndiName)) {
 			throw new DbException("No setting name [jndi] for this group.");

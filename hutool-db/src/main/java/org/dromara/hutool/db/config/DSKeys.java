@@ -40,10 +40,6 @@ public interface DSKeys {
 	 * 配置文件中配置属性名：是否忽略大小写
 	 */
 	String KEY_CASE_INSENSITIVE = "caseInsensitive";
-	/**
-	 * 配置文件中配置属性名：INSERT是否返回主键
-	 */
-	String KEY_RETURN_GENERATED_KEY = "returnGeneratedKey";
 
 	/**
 	 * 某些数据库需要的特殊配置项需要的配置项

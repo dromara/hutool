@@ -80,7 +80,7 @@ public class DSPool implements Closeable {
 	 */
 	public DSPool(final ConfigParser configParser, final DSFactory factory) {
 		this.configParser = null != configParser ? configParser : SettingConfigParser.of();
-		this.factory = null != factory ? factory : SpiUtil.loadFirstAvailable(DSFactory.class);
+		this.factory = null != factory ? factory : DSUtil.getDefaultDsFactory();
 		this.pool = new SafeConcurrentHashMap<>();
 	}
 

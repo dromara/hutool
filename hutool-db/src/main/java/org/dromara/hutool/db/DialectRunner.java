@@ -23,10 +23,7 @@ import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.handler.NumberHandler;
 import org.dromara.hutool.db.handler.PageResultHandler;
 import org.dromara.hutool.db.handler.RsHandler;
-import org.dromara.hutool.db.sql.Query;
-import org.dromara.hutool.db.sql.QuoteWrapper;
-import org.dromara.hutool.db.sql.SqlBuilder;
-import org.dromara.hutool.db.sql.SqlUtil;
+import org.dromara.hutool.db.sql.*;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -79,7 +76,7 @@ public class DialectRunner implements Serializable {
 		try {
 			if (1 == records.length) {
 				//单条单独处理
-				ps = dialect.psForInsert(conn, records[0]);
+				ps = dialect.psForInsert(false, conn, records[0]);
 				return new int[]{ps.executeUpdate()};
 			}
 
@@ -163,7 +160,7 @@ public class DialectRunner implements Serializable {
 
 		PreparedStatement ps = null;
 		try {
-			ps = dialect.psForInsert(conn, record);
+			ps = dialect.psForInsert(true, conn, record);
 			ps.executeUpdate();
 			if (null == generatedKeysHandler) {
 				return null;

@@ -17,7 +17,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
-import org.dromara.hutool.db.StatementUtil;
+import org.dromara.hutool.db.sql.StatementUtil;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
 import org.dromara.hutool.db.sql.SqlBuilder;

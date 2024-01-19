@@ -12,12 +12,11 @@
 
 package org.dromara.hutool.db.config;
 
-import org.dromara.hutool.db.Db;
+import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.driver.DriverUtil;
+import org.dromara.hutool.db.ds.DSFactory;
 import org.dromara.hutool.db.sql.filter.SqlFilter;
 import org.dromara.hutool.db.sql.filter.SqlFilterChain;
-
-import java.util.Properties;
 
 /**
  * 数据库配置，包括：
@@ -30,9 +29,10 @@ import java.util.Properties;
  *
  * @author Looly
  */
-public class DbConfig {
+public class DbConfig extends ConnectionConfig<DbConfig> {
 
 	// region ----- of
+
 	/**
 	 * 创建DsConfig
 	 *
@@ -55,25 +55,11 @@ public class DbConfig {
 	}
 	// endregion
 
-	private String driver;        //数据库驱动
-	private String url;            //jdbc url
-	private String user;            //用户名
-	private String pass;            //密码
-
-	// 连接配置
-	private Properties connProps;
-	// 连接池配置
-	private Properties poolProps;
-
 	// 其它配置
 	/**
 	 * 是否大小写不敏感（默认大小写不敏感）
 	 */
 	private boolean caseInsensitive = true;
-	/**
-	 * 是否INSERT语句中默认返回主键（默认返回主键）
-	 */
-	private boolean returnGeneratedKey = true;
 
 	/**
 	 * SQL过滤器，用于在生成SQL前对SQL做操作，如记录日志等
@@ -81,161 +67,19 @@ public class DbConfig {
 	private SqlFilterChain sqlFilters;
 
 	/**
+	 * 自定义{@link DSFactory}，用于自定义连接池
+	 */
+	private DSFactory dsFactory;
+
+	/**
+	 * 自定义数据库方言
+	 */
+	private Dialect dialect;
+
+	/**
 	 * 构造
 	 */
 	public DbConfig() {
-	}
-
-	/**
-	 * 获取JDBC驱动
-	 *
-	 * @return JDBC驱动
-	 */
-	public String getDriver() {
-		return driver;
-	}
-
-	/**
-	 * 设置JDBC驱动
-	 *
-	 * @param driver JDBC驱动
-	 * @return this
-	 */
-	public DbConfig setDriver(final String driver) {
-		this.driver = driver;
-		return this;
-	}
-
-	/**
-	 * 获取JDBC URL
-	 *
-	 * @return JDBC URL
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * 设置JDBC URL
-	 *
-	 * @param url JDBC URL
-	 * @return this
-	 */
-	public DbConfig setUrl(final String url) {
-		this.url = url;
-		return this;
-	}
-
-	/**
-	 * 获取用户名
-	 *
-	 * @return 用户名
-	 */
-	public String getUser() {
-		return user;
-	}
-
-	/**
-	 * 设置用户名
-	 *
-	 * @param user 用户名
-	 * @return this
-	 */
-	public DbConfig setUser(final String user) {
-		this.user = user;
-		return this;
-	}
-
-	/**
-	 * 获取密码
-	 *
-	 * @return 密码
-	 */
-	public String getPass() {
-		return pass;
-	}
-
-	/**
-	 * 设置密码
-	 *
-	 * @param pass 密码
-	 * @return this
-	 */
-	public DbConfig setPass(final String pass) {
-		this.pass = pass;
-		return this;
-	}
-
-	/**
-	 * 获取连接属性
-	 *
-	 * @return 连接属性
-	 */
-	public Properties getConnProps() {
-		return connProps;
-	}
-
-	/**
-	 * 设置连接属性
-	 *
-	 * @param connProps 连接属性
-	 * @return this
-	 */
-	public DbConfig setConnProps(final Properties connProps) {
-		this.connProps = connProps;
-
-		return this;
-	}
-
-	/**
-	 * 增加连接属性
-	 *
-	 * @param key   属性名
-	 * @param value 属性值
-	 * @return this
-	 */
-	public DbConfig addConnProps(final String key, final String value) {
-		if (null == this.connProps) {
-			this.connProps = new Properties();
-		}
-		this.connProps.setProperty(key, value);
-		return this;
-	}
-
-	/**
-	 * 获取连接池属性
-	 *
-	 * @return 连接池属性
-	 */
-	public Properties getPoolProps() {
-		return poolProps;
-	}
-
-	/**
-	 * 设置连接池属性
-	 *
-	 * @param poolProps 连接池属性
-	 * @return this
-	 */
-	public DbConfig setPoolProps(final Properties poolProps) {
-		this.poolProps = poolProps;
-
-		return this;
-	}
-
-	/**
-	 * 增加连接池属性
-	 *
-	 * @param key   属性名
-	 * @param value 属性值
-	 * @return this
-	 */
-	public DbConfig addPoolProps(final String key, final String value) {
-		if (null == this.poolProps) {
-			this.poolProps = new Properties();
-		}
-		this.poolProps.setProperty(key, value);
-		return this;
 	}
 
 	/**
@@ -260,33 +104,11 @@ public class DbConfig {
 	}
 
 	/**
-	 * INSERT语句中是否返回主键
-	 *
-	 * @return 是否返回主键
-	 */
-	public boolean isReturnGeneratedKey() {
-		return this.returnGeneratedKey;
-	}
-
-	/**
-	 * 设置是否INSERT语句中默认返回主键（默认返回主键）<br>
-	 * 如果false，则在Insert操作后，返回影响行数
-	 * 主要用于某些数据库不支持返回主键的情况
-	 *
-	 * @param isReturnGeneratedKey 是否INSERT语句中默认返回主键
-	 * @return this
-	 */
-	public DbConfig setReturnGeneratedKey(final boolean isReturnGeneratedKey) {
-		returnGeneratedKey = isReturnGeneratedKey;
-		return this;
-	}
-
-	/**
 	 * 获取SQL过滤器
 	 *
 	 * @return SQL过滤器
 	 */
-	public SqlFilterChain getSqlFilters(){
+	public SqlFilterChain getSqlFilters() {
 		return this.sqlFilters;
 	}
 
@@ -296,11 +118,51 @@ public class DbConfig {
 	 * @param filter SQL过滤器
 	 * @return this
 	 */
-	public DbConfig addSqlFilter(final SqlFilter filter){
-		if(null == this.sqlFilters){
+	public DbConfig addSqlFilter(final SqlFilter filter) {
+		if (null == this.sqlFilters) {
 			this.sqlFilters = new SqlFilterChain();
 		}
 		this.sqlFilters.addChain(filter);
+		return this;
+	}
+
+	/**
+	 * 获取自定义数据源工厂
+	 *
+	 * @return 数据源工厂
+	 */
+	public DSFactory getDsFactory() {
+		return dsFactory;
+	}
+
+	/**
+	 * 设置数据源工厂
+	 *
+	 * @param dsFactory 数据源工厂
+	 * @return this
+	 */
+	public DbConfig setDsFactory(final DSFactory dsFactory) {
+		this.dsFactory = dsFactory;
+		return this;
+	}
+
+	/**
+	 * 获取自定义方言
+	 *
+	 * @return 自定义方言
+	 */
+	public Dialect getDialect() {
+		return dialect;
+	}
+
+	/**
+	 * 设置自定义方言
+	 *
+	 * @param dialect 自定义方言
+	 * @return this
+	 */
+	public DbConfig setDialect(final Dialect dialect) {
+		this.dialect = dialect;
 		return this;
 	}
 }

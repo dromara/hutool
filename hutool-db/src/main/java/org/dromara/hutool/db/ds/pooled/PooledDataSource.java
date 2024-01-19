@@ -18,7 +18,7 @@ import org.dromara.hutool.core.pool.ObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionPoolConfig;
 import org.dromara.hutool.db.DbException;
-import org.dromara.hutool.db.config.DbConfig;
+import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.db.ds.simple.AbstractDataSource;
 import org.dromara.hutool.setting.props.Props;
 
@@ -45,7 +45,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 *
 	 * @param config 数据库池配置
 	 */
-	public PooledDataSource(final DbConfig config) {
+	public PooledDataSource(final ConnectionConfig<?> config) {
 
 		final Props poolProps = Props.of(config.getPoolProps());
 		this.maxWait = poolProps.getInt(KEY_MAX_WAIT, 6000);
@@ -89,7 +89,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 * @param config 数据库配置
 	 * @return {@link ObjectFactory}
 	 */
-	private ObjectFactory<Connection> createConnFactory(final DbConfig config) {
+	private ObjectFactory<Connection> createConnFactory(final ConnectionConfig<?> config) {
 		return new ObjectFactory<Connection>() {
 			@Override
 			public Connection create() {
