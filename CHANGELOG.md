@@ -2,9 +2,11 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.26(2024-01-18)
+# 5.8.26(2024-01-19)
 
 ### 🐣新特性
+* 【db    】      RedisDS增加user支持（issue#I8XEQ4@Gitee）
+
 ### 🐞Bug修复
 * 【crypto】      修复BouncyCastleProvider导致graalvm应用报错UnsupportedFeatureError（pr#3464@Github）
 * 【http  】      修复UserAgentUtil对QQ浏览器识别问题（issue#I8X5XQ@Gitee）
