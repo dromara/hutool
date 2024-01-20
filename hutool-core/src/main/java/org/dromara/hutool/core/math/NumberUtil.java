@@ -1587,4 +1587,55 @@ public class NumberUtil extends NumberValidator {
 			tens[(num % 100) / 10] +
 			ones[num % 10];
 	}
+
+	/**
+	 * 罗马数字转整数<br>
+	 * @param roman 罗马字符
+	 * @return 整数
+	 * @throws IllegalArgumentException 如果传入非罗马字符串，抛出异常
+	 * @since 6.0.0
+	 * @author dazer
+	 */
+	public static int romanToInt(String roman) {
+		int result = 0;
+		int prevValue = 0;
+		int currValue = 0;
+
+		for (int i = roman.length() - 1; i >= 0; i--) {
+			char c = roman.charAt(i);
+			switch (c) {
+				case 'I':
+					currValue = 1;
+					break;
+				case 'V':
+					currValue = 5;
+					break;
+				case 'X':
+					currValue = 10;
+					break;
+				case 'L':
+					currValue = 50;
+					break;
+				case 'C':
+					currValue = 100;
+					break;
+				case 'D':
+					currValue = 500;
+					break;
+				case 'M':
+					currValue = 1000;
+					break;
+				default:
+					throw new IllegalArgumentException("Invalid Roman character: " + c);
+			}
+			if (currValue< prevValue) {
+				result -= currValue;
+			} else {
+				result += currValue;
+			}
+
+			prevValue = currValue;
+		}
+		return result;
+	}
 }
