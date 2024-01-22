@@ -13,6 +13,7 @@
 package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.multi.ListValueMap;
@@ -23,19 +24,21 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpGlobalConfig;
-import org.dromara.hutool.http.client.body.FormBody;
-import org.dromara.hutool.http.client.body.HttpBody;
-import org.dromara.hutool.http.client.body.StringBody;
-import org.dromara.hutool.http.client.body.UrlEncodedFormBody;
+import org.dromara.hutool.http.client.body.*;
 import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.engine.ClientEngineFactory;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 请求消息体，包括请求的URI、请求头、请求体等
@@ -267,6 +270,20 @@ public class Request implements HeaderOperation<Request> {
 	 * @return this
 	 */
 	public Request form(final Map<String, Object> formMap) {
+		final AtomicBoolean isMultiPart = new AtomicBoolean(false);
+		formMap.forEach((key, value)->{
+			if(value instanceof File ||
+				value instanceof Path ||
+				value instanceof Resource ||
+				value instanceof InputStream ||
+				value instanceof Reader){
+				isMultiPart.set(true);
+			}
+		});
+
+		if(isMultiPart.get()){
+			return body(MultipartBody.of(formMap, charset()));
+		}
 		return body(new UrlEncodedFormBody(formMap, charset()));
 	}
 
