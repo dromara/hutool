@@ -281,7 +281,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 */
 	public final Set<AnnotatedElement> getElementMappings() {
 		initElementMappingsIfNecessary();
-		return SetUtil.view(this.elementMappings);
+		return this.elementMappings;
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 			synchronized (this) {
 				if (Objects.isNull(elementMappings)) {
 					final Set<AnnotatedElement> mappings = initElementMappings();
-					elementMappings = Collections.unmodifiableSet(mappings);
+					elementMappings = SetUtil.view(mappings);
 				}
 			}
 		}
