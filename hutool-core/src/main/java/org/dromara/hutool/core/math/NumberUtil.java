@@ -1573,14 +1573,14 @@ public class NumberUtil extends NumberValidator {
 	 * @since 6.0.0
 	 * @author dazer
 	 */
-	public static String intToRoman(int num) {
+	public static String intToRoman(final int num) {
 		if (num > 3999 || num < 1 ){
-			return "";
+			return StrUtil.EMPTY;
 		}
-		String[] thousands = {"", "M", "MM", "MMM"};
-		String[] hundreds = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
-		String[] tens = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
-		String[] ones = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+		final String[] thousands = {"", "M", "MM", "MMM"};
+		final String[] hundreds = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+		final String[] tens = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+		final String[] ones = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
 
 		return thousands[num / 1000] +
 			hundreds[(num % 1000) / 100] +
@@ -1596,13 +1596,13 @@ public class NumberUtil extends NumberValidator {
 	 * @since 6.0.0
 	 * @author dazer
 	 */
-	public static int romanToInt(String roman) {
+	public static int romanToInt(final String roman) {
 		int result = 0;
 		int prevValue = 0;
-		int currValue = 0;
+		int currValue;
 
 		for (int i = roman.length() - 1; i >= 0; i--) {
-			char c = roman.charAt(i);
+			final char c = roman.charAt(i);
 			switch (c) {
 				case 'I':
 					currValue = 1;
