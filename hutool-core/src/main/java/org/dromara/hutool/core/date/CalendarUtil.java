@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.comparator.CompareUtil;
-import org.dromara.hutool.core.convert.NumberChineseFormatter;
+import org.dromara.hutool.core.math.NumberChineseFormatter;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.date.format.parser.DateParser;
 import org.dromara.hutool.core.date.format.parser.FastDateParser;

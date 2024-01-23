@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.date.chinese;
 
-import org.dromara.hutool.core.convert.NumberChineseFormatter;
+import org.dromara.hutool.core.math.NumberChineseFormatter;
 import org.dromara.hutool.core.date.CalendarUtil;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;

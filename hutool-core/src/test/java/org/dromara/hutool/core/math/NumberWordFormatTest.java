@@ -10,8 +10,9 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.convert;
+package org.dromara.hutool.core.math;
 
+import org.dromara.hutool.core.math.NumberWordFormatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

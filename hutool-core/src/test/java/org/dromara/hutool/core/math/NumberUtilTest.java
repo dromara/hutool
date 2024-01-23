@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.math;
 
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -378,6 +377,18 @@ public class NumberUtilTest {
 
 		// issue#3241
 		Assertions.assertEquals(new BigDecimal("9.0E+7"), NumberUtil.toBigDecimal("9.0E+7"));
+	}
+
+	@Test
+	void emptyToBigDecimalTest(){
+		Assertions.assertThrows(IllegalArgumentException.class,()->{
+			NumberUtil.toBigDecimal("");
+		});
+	}
+
+	@Test
+	void naNToBigDecimalTest(){
+		Assertions.assertEquals(BigDecimal.ZERO, NumberUtil.toBigDecimal("NaN"));
 	}
 
 	@Test

@@ -19,6 +19,8 @@ import org.dromara.hutool.core.convert.impl.CollectionConverter;
 import org.dromara.hutool.core.convert.impl.EnumConverter;
 import org.dromara.hutool.core.convert.impl.MapConverter;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.math.NumberChineseFormatter;
+import org.dromara.hutool.core.math.NumberWordFormatter;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.UnicodeUtil;

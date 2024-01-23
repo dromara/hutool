@@ -903,16 +903,16 @@ public class NumberUtil extends NumberValidator {
 
 	/**
 	 * 数字转{@link BigDecimal}<br>
-	 * null或""或"NaN"或空白符转换为0
+	 * null或""或空白符抛出{@link IllegalArgumentException}异常<br>
+	 * "NaN"转为{@link BigDecimal#ZERO}
 	 *
 	 * @param numberStr 数字字符串
 	 * @return {@link BigDecimal}
-	 * @since 4.0.9
+	 * @throws IllegalArgumentException null或""或"NaN"或空白符抛出此异常
 	 */
-	public static BigDecimal toBigDecimal(final String numberStr) {
-		if (StrUtil.isBlank(numberStr)) {
-			return BigDecimal.ZERO;
-		}
+	public static BigDecimal toBigDecimal(final String numberStr) throws IllegalArgumentException{
+		// 统一规则，不再转换带有歧义的null、""和空格
+		Assert.notBlank(numberStr, "Number str must be not blank!");
 
 		// issue#3241，优先调用构造解析
 		try{
@@ -934,9 +934,8 @@ public class NumberUtil extends NumberValidator {
 	 * @since 5.4.5
 	 */
 	public static BigInteger toBigInteger(final Number number) {
-		if (null == number) {
-			return BigInteger.ZERO;
-		}
+		// 统一规则，不再转换带有歧义的null
+		Assert.notNull(number, "Number must be not null!");
 
 		if (number instanceof BigInteger) {
 			return (BigInteger) number;
@@ -951,12 +950,21 @@ public class NumberUtil extends NumberValidator {
 	 * 数字转{@link BigInteger}<br>
 	 * null或""或空白符转换为0
 	 *
-	 * @param number 数字字符串
+	 * @param numberStr 数字字符串
 	 * @return {@link BigInteger}
 	 * @since 5.4.5
 	 */
-	public static BigInteger toBigInteger(final String number) {
-		return StrUtil.isBlank(number) ? BigInteger.ZERO : new BigInteger(number);
+	public static BigInteger toBigInteger(final String numberStr) {
+		// 统一规则，不再转换带有歧义的null、""和空格
+		Assert.notBlank(numberStr, "Number str must be not blank!");
+
+		try{
+			return new BigInteger(numberStr);
+		} catch (final Exception ignore){
+			// 忽略解析错误
+		}
+
+		return parseBigInteger(numberStr);
 	}
 
 	/**
@@ -1057,7 +1065,7 @@ public class NumberUtil extends NumberValidator {
 	 * @return 0或非0值
 	 */
 	public static BigInteger nullToZero(final BigInteger number) {
-		return number == null ? BigInteger.ZERO : number;
+		return ObjUtil.defaultIfNull(number, BigInteger.ZERO);
 	}
 
 	/**
@@ -1574,18 +1582,7 @@ public class NumberUtil extends NumberValidator {
 	 * @author dazer
 	 */
 	public static String intToRoman(final int num) {
-		if (num > 3999 || num < 1 ){
-			return StrUtil.EMPTY;
-		}
-		final String[] thousands = {"", "M", "MM", "MMM"};
-		final String[] hundreds = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
-		final String[] tens = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
-		final String[] ones = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
-
-		return thousands[num / 1000] +
-			hundreds[(num % 1000) / 100] +
-			tens[(num % 100) / 10] +
-			ones[num % 10];
+		return NumberRomanFormatter.intToRoman(num);
 	}
 
 	/**
@@ -1597,45 +1594,6 @@ public class NumberUtil extends NumberValidator {
 	 * @author dazer
 	 */
 	public static int romanToInt(final String roman) {
-		int result = 0;
-		int prevValue = 0;
-		int currValue;
-
-		for (int i = roman.length() - 1; i >= 0; i--) {
-			final char c = roman.charAt(i);
-			switch (c) {
-				case 'I':
-					currValue = 1;
-					break;
-				case 'V':
-					currValue = 5;
-					break;
-				case 'X':
-					currValue = 10;
-					break;
-				case 'L':
-					currValue = 50;
-					break;
-				case 'C':
-					currValue = 100;
-					break;
-				case 'D':
-					currValue = 500;
-					break;
-				case 'M':
-					currValue = 1000;
-					break;
-				default:
-					throw new IllegalArgumentException("Invalid Roman character: " + c);
-			}
-			if (currValue< prevValue) {
-				result -= currValue;
-			} else {
-				result += currValue;
-			}
-
-			prevValue = currValue;
-		}
-		return result;
+		return NumberRomanFormatter.romanToInt(roman);
 	}
 }

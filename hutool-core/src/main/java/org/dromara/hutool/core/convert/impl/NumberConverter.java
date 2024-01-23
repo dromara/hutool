@@ -66,7 +66,11 @@ public class NumberConverter extends AbstractConverter {
 	@Override
 	protected String convertToStr(final Object value) {
 		final String result = StrUtil.trim(super.convertToStr(value));
-		if (null != result && result.length() > 1) {
+		if(StrUtil.isEmpty(result)){
+			throw new ConvertException("Can not convert empty value to Number!");
+		}
+
+		if (result.length() > 1) {
 			// 非单个字符才判断末尾的标识符
 			final char c = Character.toUpperCase(result.charAt(result.length() - 1));
 			if (c == 'D' || c == 'L' || c == 'F') {
@@ -75,9 +79,6 @@ public class NumberConverter extends AbstractConverter {
 			}
 		}
 
-		if(StrUtil.isEmpty(result)){
-			throw new ConvertException("Can not convert empty value to Number!");
-		}
 		return result;
 	}
 
