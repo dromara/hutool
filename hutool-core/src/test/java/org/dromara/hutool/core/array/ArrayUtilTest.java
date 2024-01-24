@@ -830,6 +830,20 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	void copyTest() {
+		final String[] dest = new String[3];
+		ArrayUtil.copy(new String[]{"a", "b"}, dest);
+		Assertions.assertArrayEquals(new String[]{"a", "b", null}, dest);
+	}
+
+	@Test
+	void copyTest2() {
+		final String[] dest = new String[3];
+		ArrayUtil.copy(new String[]{"a", "b"}, dest, 1);
+		Assertions.assertArrayEquals(new String[]{"a", null, null}, dest);
+	}
+
+	@Test
 	public void regionMatchesTest() {
 		final byte[] a = new byte[]{1, 2, 3, 4, 5};
 		final byte[] b = new byte[]{2, 3, 4};
