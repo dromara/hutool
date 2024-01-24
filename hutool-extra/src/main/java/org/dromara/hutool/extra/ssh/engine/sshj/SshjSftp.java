@@ -89,6 +89,7 @@ public class SshjSftp extends AbstractFtp {
 
 	private SSHClient ssh;
 	private SFTPClient sftp;
+	private Session session;
 
 	/**
 	 * 构造
@@ -120,7 +121,9 @@ public class SshjSftp extends AbstractFtp {
 	 * @since 5.7.18
 	 */
 	public void init() {
-		this.ssh = SshjUtil.openClient(this.ftpConfig.getConnector());
+		if(null == this.ssh){
+			this.ssh = SshjUtil.openClient(this.ftpConfig.getConnector());
+		}
 
 		try {
 			ssh.setRemoteCharset(ftpConfig.getCharset());
@@ -248,12 +251,9 @@ public class SshjSftp extends AbstractFtp {
 
 	@Override
 	public void close() {
-		try {
-			sftp.close();
-			ssh.disconnect();
-		} catch (final IOException e) {
-			throw new FtpException(e);
-		}
+		IoUtil.closeQuietly(this.session);
+		IoUtil.closeQuietly(this.sftp);
+		IoUtil.closeQuietly(this.ssh);
 	}
 
 	/**
@@ -283,16 +283,36 @@ public class SshjSftp extends AbstractFtp {
 	 * @since 5.7.19
 	 */
 	public String command(final String exec) {
-		Session session = null;
+		final Session session = this.initSession();
+
+		Session.Command command = null;
 		try {
-			session = ssh.startSession();
-			final Session.Command command = session.exec(exec);
+			command = session.exec(exec);
 			final InputStream inputStream = command.getInputStream();
-			return IoUtil.read(inputStream, DEFAULT_CHARSET);
+			return IoUtil.read(inputStream, this.ftpConfig.getCharset());
 		} catch (final Exception e) {
 			throw new FtpException(e);
 		} finally {
-			IoUtil.closeQuietly(session);
+			IoUtil.closeQuietly(command);
 		}
+	}
+
+	/**
+	 * 初始化Session并返回
+	 *
+	 * @return session
+	 */
+	private Session initSession() {
+		Session session = this.session;
+		if (null == session || !session.isOpen()) {
+			IoUtil.closeQuietly(session);
+			try {
+				session = this.ssh.startSession();
+			} catch (final Exception e) {
+				throw new FtpException(e);
+			}
+			this.session = session;
+		}
+		return session;
 	}
 }
