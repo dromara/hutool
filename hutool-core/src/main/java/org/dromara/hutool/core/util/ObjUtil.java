@@ -221,7 +221,7 @@ public class ObjUtil {
 	 *     <li>{@code null}：默认返回{@code true}；</li>
 	 *     <li>数组：等同于{@link ArrayUtil#isEmpty(Object)}；</li>
 	 *     <li>{@link CharSequence}：等同于{@link CharSequenceUtil#isEmpty(CharSequence)}；</li>
-	 *     <li>{@link Collection}：等同于{@link CollUtil#isEmpty(Collection)}；</li>
+		 *     <li>{@link Collection}：等同于{@link CollUtil#isEmpty(Collection)}；</li>
 	 *     <li>{@link Map}：等同于{@link MapUtil#isEmpty(Map)}；</li>
 	 *     <li>
 	 *         {@link Iterator}或{@link Iterable}：等同于{@link IterUtil#isEmpty(Iterator)}、

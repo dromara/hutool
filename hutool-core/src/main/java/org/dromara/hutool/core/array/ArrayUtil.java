@@ -305,9 +305,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>  元素类型
 	 * @param args 被检查对象
 	 * @return 是否存在 {@code null} 或空对象
-	 * @since 6.0.0
-	 * @author dazer
 	 * @throws IllegalArgumentException 如果提供的args的item存在数组或集合，抛出异常
+	 * @author dazer
+	 * @since 6.0.0
 	 */
 	@SafeVarargs
 	public static <T> boolean hasEmptyVarargs(final T... args) {
@@ -340,9 +340,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>  元素类型
 	 * @param args 被检查的对象,一个或者多个
 	 * @return 是否都为空
-	 * @since 6.0.0
-	 * @author dazer
 	 * @throws IllegalArgumentException 如果提供的args的item存在数组或集合，抛出异常
+	 * @author dazer
+	 * @since 6.0.0
 	 */
 	@SafeVarargs
 	public static <T> boolean isAllEmptyVarargs(final T... args) {
@@ -703,6 +703,25 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return ofArray(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrPadding(index, value).getRaw();
+	}
+
+	/**
+	 * 将元素值设置为数组的某个位置，当index小于数组的长度时，替换指定位置的值，否则追加paddingValue直到到达index后，设置值
+	 *
+	 * @param <A>          数组类型
+	 * @param <E>          元素类型
+	 * @param array        已有数组
+	 * @param index        位置，大于等于长度则追加，否则替换
+	 * @param value        新值
+	 * @param paddingValue 填充值
+	 * @return 新数组或原有数组
+	 * @since 6.0.0
+	 */
+	public static <A, E> A setOrPadding(final A array, final int index, final E value, final E paddingValue) {
+		if (index == 0 && isEmpty(array)) {
+			return ofArray(value, null == array ? null : array.getClass().getComponentType());
+		}
+		return ArrayWrapper.of(array).setOrPadding(index, value, paddingValue).getRaw();
 	}
 
 	/**

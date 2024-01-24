@@ -15,7 +15,6 @@ package org.dromara.hutool.core.array;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +54,10 @@ public class ArrayUtilTest {
 		final Object[] e = new Object[]{"1", "2", 3, 4D};
 		final boolean empty = ArrayUtil.isEmpty(e);
 		Assertions.assertFalse(empty);
+
+		// 当这个对象并非数组对象且非`null`时，返回`false`，即当用户传入非数组对象，理解为单个元素的数组。
+		final Object nonArrayObj = "a";
+		Assertions.assertFalse(ArrayUtil.isEmpty(nonArrayObj));
 	}
 
 	@Test
@@ -232,6 +235,14 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void appendTest2() {
+		final String[] a = {"1", "2", "3", "4"};
+
+		final String[] result = ArrayUtil.append(a, "a", "b", "c");
+		Assertions.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
+	}
+
+	@Test
 	public void insertTest() {
 		final String[] a = {"1", "2", "3", "4"};
 		final String[] b = {"a", "b", "c"};
@@ -342,6 +353,13 @@ public class ArrayUtilTest {
 		Assertions.assertTrue(ArrayUtil.isAllNotNull(allNotNull));
 		final String[] hasNull = {"aa", "bb", "cc", null, "bb", "dd"};
 		Assertions.assertFalse(ArrayUtil.isAllNotNull(hasNull));
+	}
+
+	@Test
+	void firstNonNullTest() {
+		final String[] a = {null, null, "cc", null, "bb", "dd"};
+		final String s = ArrayUtil.firstNonNull(a);
+		Assertions.assertEquals("cc", s);
 	}
 
 	@Test
@@ -465,6 +483,23 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void wrapIntTest() {
+		final int[] a = new int[]{1, 2, 3, 4};
+		final Integer[] wrapA = ArrayUtil.wrap(a);
+		for (final Integer o : wrapA) {
+			Assertions.assertInstanceOf(Integer.class, o);
+		}
+	}
+
+	@Test
+	public void unWrapIntTest() {
+		final Integer[] a = new Integer[]{1, 2, 3, 4};
+		final int[] wrapA = ArrayUtil.unWrap(a);
+		final Class<?> componentType = wrapA.getClass().getComponentType();
+		Assertions.assertEquals(int.class, componentType);
+	}
+
+	@Test
 	public void splitTest() {
 		final byte[] array = new byte[1024];
 		final byte[][] arrayAfterSplit = ArrayUtil.split(array, 500);
@@ -568,12 +603,26 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	void setOrPaddingTest2(){
+		final String[] arr = new String[0];
+		final String[] newArr = ArrayUtil.setOrPadding(arr, 2, "Good");
+		Console.log(newArr);
+		Assertions.assertArrayEquals(new String[]{null, null, "Good"}, newArr);
+	}
+
+	@Test
 	public void getAnyTest() {
 		final String[] a = {"a", "b", "c", "d", "e"};
 		final Object o = ArrayUtil.getAny(a, 3, 4);
 		final String[] resultO = (String[]) o;
 		final String[] c = {"d", "e"};
 		Assertions.assertTrue(ArrayUtil.containsAll(c, resultO[0], resultO[1]));
+	}
+
+	@Test
+	void hasNullTest() {
+		final String[] a = {"e", null};
+		Assertions.assertTrue(ArrayUtil.hasNull(a));
 	}
 
 	@Test
@@ -758,7 +807,7 @@ public class ArrayUtilTest {
 
 	@Test
 	public void equalsTest() {
-		final boolean b = ObjUtil.equals(new int[]{1, 2, 3}, new int[]{1, 2, 3});
+		final boolean b = ArrayUtil.equals(new int[]{1, 2, 3}, new int[]{1, 2, 3});
 		Assertions.assertTrue(b);
 	}
 
@@ -793,7 +842,38 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	void hasEmptyTest() {
+		final String[] a = {"", "a"};
+		Assertions.assertTrue(ArrayUtil.hasEmpty(a));
+
+		Object[] b = {"a", new ArrayList<>()};
+		Assertions.assertTrue(ArrayUtil.hasEmpty(b));
+
+		b = new Object[]{"a", new HashMap<>()};
+		Assertions.assertTrue(ArrayUtil.hasEmpty(b));
+	}
+
+	@Test
 	public void isAllEmptyTest() {
         Assertions.assertFalse(ArrayUtil.isAllEmptyVarargs("apple", "pear", "", "orange"));
+	}
+
+	@Test
+	void emptyCountTest() {
+		final Object[] b = {"a", new ArrayList<>(), new HashMap<>(), new int[0]};
+		final int emptyCount = ArrayUtil.emptyCount(b);
+		Assertions.assertEquals(3, emptyCount);
+	}
+
+	@Test
+	void hasBlankTest() {
+		final String[] a = {"  ", "aa"};
+		Assertions.assertTrue(ArrayUtil.hasBlank(a));
+	}
+
+	@Test
+	void isAllBlankTest() {
+		final String[] a = {"  ", " ", ""};
+		Assertions.assertTrue(ArrayUtil.isAllBlank(a));
 	}
 }
