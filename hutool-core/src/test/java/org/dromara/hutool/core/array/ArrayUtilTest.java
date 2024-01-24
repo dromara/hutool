@@ -90,6 +90,9 @@ public class ArrayUtilTest {
 		final int[] a = {1, 2, 3};
 		final int[] clone = ArrayUtil.clone(a);
 		Assertions.assertArrayEquals(a, clone);
+
+		final int[] clone1 = a.clone();
+		Assertions.assertArrayEquals(a, clone1);
 	}
 
 	@Test
@@ -606,8 +609,14 @@ public class ArrayUtilTest {
 	void setOrPaddingTest2(){
 		final String[] arr = new String[0];
 		final String[] newArr = ArrayUtil.setOrPadding(arr, 2, "Good");
-		Console.log(newArr);
 		Assertions.assertArrayEquals(new String[]{null, null, "Good"}, newArr);
+	}
+
+	@Test
+	void setOrPaddingTest3(){
+		final String[] arr = new String[0];
+		final String[] newArr = ArrayUtil.setOrPadding(arr, 2, "Good", "pad");
+		Assertions.assertArrayEquals(new String[]{"pad", "pad", "Good"}, newArr);
 	}
 
 	@Test

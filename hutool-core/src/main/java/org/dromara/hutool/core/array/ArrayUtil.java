@@ -990,11 +990,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			final Class<?> componentType = obj.getClass().getComponentType();
 			// 原始类型
 			if (componentType.isPrimitive()) {
-				int length = Array.getLength(obj);
+				final int length = Array.getLength(obj);
 				result = Array.newInstance(componentType, length);
-				while (length-- > 0) {
-					Array.set(result, length, Array.get(obj, length));
-				}
+				copy(obj, result, length);
 			} else {
 				result = ((Object[]) obj).clone();
 			}
