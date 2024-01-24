@@ -49,6 +49,9 @@ public class QrCodeUtilTest {
 		final QrConfig config = QrConfig.of();
 		config.setMargin(0);
 		config.setForeColor(Color.CYAN);
+		// 关闭ECI模式，部分老设备不支持ECI编码； 如果二维码中包含中文，则需要必须开启此配置
+		// 现象：使用三方识别二维码工具、手机微信、支付宝扫描正常，使用扫码桩、扫码枪识别会多出来，类似：\000026、\000029字符
+		config.setEnableEci(false);
 		// 背景色透明
 		config.setBackColor(null);
 		config.setErrorCorrection(ErrorCorrectionLevel.H);

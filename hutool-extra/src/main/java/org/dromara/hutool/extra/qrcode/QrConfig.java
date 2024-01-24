@@ -66,6 +66,29 @@ public class QrConfig {
 	 */
 	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
 	/**
+     * 是否开启ECI编码<br>
+	 * 如果enableEci=false,则二维码中不包含ECI信息，即：{@link #charset}字符编码设置无效, 二维码为英文字符，保持false最佳<br>
+	 * 如果enableEci=true,则二维码中包含ECI信息，即：按照{@link #charset}编码进行设置, 二维码为包含中文，保持true最佳，否则会中文乱码<br>
+	 *
+	 * 参考1：<a href="https://github.com/nutzam/nutz-qrcode/issues/6">关于\000026的问题</a>
+     * 参考2：<a href="https://en.wikipedia.org/wiki/Extended_Channel_Interpretation">ECI（Extended_Channel_Interpretation）模式</a> <br><br>
+     * 参考3：<a href="https://www.51cto.com/article/414082.html">二维码的生成细节和原理</a> <br><br>
+     * <p>二维码编码有ECI模式和非ECI模式的情况之分，在ECI模式下第一个字节是用作编码标识，而非ECI模式下直接就是数据流。
+     * 		ECI模式其实是更好的方案，这样子解码的时候可以根据标识采用不同的编码方式。而非ECI模式只能按照一种统一的方式处理了。
+     * 		但是由于部分设备不支持ECI模式，所以就出现了无法识别的情况。
+	 * 		使用扫码桩/扫码枪，可能会出现\000026的字符。使用手机扫描、其他二维码解析软件扫描，则不会出现。
+	 * </p>
+	 *
+	 * <p>
+	 *     ECI编码表可以看出UTF-8就是对应"\000026"（对应数字22）<br><br>
+	 * </p>
+	 *
+	 * <p> 总结建议：如果二维码内容全是字符，没有中文，就不用使用UTF-8等格式进行编码，只有使用中文等特殊符号才需要编码 </p>
+     *
+     * @see EncodeHintType#PDF417_AUTO_ECI
+     */
+	protected Boolean enableEci = false;
+	/**
 	 * 编码
 	 */
 	protected Charset charset = CharsetUtil.UTF_8;
@@ -267,6 +290,26 @@ public class QrConfig {
 	}
 
 	/**
+	 * 获取是否开启了ECI编码
+	 *
+	 * @return 是否开启ECI编码，true: 开启，false: 未开启；默认：未开启
+	 */
+	public Boolean getEnableEci() {
+		return enableEci;
+	}
+
+	/**
+	 * 设置二维码是否开启ECI编码，部分老设备不兼容该模式，建议不开启
+	 *
+	 * @param enableEci 二维码是否开启ECI编码
+	 */
+	public void setEnableEci(Boolean enableEci) {
+		if (enableEci == null) {
+			this.enableEci = enableEci;
+		}
+	}
+
+	/**
 	 * 设置纠错级别
 	 *
 	 * @param errorCorrection 纠错级别
@@ -407,8 +450,12 @@ public class QrConfig {
 	public HashMap<EncodeHintType, Object> toHints() {
 		// 配置
 		final HashMap<EncodeHintType, Object> hints = new HashMap<>();
-		if (null != this.charset) {
-			hints.put(EncodeHintType.CHARACTER_SET, charset.toString().toLowerCase());
+		// 只有不禁用（即开启）ECI编码功能，才使用自定义的字符编码
+		// 二维码内容就是英文字符，建议不设置编码，没有任何问题；对于中文来说，会乱码
+		if (this.enableEci) {
+			if (null != this.charset) {
+				hints.put(EncodeHintType.CHARACTER_SET, charset.toString().toLowerCase());
+			}
 		}
 		if (null != this.errorCorrection) {
 			final Object value;
