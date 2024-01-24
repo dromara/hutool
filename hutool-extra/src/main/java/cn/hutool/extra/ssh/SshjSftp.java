@@ -35,6 +35,7 @@ public class SshjSftp extends AbstractFtp {
 
 	private SSHClient ssh;
 	private SFTPClient sftp;
+	private Session session;
 
 	/**
 	 * 构造，使用默认端口
@@ -42,7 +43,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param sshHost 主机
 	 */
 	public SshjSftp(String sshHost) {
-		this(new FtpConfig(sshHost, 22, null, null, CharsetUtil.CHARSET_UTF_8));
+		this(new FtpConfig(sshHost, 22, null, null, DEFAULT_CHARSET));
 	}
 
 	/**
@@ -211,12 +212,9 @@ public class SshjSftp extends AbstractFtp {
 
 	@Override
 	public void close() {
-		try {
-			sftp.close();
-			ssh.disconnect();
-		} catch (IOException e) {
-			throw new FtpException(e);
-		}
+		IoUtil.close(this.session);
+		IoUtil.close(this.sftp);
+		IoUtil.close(this.ssh);
 	}
 
 	/**
@@ -246,16 +244,36 @@ public class SshjSftp extends AbstractFtp {
 	 * @since 5.7.19
 	 */
 	public String command(String exec) {
-		Session session = null;
+		final Session session = this.initSession();
+
+		Session.Command command = null;
 		try {
-			session = ssh.startSession();
-			final Session.Command command = session.exec(exec);
+			command = session.exec(exec);
 			InputStream inputStream = command.getInputStream();
-			return IoUtil.read(inputStream, DEFAULT_CHARSET);
+			return IoUtil.read(inputStream, this.ftpConfig.getCharset());
 		} catch (Exception e) {
 			throw new FtpException(e);
 		} finally {
-			IoUtil.close(session);
+			IoUtil.close(command);
 		}
+	}
+
+	/**
+	 * 初始化Session并返回
+	 *
+	 * @return session
+	 */
+	private Session initSession() {
+		Session session = this.session;
+		if (null == session || !session.isOpen()) {
+			IoUtil.close(session);
+			try {
+				session = this.ssh.startSession();
+			} catch (final Exception e) {
+				throw new FtpException(e);
+			}
+			this.session = session;
+		}
+		return session;
 	}
 }

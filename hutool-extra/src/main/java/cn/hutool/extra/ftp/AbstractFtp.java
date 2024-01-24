@@ -19,6 +19,9 @@ import java.util.List;
  */
 public abstract class AbstractFtp implements Closeable {
 
+	/**
+	 * 默认编码
+	 */
 	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 
 	protected FtpConfig ftpConfig;
