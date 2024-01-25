@@ -12,9 +12,9 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.stream.EmptyInputStream;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpCookie;
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +108,7 @@ public class JdkHttpResponse implements Response, Closeable {
 	 */
 	@Override
 	public Map<String, List<String>> headers() {
-		return Collections.unmodifiableMap(headers);
+		return this.headers;
 	}
 
 	@Override

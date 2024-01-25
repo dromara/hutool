@@ -30,6 +30,8 @@ public class JdkEngineTest {
 		final Response res = engine.send(req);
 
 		Console.log(res.getStatus());
+		Console.log(res.headers().getClass());
+		Console.log(res.headers());
 		Console.log(res.bodyStr());
 	}
 }
