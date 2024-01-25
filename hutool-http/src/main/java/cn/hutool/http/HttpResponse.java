@@ -25,6 +25,7 @@ import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * Http响应类<br>
@@ -536,7 +537,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 		// 读取响应头信息
 		try {
-			this.headers = httpConnection.headers();
+			// httpConnection会将状态行信息以null为key 写入到headerFields里，但状态行不属于HTTP协议规定的响应头的内容，所以移除状态行内容
+			this.headers=httpConnection.headers().entrySet().stream().filter(item->null!=item.getKey()).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		} catch (IllegalArgumentException e) {
 			// ignore
 			// StaticLog.warn(e, e.getMessage());
