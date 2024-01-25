@@ -15,4 +15,10 @@ public class IssueI8YV0KTest {
 		final String str = "<content styleCode=\"xmChange\"/>";
 		Assertions.assertEquals("<content/>", HtmlUtil.removeHtmlAttr(str, "styleCode"));
 	}
+
+	@Test
+	public void removeHtmlAttrTest3(){
+		final String str = "<content styleCode=\"dada ada\" data=\"dsad\" >";
+		Assertions.assertEquals("<content data=\"dsad\">", HtmlUtil.removeHtmlAttr(str, "styleCode"));
+	}
 }

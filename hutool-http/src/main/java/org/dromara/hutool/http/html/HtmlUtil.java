@@ -189,14 +189,16 @@ public class HtmlUtil {
 			regex = StrUtil.format("(?i)(\\s*{}\\s*=\\s*)" +
 				"(" +
 				// name="xxxx"
-				"([\"][^\"]+?[\"]\\s*)|" +
-				// name=xxx >
-				"([^>]+?\\s+(?=>))|" +
-				// name=xxx> 或者 name=xxx name2=xxx
-				"([^>]+?(?=\\s|>))" +
+				"([\"][^\"]+?[\"])|" +
+				// name=xxx > 或者 name=xxx> 或者 name=xxx name2=xxx
+				"([^>]+?\\s*(?=\\s|>))" +
 				")", attr);
 			content = content.replaceAll(regex, StrUtil.EMPTY);
 		}
+
+		// issue#I8YV0K 去除尾部空格
+		content = ReUtil.replaceAll(content, "\\s+(>|/>)", "$1");
+
 		return content;
 	}
 
