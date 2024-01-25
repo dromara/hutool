@@ -149,7 +149,7 @@ public class HtmlUtil {
 	 */
 	public static String removeHtmlAttr(String content, String... attrs) {
 		String regex;
-		for (String attr : attrs) {
+		for (final String attr : attrs) {
 			// (?i)     表示忽略大小写
 			// \s*      属性名前后的空白符去除
 			// [^>]+?   属性值，至少有一个非>的字符，>表示标签结束
@@ -158,14 +158,16 @@ public class HtmlUtil {
 			regex = StrUtil.format("(?i)(\\s*{}\\s*=\\s*)" +
 				"(" +
 				// name="xxxx"
-				"([\"][^\"]+?[\"]\\s*)|" +
-				// name=xxx >
-				"([^>]+?\\s+(?=>))|" +
-				// name=xxx> 或者 name=xxx name2=xxx
-				"([^>]+?(?=\\s|>))" +
+				"([\"][^\"]+?[\"])|" +
+				// name=xxx > 或者 name=xxx> 或者 name=xxx name2=xxx
+				"([^>]+?\\s*(?=\\s|>))" +
 				")", attr);
 			content = content.replaceAll(regex, StrUtil.EMPTY);
 		}
+
+		// issue#I8YV0K 去除尾部空格
+		content = ReUtil.replaceAll(content, "\\s+(>|/>)", "$1");
+
 		return content;
 	}
 
