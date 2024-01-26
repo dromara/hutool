@@ -3,11 +3,13 @@ package cn.hutool.core.comparator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * 版本比较单元测试
  *
  * @author looly
- *
  */
 public class VersionComparatorTest {
 
@@ -71,7 +73,7 @@ public class VersionComparatorTest {
 	}
 
 	@Test
-	public void equalsTest(){
+	public void equalsTest() {
 		VersionComparator first = new VersionComparator();
 		VersionComparator other = new VersionComparator();
 		Assert.assertNotEquals(first, other);
