@@ -408,7 +408,7 @@ public class CollUtilTest {
 	public void groupTest() {
 		final List<String> list = ListUtil.of("1", "2", "3", "4", "5", "6");
 		final List<List<String>> group = CollUtil.group(list, null);
-		Assertions.assertTrue(group.size() > 0);
+		Assertions.assertFalse(group.isEmpty());
 
 		final List<List<String>> group2 = CollUtil.group(list, t -> {
 			// 按照奇数偶数分类
@@ -1266,4 +1266,20 @@ public class CollUtilTest {
 		Assertions.assertArrayEquals(new String[]{"a", "b", "c", null, "d", "e", "f", "g", "h", "i", "j", "k", "l"}, flat.toArray());
 	}
 
+	@Test
+	void issueI8Z2Q4Test() {
+		final ArrayList<String> coll1 = new ArrayList<>();
+		coll1.add("1");
+		coll1.add("2");
+		coll1.add("3");
+		coll1.add("4");
+		final ArrayList<String> coll2 = new ArrayList<>();
+		coll2.add("1");
+		coll2.add("1");
+		coll2.add("1");
+		coll2.add("1");
+		coll2.add("1");
+
+		Assertions.assertTrue(CollUtil.containsAll(coll1, coll2));
+	}
 }
