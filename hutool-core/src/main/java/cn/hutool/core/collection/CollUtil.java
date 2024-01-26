@@ -7,10 +7,7 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.*;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
@@ -496,13 +493,16 @@ public class CollUtil {
 	}
 
 	/**
-	 * 集合1中是否包含集合2中所有的元素，即集合2是否为集合1的子集
+	 * 集合1中是否包含集合2中所有的元素。<br>
+	 * 当集合1和集合2都为空时，返回{@code true}
+	 * 当集合2为空时，返回{@code true}
 	 *
 	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @return 集合1中是否包含集合2中所有的元素
 	 * @since 4.5.12
 	 */
+	@SuppressWarnings("SuspiciousMethodCalls")
 	public static boolean containsAll(Collection<?> coll1, Collection<?> coll2) {
 		if (isEmpty(coll1)) {
 			return isEmpty(coll2);
@@ -512,12 +512,31 @@ public class CollUtil {
 			return true;
 		}
 
-		if (coll1.size() < coll2.size()) {
-			return false;
+		// Set直接判定
+		if(coll1 instanceof Set){
+			return coll1.containsAll(coll2);
 		}
 
-		for (Object object : coll2) {
-			if (false == coll1.contains(object)) {
+		// 参考Apache commons collection4
+		// 将时间复杂度降低到O(n + m)
+		final Iterator<?> it = coll1.iterator();
+		final Set<Object> elementsAlreadySeen = new HashSet<>(coll1.size(), 1);
+		for (final Object nextElement : coll2) {
+			if (elementsAlreadySeen.contains(nextElement)) {
+				continue;
+			}
+
+			boolean foundCurrentElement = false;
+			while (it.hasNext()) {
+				final Object p = it.next();
+				elementsAlreadySeen.add(p);
+				if (Objects.equals(nextElement, p)) {
+					foundCurrentElement = true;
+					break;
+				}
+			}
+
+			if (false == foundCurrentElement) {
 				return false;
 			}
 		}

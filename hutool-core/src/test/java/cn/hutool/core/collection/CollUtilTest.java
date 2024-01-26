@@ -1084,4 +1084,20 @@ public class CollUtilTest {
 		Assert.assertNull(CollUtil.max(null));
 	}
 
+	@Test
+	public void issueI8Z2Q4Test() {
+		ArrayList<String> coll1 = new ArrayList<>();
+		coll1.add("1");
+		coll1.add("2");
+		coll1.add("3");
+		coll1.add("4");
+		ArrayList<String> coll2 = new ArrayList<>();
+		coll2.add("1");
+		coll2.add("1");
+		coll2.add("1");
+		coll2.add("1");
+		coll2.add("1");
+
+		Assert.assertTrue(CollUtil.containsAll(coll1, coll2));
+	}
 }
