@@ -163,7 +163,7 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 检查是否包含指定注解指定注解
+	 * 检查是否包含指定注解
 	 *
 	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
