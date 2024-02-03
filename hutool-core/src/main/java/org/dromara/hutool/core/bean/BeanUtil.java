@@ -247,7 +247,7 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 解析Bean中的属性值
+	 * 获取Bean中的属性值
 	 *
 	 * @param <T>        属性值类型
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
@@ -265,7 +265,7 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 解析Bean中的属性值
+	 * 设置Bean中的属性值
 	 *
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
