@@ -212,6 +212,13 @@ public class CharSequenceUtil extends StrValidator {
 	 *
 	 * <p>
 	 * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * <p>
+	 * <ul>
+	 *     <li>去除字符串空格罗列相关如下：</li>
+	 *     <li>{@link StrUtil#trimPrefix(CharSequence)}去除头部空格</li>
+	 *     <li>{@link StrUtil#trimSuffix(CharSequence)}去除尾部空格</li>
+	 *     <li>{@link StrUtil#cleanBlank(CharSequence)}去除头部、尾部、中间空格</li>
+	 * </ul>
 	 *
 	 * <pre>
 	 * trim(null)          = null
