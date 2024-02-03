@@ -32,6 +32,7 @@
 		<Automatic-Module-Name>org.dromara.hutool.poi</Automatic-Module-Name>
 		<!-- versions -->
 		<poi.version>5.2.4</poi.version>
+		<log4j2.version>2.20.0</log4j2.version>
 	</properties>
 
 	<dependencies>
@@ -66,6 +67,13 @@
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
