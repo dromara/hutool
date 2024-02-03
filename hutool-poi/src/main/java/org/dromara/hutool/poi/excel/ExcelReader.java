@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.poi.excel;
 
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.SerBiConsumer;
@@ -122,7 +123,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(final Workbook book, final int sheetIndex) {
-		this(book.getSheetAt(sheetIndex));
+		this(getSheetOrCloseWorkbook(book, sheetIndex));
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param sheetName sheet名，第一个默认是sheet1
 	 */
 	public ExcelReader(final Workbook book, final String sheetName) {
-		this(book.getSheet(sheetName));
+		this(getSheetOrCloseWorkbook(book, sheetName));
 	}
 
 	/**
@@ -462,6 +463,51 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 */
 	private void checkNotClosed() {
 		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
+	}
+
+	/**
+	 * 获取Sheet，如果不存在则关闭{@link Workbook}并抛出异常，解决当sheet不存在时，文件依旧被占用问题<br>
+	 * 见：Issue#I8ZIQC
+	 * @param workbook {@link Workbook}，非空
+	 * @param name sheet名称，不存在抛出异常
+	 * @return {@link Sheet}
+	 * @throws IllegalArgumentException workbook为空或sheet不能存在
+	 */
+	private static Sheet getSheetOrCloseWorkbook(final Workbook workbook, String name) throws IllegalArgumentException{
+		Assert.notNull(workbook);
+		if(null == name){
+			name = "sheet1";
+		}
+		final Sheet sheet = workbook.getSheet(name);
+		if(null == sheet){
+			IoUtil.closeQuietly(workbook);
+			throw new IllegalArgumentException("Sheet [" + name + "] not exist!");
+		}
+		return sheet;
+	}
+
+	/**
+	 * 获取Sheet，如果不存在则关闭{@link Workbook}并抛出异常，解决当sheet不存在时，文件依旧被占用问题<br>
+	 * 见：Issue#I8ZIQC
+	 * @param workbook {@link Workbook}，非空
+	 * @param sheetIndex sheet index
+	 * @return {@link Sheet}
+	 * @throws IllegalArgumentException workbook为空或sheet不能存在
+	 */
+	private static Sheet getSheetOrCloseWorkbook(final Workbook workbook, final int sheetIndex) throws IllegalArgumentException{
+		Assert.notNull(workbook);
+		final Sheet sheet;
+		try {
+			sheet = workbook.getSheetAt(sheetIndex);
+		} catch (final IllegalArgumentException e){
+			IoUtil.closeQuietly(workbook);
+			throw e;
+		}
+		if(null == sheet){
+			IoUtil.closeQuietly(workbook);
+			throw new IllegalArgumentException("Sheet at [" + sheetIndex + "] not exist!");
+		}
+		return sheet;
 	}
 	// ------------------------------------------------------------------------------------------------------- Private methods end
 }
