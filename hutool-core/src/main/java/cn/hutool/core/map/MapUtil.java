@@ -53,7 +53,7 @@ public class MapUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(Map<?, ?> map) {
-		return null != map && false == map.isEmpty();
+		return null != map && !map.isEmpty();
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class MapUtil {
 	 */
 	public static <K, V> TreeMap<K, V> newTreeMap(Map<K, V> map, Comparator<? super K> comparator) {
 		final TreeMap<K, V> treeMap = new TreeMap<>(comparator);
-		if (false == isEmpty(map)) {
+		if (!isEmpty(map)) {
 			treeMap.putAll(map);
 		}
 		return treeMap;
@@ -488,11 +488,11 @@ public class MapUtil {
 					}
 				}
 			}
-			if (false == map.isEmpty()) {
+			if (!map.isEmpty()) {
 				resultList.add(map);
 			}
 			index++;
-		} while (false == isEnd);
+		} while (!isEnd);
 
 		return resultList;
 	}
@@ -623,7 +623,7 @@ public class MapUtil {
 		boolean isFirst = true;
 		if (isNotEmpty(map)) {
 			for (Entry<K, V> entry : map.entrySet()) {
-				if (false == isIgnoreNull || entry.getKey() != null && entry.getValue() != null) {
+				if (!isIgnoreNull || entry.getKey() != null && entry.getValue() != null) {
 					if (isFirst) {
 						isFirst = false;
 					} else {
@@ -674,7 +674,7 @@ public class MapUtil {
 		}
 
 		// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
-		if(false == map2.isEmpty()){
+		if(!map2.isEmpty()){
 			map2.clear();
 		}
 
@@ -755,7 +755,7 @@ public class MapUtil {
 		}
 
 		// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
-		if(false == map2.isEmpty()){
+		if(!map2.isEmpty()){
 			map2.clear();
 		}
 
@@ -1518,5 +1518,31 @@ public class MapUtil {
 			//value = map.computeIfAbsent(key, mappingFunction);
 		}
 		return value;
+	}
+
+	/**
+	 * 将一个Map按照固定大小拆分成多个子Map
+	 *
+	 * @param map  Map
+	 * @param size 子Map的大小
+	 * @return 子Map列表
+	 */
+	public static <K, V> List<Map<K, V>> partition(Map<K, V> map, int size) {
+		if (map == null) {
+			throw new NullPointerException("Map must not be null");
+		} else if (size <= 0) {
+			throw new IllegalArgumentException("Size must be greater than 0");
+		}
+		List<Map<K, V>> list = new ArrayList<>();
+		Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map<K, V> subMap = new HashMap<>(size);
+			for (int i = 0; i < size && iterator.hasNext(); i++) {
+				Map.Entry<K, V> entry = iterator.next();
+				subMap.put(entry.getKey(), entry.getValue());
+			}
+			list.add(subMap);
+		}
+		return list;
 	}
 }
