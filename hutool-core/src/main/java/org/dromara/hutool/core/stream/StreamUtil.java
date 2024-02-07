@@ -12,9 +12,7 @@
 
 package org.dromara.hutool.core.stream;
 
-import static java.util.Objects.requireNonNull;
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.stream.spliterators.DropWhileSpliterator;
 import org.dromara.hutool.core.stream.spliterators.IterateSpliterator;
 import org.dromara.hutool.core.stream.spliterators.TakeWhileSpliterator;
@@ -26,10 +24,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -47,12 +42,11 @@ public class StreamUtil {
 	/**
 	 * @param array 数组
 	 * @param <T>   元素类型
-	 * @return {@link Stream}
+	 * @return {@link Stream}，如果提供的array为{@code null}，返回{@link Stream#empty()}
 	 */
 	@SafeVarargs
 	public static <T> Stream<T> of(final T... array) {
-		Assert.notNull(array, "Array must be not null!");
-		return Stream.of(array);
+		return null == array ? Stream.empty() : Stream.of(array);
 	}
 
 	/**
@@ -60,7 +54,7 @@ public class StreamUtil {
 	 *
 	 * @param iterable 集合
 	 * @param <T>      集合元素类型
-	 * @return {@link Stream}
+	 * @return {@link Stream}，如果提供的iterator为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static <T> Stream<T> of(final Iterable<T> iterable) {
 		return of(iterable, false);
@@ -72,13 +66,15 @@ public class StreamUtil {
 	 * @param iterable 集合
 	 * @param parallel 是否并行
 	 * @param <T>      集合元素类型
-	 * @return {@link Stream}
+	 * @return {@link Stream}，如果提供的iterator为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static <T> Stream<T> of(final Iterable<T> iterable, final boolean parallel) {
-		Assert.notNull(iterable, "Iterable must be not null!");
+		if (null == iterable) {
+			return Stream.empty();
+		}
 		return iterable instanceof Collection ?
-				parallel ? ((Collection<T>) iterable).parallelStream() : ((Collection<T>) iterable).stream() :
-				StreamSupport.stream(iterable.spliterator(), parallel);
+			parallel ? ((Collection<T>) iterable).parallelStream() : ((Collection<T>) iterable).stream() :
+			StreamSupport.stream(iterable.spliterator(), parallel);
 	}
 
 	/**
@@ -86,8 +82,7 @@ public class StreamUtil {
 	 *
 	 * @param iterator 迭代器
 	 * @param <T>      集合元素类型
-	 * @return {@link Stream}
-	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
+	 * @return {@link Stream}，如果提供的iterator为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static <T> Stream<T> ofIter(final Iterator<T> iterator) {
 		return ofIter(iterator, false);
@@ -99,11 +94,12 @@ public class StreamUtil {
 	 * @param iterator 迭代器
 	 * @param parallel 是否并行
 	 * @param <T>      集合元素类型
-	 * @return {@link Stream}
-	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
+	 * @return {@link Stream}，如果提供的iterator为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static <T> Stream<T> ofIter(final Iterator<T> iterator, final boolean parallel) {
-		Assert.notNull(iterator, "iterator must not be null!");
+		if (null == iterator) {
+			return Stream.empty();
+		}
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
 	}
 
@@ -111,7 +107,7 @@ public class StreamUtil {
 	 * 按行读取文件为{@link Stream}
 	 *
 	 * @param file 文件
-	 * @return {@link Stream}
+	 * @return {@link Stream}，如果提供的file为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static Stream<String> of(final File file) {
 		return of(file, CharsetUtil.UTF_8);
@@ -121,7 +117,7 @@ public class StreamUtil {
 	 * 按行读取文件为{@link Stream}
 	 *
 	 * @param path 路径
-	 * @return {@link Stream}
+	 * @return {@link Stream}，如果提供的file为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static Stream<String> of(final Path path) {
 		return of(path, CharsetUtil.UTF_8);
@@ -132,10 +128,12 @@ public class StreamUtil {
 	 *
 	 * @param file    文件
 	 * @param charset 编码
-	 * @return {@link Stream}
+	 * @return {@link Stream}，如果提供的file为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static Stream<String> of(final File file, final Charset charset) {
-		Assert.notNull(file, "File must be not null!");
+		if (null == file) {
+			return Stream.empty();
+		}
 		return of(file.toPath(), charset);
 	}
 
@@ -144,9 +142,12 @@ public class StreamUtil {
 	 *
 	 * @param path    路径
 	 * @param charset 编码
-	 * @return {@link Stream}
+	 * @return {@link Stream}，如果提供的path为{@code null}，返回{@link Stream#empty()}
 	 */
 	public static Stream<String> of(final Path path, final Charset charset) {
+		if (null == path) {
+			return Stream.empty();
+		}
 		try {
 			return Files.lines(path, charset);
 		} catch (final IOException e) {
@@ -173,9 +174,12 @@ public class StreamUtil {
 	 * @param stream    {@link Stream}
 	 * @param delimiter 分隔符
 	 * @param <T>       元素类型
-	 * @return 字符串
+	 * @return 字符串，如果stream为{@code null}，返回{@code null}
 	 */
 	public static <T> String join(final Stream<T> stream, final CharSequence delimiter) {
+		if (null == stream) {
+			return null;
+		}
 		return stream.collect(CollectorUtil.joining(delimiter));
 	}
 
@@ -186,10 +190,13 @@ public class StreamUtil {
 	 * @param delimiter    分隔符
 	 * @param toStringFunc 元素转换为字符串的函数
 	 * @param <T>          元素类型
-	 * @return 字符串
+	 * @return 字符串，如果stream为{@code null}，返回{@code null}
 	 */
 	public static <T> String join(final Stream<T> stream, final CharSequence delimiter,
 								  final Function<T, ? extends CharSequence> toStringFunc) {
+		if (null == stream) {
+			return null;
+		}
 		return stream.collect(CollectorUtil.joining(delimiter, toStringFunc));
 	}
 
@@ -205,8 +212,8 @@ public class StreamUtil {
 	 * @return 无限有序流
 	 */
 	public static <T> Stream<T> iterate(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
-		requireNonNull(next);
-		requireNonNull(hasNext);
+		Objects.requireNonNull(next);
+		Objects.requireNonNull(hasNext);
 		return StreamSupport.stream(IterateSpliterator.create(seed, hasNext, next), false);
 	}
 
@@ -225,15 +232,15 @@ public class StreamUtil {
 	 * 	.toList();
 	 * }</pre>
 	 *
-	 * @param root 根节点，根节点不允许被{@code filter}过滤
+	 * @param root       根节点，根节点不允许被{@code filter}过滤
 	 * @param discoverer 下一层级节点的获取方法
-	 * @param filter 节点过滤器，不匹配的节点与以其作为根节点的子树将将会被忽略
+	 * @param filter     节点过滤器，不匹配的节点与以其作为根节点的子树将将会被忽略
+	 * @param <T>        元素类型
 	 * @return 包含根节点在内，根节点所有层级结构中的节点组成的流
-	 * @param <T> 元素类型
 	 * @see HierarchyIterator
 	 */
 	public static <T> Stream<T> iterateHierarchies(
-			final T root, final Function<T, Collection<T>> discoverer, final Predicate<T> filter) {
+		final T root, final Function<T, Collection<T>> discoverer, final Predicate<T> filter) {
 		return ofIter(HierarchyIterator.breadthFirst(root, discoverer, filter));
 	}
 
@@ -252,14 +259,14 @@ public class StreamUtil {
 	 * 	.toList();
 	 * }</pre>
 	 *
-	 * @param root 根节点，根节点不允许被{@code filter}过滤
+	 * @param root       根节点，根节点不允许被{@code filter}过滤
 	 * @param discoverer 下一层级节点的获取方法
+	 * @param <T>        元素类型
 	 * @return 包含根节点在内，根节点所有层级结构中的节点组成的流
-	 * @param <T> 元素类型
 	 * @see HierarchyIterator
 	 */
 	public static <T> Stream<T> iterateHierarchies(
-			final T root, final Function<T, Collection<T>> discoverer) {
+		final T root, final Function<T, Collection<T>> discoverer) {
 		return ofIter(HierarchyIterator.breadthFirst(root, discoverer));
 	}
 
@@ -275,8 +282,10 @@ public class StreamUtil {
 	 * @return 与指定断言匹配的元素组成的流
 	 */
 	public static <T> Stream<T> takeWhile(final Stream<T> source, final Predicate<? super T> predicate) {
-		requireNonNull(source);
-		requireNonNull(predicate);
+		if(null == source){
+			return Stream.empty();
+		}
+		Objects.requireNonNull(predicate);
 		return createStatefulNewStream(source, TakeWhileSpliterator.create(source.spliterator(), predicate));
 	}
 
@@ -292,13 +301,14 @@ public class StreamUtil {
 	 * @return 剩余元素组成的流
 	 */
 	public static <T> Stream<T> dropWhile(final Stream<T> source, final Predicate<? super T> predicate) {
-		requireNonNull(source);
-		requireNonNull(predicate);
+		if(null == source){
+			return Stream.empty();
+		}
+		Objects.requireNonNull(predicate);
 		return createStatefulNewStream(source, DropWhileSpliterator.create(source.spliterator(), predicate));
 	}
 
-	// region 私有方法
-	/* ================================================== 私有方法 =================================================== */
+	// region ----- 私有方法
 
 	/**
 	 * 根据 源流 和 新的Spliterator 生成新的流
@@ -321,8 +331,5 @@ public class StreamUtil {
 		// 由于新流不与旧流的节点关联, 所以需要主动设置旧流的close方法, 哪怕几乎不可能有人在旧流上设置onClose操作
 		return newStream.onClose(source::close);
 	}
-
-	/* ============================================================================================================== */
 	// endregion
-
 }
