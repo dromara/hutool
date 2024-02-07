@@ -3,10 +3,7 @@ package cn.hutool.core.map;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.*;
 import cn.hutool.core.stream.CollectorUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.JdkUtil;
@@ -674,7 +671,7 @@ public class MapUtil {
 		}
 
 		// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
-		if(false == map2.isEmpty()){
+		if (false == map2.isEmpty()) {
 			map2.clear();
 		}
 
@@ -755,7 +752,7 @@ public class MapUtil {
 		}
 
 		// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
-		if(false == map2.isEmpty()){
+		if (false == map2.isEmpty()) {
 			map2.clear();
 		}
 
@@ -1490,7 +1487,7 @@ public class MapUtil {
 	 * This class should be removed once we drop Java 8 support.
 	 *
 	 * <p>
-	 *     注意此方法只能用于JDK8
+	 * 注意此方法只能用于JDK8
 	 * </p>
 	 *
 	 * @param <K>             键类型
@@ -1506,7 +1503,7 @@ public class MapUtil {
 		if (null == value) {
 			value = mappingFunction.apply(key);
 			final V res = map.putIfAbsent(key, value);
-			if(null != res){
+			if (null != res) {
 				// issues#I6RVMY
 				// 如果旧值存在，说明其他线程已经赋值成功，putIfAbsent没有执行，返回旧值
 				return res;
@@ -1521,28 +1518,30 @@ public class MapUtil {
 	}
 
 	/**
-     * 将一个Map按照固定大小拆分成多个子Map
-     *
-     * @param map  Map
-     * @param size 子Map的大小
-     * @return 子Map列表
-     */
+	 * 将一个Map按照固定大小拆分成多个子Map
+	 *
+	 * @param <K>  键类型
+	 * @param <V>  值类型
+	 * @param map  Map
+	 * @param size 子Map的大小
+	 * @return 子Map列表
+	 * @since 5.8.26
+	 */
 	public static <K, V> List<Map<K, V>> partition(Map<K, V> map, int size) {
-        if (map == null) {
-            throw new NullPointerException("Map must not be null");
-        } else if (size <= 0) {
-            throw new IllegalArgumentException("Size must be greater than 0");
-        }
-        List<Map<K, V>> list = new ArrayList<>();
-        Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map<K, V> subMap = new HashMap<>(size);
-            for (int i = 0; i < size && iterator.hasNext(); i++) {
-                Map.Entry<K, V> entry = iterator.next();
-                subMap.put(entry.getKey(), entry.getValue());
-            }
-            list.add(subMap);
-        }
-        return list;
-    }
+		Assert.notNull(map);
+		if (size <= 0) {
+			throw new IllegalArgumentException("Size must be greater than 0");
+		}
+		List<Map<K, V>> list = new ArrayList<>();
+		Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map<K, V> subMap = new HashMap<>(size);
+			for (int i = 0; i < size && iterator.hasNext(); i++) {
+				Map.Entry<K, V> entry = iterator.next();
+				subMap.put(entry.getKey(), entry.getValue());
+			}
+			list.add(subMap);
+		}
+		return list;
+	}
 }

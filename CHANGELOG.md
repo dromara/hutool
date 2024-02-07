@@ -2,10 +2,11 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.26(2024-02-03)
+# 5.8.26(2024-02-07)
 
 ### 🐣新特性
 * 【db    】      RedisDS增加user支持（issue#I8XEQ4@Gitee）
+* 【core  】      MapUtil增加partition方法（pr#1170@Gitee）
 
 ### 🐞Bug修复
 * 【crypto】      修复BouncyCastleProvider导致graalvm应用报错UnsupportedFeatureError（pr#3464@Github）
