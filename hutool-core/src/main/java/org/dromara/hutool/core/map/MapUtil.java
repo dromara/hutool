@@ -1346,4 +1346,32 @@ public class MapUtil extends MapGetUtil {
 		}
 		return value;
 	}
+
+	/**
+	 * 将一个Map按照固定大小拆分成多个子Map
+	 *
+	 * @param <K>  键类型
+	 * @param <V>  值类型
+	 * @param map  Map
+	 * @param size 子Map的大小
+	 * @return 子Map列表
+	 * @since 5.8.26
+	 */
+	public static <K, V> List<Map<K, V>> partition(final Map<K, V> map, final int size) {
+		Assert.notNull(map);
+		if (size <= 0) {
+			throw new IllegalArgumentException("Size must be greater than 0");
+		}
+		final List<Map<K, V>> list = new ArrayList<>();
+		final Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
+		while (iterator.hasNext()) {
+			final Map<K, V> subMap = new HashMap<>(size);
+			for (int i = 0; i < size && iterator.hasNext(); i++) {
+				final Map.Entry<K, V> entry = iterator.next();
+				subMap.put(entry.getKey(), entry.getValue());
+			}
+			list.add(subMap);
+		}
+		return list;
+	}
 }
