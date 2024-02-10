@@ -98,4 +98,27 @@ public class VersionComparatorTest {
 		compare = VersionComparator.INSTANCE.compare("1.12.1c", "1.12.2");
 		Assertions.assertTrue(compare < 0);
 	}
+
+	@Test
+	void equalsTest2() {
+		final int compare = VersionComparator.INSTANCE.compare("1.12.0", "1.12");
+		Assertions.assertEquals(0, compare);
+	}
+
+	@Test
+	void I8Z3VETest() {
+		// 传递性测试
+		int compare = VersionComparator.INSTANCE.compare("260", "a-34");
+		Assertions.assertTrue(compare > 0);
+		compare = VersionComparator.INSTANCE.compare("a-34", "a-3");
+		Assertions.assertTrue(compare > 0);
+		compare = VersionComparator.INSTANCE.compare("260", "a-3");
+		Assertions.assertTrue(compare > 0);
+	}
+
+	@Test
+	void startWithNoneNumberTest() {
+		final int compare = VersionComparator.INSTANCE.compare("V1", "A1");
+		Assertions.assertTrue(compare > 0);
+	}
 }
