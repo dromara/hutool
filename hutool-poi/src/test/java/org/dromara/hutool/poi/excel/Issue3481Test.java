@@ -1,6 +1,5 @@
 package org.dromara.hutool.poi.excel;
 
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -9,10 +8,17 @@ public class Issue3481Test {
 	@Disabled
 	void readerToWriterTest() {
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/aaa.xlsx");
-		// 写出
-		final ExcelWriter writer = ExcelUtil.getWriter(FileUtil.file("d:/test/aaa.xlsx"));
-		writer.getOrCreateRow(10).createCell(0).setCellValue("测试");
-		writer.flush(FileUtil.file("d:/test/bbb.xlsx"));
+		final ExcelWriter writer = reader.getWriter();
+		writer.writeCellValue(3, 0, "原因");
+
 		writer.close();
+	}
+
+	@Test
+	@Disabled
+	void readerToWriterTest2() {
+		ExcelUtil.getReader("d:/test/aaa.xlsx")
+			.getWriter().writeCellValue(3, 0, "原因")
+			.close();
 	}
 }
