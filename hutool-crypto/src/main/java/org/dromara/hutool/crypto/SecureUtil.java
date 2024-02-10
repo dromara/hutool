@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.Security;
+import java.util.Objects;
 
 /**
  * 安全相关工具类<br>
@@ -524,6 +525,9 @@ public class SecureUtil {
 	 * @since 4.3.3
 	 */
 	public static byte[] decode(final String key) {
+		if(Objects.isNull(key)){
+			return null;
+		}
 		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
 	}
 
