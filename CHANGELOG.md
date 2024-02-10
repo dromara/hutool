@@ -7,6 +7,7 @@
 ### 🐣新特性
 * 【db    】      RedisDS增加user支持（issue#I8XEQ4@Gitee）
 * 【core  】      MapUtil增加partition方法（pr#1170@Gitee）
+* 【core  】      增加Version类（issue#I8Z3VE@Gitee）
 
 ### 🐞Bug修复
 * 【crypto】      修复BouncyCastleProvider导致graalvm应用报错UnsupportedFeatureError（pr#3464@Github）
@@ -17,6 +18,7 @@
 * 【core  】      修复CollUtil.containsAll在coll2长度大于coll1时逻辑歧义问题（issue#I8Z2Q4@Gitee）
 * 【poi   】      修复当sheetName 不存在时，ExcelUtil.getReader方法不会释放文件问题（issue#I8ZIQC@Gitee）
 * 【crypto】      通过添加系统属性hutool.crypto.decodeHex强制关闭hex识别以解决hex和Base64歧义问题（issue#I90M9D@Gitee）
+* 【core  】      修复VersionComparator违反传递问题（issue#I8Z3VE@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.25(2024-01-11)
