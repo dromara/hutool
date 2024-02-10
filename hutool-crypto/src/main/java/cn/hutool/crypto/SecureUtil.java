@@ -3,10 +3,7 @@ package cn.hutool.crypto;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.crypto.asymmetric.Sign;
@@ -55,6 +52,9 @@ import java.util.Map;
  * @author Looly, Gsealy
  */
 public class SecureUtil {
+
+	/** Hutool自定义系统属性：是否解码Hex字符 issue#I90M9D */
+	public static String HUTOOL_CRYPTO_DECODE_HEX = "hutool.crypto.decodeHex";
 
 	/**
 	 * 默认密钥字节数
@@ -1014,7 +1014,10 @@ public class SecureUtil {
 	 * @since 4.3.3
 	 */
 	public static byte[] decode(String key) {
-		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
+		// issue#I90M9D
+		// 某些特殊字符串会无法区分Hex还是Base64，此处使用系统属性强制关闭Hex解析
+		final boolean decodeHex = SystemPropsUtil.getBoolean(HUTOOL_CRYPTO_DECODE_HEX, true);
+		return (decodeHex && Validator.isHex(key)) ? HexUtil.decodeHex(key) : Base64.decode(key);
 	}
 
 	/**

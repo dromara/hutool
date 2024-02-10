@@ -16,6 +16,7 @@
 * 【http  】      修复HtmlUtil.removeHtmlAttr处理空格问题（issue#I8YV0K@Gitee）
 * 【core  】      修复CollUtil.containsAll在coll2长度大于coll1时逻辑歧义问题（issue#I8Z2Q4@Gitee）
 * 【poi   】      修复当sheetName 不存在时，ExcelUtil.getReader方法不会释放文件问题（issue#I8ZIQC@Gitee）
+* 【crypto】      通过添加系统属性hutool.crypto.decodeHex强制关闭hex识别以解决hex和Base64歧义问题（issue#I90M9D@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.25(2024-01-11)
