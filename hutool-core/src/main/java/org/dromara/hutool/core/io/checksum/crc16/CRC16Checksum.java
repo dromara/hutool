@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.checksum.crc16;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;

@@ -12,8 +12,7 @@
 
 package org.dromara.hutool.core.util;
 
-import org.dromara.hutool.core.codec.HexUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,15 +29,15 @@ public class HexUtilTest {
 	public void hexStrTest(){
 		final String str = "我是一个字符串";
 
-		final String hex = HexUtil.encodeHexStr(str, CharsetUtil.UTF_8);
-		final String decodedStr = HexUtil.decodeHexStr(hex);
+		final String hex = HexUtil.encodeStr(str, CharsetUtil.UTF_8);
+		final String decodedStr = HexUtil.decodeStr(hex);
 
 		Assertions.assertEquals(str, decodedStr);
 	}
 
 	@Test
 	public void issueI50MI6Test(){
-		final String s = HexUtil.encodeHexStr("烟".getBytes(StandardCharsets.UTF_16BE));
+		final String s = HexUtil.encodeStr("烟".getBytes(StandardCharsets.UTF_16BE));
 		Assertions.assertEquals("70df", s);
 	}
 
@@ -75,8 +74,8 @@ public class HexUtilTest {
 	@Test
 	public void decodeTest(){
 		final String str = "e8c670380cb220095268f40221fc748fa6ac39d6e930e63c30da68bad97f885d";
-		Assertions.assertArrayEquals(HexUtil.decodeHex(str),
-				HexUtil.decodeHex(str.toUpperCase()));
+		Assertions.assertArrayEquals(HexUtil.decode(str),
+				HexUtil.decode(str.toUpperCase()));
 	}
 
 	@Test
@@ -88,8 +87,8 @@ public class HexUtilTest {
 
 	@Test
 	public void decodeHexTest(){
-		final String s = HexUtil.encodeHexStr("6");
-		final String s1 = HexUtil.decodeHexStr(s);
+		final String s = HexUtil.encodeStr("6");
+		final String s1 = HexUtil.decodeStr(s);
 		Assertions.assertEquals("6", s1);
 	}
 }

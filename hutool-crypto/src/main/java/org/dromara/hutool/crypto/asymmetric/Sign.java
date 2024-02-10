@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IoUtil;
@@ -229,7 +229,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public String signHex(final String data, final Charset charset) {
-		return HexUtil.encodeHexStr(sign(data, charset));
+		return HexUtil.encodeStr(sign(data, charset));
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public String signHex(final byte[] data) {
-		return HexUtil.encodeHexStr(sign(data));
+		return HexUtil.encodeStr(sign(data));
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public String signHex(final InputStream data) {
-		return HexUtil.encodeHexStr(sign(data));
+		return HexUtil.encodeStr(sign(data));
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public String digestHex(final InputStream data, final int bufferLength) {
-		return HexUtil.encodeHexStr(sign(data, bufferLength));
+		return HexUtil.encodeStr(sign(data, bufferLength));
 	}
 
 	/**

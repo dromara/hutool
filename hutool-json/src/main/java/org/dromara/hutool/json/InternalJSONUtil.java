@@ -14,7 +14,7 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;

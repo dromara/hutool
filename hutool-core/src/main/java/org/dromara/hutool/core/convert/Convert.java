@@ -14,7 +14,7 @@ package org.dromara.hutool.core.convert;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.convert.impl.CollectionConverter;
 import org.dromara.hutool.core.convert.impl.EnumConverter;
 import org.dromara.hutool.core.convert.impl.MapConverter;
@@ -874,10 +874,10 @@ public class Convert {
 	 * @param str 待转换的ASCII字符串
 	 * @param charset 编码
 	 * @return 16进制字符串
-	 * @see HexUtil#encodeHexStr(String, Charset)
+	 * @see HexUtil#encodeStr(String, Charset)
 	 */
 	public static String toHex(final String str, final Charset charset) {
-		return HexUtil.encodeHexStr(str, charset);
+		return HexUtil.encodeStr(str, charset);
 	}
 
 	/**
@@ -885,10 +885,10 @@ public class Convert {
 	 *
 	 * @param bytes 被转换的byte数组
 	 * @return 转换后的值
-	 * @see HexUtil#encodeHexStr(byte[])
+	 * @see HexUtil#encodeStr(byte[])
 	 */
 	public static String toHex(final byte[] bytes) {
-		return HexUtil.encodeHexStr(bytes);
+		return HexUtil.encodeStr(bytes);
 	}
 
 	/**
@@ -896,10 +896,10 @@ public class Convert {
 	 *
 	 * @param src Byte字符串，每个Byte之间没有分隔符
 	 * @return byte[]
-	 * @see HexUtil#decodeHex(char[])
+	 * @see HexUtil#decode(char[])
 	 */
 	public static byte[] hexToBytes(final String src) {
-		return HexUtil.decodeHex(src.toCharArray());
+		return HexUtil.decode(src.toCharArray());
 	}
 
 	/**
@@ -908,11 +908,11 @@ public class Convert {
 	 * @param hexStr Byte字符串(Byte之间无分隔符 如:[616C6B])
 	 * @param charset 编码 {@link Charset}
 	 * @return 对应的字符串
-	 * @see HexUtil#decodeHexStr(String, Charset)
+	 * @see HexUtil#decodeStr(String, Charset)
 	 * @since 4.1.11
 	 */
 	public static String hexToStr(final String hexStr, final Charset charset) {
-		return HexUtil.decodeHexStr(hexStr, charset);
+		return HexUtil.decodeStr(hexStr, charset);
 	}
 
 	/**

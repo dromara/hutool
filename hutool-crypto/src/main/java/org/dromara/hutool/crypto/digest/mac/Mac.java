@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.digest.mac;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -116,7 +116,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(final String data, final Charset charset) {
-		return HexUtil.encodeHexStr(digest(data, charset));
+		return HexUtil.encodeStr(digest(data, charset));
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(final File file) {
-		return HexUtil.encodeHexStr(digest(file));
+		return HexUtil.encodeStr(digest(file));
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(final byte[] data) {
-		return HexUtil.encodeHexStr(digest(data));
+		return HexUtil.encodeStr(digest(data));
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(final InputStream data) {
-		return HexUtil.encodeHexStr(digest(data));
+		return HexUtil.encodeStr(digest(data));
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(final InputStream data, final int bufferLength) {
-		return HexUtil.encodeHexStr(digest(data, bufferLength));
+		return HexUtil.encodeStr(digest(data, bufferLength));
 	}
 
 	/**

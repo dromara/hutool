@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.codec.hash.metro;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -125,6 +125,6 @@ public class MetroHash64Test {
 	}
 
 	private static String hex(final byte[] bytes){
-		return HexUtil.encodeHexStr(bytes).toUpperCase();
+		return HexUtil.encodeStr(bytes).toUpperCase();
 	}
 }

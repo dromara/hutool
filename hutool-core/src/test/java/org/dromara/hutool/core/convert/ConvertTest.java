@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.convert;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DateUtil;
@@ -416,7 +416,7 @@ public class ConvertTest {
 	public void toFloatTest(){
 		// https://gitee.com/dromara/hutool/issues/I4M0E4
 		final String hex2 = "CD0CCB43";
-		final byte[] value = HexUtil.decodeHex(hex2);
+		final byte[] value = HexUtil.decode(hex2);
 		final float f = Convert.toFloat(value);
 		Assertions.assertEquals(406.1F, f, 0);
 	}

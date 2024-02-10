@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
@@ -190,7 +190,7 @@ public class RSATest {
 				+ "75F36564BA1DABAA20F3B90FD39315C30E68FE8A1803B36C29029B23EB612C06ACF3A34BE815074F5EB5AA3A"//
 				+ "C0C8832EC42DA725B4E1C38EF4EA1B85904F8B10B2D62EA782B813229F9090E6F7394E42E6F44494BB8";
 
-		final byte[] aByte = HexUtil.decodeHex(a);
+		final byte[] aByte = HexUtil.decode(a);
 		final byte[] decrypt = rsa.decrypt(aByte, KeyType.PrivateKey);
 
 		Assertions.assertEquals("虎头闯杭州,多抬头看天,切勿只管种地", StrUtil.str(decrypt, CharsetUtil.UTF_8));
@@ -212,7 +212,7 @@ public class RSATest {
 		//jdk原生加密
 		final Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
 		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-		final String result1 = HexUtil.encodeHexStr(cipher.doFinal(finalData));
+		final String result1 = HexUtil.encodeStr(cipher.doFinal(finalData));
 
 		//hutool加密
 		final RSA rsa = new RSA("RSA/ECB/NoPadding", null, publicKeyStr);

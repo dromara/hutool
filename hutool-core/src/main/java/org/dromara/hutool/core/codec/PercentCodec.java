@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.codec;
 
 import org.dromara.hutool.core.codec.binary.Base16Codec;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.CharPool;
 import org.dromara.hutool.core.text.StrUtil;

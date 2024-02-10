@@ -27,7 +27,7 @@ import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.encoders.Hex;
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.SecureUtil;
@@ -347,7 +347,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return 签名
 	 */
 	public String signHex(final String dataHex, final String idHex) {
-		return HexUtil.encodeHexStr(sign(HexUtil.decodeHex(dataHex), HexUtil.decodeHex(idHex)));
+		return HexUtil.encodeStr(sign(HexUtil.decode(dataHex), HexUtil.decode(idHex)));
 	}
 
 	/**
@@ -409,7 +409,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @since 5.2.0
 	 */
 	public boolean verifyHex(final String dataHex, final String signHex, final String idHex) {
-		return verify(HexUtil.decodeHex(dataHex), HexUtil.decodeHex(signHex), HexUtil.decodeHex(idHex));
+		return verify(HexUtil.decode(dataHex), HexUtil.decode(signHex), HexUtil.decode(idHex));
 	}
 
 	/**

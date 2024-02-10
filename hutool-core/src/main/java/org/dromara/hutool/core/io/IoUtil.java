@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.collection.iter.LineIter;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.copy.FileChannelCopier;
@@ -404,7 +404,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String readHex(final InputStream in, final int length, final boolean toLowerCase) throws IORuntimeException {
-		return HexUtil.encodeHexStr(readBytes(in, length), toLowerCase);
+		return HexUtil.encodeStr(readBytes(in, length), toLowerCase);
 	}
 
 	/**

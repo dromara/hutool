@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
@@ -51,7 +51,7 @@ public interface AsymmetricEncryptor {
 	 * @return Hex字符串
 	 */
 	default String encryptHex(final byte[] data, final KeyType keyType) {
-		return HexUtil.encodeHexStr(encrypt(data, keyType));
+		return HexUtil.encodeStr(encrypt(data, keyType));
 	}
 
 	/**
@@ -98,7 +98,7 @@ public interface AsymmetricEncryptor {
 	 * @since 4.0.1
 	 */
 	default String encryptHex(final String data, final KeyType keyType) {
-		return HexUtil.encodeHexStr(encrypt(data, keyType));
+		return HexUtil.encodeStr(encrypt(data, keyType));
 	}
 
 	/**
@@ -111,7 +111,7 @@ public interface AsymmetricEncryptor {
 	 * @since 4.0.1
 	 */
 	default String encryptHex(final String data, final Charset charset, final KeyType keyType) {
-		return HexUtil.encodeHexStr(encrypt(data, charset, keyType));
+		return HexUtil.encodeStr(encrypt(data, charset, keyType));
 	}
 
 	/**
@@ -160,7 +160,7 @@ public interface AsymmetricEncryptor {
 	 * @since 4.0.1
 	 */
 	default String encryptHex(final InputStream data, final KeyType keyType) {
-		return HexUtil.encodeHexStr(encrypt(data, keyType));
+		return HexUtil.encodeStr(encrypt(data, keyType));
 	}
 
 	/**

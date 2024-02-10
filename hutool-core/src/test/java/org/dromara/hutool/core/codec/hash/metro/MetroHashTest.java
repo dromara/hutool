@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.codec.hash.metro;
 
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.hash.CityHash;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;

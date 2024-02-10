@@ -13,7 +13,7 @@
 package org.dromara.hutool.crypto.symmetric;
 
 import org.dromara.hutool.core.codec.binary.Base64;
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.Mode;
@@ -77,22 +77,22 @@ public class AESTest {
 	public void encryptPKCS7Test2() {
 		// 构建
 		final AES aes = new AES(Mode.ECB.name(), "pkcs7padding",
-				HexUtil.decodeHex("0102030405060708090a0b0c0d0e0f10"));
+				HexUtil.decode("0102030405060708090a0b0c0d0e0f10"));
 
 		// ------------------------------------------------------------------------
 		// 加密数据为16进制字符串
-		final String encryptHex = aes.encryptHex(HexUtil.decodeHex("16c5"));
+		final String encryptHex = aes.encryptHex(HexUtil.decode("16c5"));
 		// 加密后的Hex
 		Assertions.assertEquals("25869eb3ff227d9e34b3512d3c3c92ed", encryptHex);
 
 		// 加密数据为16进制字符串
-		final String encryptHex2 = aes.encryptBase64(HexUtil.decodeHex("16c5"));
+		final String encryptHex2 = aes.encryptBase64(HexUtil.decode("16c5"));
 		// 加密后的Base64
 		Assertions.assertEquals("JYaes/8ifZ40s1EtPDyS7Q==", encryptHex2);
 
 		// 解密
-		Assertions.assertEquals("16c5", HexUtil.encodeHexStr(aes.decrypt("25869eb3ff227d9e34b3512d3c3c92ed")));
-		Assertions.assertEquals("16c5", HexUtil.encodeHexStr(aes.decrypt(HexUtil.encodeHexStr(Base64.decode("JYaes/8ifZ40s1EtPDyS7Q==")))));
+		Assertions.assertEquals("16c5", HexUtil.encodeStr(aes.decrypt("25869eb3ff227d9e34b3512d3c3c92ed")));
+		Assertions.assertEquals("16c5", HexUtil.encodeStr(aes.decrypt(HexUtil.encodeStr(Base64.decode("JYaes/8ifZ40s1EtPDyS7Q==")))));
 		// ------------------------------------------------------------------------
 
 		// ------------------------------------------------------------------------

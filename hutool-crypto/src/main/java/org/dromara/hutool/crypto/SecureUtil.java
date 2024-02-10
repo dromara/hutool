@@ -12,22 +12,23 @@
 
 package org.dromara.hutool.crypto;
 
+import org.bouncycastle.crypto.AlphabetMapper;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
-import org.dromara.hutool.core.codec.HexUtil;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
+import org.dromara.hutool.core.util.SystemUtil;
 import org.dromara.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import org.dromara.hutool.crypto.asymmetric.RSA;
 import org.dromara.hutool.crypto.digest.DigestAlgorithm;
 import org.dromara.hutool.crypto.digest.Digester;
+import org.dromara.hutool.crypto.digest.MD5;
 import org.dromara.hutool.crypto.digest.mac.HMac;
 import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
-import org.dromara.hutool.crypto.digest.MD5;
 import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.symmetric.*;
-import org.bouncycastle.crypto.AlphabetMapper;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -50,6 +51,9 @@ import java.util.Objects;
  * @author Looly, Gsealy
  */
 public class SecureUtil {
+
+	/** Hutool自定义系统属性：是否解码Hex字符 issue#I90M9D */
+	public static String HUTOOL_CRYPTO_DECODE_HEX = "hutool.crypto.decodeHex";
 
 	/**
 	 * 生成算法，格式为XXXwithXXX
@@ -528,7 +532,11 @@ public class SecureUtil {
 		if(Objects.isNull(key)){
 			return null;
 		}
-		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
+
+		// issue#I90M9D
+		// 某些特殊字符串会无法区分Hex还是Base64，此处使用系统属性强制关闭Hex解析
+		final boolean decodeHex = SystemUtil.getBoolean(HUTOOL_CRYPTO_DECODE_HEX, true);
+		return (decodeHex && Validator.isHex(key)) ? HexUtil.decode(key) : Base64.decode(key);
 	}
 
 	/**

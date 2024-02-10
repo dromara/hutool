@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.symmetric;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
@@ -61,7 +61,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的Hex
 	 */
 	default String encryptHex(final byte[] data) {
-		return HexUtil.encodeHexStr(encrypt(data));
+		return HexUtil.encodeStr(encrypt(data));
 	}
 
 	/**
@@ -93,7 +93,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的Hex
 	 */
 	default String encryptHex(final String data, final Charset charset) {
-		return HexUtil.encodeHexStr(encrypt(data, charset));
+		return HexUtil.encodeStr(encrypt(data, charset));
 	}
 
 	/**
@@ -125,7 +125,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的Hex
 	 */
 	default String encryptHex(final String data) {
-		return HexUtil.encodeHexStr(encrypt(data));
+		return HexUtil.encodeStr(encrypt(data));
 	}
 
 	/**
@@ -156,7 +156,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的Hex
 	 */
 	default String encryptHex(final InputStream data) {
-		return HexUtil.encodeHexStr(encrypt(data));
+		return HexUtil.encodeStr(encrypt(data));
 	}
 
 	/**

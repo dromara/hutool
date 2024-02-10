@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.file;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -71,7 +71,7 @@ public class FileTypeUtil {
 				return fileTypeEntry.getValue();
 			}
 		}
-		final byte[] bytes = (HexUtil.decodeHex(fileStreamHexHead));
+		final byte[] bytes = (HexUtil.decode(fileStreamHexHead));
 		return FileMagicNumber.getMagicNumber(bytes).getExtension();
 	}
 

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.checksum;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.io.checksum.crc16.CRC16XModem;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.junit.jupiter.api.Assertions;

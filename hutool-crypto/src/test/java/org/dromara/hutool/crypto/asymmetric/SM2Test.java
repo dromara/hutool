@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
@@ -53,8 +53,8 @@ public class SM2Test {
 		// OBJECT IDENTIFIER 1.2.156.10197.1.301
 		final String OID = "06082A811CCF5501822D";
 		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
-		Assertions.assertTrue(HexUtil.encodeHexStr(pair.getPrivate().getEncoded()).toUpperCase().contains(OID));
-		Assertions.assertTrue(HexUtil.encodeHexStr(pair.getPublic().getEncoded()).toUpperCase().contains(OID));
+		Assertions.assertTrue(HexUtil.encodeStr(pair.getPrivate().getEncoded()).toUpperCase().contains(OID));
+		Assertions.assertTrue(HexUtil.encodeStr(pair.getPublic().getEncoded()).toUpperCase().contains(OID));
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class SM2Test {
 		final SM2 sm2 = new SM2(null, publicKeyHex);
 		sm2.usePlainEncoding();
 
-		final boolean verify = sm2.verify(dataBytes, HexUtil.decodeHex(signHex));
+		final boolean verify = sm2.verify(dataBytes, HexUtil.decode(signHex));
 		Assertions.assertTrue(verify);
 	}
 
@@ -161,8 +161,8 @@ public class SM2Test {
 
 		final SM2 sm2 = SmUtil.sm2();
 
-		final String sign = sm2.signHex(HexUtil.encodeHexStr(content));
-		final boolean verify = sm2.verifyHex(HexUtil.encodeHexStr(content), sign);
+		final String sign = sm2.signHex(HexUtil.encodeStr(content));
+		final boolean verify = sm2.verifyHex(HexUtil.encodeStr(content), sign);
 		Assertions.assertTrue(verify);
 	}
 
@@ -186,8 +186,8 @@ public class SM2Test {
 		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 
 		final SM2 sm2 = new SM2(//
-				HexUtil.encodeHexStr(pair.getPrivate().getEncoded()), //
-				HexUtil.encodeHexStr(pair.getPublic().getEncoded())//
+				HexUtil.encodeStr(pair.getPrivate().getEncoded()), //
+				HexUtil.encodeStr(pair.getPublic().getEncoded())//
 		);
 
 		final byte[] sign = sm2.sign(content.getBytes(StandardCharsets.UTF_8));
@@ -200,12 +200,12 @@ public class SM2Test {
 		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 		final PublicKey publicKey = pair.getPublic();
 		final byte[] data = KeyUtil.encodeECPublicKey(publicKey);
-		final String encodeHex = HexUtil.encodeHexStr(data);
+		final String encodeHex = HexUtil.encodeStr(data);
 		final String encodeB64 = Base64.encode(data);
 		final PublicKey Hexdecode = KeyUtil.decodeECPoint(encodeHex, SmUtil.SM2_CURVE_NAME);
 		final PublicKey B64decode = KeyUtil.decodeECPoint(encodeB64, SmUtil.SM2_CURVE_NAME);
-		Assertions.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(Hexdecode.getEncoded()));
-		Assertions.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(B64decode.getEncoded()));
+		Assertions.assertEquals(HexUtil.encodeStr(publicKey.getEncoded()), HexUtil.encodeStr(Hexdecode.getEncoded()));
+		Assertions.assertEquals(HexUtil.encodeStr(publicKey.getEncoded()), HexUtil.encodeStr(B64decode.getEncoded()));
 	}
 
 	@Test

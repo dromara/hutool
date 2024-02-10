@@ -13,7 +13,7 @@
 package org.dromara.hutool.crypto.symmetric;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -287,7 +287,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @since 5.6.8
 	 */
 	public String updateHex(final byte[] data) {
-		return HexUtil.encodeHexStr(update(data));
+		return HexUtil.encodeStr(update(data));
 	}
 
 	// --------------------------------------------------------------------------------- Encrypt

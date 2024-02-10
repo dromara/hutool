@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,13 +10,12 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.codec;
+package org.dromara.hutool.core.codec.binary;
 
-import org.dromara.hutool.core.codec.binary.Base16Codec;
 import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.awt.Color;
@@ -35,43 +34,15 @@ import java.nio.charset.Charset;
  */
 public class HexUtil {
 
-	/**
-	 * 判断给定字符串是否为16进制数<br>
-	 * 如果是，需要使用对应数字类型对象的{@code decode}方法解码<br>
-	 * 例如：{@code Integer.decode}方法解码int类型的16进制数字
-	 *
-	 * @param value 值
-	 * @return 是否为16进制
-	 */
-	public static boolean isHexNumber(final String value) {
-		if (StrUtil.startWith(value, '-')) {
-			// issue#2875
-			return false;
-		}
-		int index = 0;
-		if (value.startsWith("0x", index) || value.startsWith("0X", index)) {
-			index += 2;
-		} else if (value.startsWith("#", index)) {
-			index++;
-		}
-		try {
-			new BigInteger(value.substring(index), 16);
-		} catch (final NumberFormatException e) {
-			return false;
-		}
-		return true;
-	}
-
-	// ---------------------------------------------------------------------------------------------------- encode
-
+	// region ----- encode
 	/**
 	 * 将字节数组转换为十六进制字符数组
 	 *
 	 * @param data byte[]
 	 * @return 十六进制char[]
 	 */
-	public static char[] encodeHex(final byte[] data) {
-		return encodeHex(data, true);
+	public static char[] encode(final byte[] data) {
+		return encode(data, true);
 	}
 
 	/**
@@ -81,8 +52,8 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 十六进制char[]
 	 */
-	public static char[] encodeHex(final String str, final Charset charset) {
-		return encodeHex(ByteUtil.toBytes(str, charset), true);
+	public static char[] encode(final String str, final Charset charset) {
+		return encode(ByteUtil.toBytes(str, charset), true);
 	}
 
 	/**
@@ -92,7 +63,7 @@ public class HexUtil {
 	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制char[]。如果提供的data为{@code null}，返回{@code null}
 	 */
-	public static char[] encodeHex(final byte[] data, final boolean toLowerCase) {
+	public static char[] encode(final byte[] data, final boolean toLowerCase) {
 		if(null == data){
 			return null;
 		}
@@ -105,8 +76,18 @@ public class HexUtil {
 	 * @param data byte[]
 	 * @return 十六进制String
 	 */
-	public static String encodeHexStr(final byte[] data) {
-		return encodeHexStr(data, true);
+	public static String encodeStr(final byte[] data) {
+		return encodeStr(data, true);
+	}
+
+	/**
+	 * 将字符串转换为十六进制字符串，结果为小写，默认编码是UTF-8
+	 *
+	 * @param data 被编码的字符串
+	 * @return 十六进制String
+	 */
+	public static String encodeStr(final String data) {
+		return encodeStr(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -116,18 +97,8 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 十六进制String
 	 */
-	public static String encodeHexStr(final String data, final Charset charset) {
-		return encodeHexStr(ByteUtil.toBytes(data, charset), true);
-	}
-
-	/**
-	 * 将字符串转换为十六进制字符串，结果为小写，默认编码是UTF-8
-	 *
-	 * @param data 被编码的字符串
-	 * @return 十六进制String
-	 */
-	public static String encodeHexStr(final String data) {
-		return encodeHexStr(data, CharsetUtil.UTF_8);
+	public static String encodeStr(final String data, final Charset charset) {
+		return encodeStr(ByteUtil.toBytes(data, charset), true);
 	}
 
 	/**
@@ -137,11 +108,12 @@ public class HexUtil {
 	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制String
 	 */
-	public static String encodeHexStr(final byte[] data, final boolean toLowerCase) {
-		return StrUtil.str(encodeHex(data, toLowerCase), CharsetUtil.UTF_8);
+	public static String encodeStr(final byte[] data, final boolean toLowerCase) {
+		return StrUtil.str(encode(data, toLowerCase), CharsetUtil.UTF_8);
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------- decode
+	// region ----- decode
 
 	/**
 	 * 将十六进制字符数组转换为字符串，默认编码UTF-8
@@ -149,8 +121,8 @@ public class HexUtil {
 	 * @param hexStr 十六进制String
 	 * @return 字符串
 	 */
-	public static String decodeHexStr(final String hexStr) {
-		return decodeHexStr(hexStr, CharsetUtil.UTF_8);
+	public static String decodeStr(final String hexStr) {
+		return decodeStr(hexStr, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -160,11 +132,11 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 字符串
 	 */
-	public static String decodeHexStr(final String hexStr, final Charset charset) {
+	public static String decodeStr(final String hexStr, final Charset charset) {
 		if (StrUtil.isEmpty(hexStr)) {
 			return hexStr;
 		}
-		return StrUtil.str(decodeHex(hexStr), charset);
+		return StrUtil.str(decode(hexStr), charset);
 	}
 
 	/**
@@ -174,8 +146,8 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 字符串
 	 */
-	public static String decodeHexStr(final char[] hexData, final Charset charset) {
-		return StrUtil.str(decodeHex(hexData), charset);
+	public static String decodeStr(final char[] hexData, final Charset charset) {
+		return StrUtil.str(decode(hexData), charset);
 	}
 
 	/**
@@ -184,8 +156,8 @@ public class HexUtil {
 	 * @param hexStr 十六进制String
 	 * @return byte[]
 	 */
-	public static byte[] decodeHex(final String hexStr) {
-		return decodeHex((CharSequence) hexStr);
+	public static byte[] decode(final String hexStr) {
+		return decode((CharSequence) hexStr);
 	}
 
 	/**
@@ -195,8 +167,8 @@ public class HexUtil {
 	 * @return byte[]
 	 * @throws RuntimeException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
 	 */
-	public static byte[] decodeHex(final char[] hexData) {
-		return decodeHex(String.valueOf(hexData));
+	public static byte[] decode(final char[] hexData) {
+		return decode(String.valueOf(hexData));
 	}
 
 	/**
@@ -207,11 +179,13 @@ public class HexUtil {
 	 * @throws HutoolException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
 	 * @since 5.6.6
 	 */
-	public static byte[] decodeHex(final CharSequence hexData) {
+	public static byte[] decode(final CharSequence hexData) {
 		return Base16Codec.CODEC_LOWER.decode(hexData);
 	}
 
-	// ---------------------------------------------------------------------------------------- Color
+	// endregion
+
+	// region ----- Color
 
 	/**
 	 * 将{@link Color}编码为Hex形式
@@ -262,6 +236,35 @@ public class HexUtil {
 	 */
 	public static Color decodeColor(final String hexColor) {
 		return Color.decode(hexColor);
+	}
+
+	// endregion
+
+	/**
+	 * 判断给定字符串是否为16进制数<br>
+	 * 如果是，需要使用对应数字类型对象的{@code decode}方法解码<br>
+	 * 例如：{@code Integer.decode}方法解码int类型的16进制数字
+	 *
+	 * @param value 值
+	 * @return 是否为16进制
+	 */
+	public static boolean isHexNumber(final String value) {
+		if (StrUtil.startWith(value, '-')) {
+			// issue#2875
+			return false;
+		}
+		int index = 0;
+		if (value.startsWith("0x", index) || value.startsWith("0X", index)) {
+			index += 2;
+		} else if (value.startsWith("#", index)) {
+			index++;
+		}
+		try {
+			new BigInteger(value.substring(index), 16);
+		} catch (final NumberFormatException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

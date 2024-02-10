@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.text;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 
 /**
  * 提供Unicode字符串和普通字符串之间的转换

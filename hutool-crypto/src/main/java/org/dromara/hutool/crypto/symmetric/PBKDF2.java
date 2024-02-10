@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.symmetric;
 
-import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.crypto.KeyUtil;
 
 import javax.crypto.SecretKey;
@@ -73,6 +73,6 @@ public class PBKDF2 {
 	 * @return 加密后的密码
 	 */
 	public String encryptHex(final char[] password, final byte[] salt) {
-		return HexUtil.encodeHexStr(encrypt(password, salt));
+		return HexUtil.encodeStr(encrypt(password, salt));
 	}
 }
