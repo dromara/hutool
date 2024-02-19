@@ -529,7 +529,7 @@ public class MapUtil {
 	}
 
 	/**
-	 * 将键值对转换为二维数组，第一维是key，第二纬是value
+	 * 将键值对转换为二维数组，第一维是key，第二维是value
 	 *
 	 * @param map map
 	 * @return 数组

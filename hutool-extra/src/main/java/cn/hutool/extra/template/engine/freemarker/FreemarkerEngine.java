@@ -103,7 +103,7 @@ public class FreemarkerEngine implements TemplateEngine {
 			config = new TemplateConfig();
 		}
 
-		final Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+		final Configuration cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 		cfg.setLocalizedLookup(false);
 		cfg.setDefaultEncoding(config.getCharset().toString());
 
