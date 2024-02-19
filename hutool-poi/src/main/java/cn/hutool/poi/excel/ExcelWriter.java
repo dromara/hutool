@@ -519,7 +519,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 设置列宽（单位为一个字符的宽度，例如传入width为10，表示10个字符的宽度）
 	 *
 	 * @param columnIndex 列号（从0开始计数，-1表示所有列的默认宽度）
-	 * @param width       宽度（单位1~256个字符宽度）
+	 * @param width       宽度（单位1~255个字符宽度）
 	 * @return this
 	 * @since 4.0.8
 	 */
