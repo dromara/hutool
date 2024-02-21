@@ -84,7 +84,7 @@ public class JvmInfo implements Serializable{
 	}
 
 	/**
-	 * 将Java Virutal Machine Implementation的信息转换成字符串。
+	 * 将Java Virtual Machine Implementation的信息转换成字符串。
 	 *
 	 * @return JVM impl.的字符串表示
 	 */

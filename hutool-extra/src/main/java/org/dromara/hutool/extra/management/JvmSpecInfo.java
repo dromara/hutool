@@ -17,7 +17,7 @@ import org.dromara.hutool.core.util.SystemUtil;
 import java.io.Serializable;
 
 /**
- * 代表Java Virutal Machine Specification的信息。
+ * 代表Java Virtual Machine Specification的信息。
  */
 public class JvmSpecInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -69,7 +69,7 @@ public class JvmSpecInfo implements Serializable{
 	}
 
 	/**
-	 * 将Java Virutal Machine Specification的信息转换成字符串。
+	 * 将Java Virtual Machine Specification的信息转换成字符串。
 	 *
 	 * @return JVM spec.的字符串表示
 	 */
