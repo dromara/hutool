@@ -4,14 +4,7 @@ import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.dialect.impl.AnsiSqlDialect;
-import cn.hutool.db.dialect.impl.H2Dialect;
-import cn.hutool.db.dialect.impl.MysqlDialect;
-import cn.hutool.db.dialect.impl.OracleDialect;
-import cn.hutool.db.dialect.impl.PhoenixDialect;
-import cn.hutool.db.dialect.impl.PostgresqlDialect;
-import cn.hutool.db.dialect.impl.SqlServer2012Dialect;
-import cn.hutool.db.dialect.impl.Sqlite3Dialect;
+import cn.hutool.db.dialect.impl.*;
 import cn.hutool.log.StaticLog;
 
 import javax.sql.DataSource;
@@ -66,6 +59,8 @@ public class DialectFactory implements DriverNamePool {
 				return new SqlServer2012Dialect();
 			} else if (DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
 				return new PhoenixDialect();
+			} else if (DRIVER_DM7.equalsIgnoreCase(driverName)) {
+				return new DmDialect();
 			}
 		}
 		// 无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句
