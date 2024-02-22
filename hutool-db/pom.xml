@@ -178,5 +178,11 @@
 			<version>0.5.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.dameng</groupId>
+			<artifactId>DmJdbcDriver18</artifactId>
+			<version>8.1.2.141</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 达梦数据库方言
  *
- * @author wubo
+ * @author wb04307201
  */
 public class DmDialect extends AnsiSqlDialect {
 	private static final long serialVersionUID = 3415348435502927423L;
