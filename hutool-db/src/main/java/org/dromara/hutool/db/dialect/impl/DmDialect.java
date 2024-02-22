@@ -49,6 +49,16 @@ public class DmDialect extends AnsiSqlDialect {
 		return DialectName.DM.name();
 	}
 
+	/**
+	 * 构建用于upsert的{@link PreparedStatement}<br>
+	 * 达梦使用 MERGE INTO 语法可合并 UPDATE 和 INSERT 语句<br>
+	 * 参考文档：https://eco.dameng.com/document/dm/zh-cn/pm/insertion-deletion-modification#5.4%20MERGE%20INTO%20%E8%AF%AD%E5%8F%A5
+	 *
+	 * @param conn   数据库连接对象
+	 * @param entity 数据实体类（包含表名）
+	 * @param keys   查找字段，某些数据库此字段必须，如H2，某些数据库无需此字段，如MySQL（通过主键）
+	 * @return {@link PreparedStatement}
+	 */
 	@Override
 	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) {
 		Assert.notEmpty(keys, "Keys must be not empty for DM MERGE SQL.");

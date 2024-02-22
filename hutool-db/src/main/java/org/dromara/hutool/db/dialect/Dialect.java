@@ -17,13 +17,12 @@ import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 import org.dromara.hutool.db.sql.Order;
 import org.dromara.hutool.db.sql.Query;
-import org.dromara.hutool.db.sql.SqlBuilder;
 import org.dromara.hutool.db.sql.QuoteWrapper;
+import org.dromara.hutool.db.sql.SqlBuilder;
 
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * SQL方言，不同的数据库由于在某些SQL上有所区别，故为每种数据库配置不同的方言。<br>
@@ -173,7 +172,7 @@ public interface Dialect extends Serializable {
 
 	/**
 	 * 构建用于upsert的{@link PreparedStatement}<br>
-	 * 方言实现需实现此默认方法，如果没有实现，抛出{@link SQLException}
+	 * 方言实现需实现此默认方法，如果没有实现，抛出{@link DbException}
 	 *
 	 * @param conn   数据库连接对象
 	 * @param entity 数据实体类（包含表名）
