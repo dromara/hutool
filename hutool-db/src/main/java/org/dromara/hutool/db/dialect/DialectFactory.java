@@ -72,6 +72,8 @@ public class DialectFactory implements DriverNamePool {
 				return new SqlServer2012Dialect(dbConfig);
 			} else if (DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
 				return new PhoenixDialect(dbConfig);
+			} else if (DRIVER_DM.equalsIgnoreCase(driverName)) {
+				return new DmDialect(dbConfig);
 			}
 		}
 		// 无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句

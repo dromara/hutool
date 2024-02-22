@@ -21,7 +21,7 @@ import org.dromara.hutool.core.text.StrUtil;
  * @author Looly
  */
 public enum DialectName {
-	ANSI, MYSQL, ORACLE, POSTGRESQL, SQLITE3, H2, SQLSERVER, SQLSERVER2012, PHOENIX;
+	ANSI, MYSQL, ORACLE, POSTGRESQL, SQLITE3, H2, SQLSERVER, SQLSERVER2012, PHOENIX, DM;
 
 	/**
 	 * 是否为指定数据库方言，检查时不分区大小写

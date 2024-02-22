@@ -73,9 +73,9 @@ public interface DriverNamePool {
 	 */
 	String DRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
 	/**
-	 * JDBC 驱动 达梦7
+	 * JDBC 驱动 达梦
 	 */
-	String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
+	String DRIVER_DM = "dm.jdbc.driver.DmDriver";
 	/**
 	 * JDBC 驱动 人大金仓
 	 */
