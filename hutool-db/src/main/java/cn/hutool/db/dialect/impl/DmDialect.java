@@ -31,54 +31,48 @@ public class DmDialect extends AnsiSqlDialect {
 	}
 
 	@Override
-	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
-		// limit A , B 表示：A就是查询的起点位置，B就是你需要多少行。
-		return find.append(" limit ").append(page.getStartPosition()).append(" , ").append(page.getPageSize());
-	}
-
-	@Override
 	public PreparedStatement psForUpsert(Connection conn, Entity entity, String... keys) throws SQLException {
 		Assert.notEmpty(keys, "Keys must be not empty for DM MERGE SQL.");
 		SqlBuilder.validateEntity(entity);
 		final SqlBuilder builder = SqlBuilder.create(wrapper);
 		List<String> keyList = Arrays.asList(keys);
 
-		final StringBuilder keyfieldsPart = new StringBuilder();
-		final StringBuilder updatefieldsPart = new StringBuilder();
-		final StringBuilder insertfieldsPart = new StringBuilder();
-		final StringBuilder insertplaceHolder = new StringBuilder();
+		final StringBuilder keyFieldsPart = new StringBuilder();
+		final StringBuilder updateFieldsPart = new StringBuilder();
+		final StringBuilder insertFieldsPart = new StringBuilder();
+		final StringBuilder insertPlaceHolder = new StringBuilder();
 
 		// 构建字段部分和参数占位符部分
 		entity.forEach((field, value) -> {
 			if (StrUtil.isNotBlank(field) && keyList.contains(field)) {
-				if (keyfieldsPart.length() > 0) {
-					keyfieldsPart.append(" and ");
+				if (keyFieldsPart.length() > 0) {
+					keyFieldsPart.append(" and ");
 				}
-				keyfieldsPart.append(field + "= ?");
+				keyFieldsPart.append(field + "= ?");
 				builder.addParams(value);
 			}
 		});
 
 		entity.forEach((field, value) -> {
 			if (StrUtil.isNotBlank(field) && !keyList.contains(field)) {
-				if (updatefieldsPart.length() > 0) {
+				if (updateFieldsPart.length() > 0) {
 					// 非第一个参数，追加逗号
-					updatefieldsPart.append(", ");
+					updateFieldsPart.append(", ");
 				}
-				updatefieldsPart.append(field + "= ?");
+				updateFieldsPart.append(field).append("= ?");
 				builder.addParams(value);
 			}
 		});
 
 		entity.forEach((field, value) -> {
 			if (StrUtil.isNotBlank(field)) {
-				if (insertfieldsPart.length() > 0) {
+				if (insertFieldsPart.length() > 0) {
 					// 非第一个参数，追加逗号
-					insertfieldsPart.append(", ");
-					insertplaceHolder.append(", ");
+					insertFieldsPart.append(", ");
+					insertPlaceHolder.append(", ");
 				}
-				insertfieldsPart.append((null != wrapper) ? wrapper.wrap(field) : field);
-				insertplaceHolder.append("?");
+				insertFieldsPart.append((null != wrapper) ? wrapper.wrap(field) : field);
+				insertPlaceHolder.append("?");
 				builder.addParams(value);
 			}
 		});
@@ -88,7 +82,7 @@ public class DmDialect extends AnsiSqlDialect {
 			tableName = this.wrapper.wrap(tableName);
 		}
 
-		builder.append("MERGE INTO ").append(tableName).append(" USING DUAL ON ").append(keyfieldsPart).append(" WHEN MATCHED THEN UPDATE SET ").append(updatefieldsPart).append(" WHEN NOT MATCHED THEN INSERT (").append(insertfieldsPart).append(") VALUES (").append(insertplaceHolder).append(")");
+		builder.append("MERGE INTO ").append(tableName).append(" USING DUAL ON ").append(keyFieldsPart).append(" WHEN MATCHED THEN UPDATE SET ").append(updateFieldsPart).append(" WHEN NOT MATCHED THEN INSERT (").append(insertFieldsPart).append(") VALUES (").append(insertPlaceHolder).append(")");
 
 		return StatementUtil.prepareStatement(conn, builder);
 	}

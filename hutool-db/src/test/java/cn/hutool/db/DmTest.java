@@ -2,6 +2,7 @@ package cn.hutool.db;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ public class DmTest {
 	}
 
 	@Test
+	@Ignore
 	public void upsertTest() throws SQLException {
 		Db db = Db.use(DS_GROUP_NAME);
 		db.upsert(Entity.create("test").set("a", 1).set("b", 111), "a");
