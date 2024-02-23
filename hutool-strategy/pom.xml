@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>cn.hutool</groupId>
+		<artifactId>hutool-parent</artifactId>
+		<version>5.8.27-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>hutool-strategy</artifactId>
+	<name>${project.artifactId}</name>
+	<description>策略模式中策略、策略管理器实现</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.strategy</Automatic-Module-Name>
+	</properties>
+
+</project>
