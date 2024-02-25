@@ -9,8 +9,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ChangAnTimeConverter
- *
+ * 长安时辰转换器
+ * <p>
+ * 	   23-1 -> 子时
+ *     1-3 -> 丑时
+ *     3-5 -> 寅时
+ *     5-7 -> 卯时
+ *     7-9 -> 辰时
+ *     9-11 -> 巳时
+ *     11-13 -> 午时
+ *     13-15 -> 未时
+ *     15-17 -> 申时
+ *     17-19 -> 酉时
+ *     19-21 -> 戌时
+ *     21-23 -> 亥时
+ *     24/-1/其他值 -> 未知
+ *     </p>
  * @author achao@hutool.cn
  */
 public class ChangAnTimeConverter {
@@ -33,6 +47,16 @@ public class ChangAnTimeConverter {
 		timeMap.put("亥", new int[]{21, 23});
 	}
 
+	/**
+	 * 将长安时辰转换为现代时间
+	 * <p>
+	 * toModernTime("子时").getBegin().getHours() -> 23
+	 * toModernTime("子时").getEnd().getHours() -> 1
+	 * </p>
+	 *
+	 * @param changAnTime 长安时辰
+	 * @return 现代时间段
+	 */
 	public static DateBetween toModernTime(String changAnTime) {
 		String time = changAnTime.replace("时", "");
 		int[] hours = timeMap.get(time);
@@ -53,6 +77,14 @@ public class ChangAnTimeConverter {
 		return DateBetween.of(startDate, endDate);
 	}
 
+	/**
+	 * 将小时转换为长安时辰
+	 * <p>
+	 *     toChangAnTime(1) -> "子时"
+	 *</p>
+	 * @param hour 小时
+	 * @return 长安时辰
+	 */
 	public static String toChangAnTime(int hour) {
 		for (Map.Entry<String, int[]> entry : timeMap.entrySet()) {
 			int startHour = entry.getValue()[0];
@@ -61,7 +93,7 @@ public class ChangAnTimeConverter {
 				return entry.getKey() + "时";
 			}
 		}
-		return "未知时";
+		return "未知";
 	}
 
 }

@@ -168,6 +168,14 @@ public class DateBetween implements Serializable {
 		return result;
 	}
 
+	public Date getBegin() {
+		return begin;
+	}
+
+	public Date getEnd() {
+		return end;
+	}
+
 	/**
 	 * 格式化输出时间差
 	 *
