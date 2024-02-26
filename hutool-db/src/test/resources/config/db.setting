@@ -74,6 +74,6 @@ remarks = true
 [dm]
 url = jdbc:dm://127.0.0.1:30236/schema=dm8_test
 user = SYSDBA
-pass = SYSDBA001
+pass = 123456789
 remarks = true
 

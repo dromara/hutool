@@ -73,6 +73,13 @@ public class HexUtilTest {
 	}
 
 	@Test
+	public void formatHexTest2(){
+		final String hex = "e8c670380cb220095268f40221fc748fa6";
+		final String formatHex = HexUtil.format(hex, "0x");
+		Assert.assertEquals("0xe8 0xc6 0x70 0x38 0x0c 0xb2 0x20 0x09 0x52 0x68 0xf4 0x02 0x21 0xfc 0x74 0x8f 0xa6", formatHex);
+	}
+
+	@Test
 	public void decodeHexTest(){
 		final String s = HexUtil.encodeHexStr("6");
 		final String s1 = HexUtil.decodeHexStr(s);
