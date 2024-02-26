@@ -81,3 +81,10 @@ url = jdbc:sqlserver://looly.database.chinacloudapi.cn:1433;database=test;encryp
 user = looly@looly
 pass = 123
 remarks = true
+
+# 测试用dm数据库
+[dm]
+url = jdbc:dm://127.0.0.1:30236/schema=dm8_test
+user = SYSDBA
+pass = 123456789
+remarks = true
