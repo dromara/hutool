@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 长安时辰转换器
+ * 时辰转换器
  * <p>
  * 	   23-1 -> 子时
  *     1-3 -> 丑时
@@ -27,7 +27,7 @@ import java.util.Map;
  *     </p>
  * @author achao@hutool.cn
  */
-public class ChangAnTimeConverter {
+public class ShiChen {
 
 	private static final Map<String, int[]> timeMap = new HashMap<>();
 
