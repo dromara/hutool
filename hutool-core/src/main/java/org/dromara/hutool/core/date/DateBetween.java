@@ -152,7 +152,7 @@ public class DateBetween implements Serializable {
 			// 考虑闰年的2月情况
 			if (Calendar.FEBRUARY == beginCal.get(Calendar.MONTH) && Calendar.FEBRUARY == endCal.get(Calendar.MONTH)) {
 				if (beginCal.get(Calendar.DAY_OF_MONTH) == beginCal.getActualMaximum(Calendar.DAY_OF_MONTH)
-						&& endCal.get(Calendar.DAY_OF_MONTH) == endCal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+					&& endCal.get(Calendar.DAY_OF_MONTH) == endCal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
 					// 两个日期都位于2月的最后一天，此时月数按照相等对待，此时都设置为1号
 					beginCal.set(Calendar.DAY_OF_MONTH, 1);
 					endCal.set(Calendar.DAY_OF_MONTH, 1);
@@ -168,10 +168,20 @@ public class DateBetween implements Serializable {
 		return result;
 	}
 
+	/**
+	 * 获取开始时间
+	 *
+	 * @return 获取开始时间
+	 */
 	public Date getBegin() {
 		return begin;
 	}
 
+	/**
+	 * 获取结束日期
+	 *
+	 * @return 结束日期
+	 */
 	public Date getEnd() {
 		return end;
 	}
