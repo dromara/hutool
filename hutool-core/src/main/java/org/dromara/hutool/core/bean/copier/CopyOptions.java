@@ -79,7 +79,14 @@ public class CopyOptions implements Serializable {
 	protected boolean override = true;
 
 	/**
-	 * 是否自动转换为驼峰方式
+	 * 是否自动转换为驼峰方式<br>
+	 * 此设置用于解决Bean和Map转换中的匹配问题而设置，并不是一个强制参数。
+	 * <ol>
+	 *     <li>当map转bean时，如果map中是下划线等非驼峰模式，自动匹配对应的驼峰字段，避免出现字段不拷贝问题。</li>
+	 *     <li>当bean转bean时，由于字段命名不规范，使用了非驼峰方式，增加兼容性。</li>
+	 * </ol>
+	 * <p>
+	 * 但是bean转Map和map转map时，没有使用这个参数，是因为没有匹配的必要，转map不存在无法匹配到的问题，因此此参数无效。
 	 */
 	protected boolean autoTransCamelCase = true;
 
@@ -320,7 +327,14 @@ public class CopyOptions implements Serializable {
 
 	/**
 	 * 设置是否自动转换为驼峰方式<br>
-	 * 一般用于map转bean和bean转bean出现非驼峰格式时，在尝试转换失败的情况下，是否二次检查转为驼峰匹配
+	 * 一般用于map转bean和bean转bean出现非驼峰格式时，在尝试转换失败的情况下，是否二次检查转为驼峰匹配。<br>
+	 * 此设置用于解决Bean和Map转换中的匹配问题而设置，并不是一个强制参数。
+	 * <ol>
+	 *     <li>当map转bean时，如果map中是下划线等非驼峰模式，自动匹配对应的驼峰字段，避免出现字段不拷贝问题。</li>
+	 *     <li>当bean转bean时，由于字段命名不规范，使用了非驼峰方式，增加兼容性。</li>
+	 * </ol>
+	 * <p>
+	 * 但是bean转Map和map转map时，没有使用这个参数，是因为没有匹配的必要，转map不存在无法匹配到的问题，因此此参数无效。
 	 *
 	 * @param autoTransCamelCase 是否自动转换为驼峰方式
 	 * @return this
