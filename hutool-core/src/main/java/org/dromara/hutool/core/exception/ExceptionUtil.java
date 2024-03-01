@@ -60,6 +60,33 @@ public class ExceptionUtil {
 	}
 
 	/**
+     * 获得详细异常堆栈信息
+     *
+     * @param e 异常
+     * @return 详细异常堆栈信息
+     */
+    public static String getDetailMessage(final Throwable e) {
+        if (null == e) {
+            return StrUtil.NULL;
+        }
+        final StringWriter sw = new StringWriter();
+        final PrintWriter writer = new PrintWriter(sw);
+        e.printStackTrace(writer);
+        writer.flush();
+        if (e instanceof InvocationTargetException) {
+            // 是反射异常,得到真正的异常
+            final InvocationTargetException ite = (InvocationTargetException) e;
+            return getDetailMessage(ite.getTargetException()) + System.lineSeparator() + sw;
+        }
+        if (e instanceof UndeclaredThrowableException) {
+            // 是反射异常,得到真正的异常
+            final UndeclaredThrowableException ute = (UndeclaredThrowableException) e;
+            return getDetailMessage(ute.getUndeclaredThrowable()) + System.lineSeparator() + sw;
+        }
+        return sw.toString();
+    }
+
+	/**
 	 * 使用运行时异常包装编译异常<br>
 	 * <p>
 	 * 如果传入参数已经是运行时异常，则直接返回，不再额外包装
