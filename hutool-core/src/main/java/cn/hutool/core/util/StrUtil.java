@@ -8,6 +8,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.text.CharSequenceUtil;
@@ -500,7 +503,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 截断后的字符串
 	 */
 	public static String truncateByByteLength(String str, Charset charset, int maxBytes, int factor,
-			boolean appendDots) {
+											  boolean appendDots) {
 		//字符数*速算因子<=最大字节数
 		if (str == null || str.length() * factor <= maxBytes) {
 			return str;
@@ -528,5 +531,25 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 			return result + "...";
 		}
 		return result;
+	}
+
+	/**
+	 *	将给定字符串，按照每段长度要求，拆分成多段。并以数组返回
+	 *
+	 * @param str			原始字符串
+	 * @param pieceLength	拆分后，每段字符串的长度
+	 * @return
+	 */
+	public static List<String> divideStrIntoPieces(String str, int pieceLength) {
+		if (pieceLength <= 0) {
+			return Collections.emptyList();
+		}
+		List<String> list = new ArrayList<>();
+		int originalLen = str.length();
+		int pieces = originalLen % pieceLength == 0 ? originalLen / pieceLength : originalLen / pieceLength + 1;
+		for (int i = 0; i < pieces; i++) {
+			list.add(sub(str, i * pieceLength, i == pieces - 1 ? str.length() : (i + 1) * 11));
+		}
+		return list;
 	}
 }
