@@ -636,7 +636,7 @@ public class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomString(final int length) {
-		return randomStringLower(BASE_CHAR_NUMBER, length);
+		return randomString(BASE_CHAR_NUMBER, length);
 	}
 
 	/**
@@ -646,7 +646,7 @@ public class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomStringLower(final int length) {
-		return randomStringLower(BASE_CHAR_NUMBER_LOWER, length);
+		return randomString(BASE_CHAR_NUMBER_LOWER, length);
 	}
 
 	/**
@@ -657,7 +657,7 @@ public class RandomUtil {
 	 * @since 4.0.13
 	 */
 	public static String randomStringUpper(final int length) {
-		return randomStringLower(BASE_CHAR_NUMBER_LOWER, length).toUpperCase();
+		return randomString(BASE_CHAR_NUMBER_LOWER, length).toUpperCase();
 	}
 
 	/**
@@ -670,7 +670,7 @@ public class RandomUtil {
 	public static String randomStringWithoutStr(final int length, final String elemData) {
 		String baseStr = BASE_CHAR_NUMBER_LOWER;
 		baseStr = StrUtil.removeAll(baseStr, elemData.toLowerCase().toCharArray());
-		return randomStringLower(baseStr, length);
+		return randomString(baseStr, length);
 	}
 
 	/**
@@ -680,7 +680,7 @@ public class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomNumbers(final int length) {
-		return randomStringLower(BASE_NUMBER, length);
+		return randomString(BASE_NUMBER, length);
 	}
 
 	/**
@@ -690,7 +690,7 @@ public class RandomUtil {
 	 * @param length     字符串的长度
 	 * @return 随机字符串
 	 */
-	public static String randomStringLower(final String baseString, int length) {
+	public static String randomString(final String baseString, int length) {
 		if (StrUtil.isEmpty(baseString)) {
 			return StrUtil.EMPTY;
 		}

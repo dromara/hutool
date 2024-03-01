@@ -89,7 +89,7 @@ public class RandomUtilTest {
 
 	@Test
 	public void randomStringOfLengthTest(){
-		final String s = RandomUtil.randomStringLower("123", -1);
+		final String s = RandomUtil.randomString("123", -1);
 		Assertions.assertNotNull(s);
 	}
 

@@ -30,7 +30,7 @@ public class FPETest {
 		final FPE fpe = new FPE(FPE.FPEMode.FF1, keyBytes, numberMapper, null);
 
 		// 原始数据
-		final String phone = RandomUtil.randomStringLower("A0123456789", 13);
+		final String phone = RandomUtil.randomString("A0123456789", 13);
 		final String encrypt = fpe.encrypt(phone);
 		// 加密后与原密文长度一致
 		Assertions.assertEquals(phone.length(), encrypt.length());
@@ -49,7 +49,7 @@ public class FPETest {
 		final FPE fpe = new FPE(FPE.FPEMode.FF3_1, keyBytes, numberMapper, null);
 
 		// 原始数据
-		final String phone = RandomUtil.randomStringLower("A0123456789", 13);
+		final String phone = RandomUtil.randomString("A0123456789", 13);
 		final String encrypt = fpe.encrypt(phone);
 		// 加密后与原密文长度一致
 		Assertions.assertEquals(phone.length(), encrypt.length());
