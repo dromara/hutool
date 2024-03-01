@@ -615,12 +615,18 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为可用邮箱地址
+	 * 验证是否为可用邮箱地址<br>
+	 * 邮箱地址限制长度为254个字符，参考：https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754
 	 *
 	 * @param value 值
 	 * @return true为可用邮箱地址
 	 */
 	public static boolean isEmail(final CharSequence value) {
+		final int codeLength = StrUtil.codeLength(value);
+		if(codeLength < 1 || codeLength > 254){
+			return false;
+		}
+
 		return isMatchRegex(PatternPool.EMAIL, value);
 	}
 

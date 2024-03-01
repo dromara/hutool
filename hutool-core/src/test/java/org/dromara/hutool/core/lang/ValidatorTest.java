@@ -136,6 +136,12 @@ public class ValidatorTest {
 	}
 
 	@Test
+	void issueI94YYUTest() {
+		final boolean ret = PatternPool.EMAIL.matcher(StrUtil.repeat("hutool\\\"", 1000)).matches();
+		Assertions.assertFalse(ret);
+	}
+
+	@Test
 	public void isMobileTest() {
 		final boolean m1 = Validator.isMobile("13900221432");
 		Assertions.assertTrue(m1);
@@ -143,6 +149,8 @@ public class ValidatorTest {
 		Assertions.assertTrue(m2);
 		final boolean m3 = Validator.isMobile("+8618600221432");
 		Assertions.assertTrue(m3);
+		final boolean m4 = Validator.isMobile("19312341234");
+		Assertions.assertTrue(m4);
 	}
 
 	@Test
