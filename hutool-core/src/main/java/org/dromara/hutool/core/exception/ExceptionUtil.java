@@ -50,6 +50,33 @@ public class ExceptionUtil {
 	}
 
 	/**
+     * 获得详细异常堆栈信息
+     *
+     * @param e 异常
+     * @return 详细异常堆栈信息
+     */
+    public static String getDetailMessage(final Throwable e) {
+        if (null == e) {
+            return StrUtil.NULL;
+        }
+        final StringWriter sw = new StringWriter();
+        final PrintWriter writer = new PrintWriter(sw);
+        e.printStackTrace(writer);
+        writer.flush();
+        if (e instanceof InvocationTargetException) {
+            // 是反射异常,得到真正的异常
+            final InvocationTargetException ite = (InvocationTargetException) e;
+            return getDetailMessage(ite.getTargetException()) + System.lineSeparator() + sw;
+        }
+        if (e instanceof UndeclaredThrowableException) {
+            // 是反射异常,得到真正的异常
+            final UndeclaredThrowableException ute = (UndeclaredThrowableException) e;
+            return getDetailMessage(ute.getUndeclaredThrowable()) + System.lineSeparator() + sw;
+        }
+        return sw.toString();
+    }
+
+	/**
 	 * 获得消息，调用异常类的getMessage方法
 	 *
 	 * @param e 异常
