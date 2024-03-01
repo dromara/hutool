@@ -125,6 +125,8 @@ public class ValidatorTest {
 		Assert.assertTrue(m2);
 		final boolean m3 = Validator.isMobile("+8618600221432");
 		Assert.assertTrue(m3);
+		final boolean m4 = Validator.isMobile("19312341234");
+		Assert.assertTrue(m4);
 	}
 
 	@Test
