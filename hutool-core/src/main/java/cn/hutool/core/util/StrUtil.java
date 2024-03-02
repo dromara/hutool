@@ -534,13 +534,16 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
-	 *	将给定字符串，按照每段长度要求，拆分成多段。并以数组返回
+	 * 将给定字符串，按照每段长度要求，拆分成多段。并以数组返回
 	 *
-	 * @param str			原始字符串
-	 * @param pieceLength	拆分后，每段字符串的长度
+	 * @param str         原始字符串
+	 * @param pieceLength 拆分后，每段字符串的长度
 	 * @return
 	 */
 	public static List<String> divideStrIntoPieces(String str, int pieceLength) {
+		if (isEmpty(str)) {
+			throw new NullPointerException("original string is null");
+		}
 		if (pieceLength <= 0) {
 			return Collections.emptyList();
 		}
@@ -548,7 +551,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		int originalLen = str.length();
 		int pieces = originalLen % pieceLength == 0 ? originalLen / pieceLength : originalLen / pieceLength + 1;
 		for (int i = 0; i < pieces; i++) {
-			list.add(sub(str, i * pieceLength, i == pieces - 1 ? str.length() : (i + 1) * 11));
+			list.add(sub(str, i * pieceLength, i == pieces - 1 ? str.length() : (i + 1) * pieceLength));
 		}
 		return list;
 	}
