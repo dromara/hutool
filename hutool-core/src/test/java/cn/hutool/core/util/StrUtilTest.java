@@ -691,4 +691,18 @@ public class StrUtilTest {
 		final String ret = StrUtil.truncateByByteLength(str, StandardCharsets.ISO_8859_1,10, 1, false);
 		Assert.assertEquals("This is En", ret);
 	}
+
+	@Test
+	public void divideStrIntoPiecesTest() {
+		final String str = "abcdefghijklmnopqrstuvwxyz";
+		final int len = 5;
+		List<String> pieces = StrUtil.divideStrIntoPieces(str, len);
+		Assert.assertEquals(6, pieces.size());
+		final String nullStr = null;
+		List<String> nullPieces = StrUtil.divideStrIntoPieces(nullStr, len);
+		Assert.assertEquals(0, nullPieces.size());
+		final int negativeLen = -5;
+		List<String> negativePieces = StrUtil.divideStrIntoPieces(str, negativeLen);
+		Assert.assertEquals(0, negativePieces.size());
+	}
 }

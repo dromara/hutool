@@ -542,10 +542,10 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static List<String> divideStrIntoPieces(String str, int pieceLength) {
 		if (isEmpty(str)) {
-			throw new NullPointerException("original string is null");
+			return new ArrayList<>(0);
 		}
 		if (pieceLength <= 0) {
-			return Collections.emptyList();
+			return new ArrayList<>(0);
 		}
 		List<String> list = new ArrayList<>();
 		int originalLen = str.length();
