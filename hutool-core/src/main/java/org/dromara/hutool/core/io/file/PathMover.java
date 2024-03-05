@@ -115,9 +115,10 @@ public class PathMover {
 		try {
 			return Files.move(src, target, options);
 		} catch (final IOException e) {
-			if (e instanceof FileAlreadyExistsException) {
-				// 目标文件已存在，直接抛出异常
-				// issue#I4QV0L@Gitee
+			if (e instanceof FileAlreadyExistsException || e instanceof AccessDeniedException) {
+				// issue#I4QV0L@Gitee issue#I95CLT@Gitee
+				// FileAlreadyExistsException 目标已存在
+				// AccessDeniedException 目标已存在且只读
 				throw new IORuntimeException(e);
 			}
 			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
