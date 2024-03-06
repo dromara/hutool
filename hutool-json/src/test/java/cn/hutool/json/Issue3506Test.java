@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import lombok.Data;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -13,8 +14,9 @@ public class Issue3506Test {
 		Languages languages = new Languages();
 		languages.setLanguageType(Java.class);
 		String hutoolJSONString = JSONUtil.toJsonStr(languages);
-		System.out.println(hutoolJSONString);
-		System.out.println(JSONUtil.toBean(hutoolJSONString, Languages.class));
+		final Languages bean = JSONUtil.toBean(hutoolJSONString, Languages.class);
+		Assert.assertNotNull(bean);
+		Assert.assertEquals(bean.getLanguageType(), Java.class);
 	}
 
 	@Data

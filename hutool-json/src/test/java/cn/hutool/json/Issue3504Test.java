@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import lombok.Data;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -14,8 +15,9 @@ public class Issue3504Test {
 		jsonBean.setName("test");
 		jsonBean.setClasses(new Class[]{String.class});
 		String huToolJsonStr = JSONUtil.toJsonStr(jsonBean);
-		System.out.println("hutool json str-------" + huToolJsonStr);
-		System.out.println(JSONUtil.toBean(huToolJsonStr, JsonBean.class));
+		final JsonBean bean = JSONUtil.toBean(huToolJsonStr, JsonBean.class);
+		Assert.assertNotNull(bean);
+		Assert.assertEquals("test", bean.getName());
 	}
 
 	@Data

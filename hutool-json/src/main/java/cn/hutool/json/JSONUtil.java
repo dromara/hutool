@@ -796,6 +796,7 @@ public class JSONUtil {
 				return object.toString();
 			}
 
+			// pr#3507
 			// Class类型保存类名
 			if (object instanceof Class<?>) {
 				return ((Class<?>) object).getName();
