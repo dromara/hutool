@@ -123,7 +123,8 @@ public class RegisterConverter implements Converter, Serializable {
 	 * @return 转换器
 	 */
 	public Converter getDefaultConverter(final Type type) {
-		return (null == defaultConverterMap) ? null : defaultConverterMap.get(TypeUtil.getClass(type));
+		final Class<?> key = null == type ? null : TypeUtil.getClass(type);
+		return (null == defaultConverterMap || null == key) ? null : defaultConverterMap.get(key);
 	}
 
 	/**

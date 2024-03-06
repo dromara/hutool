@@ -171,6 +171,12 @@ public class JSONValueMapper {
 				return new JSONObject(object, jsonConfig);
 			}
 
+			// pr#3507
+			// Class类型保存类名
+			if (object instanceof Class) {
+				return ((Class<?>) object).getName();
+			}
+
 			// 枚举类保存其字符串形式（4.0.2新增）
 			if (object instanceof Enum
 				// Java内部类不做转换
