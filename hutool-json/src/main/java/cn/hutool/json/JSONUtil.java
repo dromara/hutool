@@ -796,6 +796,11 @@ public class JSONUtil {
 				return object.toString();
 			}
 
+			// Class类型保存类名
+			if (object instanceof Class<?>) {
+				return ((Class<?>) object).getName();
+			}
+
 			// Java内部类不做转换
 			if (ClassUtil.isJdkClass(object.getClass())) {
 				return object.toString();

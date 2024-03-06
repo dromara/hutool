@@ -153,7 +153,8 @@ public class ConverterRegistry implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> Converter<T> getDefaultConverter(Type type) {
-		return (null == defaultConverterMap) ? null : (Converter<T>) defaultConverterMap.get(TypeUtil.getClass(type));
+		Class<?> key = TypeUtil.getClass(type);
+		return (null == defaultConverterMap || null == key) ? null : (Converter<T>) defaultConverterMap.get(key);
 	}
 
 	/**
