@@ -26,6 +26,7 @@ public class RangeReplacerByStr extends StrReplacer {
 	private final int beginInclude;
 	private final int endExclude;
 	private final CharSequence replacedStr;
+	private final boolean isCodePoint;
 
 	/**
 	 * 构造
@@ -33,11 +34,13 @@ public class RangeReplacerByStr extends StrReplacer {
 	 * @param beginInclude 开始位置（包含）
 	 * @param endExclude   结束位置（不包含）
 	 * @param replacedStr  被替换的字符串
+	 * @param isCodePoint  是否code point模式，此模式下emoji等会被作为单独的字符
 	 */
-	public RangeReplacerByStr(final int beginInclude, final int endExclude, final CharSequence replacedStr) {
+	public RangeReplacerByStr(final int beginInclude, final int endExclude, final CharSequence replacedStr, final boolean isCodePoint) {
 		this.beginInclude = beginInclude;
 		this.endExclude = endExclude;
 		this.replacedStr = replacedStr;
+		this.isCodePoint = isCodePoint;
 	}
 
 	@Override
@@ -47,8 +50,8 @@ public class RangeReplacerByStr extends StrReplacer {
 		}
 
 		final String originalStr = StrUtil.str(str);
-		final int[] strCodePoints = originalStr.codePoints().toArray();
-		final int strLength = strCodePoints.length;
+		final int[] chars = (isCodePoint ? originalStr.codePoints() : originalStr.chars()).toArray();
+		final int strLength = chars.length;
 
 		final int beginInclude = this.beginInclude;
 		if (beginInclude > strLength) {
@@ -66,11 +69,11 @@ public class RangeReplacerByStr extends StrReplacer {
 		// 新字符串长度 <= 旧长度 - (被替换区间codePoints数量) + 替换字符串长度
 		final StringBuilder stringBuilder = new StringBuilder(originalStr.length() - (endExclude - beginInclude) + replacedStr.length());
 		for (int i = 0; i < beginInclude; i++) {
-			stringBuilder.appendCodePoint(strCodePoints[i]);
+			append(stringBuilder, chars[i]);
 		}
 		replace(originalStr, beginInclude, stringBuilder);
 		for (int i = endExclude; i < strLength; i++) {
-			stringBuilder.appendCodePoint(strCodePoints[i]);
+			append(stringBuilder, chars[i]);
 		}
 		return stringBuilder.toString();
 	}
@@ -82,5 +85,19 @@ public class RangeReplacerByStr extends StrReplacer {
 
 		// 无意义的返回
 		return endExclude;
+	}
+
+	/**
+	 * 追加字符
+	 *
+	 * @param stringBuilder {@link StringBuilder}
+	 * @param c             字符
+	 */
+	private void append(final StringBuilder stringBuilder, final int c) {
+		if (isCodePoint) {
+			stringBuilder.appendCodePoint(c);
+		} else {
+			stringBuilder.append((char) c);
+		}
 	}
 }

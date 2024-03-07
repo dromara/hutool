@@ -26,18 +26,21 @@ public class RangeReplacerByChar extends StrReplacer {
 	private final int beginInclude;
 	private final int endExclude;
 	private final char replacedChar;
+	private final boolean isCodePoint;
 
 	/**
 	 * 构造
 	 *
 	 * @param beginInclude 开始位置（包含）
 	 * @param endExclude   结束位置（不包含）
-	 * @param replacedChar  被替换的字符串
+	 * @param replacedChar 被替换的字符串
+	 * @param isCodePoint  是否code point模式，此模式下emoji等会被作为单独的字符
 	 */
-	public RangeReplacerByChar(final int beginInclude, final int endExclude, final char replacedChar) {
+	public RangeReplacerByChar(final int beginInclude, final int endExclude, final char replacedChar, final boolean isCodePoint) {
 		this.beginInclude = beginInclude;
 		this.endExclude = endExclude;
 		this.replacedChar = replacedChar;
+		this.isCodePoint = isCodePoint;
 	}
 
 	@Override
@@ -47,8 +50,8 @@ public class RangeReplacerByChar extends StrReplacer {
 		}
 
 		final String originalStr = StrUtil.str(str);
-		final int[] strCodePoints = originalStr.codePoints().toArray();
-		final int strLength = strCodePoints.length;
+		final int[] chars = (isCodePoint ? originalStr.codePoints() : originalStr.chars()).toArray();
+		final int strLength = chars.length;
 
 		final int beginInclude = this.beginInclude;
 		if (beginInclude > strLength) {
@@ -71,7 +74,7 @@ public class RangeReplacerByChar extends StrReplacer {
 				replace(originalStr, i, stringBuilder);
 			} else {
 				// 其它字符保留
-				stringBuilder.appendCodePoint(strCodePoints[i]);
+				append(stringBuilder, chars[i]);
 			}
 		}
 		return stringBuilder.toString();
@@ -81,5 +84,19 @@ public class RangeReplacerByChar extends StrReplacer {
 	protected int replace(final CharSequence str, final int pos, final StringBuilder out) {
 		out.appendCodePoint(replacedChar);
 		return pos;
+	}
+
+	/**
+	 * 追加字符
+	 *
+	 * @param stringBuilder {@link StringBuilder}
+	 * @param c             字符
+	 */
+	private void append(final StringBuilder stringBuilder, final int c) {
+		if (isCodePoint) {
+			stringBuilder.appendCodePoint(c);
+		} else {
+			stringBuilder.append((char) c);
+		}
 	}
 }

@@ -40,10 +40,10 @@ public class CharSequenceUtilTest {
 	@Test
 	public void replaceByStrTest() {
 		final String replace = "SSM15930297701BeryAllen";
-		final String result = CharSequenceUtil.replace(replace, 5, 12, "***");
+		final String result = CharSequenceUtil.replaceByCodePoint(replace, 5, 12, "***");
 		Assertions.assertEquals("SSM15***01BeryAllen", result);
 
-		final String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, "***");
+		final String emoji = StrUtil.replaceByCodePoint("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, "***");
 		Assertions.assertEquals("\uD83D\uDE00a***ccdd", emoji);
 	}
 

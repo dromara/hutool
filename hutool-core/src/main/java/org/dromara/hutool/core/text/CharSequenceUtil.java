@@ -2908,7 +2908,7 @@ public class CharSequenceUtil extends StrValidator {
 		if (INDEX_NOT_FOUND == startInclude) {
 			return str(str);
 		}
-		return replace(str, startInclude, startInclude + searchStr.length(), replacedStr);
+		return replaceByCodePoint(str, startInclude, startInclude + searchStr.length(), replacedStr);
 	}
 
 	/**
@@ -3002,8 +3002,8 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 替换后的字符串
 	 * @since 3.2.1
 	 */
-	public static String replace(final CharSequence str, final int beginInclude, final int endExclude, final char replacedChar) {
-		return new RangeReplacerByChar(beginInclude, endExclude, replacedChar).apply(str);
+	public static String replaceByCodePoint(final CharSequence str, final int beginInclude, final int endExclude, final char replacedChar) {
+		return new RangeReplacerByChar(beginInclude, endExclude, replacedChar, true).apply(str);
 	}
 
 	/**
@@ -3017,8 +3017,8 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 替换后的字符串
 	 * @since 3.2.1
 	 */
-	public static String replace(final CharSequence str, final int beginInclude, final int endExclude, final CharSequence replacedStr) {
-		return new RangeReplacerByStr(beginInclude, endExclude, replacedStr).apply(str);
+	public static String replaceByCodePoint(final CharSequence str, final int beginInclude, final int endExclude, final CharSequence replacedStr) {
+		return new RangeReplacerByStr(beginInclude, endExclude, replacedStr, true).apply(str);
 	}
 
 	/**
@@ -3075,7 +3075,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @since 4.1.14
 	 */
 	public static String hide(final CharSequence str, final int startInclude, final int endExclude) {
-		return replace(str, startInclude, endExclude, '*');
+		return replaceByCodePoint(str, startInclude, endExclude, '*');
 	}
 
 	/**
