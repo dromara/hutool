@@ -166,8 +166,12 @@ public class PropDesc {
 	 */
 	public Object getValue(final Object bean) {
 		if (null != this.getter) {
-			//return MethodUtil.invoke(bean, this.getter);
-			return LambdaUtil.buildGetter(this.getter).apply(bean);
+			try{
+				return LambdaUtil.buildGetter(this.getter).apply(bean);
+			} catch (final Exception ignore){
+				// issue#I96JIP，在jdk14+多模块项目中，存在权限问题，使用传统反射
+				return MethodUtil.invoke(bean, this.getter);
+			}
 		} else if (ModifierUtil.isPublic(this.field)) {
 			return FieldUtil.getFieldValue(bean, this.field);
 		}
