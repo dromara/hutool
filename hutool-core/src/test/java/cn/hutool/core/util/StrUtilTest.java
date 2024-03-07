@@ -1,12 +1,11 @@
 package cn.hutool.core.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * 字符串工具类单元测试
@@ -219,9 +218,9 @@ public class StrUtilTest {
 
 	@Test
 	public void replaceTest() {
-		String string = StrUtil.replace("aabbccdd", 2, 6, '*');
+		String string = StrUtil.replaceByCodePoint("aabbccdd", 2, 6, '*');
 		Assert.assertEquals("aa****dd", string);
-		string = StrUtil.replace("aabbccdd", 2, 12, '*');
+		string = StrUtil.replaceByCodePoint("aabbccdd", 2, 12, '*');
 		Assert.assertEquals("aa******", string);
 	}
 
@@ -251,11 +250,11 @@ public class StrUtilTest {
 	@Test
 	public void replaceTest5() {
 		final String a = "\uD853\uDC09秀秀";
-		final String result = StrUtil.replace(a, 1, a.length(), '*');
+		final String result = StrUtil.replaceByCodePoint(a, 1, a.length(), '*');
 		Assert.assertEquals("\uD853\uDC09**", result);
 
 		final String aa = "规划大师";
-		final String result1 = StrUtil.replace(aa, 2, a.length(), '*');
+		final String result1 = StrUtil.replaceByCodePoint(aa, 2, a.length(), '*');
 		Assert.assertEquals("规划**", result1);
 	}
 

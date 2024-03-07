@@ -25,7 +25,7 @@ public class CharSequenceUtilTest {
 	@Test
 	public void replaceByStrTest() {
 		String replace = "SSM15930297701BeryAllen";
-		String result = CharSequenceUtil.replace(replace, 5, 12, "***");
+		String result = CharSequenceUtil.replaceByCodePoint(replace, 5, 12, "***");
 		Assert.assertEquals("SSM15***01BeryAllen", result);
 	}
 

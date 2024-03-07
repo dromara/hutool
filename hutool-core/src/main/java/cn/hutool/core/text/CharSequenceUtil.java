@@ -16,10 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.Normalizer;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -2461,9 +2458,7 @@ public class CharSequenceUtil {
 		}
 
 		char[] result = new char[count];
-		for (int i = 0; i < count; i++) {
-			result[i] = c;
-		}
+		Arrays.fill(result, c);
 		return new String(result);
 	}
 
@@ -3536,7 +3531,7 @@ public class CharSequenceUtil {
 		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
 			return str(str);
 		}
-		if (prefixes != null && prefixes.length > 0) {
+		if (prefixes != null) {
 			for (final CharSequence s : prefixes) {
 				if (startWith(str, s, ignoreCase)) {
 					return str.toString();
@@ -3650,8 +3645,25 @@ public class CharSequenceUtil {
 	 * @param replacedChar 被替换的字符
 	 * @return 替换后的字符串
 	 * @since 3.2.1
+	 * @deprecated 歧义，请使用{@link #replaceByCodePoint(CharSequence, int, int, char)}
 	 */
+	@Deprecated
 	public static String replace(CharSequence str, int startInclude, int endExclude, char replacedChar) {
+		return replaceByCodePoint(str, startInclude, endExclude, replacedChar);
+	}
+
+	/**
+	 * 替换指定字符串的指定区间内字符为固定字符<br>
+	 * 此方法使用{@link String#codePoints()}完成拆分替换
+	 *
+	 * @param str          字符串
+	 * @param startInclude 开始位置（包含）
+	 * @param endExclude   结束位置（不包含）
+	 * @param replacedChar 被替换的字符
+	 * @return 替换后的字符串
+	 * @since 5.8.27
+	 */
+	public static String replaceByCodePoint(CharSequence str, int startInclude, int endExclude, char replacedChar) {
 		if (isEmpty(str)) {
 			return str(str);
 		}
@@ -3690,8 +3702,25 @@ public class CharSequenceUtil {
 	 * @param replacedStr  被替换的字符串
 	 * @return 替换后的字符串
 	 * @since 3.2.1
+	 * @deprecated 歧义，请使用{@link #replaceByCodePoint(CharSequence, int, int, CharSequence)}
 	 */
+	@Deprecated
 	public static String replace(CharSequence str, int startInclude, int endExclude, CharSequence replacedStr) {
+		return replaceByCodePoint(str, startInclude, endExclude, replacedStr);
+	}
+
+	/**
+	 * 替换指定字符串的指定区间内字符为指定字符串，字符串只重复一次<br>
+	 * 此方法使用{@link String#codePoints()}完成拆分替换
+	 *
+	 * @param str          字符串
+	 * @param startInclude 开始位置（包含）
+	 * @param endExclude   结束位置（不包含）
+	 * @param replacedStr  被替换的字符串
+	 * @return 替换后的字符串
+	 * @since 5.8.27
+	 */
+	public static String replaceByCodePoint(CharSequence str, int startInclude, int endExclude, CharSequence replacedStr) {
 		if (isEmpty(str)) {
 			return str(str);
 		}
@@ -3814,7 +3843,7 @@ public class CharSequenceUtil {
 		if (INDEX_NOT_FOUND == startInclude) {
 			return str(str);
 		}
-		return replace(str, startInclude, startInclude + searchStr.length(), replacedStr);
+		return replaceByCodePoint(str, startInclude, startInclude + searchStr.length(), replacedStr);
 	}
 
 	/**
@@ -3838,7 +3867,7 @@ public class CharSequenceUtil {
 	 * @since 4.1.14
 	 */
 	public static String hide(CharSequence str, int startInclude, int endExclude) {
-		return replace(str, startInclude, endExclude, '*');
+		return replaceByCodePoint(str, startInclude, endExclude, '*');
 	}
 
 	/**
