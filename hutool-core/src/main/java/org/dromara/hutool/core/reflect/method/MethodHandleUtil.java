@@ -40,7 +40,7 @@ import java.lang.reflect.Method;
 public class MethodHandleUtil {
 
 	/**
-	 * 执行方法句柄，{@link MethodHandle#invoke(Object...)}包装<br>
+	 * 执行方法句柄，{@link MethodHandle#invokeWithArguments(Object...)}包装<br>
 	 *
 	 * @param methodHandle {@link MethodHandle}
 	 * @param args         方法参数值，支持子类转换和自动拆装箱

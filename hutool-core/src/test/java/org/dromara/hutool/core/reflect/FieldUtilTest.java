@@ -46,7 +46,7 @@ public class FieldUtilTest {
 		Assertions.assertNull(noField);
 
 		// 获取不到父类字段
-		final Field field = FieldUtil.getDeClearField(ReflectUtilTest.TestSubClass.class, "field");
+		final Field field = FieldUtil.getDeclearField(ReflectUtilTest.TestSubClass.class, "field");
 		Assertions.assertNull(field);
 
 		final Field subField = FieldUtil.getField(ReflectUtilTest.TestSubClass.class, "subField");

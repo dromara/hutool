@@ -39,6 +39,10 @@ public class JdkUtil {
 	 * 是否Android环境
 	 */
 	public static final boolean IS_ANDROID;
+	/**
+	 * 是否OPENJ9环境
+	 */
+	public static final boolean IS_OPENJ9;
 
 	static {
 		// JVM版本
@@ -49,6 +53,7 @@ public class JdkUtil {
 		// JVM名称
 		final String jvmName = _getJvmName();
 		IS_ANDROID = jvmName.equals("Dalvik");
+		IS_OPENJ9 = jvmName.contains("OpenJ9");
 	}
 
 	/**

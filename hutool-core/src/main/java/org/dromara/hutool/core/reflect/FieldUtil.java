@@ -105,7 +105,7 @@ public class FieldUtil {
 	 * @param name      字段名称
 	 * @return 字段对象，如果未找到返回{@code null}
 	 */
-	public static Field getDeClearField(final Class<?> beanClass, final String name) {
+	public static Field getDeclearField(final Class<?> beanClass, final String name) {
 		try {
 			return beanClass.getDeclaredField(name);
 		} catch (final NoSuchFieldException e) {
