@@ -1374,4 +1374,43 @@ public class MapUtil extends MapGetUtil {
 		}
 		return list;
 	}
+
+	/**
+	 * 遍历Map，返回第一个匹配的value值
+	 *
+	 * @param map       map
+	 * @param predicate 匹配条件
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @return value值
+	 * @since 6.0.0
+	 */
+	public static <K, V> V firstMatchValue(final Map<K, V> map, final Predicate<Entry<K, V>> predicate) {
+		final Entry<K, V> kvEntry = firstMatch(map, predicate);
+		if (null != kvEntry) {
+			return kvEntry.getValue();
+		}
+		return null;
+	}
+
+	/**
+	 * 遍历Map，返回第一个匹配的entry值
+	 *
+	 * @param map       map
+	 * @param predicate 匹配条件
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @return entry
+	 * @since 6.0.0
+	 */
+	public static <K, V> Entry<K, V> firstMatch(final Map<K, V> map, final Predicate<Entry<K, V>> predicate) {
+		if (isNotEmpty(map)) {
+			for (final Entry<K, V> entry : map.entrySet()) {
+				if (predicate.test(entry)) {
+					return entry;
+				}
+			}
+		}
+		return null;
+	}
 }
