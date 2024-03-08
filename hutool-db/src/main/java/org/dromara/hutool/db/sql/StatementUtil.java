@@ -16,6 +16,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.handler.ResultSetUtil;
@@ -48,7 +49,7 @@ public class StatementUtil {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(returnGeneratedKey)
-			.setSqlFilter(config.getSqlFilters())
+			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).get())
 			.setSql(sql)
 			.setParams(params)
 			.build();
@@ -83,7 +84,7 @@ public class StatementUtil {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(false)
-			.setSqlFilter(config.getSqlFilters())
+			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).get())
 			.setSql(sql)
 			.setParams(ArrayUtil.ofArray(paramsBatch, Object.class))
 			.buildForBatch();
@@ -103,7 +104,7 @@ public class StatementUtil {
 	public static CallableStatement prepareCall(final DbConfig config, final Connection conn, final String sql, final Object... params) throws SQLException {
 		return StatementBuilder.of()
 			.setConnection(conn)
-			.setSqlFilter(config.getSqlFilters())
+			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).get())
 			.setSql(sql)
 			.setParams(params)
 			.buildForCall();
