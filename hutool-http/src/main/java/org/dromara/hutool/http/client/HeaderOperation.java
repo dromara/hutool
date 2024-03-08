@@ -71,7 +71,12 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @return header值
 	 */
 	default String header(final String name) {
-		final Collection<String> values = headers().get(name);
+		final Map<String, ? extends Collection<String>> headers = headers();
+		Collection<String> values = headers.get(name);
+		if(null == values){
+			// issue#I96U4T，根据RFC2616规范，header的name不区分大小写
+			values = MapUtil.firstMatchValue(headers, entry-> StrUtil.equalsIgnoreCase(name, entry.getKey()));
+		}
 		if (ArrayUtil.isNotEmpty(values)) {
 			return CollUtil.getFirst(values);
 		}

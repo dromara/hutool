@@ -12,7 +12,9 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -30,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -288,7 +291,13 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 	 */
 	@Override
 	public String header(final String name) {
-		return this.conn.getHeaderField(name);
+		String headerField = this.conn.getHeaderField(name);
+		if(null == headerField){
+			final Map<String, ? extends Collection<String>> headers = headers();
+			headerField =  CollUtil.getFirst(MapUtil.firstMatchValue(headers, entry-> StrUtil.equalsIgnoreCase(name, entry.getKey())));
+		}
+
+		return headerField;
 	}
 
 	/**
