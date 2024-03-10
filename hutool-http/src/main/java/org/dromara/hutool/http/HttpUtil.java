@@ -12,6 +12,9 @@
 
 package org.dromara.hutool.http;
 
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.CaseInsensitiveMap;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.net.url.UrlQueryUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.client.ClientConfig;
@@ -23,6 +26,7 @@ import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.server.SimpleServer;
 
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -269,6 +273,7 @@ public class HttpUtil {
 
 	/**
 	 * 打印{@link Response} 为可读形式
+	 *
 	 * @param response {@link Response}
 	 * @return 字符串
 	 */
@@ -284,5 +289,27 @@ public class HttpUtil {
 		sb.append("    ").append(response.bodyStr()).append(StrUtil.CRLF);
 
 		return sb.toString();
+	}
+
+	/**
+	 * 获取指定的Header值，如果不存在返回{@code null}<br>
+	 * 根据RFC2616规范，header的name不区分大小写，因此首先get值，不存在则遍历匹配不区分大小写的key。
+	 *
+	 * @param headers 头信息的Map
+	 * @param name    header名
+	 * @return header值
+	 * @since 6.0.0
+	 */
+	public static String header(final Map<String, ? extends Collection<String>> headers, final String name) {
+		Collection<String> values = headers.get(name);
+		if (null == values && !(headers instanceof CaseInsensitiveMap)) {
+			// issue#I96U4T，根据RFC2616规范，header的name不区分大小写
+			values = MapUtil.firstMatchValue(headers, entry -> StrUtil.equalsIgnoreCase(name, entry.getKey()));
+		}
+		if (CollUtil.isNotEmpty(values)) {
+			return CollUtil.getFirst(values);
+		}
+
+		return null;
 	}
 }

@@ -12,11 +12,8 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.stream.EmptyInputStream;
-import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
@@ -96,15 +93,7 @@ public class JdkHttpResponse implements Response, Closeable {
 
 	@Override
 	public String header(final String name) {
-		List<String> headerValues = this.headers.get(name);
-		if(null == headerValues){
-			// issue#I96U4T，根据RFC2616规范，header的name不区分大小写
-			headerValues = MapUtil.firstMatchValue(this.headers, entry-> StrUtil.equalsIgnoreCase(name, entry.getKey()));
-		}
-		if (ArrayUtil.isNotEmpty(headerValues)) {
-			return headerValues.get(0);
-		}
-		return null;
+		return HttpUtil.header(this.headers, name);
 	}
 
 	/**
