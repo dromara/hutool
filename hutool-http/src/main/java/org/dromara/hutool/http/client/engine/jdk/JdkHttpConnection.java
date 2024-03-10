@@ -46,6 +46,10 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 	private final URL url;
 	private final Proxy proxy;
 	private final HttpURLConnection conn;
+	/**
+	 * 重定向次数计数器，内部使用
+	 */
+	protected int redirectCount;
 
 	/**
 	 * 创建HttpConnection
@@ -292,9 +296,9 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 	@Override
 	public String header(final String name) {
 		String headerField = this.conn.getHeaderField(name);
-		if(null == headerField){
+		if (null == headerField) {
 			final Map<String, ? extends Collection<String>> headers = headers();
-			headerField =  CollUtil.getFirst(MapUtil.firstMatchValue(headers, entry-> StrUtil.equalsIgnoreCase(name, entry.getKey())));
+			headerField = CollUtil.getFirst(MapUtil.firstMatchValue(headers, entry -> StrUtil.equalsIgnoreCase(name, entry.getKey())));
 		}
 
 		return headerField;

@@ -42,10 +42,6 @@ import java.util.List;
 public class JdkClientEngine implements ClientEngine {
 
 	private ClientConfig config;
-	/**
-	 * 重定向次数计数器，内部使用
-	 */
-	private int redirectCount;
 
 	/**
 	 * 构造
@@ -164,8 +160,8 @@ public class JdkClientEngine implements ClientEngine {
 			if (code != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(code)) {
 					message.url(getLocationUrl(message.handledUrl(), conn.header(HeaderName.LOCATION)));
-					if (redirectCount < message.maxRedirectCount()) {
-						redirectCount++;
+					if (conn.redirectCount < message.maxRedirectCount()) {
+						conn.redirectCount++;
 						return send(message, isAsync);
 					}
 				}
