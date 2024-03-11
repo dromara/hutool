@@ -1,33 +1,17 @@
 package cn.hutool.core.io.file;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.visitor.CopyVisitor;
 import cn.hutool.core.io.file.visitor.DelVisitor;
+import cn.hutool.core.io.resource.FileResource;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.CopyOption;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -198,13 +182,54 @@ public class PathUtil {
 	}
 
 	/**
+	 * 通过JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)} 方法拷贝文件
+	 *
+	 * @param src     源文件流
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return 目标Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.27
+	 */
+	public static Path copyFile(Resource src, Path target, CopyOption... options) throws IORuntimeException {
+		Assert.notNull(src, "Source is null !");
+		if(src instanceof FileResource){
+			return copyFile(((FileResource) src).getFile().toPath(), target, options);
+		}
+		return copyFile(src.getStream(), target, options);
+	}
+
+	/**
+	 * 通过JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)} 方法拷贝文件
+	 *
+	 * @param src     源文件流
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return 目标Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.27
+	 */
+	public static Path copyFile(InputStream src, Path target, CopyOption... options) throws IORuntimeException {
+		Assert.notNull(src, "Source is null !");
+		Assert.notNull(target, "Destination File or directory is null !");
+
+		try {
+			Files.copy(src, target, options);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return target;
+	}
+
+	/**
 	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件<br>
 	 * 此方法不支持递归拷贝目录，如果src传入是目录，只会在目标目录中创建空目录
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
 	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
-	 * @return Path
+	 * @return 目标Path
 	 * @throws IORuntimeException IO异常
 	 */
 	public static Path copyFile(Path src, Path dest, StandardCopyOption... options) throws IORuntimeException {
@@ -218,7 +243,7 @@ public class PathUtil {
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
 	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
-	 * @return Path
+	 * @return 目标Path
 	 * @throws IORuntimeException IO异常
 	 * @since 5.4.1
 	 */

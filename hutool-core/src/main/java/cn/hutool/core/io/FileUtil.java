@@ -10,6 +10,7 @@ import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.file.Tailer;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
@@ -1035,6 +1036,40 @@ public class FileUtil extends PathUtil {
 		Assert.notBlank(src, "Source File path is blank !");
 		Assert.notBlank(dest, "Destination File path is blank !");
 		return copyFile(Paths.get(src), Paths.get(dest), options).toFile();
+	}
+
+	/**
+	 * 通过JDK7+的 Files#copy(InputStream, Path, CopyOption...) 方法拷贝文件
+	 *
+	 * @param src     源文件
+	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.27
+	 */
+	public static File copyFile(Resource src, File dest, StandardCopyOption... options) throws IORuntimeException {
+		// check
+		Assert.notNull(src, "Source File is null !");
+		Assert.notNull(dest, "Destination File or directiory is null !");
+		return copyFile(src, dest.toPath(), options).toFile();
+	}
+
+	/**
+	 * 通过JDK7+的 Files#copy(InputStream, Path, CopyOption...) 方法拷贝文件
+	 *
+	 * @param src     源文件
+	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.27
+	 */
+	public static File copyFile(InputStream src, File dest, StandardCopyOption... options) throws IORuntimeException {
+		// check
+		Assert.notNull(src, "Source File is null !");
+		Assert.notNull(dest, "Destination File or directiory is null !");
+		return copyFile(src, dest.toPath(), options).toFile();
 	}
 
 	/**

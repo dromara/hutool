@@ -2,13 +2,14 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.27(2024-03-07)
+# 5.8.27(2024-03-11)
 
 ### 🐣新特性
 * 【extra 】      FreemarkerEngine修改默认版本参数
 * 【db    】      增加达梦数据库方言（pr#1178@Gitee）
 * 【core  】      HexUtil#format方法增加prefix参数（issue#I93PU9@Gitee）
 * 【core  】      StrUtil.replace歧义，修改为replaceByCodePoint（issue#I96LWH@Gitee）
+* 【core  】      FileUtil和PathUtil增加Resource重载（issue#I97FJT@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复PathMover对目标已存在且只读文件报错错误问题（issue#I95CLT@Gitee）
