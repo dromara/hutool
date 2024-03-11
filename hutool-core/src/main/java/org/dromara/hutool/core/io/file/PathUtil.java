@@ -15,6 +15,9 @@ package org.dromara.hutool.core.io.file;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.resource.FileResource;
+import org.dromara.hutool.core.io.resource.Resource;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.*;
@@ -85,6 +88,7 @@ public class PathUtil {
 		}
 	}
 
+	// region ----- loop and walk
 	/**
 	 * 递归遍历目录以及子目录中的所有文件<br>
 	 * 如果提供path为文件，直接返回过滤结果
@@ -150,8 +154,6 @@ public class PathUtil {
 
 		return fileList;
 	}
-
-	// region ----- walkFiles
 
 	/**
 	 * 遍历指定path下的文件并做处理
@@ -224,6 +226,74 @@ public class PathUtil {
 		PathDeleter.of(path).clean();
 	}
 
+	// region ----- copy
+	/**
+	 * 拷贝资源到目标文件
+	 * <ul>
+	 *     <li>如果src为{@link FileResource}，调用文件拷贝。</li>
+	 *     <li>其它，调用JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)}。</li>
+	 * </ul>
+	 *
+	 * @param src     源文件资源{@link Resource}实现
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return 目标Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.27
+	 */
+	public static Path copy(final Resource src, final Path target, final CopyOption... options) throws IORuntimeException {
+		Assert.notNull(src, "Source is null !");
+		if (src instanceof FileResource) {
+			return copy(((FileResource) src).getFile().toPath(), target, options);
+		}
+		try (final InputStream stream = src.getStream()) {
+			return copy(stream, target, options);
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 通过JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)} 方法拷贝文件
+	 *
+	 * @param src     源文件流，使用后不闭流
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return 目标Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.27
+	 */
+	public static Path copy(final InputStream src, final Path target, final CopyOption... options) throws IORuntimeException {
+		Assert.notNull(target, "Destination File or directory is null !");
+
+		try {
+			Files.copy(src, target, options);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return target;
+	}
+
+	/**
+	 * 通过JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)} 方法拷贝文件
+	 *
+	 * @param src    源文件流，使用后不闭流
+	 * @param target 目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @return 拷贝bytes数
+	 * @throws IORuntimeException IO异常
+	 * @since 6.0.0
+	 */
+	public static long copy(final Path src, final OutputStream target) throws IORuntimeException {
+		Assert.notNull(src, "Source is null !");
+
+		try {
+			return Files.copy(src, target);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
 	/**
 	 * 复制src到target中
 	 * <ul>
@@ -267,6 +337,7 @@ public class PathUtil {
 	public static Path copyContent(final Path src, final Path target, final CopyOption... options) throws IORuntimeException {
 		return PathCopier.of(src, target, options).copyContent();
 	}
+	// endregion
 
 	/**
 	 * 判断是否为目录，如果file为null，则返回false<br>

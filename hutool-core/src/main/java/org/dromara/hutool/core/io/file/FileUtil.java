@@ -19,6 +19,8 @@ import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.io.BomReader;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.resource.FileResource;
+import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.io.stream.BOMInputStream;
 import org.dromara.hutool.core.io.unit.DataSizeUtil;
@@ -214,7 +216,7 @@ public class FileUtil extends PathUtil {
 	 * </ul>
 	 * 此方法与{@link #loopFiles(File, FileFilter)}不同的是，处理目录判断，可减少无效目录的遍历。
 	 *
-	 * @param file     文件或目录，文件直接处理
+	 * @param file      文件或目录，文件直接处理
 	 * @param predicate 文件处理器，只会处理文件
 	 * @since 5.5.2
 	 */
@@ -911,6 +913,31 @@ public class FileUtil extends PathUtil {
 	}
 	// endregion
 
+	// region ----- copy
+
+	/**
+	 * 拷贝资源到目标文件
+	 * <ul>
+	 *     <li>如果src为{@link FileResource}，调用文件拷贝。</li>
+	 *     <li>其它，调用JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)}。</li>
+	 * </ul>
+	 *
+	 * @param src        源文件
+	 * @param target     目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param isOverride 是否覆盖目标文件
+	 * @return 目标目录或文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File copy(final Resource src, final File target, final boolean isOverride) throws IORuntimeException {
+		Assert.notNull(src, "Src file must be not null!");
+		Assert.notNull(target, "target file must be not null!");
+		return copy(
+			src,
+			target.toPath(),
+			isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
+			.toFile();
+	}
+
 	/**
 	 * 复制文件或目录<br>
 	 * 如果目标文件为目录，则将源文件以相同文件名拷贝到目标目录
@@ -976,6 +1003,7 @@ public class FileUtil extends PathUtil {
 			isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
 			.toFile();
 	}
+	// endregion
 
 	/**
 	 * 移动文件或目录到目标中，例如：
@@ -1051,6 +1079,8 @@ public class FileUtil extends PathUtil {
 		}
 		return rename(file.toPath(), newName, isOverride).toFile();
 	}
+
+	// region ----- getCanonicalPath and getAbsolutePath
 
 	/**
 	 * 获取规范的绝对路径
@@ -1160,6 +1190,7 @@ public class FileUtil extends PathUtil {
 		// 给定的路径已经是绝对路径了
 		return CharUtil.SLASH == path.charAt(0) || ReUtil.isMatch(PATTERN_PATH_ABSOLUTE, path);
 	}
+	// endregion
 
 	/**
 	 * 判断是否为目录，如果path为null，则返回false
@@ -2438,27 +2469,27 @@ public class FileUtil extends PathUtil {
 	 * 将流的内容写入文件<br>
 	 * 此方法会自动关闭输入流
 	 *
-	 * @param dest 目标文件
-	 * @param in   输入流
+	 * @param target 目标文件
+	 * @param in     输入流
 	 * @return dest
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File writeFromStream(final InputStream in, final File dest) throws IORuntimeException {
-		return writeFromStream(in, dest, true);
+	public static File writeFromStream(final InputStream in, final File target) throws IORuntimeException {
+		return writeFromStream(in, target, true);
 	}
 
 	/**
 	 * 将流的内容写入文件
 	 *
-	 * @param dest      目标文件
+	 * @param target    目标文件
 	 * @param in        输入流
 	 * @param isCloseIn 是否关闭输入流
 	 * @return dest
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.6
 	 */
-	public static File writeFromStream(final InputStream in, final File dest, final boolean isCloseIn) throws IORuntimeException {
-		return FileWriter.of(dest).writeFromStream(in, isCloseIn);
+	public static File writeFromStream(final InputStream in, final File target, final boolean isCloseIn) throws IORuntimeException {
+		return FileWriter.of(target).writeFromStream(in, isCloseIn);
 	}
 
 	/**
@@ -2506,6 +2537,7 @@ public class FileUtil extends PathUtil {
 	 * @return 大小
 	 */
 	public static String readableFileSize(final File file) {
+		Assert.notNull(file);
 		return readableFileSize(file.length());
 	}
 
