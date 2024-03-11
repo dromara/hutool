@@ -14,8 +14,8 @@ public class DmTest {
 
 	private static final String DS_GROUP_NAME = "dm";
 
-	@BeforeAll
-	@Disabled
+	//@BeforeAll
+	//@Disabled
 	public static void init() {
 		final Db db = Db.of(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b INTEGER)");
