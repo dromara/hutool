@@ -1058,7 +1058,7 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 通过JDK7+的 Files#copy(InputStream, Path, CopyOption...) 方法拷贝文件
 	 *
-	 * @param src     源文件
+	 * @param src     源文件流，使用后不关闭
 	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return 目标文件

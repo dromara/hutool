@@ -196,13 +196,17 @@ public class PathUtil {
 		if(src instanceof FileResource){
 			return copyFile(((FileResource) src).getFile().toPath(), target, options);
 		}
-		return copyFile(src.getStream(), target, options);
+		try(InputStream stream = src.getStream()){
+			return copyFile(stream, target, options);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
 	 * 通过JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)} 方法拷贝文件
 	 *
-	 * @param src     源文件流
+	 * @param src     源文件流，使用后不闭流
 	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return 目标Path
