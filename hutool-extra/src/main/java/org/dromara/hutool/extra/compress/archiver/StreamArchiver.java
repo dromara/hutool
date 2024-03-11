@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.compress.archiver;
 
+import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -70,7 +71,7 @@ public class StreamArchiver implements Archiver {
 		return new StreamArchiver(charset, archiverName, out);
 	}
 
-	private final ArchiveOutputStream out;
+	private final ArchiveOutputStream<? extends ArchiveEntry> out;
 
 	/**
 	 * 构造
@@ -168,6 +169,7 @@ public class StreamArchiver implements Archiver {
 	 * @param path      文件或目录的初始路径，{@code null}表示位于根路径
 	 * @param predicate 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}加入。
 	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void addInternal(final File file, final String path, final Predicate<File> predicate) throws IOException {
 		if (null != predicate && !predicate.test(file)) {
 			return;
@@ -198,7 +200,7 @@ public class StreamArchiver implements Archiver {
 		} else {
 			if (file.isFile()) {
 				// 文件直接写入
-				FileUtil.writeToStream(file, out);
+				FileUtil.copy(file, out);
 			}
 			out.closeArchiveEntry();
 		}
