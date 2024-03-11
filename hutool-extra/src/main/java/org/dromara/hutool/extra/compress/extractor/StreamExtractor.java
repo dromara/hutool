@@ -39,7 +39,7 @@ import java.util.function.Predicate;
  */
 public class StreamExtractor implements Extractor {
 
-	private final ArchiveInputStream in;
+	private final ArchiveInputStream<?> in;
 
 	/**
 	 * 构造
@@ -81,7 +81,7 @@ public class StreamExtractor implements Extractor {
 	 */
 	public StreamExtractor(final Charset charset, final String archiverName, InputStream in) {
 		if (in instanceof ArchiveInputStream) {
-			this.in = (ArchiveInputStream) in;
+			this.in = (ArchiveInputStream<?>) in;
 			return;
 		}
 
@@ -109,7 +109,7 @@ public class StreamExtractor implements Extractor {
 
 	@Override
 	public InputStream getFirst(final Predicate<ArchiveEntry> predicate) {
-		final ArchiveInputStream in = this.in;
+		final ArchiveInputStream<?> in = this.in;
 		ArchiveEntry entry;
 		try {
 			while (null != (entry = in.getNextEntry())) {
@@ -156,7 +156,7 @@ public class StreamExtractor implements Extractor {
 	 */
 	private void extractInternal(final File targetDir, final Predicate<ArchiveEntry> predicate) throws IOException {
 		Assert.isTrue(null != targetDir && ((!targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
-		final ArchiveInputStream in = this.in;
+		final ArchiveInputStream<?> in = this.in;
 		ArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = in.getNextEntry())) {
@@ -173,7 +173,7 @@ public class StreamExtractor implements Extractor {
 				//noinspection ResultOfMethodCallIgnored
 				outItemFile.mkdirs();
 			} else {
-				FileUtil.writeFromStream(in, outItemFile, false);
+				FileUtil.copy(in, outItemFile);
 			}
 		}
 	}

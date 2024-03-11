@@ -74,6 +74,10 @@
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>commons-lang3</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
 			</exclusions>
 			<optional>true</optional>
 		</dependency>
@@ -105,6 +109,10 @@
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-io</artifactId>
+					<groupId>commons-io</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
@@ -496,7 +504,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.26.0</version>
+			<version>1.26.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

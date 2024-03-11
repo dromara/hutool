@@ -184,7 +184,7 @@ public class ZipReader implements Closeable {
 			outItemFile.mkdirs();
 		} else {
 			// 文件
-			FileUtil.writeFromStream(this.resource.get(zipEntry), outItemFile, false);
+			FileUtil.copy(this.resource.get(zipEntry), outItemFile);
 		}
 	}
 }

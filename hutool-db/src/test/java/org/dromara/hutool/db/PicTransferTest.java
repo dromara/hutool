@@ -41,6 +41,6 @@ public class PicTransferTest {
 	private static void save(final ResultSet rs) throws SQLException{
 		final String destDir = "d:/test/pic";
 		final String path = StrUtil.format("{}/{}-{}.jpg", destDir, rs.getString("NAME"), rs.getString("GROUP"));
-		FileUtil.writeFromStream(rs.getBlob("PIC").getBinaryStream(), path);
+		FileUtil.copy(rs.getBlob("PIC").getBinaryStream(), FileUtil.file(path));
 	}
 }

@@ -939,17 +939,50 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
+	 * 通过JDK7+的 Files#copy(InputStream, Path, CopyOption...) 方法拷贝文件
+	 *
+	 * @param src     源文件流，使用后不关闭
+	 * @param target  目标文件
+	 * @param options {@link StandardCopyOption}
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.27
+	 */
+	public static File copy(final InputStream src, final File target, final StandardCopyOption... options) throws IORuntimeException {
+		// check
+		Assert.notNull(src, "Source File is null !");
+		Assert.notNull(target, "Target File or directory is null !");
+		return copy(src, target.toPath(), options).toFile();
+	}
+
+	/**
+	 * 将文件写入流中，此方法不会关闭输出流
+	 *
+	 * @param src 文件
+	 * @param out  流
+	 * @return 写出的流byte数
+	 * @throws IORuntimeException IO异常
+	 * @since 6.0.0
+	 */
+	public static long copy(final File src, final OutputStream out) throws IORuntimeException {
+		// check
+		Assert.notNull(src, "Source File is null !");
+		Assert.notNull(out, "Target stream is null !");
+		return copy(src.toPath(), out);
+	}
+
+	/**
 	 * 复制文件或目录<br>
 	 * 如果目标文件为目录，则将源文件以相同文件名拷贝到目标目录
 	 *
 	 * @param srcPath    源文件或目录
-	 * @param destPath   目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param targetPath   目标文件或目录，目标不存在会自动创建（目录、文件都创建）
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File copy(final String srcPath, final String destPath, final boolean isOverride) throws IORuntimeException {
-		return copy(file(srcPath), file(destPath), isOverride);
+	public static File copy(final String srcPath, final String targetPath, final boolean isOverride) throws IORuntimeException {
+		return copy(file(srcPath), file(targetPath), isOverride);
 	}
 
 	/**
@@ -2463,70 +2496,6 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File writeBytes(final byte[] data, final File dest, final int off, final int len, final boolean isAppend) throws IORuntimeException {
 		return FileWriter.of(dest).write(data, off, len, isAppend);
-	}
-
-	/**
-	 * 将流的内容写入文件<br>
-	 * 此方法会自动关闭输入流
-	 *
-	 * @param target 目标文件
-	 * @param in     输入流
-	 * @return dest
-	 * @throws IORuntimeException IO异常
-	 */
-	public static File writeFromStream(final InputStream in, final File target) throws IORuntimeException {
-		return writeFromStream(in, target, true);
-	}
-
-	/**
-	 * 将流的内容写入文件
-	 *
-	 * @param target    目标文件
-	 * @param in        输入流
-	 * @param isCloseIn 是否关闭输入流
-	 * @return dest
-	 * @throws IORuntimeException IO异常
-	 * @since 5.5.6
-	 */
-	public static File writeFromStream(final InputStream in, final File target, final boolean isCloseIn) throws IORuntimeException {
-		return FileWriter.of(target).writeFromStream(in, isCloseIn);
-	}
-
-	/**
-	 * 将流的内容写入文件<br>
-	 * 此方法会自动关闭输入流
-	 *
-	 * @param in           输入流
-	 * @param fullFilePath 文件绝对路径
-	 * @return 目标文件
-	 * @throws IORuntimeException IO异常
-	 */
-	public static File writeFromStream(final InputStream in, final String fullFilePath) throws IORuntimeException {
-		return writeFromStream(in, touch(fullFilePath));
-	}
-
-	/**
-	 * 将文件写入流中，此方法不会关闭输出流
-	 *
-	 * @param file 文件
-	 * @param out  流
-	 * @return 写出的流byte数
-	 * @throws IORuntimeException IO异常
-	 */
-	public static long writeToStream(final File file, final OutputStream out) throws IORuntimeException {
-		return FileReader.of(file).writeToStream(out);
-	}
-
-	/**
-	 * 将路径对应文件写入流中，此方法不会关闭输出流
-	 *
-	 * @param fullFilePath 文件绝对路径
-	 * @param out          输出流
-	 * @return 写出的流byte数
-	 * @throws IORuntimeException IO异常
-	 */
-	public static long writeToStream(final String fullFilePath, final OutputStream out) throws IORuntimeException {
-		return writeToStream(touch(fullFilePath), out);
 	}
 	// endregion
 

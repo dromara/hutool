@@ -55,7 +55,8 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 */
 	public SevenZExtractor(final File file, final char[] password) {
 		try {
-			this.sevenZFile = new SevenZFile(file, password);
+			this.sevenZFile = SevenZFile.builder()
+				.setFile(file).setPassword(password).get();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -97,7 +98,8 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 */
 	public SevenZExtractor(final SeekableByteChannel channel, final char[] password) {
 		try {
-			this.sevenZFile = new SevenZFile(channel, password);
+			this.sevenZFile = SevenZFile.builder()
+				.setSeekableByteChannel(channel).setPassword(password).get();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -160,7 +162,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 			} else if (entry.hasStream()) {
 				// 读取entry对应数据流
 				// 此处直接读取而非调用sevenZFile.getInputStream(entry)，因为此方法需要遍历查找entry对应位置，性能不好。
-				FileUtil.writeFromStream(new Seven7EntryInputStream(sevenZFile, entry), outItemFile);
+				FileUtil.copy(new Seven7EntryInputStream(sevenZFile, entry), outItemFile);
 			} else {
 				// 无数据流的文件创建为空文件
 				FileUtil.touch(outItemFile);

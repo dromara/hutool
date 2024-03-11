@@ -279,16 +279,16 @@ public class PathUtil {
 	 * 通过JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)} 方法拷贝文件
 	 *
 	 * @param src    源文件流，使用后不闭流
-	 * @param target 目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param out 目标流
 	 * @return 拷贝bytes数
 	 * @throws IORuntimeException IO异常
 	 * @since 6.0.0
 	 */
-	public static long copy(final Path src, final OutputStream target) throws IORuntimeException {
+	public static long copy(final Path src, final OutputStream out) throws IORuntimeException {
 		Assert.notNull(src, "Source is null !");
 
 		try {
-			return Files.copy(src, target);
+			return Files.copy(src, out);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
