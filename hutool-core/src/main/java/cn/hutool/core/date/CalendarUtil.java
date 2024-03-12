@@ -62,7 +62,7 @@ public class CalendarUtil {
 	/**
 	 * 转换为Calendar对象
 	 *
-	 * @param millis 时间戳
+	 * @param millis   时间戳
 	 * @param timeZone 时区
 	 * @return Calendar对象
 	 * @since 5.7.22
@@ -356,15 +356,26 @@ public class CalendarUtil {
 			throw new IllegalArgumentException("The date must not be null");
 		}
 		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
-				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
-				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+			cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
+			cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+	}
+
+	/**
+	 * 是否为本月最后一天
+	 *
+	 * @param calendar {@link Calendar}
+	 * @return 是否为本月最后一天
+	 * @since 5.8.27
+	 */
+	public static boolean isLastDayOfMonth(Calendar calendar) {
+		return calendar.get(Calendar.DAY_OF_MONTH) == calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	}
 
 	/**
 	 * 比较两个日期是否为同一周
 	 *
-	 * @param cal1 日期1
-	 * @param cal2 日期2
+	 * @param cal1  日期1
+	 * @param cal2  日期2
 	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
 	 * @return 是否为同一周
 	 * @since 5.7.21
@@ -408,9 +419,9 @@ public class CalendarUtil {
 			throw new IllegalArgumentException("The date must not be null");
 		}
 		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
-				cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
-				// issue#3011@Github
-				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+			cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+			// issue#3011@Github
+			cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
 	}
 
 	/**
@@ -657,7 +668,7 @@ public class CalendarUtil {
 		int age = year - cal.get(Calendar.YEAR);
 
 		//当前日期，则为0岁
-		if (age == 0){
+		if (age == 0) {
 			return 0;
 		}
 

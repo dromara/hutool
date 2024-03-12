@@ -54,7 +54,7 @@ public class DateBetweenTest {
 		long betweenMonth2 = new DateBetween(start2, end2).betweenMonth(false);
 		Assert.assertEquals(11, betweenMonth2);
 	}
-	
+
 	@Test
 	public void betweenMinuteTest() {
 		Date date1 = DateUtil.parse("2017-03-01 20:33:23");
@@ -74,5 +74,17 @@ public class DateBetweenTest {
 				LocalDateTimeUtil.parse("2020-11-23", "yyy-MM-dd"),
 				ChronoUnit.WEEKS);
 		Assert.assertEquals(betweenWeek, betweenWeek2);
+	}
+
+	@Test
+	public void issueI97U3JTest(){
+		String dateStr1 = "2024-02-29 23:59:59";
+		Date sdate = DateUtil.parse(dateStr1);
+
+		String dateStr2 = "2023-03-01 00:00:00";
+		Date edate = DateUtil.parse(dateStr2);
+
+		long result = DateUtil.betweenYear(sdate, edate, false);
+		Assert.assertEquals(0, result);
 	}
 }

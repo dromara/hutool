@@ -15,6 +15,7 @@
 * 【core  】      修复PathMover对目标已存在且只读文件报错错误问题（issue#I95CLT@Gitee）
 * 【json  】      修复JSONUtil序列化和反序列化预期的结果不一致问题（pr#3507@Github）
 * 【http  】      修复CVE-2022-22885，HttpGlobalConfig可选关闭信任host（issue#2042@Github）
+* 【core  】      修复DateUtil.betweenYear闰年2月问题（issue#I97U3J@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.26(2024-02-10)
