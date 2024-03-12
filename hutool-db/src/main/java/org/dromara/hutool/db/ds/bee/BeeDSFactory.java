@@ -12,12 +12,12 @@
 
 package org.dromara.hutool.db.ds.bee;
 
-import cn.beecp.BeeDataSource;
-import cn.beecp.BeeDataSourceConfig;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.db.ds.DSFactory;
 import org.dromara.hutool.setting.props.Props;
+import org.stone.beecp.BeeDataSource;
+import org.stone.beecp.BeeDataSourceConfig;
 
 import javax.sql.DataSource;
 import java.util.Properties;
