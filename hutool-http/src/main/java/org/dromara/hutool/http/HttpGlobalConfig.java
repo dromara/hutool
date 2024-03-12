@@ -45,6 +45,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 是否从响应正文中的meta标签获取编码信息
 	 */
 	private static boolean getCharsetFromContent = true;
+	private static boolean trustAnyHost = false;
 
 	/**
 	 * 获取全局默认的超时时长
@@ -210,5 +211,25 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	public static boolean isGetCharsetFromContent(){
 		return getCharsetFromContent;
+	}
+
+	/**
+	 * 是否信任所有Host
+	 * @return 是否信任所有Host
+	 * @since 5.8.27
+	 */
+	public static boolean isTrustAnyHost(){
+		return trustAnyHost;
+	}
+
+	/**
+	 * 是否信任所有Host<br>
+	 * 见：https://github.com/dromara/hutool/issues/2042<br>
+	 *
+	 * @param customTrustAnyHost 如果设置为{@code false}，则按照JDK默认验证机制，验证目标服务器的证书host和请求host是否一致，{@code true}表示不验证。
+	 * @since 5.8.27
+	 */
+	public static void setTrustAnyHost(boolean customTrustAnyHost) {
+		trustAnyHost = customTrustAnyHost;
 	}
 }

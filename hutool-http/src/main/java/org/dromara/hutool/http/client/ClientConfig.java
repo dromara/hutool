@@ -59,7 +59,7 @@ public class ClientConfig {
 	public ClientConfig() {
 		connectionTimeout = HttpGlobalConfig.getTimeout();
 		readTimeout = HttpGlobalConfig.getTimeout();
-		sslInfo = SSLInfo.TRUST_ANY;
+		sslInfo = HttpGlobalConfig.isTrustAnyHost() ? SSLInfo.TRUST_ANY : SSLInfo.DEFAULT;
 	}
 
 	/**
