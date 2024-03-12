@@ -33,6 +33,7 @@ public class HttpGlobalConfig implements Serializable {
 	private static int maxRedirectCount = 0;
 	private static boolean ignoreEOFError = true;
 	private static boolean decodeUrl = false;
+	private static boolean trustAnyHost = true;
 
 	/**
 	 * 获取全局默认的超时时长
@@ -199,7 +200,7 @@ public class HttpGlobalConfig implements Serializable {
 		// 去除final修饰
 		ReflectUtil.removeFinalModify(methodsField);
 		final String[] methods = {
-				"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"
+			"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"
 		};
 		ReflectUtil.setFieldValue(null, methodsField, methods);
 
@@ -210,5 +211,25 @@ public class HttpGlobalConfig implements Serializable {
 		}
 
 		isAllowPatch = true;
+	}
+
+	/**
+	 * 是否信任所有Host
+	 * @return 是否信任所有Host
+	 * @since 5.8.27
+	 */
+	public static boolean isTrustAnyHost(){
+		return trustAnyHost;
+	}
+
+	/**
+	 * 是否信任所有Host<br>
+	 * 见：https://github.com/dromara/hutool/issues/2042<br>
+	 *
+	 * @param customTrustAnyHost 如果设置为{@code false}，则按照JDK默认验证机制，验证目标服务器的证书host和请求host是否一致，{@code true}表示不验证。
+	 * @since 5.8.27
+	 */
+	public static void setTrustAnyHost(boolean customTrustAnyHost) {
+		trustAnyHost = customTrustAnyHost;
 	}
 }
