@@ -371,6 +371,7 @@ public class CalendarUtil {
 	// endregion
 
 	// region ----- isSame
+
 	/**
 	 * 比较两个日期是否为同一天
 	 *
@@ -443,8 +444,8 @@ public class CalendarUtil {
 			throw new IllegalArgumentException("The date must not be null");
 		}
 		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
-				// issue#3011@Github
-				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+			// issue#3011@Github
+			cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
 	}
 
 	/**
@@ -647,6 +648,7 @@ public class CalendarUtil {
 	}
 
 	// region ----- parse
+
 	/**
 	 * 通过给定的日期格式解析日期时间字符串。<br>
 	 * 传入的日期格式会逐个尝试，直到解析成功，返回{@link Calendar}对象，否则抛出{@link DateException}异常。
@@ -795,5 +797,27 @@ public class CalendarUtil {
 		}
 
 		return age;
+	}
+
+	/**
+	 * 是否为本月第一天
+	 *
+	 * @param calendar {@link Calendar}
+	 * @return 是否为本月最后一天
+	 * @since 6.0.0
+	 */
+	public static boolean isFirstDayOfMonth(final Calendar calendar) {
+		return 1 == calendar.get(Calendar.DAY_OF_MONTH);
+	}
+
+	/**
+	 * 是否为本月最后一天
+	 *
+	 * @param calendar {@link Calendar}
+	 * @return 是否为本月最后一天
+	 * @since 5.8.27
+	 */
+	public static boolean isLastDayOfMonth(final Calendar calendar) {
+		return calendar.get(Calendar.DAY_OF_MONTH) == calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	}
 }

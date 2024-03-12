@@ -48,6 +48,40 @@ public class DateBetweenTest {
 	}
 
 	@Test
+	public void betweenYearTest3(){
+		final String dateStr1 = "2023-02-28 00:00:01";
+		final Date sdate = DateUtil.parse(dateStr1);
+		final String dateStr2 = "2024-02-29 00:00:00";
+		final Date edate = DateUtil.parse(dateStr2);
+
+		final long result = DateUtil.betweenYear(sdate, edate, false);
+		Assertions.assertEquals(0, result);
+	}
+
+	@Test
+	public void betweenYearTest4(){
+		final String dateStr1 = "2024-02-29 00:00:00";
+		final Date sdate = DateUtil.parse(dateStr1);
+		final String dateStr2 = "2025-02-28 00:00:00";
+		final Date edate = DateUtil.parse(dateStr2);
+
+		final long result = DateUtil.betweenYear(sdate, edate, false);
+		Assertions.assertEquals(1, result);
+	}
+
+	@Test
+	public void issueI97U3JTest(){
+		final String dateStr1 = "2024-02-29 23:59:59";
+		final Date sdate = DateUtil.parse(dateStr1);
+
+		final String dateStr2 = "2023-03-01 00:00:00";
+		final Date edate = DateUtil.parse(dateStr2);
+
+		final long result = DateUtil.betweenYear(sdate, edate, false);
+		Assertions.assertEquals(0, result);
+	}
+
+	@Test
 	public void betweenMonthTest() {
 		final Date start = DateUtil.parse("2017-02-01 12:23:46");
 		final Date end = DateUtil.parse("2018-02-01 12:23:46");

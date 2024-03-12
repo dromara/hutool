@@ -148,15 +148,20 @@ public class DateBetween implements Serializable {
 		final Calendar endCal = DateUtil.calendar(end);
 
 		final int result = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
-		if (!isReset) {
-			// 考虑闰年的2月情况
-			if (Calendar.FEBRUARY == beginCal.get(Calendar.MONTH) && Calendar.FEBRUARY == endCal.get(Calendar.MONTH)) {
-				if (beginCal.get(Calendar.DAY_OF_MONTH) == beginCal.getActualMaximum(Calendar.DAY_OF_MONTH)
-					&& endCal.get(Calendar.DAY_OF_MONTH) == endCal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-					// 两个日期都位于2月的最后一天，此时月数按照相等对待，此时都设置为1号
-					beginCal.set(Calendar.DAY_OF_MONTH, 1);
-					endCal.set(Calendar.DAY_OF_MONTH, 1);
-				}
+		if (false == isReset) {
+			final int beginMonthBase0 = beginCal.get(Calendar.MONTH);
+			final int endMonthBase0 = endCal.get(Calendar.MONTH);
+			if (beginMonthBase0 < endMonthBase0) {
+				return result;
+			} else if (beginMonthBase0 > endMonthBase0) {
+				return result - 1;
+			} else if (Calendar.FEBRUARY == beginMonthBase0
+				&& CalendarUtil.isLastDayOfMonth(beginCal)
+				&& CalendarUtil.isLastDayOfMonth(endCal)) {
+				// 考虑闰年的2月情况
+				// 两个日期都位于2月的最后一天，此时月数按照相等对待，此时都设置为1号
+				beginCal.set(Calendar.DAY_OF_MONTH, 1);
+				endCal.set(Calendar.DAY_OF_MONTH, 1);
 			}
 
 			endCal.set(Calendar.YEAR, beginCal.get(Calendar.YEAR));
