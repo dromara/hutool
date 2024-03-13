@@ -403,9 +403,9 @@ public class MaskingUtil {
 	}
 
 	/**
-	 * IPv4脱敏，如：脱敏前：2001:0db8:86a3:08d3:1319:8a2e:0370:7344；脱敏后：2001:*:*:*:*:*:*:*
+	 * IPv6脱敏，如：脱敏前：2001:0db8:86a3:08d3:1319:8a2e:0370:7344；脱敏后：2001:*:*:*:*:*:*:*
 	 *
-	 * @param ipv6 IPv4地址
+	 * @param ipv6 IPv6地址
 	 * @return 脱敏后的地址
 	 */
 	public static String ipv6(final String ipv6) {
