@@ -24,21 +24,22 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.net.NetUtil;
+import org.dromara.hutool.core.net.url.UrlEncoder;
 import org.dromara.hutool.core.net.multipart.MultipartFormData;
 import org.dromara.hutool.core.net.multipart.UploadSetting;
-import org.dromara.hutool.core.net.url.UrlEncoder;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.http.meta.Method;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.dromara.hutool.http.meta.Method;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -296,7 +297,7 @@ public class ServletUtil {
 	 * @since 4.6.2
 	 */
 	public static Map<String, String> getHeaderMap(final HttpServletRequest request) {
-		final Map<String, String> headerMap = new LinkedHashMap<>();
+		final Map<String, String> headerMap = new HashMap<>();
 
 		final Enumeration<String> names = request.getHeaderNames();
 		String name;
@@ -363,18 +364,6 @@ public class ServletUtil {
 		}
 
 		return null;
-	}
-
-	/**
-	 * 获得请求header中的信息
-	 *
-	 * @param request     请求对象{@link HttpServletRequest}
-	 * @param name        头信息的KEY
-	 * @param charsetName 字符集
-	 * @return header值
-	 */
-	public static String getHeader(final HttpServletRequest request, final String name, final String charsetName) {
-		return getHeader(request, name, CharsetUtil.charset(charsetName));
 	}
 
 	/**

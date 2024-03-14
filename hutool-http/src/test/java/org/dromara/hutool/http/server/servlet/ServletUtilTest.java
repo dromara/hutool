@@ -12,11 +12,11 @@
 
 package org.dromara.hutool.http.server.servlet;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author dazer
  * @see ServletUtil
- * @see JakartaServletUtil
+ * @see ServletUtil
  */
 public class ServletUtilTest {
 
@@ -59,7 +59,7 @@ public class ServletUtilTest {
 			final String fileName = "签名文件.pdf";
 			final String contentType = "application/pdf";// application/octet-stream、image/jpeg、image/gif
 			response.setCharacterEncoding(StandardCharsets.UTF_8.name()); // 必须设置否则乱码; 但是 safari乱码
-			JakartaServletUtil.write(response, new ByteArrayInputStream(bytes), contentType, fileName);
+			ServletUtil.write(response, new ByteArrayInputStream(bytes), contentType, fileName);
 		}
 	}
 }
