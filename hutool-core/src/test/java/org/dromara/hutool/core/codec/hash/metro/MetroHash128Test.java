@@ -120,7 +120,7 @@ public class MetroHash128Test {
 	static String h128(final String input) {
 		final MetroHash128 mh = MetroHash128.of(0).apply(ByteBuffer.wrap(ByteUtil.toUtf8Bytes(input)));
 		final Number128 hash = mh.get();
-		return hex(hash.getHighValue()) + hex(hash.getLowValue());
+		return hex(hash.getMostSigBits()) + hex(hash.getLeastSigBits());
 	}
 
 	private static String hex(final long value){

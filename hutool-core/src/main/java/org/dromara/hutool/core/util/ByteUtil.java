@@ -55,6 +55,7 @@ public class ByteUtil {
 	 */
 	public static final ByteOrder CPU_ENDIAN = "little".equals(System.getProperty("sun.cpu.endian")) ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
 
+	// region ----- toBytes
 	/**
 	 * 编码字符串，编码为UTF-8
 	 *
@@ -94,59 +95,6 @@ public class ByteUtil {
 	}
 
 	/**
-	 * byte转无符号int
-	 *
-	 * @param byteValue byte值
-	 * @return 无符号int值
-	 * @since 3.2.0
-	 */
-	public static int toUnsignedInt(final byte byteValue) {
-		// Java 总是把 byte 当做有符处理；我们可以通过将其和 0xFF 进行二进制与得到它的无符值
-		return byteValue & 0xFF;
-	}
-
-	/**
-	 * byte数组转short<br>
-	 * 默认以小端序转换
-	 *
-	 * @param bytes byte数组
-	 * @return short值
-	 */
-	public static short toShort(final byte[] bytes) {
-		return toShort(bytes, DEFAULT_ORDER);
-	}
-
-	/**
-	 * byte数组转short<br>
-	 * 自定义端序
-	 *
-	 * @param bytes     byte数组，长度必须为2
-	 * @param byteOrder 端序
-	 * @return short值
-	 */
-	public static short toShort(final byte[] bytes, final ByteOrder byteOrder) {
-		return toShort(bytes, 0, byteOrder);
-	}
-
-	/**
-	 * byte数组转short<br>
-	 * 自定义端序
-	 *
-	 * @param bytes     byte数组，长度必须大于2
-	 * @param start     开始位置
-	 * @param byteOrder 端序
-	 * @return short值
-	 */
-	public static short toShort(final byte[] bytes, final int start, final ByteOrder byteOrder) {
-		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			//小端模式，数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中
-			return (short) (bytes[start] & 0xff | (bytes[start + 1] & 0xff) << Byte.SIZE);
-		} else {
-			return (short) (bytes[start + 1] & 0xff | (bytes[start] & 0xff) << Byte.SIZE);
-		}
-	}
-
-	/**
 	 * short转byte数组<br>
 	 * 默认以小端序转换
 	 *
@@ -175,54 +123,6 @@ public class ByteUtil {
 			b[0] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
 		}
 		return b;
-	}
-
-	/**
-	 * byte[]转int值<br>
-	 * 默认以小端序转换
-	 *
-	 * @param bytes byte数组
-	 * @return int值
-	 */
-	public static int toInt(final byte[] bytes) {
-		return toInt(bytes, DEFAULT_ORDER);
-	}
-
-	/**
-	 * byte[]转int值<br>
-	 * 自定义端序
-	 *
-	 * @param bytes     byte数组
-	 * @param byteOrder 端序
-	 * @return int值
-	 */
-	public static int toInt(final byte[] bytes, final ByteOrder byteOrder) {
-		return toInt(bytes, 0, byteOrder);
-	}
-
-	/**
-	 * byte[]转int值<br>
-	 * 自定义端序
-	 *
-	 * @param bytes     byte数组
-	 * @param start     开始位置（包含）
-	 * @param byteOrder 端序
-	 * @return int值
-	 * @since 5.7.21
-	 */
-	public static int toInt(final byte[] bytes, final int start, final ByteOrder byteOrder) {
-		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			return bytes[start] & 0xFF | //
-				(bytes[1 + start] & 0xFF) << 8 | //
-				(bytes[2 + start] & 0xFF) << 16 | //
-				(bytes[3 + start] & 0xFF) << 24; //
-		} else {
-			return bytes[3 + start] & 0xFF | //
-				(bytes[2 + start] & 0xFF) << 8 | //
-				(bytes[1 + start] & 0xFF) << 16 | //
-				(bytes[start] & 0xFF) << 24; //
-		}
-
 	}
 
 	/**
@@ -286,22 +186,226 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return byte数组
 	 */
-	public static byte[] toBytes(long longValue, final ByteOrder byteOrder) {
+	public static byte[] toBytes(final long longValue, final ByteOrder byteOrder) {
 		final byte[] result = new byte[Long.BYTES];
+		return fill(longValue, 0, byteOrder, result);
+	}
+
+	/**
+	 * 将long值转为bytes并填充到给定的bytes中
+	 *
+	 * @param longValue long值
+	 * @param start     开始位置（包含）
+	 * @param byteOrder 端续
+	 * @param bytes     被填充的bytes
+	 * @return 填充后的bytes
+	 * @since 6.0.0
+	 */
+	public static byte[] fill(long longValue, final int start, final ByteOrder byteOrder, final byte[] bytes) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			for (int i = 0; i < result.length; i++) {
-				result[i] = (byte) (longValue & 0xFF);
+			for (int i = start; i < bytes.length; i++) {
+				bytes[i] = (byte) (longValue & 0xFF);
 				longValue >>= Byte.SIZE;
 			}
 		} else {
-			for (int i = (result.length - 1); i >= 0; i--) {
-				result[i] = (byte) (longValue & 0xFF);
+			for (int i = (bytes.length - 1); i >= start; i--) {
+				bytes[i] = (byte) (longValue & 0xFF);
 				longValue >>= Byte.SIZE;
 			}
 		}
-		return result;
+		return bytes;
 	}
 
+	/**
+	 * float转byte数组，默认以小端序转换<br>
+	 *
+	 * @param floatValue float值
+	 * @return byte数组
+	 * @since 5.7.18
+	 */
+	public static byte[] toBytes(final float floatValue) {
+		return toBytes(floatValue, DEFAULT_ORDER);
+	}
+
+	/**
+	 * float转byte数组，自定义端序<br>
+	 *
+	 * @param floatValue float值
+	 * @param byteOrder  端序
+	 * @return byte数组
+	 * @since 5.7.18
+	 */
+	public static byte[] toBytes(final float floatValue, final ByteOrder byteOrder) {
+		return toBytes(Float.floatToIntBits(floatValue), byteOrder);
+	}
+
+	/**
+	 * double转byte数组<br>
+	 * 默认以小端序转换<br>
+	 *
+	 * @param doubleValue double值
+	 * @return byte数组
+	 */
+	public static byte[] toBytes(final double doubleValue) {
+		return toBytes(doubleValue, DEFAULT_ORDER);
+	}
+
+	/**
+	 * double转byte数组<br>
+	 * 自定义端序<br>
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
+	 *
+	 * @param doubleValue double值
+	 * @param byteOrder   端序
+	 * @return byte数组
+	 */
+	public static byte[] toBytes(final double doubleValue, final ByteOrder byteOrder) {
+		return toBytes(Double.doubleToLongBits(doubleValue), byteOrder);
+	}
+
+	/**
+	 * 将{@link Number}转换为
+	 *
+	 * @param number 数字
+	 * @return bytes
+	 */
+	public static byte[] toBytes(final Number number) {
+		return toBytes(number, DEFAULT_ORDER);
+	}
+
+	/**
+	 * 将{@link Number}转换为
+	 *
+	 * @param number    数字
+	 * @param byteOrder 端序
+	 * @return bytes
+	 */
+	public static byte[] toBytes(final Number number, final ByteOrder byteOrder) {
+		if (number instanceof Byte) {
+			return new byte[]{number.byteValue()};
+		} else if (number instanceof Double) {
+			return toBytes(number.doubleValue(), byteOrder);
+		} else if (number instanceof Long) {
+			return toBytes(number.longValue(), byteOrder);
+		} else if (number instanceof Integer) {
+			return ByteUtil.toBytes(number.intValue(), byteOrder);
+		} else if (number instanceof Short) {
+			return ByteUtil.toBytes(number.shortValue(), byteOrder);
+		} else if (number instanceof Float) {
+			return toBytes(number.floatValue(), byteOrder);
+		} else if (number instanceof BigInteger) {
+			return ((BigInteger) number).toByteArray();
+		} else {
+			return toBytes(number.doubleValue(), byteOrder);
+		}
+	}
+	// endregion
+
+	// region ----- toShort
+	/**
+	 * byte数组转short<br>
+	 * 默认以小端序转换
+	 *
+	 * @param bytes byte数组
+	 * @return short值
+	 */
+	public static short toShort(final byte[] bytes) {
+		return toShort(bytes, DEFAULT_ORDER);
+	}
+
+	/**
+	 * byte数组转short<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组，长度必须为2
+	 * @param byteOrder 端序
+	 * @return short值
+	 */
+	public static short toShort(final byte[] bytes, final ByteOrder byteOrder) {
+		return toShort(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte数组转short<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组，长度必须大于2
+	 * @param start     开始位置
+	 * @param byteOrder 端序
+	 * @return short值
+	 */
+	public static short toShort(final byte[] bytes, final int start, final ByteOrder byteOrder) {
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			//小端模式，数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中
+			return (short) (bytes[start] & 0xff | (bytes[start + 1] & 0xff) << Byte.SIZE);
+		} else {
+			return (short) (bytes[start + 1] & 0xff | (bytes[start] & 0xff) << Byte.SIZE);
+		}
+	}
+	// endregion
+
+	// region ----- toInt
+	/**
+	 * byte[]转int值<br>
+	 * 默认以小端序转换
+	 *
+	 * @param bytes byte数组
+	 * @return int值
+	 */
+	public static int toInt(final byte[] bytes) {
+		return toInt(bytes, DEFAULT_ORDER);
+	}
+
+	/**
+	 * byte[]转int值<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组
+	 * @param byteOrder 端序
+	 * @return int值
+	 */
+	public static int toInt(final byte[] bytes, final ByteOrder byteOrder) {
+		return toInt(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte[]转int值<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组
+	 * @param start     开始位置（包含）
+	 * @param byteOrder 端序
+	 * @return int值
+	 * @since 5.7.21
+	 */
+	public static int toInt(final byte[] bytes, final int start, final ByteOrder byteOrder) {
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			return bytes[start] & 0xFF | //
+				(bytes[1 + start] & 0xFF) << 8 | //
+				(bytes[2 + start] & 0xFF) << 16 | //
+				(bytes[3 + start] & 0xFF) << 24; //
+		} else {
+			return bytes[3 + start] & 0xFF | //
+				(bytes[2 + start] & 0xFF) << 8 | //
+				(bytes[1 + start] & 0xFF) << 16 | //
+				(bytes[start] & 0xFF) << 24; //
+		}
+	}
+
+	/**
+	 * byte转无符号int
+	 *
+	 * @param byteValue byte值
+	 * @return 无符号int值
+	 * @since 3.2.0
+	 */
+	public static int toUnsignedInt(final byte byteValue) {
+		// Java 总是把 byte 当做有符处理；我们可以通过将其和 0xFF 进行二进制与得到它的无符值
+		return byteValue & 0xFF;
+	}
+	// endregion
+
+	// region ----- toLong
 	/**
 	 * byte数组转long<br>
 	 * 默认以小端序转换<br>
@@ -354,30 +458,9 @@ public class ByteUtil {
 
 		return values;
 	}
+	// endregion
 
-	/**
-	 * float转byte数组，默认以小端序转换<br>
-	 *
-	 * @param floatValue float值
-	 * @return byte数组
-	 * @since 5.7.18
-	 */
-	public static byte[] toBytes(final float floatValue) {
-		return toBytes(floatValue, DEFAULT_ORDER);
-	}
-
-	/**
-	 * float转byte数组，自定义端序<br>
-	 *
-	 * @param floatValue float值
-	 * @param byteOrder  端序
-	 * @return byte数组
-	 * @since 5.7.18
-	 */
-	public static byte[] toBytes(final float floatValue, final ByteOrder byteOrder) {
-		return toBytes(Float.floatToIntBits(floatValue), byteOrder);
-	}
-
+	// region ----- toFloat
 	/**
 	 * byte数组转float<br>
 	 * 默认以小端序转换<br>
@@ -402,31 +485,9 @@ public class ByteUtil {
 	public static float toFloat(final byte[] bytes, final ByteOrder byteOrder) {
 		return Float.intBitsToFloat(toInt(bytes, byteOrder));
 	}
+	// endregion
 
-	/**
-	 * double转byte数组<br>
-	 * 默认以小端序转换<br>
-	 *
-	 * @param doubleValue double值
-	 * @return byte数组
-	 */
-	public static byte[] toBytes(final double doubleValue) {
-		return toBytes(doubleValue, DEFAULT_ORDER);
-	}
-
-	/**
-	 * double转byte数组<br>
-	 * 自定义端序<br>
-	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
-	 *
-	 * @param doubleValue double值
-	 * @param byteOrder   端序
-	 * @return byte数组
-	 */
-	public static byte[] toBytes(final double doubleValue, final ByteOrder byteOrder) {
-		return toBytes(Double.doubleToLongBits(doubleValue), byteOrder);
-	}
-
+	// region ----- toDouble
 	/**
 	 * byte数组转Double<br>
 	 * 默认以小端序转换<br>
@@ -449,43 +510,7 @@ public class ByteUtil {
 	public static double toDouble(final byte[] bytes, final ByteOrder byteOrder) {
 		return Double.longBitsToDouble(toLong(bytes, byteOrder));
 	}
-
-	/**
-	 * 将{@link Number}转换为
-	 *
-	 * @param number 数字
-	 * @return bytes
-	 */
-	public static byte[] toBytes(final Number number) {
-		return toBytes(number, DEFAULT_ORDER);
-	}
-
-	/**
-	 * 将{@link Number}转换为
-	 *
-	 * @param number    数字
-	 * @param byteOrder 端序
-	 * @return bytes
-	 */
-	public static byte[] toBytes(final Number number, final ByteOrder byteOrder) {
-		if (number instanceof Byte) {
-			return new byte[]{number.byteValue()};
-		} else if (number instanceof Double) {
-			return toBytes(number.doubleValue(), byteOrder);
-		} else if (number instanceof Long) {
-			return toBytes(number.longValue(), byteOrder);
-		} else if (number instanceof Integer) {
-			return ByteUtil.toBytes(number.intValue(), byteOrder);
-		} else if (number instanceof Short) {
-			return ByteUtil.toBytes(number.shortValue(), byteOrder);
-		} else if (number instanceof Float) {
-			return toBytes(number.floatValue(), byteOrder);
-		} else if (number instanceof BigInteger) {
-			return ((BigInteger) number).toByteArray();
-		} else {
-			return toBytes(number.doubleValue(), byteOrder);
-		}
-	}
+	// endregion
 
 	/**
 	 * byte数组转换为指定类型数字
@@ -539,6 +564,7 @@ public class ByteUtil {
 		return (T) number;
 	}
 
+	// region ----- toUnsignedByteArray and fromUnsignedByteArray
 	/**
 	 * 以无符号字节数组的形式返回传入值。
 	 *
@@ -612,6 +638,7 @@ public class ByteUtil {
 		}
 		return new BigInteger(1, mag);
 	}
+	// endregion
 
 	/**
 	 * 连接多个byte[]

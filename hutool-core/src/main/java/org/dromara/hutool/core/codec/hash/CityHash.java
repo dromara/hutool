@@ -164,13 +164,13 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 		len = (len - 1) & ~63;
 		int pos = 0;
 		do {
-			x = Long.rotateRight(x + y + v.getLowValue() + fetch64(data, pos + 8), 37) * k1;
-			y = Long.rotateRight(y + v.getHighValue() + fetch64(data, pos + 48), 42) * k1;
-			x ^= w.getHighValue();
-			y += v.getLowValue() + fetch64(data, pos + 40);
-			z = Long.rotateRight(z + w.getLowValue(), 33) * k1;
-			v = weakHashLen32WithSeeds(data, pos, v.getHighValue() * k1, x + w.getLowValue());
-			w = weakHashLen32WithSeeds(data, pos + 32, z + w.getHighValue(), y + fetch64(data, pos + 16));
+			x = Long.rotateRight(x + y + v.getLeastSigBits() + fetch64(data, pos + 8), 37) * k1;
+			y = Long.rotateRight(y + v.getMostSigBits() + fetch64(data, pos + 48), 42) * k1;
+			x ^= w.getMostSigBits();
+			y += v.getLeastSigBits() + fetch64(data, pos + 40);
+			z = Long.rotateRight(z + w.getLeastSigBits(), 33) * k1;
+			v = weakHashLen32WithSeeds(data, pos, v.getMostSigBits() * k1, x + w.getLeastSigBits());
+			w = weakHashLen32WithSeeds(data, pos + 32, z + w.getMostSigBits(), y + fetch64(data, pos + 16));
 			// swap z,x value
 			final long swapValue = x;
 			x = z;
@@ -178,8 +178,8 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 			pos += 64;
 			len -= 64;
 		} while (len != 0);
-		return hashLen16(hashLen16(v.getLowValue(), w.getLowValue()) + shiftMix(y) * k1 + z,
-				hashLen16(v.getHighValue(), w.getHighValue()) + x);
+		return hashLen16(hashLen16(v.getLeastSigBits(), w.getLeastSigBits()) + shiftMix(y) * k1 + z,
+				hashLen16(v.getMostSigBits(), w.getMostSigBits()) + x);
 	}
 
 	/**
@@ -243,66 +243,66 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 		// v, w, x, y, and z.
 		Number128 v = new Number128(0L, 0L);
 		Number128 w = new Number128(0L, 0L);
-		long x = seed.getLowValue();
-		long y = seed.getHighValue();
+		long x = seed.getLeastSigBits();
+		long y = seed.getMostSigBits();
 		long z = len * k1;
-		v.setLowValue(Long.rotateRight(y ^ k1, 49) * k1 + fetch64(byteArray, start));
-		v.setHighValue(Long.rotateRight(v.getLowValue(), 42) * k1 + fetch64(byteArray, start + 8));
-		w.setLowValue(Long.rotateRight(y + z, 35) * k1 + x);
-		w.setHighValue(Long.rotateRight(x + fetch64(byteArray, start + 88), 53) * k1);
+		v.setLeastSigBits(Long.rotateRight(y ^ k1, 49) * k1 + fetch64(byteArray, start));
+		v.setMostSigBits(Long.rotateRight(v.getLeastSigBits(), 42) * k1 + fetch64(byteArray, start + 8));
+		w.setLeastSigBits(Long.rotateRight(y + z, 35) * k1 + x);
+		w.setMostSigBits(Long.rotateRight(x + fetch64(byteArray, start + 88), 53) * k1);
 
 		// This is the same inner loop as CityHash64(), manually unrolled.
 		int pos = start;
 		do {
-			x = Long.rotateRight(x + y + v.getLowValue() + fetch64(byteArray, pos + 8), 37) * k1;
-			y = Long.rotateRight(y + v.getHighValue() + fetch64(byteArray, pos + 48), 42) * k1;
-			x ^= w.getHighValue();
-			y += v.getLowValue() + fetch64(byteArray, pos + 40);
-			z = Long.rotateRight(z + w.getLowValue(), 33) * k1;
-			v = weakHashLen32WithSeeds(byteArray, pos, v.getHighValue() * k1, x + w.getLowValue());
-			w = weakHashLen32WithSeeds(byteArray, pos + 32, z + w.getHighValue(), y + fetch64(byteArray, pos + 16));
+			x = Long.rotateRight(x + y + v.getLeastSigBits() + fetch64(byteArray, pos + 8), 37) * k1;
+			y = Long.rotateRight(y + v.getMostSigBits() + fetch64(byteArray, pos + 48), 42) * k1;
+			x ^= w.getMostSigBits();
+			y += v.getLeastSigBits() + fetch64(byteArray, pos + 40);
+			z = Long.rotateRight(z + w.getLeastSigBits(), 33) * k1;
+			v = weakHashLen32WithSeeds(byteArray, pos, v.getMostSigBits() * k1, x + w.getLeastSigBits());
+			w = weakHashLen32WithSeeds(byteArray, pos + 32, z + w.getMostSigBits(), y + fetch64(byteArray, pos + 16));
 
 			long swapValue = x;
 			x = z;
 			z = swapValue;
 			pos += 64;
-			x = Long.rotateRight(x + y + v.getLowValue() + fetch64(byteArray, pos + 8), 37) * k1;
-			y = Long.rotateRight(y + v.getHighValue() + fetch64(byteArray, pos + 48), 42) * k1;
-			x ^= w.getHighValue();
-			y += v.getLowValue() + fetch64(byteArray, pos + 40);
-			z = Long.rotateRight(z + w.getLowValue(), 33) * k1;
-			v = weakHashLen32WithSeeds(byteArray, pos, v.getHighValue() * k1, x + w.getLowValue());
-			w = weakHashLen32WithSeeds(byteArray, pos + 32, z + w.getHighValue(), y + fetch64(byteArray, pos + 16));
+			x = Long.rotateRight(x + y + v.getLeastSigBits() + fetch64(byteArray, pos + 8), 37) * k1;
+			y = Long.rotateRight(y + v.getMostSigBits() + fetch64(byteArray, pos + 48), 42) * k1;
+			x ^= w.getMostSigBits();
+			y += v.getLeastSigBits() + fetch64(byteArray, pos + 40);
+			z = Long.rotateRight(z + w.getLeastSigBits(), 33) * k1;
+			v = weakHashLen32WithSeeds(byteArray, pos, v.getMostSigBits() * k1, x + w.getLeastSigBits());
+			w = weakHashLen32WithSeeds(byteArray, pos + 32, z + w.getMostSigBits(), y + fetch64(byteArray, pos + 16));
 			swapValue = x;
 			x = z;
 			z = swapValue;
 			pos += 64;
 			len -= 128;
 		} while (len >= 128);
-		x += Long.rotateRight(v.getLowValue() + z, 49) * k0;
-		y = y * k0 + Long.rotateRight(w.getHighValue(), 37);
-		z = z * k0 + Long.rotateRight(w.getLowValue(), 27);
-		w.setLowValue(w.getLowValue() * 9);
-		v.setLowValue(v.getLowValue() * k0);
+		x += Long.rotateRight(v.getLeastSigBits() + z, 49) * k0;
+		y = y * k0 + Long.rotateRight(w.getMostSigBits(), 37);
+		z = z * k0 + Long.rotateRight(w.getLeastSigBits(), 27);
+		w.setLeastSigBits(w.getLeastSigBits() * 9);
+		v.setLeastSigBits(v.getLeastSigBits() * k0);
 
 		// If 0 < len < 128, hash up to 4 chunks of 32 bytes each from the end of s.
 		for (int tail_done = 0; tail_done < len; ) {
 			tail_done += 32;
-			y = Long.rotateRight(x + y, 42) * k0 + v.getHighValue();
-			w.setLowValue(w.getLowValue() + fetch64(byteArray, pos + len - tail_done + 16));
-			x = x * k0 + w.getLowValue();
-			z += w.getHighValue() + fetch64(byteArray, pos + len - tail_done);
-			w.setHighValue(w.getHighValue() + v.getLowValue());
-			v = weakHashLen32WithSeeds(byteArray, pos + len - tail_done, v.getLowValue() + z, v.getHighValue());
-			v.setLowValue(v.getLowValue() * k0);
+			y = Long.rotateRight(x + y, 42) * k0 + v.getMostSigBits();
+			w.setLeastSigBits(w.getLeastSigBits() + fetch64(byteArray, pos + len - tail_done + 16));
+			x = x * k0 + w.getLeastSigBits();
+			z += w.getMostSigBits() + fetch64(byteArray, pos + len - tail_done);
+			w.setMostSigBits(w.getMostSigBits() + v.getLeastSigBits());
+			v = weakHashLen32WithSeeds(byteArray, pos + len - tail_done, v.getLeastSigBits() + z, v.getMostSigBits());
+			v.setLeastSigBits(v.getLeastSigBits() * k0);
 		}
 		// At this point our 56 bytes of state should contain more than
 		// enough information for a strong 128-bit hash.  We use two
 		// different 56-byte-to-8-byte hashes to get a 16-byte final result.
-		x = hashLen16(x, v.getLowValue());
-		y = hashLen16(y + z, w.getLowValue());
-		return new Number128(hashLen16(x + v.getHighValue(), w.getHighValue()) + y,
-				hashLen16(x + w.getHighValue(), y + v.getHighValue()));
+		x = hashLen16(x, v.getLeastSigBits());
+		y = hashLen16(y + z, w.getLeastSigBits());
+		return new Number128(hashLen16(x + v.getMostSigBits(), w.getMostSigBits()) + y,
+				hashLen16(x + w.getMostSigBits(), y + v.getMostSigBits()));
 
 	}
 
@@ -427,9 +427,9 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 	private long hash128to64(final Number128 number128) {
 		// Murmur-inspired hashing.
 		final long kMul = 0x9ddfea08eb382d69L;
-		long a = (number128.getLowValue() ^ number128.getHighValue()) * kMul;
+		long a = (number128.getLeastSigBits() ^ number128.getMostSigBits()) * kMul;
 		a ^= (a >>> 47);
-		long b = (number128.getHighValue() ^ a) * kMul;
+		long b = (number128.getMostSigBits() ^ a) * kMul;
 		b ^= (b >>> 47);
 		b *= kMul;
 		return b;
@@ -482,8 +482,8 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 
 	private Number128 cityMurmur(final byte[] byteArray, final Number128 seed) {
 		final int len = byteArray.length;
-		long a = seed.getLowValue();
-		long b = seed.getHighValue();
+		long a = seed.getLeastSigBits();
+		long b = seed.getMostSigBits();
 		long c;
 		long d;
 		int l = len - 16;
