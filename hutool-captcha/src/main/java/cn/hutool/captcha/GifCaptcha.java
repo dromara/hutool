@@ -171,32 +171,35 @@ public class GifCaptcha extends AbstractCaptcha {
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		//或得图形上下文
 		Graphics2D g2d = image.createGraphics();
-		//利用指定颜色填充背景
-		g2d.setColor(ObjectUtil.defaultIfNull(this.background, Color.WHITE));
-		g2d.fillRect(0, 0, width, height);
-		AlphaComposite ac;
-		// 字符的y坐标
-		float y = (height >> 1) + (font.getSize() >> 1);
-		float m = 1.0f * (width - (chars.length * font.getSize())) / chars.length;
-		//字符的x坐标
-		float x = Math.max(m / 2.0f, 2);
-		g2d.setFont(font);
-		// 指定透明度
-		if (null != this.textAlpha) {
-			g2d.setComposite(this.textAlpha);
-		}
-		for (int i = 0; i < chars.length; i++) {
-			ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getAlpha(chars.length, flag, i));
-			g2d.setComposite(ac);
-			g2d.setColor(fontColor[i]);
-			g2d.drawOval(
+		try{
+			//利用指定颜色填充背景
+			g2d.setColor(ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+			g2d.fillRect(0, 0, width, height);
+			AlphaComposite ac;
+			// 字符的y坐标
+			float y = (height >> 1) + (font.getSize() >> 1);
+			float m = 1.0f * (width - (chars.length * font.getSize())) / chars.length;
+			//字符的x坐标
+			float x = Math.max(m / 2.0f, 2);
+			g2d.setFont(font);
+			// 指定透明度
+			if (null != this.textAlpha) {
+				g2d.setComposite(this.textAlpha);
+			}
+			for (int i = 0; i < chars.length; i++) {
+				ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getAlpha(chars.length, flag, i));
+				g2d.setComposite(ac);
+				g2d.setColor(fontColor[i]);
+				g2d.drawOval(
 					RandomUtil.randomInt(width),
 					RandomUtil.randomInt(height),
 					RandomUtil.randomInt(5, 30), 5 + RandomUtil.randomInt(5, 30)
-			);//绘制椭圆边框
-			g2d.drawString(words[i] + "", x + (font.getSize() + m) * i, y);
+				);//绘制椭圆边框
+				g2d.drawString(words[i] + "", x + (font.getSize() + m) * i, y);
+			}
+		} finally {
+			g2d.dispose();
 		}
-		g2d.dispose();
 		return image;
 	}
 

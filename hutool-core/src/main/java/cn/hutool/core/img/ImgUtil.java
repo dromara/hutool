@@ -1338,8 +1338,11 @@ public class ImgUtil {
 		final BufferedImage bimage = new BufferedImage(
 				img.getWidth(null), img.getHeight(null), imageType);
 		final Graphics2D bGr = GraphicsUtil.createGraphics(bimage, backgroundColor);
-		bGr.drawImage(img, 0, 0, null);
-		bGr.dispose();
+		try{
+			bGr.drawImage(img, 0, 0, null);
+		} finally {
+			bGr.dispose();
+		}
 
 		return bimage;
 	}

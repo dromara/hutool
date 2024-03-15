@@ -71,11 +71,15 @@ public class CircleCaptcha extends AbstractCaptcha {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = ImgUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
 
-		// 随机画干扰圈圈
-		drawInterfere(g);
+		try{
+			// 随机画干扰圈圈
+			drawInterfere(g);
 
-		// 画字符串
-		drawString(g, code);
+			// 画字符串
+			drawString(g, code);
+		} finally {
+			g.dispose();
+		}
 
 		return image;
 	}
