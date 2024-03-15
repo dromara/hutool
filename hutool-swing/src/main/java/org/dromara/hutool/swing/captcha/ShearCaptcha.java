@@ -85,13 +85,16 @@ public class ShearCaptcha extends AbstractCaptcha {
 		final BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
-		// 画字符串
-		drawString(g, code);
-
-		// 扭曲
-		shear(g, this.width, this.height, ObjUtil.defaultIfNull(this.background, Color.WHITE));
-		// 画干扰线
-		drawInterfere(g, 0, RandomUtil.randomInt(this.height) + 1, this.width, RandomUtil.randomInt(this.height) + 1, this.interfereCount, ColorUtil.randomColor());
+		try{
+			// 画字符串
+			drawString(g, code);
+			// 扭曲
+			shear(g, this.width, this.height, ObjUtil.defaultIfNull(this.background, Color.WHITE));
+			// 画干扰线
+			drawInterfere(g, 0, RandomUtil.randomInt(this.height) + 1, this.width, RandomUtil.randomInt(this.height) + 1, this.interfereCount, ColorUtil.randomColor());
+		} finally {
+			g.dispose();
+		}
 
 		return image;
 	}

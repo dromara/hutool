@@ -234,7 +234,7 @@ public class ULID implements Comparable<ULID>, Serializable {
 	 * @param timestamp 时间戳
 	 */
 	private static void checkTimestamp(final long timestamp) {
-		Assert.isTrue((timestamp & TIMESTAMP_MASK) == 0), "ULID does not support timestamps after +10889-08-02T05:31:50.655Z!")
-		;
+		Assert.isTrue((timestamp & TIMESTAMP_MASK) == 0,
+			"ULID does not support timestamps after +10889-08-02T05:31:50.655Z!");
 	}
 }

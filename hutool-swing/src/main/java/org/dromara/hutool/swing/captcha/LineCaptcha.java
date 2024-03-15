@@ -77,11 +77,15 @@ public class LineCaptcha extends AbstractCaptcha {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
-		// 干扰线
-		drawInterfere(g);
+		try{
+			// 干扰线
+			drawInterfere(g);
 
-		// 字符串
-		drawString(g, code);
+			// 字符串
+			drawString(g, code);
+		} finally {
+			g.dispose();
+		}
 
 		return image;
 	}
