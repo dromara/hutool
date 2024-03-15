@@ -52,36 +52,36 @@ public class Number128 extends Number implements Comparable<Number128>{
 	}
 
 	/**
-	 * 获取高位值
+	 * 获取最高有效位（Most Significant Bit），64 bit（8 bytes）
 	 *
-	 * @return 高位值
+	 * @return 最高有效位（Most Significant Bit），64 bit（8 bytes）
 	 */
 	public long getMostSigBits() {
 		return mostSigBits;
 	}
 
 	/**
-	 * 设置高位值
+	 * 设置最高有效位（Most Significant Bit），64 bit（8 bytes）
 	 *
-	 * @param hiValue 高位值
+	 * @param hiValue 最高有效位（Most Significant Bit），64 bit（8 bytes）
 	 */
 	public void setMostSigBits(final long hiValue) {
 		this.mostSigBits = hiValue;
 	}
 
 	/**
-	 * 获取低位值
+	 * 获取最低有效位（Least Significant Bit），64 bit（8 bytes）
 	 *
-	 * @return 地位值
+	 * @return 最低有效位（Least Significant Bit），64 bit（8 bytes）
 	 */
 	public long getLeastSigBits() {
 		return leastSigBits;
 	}
 
 	/**
-	 * 设置低位值
+	 * 设置最低有效位（Least Significant Bit），64 bit（8 bytes）
 	 *
-	 * @param leastSigBits 低位值
+	 * @param leastSigBits 最低有效位（Least Significant Bit），64 bit（8 bytes）
 	 */
 	public void setLeastSigBits(final long leastSigBits) {
 		this.leastSigBits = leastSigBits;

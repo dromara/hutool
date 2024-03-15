@@ -21,6 +21,7 @@ import org.dromara.hutool.core.util.RandomUtil;
 import java.io.Serializable;
 import java.nio.ByteOrder;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * 参考：https://github.com/zjcscut/framework-mesh/blob/master/ulid4j/src/main/java/cn/vlts/ulid/ULID.java
@@ -51,10 +52,68 @@ public class ULID implements Comparable<ULID>, Serializable {
 	private static final long OVERFLOW = 0x0000000000000000L;
 
 	// region ----- Factory methods
+
+	/**
+	 * 创建一个新的ULID，使用当前系统时间戳和随机数
+	 *
+	 * @return ULID
+	 */
 	public static ULID of() {
-		return of(System.currentTimeMillis(), RandomUtil.randomBytes(RANDOMNESS_BYTE_LEN));
+		return of(System.currentTimeMillis());
 	}
 
+	/**
+	 * 创建一个新的ULID，使用指定系统时间戳和随机数
+	 *
+	 * @param timestamp 时间戳
+	 * @return ULID
+	 */
+	public static ULID of(final long timestamp) {
+		return of(timestamp, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 创建一个新的ULID，使用指定系统时间戳和指定随机对象
+	 *
+	 * @param timestamp 时间戳
+	 * @param random    {@link Random}
+	 * @return ULID
+	 */
+	public static ULID of(final long timestamp, final Random random) {
+		return of(timestamp, RandomUtil.randomBytes(RANDOMNESS_BYTE_LEN, random));
+	}
+
+	/**
+	 * 创建一个新的ULID，使用指定系统时间戳和指定填充数
+	 *
+	 * @param timestamp  时间戳
+	 * @param randomness 指定填充数
+	 * @return ULID
+	 */
+	public static ULID of(final long timestamp, final byte[] randomness) {
+		// 时间戳最多为48 bit(6 bytes)
+		checkTimestamp(timestamp);
+		Assert.notNull(randomness);
+		// 随机数部分长度必须为80 bit(10 bytes)
+		Assert.isTrue(RANDOMNESS_BYTE_LEN == randomness.length, "Invalid randomness");
+
+		long msb = 0;
+		// 时间戳左移16位，低位补零准备填入部分随机数位，即16_bit_uint_random
+		msb |= timestamp << 16;
+		// randomness[0]左移0位填充到16_bit_uint_random的高8位，randomness[1]填充到16_bit_uint_random的低8位
+		msb |= (long) (randomness[0x0] & 0xff) << 8;
+		// randomness[1]填充到16_bit_uint_random的低8位
+		msb |= randomness[0x1] & 0xff;
+
+		return new ULID(new Number128(ByteUtil.toLong(randomness, 2, ByteOrder.BIG_ENDIAN), msb));
+	}
+
+	/**
+	 * 解析一个Crockford`s Base32的ULID
+	 *
+	 * @param ulidString Crockford`s Base32的ULID
+	 * @return ULID
+	 */
 	public static ULID of(final String ulidString) {
 		Objects.requireNonNull(ulidString, "ulidString must not be null!");
 		if (ulidString.length() != 26) {
@@ -75,6 +134,12 @@ public class ULID implements Comparable<ULID>, Serializable {
 		return new ULID(new Number128(least, most));
 	}
 
+	/**
+	 * 从bytes解析ULID
+	 *
+	 * @param data bytes
+	 * @return ULID
+	 */
 	public static ULID of(final byte[] data) {
 		Objects.requireNonNull(data, "data must not be null!");
 		if (data.length != 16) {
@@ -91,24 +156,6 @@ public class ULID implements Comparable<ULID>, Serializable {
 		return new ULID(new Number128(leastSignificantBits, mostSignificantBits));
 	}
 
-	public static ULID of(final long timestamp, final byte[] randomness) {
-		// 时间戳最多为48 bit(6 bytes)
-		checkTimestamp(timestamp);
-		Assert.notNull(randomness);
-		// 随机数部分长度必须为80 bit(10 bytes)
-		Assert.isTrue(RANDOMNESS_BYTE_LEN == randomness.length, "Invalid randomness");
-
-		long msb = 0;
-		// 时间戳左移16位，低位补零准备填入部分随机数位，即16_bit_uint_random
-		msb |= timestamp << 16;
-		// randomness[0]左移0位填充到16_bit_uint_random的高8位，randomness[1]填充到16_bit_uint_random的低8位
-		msb |= (long) (randomness[0x0] & 0xff) << 8;
-		// randomness[1]填充到16_bit_uint_random的低8位
-		msb |= randomness[0x1] & 0xff;
-
-		return new ULID(new Number128(ByteUtil.toLong(randomness, 2, ByteOrder.BIG_ENDIAN), msb));
-	}
-
 	// endregion
 
 	private final Number128 idValue;
@@ -122,27 +169,37 @@ public class ULID implements Comparable<ULID>, Serializable {
 		this.idValue = number128;
 	}
 
+	/**
+	 * 获取最高有效位（Most Significant Bit），64 bit（8 bytes）
+	 *
+	 * @return 最高有效位（Most Significant Bit），64 bit（8 bytes）
+	 */
 	public long getMostSignificantBits() {
 		return this.idValue.getMostSigBits();
 	}
 
+	/**
+	 * 获取最低有效位（Least Significant Bit），64 bit（8 bytes）
+	 *
+	 * @return 最低有效位（Least Significant Bit），64 bit（8 bytes）
+	 */
 	public long getLeastSignificantBits() {
 		return this.idValue.getLeastSigBits();
 	}
 
 	/**
-	 * Get the timestamp component of ULID
+	 * 获取ULID的时间戳部分
 	 *
-	 * @return the timestamp component
+	 * @return 时间戳
 	 */
 	public long getTimestamp() {
 		return this.idValue.getMostSigBits() >>> 16;
 	}
 
 	/**
-	 * Get the randomness component of ULID
+	 * 获取ULID的随机数部分
 	 *
-	 * @return the randomness component
+	 * @return 随机数部分
 	 */
 	public byte[] getRandomness() {
 		final long msb = this.idValue.getMostSigBits();
@@ -156,6 +213,11 @@ public class ULID implements Comparable<ULID>, Serializable {
 		return randomness;
 	}
 
+	/**
+	 * 自增ULID
+	 *
+	 * @return 返回自增ULID
+	 */
 	public ULID increment() {
 		final long msb = this.idValue.getMostSigBits();
 		final long lsb = this.idValue.getLeastSigBits();
@@ -164,9 +226,27 @@ public class ULID implements Comparable<ULID>, Serializable {
 		if (newLsb == OVERFLOW) {
 			newMsb += 1;
 		}
-		return new ULID(new Number128(lsb, msb));
+		return new ULID(new Number128(newLsb, newMsb));
 	}
 
+	/**
+	 * 获取下一个有序的ULID
+	 *
+	 * @param timestamp 时间戳
+	 * @return 如果给定时间戳与当前ULID相同，则返回自增ULID，否则返回一个新的ULID
+	 */
+	public ULID nextMonotonic(final long timestamp) {
+		if (getTimestamp() == timestamp) {
+			return increment();
+		}
+		return of(timestamp);
+	}
+
+	/**
+	 * 转为bytes值
+	 *
+	 * @return bytes值
+	 */
 	public byte[] toBytes() {
 		final long msb = this.idValue.getMostSigBits();
 		final long lsb = this.idValue.getLeastSigBits();
@@ -181,12 +261,22 @@ public class ULID implements Comparable<ULID>, Serializable {
 		return result;
 	}
 
+	/**
+	 * 转为UUID
+	 *
+	 * @return UUID
+	 */
 	public UUID toUUID() {
 		final long msb = this.idValue.getMostSigBits();
 		final long lsb = this.idValue.getLeastSigBits();
 		return new UUID(msb, lsb);
 	}
 
+	/**
+	 * 转为JDK的UUID
+	 *
+	 * @return UUID
+	 */
 	public java.util.UUID toJdkUUID() {
 		final long msb = this.idValue.getMostSigBits();
 		final long lsb = this.idValue.getLeastSigBits();

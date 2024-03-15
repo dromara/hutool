@@ -186,8 +186,23 @@ public class RandomUtil {
 	 * @return bytes
 	 */
 	public static byte[] randomBytes(final int length) {
+		return randomBytes(length, getRandom());
+	}
+
+	/**
+	 * 随机bytes
+	 *
+	 * @param length 长度
+	 * @param random {@link Random}
+	 * @return bytes
+	 * @since 6.0.0
+	 */
+	public static byte[] randomBytes(final int length, Random random) {
+		if (null == random) {
+			random = getRandom();
+		}
 		final byte[] bytes = new byte[length];
-		getRandom().nextBytes(bytes);
+		random.nextBytes(bytes);
 		return bytes;
 	}
 
