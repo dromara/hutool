@@ -6,6 +6,7 @@ import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.nio.charset.Charset;
@@ -55,6 +56,8 @@ public abstract class HttpBase<T> {
 	 * 存储主体
 	 */
 	protected Resource body;
+
+	public final static String CONTENT_TYPE_CHARSET = ";charset=(.+);?";
 
 	// ---------------------------------------------------------------- Headers start
 
@@ -120,6 +123,10 @@ public abstract class HttpBase<T> {
 				headers.put(name.trim(), valueList);
 			} else {
 				values.add(value.trim());
+			}
+
+			if (Header.CONTENT_TYPE.getValue().equals(name.trim())) {
+				charsetFromContentType(value);
 			}
 		}
 		return (T) this;
@@ -358,5 +365,17 @@ public abstract class HttpBase<T> {
 		sb.append("    ").append(StrUtil.str(this.bodyBytes(), this.charset)).append(StrUtil.CRLF);
 
 		return sb.toString();
+	}
+
+	/**
+	 * Content-Type中存在charset时，例如：application/json;charset=GB18030，设置字符编码
+	 *
+	 * @param contentType 请求体类型
+	 */
+	protected void charsetFromContentType(String contentType) {
+		String charset = ReUtil.getGroup1(CONTENT_TYPE_CHARSET, contentType);
+		if (StrUtil.isNotEmpty(charset)) {
+			this.charset(charset.trim());
+		}
 	}
 }

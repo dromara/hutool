@@ -714,6 +714,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(String body, String contentType) {
+		charsetFromContentType(contentType);
 		byte[] bytes = StrUtil.bytes(body, this.charset);
 		body(bytes);
 		this.form = null; // 当使用body时，停止form的使用

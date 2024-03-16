@@ -203,7 +203,7 @@ public class HttpRequestTest {
 	public void addInterceptorTest() {
 		HttpUtil.createGet("https://hutool.cn")
 				.addInterceptor(Console::log)
-				.addResponseInterceptor((res)-> Console.log(res.getStatus()))
+				.addResponseInterceptor((res) -> Console.log(res.getStatus()))
 				.execute();
 	}
 
@@ -216,17 +216,17 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
-	public void getWithFormTest(){
+	public void getWithFormTest() {
 		final String url = "https://postman-echo.com/get";
 		final Map<String, Object> map = new HashMap<>();
 		map.put("aaa", "application+1@qqq.com");
-		final HttpRequest request =HttpUtil.createGet(url).form(map);
+		final HttpRequest request = HttpUtil.createGet(url).form(map);
 		Console.log(request.execute().body());
 	}
 
 	@Test
 	@Ignore
-	public void urlWithParamIfGetTest(){
+	public void urlWithParamIfGetTest() {
 		final UrlBuilder urlBuilder = new UrlBuilder();
 		urlBuilder.setScheme("https").setHost("hutool.cn");
 
@@ -238,6 +238,30 @@ public class HttpRequestTest {
 	@Ignore
 	public void issueI5Y68WTest() {
 		final HttpResponse httpResponse = HttpRequest.get("http://82.157.17.173:8100/app/getAddress").execute();
+		Console.log(httpResponse.body());
+	}
+
+
+	@Test
+	@Ignore
+	public void headerWithCharsetTest() {
+		HttpResponse httpResponse = HttpRequest.post("https://hutool.cn")
+				.header("Content-Type", "application/json;charset=GBK")
+				.body("{\n" +
+						"    \"name\":\"测试\"\n" +
+						"}")
+				.execute();
+		Console.log(httpResponse.body());
+	}
+
+	@Test
+	@Ignore
+	public void bodyWithCharsetTest() {
+		HttpResponse httpResponse = HttpRequest.get("https://hutool.cn/")
+				.body("{\n" +
+						"    \"name\":\"测试\"\n" +
+						"}", "application/json;charset=GBK")
+				.execute();
 		Console.log(httpResponse.body());
 	}
 }
