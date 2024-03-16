@@ -32,6 +32,10 @@ import java.util.List;
 public class PartParser {
 
 	private final Part part;
+	/**
+	 * 是否是查询最后一天
+	 */
+	private boolean isLastDay;
 
 	/**
 	 * 创建解析器
@@ -69,6 +73,7 @@ public class PartParser {
 			return new AlwaysTrueMatcher();
 		}
 
+		isLastDay = false;
 		final List<Integer> values = parseArray(value);
 		if (values.isEmpty()) {
 			throw new CronException("Invalid part value: [{}]", value);
@@ -76,7 +81,7 @@ public class PartParser {
 
 		switch (this.part) {
 			case DAY_OF_MONTH:
-				return new DayOfMonthMatcher(values);
+				return new DayOfMonthMatcher(values, isLastDay);
 			case YEAR:
 				return new YearValueMatcher(values);
 			default:
@@ -226,7 +231,7 @@ public class PartParser {
 	/**
 	 * 解析单个int值，支持别名
 	 *
-	 * @param value 被解析的值
+	 * @param value      被解析的值
 	 * @param checkValue 是否检查值在有效范围内
 	 * @return 解析结果
 	 * @throws CronException 当无效数字或无效别名时抛出
@@ -265,6 +270,7 @@ public class PartParser {
 	 */
 	private int parseAlias(String name) throws CronException {
 		if ("L".equalsIgnoreCase(name)) {
+			isLastDay = true;
 			// L表示最大值
 			return part.getMax();
 		}

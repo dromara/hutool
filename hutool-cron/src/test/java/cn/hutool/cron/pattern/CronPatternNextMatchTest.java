@@ -97,4 +97,135 @@ public class CronPatternNextMatchTest {
 		final Calendar calendar = pattern.nextMatchAfter(time.toCalendar());
 		Assert.assertEquals("2022-04-09 01:01:01", DateUtil.date(calendar).toString());
 	}
+
+	@Test
+	public void testLastDayOfMonthForEveryMonth1() {
+		DateTime date = DateUtil.parse("2023-01-08 07:44:16");
+		DateTime result = DateUtil.parse("2023-01-31 03:02:01");
+		// 匹配所有月，生成每个月的最后一天
+		CronPattern pattern = new CronPattern("1 2 3 L * ?");
+		for (int i = 0; i < 30; i++) {
+			//noinspection ConstantConditions
+			Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
+			date = DateUtil.date(calendar);
+			Assert.assertEquals(date, result);
+			// 加一秒
+			date = date.offset(DateField.SECOND, 1);
+
+			// 移动到下一个月的最后一天
+			result = result.offset(DateField.DAY_OF_MONTH, 1);
+			int lastDayOfMonth = DateUtil.getLastDayOfMonth(result);
+			result.setField(DateField.DAY_OF_MONTH, lastDayOfMonth);
+		}
+	}
+
+	@Test
+	public void testLastDayOfMonthForEveryMonth2() {
+		DateTime date = DateUtil.parse("2023-03-08 07:44:16");
+		DateTime result = DateUtil.parse("2023-03-31 03:02:01");
+		// 匹配所有月，生成每个月的最后一天
+		CronPattern pattern = new CronPattern("1 2 3 L * ?");
+		for (int i = 0; i < 30; i++) {
+			//noinspection ConstantConditions
+			Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
+			date = DateUtil.date(calendar);
+			Assert.assertEquals(date, result);
+			// 加一秒
+			date = date.offset(DateField.SECOND, 1);
+
+			// 移动到下一个月的最后一天
+			result = result.offset(DateField.DAY_OF_MONTH, 1);
+			int lastDayOfMonth = DateUtil.getLastDayOfMonth(result);
+			result.setField(DateField.DAY_OF_MONTH, lastDayOfMonth);
+		}
+	}
+
+	@Test
+	public void testLastDayOfMonthForEveryYear1() {
+		DateTime date = DateUtil.parse("2023-01-08 07:44:16");
+		DateTime result = DateUtil.parse("2023-02-28 03:02:01");
+		// 匹配每一年2月的最后一天
+		CronPattern pattern = new CronPattern("1 2 3 L 2 ?");
+		for (int i = 0; i < 10; i++) {
+			//noinspection ConstantConditions
+			Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
+			date = DateUtil.date(calendar);
+			Assert.assertEquals(date, result);
+			// 加一秒
+			date = date.offset(DateField.SECOND, 1);
+
+			// 移动到下一年的最后一天
+			result = result.offset(DateField.YEAR, 1);
+			int lastDayOfMonth = DateUtil.getLastDayOfMonth(result);
+			result.setField(DateField.DAY_OF_MONTH, lastDayOfMonth);
+		}
+	}
+
+	@Test
+	public void testLastDayOfMonthForEveryYear2() {
+		DateTime date = DateUtil.parse("2022-03-08 07:44:16");
+		DateTime result = DateUtil.parse("2023-02-28 03:02:01");
+		// 匹配每一年2月的最后一天
+		CronPattern pattern = new CronPattern("1 2 3 L 2 ?");
+		for (int i = 0; i < 30; i++) {
+			//noinspection ConstantConditions
+			Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
+			date = DateUtil.date(calendar);
+			Assert.assertEquals(date, result);
+			// 加一秒
+			date = date.offset(DateField.SECOND, 1);
+
+			// 移动到下一年的最后一天
+			result = result.offset(DateField.YEAR, 1);
+			int lastDayOfMonth = DateUtil.getLastDayOfMonth(result);
+			result.setField(DateField.DAY_OF_MONTH, lastDayOfMonth);
+		}
+	}
+
+	@Test
+	public void testEveryHour() {
+		DateTime date = DateUtil.parse("2022-02-28 07:44:16");
+		DateTime result = DateUtil.parse("2022-02-28 08:02:01");
+		// 匹配每一年2月的最后一天
+		CronPattern pattern = new CronPattern("1 2 */1 * * ?");
+		for (int i = 0; i < 30; i++) {
+			//noinspection ConstantConditions
+			Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
+			date = DateUtil.date(calendar);
+			Assert.assertEquals(date, result);
+			// 加一秒
+			date = date.offset(DateField.SECOND, 1);
+
+			// 移动到下一个小时
+			result = result.offset(DateField.HOUR_OF_DAY, 1);
+		}
+	}
+
+	@Test
+	public void testLastDayOfMonthForEveryHour() {
+		DateTime date = DateUtil.parse("2023-01-28 07:44:16");
+		DateTime result = DateUtil.parse("2023-01-31 00:00:00");
+		// 匹配每一年2月的最后一天
+		CronPattern pattern = new CronPattern("0 0 */1 L * ?");
+		for (int i = 0; i < 400; i++) {
+			//noinspection ConstantConditions
+			Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
+			date = DateUtil.date(calendar);
+			Assert.assertEquals(date, result);
+			// 加一秒
+			date = date.offset(DateField.SECOND, 1);
+
+			// 移动到下一个小时
+			DateTime t = result.setMutable(false).offset(DateField.HOUR_OF_DAY, 1);
+			if (t.dayOfMonth() != result.dayOfMonth()) {
+				// 移动到下个月最后一天的开始
+				result = result.offset(DateField.DAY_OF_MONTH, 1);
+				int lastDayOfMonth = DateUtil.getLastDayOfMonth(result);
+				result = result.setField(DateField.DAY_OF_MONTH, lastDayOfMonth);
+				result = DateUtil.beginOfDay(result);
+			} else {
+				result = t;
+			}
+		}
+	}
 }

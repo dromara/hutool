@@ -1,5 +1,7 @@
 package cn.hutool.cron.pattern.matcher;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.Month;
 import cn.hutool.cron.pattern.Part;
 
 import java.time.Year;
@@ -184,14 +186,23 @@ public class PatternMatcher {
 				// 周不参与计算
 				i--;
 				continue;
+			} else if (i == Part.DAY_OF_MONTH.ordinal()
+				&& matchers[i] instanceof DayOfMonthMatcher
+				&& ((DayOfMonthMatcher) matchers[i]).isLast()) {
+				int newMonth = newValues[Part.MONTH.ordinal()];
+				int newYear = newValues[Part.YEAR.ordinal()];
+				nextValue = Month.of(newMonth - 1).getLastDay(DateUtil.isLeapYear(newYear));
+			} else {
+				nextValue = matchers[i].nextAfter(values[i]);
 			}
-			nextValue = matchers[i].nextAfter(values[i]);
 			if (nextValue > values[i]) {
 				// 此部分正常获取新值，结束循环，后续的部分置最小值
 				newValues[i] = nextValue;
 				i--;
 				break;
 			} else if (nextValue < values[i]) {
+				// 回退前保存最新值
+				newValues[i] = nextValue;
 				// 此部分下一个值获取到的值产生回退，回到上一个部分，继续获取新值
 				i++;
 				nextValue = -1;// 标记回退查找
@@ -208,8 +219,15 @@ public class PatternMatcher {
 					// 周不参与计算
 					i++;
 					continue;
+				} else if (i == Part.DAY_OF_MONTH.ordinal()
+					&& matchers[i] instanceof DayOfMonthMatcher
+					&& ((DayOfMonthMatcher) matchers[i]).isLast()) {
+					int newMonth = newValues[Part.MONTH.ordinal()];
+					int newYear = newValues[Part.YEAR.ordinal()];
+					nextValue = Month.of(newMonth - 1).getLastDay(DateUtil.isLeapYear(newYear));
+				} else {
+					nextValue = matchers[i].nextAfter(values[i] + 1);
 				}
-				nextValue = matchers[i].nextAfter(values[i] + 1);
 				if (nextValue > values[i]) {
 					newValues[i] = nextValue;
 					i--;
@@ -234,7 +252,15 @@ public class PatternMatcher {
 		Part part;
 		for (int i = 0; i <= toPart; i++) {
 			part = Part.of(i);
-			values[i] = getMin(part);
+			if (part == Part.DAY_OF_MONTH
+				&& get(part) instanceof DayOfMonthMatcher
+				&& ((DayOfMonthMatcher) get(part)).isLast()) {
+				int newMonth = values[Part.MONTH.ordinal()];
+				int newYear = values[Part.YEAR.ordinal()];
+				values[i] = Month.of(newMonth - 1).getLastDay(DateUtil.isLeapYear(newYear));
+			} else {
+				values[i] = getMin(part);
+			}
 		}
 	}
 
