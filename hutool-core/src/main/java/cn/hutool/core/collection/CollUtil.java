@@ -411,6 +411,34 @@ public class CollUtil {
 	}
 
 	/**
+	 * 计算多个列表的笛卡尔积（非递归），即从每个列表中任取1个值构成所有组合，例如：
+	 *
+	 * <pre>
+	 *     cartesianProduct([1,2],[3,4]) -》 [1,3],[1,4],[2,3],[2,4]
+	 * </pre>
+	 *
+	 * @param lists 多个集合构成的大集合
+	 * @param <T>   元素类型
+	 * @return 笛卡尔积
+	 */
+	public static <T> List<List<T>> cartesianProduct(List<List<T>> lists) {
+		List<List<T>> result = new ArrayList<>();
+		result.add(new ArrayList<>());
+		for (List<T> list : lists) {
+			List<List<T>> temp = new ArrayList<>();
+			for (List<T> res : result) {
+				for (T item : list) {
+					List<T> newList = new ArrayList<>(res);
+					newList.add(item);
+					temp.add(newList);
+				}
+			}
+			result = temp;
+		}
+		return result;
+	}
+
+	/**
 	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
 	 *
 	 * @param collection 集合
