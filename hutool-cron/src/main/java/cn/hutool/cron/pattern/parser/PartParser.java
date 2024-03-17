@@ -32,10 +32,6 @@ import java.util.List;
 public class PartParser {
 
 	private final Part part;
-	/**
-	 * 是否是查询最后一天
-	 */
-	private boolean isLastDay;
 
 	/**
 	 * 创建解析器
@@ -68,12 +64,15 @@ public class PartParser {
 	 * @return {@link PartMatcher}
 	 */
 	public PartMatcher parse(String value) {
+		// 是否是查询最后一天
+		boolean isLastDay = false;
 		if (isMatchAllStr(value)) {
 			//兼容Quartz的"?"表达式，不会出现互斥情况，与"*"作用相同
 			return new AlwaysTrueMatcher();
+		} else if ("L".equalsIgnoreCase(value)) {
+			isLastDay = true;
 		}
 
-		isLastDay = false;
 		final List<Integer> values = parseArray(value);
 		if (values.isEmpty()) {
 			throw new CronException("Invalid part value: [{}]", value);
@@ -270,7 +269,6 @@ public class PartParser {
 	 */
 	private int parseAlias(String name) throws CronException {
 		if ("L".equalsIgnoreCase(name)) {
-			isLastDay = true;
 			// L表示最大值
 			return part.getMax();
 		}
