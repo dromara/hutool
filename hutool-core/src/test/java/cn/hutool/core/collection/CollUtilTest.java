@@ -452,6 +452,40 @@ public class CollUtilTest {
 		Assert.assertEquals(Collections.emptyList(), emptyList);
 	}
 
+    @Test
+    public void cartesianProductTest() {
+		List<List<Integer>> lists = new ArrayList<>();
+		lists.add(Arrays.asList(1, 2, 3));
+		lists.add(Arrays.asList(4, 5));
+		lists.add(Arrays.asList(6, 7, 8));
+
+		List<List<Integer>> result = CollUtil.cartesianProduct(lists);
+
+		List<List<Integer>> target = new ArrayList<>();
+		target.add(Arrays.asList(1, 4, 6));
+		target.add(Arrays.asList(1, 4, 7));
+		target.add(Arrays.asList(1, 4, 8));
+		target.add(Arrays.asList(1, 5, 6));
+		target.add(Arrays.asList(1, 5, 7));
+		target.add(Arrays.asList(1, 5, 8));
+
+		target.add(Arrays.asList(2, 4, 6));
+		target.add(Arrays.asList(2, 4, 7));
+		target.add(Arrays.asList(2, 4, 8));
+		target.add(Arrays.asList(2, 5, 6));
+		target.add(Arrays.asList(2, 5, 7));
+		target.add(Arrays.asList(2, 5, 8));
+
+		target.add(Arrays.asList(3, 4, 6));
+		target.add(Arrays.asList(3, 4, 7));
+		target.add(Arrays.asList(3, 4, 8));
+		target.add(Arrays.asList(3, 5, 6));
+		target.add(Arrays.asList(3, 5, 7));
+		target.add(Arrays.asList(3, 5, 8));
+
+		Assert.assertEquals(target, result);
+    }
+
 	@Data
 	@AllArgsConstructor
 	public static class TestBean {
