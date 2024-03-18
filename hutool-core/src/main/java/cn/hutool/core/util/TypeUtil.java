@@ -328,6 +328,13 @@ public class TypeUtil {
 			for (final Type genericInterface : genericInterfaces) {
 				if (genericInterface instanceof ParameterizedType) {
 					result.add((ParameterizedType) genericInterface);
+					continue;
+				}
+
+				// 继承接口泛型参数
+				final ParameterizedType parameterizedType = toParameterizedType(genericInterface);
+				if (parameterizedType != null) {
+					result.add(parameterizedType);
 				}
 			}
 		}
