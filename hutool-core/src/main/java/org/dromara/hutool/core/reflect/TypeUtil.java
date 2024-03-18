@@ -343,8 +343,9 @@ public class TypeUtil {
 		final Type[] genericInterfaces = clazz.getGenericInterfaces();
 		if (ArrayUtil.isNotEmpty(genericInterfaces)) {
 			for (final Type genericInterface : genericInterfaces) {
-				if (genericInterface instanceof ParameterizedType) {
-					result.add((ParameterizedType) genericInterface);
+				final ParameterizedType parameterizedType = toParameterizedType(genericInterface);
+				if(null != parameterizedType){
+					result.add(parameterizedType);
 				}
 			}
 		}
