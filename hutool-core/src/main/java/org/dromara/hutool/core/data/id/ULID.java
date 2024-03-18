@@ -24,6 +24,18 @@ import java.util.Objects;
 import java.util.Random;
 
 /**
+ * ULID（Universally Unique Lexicographically Sortable Identifier）通用唯一词典分类标识符，特性：
+ * <ul>
+ *     <li>与UUID的128位兼容性</li>
+ *     <li>每毫秒1.21e + 24个唯一ULID</li>
+ *     <li>按字典顺序(也就是字母顺序)排序</li>
+ *     <li>规范地编码为26个字符串，而不是UUID的36个字符</li>
+ *     <li>使用Crockford的base32获得更好的效率和可读性（每个字符5位）</li>
+ *     <li>不区分大小写</li>
+ *     <li>没有特殊字符（URL安全）</li>
+ *     <li>单调排序顺序（正确检测并处理相同的毫秒）</li>
+ * </ul>
+ *
  * 参考：https://github.com/zjcscut/framework-mesh/blob/master/ulid4j/src/main/java/cn/vlts/ulid/ULID.java
  * <pre>{@code
  *   01AN4Z07BY      79KA1307SR9X4MV3
@@ -32,7 +44,7 @@ import java.util.Random;
  *    48bits             80bits
  * }</pre>
  *
- * @author throwable
+ * @author throwable，Looly
  * @since 6.0.0
  */
 public class ULID implements Comparable<ULID>, Serializable {
