@@ -137,7 +137,7 @@ public class ULID implements Comparable<ULID>, Serializable {
 	/**
 	 * 从bytes解析ULID
 	 *
-	 * @param data bytes
+	 * @param data bytes,16位，0-7为mostSignificantBits，8-15为leastSignificantBits
 	 * @return ULID
 	 */
 	public static ULID of(final byte[] data) {
@@ -161,9 +161,9 @@ public class ULID implements Comparable<ULID>, Serializable {
 	private final Number128 idValue;
 
 	/**
-	 * Creates a new ULID with the high 64 bits and low 64 bits as long value.
+	 * 构造
 	 *
-	 * @param number128 the low 8 bytes of ULID
+	 * @param number128 16位数字
 	 */
 	public ULID(final Number128 number128) {
 		this.idValue = number128;
@@ -243,7 +243,7 @@ public class ULID implements Comparable<ULID>, Serializable {
 	}
 
 	/**
-	 * 转为bytes值
+	 * 转为bytes值,16位，0-7为mostSignificantBits，8-15为leastSignificantBits
 	 *
 	 * @return bytes值
 	 */

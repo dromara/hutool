@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.data.id;
 
+import org.dromara.hutool.core.codec.Number128;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -77,15 +78,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		static final SecureRandom NUMBER_GENERATOR = RandomUtil.getSecureRandom();
 	}
 
-	/**
-	 * 此UUID的最高64有效位
-	 */
-	private final long mostSigBits;
-
-	/**
-	 * 此UUID的最低64有效位
-	 */
-	private final long leastSigBits;
+	private final Number128 idValue;
 
 	/**
 	 * 私有构造
@@ -102,8 +95,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		for (int i = 8; i < 16; i++) {
 			lsb = (lsb << 8) | (data[i] & 0xff);
 		}
-		this.mostSigBits = msb;
-		this.leastSigBits = lsb;
+		this.idValue = new Number128(lsb, msb);
 	}
 
 	/**
@@ -113,8 +105,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param leastSigBits 用于 {@code UUID} 的最低有效 64 位
 	 */
 	public UUID(final long mostSigBits, final long leastSigBits) {
-		this.mostSigBits = mostSigBits;
-		this.leastSigBits = leastSigBits;
+		this.idValue = new Number128(leastSigBits, mostSigBits);
 	}
 
 	/**
@@ -142,10 +133,17 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 随机生成的 {@code UUID}
 	 */
 	public static UUID randomUUID(final boolean isSecure) {
-		final Random ng = isSecure ? Holder.NUMBER_GENERATOR : RandomUtil.getRandom();
+		return randomUUID(isSecure ? Holder.NUMBER_GENERATOR : RandomUtil.getRandom());
+	}
 
-		final byte[] randomBytes = new byte[16];
-		ng.nextBytes(randomBytes);
+	/**
+	 * 获取类型 4 UUIDv4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
+	 *
+	 * @param random 随机数生成器
+	 * @return 随机生成的 {@code UUID}
+	 */
+	public static UUID randomUUID(final Random random) {
+		final byte[] randomBytes = RandomUtil.randomBytes(16, random);
 
 		randomBytes[6] &= 0x0f; /* clear version */
 		randomBytes[6] |= 0x40; /* set to version 4 */
@@ -211,7 +209,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 此 UUID 的 128 位值中的最低有效 64 位。
 	 */
 	public long getLeastSignificantBits() {
-		return leastSigBits;
+		return this.idValue.getLeastSigBits();
 	}
 
 	/**
@@ -220,7 +218,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 此 UUID 的 128 位值中最高有效 64 位。
 	 */
 	public long getMostSignificantBits() {
-		return mostSigBits;
+		return this.idValue.getMostSigBits();
 	}
 
 	/**
@@ -241,7 +239,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 */
 	public int version() {
 		// Version is bits masked by 0x000000000000F000 in MS long
-		return (int) ((mostSigBits >> 12) & 0x0f);
+		return (int) ((this.getMostSignificantBits() >> 12) & 0x0f);
 	}
 
 	/**
@@ -258,6 +256,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 此 {@code UUID} 相关联的变体号
 	 */
 	public int variant() {
+		final long leastSigBits = this.getLeastSignificantBits();
 		// This field is composed of a varying number of bits.
 		// 0 - - Reserved for NCS backward compatibility
 		// 1 0 - The IETF aka Leach-Salz variant (used by this class)
@@ -281,6 +280,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @throws UnsupportedOperationException 如果此 {@code UUID} 不是 version 为 1 的 UUID。
 	 */
 	public long timestamp() throws UnsupportedOperationException {
+		final long mostSigBits = this.getMostSignificantBits();
 		checkTimeBase();
 		return (mostSigBits & 0x0FFFL) << 48//
 				| ((mostSigBits >> 16) & 0x0FFFFL) << 32//
@@ -300,7 +300,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 */
 	public int clockSequence() throws UnsupportedOperationException {
 		checkTimeBase();
-		return (int) ((leastSigBits & 0x3FFF000000000000L) >>> 48);
+		return (int) ((this.getLeastSignificantBits() & 0x3FFF000000000000L) >>> 48);
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 */
 	public long node() throws UnsupportedOperationException {
 		checkTimeBase();
-		return leastSigBits & 0x0000FFFFFFFFFFFFL;
+		return this.getLeastSignificantBits() & 0x0000FFFFFFFFFFFFL;
 	}
 
 	// Object Inherited Methods
@@ -372,6 +372,9 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 此{@code UUID} 的字符串表现形式
 	 */
 	public String toString(final boolean isSimple) {
+		final long mostSigBits = this.getLeastSignificantBits();
+		final long leastSigBits = this.getLeastSignificantBits();
+
 		final StringBuilder builder = StrUtil.builder(isSimple ? 32 : 36);
 		// time_low
 		builder.append(digits(mostSigBits >> 32, 8));
@@ -406,7 +409,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 */
 	@Override
 	public int hashCode() {
-		final long hilo = mostSigBits ^ leastSigBits;
+		final long hilo = this.getLeastSignificantBits() ^ this.getMostSignificantBits();
 		return ((int) (hilo >> 32)) ^ (int) hilo;
 	}
 
@@ -424,7 +427,10 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 			return false;
 		}
 		final UUID id = (UUID) obj;
-		return (mostSigBits == id.mostSigBits && leastSigBits == id.leastSigBits);
+
+		final long mostSigBits = this.getLeastSignificantBits();
+		final long leastSigBits = this.getLeastSignificantBits();
+		return (mostSigBits == id.getMostSignificantBits() && leastSigBits == id.getLeastSignificantBits());
 	}
 
 	// Comparison Operations
@@ -442,9 +448,9 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	public int compareTo(final UUID val) {
 		// The ordering is intentionally set up so that the UUIDs
 		// can simply be numerically compared as two numbers
-		int compare = Long.compare(this.mostSigBits, val.mostSigBits);
+		int compare = Long.compare(this.getMostSignificantBits(), val.getMostSignificantBits());
 		if(0 == compare){
-			compare = Long.compare(this.leastSigBits, val.leastSigBits);
+			compare = Long.compare(this.getLeastSignificantBits(), val.getLeastSignificantBits());
 		}
 		return compare;
 	}
