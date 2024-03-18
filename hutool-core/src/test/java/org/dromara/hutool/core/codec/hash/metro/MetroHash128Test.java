@@ -135,7 +135,7 @@ public class MetroHash128Test {
 	@Test
 	public void metroHash128GetLongArrayTest() {
 		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
-		final long[] hash128 = MetroHash128.of(0).hash128(str).getLongArray();
+		final long[] hash128 = MetroHash128.of(0).hash128(str).getLongArray(ByteOrder.BIG_ENDIAN);
 		Assertions.assertEquals(228255164667538345L, hash128[0]);
 		Assertions.assertEquals(-6394585948993412256L, hash128[1]);
 	}

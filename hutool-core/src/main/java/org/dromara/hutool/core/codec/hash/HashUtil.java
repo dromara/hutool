@@ -542,10 +542,9 @@ public class HashUtil {
 	 *
 	 * @param data 数据
 	 * @return hash值
-	 * @since 5.2.5
 	 */
-	public static long[] cityHash128(final byte[] data) {
-		return CityHash.INSTANCE.hash128(data).getLongArray();
+	public static Number128 cityHash128(final byte[] data) {
+		return CityHash.INSTANCE.hash128(data);
 	}
 
 	/**
@@ -553,11 +552,10 @@ public class HashUtil {
 	 *
 	 * @param data 数据
 	 * @param seed 种子
-	 * @return hash值，long[0]：低位，long[1]：高位
-	 * @since 5.2.5
+	 * @return hash值
 	 */
-	public static long[] cityHash128(final byte[] data, final Number128 seed) {
-		return CityHash.INSTANCE.hash128(data, seed).getLongArray();
+	public static Number128 cityHash128(final byte[] data, final Number128 seed) {
+		return CityHash.INSTANCE.hash128(data, seed);
 	}
 
 	/**
@@ -576,10 +574,10 @@ public class HashUtil {
 	 *
 	 * @param data 数据
 	 * @param seed 种子
-	 * @return hash值，long[0]：低位，long[1]：高位
+	 * @return hash值
 	 */
-	public static long[] metroHash128(final byte[] data, final long seed) {
-		return MetroHash128.of(seed).hash128(data).getLongArray();
+	public static Number128 metroHash128(final byte[] data, final long seed) {
+		return MetroHash128.of(seed).hash128(data);
 	}
 
 	/**

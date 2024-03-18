@@ -87,15 +87,6 @@ public class Number128 extends Number implements Comparable<Number128>{
 	}
 
 	/**
-	 * 获取高低位数组，long[0]：低位，long[1]：高位
-	 *
-	 * @return 高低位数组，long[0]：低位，long[1]：高位
-	 */
-	public long[] getLongArray() {
-		return getLongArray(ByteOrder.BIG_ENDIAN);
-	}
-
-	/**
 	 * 获取高低位数组，规则为：
 	 * <ul>
 	 *     <li>{@link ByteOrder#LITTLE_ENDIAN}，则long[0]：低位，long[1]：高位</li>

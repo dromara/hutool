@@ -13,16 +13,17 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.codec.hash.HashUtil;
-import org.dromara.hutool.core.util.ByteUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.nio.ByteOrder;
 
 public class HashUtilTest {
 
 	@Test
 	public void cityHash128Test(){
 		final String s="Google发布的Hash计算算法：CityHash64 与 CityHash128";
-		final long[] hash = HashUtil.cityHash128(ByteUtil.toUtf8Bytes(s));
+		final long[] hash = HashUtil.cityHash128(ByteUtil.toUtf8Bytes(s)).getLongArray(ByteOrder.BIG_ENDIAN);
 		Assertions.assertEquals(0x5944f1e788a18db0L, hash[0]);
 		Assertions.assertEquals(0xc2f68d8b2bf4a5cfL, hash[1]);
 	}
