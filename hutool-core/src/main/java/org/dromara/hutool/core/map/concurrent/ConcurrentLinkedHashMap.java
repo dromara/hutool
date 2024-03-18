@@ -15,7 +15,6 @@ import org.dromara.hutool.core.collection.queue.DiscardingQueue;
 import org.dromara.hutool.core.collection.queue.Linked;
 import org.dromara.hutool.core.collection.queue.LinkedDeque;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.util.RuntimeUtil;
 
 import java.io.InvalidObjectException;

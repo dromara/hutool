@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.collection;
 
 import org.dromara.hutool.core.collection.set.SetFromMap;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 
 import java.util.Collection;
 

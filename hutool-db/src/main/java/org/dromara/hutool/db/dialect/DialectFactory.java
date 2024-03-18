@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.dialect;
 
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.impl.*;

@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class ActualTypeMapperPool {
 
-	private static final WeakConcurrentMap<Type, Map<Type, Type>> CACHE = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<Type, Map<Type, Type>> CACHE = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 获取泛型变量和泛型实际类型的对应关系Map

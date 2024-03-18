@@ -16,7 +16,7 @@ import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.lang.EnumItem;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
@@ -42,7 +42,7 @@ public class EnumConverter extends AbstractConverter {
 	 */
 	public static final EnumConverter INSTANCE = new EnumConverter();
 
-	private static final WeakConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakKeyConcurrentMap<>();
 
 	@Override
 	protected Object convertInternal(final Class<?> targetClass, final Object value) {

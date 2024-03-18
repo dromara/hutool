@@ -22,7 +22,7 @@ import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
@@ -44,11 +44,11 @@ public class MethodUtil {
 	/**
 	 * 方法缓存
 	 */
-	private static final WeakConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakKeyConcurrentMap<>();
 	/**
 	 * 直接声明的方法缓存
 	 */
-	private static final WeakConcurrentMap<Class<?>, Method[]> DECLARED_METHODS_CACHE = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<Class<?>, Method[]> DECLARED_METHODS_CACHE = new WeakKeyConcurrentMap<>();
 
 	// --------------------------------------------------------------------------------------------------------- method
 

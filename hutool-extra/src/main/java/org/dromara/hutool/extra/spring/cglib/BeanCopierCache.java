@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.spring.cglib;
 
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.core.Converter;
@@ -30,7 +30,7 @@ public enum BeanCopierCache {
 	 */
 	INSTANCE;
 
-	private final WeakConcurrentMap<String, BeanCopier> cache = new WeakConcurrentMap<>();
+	private final WeakKeyConcurrentMap<String, BeanCopier> cache = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 获得类与转换器生成的key在{@link BeanCopier}的Map中对应的元素

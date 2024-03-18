@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.map;
 
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledForJreRange;

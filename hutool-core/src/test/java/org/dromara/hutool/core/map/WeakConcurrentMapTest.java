@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.map;
 
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.thread.ConcurrencyTester;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -23,7 +24,7 @@ public class WeakConcurrentMapTest {
 
 	@Test
 	public void putAndGetTest(){
-		final WeakConcurrentMap<Object, Object> map = new WeakConcurrentMap<>();
+		final WeakKeyConcurrentMap<Object, Object> map = new WeakKeyConcurrentMap<>();
 		Object
 				key1 = new Object();
 		final Object value1 = new Object();
@@ -57,7 +58,7 @@ public class WeakConcurrentMapTest {
 
 	@Test
 	public void getConcurrencyTest(){
-		final WeakConcurrentMap<String, String> cache = new WeakConcurrentMap<>();
+		final WeakKeyConcurrentMap<String, String> cache = new WeakKeyConcurrentMap<>();
 		final ConcurrencyTester tester = new ConcurrencyTester(2000);
 		tester.test(()-> cache.computeIfAbsent("aaa" + RandomUtil.randomInt(2), (key)-> "aaaValue"));
 

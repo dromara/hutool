@@ -16,7 +16,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassUtil;
 
 import java.lang.reflect.Method;
@@ -63,7 +63,7 @@ import java.util.function.Predicate;
  * <p><strong>缓存</strong>
  * <p>对于{@link #getDeclaredMethods}与{@link #getMethods}方法与基于这两个方法实现的，
  * 所有{@code xxxFromMethods}与{@code xxxFromDeclaredMethods}方法，
- * 都提供了缓存基于{@link WeakConcurrentMap}的缓存支持。<br>
+ * 都提供了缓存基于{@link WeakKeyConcurrentMap}的缓存支持。<br>
  * {@link #getAllMethods}与所有{@code xxxFromAllMethods}方法都基于{@link #getDeclaredMethods}实现，
  * 但是每次全量查找，都需要重新遍历类层级结构，因此会带来一定的额外的性能损耗。<br>
  * 缓存在GC时会被回收，但是也可以通过{@link #clearCaches}手动清除缓存。
@@ -87,12 +87,12 @@ public class MethodScanner {
 	/**
 	 * 方法缓存
 	 */
-	private static final WeakConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 直接声明的方法缓存
 	 */
-	private static final WeakConcurrentMap<Class<?>, Method[]> DECLARED_METHODS_CACHE = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<Class<?>, Method[]> DECLARED_METHODS_CACHE = new WeakKeyConcurrentMap<>();
 
 	// region ============= basic =============
 

@@ -14,7 +14,7 @@ package org.dromara.hutool.core.lang;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.func.SerSupplier;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 

@@ -17,7 +17,7 @@ import org.dromara.hutool.core.cache.CacheListener;
 import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -14,7 +14,7 @@ package org.dromara.hutool.core.text.placeholder;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.placeholder.template.NamedPlaceholderStrTemplate;
 import org.dromara.hutool.core.text.placeholder.template.SinglePlaceholderStrTemplate;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @author Looly
  */
 public class StrFormatter {
-	private static final WeakConcurrentMap<Map.Entry<CharSequence, Object>, StrTemplate> CACHE = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<Map.Entry<CharSequence, Object>, StrTemplate> CACHE = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 格式化字符串<br>

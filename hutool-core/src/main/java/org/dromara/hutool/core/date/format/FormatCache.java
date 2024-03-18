@@ -14,7 +14,7 @@ package org.dromara.hutool.core.date.format;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.tuple.Tuple;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 
 import java.text.DateFormat;
 import java.text.Format;

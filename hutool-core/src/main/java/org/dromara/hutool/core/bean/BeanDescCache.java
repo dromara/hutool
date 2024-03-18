@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.bean;
 
 import org.dromara.hutool.core.func.SerSupplier;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 
 /**
  * Bean属性缓存<br>
@@ -27,7 +27,7 @@ public enum BeanDescCache {
 	 */
 	INSTANCE;
 
-	private final WeakConcurrentMap<Class<?>, BeanDesc> bdCache = new WeakConcurrentMap<>();
+	private final WeakKeyConcurrentMap<Class<?>, BeanDesc> bdCache = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 获得属性名和{@link BeanDesc}Map映射

@@ -20,7 +20,7 @@ import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.mutable.MutableInt;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;

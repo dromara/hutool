@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.text;
 
 
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.text.split.SplitUtil;
 
 import java.util.ArrayList;

@@ -15,7 +15,7 @@ package org.dromara.hutool.core.func;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.reflect.*;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 import org.dromara.hutool.core.reflect.method.MethodTypeUtil;
@@ -37,7 +37,7 @@ public class LambdaFactory {
 		throw new IllegalAccessException();
 	}
 
-	private static final Map<MutableEntry<Class<?>, Executable>, Object> CACHE = new WeakConcurrentMap<>();
+	private static final Map<MutableEntry<Class<?>, Executable>, Object> CACHE = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 构建Lambda

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.json.serialize;
 
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.NullType;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;

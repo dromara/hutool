@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.annotation;
 
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
 

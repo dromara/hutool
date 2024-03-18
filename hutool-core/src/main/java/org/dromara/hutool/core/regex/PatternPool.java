@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.regex;
 
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 
 import java.util.regex.Pattern;
 
@@ -209,7 +209,7 @@ public class PatternPool {
 	/**
 	 * Pattern池
 	 */
-	private static final WeakConcurrentMap<RegexWithFlag, Pattern> POOL = new WeakConcurrentMap<>();
+	private static final WeakKeyConcurrentMap<RegexWithFlag, Pattern> POOL = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。

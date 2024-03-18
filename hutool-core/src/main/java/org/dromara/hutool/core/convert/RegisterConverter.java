@@ -17,7 +17,7 @@ import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.lang.tuple.Tuple;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.TypeUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;

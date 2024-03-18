@@ -13,8 +13,8 @@
 package org.dromara.hutool.core.bean;
 
 import org.dromara.hutool.core.func.SerSupplier;
-import org.dromara.hutool.core.map.ReferenceConcurrentMap;
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.ReferenceKeyConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 
 import java.beans.PropertyDescriptor;
 import java.util.Map;
@@ -31,8 +31,8 @@ public enum BeanInfoCache {
 	 */
 	INSTANCE;
 
-	private final WeakConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> pdCache = new WeakConcurrentMap<>();
-	private final WeakConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new WeakConcurrentMap<>();
+	private final WeakKeyConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> pdCache = new WeakKeyConcurrentMap<>();
+	private final WeakKeyConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new WeakKeyConcurrentMap<>();
 
 	/**
 	 * 获得属性名和{@link PropertyDescriptor}Map映射
@@ -86,10 +86,10 @@ public enum BeanInfoCache {
 	 * 根据是否忽略字段名的大小写，返回不用Cache对象
 	 *
 	 * @param ignoreCase 是否忽略大小写
-	 * @return {@link ReferenceConcurrentMap}
+	 * @return {@link ReferenceKeyConcurrentMap}
 	 * @since 5.4.1
 	 */
-	private ReferenceConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> getCache(final boolean ignoreCase) {
+	private ReferenceKeyConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> getCache(final boolean ignoreCase) {
 		return ignoreCase ? ignoreCasePdCache : pdCache;
 	}
 }

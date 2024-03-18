@@ -13,7 +13,7 @@
 package org.dromara.hutool.setting.profile;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.setting.Setting;
 

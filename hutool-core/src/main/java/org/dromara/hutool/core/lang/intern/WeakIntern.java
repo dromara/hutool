@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.intern;
 
-import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 
 import java.lang.ref.WeakReference;
 
@@ -25,7 +25,7 @@ import java.lang.ref.WeakReference;
  */
 public class WeakIntern<T> implements Intern<T> {
 
-	private final WeakConcurrentMap<T, WeakReference<T>> cache = new WeakConcurrentMap<>();
+	private final WeakKeyConcurrentMap<T, WeakReference<T>> cache = new WeakKeyConcurrentMap<>();
 
 	@Override
 	public T intern(final T sample) {

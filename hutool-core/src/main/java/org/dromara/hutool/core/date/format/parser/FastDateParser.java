@@ -16,7 +16,7 @@ import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.format.FastDateFormat;
 import org.dromara.hutool.core.date.format.FastDatePrinter;
 import org.dromara.hutool.core.date.format.SimpleDateBasic;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

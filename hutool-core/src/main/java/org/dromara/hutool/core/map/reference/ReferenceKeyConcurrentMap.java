@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.map;
+package org.dromara.hutool.core.map.reference;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -40,9 +40,8 @@ import java.util.stream.Collectors;
  * @param <K> 键类型
  * @param <V> 值类型
  * @author looly
- * @since 5.8.0
  */
-public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
+public class ReferenceKeyConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	final ConcurrentMap<Reference<K>, V> raw;
@@ -61,7 +60,7 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 	 * @param raw           {@link ConcurrentMap}实现
 	 * @param referenceType Reference类型
 	 */
-	public ReferenceConcurrentMap(final ConcurrentMap<Reference<K>, V> raw, final ReferenceUtil.ReferenceType referenceType) {
+	public ReferenceKeyConcurrentMap(final ConcurrentMap<Reference<K>, V> raw, final ReferenceUtil.ReferenceType referenceType) {
 		this.raw = raw;
 		this.keyType = referenceType;
 		lastQueue = new ReferenceQueue<>();

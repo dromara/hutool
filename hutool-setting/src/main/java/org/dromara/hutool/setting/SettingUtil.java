@@ -14,7 +14,7 @@ package org.dromara.hutool.setting;
 
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.resource.NoResourceException;
-import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Map;
