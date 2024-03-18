@@ -215,9 +215,8 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 	public Number128 hash128(final byte[] data) {
 		final int len = data.length;
 		return len >= 16 ?
-				hash128(data, 16,
-						new Number128(fetch64(data, 0), fetch64(data, 8) + k0)) :
-				hash128(data, 0, new Number128(k0, k1));
+				hash128(data, 16, new Number128(fetch64(data, 8) + k0, fetch64(data, 0))) :
+				hash128(data, 0, new Number128(k1, k0));
 	}
 
 	/**
@@ -301,8 +300,8 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 		// different 56-byte-to-8-byte hashes to get a 16-byte final result.
 		x = hashLen16(x, v.getLeastSigBits());
 		y = hashLen16(y + z, w.getLeastSigBits());
-		return new Number128(hashLen16(x + v.getMostSigBits(), w.getMostSigBits()) + y,
-				hashLen16(x + w.getMostSigBits(), y + v.getMostSigBits()));
+		return new Number128(hashLen16(x + w.getMostSigBits(), y + v.getMostSigBits()),
+			hashLen16(x + v.getMostSigBits(), w.getMostSigBits()) + y);
 
 	}
 
@@ -421,7 +420,7 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 	}
 
 	private long hashLen16(final long u, final long v) {
-		return hash128to64(new Number128(u, v));
+		return hash128to64(new Number128(v, u));
 	}
 
 	private long hash128to64(final Number128 number128) {
@@ -466,7 +465,7 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 		a += x;
 		a += y;
 		b += Long.rotateRight(a, 44);
-		return new Number128(a + z, b + c);
+		return new Number128(b + c, a + z);
 	}
 
 	// Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
@@ -509,7 +508,7 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 		}
 		a = hashLen16(a, c);
 		b = hashLen16(d, b);
-		return new Number128(a ^ b, hashLen16(b, a));
+		return new Number128(hashLen16(b, a), a ^ b);
 	}
 	//------------------------------------------------------------------------------------------------------- Private method end
 }

@@ -15,6 +15,7 @@ package org.dromara.hutool.core.codec.hash.metro;
 import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.Number128;
 import org.dromara.hutool.core.util.ByteUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -129,5 +130,13 @@ public class MetroHash128Test {
 
 	private static String hex(final byte[] bytes){
 		return HexUtil.encodeStr(bytes).toUpperCase();
+	}
+
+	@Test
+	public void metroHash128GetLongArrayTest() {
+		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
+		final long[] hash128 = MetroHash128.of(0).hash128(str).getLongArray();
+		Assertions.assertEquals(228255164667538345L, hash128[0]);
+		Assertions.assertEquals(-6394585948993412256L, hash128[1]);
 	}
 }

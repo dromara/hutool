@@ -354,7 +354,7 @@ public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[
 		h1 += h2;
 		h2 += h1;
 
-		return new Number128(h1, h2);
+		return new Number128(h2, h1);
 	}
 
 	private static int mix32(int k, int hash) {

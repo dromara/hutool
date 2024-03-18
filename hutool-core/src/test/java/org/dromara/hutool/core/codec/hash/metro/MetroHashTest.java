@@ -49,14 +49,6 @@ public class MetroHashTest {
 		Assertions.assertEquals(147395857347476456L, hash64);
 	}
 
-	@Test
-	public void metroHash128Test() {
-		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
-		final long[] hash128 = MetroHash128.of(0).hash128(str).getLongArray();
-		Assertions.assertEquals(228255164667538345L, hash128[0]);
-		Assertions.assertEquals(-6394585948993412256L, hash128[1]);
-	}
-
 	/**
 	 * 数据量越大 MetroHash 优势越明显，
 	 */

@@ -95,7 +95,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		for (int i = 8; i < 16; i++) {
 			lsb = (lsb << 8) | (data[i] & 0xff);
 		}
-		this.idValue = new Number128(lsb, msb);
+		this.idValue = new Number128(msb, lsb);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param leastSigBits 用于 {@code UUID} 的最低有效 64 位
 	 */
 	public UUID(final long mostSigBits, final long leastSigBits) {
-		this.idValue = new Number128(leastSigBits, mostSigBits);
+		this.idValue = new Number128(mostSigBits, leastSigBits);
 	}
 
 	/**

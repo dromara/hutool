@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.codec;
 
-import org.dromara.hutool.core.util.ByteUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteOrder;
@@ -43,10 +42,10 @@ public class Number128 extends Number implements Comparable<Number128>{
 	/**
 	 * 构造
 	 *
-	 * @param leastSigBits  低位
 	 * @param mostSigBits 高位
+	 * @param leastSigBits  低位
 	 */
-	public Number128(final long leastSigBits, final long mostSigBits) {
+	public Number128(final long mostSigBits, final long leastSigBits) {
 		this.mostSigBits = mostSigBits;
 		this.leastSigBits = leastSigBits;
 	}
@@ -93,7 +92,7 @@ public class Number128 extends Number implements Comparable<Number128>{
 	 * @return 高低位数组，long[0]：低位，long[1]：高位
 	 */
 	public long[] getLongArray() {
-		return getLongArray(ByteUtil.DEFAULT_ORDER);
+		return getLongArray(ByteOrder.BIG_ENDIAN);
 	}
 
 	/**

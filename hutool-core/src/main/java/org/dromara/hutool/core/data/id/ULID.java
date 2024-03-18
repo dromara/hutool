@@ -105,7 +105,7 @@ public class ULID implements Comparable<ULID>, Serializable {
 		// randomness[1]填充到16_bit_uint_random的低8位
 		msb |= randomness[0x1] & 0xff;
 
-		return new ULID(new Number128(ByteUtil.toLong(randomness, 2, ByteOrder.BIG_ENDIAN), msb));
+		return new ULID(new Number128(msb, ByteUtil.toLong(randomness, 2, ByteOrder.BIG_ENDIAN)));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class ULID implements Comparable<ULID>, Serializable {
 
 		final long most = (time << 16) | (part1 >>> 24);
 		final long least = part2 | (part1 << 40);
-		return new ULID(new Number128(least, most));
+		return new ULID(new Number128(most, least));
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class ULID implements Comparable<ULID>, Serializable {
 		for (int i = 8; i < 16; i++) {
 			leastSignificantBits = (leastSignificantBits << 8) | (data[i] & 0xff);
 		}
-		return new ULID(new Number128(leastSignificantBits, mostSignificantBits));
+		return new ULID(new Number128(mostSignificantBits, leastSignificantBits));
 	}
 
 	// endregion
@@ -226,7 +226,7 @@ public class ULID implements Comparable<ULID>, Serializable {
 		if (newLsb == OVERFLOW) {
 			newMsb += 1;
 		}
-		return new ULID(new Number128(newLsb, newMsb));
+		return new ULID(new Number128(newMsb, newLsb));
 	}
 
 	/**

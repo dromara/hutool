@@ -70,7 +70,7 @@ public class MetroHash128 extends AbstractMetroHash<MetroHash128> implements Has
 	 * @return hash值
 	 */
 	public Number128 get() {
-		return new Number128(v1, v0);
+		return new Number128(v0, v1);
 	}
 
 	@Override
