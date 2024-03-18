@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.reflect.ActualTypeMapperPool;
 
@@ -309,7 +310,6 @@ public class TypeUtil {
 	 *
 	 * @param clazz 类
 	 * @return 泛型父类或接口数组
-	 * @since 6.0.0
 	 */
 	public static ParameterizedType[] getGenerics(final Class<?> clazz) {
 		final List<ParameterizedType> result = new ArrayList<>();
@@ -326,8 +326,9 @@ public class TypeUtil {
 		final Type[] genericInterfaces = clazz.getGenericInterfaces();
 		if (ArrayUtil.isNotEmpty(genericInterfaces)) {
 			for (final Type genericInterface : genericInterfaces) {
-				if (genericInterface instanceof ParameterizedType) {
-					result.add((ParameterizedType) genericInterface);
+				final ParameterizedType parameterizedType = toParameterizedType(genericInterface);
+				if(null != parameterizedType){
+					result.add(parameterizedType);
 				}
 			}
 		}
