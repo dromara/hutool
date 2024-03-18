@@ -1053,11 +1053,25 @@ public class MapUtil extends MapGetUtil {
 	 * @since 4.6.5
 	 */
 	public static <K, V> Map<K, V> removeNullValue(final Map<K, V> map) {
+		return removeIf(map, entry -> null == entry.getValue());
+	}
+
+	/**
+	 * 去除Map中值为{@code null}的键值对<br>
+	 * 注意：此方法在传入的Map上直接修改。
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @param map Map
+	 * @param predicate 移除条件，当{@link Predicate#test(Object)}为{@code true}时移除
+	 * @return map
+	 * @since 6.0.0
+	 */
+	public static <K, V> Map<K, V> removeIf(final Map<K, V> map, final Predicate<Entry<K, V>> predicate) {
 		if (isEmpty(map)) {
 			return map;
 		}
-
-		map.entrySet().removeIf(entry -> null == entry.getValue());
+		map.entrySet().removeIf(predicate);
 		return map;
 	}
 
