@@ -74,6 +74,11 @@ public class QrConfig {
 	 * 二维码中的Logo
 	 */
 	protected Image img;
+
+	/**
+	 * 二维码logo圆角弧度，0~1，为长宽占比
+	 */
+	protected double imgRound = 0.3;
 	/**
 	 * 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
 	 */
@@ -382,6 +387,26 @@ public class QrConfig {
 	 */
 	public QrConfig setImg(final Image img) {
 		this.img = img;
+		return this;
+	}
+
+	/**
+	 * 获取二维码logo圆角弧度，0~1，为长宽占比
+	 * @return 二维码logo圆角弧度，0~1，为长宽占比
+	 * @since 6.0.0
+	 */
+	public double getImgRound() {
+		return imgRound;
+	}
+
+	/**
+	 * 设置二维码logo圆角弧度，0~1，为长宽占比
+	 * @param imgRound 二维码logo圆角弧度，0~1，为长宽占比
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public QrConfig setImgRound(final double imgRound) {
+		this.imgRound = imgRound;
 		return this;
 	}
 

@@ -87,7 +87,7 @@ public class QrImage extends BufferedImage {
 			}
 
 			Img.from(this).pressImage(//
-					Img.from(logoImg).round(0.3).getImg(), // 圆角
+					Img.from(logoImg).round(config.imgRound).getImg(), // 圆角
 					new Rectangle(imgWidth, imgHeight), // 位置
 					1//不透明
 			);
