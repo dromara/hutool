@@ -177,6 +177,7 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 
 	@Override
 	public Set<K> keySet() {
+		this.purgeStaleKeys();
 		// TODO 非高效方式的set转换，应该返回一个view
 		final Collection<K> trans = CollUtil.trans(this.raw.keySet(), (reference) -> null == reference ? null : reference.get());
 		return new HashSet<>(trans);
