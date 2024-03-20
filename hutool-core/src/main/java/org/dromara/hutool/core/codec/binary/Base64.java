@@ -261,6 +261,7 @@ public class Base64 {
 	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(final byte[] in) {
+		//return java.util.Base64.getDecoder().decode(in);
 		return Base64Decoder.INSTANCE.decode(in);
 	}
 
