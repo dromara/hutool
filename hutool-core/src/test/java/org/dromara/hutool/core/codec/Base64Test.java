@@ -102,4 +102,11 @@ public class Base64Test {
 		final String decodeStr = Base64.decodeStr(encode);
 		Assertions.assertEquals(str, decodeStr);
 	}
+
+	@Test
+	void issue3520Test() {
+		// 宽松解码，丢弃前后不符合规范的字符
+		final String str ="我是不需要解码的内容5Lym5a625piv5LiA5Liq6Z2e5bi46ZW/55qE5a2X56ym5LiyNjY我是不需要解码的内容";
+		Assertions.assertEquals("伦家是一个非常长的字符串66", Base64.decodeStr(str));
+	}
 }
