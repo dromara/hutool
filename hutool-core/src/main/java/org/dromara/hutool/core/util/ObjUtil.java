@@ -221,7 +221,7 @@ public class ObjUtil {
 	 *     <li>{@code null}：默认返回{@code true}；</li>
 	 *     <li>数组：等同于{@link ArrayUtil#isEmpty(Object)}；</li>
 	 *     <li>{@link CharSequence}：等同于{@link CharSequenceUtil#isEmpty(CharSequence)}；</li>
-		 *     <li>{@link Collection}：等同于{@link CollUtil#isEmpty(Collection)}；</li>
+	 *     <li>{@link Collection}：等同于{@link CollUtil#isEmpty(Collection)}；</li>
 	 *     <li>{@link Map}：等同于{@link MapUtil#isEmpty(Map)}；</li>
 	 *     <li>
 	 *         {@link Iterator}或{@link Iterable}：等同于{@link IterUtil#isEmpty(Iterator)}、
@@ -327,6 +327,19 @@ public class ObjUtil {
 			return handler.apply(source);
 		}
 		return defaultSupplier.get();
+	}
+
+	/**
+	 * 如果指定的对象不为 {@code null},则应用提供的映射函数并返回结果,否则返回 {@code null}。
+	 *
+	 * @param source 要检查的对象
+	 * @param handler 要应用的映射函数
+	 * @param <T>    输入对象的类型
+	 * @param <R>    映射函数的返回类型
+	 * @return 映射函数的结果, 如果输入对象为 null,则返回 null
+	 */
+	public static <T, R> R apply(final T source, final Function<T, R> handler) {
+		return defaultIfNull(source, handler, null);
 	}
 
 	/**
