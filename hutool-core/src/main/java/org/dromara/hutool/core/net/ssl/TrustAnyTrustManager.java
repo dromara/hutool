@@ -18,7 +18,7 @@ import java.net.Socket;
 import java.security.cert.X509Certificate;
 
 /**
- * 新任所有信任管理器，默认信任所有客户端和服务端证书<br>
+ * 信任所有信任管理器，默认信任所有客户端和服务端证书<br>
  * 继承{@link X509ExtendedTrustManager}的原因见：<br>
  * https://blog.csdn.net/ghaohao/article/details/79454913
  *
@@ -29,6 +29,8 @@ import java.security.cert.X509Certificate;
  */
 public class TrustAnyTrustManager extends X509ExtendedTrustManager {
 
+	private static final X509Certificate[] EMPTY_X509_CERTIFICATE_ARRAY = {};
+
 	/**
 	 * 全局单例信任管理器，默认信任所有客户端和服务端证书
 	 *
@@ -38,7 +40,7 @@ public class TrustAnyTrustManager extends X509ExtendedTrustManager {
 
 	@Override
 	public X509Certificate[] getAcceptedIssuers() {
-		return new X509Certificate[0];
+		return EMPTY_X509_CERTIFICATE_ARRAY;
 	}
 
 	@Override
