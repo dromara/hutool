@@ -12,77 +12,19 @@
 
 package org.dromara.hutool.core.net.ssl;
 
-import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.text.StrUtil;
 
-import javax.net.ssl.*;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
 /**
- * SSL(Secure Sockets Layer 安全套接字协议)相关工具封装
+ * SSL(Secure Sockets Layer 安全套接字协议)中的{@link SSLContext}相关工具封装
  *
  * @author looly
  * @since 5.5.2
  */
-public class SSLUtil {
-
-	/**
-	 * 获取指定的{@link X509TrustManager}<br>
-	 * 此方法主要用于获取自签证书的{@link X509TrustManager}
-	 *
-	 * @param keyStore  {@link KeyStore}
-	 * @param provider  算法提供者，如bc，{@code null}表示默认
-	 * @return {@link X509TrustManager} or {@code null}
-	 * @since 6.0.0
-	 */
-	public static X509TrustManager getTrustManager(final KeyStore keyStore, final Provider provider) {
-		return getTrustManager(keyStore, null, provider);
-	}
-
-	/**
-	 * 获取指定的{@link X509TrustManager}<br>
-	 * 此方法主要用于获取自签证书的{@link X509TrustManager}
-	 *
-	 * @param keyStore  {@link KeyStore}
-	 * @param algorithm 算法名称，如"SunX509"，{@code null}表示默认SunX509
-	 * @param provider  算法提供者，如bc，{@code null}表示默认SunJSSE
-	 * @return {@link X509TrustManager} or {@code null}
-	 * @since 6.0.0
-	 */
-	public static X509TrustManager getTrustManager(final KeyStore keyStore, String algorithm, final Provider provider) {
-		final TrustManagerFactory tmf;
-
-		if(StrUtil.isEmpty(algorithm)){
-			algorithm = TrustManagerFactory.getDefaultAlgorithm();
-		}
-		try {
-			if(null == provider){
-				tmf = TrustManagerFactory.getInstance(algorithm);
-			} else{
-				tmf = TrustManagerFactory.getInstance(algorithm, provider);
-			}
-		} catch (final NoSuchAlgorithmException e) {
-			throw new HutoolException(e);
-		}
-		try {
-			tmf.init(keyStore);
-		} catch (final KeyStoreException e) {
-			throw new HutoolException(e);
-		}
-
-		final TrustManager[] tms = tmf.getTrustManagers();
-		for (final TrustManager tm : tms) {
-			if (tm instanceof X509TrustManager) {
-				return (X509TrustManager) tm;
-			}
-		}
-
-		return null;
-	}
+public class SSLContextUtil {
 
 	/**
 	 * 创建{@link SSLContext}，信任全部，协议为TLS
@@ -106,7 +48,7 @@ public class SSLUtil {
 		return SSLContextBuilder.of()
 			.setProtocol(protocol)
 			// 信任所有服务端
-			.setTrustManagers(new TrustManager[]{TrustAnyTrustManager.INSTANCE})
+			.setTrustManagers(TrustManagerUtil.TRUST_ANYS)
 			.build();
 	}
 

@@ -13,7 +13,7 @@
 package org.dromara.hutool.http.ssl;
 
 import org.dromara.hutool.core.net.ssl.SSLProtocols;
-import org.dromara.hutool.core.net.ssl.SSLUtil;
+import org.dromara.hutool.core.net.ssl.SSLContextUtil;
 import org.dromara.hutool.core.net.ssl.SSLContextBuilder;
 import org.dromara.hutool.core.net.ssl.TrustAnyHostnameVerifier;
 import org.dromara.hutool.core.net.ssl.TrustAnyTrustManager;
@@ -47,7 +47,7 @@ public class SSLInfo {
 	 */
 	public static final SSLInfo TRUST_ANY = SSLInfo.of()
 			.setHostnameVerifier(TrustAnyHostnameVerifier.INSTANCE)
-			.setSslContext(SSLUtil.createTrustAnySSLContext())
+			.setSslContext(SSLContextUtil.createTrustAnySSLContext())
 			.setTrustManager(TrustAnyTrustManager.INSTANCE);
 
 	/**

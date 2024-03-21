@@ -45,7 +45,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
-	private TrustManager[] trustManagers = {TrustAnyTrustManager.INSTANCE};
+	private TrustManager[] trustManagers = TrustManagerUtil.TRUST_ANYS;
 	private SecureRandom secureRandom = new SecureRandom();
 
 
