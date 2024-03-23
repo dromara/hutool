@@ -1057,6 +1057,21 @@ public class MapUtil extends MapGetUtil {
 	}
 
 	/**
+	 * 去除Map中值为指定值的键值对<br>
+	 * 注意：此方法在传入的Map上直接修改。
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @param map Map
+	 * @param value 给定值
+	 * @return map
+	 * @since 6.0.0
+	 */
+	public static <K, V> Map<K, V> removeByValue(final Map<K, V> map, final V value) {
+		return removeIf(map, entry -> ObjUtil.equals(value, entry.getValue()));
+	}
+
+	/**
 	 * 去除Map中值为{@code null}的键值对<br>
 	 * 注意：此方法在传入的Map上直接修改。
 	 *

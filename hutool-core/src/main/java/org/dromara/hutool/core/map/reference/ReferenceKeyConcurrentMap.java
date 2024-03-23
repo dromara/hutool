@@ -13,20 +13,12 @@
 package org.dromara.hutool.core.map.reference;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.util.ReferenceUtil;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.util.AbstractMap;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -244,80 +236,10 @@ public class ReferenceKeyConcurrentMap<K, V> implements ConcurrentMap<K, V>, Ite
 	private Reference<K> ofKey(final K key, final ReferenceQueue<? super K> queue) {
 		switch (keyType) {
 			case WEAK:
-				return new WeakKey<>(key, queue);
+				return new WeakObj<>(key, queue);
 			case SOFT:
-				return new SoftKey<>(key, queue);
+				return new SoftObj<>(key, queue);
 		}
 		throw new IllegalArgumentException("Unsupported key type: " + keyType);
-	}
-
-	/**
-	 * 弱键
-	 *
-	 * @param <K> 键类型
-	 */
-	private static class WeakKey<K> extends WeakReference<K> {
-		private final int hashCode;
-
-		/**
-		 * 构造
-		 *
-		 * @param key   原始Key，不能为{@code null}
-		 * @param queue {@link ReferenceQueue}
-		 */
-		WeakKey(final K key, final ReferenceQueue<? super K> queue) {
-			super(key, queue);
-			hashCode = key.hashCode();
-		}
-
-		@Override
-		public int hashCode() {
-			return hashCode;
-		}
-
-		@Override
-		public boolean equals(final Object other) {
-			if (other == this) {
-				return true;
-			} else if (other instanceof WeakKey) {
-				return ObjUtil.equals(((WeakKey<?>) other).get(), get());
-			}
-			return false;
-		}
-	}
-
-	/**
-	 * 弱键
-	 *
-	 * @param <K> 键类型
-	 */
-	private static class SoftKey<K> extends SoftReference<K> {
-		private final int hashCode;
-
-		/**
-		 * 构造
-		 *
-		 * @param key   原始Key，不能为{@code null}
-		 * @param queue {@link ReferenceQueue}
-		 */
-		SoftKey(final K key, final ReferenceQueue<? super K> queue) {
-			super(key, queue);
-			hashCode = key.hashCode();
-		}
-
-		@Override
-		public int hashCode() {
-			return hashCode;
-		}
-
-		@Override
-		public boolean equals(final Object other) {
-			if (other == this) {
-				return true;
-			} else if (other instanceof SoftKey) {
-				return ObjUtil.equals(((SoftKey<?>) other).get(), get());
-			}
-			return false;
-		}
 	}
 }
