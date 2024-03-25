@@ -22,7 +22,6 @@ import org.dromara.hutool.db.sql.SqlLog;
 import org.dromara.hutool.db.sql.filter.SqlLogFilter;
 import org.dromara.hutool.log.level.Level;
 import org.dromara.hutool.setting.Setting;
-import org.dromara.hutool.setting.props.Props;
 
 import java.util.Set;
 
@@ -158,14 +157,12 @@ public class SettingConfigParser implements ConfigParser {
 		}
 
 		// 自定义连接属性
-		final Props connProps = new Props();
 		final Set<String> keys = setting.keySet();
 		for (final String key : keys) {
 			if (key.startsWith(CONNECTION_PREFIX)) {
-				connProps.set(StrUtil.subSuf(key, CONNECTION_PREFIX.length()), setting.remove(key));
+				dbConfig.addConnProps(StrUtil.subSuf(key, CONNECTION_PREFIX.length()), setting.remove(key));
 			}
 		}
-		dbConfig.setConnProps(connProps);
 
 		// 池属性
 		dbConfig.setPoolProps(setting.toProps());

@@ -1,0 +1,3 @@
+# 默认数据源
+url = jdbc:sqlite:test.db
+remarks = true

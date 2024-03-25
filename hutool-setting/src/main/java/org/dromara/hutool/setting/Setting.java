@@ -387,7 +387,12 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		for (final Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
 			group = groupEntry.getKey();
 			for (final Entry<String, String> entry : groupEntry.getValue().entrySet()) {
-				props.setProperty(StrUtil.isEmpty(group) ? entry.getKey() : group + CharUtil.DOT + entry.getKey(), entry.getValue());
+				// issue#I9B98C，忽略null的键值对
+				final String key = entry.getKey();
+				final String value = entry.getValue();
+				if(null != key && null != value){
+					props.setProperty(StrUtil.isEmpty(group) ? key : group + CharUtil.DOT + key, value);
+				}
 			}
 		}
 		return props;
