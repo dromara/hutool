@@ -101,4 +101,13 @@ public class ThreadUtilTest {
 			}, "线程 - " + x).start();
 		}
 	}
+
+	@Test
+	void safeSleepTest() {
+		final long sleepMillis = RandomUtil.randomLong(1, 1000);
+		// 随机sleep时长，确保sleep时间足够
+		final long l = System.currentTimeMillis();
+		ThreadUtil.safeSleep(sleepMillis);
+		Assertions.assertTrue(System.currentTimeMillis() - l >= sleepMillis);
+	}
 }
