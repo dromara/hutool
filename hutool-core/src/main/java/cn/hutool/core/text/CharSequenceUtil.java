@@ -1283,7 +1283,7 @@ public class CharSequenceUtil {
 	 * 返回字符串 searchStr 在字符串 str 中第 ordinal 次出现的位置。
 	 *
 	 * <p>
-	 * 如果 str=null 或 searchStr=null 或 ordinal&ge;0 则返回-1<br>
+	 * 如果 str=null 或 searchStr=null 或 ordinal&le;0 则返回-1<br>
 	 * 此方法来自：Apache-Commons-Lang
 	 * <p>
 	 * 例子（*代表任意字符）：
