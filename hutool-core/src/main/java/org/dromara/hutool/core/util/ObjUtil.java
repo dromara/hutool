@@ -339,7 +339,7 @@ public class ObjUtil {
 	 * @return 映射函数的结果, 如果输入对象为 null,则返回 null
 	 */
 	public static <T, R> R apply(final T source, final Function<T, R> handler) {
-		return defaultIfNull(source, handler, null);
+		return defaultIfNull(source, handler, (R)null);
 	}
 
 	/**

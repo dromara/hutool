@@ -15,9 +15,8 @@ package org.dromara.hutool.core.cache.impl;
 import org.dromara.hutool.core.cache.CacheListener;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.mutable.Mutable;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
-
-import java.lang.ref.Reference;
+import org.dromara.hutool.core.lang.ref.Ref;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 
 /**
  * 弱引用缓存<br>
@@ -39,16 +38,18 @@ public class WeakCache<K, V> extends TimedCache<K, V>{
 	 * @param timeout 超时时常，单位毫秒，-1或0表示无限制
 	 */
 	public WeakCache(final long timeout) {
-		super(timeout, new WeakKeyConcurrentMap<>());
+		super(timeout, new WeakConcurrentMap<>());
 	}
 
 	@Override
 	public WeakCache<K, V> setListener(final CacheListener<K, V> listener) {
 		super.setListener(listener);
 
-		final WeakKeyConcurrentMap<Mutable<K>, CacheObj<K, V>> map = (WeakKeyConcurrentMap<Mutable<K>, CacheObj<K, V>>) this.cacheMap;
+		final WeakConcurrentMap<Mutable<K>, CacheObj<K, V>> map = (WeakConcurrentMap<Mutable<K>, CacheObj<K, V>>) this.cacheMap;
 		// WeakKey回收之后，key对应的值已经是null了，因此此处的key也为null
-		map.setPurgeListener((key, value)-> listener.onRemove(Opt.ofNullable(key).map(Reference::get).map(Mutable::get).get(), value.getValue()));
+		map.setPurgeListener((key, value)-> listener.onRemove(
+			Opt.ofNullable(key).map(Ref::get).map(Mutable::get).get(),
+			Opt.ofNullable(value).map(Ref::get).map(CacheObj::getValue).get()));
 
 		return this;
 	}

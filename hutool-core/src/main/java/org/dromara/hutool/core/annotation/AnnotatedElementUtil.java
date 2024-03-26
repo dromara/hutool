@@ -15,8 +15,8 @@ package org.dromara.hutool.core.annotation;
 import org.dromara.hutool.core.annotation.elements.HierarchicalAnnotatedElements;
 import org.dromara.hutool.core.annotation.elements.MetaAnnotatedElement;
 import org.dromara.hutool.core.annotation.elements.RepeatableMetaAnnotatedElement;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.annotation.Annotation;
@@ -133,7 +133,7 @@ import java.util.stream.Stream;
  * <p><strong>缓存</strong>
  * <p>为了避免注解以及{@link AnnotatedElement}层级结构解析过程中的大量反射调用，
  * 工具类为{@link AnnotatedElement}及其元注解信息进行了缓存。<br>
- * 缓存功能默认基于{@link WeakKeyConcurrentMap}实现，会在gc时自动回收部分缓存数据。
+ * 缓存功能默认基于{@link WeakConcurrentMap}实现，会在gc时自动回收部分缓存数据。
  * 但是若有必要，也可以调用{@link #clearCaches()}方法主动清空缓存。
  *
  * @author huangchengxing
@@ -150,22 +150,22 @@ public class AnnotatedElementUtil {
 	/**
 	 * 支持属性解析的{@link MetaAnnotatedElement}缓存
 	 */
-	private static final Map<AnnotatedElement, MetaAnnotatedElement<ResolvedAnnotationMapping>> RESOLVED_ELEMENT_CACHE = new WeakKeyConcurrentMap<>();
+	private static final Map<AnnotatedElement, MetaAnnotatedElement<ResolvedAnnotationMapping>> RESOLVED_ELEMENT_CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 不支持属性解析的{@link MetaAnnotatedElement}缓存
 	 */
-	private static final Map<AnnotatedElement, MetaAnnotatedElement<GenericAnnotationMapping>> ELEMENT_CACHE = new WeakKeyConcurrentMap<>();
+	private static final Map<AnnotatedElement, MetaAnnotatedElement<GenericAnnotationMapping>> ELEMENT_CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 不支持属性解析的{@link RepeatableMetaAnnotatedElement}缓存
 	 */
-	private static final Map<AnnotatedElement, RepeatableMetaAnnotatedElement<ResolvedAnnotationMapping>> RESOLVED_REPEATABLE_ELEMENT_CACHE = new WeakKeyConcurrentMap<>();
+	private static final Map<AnnotatedElement, RepeatableMetaAnnotatedElement<ResolvedAnnotationMapping>> RESOLVED_REPEATABLE_ELEMENT_CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 不支持属性解析的{@link RepeatableMetaAnnotatedElement}缓存
 	 */
-	private static final Map<AnnotatedElement, RepeatableMetaAnnotatedElement<GenericAnnotationMapping>> REPEATABLE_ELEMENT_CACHE = new WeakKeyConcurrentMap<>();
+	private static final Map<AnnotatedElement, RepeatableMetaAnnotatedElement<GenericAnnotationMapping>> REPEATABLE_ELEMENT_CACHE = new WeakConcurrentMap<>();
 
 	// region ========== find ==========
 

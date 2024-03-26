@@ -79,4 +79,16 @@ public class ReferenceUtil {
 	public static <T> T get(final Reference<T> obj) {
 		return ObjUtil.apply(obj, Reference::get);
 	}
+
+	/**
+	 * {@code null}全的解包获取原始对象
+	 *
+	 * @param <T> 对象类型
+	 * @param obj Ref对象
+	 * @return 原始对象 or {@code null}
+	 * @since 6.0.0
+	 */
+	public static <T> T get(final Ref<T> obj) {
+		return ObjUtil.apply(obj, Ref::get);
+	}
 }

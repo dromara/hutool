@@ -14,7 +14,7 @@ package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.creator.DefaultObjectCreator;
 import org.dromara.hutool.core.reflect.creator.PossibleObjectCreator;
 
@@ -29,7 +29,7 @@ public class ConstructorUtil {
 	/**
 	 * 构造对象缓存
 	 */
-	private static final WeakKeyConcurrentMap<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new WeakKeyConcurrentMap<>();
+	private static final WeakConcurrentMap<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new WeakConcurrentMap<>();
 	// --------------------------------------------------------------------------------------------------------- Constructor
 
 	/**

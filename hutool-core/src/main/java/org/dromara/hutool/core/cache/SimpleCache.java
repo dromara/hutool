@@ -18,7 +18,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * 简单缓存，无超时实现，默认使用{@link WeakKeyConcurrentMap}实现缓存自动清理
+ * 简单缓存，无超时实现，默认使用{@link WeakConcurrentMap}实现缓存自动清理
  *
  * @param <K> 键类型
  * @param <V> 值类型
@@ -57,7 +57,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * 构造，默认使用{@link WeakHashMap}实现缓存自动清理
 	 */
 	public SimpleCache() {
-		this(new WeakKeyConcurrentMap<>());
+		this(new WeakConcurrentMap<>());
 	}
 
 	/**

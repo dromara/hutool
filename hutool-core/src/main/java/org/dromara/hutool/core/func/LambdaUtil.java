@@ -17,10 +17,10 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassDescUtil;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -37,7 +37,7 @@ import java.util.function.*;
  */
 public class LambdaUtil {
 
-	private static final WeakKeyConcurrentMap<Object, LambdaInfo> CACHE = new WeakKeyConcurrentMap<>();
+	private static final WeakConcurrentMap<Object, LambdaInfo> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 通过对象的方法或类的静态方法引用，获取lambda实现类

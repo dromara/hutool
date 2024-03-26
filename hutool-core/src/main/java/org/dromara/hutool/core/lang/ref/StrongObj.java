@@ -14,40 +14,42 @@ package org.dromara.hutool.core.lang.ref;
 
 import org.dromara.hutool.core.util.ObjUtil;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
 import java.util.Objects;
 
 /**
- * 软引用对象，在GC报告内存不足时会被GC回收
+ * 弱引用对象，在GC时发现弱引用会回收其对象
  *
  * @param <T> 键类型
  */
-public class SoftObj<T> extends SoftReference<T> implements Ref<T>{
-	private final int hashCode;
+public class StrongObj<T> implements Ref<T> {
+
+	private final T obj;
 
 	/**
 	 * 构造
 	 *
-	 * @param obj   原始对象
-	 * @param queue {@link ReferenceQueue}
+	 * @param obj 原始对象
 	 */
-	public SoftObj(final T obj, final ReferenceQueue<? super T> queue) {
-		super(obj, queue);
-		hashCode = Objects.hashCode(obj);
+	public StrongObj(final T obj) {
+		this.obj = obj;
+	}
+
+	@Override
+	public T get() {
+		return this.obj;
 	}
 
 	@Override
 	public int hashCode() {
-		return hashCode;
+		return Objects.hashCode(obj);
 	}
 
 	@Override
 	public boolean equals(final Object other) {
 		if (other == this) {
 			return true;
-		} else if (other instanceof SoftObj) {
-			return ObjUtil.equals(((SoftObj<?>) other).get(), get());
+		} else if (other instanceof StrongObj) {
+			return ObjUtil.equals(((StrongObj<?>) other).get(), get());
 		}
 		return false;
 	}

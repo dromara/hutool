@@ -19,7 +19,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.LambdaInfo;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
@@ -50,7 +50,7 @@ public class AnnotationUtil {
 	/**
 	 * 直接声明的注解缓存
 	 */
-	private static final Map<AnnotatedElement, Annotation[]> DECLARED_ANNOTATIONS_CACHE = new WeakKeyConcurrentMap<>();
+	private static final Map<AnnotatedElement, Annotation[]> DECLARED_ANNOTATIONS_CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 获取直接声明的注解，若已有缓存则从缓存中获取

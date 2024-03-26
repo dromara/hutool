@@ -14,7 +14,7 @@ package org.dromara.hutool.core.annotation;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
 
@@ -337,7 +337,7 @@ public interface RepeatableAnnotationCollector {
 		/**
 		 * 可重复注解对应的方法缓存
 		 */
-		private final Map<Class<? extends Annotation>, Object> repeatableMethodCache = new WeakKeyConcurrentMap<>();
+		private final Map<Class<? extends Annotation>, Object> repeatableMethodCache = new WeakConcurrentMap<>();
 
 		/**
 		 * 构造
@@ -447,7 +447,7 @@ public interface RepeatableAnnotationCollector {
 		/**
 		 * 可重复注解对应的方法缓存
 		 */
-		private final Map<Class<? extends Annotation>, Object> repeatableMethodCache = new WeakKeyConcurrentMap<>();
+		private final Map<Class<? extends Annotation>, Object> repeatableMethodCache = new WeakConcurrentMap<>();
 
 		/**
 		 * 构造

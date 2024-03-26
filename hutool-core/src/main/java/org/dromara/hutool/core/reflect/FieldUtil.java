@@ -13,13 +13,13 @@
 package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.annotation.Alias;
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.map.reference.WeakKeyConcurrentMap;
+import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class FieldUtil {
 	/**
 	 * 字段缓存
 	 */
-	private static final WeakKeyConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakKeyConcurrentMap<>();
+	private static final WeakConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakConcurrentMap<>();
 
 	// --------------------------------------------------------------------------------------------------------- Field
 

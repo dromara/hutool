@@ -12,8 +12,9 @@
 
 package org.dromara.hutool.core.map.reference;
 
-import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.lang.ref.Ref;
 import org.dromara.hutool.core.lang.ref.ReferenceUtil;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;
@@ -34,13 +35,13 @@ import java.util.function.Function;
 public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	final ConcurrentMap<Reference<K>, Reference<V>> raw;
+	final ConcurrentMap<Ref<K>, Ref<V>> raw;
 	private final ReferenceQueue<K> lastKeyQueue;
 	private final ReferenceQueue<V> lastValueQueue;
 	/**
 	 * 回收监听
 	 */
-	private BiConsumer<Reference<? extends K>, Reference<? extends V>> purgeListener;
+	private BiConsumer<Ref<? extends K>, Ref<? extends V>> purgeListener;
 
 	// region 构造
 
@@ -49,7 +50,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 *
 	 * @param raw {@link ConcurrentMap}实现
 	 */
-	public ReferenceConcurrentMap(final ConcurrentMap<Reference<K>, Reference<V>> raw) {
+	public ReferenceConcurrentMap(final ConcurrentMap<Ref<K>, Ref<V>> raw) {
 		this.raw = raw;
 		lastKeyQueue = new ReferenceQueue<>();
 		lastValueQueue = new ReferenceQueue<>();
@@ -61,7 +62,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 *
 	 * @param purgeListener 监听函数
 	 */
-	public void setPurgeListener(final BiConsumer<Reference<? extends K>, Reference<? extends V>> purgeListener) {
+	public void setPurgeListener(final BiConsumer<Ref<? extends K>, Ref<? extends V>> purgeListener) {
 		this.purgeListener = purgeListener;
 	}
 
@@ -98,14 +99,14 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	@Override
 	public V put(final K key, final V value) {
 		this.purgeStale();
-		final Reference<V> vReference = this.raw.put(wrapKey(key), wrapValue(value));
+		final Ref<V> vReference = this.raw.put(wrapKey(key), wrapValue(value));
 		return unwrap(vReference);
 	}
 
 	@Override
 	public V putIfAbsent(final K key, final V value) {
 		this.purgeStale();
-		final Reference<V> vReference = this.raw.putIfAbsent(wrapKey(key), wrapValue(value));
+		final Ref<V> vReference = this.raw.putIfAbsent(wrapKey(key), wrapValue(value));
 		return unwrap(vReference);
 	}
 
@@ -117,7 +118,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	@Override
 	public V replace(final K key, final V value) {
 		this.purgeStale();
-		final Reference<V> vReference = this.raw.replace(wrapKey(key), wrapValue(value));
+		final Ref<V> vReference = this.raw.replace(wrapKey(key), wrapValue(value));
 		return unwrap(vReference);
 	}
 
@@ -136,7 +137,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	@Override
 	public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
 		this.purgeStale();
-		final Reference<V> vReference = this.raw.computeIfAbsent(wrapKey(key),
+		final Ref<V> vReference = this.raw.computeIfAbsent(wrapKey(key),
 			kReference -> wrapValue(mappingFunction.apply(unwrap(kReference))));
 		return unwrap(vReference);
 	}
@@ -144,7 +145,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	@Override
 	public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
 		this.purgeStale();
-		final Reference<V> vReference = this.raw.computeIfPresent(wrapKey(key),
+		final Ref<V> vReference = this.raw.computeIfPresent(wrapKey(key),
 			(kReference, vReference1) -> wrapValue(remappingFunction.apply(unwrap(kReference), unwrap(vReference1))));
 		return unwrap(vReference);
 	}
@@ -173,11 +174,11 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	@Override
 	public Set<K> keySet() {
 		this.purgeStale();
-		final Set<Reference<K>> referenceSet = this.raw.keySet();
+		final Set<Ref<K>> referenceSet = this.raw.keySet();
 		return new AbstractSet<K>() {
 			@Override
 			public Iterator<K> iterator() {
-				final Iterator<Reference<K>> referenceIter = referenceSet.iterator();
+				final Iterator<Ref<K>> referenceIter = referenceSet.iterator();
 				return new Iterator<K>() {
 					@Override
 					public boolean hasNext() {
@@ -201,11 +202,11 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	@Override
 	public Collection<V> values() {
 		this.purgeStale();
-		final Collection<Reference<V>> referenceValues = this.raw.values();
+		final Collection<Ref<V>> referenceValues = this.raw.values();
 		return new AbstractCollection<V>() {
 			@Override
 			public Iterator<V> iterator() {
-				final Iterator<Reference<V>> referenceIter = referenceValues.iterator();
+				final Iterator<Ref<V>> referenceIter = referenceValues.iterator();
 				return new Iterator<V>() {
 					@Override
 					public boolean hasNext() {
@@ -229,11 +230,11 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	@Override
 	public Set<Entry<K, V>> entrySet() {
 		this.purgeStale();
-		final Set<Entry<Reference<K>, Reference<V>>> referenceEntrySet = this.raw.entrySet();
+		final Set<Entry<Ref<K>, Ref<V>>> referenceEntrySet = this.raw.entrySet();
 		return new AbstractSet<Entry<K, V>>() {
 			@Override
 			public Iterator<Entry<K, V>> iterator() {
-				final Iterator<Entry<Reference<K>, Reference<V>>> referenceIter = referenceEntrySet.iterator();
+				final Iterator<Entry<Ref<K>, Ref<V>>> referenceIter = referenceEntrySet.iterator();
 				return new Iterator<Entry<K, V>>() {
 					@Override
 					public boolean hasNext() {
@@ -242,7 +243,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 
 					@Override
 					public Entry<K, V> next() {
-						final Entry<Reference<K>, Reference<V>> next = referenceIter.next();
+						final Entry<Ref<K>, Ref<V>> next = referenceIter.next();
 						return new Entry<K, V>() {
 							@Override
 							public K getKey() {
@@ -300,11 +301,11 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 */
 	@SuppressWarnings("unchecked")
 	private void purgeStale() {
-		Reference<? extends K> key;
-		Reference<? extends V> value;
+		Ref<? extends K> key;
+		Ref<? extends V> value;
 
 		// 清除无效key对应键值对
-		while ((key = this.lastKeyQueue.poll()) != null) {
+		while ((key = (Ref<? extends K>) this.lastKeyQueue.poll()) != null) {
 			value = this.raw.remove(key);
 			if (null != purgeListener) {
 				purgeListener.accept(key, value);
@@ -312,8 +313,8 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 		}
 
 		// 清除无效value对应的键值对
-		while ((value = this.lastValueQueue.poll()) != null) {
-			MapUtil.removeByValue(this.raw, (Reference<V>) value);
+		while ((value = (Ref<? extends V>) this.lastValueQueue.poll()) != null) {
+			MapUtil.removeByValue(this.raw, (Ref<V>) value);
 			if (null != purgeListener) {
 				purgeListener.accept(null, value);
 			}
@@ -327,7 +328,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 * @param queue {@link ReferenceQueue}
 	 * @return {@link Reference}
 	 */
-	abstract Reference<K> wrapKey(final K key, final ReferenceQueue<? super K> queue);
+	abstract Ref<K> wrapKey(final K key, final ReferenceQueue<? super K> queue);
 
 	/**
 	 * 根据Reference类型构建value对应的{@link Reference}
@@ -336,7 +337,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 * @param queue {@link ReferenceQueue}
 	 * @return {@link Reference}
 	 */
-	abstract Reference<V> wrapValue(final V value, final ReferenceQueue<? super V> queue);
+	abstract Ref<V> wrapValue(final V value, final ReferenceQueue<? super V> queue);
 
 	/**
 	 * 根据Reference类型构建key对应的{@link Reference}
@@ -345,7 +346,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 * @return {@link Reference}
 	 */
 	@SuppressWarnings("unchecked")
-	private Reference<K> wrapKey(final Object key) {
+	private Ref<K> wrapKey(final Object key) {
 		return wrapKey((K) key, this.lastKeyQueue);
 	}
 
@@ -356,7 +357,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 * @return {@link Reference}
 	 */
 	@SuppressWarnings("unchecked")
-	private Reference<V> wrapValue(final Object value) {
+	private Ref<V> wrapValue(final Object value) {
 		return wrapValue((V) value, this.lastValueQueue);
 	}
 
@@ -367,7 +368,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 * @param obj 对象
 	 * @return 值
 	 */
-	private static <T> T unwrap(final Reference<T> obj) {
+	private static <T> T unwrap(final Ref<T> obj) {
 		return ReferenceUtil.get(obj);
 	}
 }

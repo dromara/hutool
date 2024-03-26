@@ -23,7 +23,7 @@ import java.util.Objects;
  *
  * @param <T> 键类型
  */
-public class WeakObj<T> extends WeakReference<T> {
+public class WeakObj<T> extends WeakReference<T> implements Ref<T>{
 	private final int hashCode;
 
 	/**
