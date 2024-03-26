@@ -13,7 +13,10 @@
 package cn.hutool.db.ds;
 
 import cn.hutool.setting.Setting;
+import org.junit.Assert;
 import org.junit.Test;
+
+import javax.sql.DataSource;
 
 public class IssueI70J95Test {
 
@@ -26,5 +29,12 @@ public class IssueI70J95Test {
 		dbSetting.setByGroup("username", dbSourceName, "****");
 		dbSetting.setByGroup("password", dbSourceName, "***");
 		DSFactory.create(dbSetting).getDataSource(dbSourceName);
+	}
+
+	@Test
+	public void getDataSourceTest2() {
+		final Setting dbSetting = new Setting("config/db.setting");
+		final DataSource dataSource = DSFactory.create(dbSetting).getDataSource("");
+		Assert.assertNotNull(dataSource);
 	}
 }
