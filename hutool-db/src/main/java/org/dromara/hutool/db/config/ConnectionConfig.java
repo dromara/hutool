@@ -186,4 +186,16 @@ public class ConnectionConfig<T extends ConnectionConfig<?>> {
 		this.poolProps.setProperty(key, value);
 		return (T) this;
 	}
+
+	@Override
+	public String toString() {
+		return "ConnectionConfig{" +
+			"driver='" + driver + '\'' +
+			", url='" + url + '\'' +
+			", user='" + user + '\'' +
+			", pass='****" + '\'' +
+			", connProps=" + connProps +
+			", poolProps=" + poolProps +
+			'}';
+	}
 }

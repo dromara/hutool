@@ -56,7 +56,7 @@ public class C3p0DSFactory implements DSFactory {
 		// 连接配置
 		final Properties connProps = config.getConnProps();
 		if(MapUtil.isNotEmpty(connProps)){
-			ds.setProperties(connProps);
+			ds.getProperties().putAll(connProps);
 		}
 
 		return ds;
