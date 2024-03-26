@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.map.reference;
 
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.util.ReferenceUtil;
+import org.dromara.hutool.core.lang.ref.ReferenceUtil;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;

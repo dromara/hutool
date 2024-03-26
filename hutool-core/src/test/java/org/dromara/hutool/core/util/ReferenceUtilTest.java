@@ -14,6 +14,8 @@ package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.core.lang.ref.ReferenceType;
+import org.dromara.hutool.core.lang.ref.ReferenceUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -27,21 +29,21 @@ public class ReferenceUtilTest {
 
 	@Test
 	public void createWeakTest(){
-		final Reference<Integer> integerReference = ReferenceUtil.of(ReferenceUtil.ReferenceType.WEAK, 1);
+		final Reference<Integer> integerReference = ReferenceUtil.of(ReferenceType.WEAK, 1);
 		Assertions.assertInstanceOf(WeakReference.class, integerReference);
 		Assertions.assertEquals(Integer.valueOf(1), integerReference.get());
 	}
 
 	@Test
 	public void createSoftTest(){
-		final Reference<Integer> integerReference = ReferenceUtil.of(ReferenceUtil.ReferenceType.SOFT, 1);
+		final Reference<Integer> integerReference = ReferenceUtil.of(ReferenceType.SOFT, 1);
 		Assertions.assertInstanceOf(SoftReference.class, integerReference);
 		Assertions.assertEquals(Integer.valueOf(1), integerReference.get());
 	}
 
 	@Test
 	public void createPhantomTest(){
-		final Reference<Integer> integerReference = ReferenceUtil.of(ReferenceUtil.ReferenceType.PHANTOM, 1);
+		final Reference<Integer> integerReference = ReferenceUtil.of(ReferenceType.PHANTOM, 1);
 		Assertions.assertInstanceOf(PhantomReference.class, integerReference);
 		// get方法永远都返回null，PhantomReference只能用来监控对象的GC状况
 		Assertions.assertNull(integerReference.get());

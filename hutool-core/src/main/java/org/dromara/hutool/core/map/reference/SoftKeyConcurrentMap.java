@@ -12,8 +12,8 @@
 
 package org.dromara.hutool.core.map.reference;
 
+import org.dromara.hutool.core.lang.ref.ReferenceType;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
-import org.dromara.hutool.core.util.ReferenceUtil;
 
 import java.lang.ref.Reference;
 import java.util.concurrent.ConcurrentMap;
@@ -42,6 +42,6 @@ public class SoftKeyConcurrentMap<K, V> extends ReferenceKeyConcurrentMap<K, V> 
 	 * @param raw {@link ConcurrentMap}实现
 	 */
 	public SoftKeyConcurrentMap(final ConcurrentMap<Reference<K>, V> raw) {
-		super(raw, ReferenceUtil.ReferenceType.SOFT);
+		super(raw, ReferenceType.SOFT);
 	}
 }

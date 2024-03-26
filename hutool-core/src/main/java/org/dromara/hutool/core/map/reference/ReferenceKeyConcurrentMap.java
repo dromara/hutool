@@ -13,7 +13,9 @@
 package org.dromara.hutool.core.map.reference;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.util.ReferenceUtil;
+import org.dromara.hutool.core.lang.ref.ReferenceType;
+import org.dromara.hutool.core.lang.ref.SoftObj;
+import org.dromara.hutool.core.lang.ref.WeakObj;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;
@@ -38,7 +40,7 @@ public class ReferenceKeyConcurrentMap<K, V> implements ConcurrentMap<K, V>, Ite
 
 	final ConcurrentMap<Reference<K>, V> raw;
 	private final ReferenceQueue<K> lastQueue;
-	private final ReferenceUtil.ReferenceType keyType;
+	private final ReferenceType keyType;
 	/**
 	 * 回收监听
 	 */
@@ -52,7 +54,7 @@ public class ReferenceKeyConcurrentMap<K, V> implements ConcurrentMap<K, V>, Ite
 	 * @param raw           {@link ConcurrentMap}实现
 	 * @param referenceType Reference类型
 	 */
-	public ReferenceKeyConcurrentMap(final ConcurrentMap<Reference<K>, V> raw, final ReferenceUtil.ReferenceType referenceType) {
+	public ReferenceKeyConcurrentMap(final ConcurrentMap<Reference<K>, V> raw, final ReferenceType referenceType) {
 		this.raw = raw;
 		this.keyType = referenceType;
 		lastQueue = new ReferenceQueue<>();

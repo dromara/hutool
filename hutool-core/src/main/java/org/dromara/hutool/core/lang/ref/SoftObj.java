@@ -10,30 +10,31 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.map.reference;
+package org.dromara.hutool.core.lang.ref;
 
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
+import java.util.Objects;
 
 /**
- * 弱键
+ * 软引用对象，在GC报告内存不足时会被GC回收
  *
  * @param <T> 键类型
  */
-public class WeakObj<T> extends WeakReference<T> {
+public class SoftObj<T> extends SoftReference<T> {
 	private final int hashCode;
 
 	/**
 	 * 构造
 	 *
-	 * @param key   原始Key，不能为{@code null}
+	 * @param obj   原始对象
 	 * @param queue {@link ReferenceQueue}
 	 */
-	public WeakObj(final T key, final ReferenceQueue<? super T> queue) {
-		super(key, queue);
-		hashCode = key.hashCode();
+	public SoftObj(final T obj, final ReferenceQueue<? super T> queue) {
+		super(obj, queue);
+		hashCode = Objects.hashCode(obj);
 	}
 
 	@Override
@@ -45,8 +46,8 @@ public class WeakObj<T> extends WeakReference<T> {
 	public boolean equals(final Object other) {
 		if (other == this) {
 			return true;
-		} else if (other instanceof WeakObj) {
-			return ObjUtil.equals(((WeakObj<?>) other).get(), get());
+		} else if (other instanceof SoftObj) {
+			return ObjUtil.equals(((SoftObj<?>) other).get(), get());
 		}
 		return false;
 	}
