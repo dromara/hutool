@@ -384,18 +384,14 @@ public class ThreadUtil {
 	public static boolean safeSleep(long millis) {
 		long done = 0;
 		long before;
-		long spendTime;
-		while (done >= 0 && done < millis) {
-			before = System.currentTimeMillis();
-			if (false == sleep(millis - done)) {
+		// done表示实际花费的时间，确保实际花费时间大于应该sleep的时间
+		while (done < millis) {
+			before = System.nanoTime();
+			if (!sleep(millis - done)) {
 				return false;
 			}
-			spendTime = System.currentTimeMillis() - before;
-			if (spendTime <= 0) {
-				// Sleep花费时间为0或者负数，说明系统时间被拨动
-				break;
-			}
-			done += spendTime;
+			// done始终为正
+			done += (System.nanoTime() - before) / 1_000_000;
 		}
 		return true;
 	}

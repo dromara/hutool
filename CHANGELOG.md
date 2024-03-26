@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.27(2024-03-18)
+# 5.8.27(2024-03-26)
 
 ### 🐣新特性
 * 【extra 】      FreemarkerEngine修改默认版本参数
@@ -10,6 +10,7 @@
 * 【core  】      HexUtil#format方法增加prefix参数（issue#I93PU9@Gitee）
 * 【core  】      StrUtil.replace歧义，修改为replaceByCodePoint（issue#I96LWH@Gitee）
 * 【core  】      FileUtil和PathUtil增加Resource重载（issue#I97FJT@Gitee）
+* 【core  】      优化ThreadUtil.safeSleep，使用System.nanoTime()（issue#I9BMGK@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复PathMover对目标已存在且只读文件报错错误问题（issue#I95CLT@Gitee）
