@@ -152,6 +152,15 @@ public class JschSftp extends AbstractFtp {
 					.getRaw();
 			}
 
+			if (false == session.isConnected()) {
+				// issue#I9CH6A 首先Session需连接
+				try {
+					session.connect((int) this.ftpConfig.getConnector().getTimeout());
+				} catch (final JSchException e) {
+					throw new SshException(e);
+				}
+			}
+
 			// 创建Channel
 			try {
 				this.channel = (ChannelSftp) this.session.openChannel(ChannelType.SFTP.getValue());
