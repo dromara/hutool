@@ -21,7 +21,7 @@ public class HTMLFilterTest {
 		final String p1 = "<p>a</p>";
 		final String p2 = "<p onclick=\"bbbb\">a</p>";
 
-		final HTMLFilter htmlFilter = new HTMLFilter();
+		final HtmlFilter htmlFilter = new HtmlFilter();
 		String filter = htmlFilter.filter(p1);
 		Assertions.assertEquals("<p>a</p>", filter);
 

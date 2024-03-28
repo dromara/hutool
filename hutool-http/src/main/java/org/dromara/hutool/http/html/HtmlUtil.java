@@ -249,7 +249,7 @@ public class HtmlUtil {
 	 * @return 过滤后的内容
 	 */
 	public static String filter(final String htmlContent) {
-		return new HTMLFilter().filter(htmlContent);
+		return new HtmlFilter().filter(htmlContent);
 	}
 
 	/**
