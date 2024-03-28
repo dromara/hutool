@@ -12,11 +12,10 @@
 
 package org.dromara.hutool.db.sql;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.db.Entity;
 
 import java.io.Serializable;
@@ -32,6 +31,11 @@ import java.util.Map.Entry;
  */
 public class QuoteWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 无需包装和解包装的关键字
+	 */
+	private static final String[] IGNORE_WRAPPER_KEYS = {"*", "(", " ", " as "};
 
 	/**
 	 * 前置包装符号
@@ -122,7 +126,7 @@ public class QuoteWrapper implements Serializable {
 		}
 
 		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
-		if (StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
+		if (StrUtil.containsAnyIgnoreCase(field, IGNORE_WRAPPER_KEYS)) {
 			return field;
 		}
 
@@ -132,20 +136,20 @@ public class QuoteWrapper implements Serializable {
 				// 用户名和表名不能包含空格
 				SplitUtil.split(field, StrUtil.DOT, 2, true, false),
 				// 用户名和表名都加引号
-				t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
+				t -> StrUtil.wrap(t, preWrapQuote, sufWrapQuote));
 			return CollUtil.join(target, StrUtil.DOT);
 		}
 
-		return StrUtil.format("{}{}{}", preWrapQuote, field, sufWrapQuote);
+		return StrUtil.wrap(field, preWrapQuote, sufWrapQuote);
 	}
 
 	/**
-	 * 反解包装字段名<br>
+	 * 解包装字段名
 	 *
 	 * @param field 字段名
 	 * @return 未包装的字段名
 	 */
-	public String unWrap(String field) {
+	public String unWrap(final String field) {
 		if (preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
 			return field;
 		}
@@ -155,8 +159,8 @@ public class QuoteWrapper implements Serializable {
 			return field;
 		}
 
-		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
-		if (StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
+		//如果字段中包含通配符或者括号（字段通配符或者函数），不做解包
+		if (StrUtil.containsAnyIgnoreCase(field, IGNORE_WRAPPER_KEYS)) {
 			return field;
 		}
 

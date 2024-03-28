@@ -59,8 +59,8 @@ remarks = true
 
 # 测试用Oracle数据库
 [orcl]
-url = jdbc:oracle:thin:@//looly.centos:1521/XE
-user = looly
+url = jdbc:oracle:thin:@//localhost:1521/XEPDB1
+user = system
 pass = 123456
 remarks = true
 
@@ -84,7 +84,7 @@ remarks = true
 
 # 测试用dm数据库
 [dm]
-url = jdbc:dm://127.0.0.1:30236/schema=dm8_test
+url = jdbc:dm://localhost:30236/schema=dm8_test
 user = SYSDBA
-pass = 123456789
+pass = 123456
 remarks = true

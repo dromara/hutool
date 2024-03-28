@@ -2213,6 +2213,18 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
+	 * 包装指定字符串
+	 *
+	 * @param str    被包装的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 包装后的字符串
+	 */
+	public static String wrap(final CharSequence str, final char prefix, final char suffix) {
+		return prefix + emptyIfNull(str) + suffix;
+	}
+
+	/**
 	 * 使用单个字符包装多个字符串
 	 *
 	 * @param prefixAndSuffix 前缀和后缀
@@ -2531,7 +2543,7 @@ public class CharSequenceUtil extends StrValidator {
 
 		return str.toString().concat(repeatByLength(padStr, length - strLen));
 	}
-	// region
+	// endregion
 
 	// region ----- center
 
@@ -2628,7 +2640,7 @@ public class CharSequenceUtil extends StrValidator {
 	}
 	// endregion
 
-	// ------------------------------------------------------------------------ count
+	// region ----- count
 
 	/**
 	 * 统计指定内容中包含指定字符串的数量<br>
@@ -2684,6 +2696,7 @@ public class CharSequenceUtil extends StrValidator {
 		}
 		return count;
 	}
+	// endregion
 
 	// region ----- compare
 
@@ -3724,6 +3737,7 @@ public class CharSequenceUtil extends StrValidator {
 			str2.substring(strLength - suffixLength));
 	}
 
+	// region ----- join
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 *
@@ -3749,6 +3763,8 @@ public class CharSequenceUtil extends StrValidator {
 	public static <T> String join(final CharSequence conjunction, final Iterable<T> iterable) {
 		return CollUtil.join(iterable, conjunction);
 	}
+
+	// endregion
 
 	/**
 	 * 检查字符串是否都为数字组成

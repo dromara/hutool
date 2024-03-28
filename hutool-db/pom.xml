@@ -153,5 +153,11 @@
 			<version>2.0.9</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>23.3.0.23.09</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
