@@ -356,7 +356,7 @@ public class CrockfordBase32Codec {
 	 *
 	 * @param pArray byte[] array which will later be encoded
 	 * @return amount of space needed to encode the supplied array.
-	 * Returns a long since a max-len array will require > Integer.MAX_VALUE
+	 * Returns a long since a max-len array will require &gt; Integer.MAX_VALUE
 	 */
 	public long getEncodedLength(final byte[] pArray) {
 		// Calculate non-chunked size - rounded up to allow for padding
