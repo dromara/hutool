@@ -817,6 +817,9 @@ public class DateUtil extends CalendarUtil {
 	 * @since 3.1.1
 	 */
 	public static DateTime parseTimeToday(CharSequence timeString) {
+		// issue#I9C2D4 处理时分秒
+		timeString = StrUtil.replaceChars(timeString, "时分秒", ":");
+
 		timeString = StrUtil.format("{} {}", today(), timeString);
 		if (1 == StrUtil.count(timeString, ':')) {
 			// 时间格式为 HH:mm
@@ -930,6 +933,17 @@ public class DateUtil extends CalendarUtil {
 			return null;
 		}
 
+		// issue#I9C2D4
+		if(StrUtil.contains(cstString, ',')){
+			if(StrUtil.contains(cstString, "星期")){
+				return parse(cstString, FastDateFormat.getInstance(DatePattern.HTTP_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.CHINA));
+			}
+			return parse(cstString, DatePattern.HTTP_DATETIME_FORMAT);
+		}
+
+		if(StrUtil.contains(cstString, "星期")){
+			return parse(cstString, FastDateFormat.getInstance(DatePattern.JDK_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.CHINA));
+		}
 		return parse(cstString, DatePattern.JDK_DATETIME_FORMAT);
 	}
 
