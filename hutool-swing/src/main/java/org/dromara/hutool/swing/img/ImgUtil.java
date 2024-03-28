@@ -52,29 +52,29 @@ public class ImgUtil {
 
 	// region ----- [const] image type
 	/**
-	 * GIF
+	 * 图形交换格式：GIF
 	 */
-	public static final String IMAGE_TYPE_GIF = "gif";// 图形交换格式
+	public static final String IMAGE_TYPE_GIF = "gif";
 	/**
-	 * JPG
+	 * 联合照片专家组：JPG
 	 */
-	public static final String IMAGE_TYPE_JPG = "jpg";// 联合照片专家组
+	public static final String IMAGE_TYPE_JPG = "jpg";
 	/**
-	 * JPEG
+	 * 联合照片专家组：JPEG
 	 */
-	public static final String IMAGE_TYPE_JPEG = "jpeg";// 联合照片专家组
+	public static final String IMAGE_TYPE_JPEG = "jpeg";
 	/**
-	 * BMP
+	 * 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式：BMP
 	 */
-	public static final String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
+	public static final String IMAGE_TYPE_BMP = "bmp";
 	/**
-	 * PNG
+	 * 可移植网络图形：PNG
 	 */
-	public static final String IMAGE_TYPE_PNG = "png";// 可移植网络图形
+	public static final String IMAGE_TYPE_PNG = "png";
 	/**
-	 * PSD
+	 * Photoshop的专用格式：PSD
 	 */
-	public static final String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
+	public static final String IMAGE_TYPE_PSD = "psd";
 	// endregion
 
 	// region ----- scale
@@ -100,16 +100,16 @@ public class ImgUtil {
 	 * 缩放图像（按比例缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcStream  源图像来源流
-	 * @param destStream 缩放后的图像写出到的流
-	 * @param scale      缩放比例。比例大于1时为放大，小于1大于0为缩小
+	 * @param srcStream    源图像来源流
+	 * @param targetStream 缩放后的图像写出到的流
+	 * @param scale        缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @since 3.0.9
 	 */
-	public static void scale(final InputStream srcStream, final OutputStream destStream, final float scale) {
+	public static void scale(final InputStream srcStream, final OutputStream targetStream, final float scale) {
 		BufferedImage image = null;
 		try {
 			image = read(srcStream);
-			scale(image, destStream, scale);
+			scale(image, targetStream, scale);
 		} finally {
 			flush(image);
 		}
@@ -229,15 +229,21 @@ public class ImgUtil {
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 缩放后的图像目标流
-	 * @param width      缩放后的宽度
-	 * @param height     缩放后的高度
-	 * @param fixedColor 比例不对时补充的颜色，不补充为{@code null}
+	 * @param srcStream    源图像流
+	 * @param targetStream 缩放后的图像目标流
+	 * @param width        缩放后的宽度
+	 * @param height       缩放后的高度
+	 * @param fixedColor   比例不对时补充的颜色，不补充为{@code null}
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void scale(final InputStream srcStream, final OutputStream destStream, final int width, final int height, final Color fixedColor) throws IORuntimeException {
-		scale(read(srcStream), getImageOutputStream(destStream), width, height, fixedColor);
+	public static void scale(final InputStream srcStream, final OutputStream targetStream, final int width, final int height, final Color fixedColor) throws IORuntimeException {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			scale(image, getImageOutputStream(targetStream), width, height, fixedColor);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
@@ -265,22 +271,22 @@ public class ImgUtil {
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcImage        源图像
-	 * @param destImageStream 缩放后的图像目标流
-	 * @param width           缩放后的宽度
-	 * @param height          缩放后的高度
-	 * @param fixedColor      比例不对时补充的颜色，不补充为{@code null}
+	 * @param srcImage          源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetImageStream 缩放后的图像目标流
+	 * @param width             缩放后的宽度
+	 * @param height            缩放后的高度
+	 * @param fixedColor        比例不对时补充的颜色，不补充为{@code null}
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void scale(final Image srcImage, final ImageOutputStream destImageStream, final int width, final int height, final Color fixedColor) throws IORuntimeException {
-		writeJpg(scale(srcImage, width, height, fixedColor), destImageStream);
+	public static void scale(final Image srcImage, final ImageOutputStream targetImageStream, final int width, final int height, final Color fixedColor) throws IORuntimeException {
+		writeJpg(scale(srcImage, width, height, fixedColor), targetImageStream);
 	}
 
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式
 	 *
-	 * @param srcImage   源图像
+	 * @param srcImage   源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param width      缩放后的宽度
 	 * @param height     缩放后的高度
 	 * @param fixedColor 比例不对时补充的颜色，不补充为{@code null}
@@ -297,15 +303,15 @@ public class ImgUtil {
 	 * 图像切割(按指定起点坐标和宽高切割)
 	 *
 	 * @param srcImgFile  源图像文件
-	 * @param destImgFile 切片后的图像文件
+	 * @param targetImgFile 切片后的图像文件
 	 * @param rectangle   矩形对象，表示矩形区域的x，y，width，height
 	 * @since 3.1.0
 	 */
-	public static void cut(final File srcImgFile, final File destImgFile, final Rectangle rectangle) {
+	public static void cut(final File srcImgFile, final File targetImgFile, final Rectangle rectangle) {
 		BufferedImage image = null;
 		try {
 			image = read(srcImgFile);
-			cut(image, destImgFile, rectangle);
+			cut(image, targetImgFile, rectangle);
 		} finally {
 			flush(image);
 		}
@@ -742,15 +748,15 @@ public class ImgUtil {
 	 * 此方法并不关闭流
 	 *
 	 * @param srcStream  源图像流
-	 * @param destStream 目标图像流
+	 * @param targetStream 目标图像流
 	 * @param imageType  图片格式(扩展名)
 	 * @since 4.0.5
 	 */
-	public static void binary(final InputStream srcStream, final OutputStream destStream, final String imageType) {
+	public static void binary(final InputStream srcStream, final OutputStream targetStream, final String imageType) {
 		BufferedImage image = null;
 		try {
 			image = read(srcStream);
-			binary(image, getImageOutputStream(destStream), imageType);
+			binary(image, getImageOutputStream(targetStream), imageType);
 		} finally {
 			flush(image);
 		}
@@ -778,7 +784,7 @@ public class ImgUtil {
 	/**
 	 * 彩色转为黑白二值化图片，根据目标文件扩展名确定转换后的格式
 	 *
-	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param srcImage 源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param outFile  目标文件
 	 * @since 4.0.5
 	 */
@@ -790,7 +796,7 @@ public class ImgUtil {
 	 * 彩色转为黑白二值化图片<br>
 	 * 此方法并不关闭流，输出JPG格式
 	 *
-	 * @param srcImage  源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param srcImage  源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out       目标图像流
 	 * @param imageType 图片格式(扩展名)
 	 * @since 4.0.5
@@ -803,7 +809,7 @@ public class ImgUtil {
 	 * 彩色转为黑白二值化图片<br>
 	 * 此方法并不关闭流，输出JPG格式
 	 *
-	 * @param srcImage          源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param srcImage          源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param targetImageStream 目标图像流
 	 * @param imageType         图片格式(扩展名)
 	 * @throws IORuntimeException IO异常
@@ -816,7 +822,7 @@ public class ImgUtil {
 	/**
 	 * 彩色转为黑白二值化图片
 	 *
-	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param srcImage 源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @return {@link Image}二值化后的图片
 	 * @since 4.0.5
 	 */

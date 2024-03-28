@@ -86,6 +86,7 @@ public class QrImage extends BufferedImage {
 				imgWidth = logoImg.getWidth(null) * imgHeight / logoImg.getHeight(null);
 			}
 
+			// 原图片上直接绘制水印
 			Img.from(this).pressImage(//
 					Img.from(logoImg).round(config.imgRound).getImg(), // 圆角
 					new Rectangle(imgWidth, imgHeight), // 位置

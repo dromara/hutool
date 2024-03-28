@@ -586,7 +586,8 @@ public class Img implements Flushable, Serializable {
 	}
 
 	/**
-	 * 给图片添加图片水印
+	 * 给图片添加图片水印<br>
+	 * 如果源图片对象为 {@link BufferedImage}，则绘制在源图片上，否则创建新的图片
 	 *
 	 * @param pressImg  水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
