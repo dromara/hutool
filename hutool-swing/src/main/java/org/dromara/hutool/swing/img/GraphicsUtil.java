@@ -185,8 +185,8 @@ public class GraphicsUtil {
 	 * @return 画笔对象
 	 */
 	public static Graphics drawImg(final Graphics g, final Image img, final Point point) {
-		return drawImg(g, img,
-				new Rectangle(point.x, point.y, img.getWidth(null), img.getHeight(null)));
+		g.drawImage(img, point.x, point.y, null);
+		return g;
 	}
 
 	/**

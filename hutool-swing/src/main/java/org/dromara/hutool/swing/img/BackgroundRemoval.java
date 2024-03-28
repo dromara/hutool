@@ -12,9 +12,10 @@
 
 package org.dromara.hutool.swing.img;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileTypeUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.swing.img.color.ColorUtil;
 
@@ -33,9 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>图片背景识别处理、背景替换、背景设置为矢量图</p>
- * <p>根据一定规则算出图片背景色的RGB值，进行替换</p>
- * <p>2020-05-21 16:36</p>
+ * 图片背景识别处理、背景替换、背景设置为矢量图，根据一定规则算出图片背景色的RGB值，进行替换
  *
  * @author Dai Yuanchuan
  **/
@@ -45,7 +44,7 @@ public class BackgroundRemoval {
 	 * 目前暂时支持的图片类型数组
 	 * 其他格式的不保证结果
 	 */
-	public static String[] IMAGES_TYPE = {"jpg", "png"};
+	public static String[] IMAGES_TYPE = {ImgUtil.IMAGE_TYPE_JPG, ImgUtil.IMAGE_TYPE_JPEG, ImgUtil.IMAGE_TYPE_PNG};
 
 	/**
 	 * 背景移除
@@ -59,10 +58,9 @@ public class BackgroundRemoval {
 	 * @param inputPath  要处理图片的路径
 	 * @param outputPath 输出图片的路径
 	 * @param tolerance  容差值[根据图片的主题色,加入容差值,值的范围在0~255之间]
-	 * @return 返回处理结果 true:图片处理完成 false:图片处理失败
 	 */
-	public static boolean backgroundRemoval(final String inputPath, final String outputPath, final int tolerance) {
-		return backgroundRemoval(new File(inputPath), new File(outputPath), tolerance);
+	public static void backgroundRemoval(final String inputPath, final String outputPath, final int tolerance) {
+		backgroundRemoval(new File(inputPath), new File(outputPath), tolerance);
 	}
 
 	/**
@@ -77,10 +75,9 @@ public class BackgroundRemoval {
 	 * @param input     需要进行操作的图片
 	 * @param output    最后输出的文件
 	 * @param tolerance 容差值[根据图片的主题色,加入容差值,值的取值范围在0~255之间]
-	 * @return 返回处理结果 true:图片处理完成 false:图片处理失败
 	 */
-	public static boolean backgroundRemoval(final File input, final File output, final int tolerance) {
-		return backgroundRemoval(input, output, null, tolerance);
+	public static void backgroundRemoval(final File input, final File output, final int tolerance) {
+		backgroundRemoval(input, output, null, tolerance);
 	}
 
 	/**
@@ -93,22 +90,20 @@ public class BackgroundRemoval {
 	 * 发现相同则将颜色不透明度设置为0,使颜色完全透明.
 	 *
 	 * @param input     需要进行操作的图片
-	 * @param output    最后输出的文件
+	 * @param output    最后输出的文件，必须为.png
 	 * @param override  指定替换成的背景颜色 为null时背景为透明
 	 * @param tolerance 容差值[根据图片的主题色,加入容差值,值的取值范围在0~255之间]
-	 * @return 返回处理结果 true:图片处理完成 false:图片处理失败
 	 */
-	public static boolean backgroundRemoval(final File input, final File output, final Color override, final int tolerance) {
-		if (fileTypeValidation(input, IMAGES_TYPE)) {
-			return false;
-		}
+	public static void backgroundRemoval(final File input, final File output, final Color override, final int tolerance) {
+		fileTypeValidation(input, IMAGES_TYPE);
+		BufferedImage bufferedImage = null;
 		try {
 			// 获取图片左上、中上、右上、右中、右下、下中、左下、左中、8个像素点rgb的16进制值
-			final BufferedImage bufferedImage = ImageIO.read(input);
+			bufferedImage = ImgUtil.read(input);
 			// 图片输出的格式为 png
-			return ImageIO.write(backgroundRemoval(bufferedImage, override, tolerance), "png", output);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
+			ImgUtil.write(backgroundRemoval(bufferedImage, override, tolerance), output);
+		} finally {
+			ImgUtil.flush(bufferedImage);
 		}
 	}
 
@@ -132,7 +127,7 @@ public class BackgroundRemoval {
 		// 绘制icon
 		final ImageIcon imageIcon = new ImageIcon(bufferedImage);
 		final BufferedImage image = new BufferedImage(imageIcon.getIconWidth(), imageIcon.getIconHeight(),
-				BufferedImage.TYPE_4BYTE_ABGR);
+			BufferedImage.TYPE_4BYTE_ABGR);
 		// 绘图工具
 		final Graphics graphics = image.getGraphics();
 		graphics.drawImage(imageIcon.getImage(), 0, 0, imageIcon.getImageObserver());
@@ -147,7 +142,7 @@ public class BackgroundRemoval {
 				int rgb = image.getRGB(x, y);
 				final String hex = ColorUtil.toHex((rgb & 0xff0000) >> 16, (rgb & 0xff00) >> 8, (rgb & 0xff));
 				final boolean isTrue = ArrayUtil.contains(removeRgb, hex) ||
-						areColorsWithinTolerance(hexToRgb(mainColor), new Color(Integer.parseInt(hex.substring(1), 16)), tolerance);
+					areColorsWithinTolerance(hexToRgb(mainColor), new Color(Integer.parseInt(hex.substring(1), 16)), tolerance);
 				if (isTrue) {
 					rgb = override == null ? ((alpha + 1) << 24) | (rgb & 0x00ffffff) : override.getRGB();
 				}
@@ -254,13 +249,13 @@ public class BackgroundRemoval {
 	 */
 	public static boolean areColorsWithinTolerance(final Color color1, final Color color2, final Color tolerance) {
 		return (color1.getRed() - color2.getRed() < tolerance.getRed() && color1
-				.getRed() - color2.getRed() > -tolerance.getRed())
-				&& (color1.getBlue() - color2.getBlue() < tolerance
-				.getBlue() && color1.getBlue() - color2.getBlue() > -tolerance
-				.getBlue())
-				&& (color1.getGreen() - color2.getGreen() < tolerance
-				.getGreen() && color1.getGreen()
-				- color2.getGreen() > -tolerance.getGreen());
+			.getRed() - color2.getRed() > -tolerance.getRed())
+			&& (color1.getBlue() - color2.getBlue() < tolerance
+			.getBlue() && color1.getBlue() - color2.getBlue() > -tolerance
+			.getBlue())
+			&& (color1.getGreen() - color2.getGreen() < tolerance
+			.getGreen() && color1.getGreen()
+			- color2.getGreen() > -tolerance.getGreen());
 	}
 
 	/**
@@ -335,7 +330,7 @@ public class BackgroundRemoval {
 		final int rgbLength = 3;
 		if (strings.length == rgbLength) {
 			return ColorUtil.toHex(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]),
-					Integer.parseInt(strings[2]));
+				Integer.parseInt(strings[2]));
 		}
 		return StrUtil.EMPTY;
 	}
@@ -348,18 +343,14 @@ public class BackgroundRemoval {
 	 *
 	 * @param input      需要进行验证的文件
 	 * @param imagesType 文件包含的类型数组
-	 * @return 返回布尔值 false:给定文件的文件类型在文件数组中  true:给定文件的文件类型 不在给定数组中。
 	 */
-	private static boolean fileTypeValidation(final File input, final String[] imagesType) {
-		if (!input.exists()) {
-			throw new IllegalArgumentException("给定文件为空");
-		}
+	private static void fileTypeValidation(final File input, final String[] imagesType) {
+		Assert.isTrue(input.exists(), "File {} not exist!", input);
 		// 获取图片类型
 		final String type = FileTypeUtil.getType(input);
 		// 类型对比
 		if (!ArrayUtil.contains(imagesType, type)) {
-			throw new IllegalArgumentException(StrUtil.format("文件类型{}不支持", type));
+			throw new IllegalArgumentException(StrUtil.format("Format {} of File not supported!", type));
 		}
-		return false;
 	}
 }

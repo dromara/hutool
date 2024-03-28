@@ -758,10 +758,13 @@ public class Img implements Flushable, Serializable {
 	 * 结果类型设定见{@link #setTargetImageType(String)}
 	 *
 	 * @param out 写出到的目标流
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public void write(final OutputStream out) throws IORuntimeException {
+	public Img write(final OutputStream out) throws IORuntimeException {
 		write(ImgUtil.getImageOutputStream(out));
+
+		return this;
 	}
 
 	/**
@@ -769,9 +772,10 @@ public class Img implements Flushable, Serializable {
 	 * 结果类型设定见{@link #setTargetImageType(String)}
 	 *
 	 * @param targetImageStream 写出到的目标流
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public void write(final ImageOutputStream targetImageStream) throws IORuntimeException {
+	public Img write(final ImageOutputStream targetImageStream) throws IORuntimeException {
 		Assert.notBlank(this.targetImageType, "Target image type is blank !");
 		Assert.notNull(targetImageStream, "Target output stream is null !");
 
@@ -779,6 +783,8 @@ public class Img implements Flushable, Serializable {
 		Assert.notNull(targetImage, "Target image is null !");
 
 		ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality, this.backgroundColor);
+
+		return this;
 	}
 
 	/**
@@ -786,8 +792,9 @@ public class Img implements Flushable, Serializable {
 	 *
 	 * @param targetFile 目标文件
 	 * @throws IORuntimeException IO异常
+	 * @return this
 	 */
-	public void write(final File targetFile) throws IORuntimeException {
+	public Img write(final File targetFile) throws IORuntimeException {
 		final String formatName = FileNameUtil.extName(targetFile);
 		if (StrUtil.isNotBlank(formatName)) {
 			this.targetImageType = formatName;
@@ -805,6 +812,7 @@ public class Img implements Flushable, Serializable {
 		} finally {
 			IoUtil.closeQuietly(out);
 		}
+		return this;
 	}
 
 	@Override

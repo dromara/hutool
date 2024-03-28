@@ -19,6 +19,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -117,6 +120,21 @@ public class FontUtil {
 		final int height = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
 
 		return new Dimension(width, height);
+	}
+
+	/**
+	 * 获取font的样式应用在str上的整个矩形
+	 *
+	 * @param str  字符串，必须非空
+	 * @param font 字体，必须非空
+	 * @return {@link Rectangle2D}
+	 * @since 5.3.3
+	 */
+	public static Rectangle2D getRectangle(final String str, final Font font) {
+		return font.getStringBounds(str,
+			new FontRenderContext(AffineTransform.getScaleInstance(1, 1),
+				false,
+				false));
 	}
 
 }

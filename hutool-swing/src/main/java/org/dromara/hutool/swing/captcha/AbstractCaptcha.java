@@ -112,7 +112,15 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		generateCode();
 
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ImgUtil.writePng(createImage(this.code), out);
+
+		Image image = null;
+		try{
+			image = createImage(this.code);
+			ImgUtil.writePng(image, out);
+		} finally {
+			ImgUtil.flush(image);
+		}
+
 		this.imageBytes = out.toByteArray();
 	}
 
@@ -189,7 +197,8 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	}
 
 	/**
-	 * 获取验证码图
+	 * 获取验证码图<br>
+	 * 注意返回的{@link BufferedImage}使用完毕后需要调用{@link BufferedImage#flush()}释放资源
 	 *
 	 * @return 验证码图
 	 */

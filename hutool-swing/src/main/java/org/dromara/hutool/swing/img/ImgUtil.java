@@ -34,7 +34,6 @@ import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 import java.awt.*;
 import java.awt.color.ColorSpace;
-import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.*;
@@ -88,7 +87,13 @@ public class ImgUtil {
 	 * @param scale         缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 */
 	public static void scale(final File srcImageFile, final File destImageFile, final float scale) {
-		scale(read(srcImageFile), destImageFile, scale);
+		BufferedImage image = null;
+		try {
+			image = read(srcImageFile);
+			scale(image, destImageFile, scale);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
@@ -101,27 +106,39 @@ public class ImgUtil {
 	 * @since 3.0.9
 	 */
 	public static void scale(final InputStream srcStream, final OutputStream destStream, final float scale) {
-		scale(read(srcStream), destStream, scale);
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			scale(image, destStream, scale);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 缩放图像（按比例缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcStream  源图像来源流
-	 * @param destStream 缩放后的图像写出到的流
-	 * @param scale      缩放比例。比例大于1时为放大，小于1大于0为缩小
+	 * @param srcStream    源图像来源流
+	 * @param targetStream 缩放后的图像写出到的流
+	 * @param scale        缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @since 3.1.0
 	 */
-	public static void scale(final ImageInputStream srcStream, final ImageOutputStream destStream, final float scale) {
-		scale(read(srcStream), destStream, scale);
+	public static void scale(final ImageInputStream srcStream, final ImageOutputStream targetStream, final float scale) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			scale(image, targetStream, scale);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 缩放图像（按比例缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcImg   源图像来源流
+	 * @param srcImg   源图像来源流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param destFile 缩放后的图像写出到的流
 	 * @param scale    缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @throws IORuntimeException IO异常
@@ -135,7 +152,7 @@ public class ImgUtil {
 	 * 缩放图像（按比例缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcImg 源图像来源流
+	 * @param srcImg 源图像来源流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out    缩放后的图像写出到的流
 	 * @param scale  缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @throws IORuntimeException IO异常
@@ -149,7 +166,7 @@ public class ImgUtil {
 	 * 缩放图像（按比例缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcImg          源图像来源流
+	 * @param srcImg          源图像来源流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param destImageStream 缩放后的图像写出到的流
 	 * @param scale           缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @throws IORuntimeException IO异常
@@ -162,7 +179,7 @@ public class ImgUtil {
 	/**
 	 * 缩放图像（按比例缩放）
 	 *
-	 * @param srcImg 源图像来源流
+	 * @param srcImg 源图像来源流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param scale  缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @return {@link Image}
 	 * @since 3.1.0
@@ -175,7 +192,7 @@ public class ImgUtil {
 	 * 缩放图像（按长宽缩放）<br>
 	 * 注意：目标长宽与原图不成比例会变形
 	 *
-	 * @param srcImg 源图像来源流
+	 * @param srcImg 源图像来源流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param width  目标宽度
 	 * @param height 目标高度
 	 * @return {@link Image}
@@ -189,18 +206,23 @@ public class ImgUtil {
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认格式与源图片相同，无法识别原图片默认JPG
 	 *
-	 * @param srcImageFile  源图像文件地址
-	 * @param destImageFile 缩放后的图像地址
-	 * @param width         缩放后的宽度
-	 * @param height        缩放后的高度
-	 * @param fixedColor    补充的颜色，不补充为{@code null}
+	 * @param srcImageFile    源图像文件地址
+	 * @param targetImageFile 缩放后的图像地址
+	 * @param width           缩放后的宽度
+	 * @param height          缩放后的高度
+	 * @param fixedColor      补充的颜色，不补充为{@code null}
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void scale(final File srcImageFile, final File destImageFile, final int width, final int height, final Color fixedColor) throws IORuntimeException {
-		Img.from(srcImageFile)//
-			.setTargetImageType(FileNameUtil.extName(destImageFile))//
-			.scale(width, height, fixedColor)//
-			.write(destImageFile);
+	public static void scale(final File srcImageFile, final File targetImageFile, final int width, final int height, final Color fixedColor) throws IORuntimeException {
+		Img img = null;
+		try {
+			img = Img.from(srcImageFile);
+			img.setTargetImageType(FileNameUtil.extName(targetImageFile))
+				.scale(width, height, fixedColor)//
+				.write(targetImageFile);
+		} finally {
+			IoUtil.flush(img);
+		}
 	}
 
 	/**
@@ -222,15 +244,21 @@ public class ImgUtil {
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 缩放后的图像目标流
-	 * @param width      缩放后的宽度
-	 * @param height     缩放后的高度
-	 * @param fixedColor 比例不对时补充的颜色，不补充为{@code null}
+	 * @param srcStream    源图像流
+	 * @param targetStream 缩放后的图像目标流
+	 * @param width        缩放后的宽度
+	 * @param height       缩放后的高度
+	 * @param fixedColor   比例不对时补充的颜色，不补充为{@code null}
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void scale(final ImageInputStream srcStream, final ImageOutputStream destStream, final int width, final int height, final Color fixedColor) throws IORuntimeException {
-		scale(read(srcStream), destStream, width, height, fixedColor);
+	public static void scale(final ImageInputStream srcStream, final ImageOutputStream targetStream, final int width, final int height, final Color fixedColor) throws IORuntimeException {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			scale(image, targetStream, width, height, fixedColor);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
@@ -274,37 +302,55 @@ public class ImgUtil {
 	 * @since 3.1.0
 	 */
 	public static void cut(final File srcImgFile, final File destImgFile, final Rectangle rectangle) {
-		cut(read(srcImgFile), destImgFile, rectangle);
+		BufferedImage image = null;
+		try {
+			image = read(srcImgFile);
+			cut(image, destImgFile, rectangle);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 切片后的图像输出流
-	 * @param rectangle  矩形对象，表示矩形区域的x，y，width，height
+	 * @param srcStream    源图像流
+	 * @param targetStream 切片后的图像输出流
+	 * @param rectangle    矩形对象，表示矩形区域的x，y，width，height
 	 * @since 3.1.0
 	 */
-	public static void cut(final InputStream srcStream, final OutputStream destStream, final Rectangle rectangle) {
-		cut(read(srcStream), destStream, rectangle);
+	public static void cut(final InputStream srcStream, final OutputStream targetStream, final Rectangle rectangle) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			cut(image, targetStream, rectangle);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 切片后的图像输出流
-	 * @param rectangle  矩形对象，表示矩形区域的x，y，width，height
+	 * @param srcStream    源图像流
+	 * @param targetStream 切片后的图像输出流
+	 * @param rectangle    矩形对象，表示矩形区域的x，y，width，height
 	 * @since 3.1.0
 	 */
-	public static void cut(final ImageInputStream srcStream, final ImageOutputStream destStream, final Rectangle rectangle) {
-		cut(read(srcStream), destStream, rectangle);
+	public static void cut(final ImageInputStream srcStream, final ImageOutputStream targetStream, final Rectangle rectangle) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			cut(image, targetStream, rectangle);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
 	 *
-	 * @param srcImage  源图像
+	 * @param srcImage  源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param destFile  输出的文件
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
 	 * @throws IORuntimeException IO异常
@@ -330,20 +376,20 @@ public class ImgUtil {
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
 	 *
-	 * @param srcImage        源图像
-	 * @param destImageStream 切片后的图像输出流
-	 * @param rectangle       矩形对象，表示矩形区域的x，y，width，height
+	 * @param srcImage          源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetImageStream 切片后的图像输出流
+	 * @param rectangle         矩形对象，表示矩形区域的x，y，width，height
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.0
 	 */
-	public static void cut(final Image srcImage, final ImageOutputStream destImageStream, final Rectangle rectangle) throws IORuntimeException {
-		writeJpg(cut(srcImage, rectangle), destImageStream);
+	public static void cut(final Image srcImage, final ImageOutputStream targetImageStream, final Rectangle rectangle) throws IORuntimeException {
+		writeJpg(cut(srcImage, rectangle), targetImageStream);
 	}
 
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)
 	 *
-	 * @param srcImage  源图像
+	 * @param srcImage  源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
 	 * @return {@link BufferedImage}
 	 * @since 3.1.0
@@ -355,7 +401,7 @@ public class ImgUtil {
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)，填充满整个图片（直径取长宽最小值）
 	 *
-	 * @param srcImage 源图像
+	 * @param srcImage 源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param x        原图的x坐标起始位置
 	 * @param y        原图的y坐标起始位置
 	 * @return {@link Image}
@@ -368,7 +414,7 @@ public class ImgUtil {
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)
 	 *
-	 * @param srcImage 源图像
+	 * @param srcImage 源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param x        原图的x坐标起始位置
 	 * @param y        原图的y坐标起始位置
 	 * @param radius   半径，小于0表示填充满整个图片（直径取长宽最小值）
@@ -384,50 +430,56 @@ public class ImgUtil {
 	 *
 	 * @param srcImageFile 源图像
 	 * @param descDir      切片目标文件夹
-	 * @param destWidth    目标切片宽度。默认200
-	 * @param destHeight   目标切片高度。默认150
+	 * @param targetWidth  目标切片宽度。默认200
+	 * @param targetHeight 目标切片高度。默认150
 	 */
-	public static void slice(final File srcImageFile, final File descDir, final int destWidth, final int destHeight) {
-		slice(read(srcImageFile), descDir, destWidth, destHeight);
+	public static void slice(final File srcImageFile, final File descDir, final int targetWidth, final int targetHeight) {
+		BufferedImage image = null;
+		try {
+			image = read(srcImageFile);
+			slice(image, descDir, targetWidth, targetHeight);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 图像切片（指定切片的宽度和高度）
 	 *
-	 * @param srcImage   源图像
-	 * @param descDir    切片目标文件夹
-	 * @param destWidth  目标切片宽度。默认200
-	 * @param destHeight 目标切片高度。默认150
+	 * @param srcImage     源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param descDir      切片目标文件夹
+	 * @param targetWidth  目标切片宽度。默认200
+	 * @param targetHeight 目标切片高度。默认150
 	 */
-	public static void slice(final Image srcImage, final File descDir, int destWidth, int destHeight) {
-		if (destWidth <= 0) {
-			destWidth = 200; // 切片宽度
+	public static void slice(final Image srcImage, final File descDir, int targetWidth, int targetHeight) {
+		if (targetWidth <= 0) {
+			targetWidth = 200; // 切片宽度
 		}
-		if (destHeight <= 0) {
-			destHeight = 150; // 切片高度
+		if (targetHeight <= 0) {
+			targetHeight = 150; // 切片高度
 		}
 		final int srcWidth = srcImage.getWidth(null); // 源图宽度
 		final int srcHeight = srcImage.getHeight(null); // 源图高度
 
-		if (srcWidth < destWidth) {
-			destWidth = srcWidth;
+		if (srcWidth < targetWidth) {
+			targetWidth = srcWidth;
 		}
-		if (srcHeight < destHeight) {
-			destHeight = srcHeight;
+		if (srcHeight < targetHeight) {
+			targetHeight = srcHeight;
 		}
 
 		final int cols; // 切片横向数量
 		final int rows; // 切片纵向数量
 		// 计算切片的横向和纵向数量
-		if (srcWidth % destWidth == 0) {
-			cols = srcWidth / destWidth;
+		if (srcWidth % targetWidth == 0) {
+			cols = srcWidth / targetWidth;
 		} else {
-			cols = (int) Math.floor((double) srcWidth / destWidth) + 1;
+			cols = (int) Math.floor((double) srcWidth / targetWidth) + 1;
 		}
-		if (srcHeight % destHeight == 0) {
-			rows = srcHeight / destHeight;
+		if (srcHeight % targetHeight == 0) {
+			rows = srcHeight / targetHeight;
 		} else {
-			rows = (int) Math.floor((double) srcHeight / destHeight) + 1;
+			rows = (int) Math.floor((double) srcHeight / targetHeight) + 1;
 		}
 		// 循环建立切片
 		Image tag;
@@ -435,7 +487,7 @@ public class ImgUtil {
 			for (int j = 0; j < cols; j++) {
 				// 四个参数分别为图像起点坐标和宽高
 				// 即: CropImageFilter(int x,int y,int width,int height)
-				tag = cut(srcImage, new Rectangle(j * destWidth, i * destHeight, destWidth, destHeight));
+				tag = cut(srcImage, new Rectangle(j * targetWidth, i * targetHeight, targetWidth, targetHeight));
 				// 输出为文件
 				write(tag, FileUtil.file(descDir, "_r" + i + "_c" + j + ".jpg"));
 			}
@@ -452,13 +504,19 @@ public class ImgUtil {
 	 * @param cols         目标切片列数。默认2，必须是范围 [1, 20] 之内
 	 */
 	public static void sliceByRowsAndCols(final File srcImageFile, final File targetDir, final String formatName, final int rows, final int cols) {
-		sliceByRowsAndCols(read(srcImageFile), targetDir, formatName, rows, cols);
+		BufferedImage image = null;
+		try {
+			image = read(srcImageFile);
+			sliceByRowsAndCols(image, targetDir, formatName, rows, cols);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 图像切割（指定切片的行数和列数），默认RGB模式
 	 *
-	 * @param srcImage   源图像，如果非{@link BufferedImage}，则默认使用RGB模式
+	 * @param srcImage   源图像，如果非{@link BufferedImage}，则默认使用RGB模式，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param destDir    切片目标文件夹
 	 * @param formatName 格式名称，即图片格式后缀
 	 * @param rows       目标切片行数。默认2，必须是范围 [1, 20] 之内
@@ -517,7 +575,13 @@ public class ImgUtil {
 			FileUtil.copy(srcImageFile, targetImageFile, true);
 		}
 
-		Img.from(srcImageFile).write(targetImageFile);
+		Img img = null;
+		try {
+			img = Img.from(srcImageFile);
+			img.write(targetImageFile);
+		} finally {
+			IoUtil.flush(img);
+		}
 	}
 
 	/**
@@ -530,14 +594,20 @@ public class ImgUtil {
 	 * @since 3.0.9
 	 */
 	public static void convert(final InputStream srcStream, final String formatName, final OutputStream targetStream) {
-		write(read(srcStream), formatName, getImageOutputStream(targetStream));
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			write(image, formatName, getImageOutputStream(targetStream));
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage          源图像流
+	 * @param srcImage          源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param formatName        包含格式非正式名称的 String：如JPG、JPEG、GIF等
 	 * @param targetImageStream 目标图像输出流
 	 * @since 4.1.14
@@ -552,41 +622,59 @@ public class ImgUtil {
 	/**
 	 * 彩色转为黑白
 	 *
-	 * @param srcImageFile  源图像地址
-	 * @param destImageFile 目标图像地址
+	 * @param srcImageFile    源图像地址
+	 * @param targetImageFile 目标图像地址
 	 */
-	public static void gray(final File srcImageFile, final File destImageFile) {
-		gray(read(srcImageFile), destImageFile);
+	public static void gray(final File srcImageFile, final File targetImageFile) {
+		BufferedImage image = null;
+		try {
+			image = read(srcImageFile);
+			gray(image, targetImageFile);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 彩色转为黑白<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 目标图像流
+	 * @param srcStream    源图像流
+	 * @param targetStream 目标图像流
 	 * @since 3.0.9
 	 */
-	public static void gray(final InputStream srcStream, final OutputStream destStream) {
-		gray(read(srcStream), getImageOutputStream(destStream));
+	public static void gray(final InputStream srcStream, final OutputStream targetStream) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			gray(image, targetStream);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 彩色转为黑白<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 目标图像流
+	 * @param srcStream    源图像流
+	 * @param targetStream 目标图像流
 	 * @since 3.0.9
 	 */
-	public static void gray(final ImageInputStream srcStream, final ImageOutputStream destStream) {
-		gray(read(srcStream), destStream);
+	public static void gray(final ImageInputStream srcStream, final ImageOutputStream targetStream) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			gray(image, targetStream);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 彩色转为黑白
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param outFile  目标文件
 	 * @since 3.2.2
 	 */
@@ -598,7 +686,7 @@ public class ImgUtil {
 	 * 彩色转为黑白<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out      目标图像流
 	 * @since 3.2.2
 	 */
@@ -610,19 +698,19 @@ public class ImgUtil {
 	 * 彩色转为黑白<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage        源图像流
-	 * @param destImageStream 目标图像流
+	 * @param srcImage          源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetImageStream 目标图像流
 	 * @throws IORuntimeException IO异常
 	 * @since 3.0.9
 	 */
-	public static void gray(final Image srcImage, final ImageOutputStream destImageStream) throws IORuntimeException {
-		writeJpg(gray(srcImage), destImageStream);
+	public static void gray(final Image srcImage, final ImageOutputStream targetImageStream) throws IORuntimeException {
+		writeJpg(gray(srcImage), targetImageStream);
 	}
 
 	/**
 	 * 彩色转为黑白
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @return {@link Image}灰度后的图片
 	 * @since 3.1.0
 	 */
@@ -636,11 +724,17 @@ public class ImgUtil {
 	/**
 	 * 彩色转为黑白二值化图片，根据目标文件扩展名确定转换后的格式
 	 *
-	 * @param srcImageFile  源图像地址
-	 * @param destImageFile 目标图像地址
+	 * @param srcImageFile    源图像地址
+	 * @param targetImageFile 目标图像地址
 	 */
-	public static void binary(final File srcImageFile, final File destImageFile) {
-		binary(read(srcImageFile), destImageFile);
+	public static void binary(final File srcImageFile, final File targetImageFile) {
+		BufferedImage image = null;
+		try {
+			image = read(srcImageFile);
+			binary(image, targetImageFile);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
@@ -653,26 +747,38 @@ public class ImgUtil {
 	 * @since 4.0.5
 	 */
 	public static void binary(final InputStream srcStream, final OutputStream destStream, final String imageType) {
-		binary(read(srcStream), getImageOutputStream(destStream), imageType);
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			binary(image, getImageOutputStream(destStream), imageType);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 彩色转为黑白黑白二值化图片<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 目标图像流
-	 * @param imageType  图片格式(扩展名)
+	 * @param srcStream    源图像流
+	 * @param targetStream 目标图像流
+	 * @param imageType    图片格式(扩展名)
 	 * @since 4.0.5
 	 */
-	public static void binary(final ImageInputStream srcStream, final ImageOutputStream destStream, final String imageType) {
-		binary(read(srcStream), destStream, imageType);
+	public static void binary(final ImageInputStream srcStream, final ImageOutputStream targetStream, final String imageType) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			binary(image, targetStream, imageType);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 彩色转为黑白二值化图片，根据目标文件扩展名确定转换后的格式
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param outFile  目标文件
 	 * @since 4.0.5
 	 */
@@ -684,7 +790,7 @@ public class ImgUtil {
 	 * 彩色转为黑白二值化图片<br>
 	 * 此方法并不关闭流，输出JPG格式
 	 *
-	 * @param srcImage  源图像流
+	 * @param srcImage  源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out       目标图像流
 	 * @param imageType 图片格式(扩展名)
 	 * @since 4.0.5
@@ -697,20 +803,20 @@ public class ImgUtil {
 	 * 彩色转为黑白二值化图片<br>
 	 * 此方法并不关闭流，输出JPG格式
 	 *
-	 * @param srcImage        源图像流
-	 * @param destImageStream 目标图像流
-	 * @param imageType       图片格式(扩展名)
+	 * @param srcImage          源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetImageStream 目标图像流
+	 * @param imageType         图片格式(扩展名)
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.5
 	 */
-	public static void binary(final Image srcImage, final ImageOutputStream destImageStream, final String imageType) throws IORuntimeException {
-		write(binary(srcImage), imageType, destImageStream);
+	public static void binary(final Image srcImage, final ImageOutputStream targetImageStream, final String imageType) throws IORuntimeException {
+		write(binary(srcImage), imageType, targetImageStream);
 	}
 
 	/**
 	 * 彩色转为黑白二值化图片
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @return {@link Image}二值化后的图片
 	 * @since 4.0.5
 	 */
@@ -724,45 +830,57 @@ public class ImgUtil {
 	/**
 	 * 给图片添加文字水印
 	 *
-	 * @param imageFile 源图像文件
-	 * @param destFile  目标图像文件
-	 * @param pressText 水印文字
+	 * @param imageFile  源图像文件
+	 * @param targetFile 目标图像文件
+	 * @param pressText  水印文字
 	 */
-	public static void pressText(final File imageFile, final File destFile, final DisplayText pressText) {
-		pressText(read(imageFile), destFile, pressText);
+	public static void pressText(final File imageFile, final File targetFile, final DisplayText pressText) {
+		BufferedImage image = null;
+		try {
+			image = read(imageFile);
+			pressText(image, targetFile, pressText);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 给图片添加文字水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 目标图像流
-	 * @param pressText  水印文本信息
+	 * @param srcStream    源图像流
+	 * @param targetStream 目标图像流
+	 * @param pressText    水印文本信息
 	 */
-	public static void pressText(final InputStream srcStream, final OutputStream destStream, final DisplayText pressText) {
-		pressText(read(srcStream), getImageOutputStream(destStream), pressText);
+	public static void pressText(final InputStream srcStream, final OutputStream targetStream, final DisplayText pressText) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			pressText(image, getImageOutputStream(targetStream), pressText);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 给图片添加文字水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage  源图像
-	 * @param destFile  目标流
-	 * @param pressText 水印文字信息
+	 * @param srcImage   源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetFile 目标流
+	 * @param pressText  水印文字信息
 	 * @throws IORuntimeException IO异常
 	 * @since 3.2.2
 	 */
-	public static void pressText(final Image srcImage, final File destFile, final DisplayText pressText) throws IORuntimeException {
-		write(pressText(srcImage, pressText), destFile);
+	public static void pressText(final Image srcImage, final File targetFile, final DisplayText pressText) throws IORuntimeException {
+		write(pressText(srcImage, pressText), targetFile);
 	}
 
 	/**
 	 * 给图片添加文字水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage  源图像
+	 * @param srcImage  源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param to        目标流
 	 * @param pressText 水印文字信息
 	 * @throws IORuntimeException IO异常
@@ -776,20 +894,20 @@ public class ImgUtil {
 	 * 给图片添加文字水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage        源图像
-	 * @param destImageStream 目标图像流
-	 * @param pressText       水印文字信息
+	 * @param srcImage          源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetImageStream 目标图像流
+	 * @param pressText         水印文字信息
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void pressText(final Image srcImage, final ImageOutputStream destImageStream, final DisplayText pressText) throws IORuntimeException {
-		writeJpg(pressText(srcImage, pressText), destImageStream);
+	public static void pressText(final Image srcImage, final ImageOutputStream targetImageStream, final DisplayText pressText) throws IORuntimeException {
+		writeJpg(pressText(srcImage, pressText), targetImageStream);
 	}
 
 	/**
 	 * 给图片添加文字水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage  源图像
+	 * @param srcImage  源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param pressText 水印文字信息
 	 * @return 处理后的图像
 	 * @since 3.2.2
@@ -802,7 +920,7 @@ public class ImgUtil {
 	 * 给图片添加全屏文字水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage   源图像
+	 * @param srcImage   源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param pressText  水印文字
 	 * @param color      水印的字体颜色
 	 * @param font       {@link Font} 字体相关信息，如果默认则为{@code null}
@@ -819,37 +937,49 @@ public class ImgUtil {
 	/**
 	 * 给图片添加图片水印
 	 *
-	 * @param srcImageFile  源图像文件
-	 * @param destImageFile 目标图像文件
-	 * @param pressImg      水印图片
-	 * @param x             修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param y             修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param alpha         透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @param srcImageFile    源图像文件
+	 * @param targetImageFile 目标图像文件
+	 * @param pressImg        水印图片，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param x               修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y               修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha           透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
-	public static void pressImage(final File srcImageFile, final File destImageFile, final Image pressImg, final int x, final int y, final float alpha) {
-		pressImage(read(srcImageFile), destImageFile, pressImg, x, y, alpha);
+	public static void pressImage(final File srcImageFile, final File targetImageFile, final Image pressImg, final int x, final int y, final float alpha) {
+		BufferedImage image = null;
+		try {
+			image = read(srcImageFile);
+			pressImage(image, targetImageFile, pressImg, x, y, alpha);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 给图片添加图片水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param destStream 目标图像流
-	 * @param pressImg   水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
-	 * @param x          修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param y          修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param alpha      透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @param srcStream    源图像流
+	 * @param targetStream 目标图像流
+	 * @param pressImg     水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
+	 * @param x            修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y            修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha        透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
-	public static void pressImage(final InputStream srcStream, final OutputStream destStream, final Image pressImg, final int x, final int y, final float alpha) {
-		pressImage(read(srcStream), getImageOutputStream(destStream), pressImg, x, y, alpha);
+	public static void pressImage(final InputStream srcStream, final OutputStream targetStream, final Image pressImg, final int x, final int y, final float alpha) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			pressImage(image, getImageOutputStream(targetStream), pressImg, x, y, alpha);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 给图片添加图片水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param outFile  写出文件
 	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param x        修正值。 默认在中间，偏移量相对于中间偏移
@@ -863,10 +993,10 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 给图片添加图片水印<br>
+	 * 给图片添加图片水印，写出目标图片格式为JPG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out      目标图像流
 	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param x        修正值。 默认在中间，偏移量相对于中间偏移
@@ -880,26 +1010,26 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 给图片添加图片水印<br>
+	 * 给图片添加图片水印，写出目标图片格式为JPG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage        源图像流
-	 * @param destImageStream 目标图像流
-	 * @param pressImg        水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
-	 * @param x               修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param y               修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param alpha           透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @param srcImage          源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetImageStream 目标图像流
+	 * @param pressImg          水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
+	 * @param x                 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y                 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha             透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void pressImage(final Image srcImage, final ImageOutputStream destImageStream, final Image pressImg, final int x, final int y, final float alpha) throws IORuntimeException {
-		writeJpg(pressImage(srcImage, pressImg, x, y, alpha), destImageStream);
+	public static void pressImage(final Image srcImage, final ImageOutputStream targetImageStream, final Image pressImg, final int x, final int y, final float alpha) throws IORuntimeException {
+		writeJpg(pressImage(srcImage, pressImg, x, y, alpha), targetImageStream);
 	}
 
 	/**
 	 * 给图片添加图片水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage 源图像流
+	 * @param srcImage 源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param x        修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param y        修正值。 默认在中间，偏移量相对于中间偏移
@@ -914,7 +1044,7 @@ public class ImgUtil {
 	 * 给图片添加图片水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage  源图像流
+	 * @param srcImage  源图像流，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param pressImg  水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
 	 * @param alpha     透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
@@ -926,44 +1056,56 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 给图片添加全屏图片水印<br>
+	 * 给图片添加全屏图片水印
 	 *
 	 * @param imageFile      源图像文件
-	 * @param destFile       目标图像文件
+	 * @param targetFile     目标图像文件
 	 * @param pressImageFile 水印图像文件
 	 * @param lineHeight     行高
 	 * @param degree         水印图像旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
 	 * @param alpha          透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void pressImageFull(final File imageFile, final File destFile, final File pressImageFile,
+	public static void pressImageFull(final File imageFile, final File targetFile, final File pressImageFile,
 									  final int lineHeight, final int degree, final float alpha) throws IORuntimeException {
-		write(pressImageFull(read(imageFile), read(pressImageFile), lineHeight, degree, alpha), destFile);
+		BufferedImage image = null;
+		try {
+			image = read(imageFile);
+			write(pressImageFull(image, read(pressImageFile), lineHeight, degree, alpha), targetFile);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
-	 * 给图片添加全屏图像水印<br>
+	 * 给图片添加全屏图像水印，写出格式为JPG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream   源图像流
-	 * @param destStream  目标图像流
-	 * @param pressStream 水印图像流
-	 * @param lineHeight  行高
-	 * @param degree      水印图像旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
-	 * @param alpha       透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @param srcStream    源图像流
+	 * @param targetStream 目标图像流
+	 * @param pressStream  水印图像流
+	 * @param lineHeight   行高
+	 * @param degree       水印图像旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
+	 * @param alpha        透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void pressImageFull(final InputStream srcStream, final OutputStream destStream,
+	public static void pressImageFull(final InputStream srcStream, final OutputStream targetStream,
 									  final InputStream pressStream, final int lineHeight, final int degree, final float alpha) throws IORuntimeException {
-		writeJpg(pressImageFull(read(srcStream), read(pressStream), lineHeight, degree, alpha), destStream);
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			writeJpg(pressImageFull(image, read(pressStream), lineHeight, degree, alpha), targetStream);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 给图片添加全屏图像水印<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcImage   源图像
-	 * @param pressImage 水印图像
+	 * @param srcImage   源图像，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param pressImage 水印图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param lineHeight 行高
 	 * @param degree     水印图像旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
 	 * @param alpha      透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
@@ -987,14 +1129,20 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static void rotate(final File imageFile, final int degree, final File outFile) throws IORuntimeException {
-		rotate(read(imageFile), degree, outFile);
+		BufferedImage image = null;
+		try {
+			image = read(imageFile);
+			rotate(image, degree, outFile);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 旋转图片为指定角度<br>
 	 * 此方法不会关闭输出流
 	 *
-	 * @param image   目标图像
+	 * @param image   需要旋转的图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param degree  旋转角度
 	 * @param outFile 输出文件
 	 * @throws IORuntimeException IO异常
@@ -1008,7 +1156,7 @@ public class ImgUtil {
 	 * 旋转图片为指定角度<br>
 	 * 此方法不会关闭输出流
 	 *
-	 * @param image  目标图像
+	 * @param image  需要旋转的图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param degree 旋转角度
 	 * @param out    输出流
 	 * @throws IORuntimeException IO异常
@@ -1022,7 +1170,7 @@ public class ImgUtil {
 	 * 旋转图片为指定角度<br>
 	 * 此方法不会关闭输出流，输出格式为JPG
 	 *
-	 * @param image  目标图像
+	 * @param image  需要旋转的图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param degree 旋转角度
 	 * @param out    输出图像流
 	 * @throws IORuntimeException IO异常
@@ -1036,7 +1184,7 @@ public class ImgUtil {
 	 * 旋转图片为指定角度<br>
 	 * 来自：<a href="http://blog.51cto.com/cping1982/130066">http://blog.51cto.com/cping1982/130066</a>
 	 *
-	 * @param image  目标图像
+	 * @param image  需要旋转的图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param degree 旋转角度
 	 * @return 旋转后的图片
 	 * @since 3.2.2
@@ -1057,13 +1205,19 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static void flip(final File imageFile, final File outFile) throws IORuntimeException {
-		flip(read(imageFile), outFile);
+		BufferedImage image = null;
+		try {
+			image = read(imageFile);
+			flip(image, outFile);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 水平翻转图像
 	 *
-	 * @param image   图像
+	 * @param image   图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param outFile 输出文件
 	 * @throws IORuntimeException IO异常
 	 * @since 3.2.2
@@ -1075,7 +1229,7 @@ public class ImgUtil {
 	/**
 	 * 水平翻转图像
 	 *
-	 * @param image 图像
+	 * @param image 图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out   输出
 	 * @throws IORuntimeException IO异常
 	 * @since 3.2.2
@@ -1087,7 +1241,7 @@ public class ImgUtil {
 	/**
 	 * 水平翻转图像，写出格式为JPG
 	 *
-	 * @param image 图像
+	 * @param image 图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out   输出
 	 * @throws IORuntimeException IO异常
 	 * @since 3.2.2
@@ -1099,7 +1253,7 @@ public class ImgUtil {
 	/**
 	 * 水平翻转图像
 	 *
-	 * @param image 图像
+	 * @param image 图像，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @return 翻转后的图片
 	 * @since 3.2.2
 	 */
@@ -1120,7 +1274,13 @@ public class ImgUtil {
 	 * @since 4.3.2
 	 */
 	public static void compress(final File imageFile, final File outFile, final float quality) throws IORuntimeException {
-		Img.from(imageFile).setQuality(quality).write(outFile);
+		Img img = null;
+		try {
+			img = Img.from(imageFile);
+			img.setQuality(quality).write(outFile);
+		} finally {
+			IoUtil.flush(img);
+		}
 	}
 	// endregion
 
@@ -1230,6 +1390,8 @@ public class ImgUtil {
 	}
 	// endregion
 
+	// region ----- copyImage
+
 	/**
 	 * 将已有Image复制新的一份出来
 	 *
@@ -1285,12 +1447,20 @@ public class ImgUtil {
 			img.getWidth(null),
 			img.getHeight(null),
 			imageType);
+
 		final Graphics2D bGr = GraphicsUtil.createGraphics(bImage, backgroundColor);
-		bGr.drawImage(img, 0, 0, null);
-		bGr.dispose();
+		try {
+			GraphicsUtil.drawImg(bGr, img, new Point());
+		} finally {
+			bGr.dispose();
+		}
 
 		return bImage;
 	}
+
+	// endregion
+
+	// region ----- toXXX
 
 	/**
 	 * 将Base64编码的图像信息转为 {@link BufferedImage}
@@ -1366,6 +1536,8 @@ public class ImgUtil {
 		return out.toByteArrayZeroCopyIfPossible();
 	}
 
+	// endregion
+
 	// region ----- createImage
 
 	/**
@@ -1373,7 +1545,7 @@ public class ImgUtil {
 	 *
 	 * @param width        宽度
 	 * @param height       高度
-	 * @param transparency 透明模式，见 {@link java.awt.Transparency}
+	 * @param transparency 透明模式，见 {@link Transparency}
 	 * @return {@link BufferedImage}
 	 * @since 5.7.13
 	 */
@@ -1394,7 +1566,13 @@ public class ImgUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void createTransparentImage(final String str, final Font font, final Color fontColor, final ImageOutputStream out) throws IORuntimeException {
-		writePng(createImage(str, font, null, fontColor, BufferedImage.TYPE_INT_ARGB), out);
+		BufferedImage image = null;
+		try {
+			image = createImage(str, font, null, fontColor, BufferedImage.TYPE_INT_ARGB);
+			writePng(image, out);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
@@ -1408,7 +1586,13 @@ public class ImgUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void createImage(final String str, final Font font, final Color backgroundColor, final Color fontColor, final ImageOutputStream out) throws IORuntimeException {
-		writePng(createImage(str, font, backgroundColor, fontColor, BufferedImage.TYPE_INT_ARGB), out);
+		BufferedImage image = null;
+		try {
+			image = createImage(str, font, backgroundColor, fontColor, BufferedImage.TYPE_INT_ARGB);
+			writePng(image, out);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
@@ -1424,7 +1608,7 @@ public class ImgUtil {
 	 */
 	public static BufferedImage createImage(final String str, final Font font, final Color backgroundColor, final Color fontColor, final int imageType) throws IORuntimeException {
 		// 获取font的样式应用在str上的整个矩形
-		final Rectangle2D r = getRectangle(str, font);
+		final Rectangle2D r = FontUtil.getRectangle(str, font);
 		// 获取单个字符的高度
 		final int unitHeight = (int) Math.floor(r.getHeight());
 		// 获取整个str用了font样式的宽度这里用四舍五入后+1保证宽度绝对能容纳这个字符串作为图片的宽度
@@ -1442,49 +1626,34 @@ public class ImgUtil {
 	}
 	// endregion
 
-	/**
-	 * 获取font的样式应用在str上的整个矩形
-	 *
-	 * @param str  字符串，必须非空
-	 * @param font 字体，必须非空
-	 * @return {@link Rectangle2D}
-	 * @since 5.3.3
-	 */
-	public static Rectangle2D getRectangle(final String str, final Font font) {
-		return font.getStringBounds(str,
-			new FontRenderContext(AffineTransform.getScaleInstance(1, 1),
-				false,
-				false));
-	}
-
 	// region ----- write
 
 	/**
 	 * 写出图像为JPG格式
 	 *
-	 * @param image           {@link Image}
-	 * @param destImageStream 写出到的目标流
+	 * @param image             {@link Image}
+	 * @param targetImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void writeJpg(final Image image, final ImageOutputStream destImageStream) throws IORuntimeException {
-		write(image, IMAGE_TYPE_JPG, destImageStream);
+	public static void writeJpg(final Image image, final ImageOutputStream targetImageStream) throws IORuntimeException {
+		write(image, IMAGE_TYPE_JPG, targetImageStream);
 	}
 
 	/**
 	 * 写出图像为PNG格式
 	 *
-	 * @param image           {@link Image}
-	 * @param destImageStream 写出到的目标流
+	 * @param image             {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param targetImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void writePng(final Image image, final ImageOutputStream destImageStream) throws IORuntimeException {
-		write(image, IMAGE_TYPE_PNG, destImageStream);
+	public static void writePng(final Image image, final ImageOutputStream targetImageStream) throws IORuntimeException {
+		write(image, IMAGE_TYPE_PNG, targetImageStream);
 	}
 
 	/**
 	 * 写出图像为JPG格式
 	 *
-	 * @param image {@link Image}
+	 * @param image {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out   写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.10
@@ -1496,7 +1665,7 @@ public class ImgUtil {
 	/**
 	 * 写出图像为PNG格式
 	 *
-	 * @param image {@link Image}
+	 * @param image {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param out   写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.10
@@ -1509,20 +1678,26 @@ public class ImgUtil {
 	 * 按照目标格式写出图像：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
-	 * @param destStream 目标图像输出流
+	 * @param srcStream    源图像流
+	 * @param formatName   包含格式非正式名称的 String：如JPG、JPEG、GIF等
+	 * @param targetStream 目标图像输出流
 	 * @since 5.0.0
 	 */
-	public static void write(final ImageInputStream srcStream, final String formatName, final ImageOutputStream destStream) {
-		write(read(srcStream), formatName, destStream);
+	public static void write(final ImageInputStream srcStream, final String formatName, final ImageOutputStream targetStream) {
+		BufferedImage image = null;
+		try {
+			image = read(srcStream);
+			write(image, formatName, targetStream);
+		} finally {
+			flush(image);
+		}
 	}
 
 	/**
 	 * 写出图像：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param image     {@link Image}
+	 * @param image     {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param imageType 图片类型（图片扩展名）
 	 * @param out       写出到的目标流
 	 * @throws IORuntimeException IO异常
@@ -1535,22 +1710,21 @@ public class ImgUtil {
 	/**
 	 * 写出图像为目标文件扩展名对应的格式
 	 *
-	 * @param image      {@link Image}
+	 * @param image      {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param targetFile 目标文件
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.0
 	 */
 	public static void write(final Image image, final File targetFile) throws IORuntimeException {
-		final String imageType = FileNameUtil.extName(targetFile);
-		ImgWriter.of(image, imageType).write(targetFile);
+		ImgWriter.of(image, FileNameUtil.extName(targetFile)).write(targetFile);
 	}
 
 	/**
 	 * 写出图像为指定格式：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param image           {@link Image}
-	 * @param imageType       图片类型（图片扩展名）
+	 * @param image             {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
+	 * @param imageType         图片类型（图片扩展名）
 	 * @param targetImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
@@ -1562,7 +1736,7 @@ public class ImgUtil {
 	/**
 	 * 写出图像为指定格式
 	 *
-	 * @param image           {@link Image}
+	 * @param image           {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param imageType       图片类型（图片扩展名），{@code null}表示使用RGB模式（JPG）
 	 * @param out             写出到的目标流
 	 * @param quality         质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
@@ -1579,7 +1753,7 @@ public class ImgUtil {
 	/**
 	 * 通过{@link ImageWriter}写出图片到输出流
 	 *
-	 * @param image     图片
+	 * @param image     图片，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param imageType 图片类型
 	 * @param output    输出的Image流{@link ImageOutputStream}
 	 * @param quality   质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
@@ -1594,7 +1768,7 @@ public class ImgUtil {
 	/**
 	 * 根据给定的Image对象和格式获取对应的{@link ImageWriter}，如果未找到合适的Writer，返回null
 	 *
-	 * @param img        {@link Image}
+	 * @param img        {@link Image}，使用结束后需手动调用{@link #flush(Image)}释放资源
 	 * @param formatName 图片格式，例如"jpg"、"png"，{@code null}则使用默认值"jpg"
 	 * @return {@link ImageWriter}
 	 * @since 4.3.2
@@ -1909,10 +2083,9 @@ public class ImgUtil {
 	 * @param inputPath  要处理图片的路径
 	 * @param outputPath 输出图片的路径
 	 * @param tolerance  容差值[根据图片的主题色,加入容差值,值的范围在0~255之间]
-	 * @return 返回处理结果 true:图片处理完成 false:图片处理失败
 	 */
-	public static boolean backgroundRemoval(final String inputPath, final String outputPath, final int tolerance) {
-		return BackgroundRemoval.backgroundRemoval(inputPath, outputPath, tolerance);
+	public static void backgroundRemoval(final String inputPath, final String outputPath, final int tolerance) {
+		BackgroundRemoval.backgroundRemoval(inputPath, outputPath, tolerance);
 	}
 
 	/**
@@ -1927,10 +2100,9 @@ public class ImgUtil {
 	 * @param input     需要进行操作的图片
 	 * @param output    最后输出的文件
 	 * @param tolerance 容差值[根据图片的主题色,加入容差值,值的取值范围在0~255之间]
-	 * @return 返回处理结果 true:图片处理完成 false:图片处理失败
 	 */
-	public static boolean backgroundRemoval(final File input, final File output, final int tolerance) {
-		return BackgroundRemoval.backgroundRemoval(input, output, tolerance);
+	public static void backgroundRemoval(final File input, final File output, final int tolerance) {
+		BackgroundRemoval.backgroundRemoval(input, output, tolerance);
 	}
 
 	/**
@@ -1946,10 +2118,9 @@ public class ImgUtil {
 	 * @param output    最后输出的文件
 	 * @param override  指定替换成的背景颜色 为null时背景为透明
 	 * @param tolerance 容差值[根据图片的主题色,加入容差值,值的取值范围在0~255之间]
-	 * @return 返回处理结果 true:图片处理完成 false:图片处理失败
 	 */
-	public static boolean backgroundRemoval(final File input, final File output, final Color override, final int tolerance) {
-		return BackgroundRemoval.backgroundRemoval(input, output, override, tolerance);
+	public static void backgroundRemoval(final File input, final File output, final Color override, final int tolerance) {
+		BackgroundRemoval.backgroundRemoval(input, output, override, tolerance);
 	}
 
 	/**

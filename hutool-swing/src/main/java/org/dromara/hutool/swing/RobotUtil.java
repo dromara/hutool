@@ -201,7 +201,13 @@ public class RobotUtil {
 	 * @return 写出到的文件
 	 */
 	public static File captureScreen(final File outFile) {
-		ImgUtil.write(captureScreen(), outFile);
+		BufferedImage image = null;
+		try{
+			image = captureScreen();
+			ImgUtil.write(image, outFile);
+		} finally {
+			ImgUtil.flush(image);
+		}
 		return outFile;
 	}
 

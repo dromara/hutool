@@ -24,16 +24,18 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * 图片写出封装
  */
-public class ImgWriter {
+public class ImgWriter implements Flushable {
 
 	/**
 	 * 创建图片写出器
@@ -135,6 +137,16 @@ public class ImgWriter {
 			throw new IORuntimeException(e);
 		} finally {
 			writer.dispose();
+		}
+	}
+
+	@Override
+	public void flush() {
+		final RenderedImage renderedImage = this.image;
+		if(renderedImage instanceof BufferedImage){
+			ImgUtil.flush((BufferedImage) renderedImage);
+		} else if(renderedImage instanceof Image){
+			ImgUtil.flush((Image) renderedImage);
 		}
 	}
 

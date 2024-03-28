@@ -107,6 +107,7 @@ public class ImgTest {
 
 		final Image img = ImgUtil.getImage(UrlUtil.getURL(file));
 		ImgUtil.scale(img, fileScale, 0.8f);
+		ImgUtil.flush(img);
 	}
 
 	@Test
