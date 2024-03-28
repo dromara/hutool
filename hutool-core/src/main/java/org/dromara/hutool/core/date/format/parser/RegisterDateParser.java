@@ -37,7 +37,7 @@ public class RegisterDateParser extends DefaultDateBasic implements DateParser {
 			// Tue Jun 4 16:25:15 +0800 2019
 			// Thu May 16 17:57:18 GMT+08:00 2019
 			// Wed Aug 01 00:00:00 CST 2012
-			CSTDateParser.INSTANCE,
+			RFC2822DateParser.INSTANCE,
 			// ISO8601标准时间
 			// yyyy-MM-dd'T'HH:mm:ss'Z'
 			// yyyy-MM-dd'T'HH:mm:ss+0800

@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.date.format.FastDateFormat;
-import org.dromara.hutool.core.date.format.parser.CSTDateParser;
+import org.dromara.hutool.core.date.format.parser.RFC2822DateParser;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -64,7 +64,7 @@ import java.util.TimeZone;
  *
  * <p>
  * 其中：CST格式，形如："Mon Aug 15 14:23:15 CST 2022",上面未包含
- * 参见：{@link CSTDateParser#parse(String)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
+ * 参见：{@link RFC2822DateParser#parse(String)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
  * </p>
  *
  * <p>
@@ -289,9 +289,13 @@ public class DatePattern {
 	 */
 	public static final String HTTP_DATETIME_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
 	/**
+	 * HTTP头中日期时间格式 {@link FastDateFormat}：EEE, dd MMM yyyy HH:mm:ss GMT
+	 */
+	public static final FastDateFormat HTTP_DATETIME_FORMAT_GMT = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.US);
+	/**
 	 * HTTP头中日期时间格式 {@link FastDateFormat}：EEE, dd MMM yyyy HH:mm:ss z
 	 */
-	public static final FastDateFormat HTTP_DATETIME_FORMAT = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.US);
+	public static final FastDateFormat HTTP_DATETIME_FORMAT = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN, Locale.US);
 
 	/**
 	 * JDK中日期时间格式：EEE MMM dd HH:mm:ss zzz yyyy

@@ -650,7 +650,7 @@ public class DateUtil extends CalendarUtil {
 		if (null == date) {
 			return null;
 		}
-		return DatePattern.HTTP_DATETIME_FORMAT.format(date);
+		return DatePattern.HTTP_DATETIME_FORMAT_GMT.format(date);
 	}
 
 	/**
