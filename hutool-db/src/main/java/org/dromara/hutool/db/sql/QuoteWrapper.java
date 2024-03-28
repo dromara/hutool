@@ -13,6 +13,7 @@
 package org.dromara.hutool.db.sql;
 
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
@@ -128,14 +129,46 @@ public class QuoteWrapper implements Serializable {
 		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
 		if (field.contains(StrUtil.DOT)) {
 			final Collection<String> target = CollUtil.edit(
-					// 用户名和表名不能包含空格
-					SplitUtil.split(field, StrUtil.DOT, 2, true, false),
-					// 用户名和表名都加引号
-					t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
+				// 用户名和表名不能包含空格
+				SplitUtil.split(field, StrUtil.DOT, 2, true, false),
+				// 用户名和表名都加引号
+				t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
 			return CollUtil.join(target, StrUtil.DOT);
 		}
 
 		return StrUtil.format("{}{}{}", preWrapQuote, field, sufWrapQuote);
+	}
+
+	/**
+	 * 反解包装字段名<br>
+	 *
+	 * @param field 字段名
+	 * @return 未包装的字段名
+	 */
+	public String unWrap(String field) {
+		if (preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
+			return field;
+		}
+
+		//如果已经包含包装的引号，返回原字符
+		if (!StrUtil.isWrap(field, preWrapQuote, sufWrapQuote)) {
+			return field;
+		}
+
+		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
+		if (StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
+			return field;
+		}
+
+		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
+		if (field.contains(StrUtil.DOT)) {
+			final Collection<String> target = CollUtil.edit(
+				SplitUtil.split(field, StrUtil.DOT, 2, true, false),
+				t -> StrUtil.unWrap(t, preWrapQuote, sufWrapQuote));
+			return CollUtil.join(target, StrUtil.DOT);
+		}
+
+		return StrUtil.unWrap(field, preWrapQuote, sufWrapQuote);
 	}
 
 	/**
