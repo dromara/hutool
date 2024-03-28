@@ -62,8 +62,13 @@ public class QrCodeUtil {
 	 * @return 图片 Base64 编码字符串
 	 */
 	public static String generateAsBase64DataUri(final String content, final QrConfig qrConfig, final String imageType) {
-		final BufferedImage img = generate(content, qrConfig);
-		return ImgUtil.toBase64DataUri(img, imageType);
+		BufferedImage img = null;
+		try{
+			img = generate(content, qrConfig);
+			return ImgUtil.toBase64DataUri(img, imageType);
+		} finally {
+			ImgUtil.flush(img);
+		}
 	}
 
 	/**
@@ -105,8 +110,13 @@ public class QrCodeUtil {
 	 * @return 目标文件
 	 */
 	public static File generate(final String content, final int width, final int height, final File targetFile) {
-		final BufferedImage image = generate(content, width, height);
-		ImgUtil.write(image, targetFile);
+		BufferedImage image = null;
+		try{
+			image = generate(content, width, height);
+			ImgUtil.write(image, targetFile);
+		} finally {
+			ImgUtil.flush(image);
+		}
 		return targetFile;
 	}
 
@@ -120,8 +130,13 @@ public class QrCodeUtil {
 	 * @since 4.1.2
 	 */
 	public static File generate(final String content, final QrConfig config, final File targetFile) {
-		final BufferedImage image = generate(content, config);
-		ImgUtil.write(image, targetFile);
+		BufferedImage image = null;
+		try{
+			image = generate(content, config);
+			ImgUtil.write(image, targetFile);
+		} finally {
+			ImgUtil.flush(image);
+		}
 		return targetFile;
 	}
 
@@ -135,8 +150,13 @@ public class QrCodeUtil {
 	 * @param out       目标流
 	 */
 	public static void generate(final String content, final int width, final int height, final String imageType, final OutputStream out) {
-		final BufferedImage image = generate(content, width, height);
-		ImgUtil.write(image, imageType, out);
+		BufferedImage img = null;
+		try{
+			img = generate(content, width, height);
+			ImgUtil.write(img, imageType, out);
+		} finally {
+			ImgUtil.flush(img);
+		}
 	}
 
 	/**
@@ -149,8 +169,13 @@ public class QrCodeUtil {
 	 * @since 4.1.2
 	 */
 	public static void generate(final String content, final QrConfig config, final String imageType, final OutputStream out) {
-		final BufferedImage image = generate(content, config);
-		ImgUtil.write(image, imageType, out);
+		BufferedImage image = null;
+		try{
+			image = generate(content, config);
+			ImgUtil.write(image, imageType, out);
+		} finally {
+			ImgUtil.flush(image);
+		}
 	}
 
 	/**
@@ -201,7 +226,13 @@ public class QrCodeUtil {
 	 * @return 解码文本
 	 */
 	public static String decode(final InputStream qrCodeInputstream) {
-		return decode(ImgUtil.read(qrCodeInputstream));
+		BufferedImage image = null;
+		try{
+			image = ImgUtil.read(qrCodeInputstream);
+			return decode(image);
+		} finally {
+			ImgUtil.flush(image);
+		}
 	}
 
 	/**
@@ -211,7 +242,13 @@ public class QrCodeUtil {
 	 * @return 解码文本
 	 */
 	public static String decode(final File qrCodeFile) {
-		return decode(ImgUtil.read(qrCodeFile));
+		BufferedImage image = null;
+		try{
+			image = ImgUtil.read(qrCodeFile);
+			return decode(image);
+		} finally {
+			ImgUtil.flush(image);
+		}
 	}
 
 	/**

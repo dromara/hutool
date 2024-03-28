@@ -32,10 +32,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.CropImageFilter;
 import java.awt.image.ImageFilter;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -45,7 +42,7 @@ import java.nio.file.Path;
  * @author looly
  * @since 4.1.5
  */
-public class Img implements Serializable {
+public class Img implements Flushable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final BufferedImage srcImage;
@@ -808,6 +805,12 @@ public class Img implements Serializable {
 		} finally {
 			IoUtil.closeQuietly(out);
 		}
+	}
+
+	@Override
+	public void flush() {
+		ImgUtil.flush(this.srcImage);
+		ImgUtil.flush(this.targetImage);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------- Private method start

@@ -20,6 +20,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -1550,12 +1551,12 @@ public class ImgUtil {
 	 *
 	 * @param image           {@link Image}
 	 * @param imageType       图片类型（图片扩展名）
-	 * @param destImageStream 写出到的目标流
+	 * @param targetImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
 	 */
-	public static void write(final Image image, final String imageType, final ImageOutputStream destImageStream) throws IORuntimeException {
-		write(image, imageType, destImageStream, 1);
+	public static void write(final Image image, final String imageType, final ImageOutputStream targetImageStream) throws IORuntimeException {
+		write(image, imageType, targetImageStream, 1);
 	}
 
 	/**
@@ -1757,6 +1758,39 @@ public class ImgUtil {
 		final Iterator<ImageReader> iterator = ImageIO.getImageReadersByFormatName(type);
 		if (iterator.hasNext()) {
 			return iterator.next();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过 {@link ImageInputStream} 获取对应类型的宽和高
+	 *
+	 * @param imageStream {@link ImageInputStream}
+	 * @param type        图片类型
+	 * @return 宽和高
+	 * @since 6.0.0
+	 */
+	public static Pair<Integer, Integer> getWidthAndHeight(final InputStream imageStream, final String type) {
+		return getWidthAndHeight(getImageInputStream(imageStream), type);
+	}
+
+	/**
+	 * 通过 {@link ImageInputStream} 获取对应类型的宽和高
+	 *
+	 * @param imageStream {@link ImageInputStream}
+	 * @param type        图片类型
+	 * @return 宽和高
+	 * @since 6.0.0
+	 */
+	public static Pair<Integer, Integer> getWidthAndHeight(final ImageInputStream imageStream, final String type) {
+		final ImageReader reader = getReader(type);
+		if (null != reader) {
+			reader.setInput(imageStream, true);
+			try {
+				return Pair.of(reader.getWidth(0), reader.getHeight(0));
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
 		}
 		return null;
 	}
@@ -2008,4 +2042,16 @@ public class ImgUtil {
 			new FilteredImageSource(image.getSource(), filter));
 	}
 	// endregion
+
+	/**
+	 * 刷新和释放{@link Image} 资源
+	 *
+	 * @param image {@link Image}
+	 * @since 5.8.27
+	 */
+	public static void flush(final Image image) {
+		if (null != image) {
+			image.flush();
+		}
+	}
 }
