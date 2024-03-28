@@ -29,8 +29,8 @@ public class BoolArrayMatcher implements PartMatcher {
 	/**
 	 * 用户定义此字段的最小值
 	 */
-	private final int minValue;
-	private final boolean[] bValues;
+	protected final int minValue;
+	protected final boolean[] bValues;
 
 	/**
 	 * 构造
@@ -50,6 +50,7 @@ public class BoolArrayMatcher implements PartMatcher {
 
 	@Override
 	public boolean test(final Integer value) {
+		final boolean[] bValues = this.bValues;
 		if (null == value || value >= bValues.length) {
 			return false;
 		}
@@ -58,7 +59,9 @@ public class BoolArrayMatcher implements PartMatcher {
 
 	@Override
 	public int nextAfter(int value) {
+		final int minValue = this.minValue;
 		if(value > minValue){
+			final boolean[] bValues = this.bValues;
 			while(value < bValues.length){
 				if(bValues[value]){
 					return value;

@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.cron.pattern.matcher;
 
+import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.cron.pattern.Part;
 
 import java.time.Year;
@@ -52,13 +54,13 @@ public class PatternMatcher {
 						  final PartMatcher yearMatcher) {
 
 		matchers = new PartMatcher[]{
-				secondMatcher,
-				minuteMatcher,
-				hourMatcher,
-				dayOfMonthMatcher,
-				monthMatcher,
-				dayOfWeekMatcher,
-				yearMatcher
+			secondMatcher,
+			minuteMatcher,
+			hourMatcher,
+			dayOfMonthMatcher,
+			monthMatcher,
+			dayOfWeekMatcher,
+			yearMatcher
 		};
 	}
 
@@ -109,12 +111,12 @@ public class PatternMatcher {
 	 */
 	private boolean match(final int second, final int minute, final int hour, final int dayOfMonth, final int month, final int dayOfWeek, final int year) {
 		return ((second < 0) || matchers[0].test(second)) // 匹配秒（非秒匹配模式下始终返回true）
-				&& matchers[1].test(minute)// 匹配分
-				&& matchers[2].test(hour)// 匹配时
-				&& matchDayOfMonth(matchers[3], dayOfMonth, month, Year.isLeap(year))// 匹配日
-				&& matchers[4].test(month) // 匹配月
-				&& matchers[5].test(dayOfWeek)// 匹配周
-				&& matchers[6].test(year);// 匹配年
+			&& matchers[1].test(minute)// 匹配分
+			&& matchers[2].test(hour)// 匹配时
+			&& matchDayOfMonth(matchers[3], dayOfMonth, month, Year.isLeap(year))// 匹配日
+			&& matchers[4].test(month) // 匹配月
+			&& matchers[5].test(dayOfWeek)// 匹配周
+			&& matchers[6].test(year);// 匹配年
 	}
 
 	/**
@@ -128,8 +130,8 @@ public class PatternMatcher {
 	 */
 	private static boolean matchDayOfMonth(final PartMatcher matcher, final int dayOfMonth, final int month, final boolean isLeapYear) {
 		return ((matcher instanceof DayOfMonthMatcher) //
-				? ((DayOfMonthMatcher) matcher).match(dayOfMonth, month, isLeapYear) //
-				: matcher.test(dayOfMonth));
+			? ((DayOfMonthMatcher) matcher).match(dayOfMonth, month, isLeapYear) //
+			: matcher.test(dayOfMonth));
 	}
 	//endregion
 
@@ -145,11 +147,11 @@ public class PatternMatcher {
 	 * </ul>
 	 *
 	 * <pre>
-	 *        秒 分 时 日 月 周 年
+	 *        秒 分 时 日 月(1) 周(0) 年
 	 *     下 &lt;-----------------&gt; 上
 	 * </pre>
 	 *
-	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year}
 	 * @param zone   时区
 	 * @return {@link Calendar}，毫秒数为0
 	 */
@@ -182,7 +184,7 @@ public class PatternMatcher {
 	 *     下 &lt;-----------------&gt; 上
 	 * </pre>
 	 *
-	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year}
 	 * @return {@link Calendar}，毫秒数为0
 	 */
 	private int[] nextMatchValuesAfter(final int[] values) {
@@ -197,7 +199,15 @@ public class PatternMatcher {
 				i--;
 				continue;
 			}
-			nextValue = matchers[i].nextAfter(values[i]);
+
+			if (i == Part.DAY_OF_MONTH.ordinal()) {
+				final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
+				final int month = values[Part.MONTH.ordinal()];
+				nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i], month, isLeapYear);
+			} else {
+				nextValue = matchers[i].nextAfter(values[i]);
+			}
+
 			if (nextValue > values[i]) {
 				// 此部分正常获取新值，结束循环，后续的部分置最小值
 				newValues[i] = nextValue;
@@ -209,6 +219,7 @@ public class PatternMatcher {
 				nextValue = -1;// 标记回退查找
 				break;
 			}
+
 			// 值不变，检查下一个部分
 			i--;
 		}
@@ -221,7 +232,15 @@ public class PatternMatcher {
 					i++;
 					continue;
 				}
-				nextValue = matchers[i].nextAfter(values[i] + 1);
+
+				if (i == Part.DAY_OF_MONTH.ordinal()) {
+					final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
+					final int month = values[Part.MONTH.ordinal()];
+					nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i] + 1, month, isLeapYear);
+				} else {
+					nextValue = matchers[i].nextAfter(values[i] + 1);
+				}
+
 				if (nextValue > values[i]) {
 					newValues[i] = nextValue;
 					i--;

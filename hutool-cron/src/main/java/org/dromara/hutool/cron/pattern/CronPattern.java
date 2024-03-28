@@ -191,7 +191,7 @@ public class CronPattern {
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
-	 * @param fields 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
+	 * @param fields 时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year}
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
 	private boolean match(final int[] fields) {
@@ -206,7 +206,7 @@ public class CronPattern {
 	/**
 	 * 获取下一个最近的匹配日期时间
 	 *
-	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year}
 	 * @param zone   时区
 	 * @return {@link Calendar}，毫秒数为0
 	 */
