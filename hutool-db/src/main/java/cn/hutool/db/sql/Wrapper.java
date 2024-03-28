@@ -121,10 +121,11 @@ public class Wrapper implements Serializable {
 	}
 
 	/**
-	 * 反解包装字段名<br>
+	 * 解包装字段名<br>
 	 *
 	 * @param field 字段名
 	 * @return 未包装的字段名
+	 * @since 5.8.27
 	 */
 	public String unWrap(String field) {
 		if (preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
@@ -136,7 +137,7 @@ public class Wrapper implements Serializable {
 			return field;
 		}
 
-		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
+		//如果字段中包含通配符或者括号（字段通配符或者函数），不做解包装
 		if (StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
 			return field;
 		}

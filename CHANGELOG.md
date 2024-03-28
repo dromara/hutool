@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.27(2024-03-26)
+# 5.8.27(2024-03-28)
 
 ### 🐣新特性
 * 【extra 】      FreemarkerEngine修改默认版本参数
@@ -11,6 +11,7 @@
 * 【core  】      StrUtil.replace歧义，修改为replaceByCodePoint（issue#I96LWH@Gitee）
 * 【core  】      FileUtil和PathUtil增加Resource重载（issue#I97FJT@Gitee）
 * 【core  】      优化ThreadUtil.safeSleep，使用System.nanoTime()（issue#I9BMGK@Gitee）
+* 【db    】      新增数据库Wrapper支持反解（pr#1192@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复PathMover对目标已存在且只读文件报错错误问题（issue#I95CLT@Gitee）
