@@ -13,6 +13,7 @@ import com.google.zxing.*;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
+import com.sun.imageio.plugins.common.ImageUtil;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -459,7 +460,13 @@ public class QrCodeUtil {
 	 * @return 解码文本
 	 */
 	public static String decode(InputStream qrCodeInputStream) {
-		return decode(ImgUtil.read(qrCodeInputStream));
+		BufferedImage image = null;
+		try{
+			image = ImgUtil.read(qrCodeInputStream);
+			return decode(image);
+		} finally {
+			ImgUtil.flush(image);
+		}
 	}
 
 	/**
@@ -469,7 +476,13 @@ public class QrCodeUtil {
 	 * @return 解码文本
 	 */
 	public static String decode(File qrCodeFile) {
-		return decode(ImgUtil.read(qrCodeFile));
+		BufferedImage image = null;
+		try{
+			image = ImgUtil.read(qrCodeFile);
+			return decode(image);
+		} finally {
+			ImgUtil.flush(image);
+		}
 	}
 
 	/**

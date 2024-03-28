@@ -20,6 +20,7 @@
 * 【core  】      修复DateUtil.betweenYear闰年2月问题（issue#I97U3J@Gitee）
 * 【captcha】     修复Graphics2D的资源没释放问题（issue#I98PYN@Gitee）
 * 【core  】      修复ClassUtil.getTypeArgument() 获取泛型存在null问题（issue#3516@Github）
+* 【core  】      修复图片操作未调用flush导致资源未释放问题（issue#I9C7NA@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.26(2024-02-10)

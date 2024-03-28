@@ -8,6 +8,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.sun.imageio.plugins.common.ImageUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -30,10 +31,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.CropImageFilter;
 import java.awt.image.ImageFilter;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -43,7 +41,7 @@ import java.nio.file.Path;
  * @author looly
  * @since 4.1.5
  */
-public class Img implements Serializable {
+public class Img implements Flushable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final BufferedImage srcImage;
@@ -752,6 +750,12 @@ public class Img implements Serializable {
 		} finally {
 			IoUtil.close(out);
 		}
+	}
+
+	@Override
+	public void flush() {
+		ImgUtil.flush(this.srcImage);
+		ImgUtil.flush(this.targetImage);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------- Private method start
