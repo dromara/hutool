@@ -705,7 +705,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseCSTTest() {
+	public void parseRFC2822Test() {
 		final String dateStr = "Wed Sep 16 11:26:23 CST 2009";
 
 		final SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
@@ -713,7 +713,7 @@ public class DateUtilTest {
 		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
-		DateTime dateTime = DateUtil.parseCST(dateStr);
+		DateTime dateTime = DateUtil.parseRFC2822(dateStr);
 		Assert.assertEquals(parse, dateTime);
 
 		dateTime = DateUtil.parse(dateStr);

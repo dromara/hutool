@@ -226,6 +226,10 @@ public class DatePattern {
 	 * HTTP头中日期时间格式 {@link FastDateFormat}：EEE, dd MMM yyyy HH:mm:ss z
 	 */
 	public static final FastDateFormat HTTP_DATETIME_FORMAT = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.US);
+	/**
+	 * HTTP头中日期时间格式 {@link FastDateFormat}：EEE, dd MMM yyyy HH:mm:ss z
+	 */
+	public static final FastDateFormat HTTP_DATETIME_FORMAT_Z = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN, Locale.US);
 
 	/**
 	 * JDK中日期时间格式：EEE MMM dd HH:mm:ss zzz yyyy

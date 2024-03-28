@@ -12,6 +12,7 @@
 * 【core  】      FileUtil和PathUtil增加Resource重载（issue#I97FJT@Gitee）
 * 【core  】      优化ThreadUtil.safeSleep，使用System.nanoTime()（issue#I9BMGK@Gitee）
 * 【db    】      新增数据库Wrapper支持反解（pr#1192@Gitee）
+* 【core  】      新增RFC2822日期格式解析支持（issue#I9C2D4@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复PathMover对目标已存在且只读文件报错错误问题（issue#I95CLT@Gitee）

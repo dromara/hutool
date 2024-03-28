@@ -927,24 +927,40 @@ public class DateUtil extends CalendarUtil {
 	 * @param cstString UTC时间
 	 * @return 日期对象
 	 * @since 4.6.9
+	 * @deprecated 理解错误，请使用{@link #parseRFC2822(CharSequence)}
 	 */
+	@Deprecated
 	public static DateTime parseCST(CharSequence cstString) {
-		if (cstString == null) {
+		return parseRFC2822(cstString);
+	}
+
+	/**
+	 * 解析RFC2822时间，格式：<br>
+	 * <ol>
+	 * <li>EEE MMM dd HH:mm:ss z yyyy（例如：Wed Aug 01 00:00:00 CST 2012）</li>
+	 * </ol>
+	 *
+	 * @param source RFC2822时间
+	 * @return 日期对象
+	 * @since 4.6.9
+	 */
+	public static DateTime parseRFC2822(CharSequence source) {
+		if (source == null) {
 			return null;
 		}
 
 		// issue#I9C2D4
-		if(StrUtil.contains(cstString, ',')){
-			if(StrUtil.contains(cstString, "星期")){
-				return parse(cstString, FastDateFormat.getInstance(DatePattern.HTTP_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.CHINA));
+		if(StrUtil.contains(source, ',')){
+			if(StrUtil.contains(source, "星期")){
+				return parse(source, FastDateFormat.getInstance(DatePattern.HTTP_DATETIME_PATTERN, Locale.CHINA));
 			}
-			return parse(cstString, DatePattern.HTTP_DATETIME_FORMAT);
+			return parse(source, DatePattern.HTTP_DATETIME_FORMAT_Z);
 		}
 
-		if(StrUtil.contains(cstString, "星期")){
-			return parse(cstString, FastDateFormat.getInstance(DatePattern.JDK_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.CHINA));
+		if(StrUtil.contains(source, "星期")){
+			return parse(source, FastDateFormat.getInstance(DatePattern.JDK_DATETIME_PATTERN, Locale.CHINA));
 		}
-		return parse(cstString, DatePattern.JDK_DATETIME_FORMAT);
+		return parse(source, DatePattern.JDK_DATETIME_FORMAT);
 	}
 
 	/**
@@ -1007,7 +1023,7 @@ public class DateUtil extends CalendarUtil {
 			// Tue Jun 4 16:25:15 +0800 2019
 			// Thu May 16 17:57:18 GMT+08:00 2019
 			// Wed Aug 01 00:00:00 CST 2012
-			return parseCST(dateStr);
+			return parseRFC2822(dateStr);
 		} else if (StrUtil.contains(dateStr, 'T')) {
 			// UTC时间
 			return parseUTC(dateStr);
