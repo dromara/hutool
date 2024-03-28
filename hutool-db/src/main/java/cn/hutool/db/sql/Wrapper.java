@@ -121,6 +121,36 @@ public class Wrapper implements Serializable {
 	}
 
 	/**
+	 * 反解包装字段名<br>
+	 *
+	 * @param field 字段名
+	 * @return 未包装的字段名
+	 */
+	public String unWrap(String field) {
+		if (preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
+			return field;
+		}
+
+		//如果已经包含包装的引号，返回原字符
+		if (!StrUtil.isSurround(field, preWrapQuote, sufWrapQuote)) {
+			return field;
+		}
+
+		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
+		if (StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
+			return field;
+		}
+
+		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
+		if (field.contains(StrUtil.DOT)) {
+			final Collection<String> target = CollUtil.edit(StrUtil.split(field, CharUtil.DOT, 2), t -> StrUtil.unWrap(t, preWrapQuote, sufWrapQuote));
+			return CollectionUtil.join(target, StrUtil.DOT);
+		}
+
+		return StrUtil.unWrap(field, preWrapQuote, sufWrapQuote);
+	}
+
+	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
 	 *
