@@ -528,7 +528,7 @@ public class XmlUtil {
 	 * @param writer             写出的Writer，Writer决定了输出XML的编码
 	 * @param charset            编码
 	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @since 5.1.2
 	 */
 	public static void write(Node node, Writer writer, String charset, int indent, boolean omitXmlDeclaration) {
@@ -555,7 +555,7 @@ public class XmlUtil {
 	 * @param out                写出的Writer，Writer决定了输出XML的编码
 	 * @param charset            编码
 	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @since 5.1.2
 	 */
 	public static void write(Node node, OutputStream out, String charset, int indent, boolean omitXmlDeclaration) {
@@ -584,7 +584,7 @@ public class XmlUtil {
 	 * @param result             目标
 	 * @param charset            编码
 	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @since 5.1.2
 	 */
 	public static void transform(Source source, Result result, String charset, int indent, boolean omitXmlDeclaration) {
@@ -1109,7 +1109,7 @@ public class XmlUtil {
 	 * 将Map转换为XML格式的字符串
 	 *
 	 * @param data               Map类型数据
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
@@ -1151,7 +1151,7 @@ public class XmlUtil {
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
 	 * @param namespace          命名空间，可以为null
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
@@ -1167,7 +1167,7 @@ public class XmlUtil {
 	 * @param rootName           根节点名
 	 * @param namespace          命名空间，可以为null
 	 * @param isPretty           是否格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
@@ -1184,7 +1184,7 @@ public class XmlUtil {
 	 * @param namespace          命名空间，可以为null
 	 * @param charset            编码
 	 * @param isPretty           是否格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
