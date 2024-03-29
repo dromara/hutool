@@ -250,7 +250,11 @@ public class XmlUtil extends XmlConstants {
 
 	/**
 	 * 将XML文档转换为String<br>
-	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8<br>
+	 * 当{@code omitXmlDeclaration}为{@code true}时，表示忽略xml Declaration，即删掉
+	 * <pre>{@code
+	 *     <?xml version="1.0" encoding="utf-8"?>
+	 * }</pre>
 	 *
 	 * @param doc                XML文档
 	 * @param charset            编码
@@ -317,13 +321,17 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	/**
-	 * 将XML文档写出
+	 * 将XML文档写出<br>
+	 * 当{@code omitXmlDeclaration}为{@code true}时，表示忽略xml Declaration，即删掉
+	 * <pre>{@code
+	 *     <?xml version="1.0" encoding="utf-8"?>
+	 * }</pre>
 	 *
 	 * @param node               {@link Node} XML文档节点或文档本身
 	 * @param writer             写出的Writer，Writer决定了输出XML的编码
 	 * @param charset            编码
 	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @since 5.1.2
 	 */
 	public static void write(final Node node, final Writer writer, final Charset charset, final int indent, final boolean omitXmlDeclaration) {
@@ -348,13 +356,17 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	/**
-	 * 将XML文档写出
+	 * 将XML文档写出<br>
+	 * 当{@code omitXmlDeclaration}为{@code true}时，表示忽略xml Declaration，即删掉
+	 * <pre>{@code
+	 *     <?xml version="1.0" encoding="utf-8"?>
+	 * }</pre>
 	 *
 	 * @param node               {@link Node} XML文档节点或文档本身
 	 * @param out                写出的Writer，Writer决定了输出XML的编码
 	 * @param charset            编码
 	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @since 5.1.2
 	 */
 	public static void write(final Node node, final OutputStream out,
@@ -654,10 +666,14 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	/**
-	 * 将Map转换为XML格式的字符串
+	 * 将Map转换为XML格式的字符串<br>
+	 * 当{@code omitXmlDeclaration}为{@code true}时，表示忽略xml Declaration，即
+	 * <pre>{@code
+	 *     <?xml version="1.0" encoding="utf-8"?>
+	 * }</pre>
 	 *
 	 * @param data               Map类型数据
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
@@ -691,7 +707,11 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	/**
-	 * 将Map转换为XML格式的字符串
+	 * 将Map转换为XML格式的字符串<br>
+	 * 当{@code omitXmlDeclaration}为{@code true}时，表示忽略xml Declaration，即删掉
+	 * <pre>{@code
+	 *     <?xml version="1.0" encoding="utf-8"?>
+	 * }</pre>
 	 *
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
@@ -705,13 +725,17 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	/**
-	 * 将Map转换为XML格式的字符串
+	 * 将Map转换为XML格式的字符串<br>
+	 * 当{@code omitXmlDeclaration}为{@code true}时，表示忽略xml Declaration，即删掉
+	 * <pre>{@code
+	 *     <?xml version="1.0" encoding="utf-8"?>
+	 * }</pre>
 	 *
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
 	 * @param namespace          命名空间，可以为null
 	 * @param isPretty           是否格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
@@ -720,14 +744,18 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	/**
-	 * 将Map转换为XML格式的字符串
+	 * 将Map转换为XML格式的字符串<br>
+	 * 当{@code omitXmlDeclaration}为{@code true}时，表示忽略xml Declaration，即删掉
+	 * <pre>{@code
+	 *     <?xml version="1.0" encoding="utf-8"?>
+	 * }</pre>
 	 *
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
 	 * @param namespace          命名空间，可以为null
 	 * @param charset            编码
 	 * @param isPretty           是否格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
