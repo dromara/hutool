@@ -278,8 +278,8 @@ public class IdcardUtil {
 			return false;
 		}
 
-		// 省份
-		final String proCode = idcard.substring(0, 2);
+		// 截取省份代码。新版外国人永久居留身份证以9开头，第二三位是受理地代码
+		final String proCode = idcard.startsWith("9") ? idcard.substring(1, 3): idcard.substring(0, 2);
 		if (null == CITY_CODES.get(proCode)) {
 			return false;
 		}
