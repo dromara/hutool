@@ -13,7 +13,6 @@
 package org.dromara.hutool.cron.pattern.matcher;
 
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.cron.pattern.Part;
 
 import java.time.Year;
@@ -202,7 +201,7 @@ public class PatternMatcher {
 
 			if (i == Part.DAY_OF_MONTH.ordinal()) {
 				final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
-				final int month = values[Part.MONTH.ordinal()];
+				final int month = newValues[Part.MONTH.ordinal()];
 				nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i], month, isLeapYear);
 			} else {
 				nextValue = matchers[i].nextAfter(values[i]);
@@ -235,7 +234,7 @@ public class PatternMatcher {
 
 				if (i == Part.DAY_OF_MONTH.ordinal()) {
 					final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
-					final int month = values[Part.MONTH.ordinal()];
+					final int month = newValues[Part.MONTH.ordinal()];
 					nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i] + 1, month, isLeapYear);
 				} else {
 					nextValue = matchers[i].nextAfter(values[i] + 1);

@@ -164,4 +164,17 @@ public class IdcardUtilTest {
 		flag = IdcardUtil.isValidTWCard(errTwCard2);
 		Assertions.assertFalse(flag);
 	}
+
+	@Test
+	void foreignTest() {
+		// 新版外国人永久居留身份证号码
+		final String FOREIGN_ID_18 = "932682198501010017";
+		Assertions.assertTrue(IdcardUtil.isValidCard(FOREIGN_ID_18));
+
+		final DateTime date = DateUtil.parse("2017-04-10");
+		Assertions.assertEquals(IdcardUtil.getAge(FOREIGN_ID_18, date), 32);
+
+		// 新版外国人永久居留身份证
+		Assertions.assertTrue(IdcardUtil.isValidCard18("932682198501010017"));
+	}
 }
