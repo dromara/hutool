@@ -65,12 +65,9 @@ public class PartParser {
 	 */
 	public PartMatcher parse(String value) {
 		// 是否是查询最后一天
-		boolean isLastDay = false;
 		if (isMatchAllStr(value)) {
 			//兼容Quartz的"?"表达式，不会出现互斥情况，与"*"作用相同
 			return new AlwaysTrueMatcher();
-		} else if ("L".equalsIgnoreCase(value)) {
-			isLastDay = true;
 		}
 
 		final List<Integer> values = parseArray(value);
@@ -80,7 +77,7 @@ public class PartParser {
 
 		switch (this.part) {
 			case DAY_OF_MONTH:
-				return new DayOfMonthMatcher(values, isLastDay);
+				return new DayOfMonthMatcher(values);
 			case YEAR:
 				return new YearValueMatcher(values);
 			default:

@@ -12,18 +12,12 @@ import java.util.List;
  */
 public class DayOfMonthMatcher extends BoolArrayMatcher {
 	/**
-	 * 是否是查询最后一天，即“L”
-	 */
-	private final boolean isLast;
-
-	/**
 	 * 构造
 	 *
 	 * @param intValueList 匹配的日值
 	 */
-	public DayOfMonthMatcher(List<Integer> intValueList, boolean isLast) {
+	public DayOfMonthMatcher(List<Integer> intValueList) {
 		super(intValueList);
-		this.isLast = isLast;
 	}
 
 	/**
@@ -57,7 +51,7 @@ public class DayOfMonthMatcher extends BoolArrayMatcher {
 	}
 
 	public boolean isLast() {
-		return isLast;
+		return match(31);
 	}
 
 }

@@ -6,6 +6,7 @@ import cn.hutool.cron.pattern.Part;
 
 import java.time.Year;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -186,15 +187,19 @@ public class PatternMatcher {
 				// 周不参与计算
 				i--;
 				continue;
-			} else if (i == Part.DAY_OF_MONTH.ordinal()
+			}
+
+			// pr#1189
+			if (i == Part.DAY_OF_MONTH.ordinal()
 				&& matchers[i] instanceof DayOfMonthMatcher
 				&& ((DayOfMonthMatcher) matchers[i]).isLast()) {
 				int newMonth = newValues[Part.MONTH.ordinal()];
 				int newYear = newValues[Part.YEAR.ordinal()];
-				nextValue = Month.of(newMonth - 1).getLastDay(DateUtil.isLeapYear(newYear));
+				nextValue = getLastDay(newMonth, newYear);
 			} else {
 				nextValue = matchers[i].nextAfter(values[i]);
 			}
+
 			if (nextValue > values[i]) {
 				// 此部分正常获取新值，结束循环，后续的部分置最小值
 				newValues[i] = nextValue;
@@ -224,7 +229,7 @@ public class PatternMatcher {
 					&& ((DayOfMonthMatcher) matchers[i]).isLast()) {
 					int newMonth = newValues[Part.MONTH.ordinal()];
 					int newYear = newValues[Part.YEAR.ordinal()];
-					nextValue = Month.of(newMonth - 1).getLastDay(DateUtil.isLeapYear(newYear));
+					nextValue = getLastDay(newMonth, newYear);
 				} else {
 					nextValue = matchers[i].nextAfter(values[i] + 1);
 				}
@@ -257,7 +262,7 @@ public class PatternMatcher {
 				&& ((DayOfMonthMatcher) get(part)).isLast()) {
 				int newMonth = values[Part.MONTH.ordinal()];
 				int newYear = values[Part.YEAR.ordinal()];
-				values[i] = Month.of(newMonth - 1).getLastDay(DateUtil.isLeapYear(newYear));
+				values[i] = getLastDay(newMonth, newYear);
 			} else {
 				values[i] = getMin(part);
 			}
@@ -310,5 +315,10 @@ public class PatternMatcher {
 		calendar.set(part.getCalendarField(), value);
 		//Console.log("Set [{}] as [{}]", part, value);
 		return calendar;
+	}
+
+	private static int getLastDay(int monthBase1, int year){
+		return Objects.requireNonNull(Month.of(monthBase1 - 1))
+			.getLastDay(DateUtil.isLeapYear(year));
 	}
 }
