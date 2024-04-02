@@ -288,6 +288,18 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
+	 * 调用对象的toString方法，null会返回空字符串 ""
+	 *
+	 * @param obj 对象
+	 * @return {@link String }
+	 * @author ahwei163@qq.com
+	 */
+	public static String toStringOrEmptyStr(Object obj) {
+		// obj为空时, 返回 null 或 "null" 都不适用部分场景, 此处返回 "" 空字符串
+		return null == obj ? "" : obj.toString();
+	}
+
+	/**
 	 * 创建StringBuilder对象
 	 *
 	 * @return StringBuilder对象
