@@ -955,6 +955,15 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void issueI9CYHITest() {
+		final long betweenDay = DateUtil.betweenDay(
+			DateUtil.parse("2024-03-01"),
+			DateUtil.parse("2024-03-31"), true);
+
+		Assert.assertEquals(30, betweenDay);
+	}
+
+	@Test
 	public void dayOfYearTest() {
 		final int dayOfYear = DateUtil.dayOfYear(DateUtil.parse("2020-01-01"));
 		Assert.assertEquals(1, dayOfYear);
