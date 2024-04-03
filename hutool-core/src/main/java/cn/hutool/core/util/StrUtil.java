@@ -294,9 +294,9 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return {@link String }
 	 * @author ahwei163@qq.com
 	 */
-	public static String toStringOrEmptyStr(Object obj) {
+	public static String toStringOrEmpty(Object obj) {
 		// obj为空时, 返回 null 或 "null" 都不适用部分场景, 此处返回 "" 空字符串
-		return null == obj ? "" : obj.toString();
+		return null == obj ? EMPTY : obj.toString();
 	}
 
 	/**
