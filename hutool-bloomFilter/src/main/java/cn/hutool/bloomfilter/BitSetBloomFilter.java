@@ -25,7 +25,7 @@ public class BitSetBloomFilter implements BloomFilter {
 	private final int hashFunctionNumber;
 
 	/**
-	 * 构造一个布隆过滤器，过滤器的容量为c * n 个bit.
+	 * 构造一个布隆过滤器，过滤器的容量为c * k 个bit.
 	 *
 	 * @param c 当前过滤器预先开辟的最大包含记录,通常要比预计存入的记录多一倍.
 	 * @param n 当前过滤器预计所要包含的记录.
