@@ -201,7 +201,7 @@ public class SystemUtil extends SystemPropsUtil {
 	 * 返回Java虚拟机编译系统相关属性<br>
 	 * 如果没有编译系统，则返回{@code null}
 	 *
-	 * @return a {@link CompilationMXBean} ，如果没有编译系统，则返回{@code null}
+	 * @return  {@link CompilationMXBean} ，如果没有编译系统，则返回{@code null}
 	 * @since 4.1.4
 	 */
 	public static CompilationMXBean getCompilationMXBean() {
