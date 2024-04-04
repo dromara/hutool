@@ -24,7 +24,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造，默认5位验证码，150条干扰线
 	 *
-	 * @param width 图片宽
+	 * @param width  图片宽
 	 * @param height 图片高
 	 */
 	public LineCaptcha(int width, int height) {
@@ -34,8 +34,8 @@ public class LineCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
-	 * @param height 图片高
+	 * @param width     图片宽
+	 * @param height    图片高
 	 * @param codeCount 字符个数
 	 * @param lineCount 干扰线条数
 	 */
@@ -54,6 +54,21 @@ public class LineCaptcha extends AbstractCaptcha {
 	public LineCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
 		super(width, height, generator, interfereCount);
 	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount      字符个数
+	 * @param interfereCount 验证码干扰元素个数
+	 * @param size           字体的大小 高度的倍数
+	 */
+	public LineCaptcha(int width, int height, int codeCount, int interfereCount, float size) {
+		super(width, height, new RandomGenerator(codeCount), interfereCount, size);
+	}
+
+
 	// -------------------------------------------------------------------- Constructor end
 
 	@Override
@@ -79,7 +94,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	/**
 	 * 绘制字符串
 	 *
-	 * @param g {@link Graphics}画笔
+	 * @param g    {@link Graphics}画笔
 	 * @param code 验证码
 	 */
 	private void drawString(Graphics2D g, String code) {
