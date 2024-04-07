@@ -294,6 +294,9 @@ public class JschUtil {
 		// 设置第一次登录的时候提示，可选值：(ask | yes | no)
 		session.setConfig("StrictHostKeyChecking", "no");
 
+		// 设置登录认证方式，跳过Kerberos身份验证
+		session.setConfig("PreferredAuthentications","publickey,keyboard-interactive,password");
+
 		return session;
 	}
 
