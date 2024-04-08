@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.url.UrlQuery;
@@ -693,7 +694,8 @@ public class HttpUtil {
 	 * @return 合成后的URL
 	 */
 	public static String urlWithFormUrlEncoded(String url, Map<String, Object> form, Charset charset) {
-		return urlWithForm(url, toParams(form, charset, true), charset, true);
+		// issue#3536，urlWithForm会对参数进行一次编码，因此toParams无需编码
+		return urlWithForm(url, toParams(form, null, false), charset, true);
 	}
 
 	/**
