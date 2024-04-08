@@ -269,7 +269,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 *
 	 * @param obj 对象
 	 * @return {@link String }
-	 * @author ahwei163@qq.com
+	 * @author Junwei Xu
 	 */
 	public static String toStringOrEmpty(final Object obj) {
 		// obj为空时, 返回 null 或 "null" 都不适用部分场景, 此处返回 "" 空字符串

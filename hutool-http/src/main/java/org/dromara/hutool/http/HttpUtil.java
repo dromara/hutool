@@ -206,7 +206,7 @@ public class HttpUtil {
 	 * @return 合成后的URL
 	 */
 	public static String urlWithForm(final String url, final Map<String, Object> form, final Charset charset, final boolean isEncodeParams) {
-		return urlWithForm(url, UrlQueryUtil.toQuery(form, charset), charset, isEncodeParams);
+		return urlWithForm(url, UrlQueryUtil.toQuery(form, null), charset, isEncodeParams);
 	}
 
 	/**
