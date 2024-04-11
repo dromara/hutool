@@ -12,12 +12,15 @@
 
 package org.dromara.hutool.json.xml;
 
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.xml.XmlConstants;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.mapper.JSONValueMapper;
+
+import java.util.function.Predicate;
 
 /**
  * XML解析器，将XML解析为JSON对象
@@ -28,18 +31,42 @@ import org.dromara.hutool.json.mapper.JSONValueMapper;
 public class JSONXMLParser {
 
 	/**
+	 * 创建XML解析器
+	 *
+	 * @param parseConfig 解析选项
+	 * @param predicate   键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @return JSONXMLParser
+	 */
+	public static JSONXMLParser of(final ParseConfig parseConfig, final Predicate<MutableEntry<String, Object>> predicate) {
+		return new JSONXMLParser(parseConfig, predicate);
+	}
+
+	private final ParseConfig parseConfig;
+	private final Predicate<MutableEntry<String, Object>> predicate;
+
+	/**
+	 * 构造
+	 *
+	 * @param parseConfig 解析选项
+	 * @param predicate   键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 */
+	public JSONXMLParser(final ParseConfig parseConfig, final Predicate<MutableEntry<String, Object>> predicate) {
+		this.parseConfig = parseConfig;
+		this.predicate = predicate;
+	}
+
+	/**
 	 * 转换XML为JSONObject
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
 	 *
 	 * @param xmlStr      XML字符串
 	 * @param jo          JSONObject
-	 * @param parseConfig 解析选项
 	 * @throws JSONException 解析异常
 	 */
-	public static void parseJSONObject(final String xmlStr, final JSONObject jo, final ParseConfig parseConfig) throws JSONException {
+	public void parseJSONObject(final String xmlStr, final JSONObject jo) throws JSONException {
 		final XMLTokener x = new XMLTokener(xmlStr, jo.config());
 		while (x.more() && x.skipPast("<")) {
-			parse(x, jo, null, parseConfig, 0);
+			parse(x, jo, null, 0);
 		}
 	}
 
@@ -49,13 +76,11 @@ public class JSONXMLParser {
 	 * @param x                   {@link XMLTokener}
 	 * @param context             {@link JSONObject}
 	 * @param name                标签名，null表示从根标签开始解析
-	 * @param parseConfig         解析选项
 	 * @param currentNestingDepth 当前层级
 	 * @return {@code true}表示解析完成
 	 * @throws JSONException JSON异常
 	 */
-	private static boolean parse(final XMLTokener x, final JSONObject context, final String name,
-								 final ParseConfig parseConfig, final int currentNestingDepth) throws JSONException {
+	private boolean parse(final XMLTokener x, final JSONObject context, final String name, final int currentNestingDepth) throws JSONException {
 		final char c;
 		int i;
 		final JSONObject jsonobject;
@@ -155,9 +180,9 @@ public class JSONXMLParser {
 						throw x.syntaxError("Misshaped tag");
 					}
 					if (!jsonobject.isEmpty()) {
-						context.append(tagName, jsonobject);
+						context.append(tagName, jsonobject, this.predicate);
 					} else {
-						context.append(tagName, StrUtil.EMPTY);
+						context.append(tagName, StrUtil.EMPTY, this.predicate);
 					}
 					return false;
 
@@ -185,13 +210,13 @@ public class JSONXMLParser {
 							}
 
 							// Nested element
-							if (parse(x, jsonobject, tagName, parseConfig, currentNestingDepth + 1)) {
+							if (parse(x, jsonobject, tagName, currentNestingDepth + 1)) {
 								if (jsonobject.isEmpty()) {
-									context.append(tagName, StrUtil.EMPTY);
+									context.append(tagName, StrUtil.EMPTY, this.predicate);
 								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {
-									context.append(tagName, jsonobject.get("content"));
+									context.append(tagName, jsonobject.get("content"), this.predicate);
 								} else {
-									context.append(tagName, jsonobject);
+									context.append(tagName, jsonobject, this.predicate);
 								}
 								return false;
 							}

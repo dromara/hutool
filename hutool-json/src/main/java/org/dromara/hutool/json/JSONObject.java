@@ -195,12 +195,13 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	/**
 	 * 根据lambda的方法引用，获取
+	 *
 	 * @param func 方法引用
-	 * @param <P> 参数类型
-	 * @param <T> 返回值类型
+	 * @param <P>  参数类型
+	 * @param <T>  返回值类型
 	 * @return 获取表达式对应属性和返回的对象
 	 */
-	public <P, T> T get(final SerFunction<P, T> func){
+	public <P, T> T get(final SerFunction<P, T> func) {
 		final LambdaInfo lambdaInfo = LambdaUtil.resolve(func);
 		return get(lambdaInfo.getFieldName(), lambdaInfo.getReturnType());
 	}
@@ -314,6 +315,38 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
 	 */
 	public JSONObject append(final String key, final Object value) throws JSONException {
+		return append(key, value, null);
+	}
+
+	/**
+	 * 追加值.
+	 * <ul>
+	 *     <li>如果键值对不存在或对应值为{@code null}，则value为单独值</li>
+	 *     <li>如果值是一个{@link JSONArray}，追加之</li>
+	 *     <li>如果值是一个其他值，则和旧值共同组合为一个{@link JSONArray}</li>
+	 * </ul>
+	 *
+	 * @param key       键
+	 * @param value     值
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
+	 * @return this.
+	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
+	 * @since 6.0.0
+	 */
+	public JSONObject append(String key, Object value, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
+		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		if (null != predicate) {
+			final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
+			if (predicate.test(pair)) {
+				// 使用修改后的键值对
+				key = pair.getKey();
+				value = pair.getValue();
+			} else {
+				// 键值对被过滤
+				return this;
+			}
+		}
+
 		final Object object = this.getObj(key);
 		if (object == null) {
 			this.set(key, value);
@@ -396,7 +429,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	@Override
 	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
-				.beginObj();
+			.beginObj();
 		this.forEach((key, value) -> jsonWriter.writeField(new MutableEntry<>(key, value), predicate));
 		jsonWriter.end();
 		// 此处不关闭Writer，考虑writer后续还需要填内容

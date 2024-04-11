@@ -64,7 +64,7 @@ public class JSONXMLUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONObject toJSONObject(final String xmlStr, final JSONObject jo, final ParseConfig parseConfig) throws JSONException {
-		JSONXMLParser.parseJSONObject(xmlStr, jo, parseConfig);
+		JSONXMLParser.of(parseConfig, null).parseJSONObject(xmlStr, jo);
 		return jo;
 	}
 

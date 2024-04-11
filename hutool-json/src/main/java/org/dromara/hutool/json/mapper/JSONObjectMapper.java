@@ -20,15 +20,10 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.InternalJSONUtil;
-import org.dromara.hutool.json.JSONArray;
-import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.JSONParser;
-import org.dromara.hutool.json.JSONTokener;
-import org.dromara.hutool.json.xml.JSONXMLUtil;
+import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONSerializer;
+import org.dromara.hutool.json.xml.JSONXMLParser;
 import org.dromara.hutool.json.xml.ParseConfig;
 
 import java.io.InputStream;
@@ -171,7 +166,8 @@ public class JSONObjectMapper {
 		final String jsonStr = StrUtil.trim(source);
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
-			JSONXMLUtil.toJSONObject(jsonStr, jsonObject, ParseConfig.of());
+			//JSONXMLUtil.toJSONObject(jsonStr, jsonObject, ParseConfig.of());
+			JSONXMLParser.of(ParseConfig.of(), this.predicate).parseJSONObject(jsonStr, jsonObject);
 			return;
 		}
 		mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonObject.config()), jsonObject);
