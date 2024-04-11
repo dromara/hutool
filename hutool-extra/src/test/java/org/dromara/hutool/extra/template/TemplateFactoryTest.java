@@ -20,6 +20,7 @@ import org.dromara.hutool.extra.template.engine.TemplateEngineFactory;
 import org.dromara.hutool.extra.template.engine.beetl.BeetlEngine;
 import org.dromara.hutool.extra.template.engine.enjoy.EnjoyEngine;
 import org.dromara.hutool.extra.template.engine.freemarker.FreemarkerEngine;
+import org.dromara.hutool.extra.template.engine.jte.JteEngine;
 import org.dromara.hutool.extra.template.engine.pebble.PebbleTemplateEngine;
 import org.dromara.hutool.extra.template.engine.rythm.RythmEngine;
 import org.dromara.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
@@ -30,8 +31,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 模板引擎单元测试
@@ -155,6 +155,26 @@ public class TemplateFactoryTest {
 				new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(ThymeleafEngine.class));
 		template = engine.getTemplate("thymeleaf_test.ttl");
 		result = template.render(Dict.of().set("message", "Hutool"));
+		Assertions.assertEquals("<h3>Hutool</h3>", result);
+	}
+
+	@Test
+	public void jteEngineTest() {
+		// 字符串模板
+		TemplateEngine engine = TemplateEngineFactory.createEngine(
+				new TemplateConfig("templates.jte").setCustomEngine(JteEngine.class));
+		Template template = engine.getTemplate("@param java.util.HashMap<String, String> map\n" +
+			"<h3>${map.get(\"message\")}</h3>");
+		Map<String, String> model = new HashMap<>();
+		model.put("message", "Hutool");
+		String result = template.render(model);
+		Assertions.assertEquals("<h3>Hutool</h3>", result);
+
+		//ClassPath模板
+		engine = TemplateEngineFactory.createEngine(
+				new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(JteEngine.class));
+		template = engine.getTemplate("jte_test.jte");
+		result = template.render(model);
 		Assertions.assertEquals("<h3>Hutool</h3>", result);
 	}
 
