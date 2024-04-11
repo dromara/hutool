@@ -26,6 +26,8 @@ import java.lang.reflect.Proxy;
  */
 public final class ProxyUtil {
 
+	private static final String CGLIB_CLASS_SEPARATOR = "$$";
+
 	/**
 	 * 获取动态代理引擎
 	 *
@@ -94,4 +96,34 @@ public final class ProxyUtil {
 		return newProxyInstance(ClassLoaderUtil.getClassLoader(), invocationHandler, interfaces);
 	}
 	// endregion
+
+	/**
+	 * 是否为代理对象，判断JDK代理或Cglib代理
+	 *
+	 * @param object 被检查的对象
+	 * @return 是否为代理对象
+	 */
+	public static boolean isProxy(final Object object) {
+		return isJdkProxy(object) || isCglibProxy(object);
+	}
+
+	/**
+	 * 是否为JDK代理对象
+	 *
+	 * @param object 被检查的对象
+	 * @return 是否为JDK代理对象
+	 */
+	public static boolean isJdkProxy(final Object object) {
+		return Proxy.isProxyClass(object.getClass());
+	}
+
+	/**
+	 * 是否Cglib代理对象
+	 *
+	 * @param object 被检查的对象
+	 * @return 是否Cglib代理对象
+	 */
+	public static boolean isCglibProxy(final Object object) {
+		return (object.getClass().getName().contains(CGLIB_CLASS_SEPARATOR));
+	}
 }
