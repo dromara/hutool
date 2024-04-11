@@ -17,17 +17,21 @@ public class SimpleStringCodeResolver implements CodeResolver {
 
 	private final Map<String, String> templates;
 
-	public SimpleStringCodeResolver(Map<String, String> templates) {
+	/**
+	 * 构造
+	 * @param templates 参数
+	 */
+	public SimpleStringCodeResolver(final Map<String, String> templates) {
 		this.templates = templates;
 	}
 
 	@Override
-	public String resolve(String name) {
+	public String resolve(final String name) {
 		return templates.get(name);
 	}
 
 	@Override
-	public long getLastModified(String name) {
+	public long getLastModified(final String name) {
 		return 0L;
 	}
 

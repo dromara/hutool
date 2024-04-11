@@ -19,7 +19,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.extra.template.Template;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -33,20 +33,29 @@ public class JteTemplate implements Template, Serializable {
 
 	private final TemplateEngine templateEngine;
 	private final String template;
+	private final Charset charset;
 
-	public JteTemplate(TemplateEngine engine, String template) {
+	/**
+	 * 构造
+	 *
+	 * @param engine   jet引擎
+	 * @param template 模板
+	 * @param charset 输出编码
+	 */
+	public JteTemplate(final TemplateEngine engine, final String template, final Charset charset) {
 		this.templateEngine = engine;
 		this.template = template;
+		this.charset = charset;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		templateEngine.render(template, bindingMap, new WriterOutput(writer));
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
-		this.render(bindingMap, IoUtil.toWriter(out, StandardCharsets.UTF_8));
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
+		this.render(bindingMap, IoUtil.toWriter(out, charset));
 	}
 
 	/**
@@ -55,7 +64,7 @@ public class JteTemplate implements Template, Serializable {
 	 * @param model  实体类
 	 * @param writer 输出
 	 */
-	public void render(Object model, Writer writer) {
+	public void render(final Object model, final Writer writer) {
 		templateEngine.render(template, model, new WriterOutput(writer));
 	}
 
@@ -65,8 +74,8 @@ public class JteTemplate implements Template, Serializable {
 	 * @param model 实体类
 	 * @param out   输出
 	 */
-	public void render(Object model, OutputStream out) {
-		render(model, IoUtil.toWriter(out, StandardCharsets.UTF_8));
+	public void render(final Object model, final OutputStream out) {
+		render(model, IoUtil.toWriter(out, charset));
 	}
 
 	/**

@@ -65,7 +65,7 @@ public class JteEngine implements TemplateEngine {
 	// --------------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public TemplateEngine init(TemplateConfig config) {
+	public TemplateEngine init(final TemplateConfig config) {
 		if (config != null) {
 			this.config = config;
 		}
@@ -74,15 +74,15 @@ public class JteEngine implements TemplateEngine {
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if (TemplateConfig.ResourceMode.STRING.equals(config.getResourceMode())) {
 			if (!StrUtil.endWithAny(config.getPath(), ".jte", ".kte")) {
-				throw new RuntimeException("路径path需以.jte/.kte结尾");
+				throw new RuntimeException("path need to end with '.jte' or '.kte'");
 			}
 			createEngine(new SimpleStringCodeResolver(MapUtil.of(config.getPath(), resource)), contentType);
-			return new JteTemplate(engine, config.getPath());
+			return new JteTemplate(engine, config.getPath(), config.getCharset());
 		} else {
-			return new JteTemplate(engine, resource);
+			return new JteTemplate(engine, resource, config.getCharset());
 		}
 	}
 
@@ -116,7 +116,7 @@ public class JteEngine implements TemplateEngine {
 	 * @param codeResolver CodeResolver
 	 * @param contentType  ContentType
 	 */
-	private void createEngine(CodeResolver codeResolver, ContentType contentType) {
+	private void createEngine(final CodeResolver codeResolver, final ContentType contentType) {
 		this.engine = gg.jte.TemplateEngine.create(codeResolver, contentType);
 	}
 }
