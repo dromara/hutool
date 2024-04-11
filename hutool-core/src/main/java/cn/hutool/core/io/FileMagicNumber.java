@@ -1,6 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -1135,7 +1136,17 @@ public enum FileMagicNumber {
 		this.extension = extension;
 	}
 
+	/**
+	 * 根据给定的bytes，获取对应识别到的{@code FileMagicNumber}
+	 *
+	 * @param bytes bytes魔数
+	 * @return {@code FileMagicNumber}
+	 */
 	public static FileMagicNumber getMagicNumber(final byte[] bytes) {
+		if(ObjUtil.isNull(bytes)){
+			return UNKNOWN;
+		}
+
 		final FileMagicNumber number = Arrays.stream(values())
 				.filter(fileMagicNumber -> fileMagicNumber.match(bytes))
 				.findFirst()
