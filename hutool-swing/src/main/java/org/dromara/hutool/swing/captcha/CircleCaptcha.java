@@ -30,7 +30,6 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author looly
  * @since 3.2.3
- *
  */
 public class CircleCaptcha extends AbstractCaptcha {
 	private static final long serialVersionUID = -7096627300356535494L;
@@ -38,7 +37,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
+	 * @param width  图片宽
 	 * @param height 图片高
 	 */
 	public CircleCaptcha(final int width, final int height) {
@@ -48,8 +47,8 @@ public class CircleCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
-	 * @param height 图片高
+	 * @param width     图片宽
+	 * @param height    图片高
 	 * @param codeCount 字符个数
 	 */
 	public CircleCaptcha(final int width, final int height, final int codeCount) {
@@ -59,9 +58,9 @@ public class CircleCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
-	 * @param height 图片高
-	 * @param codeCount 字符个数
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount      字符个数
 	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public CircleCaptcha(final int width, final int height, final int codeCount, final int interfereCount) {
@@ -80,12 +79,25 @@ public class CircleCaptcha extends AbstractCaptcha {
 		super(width, height, generator, interfereCount);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount      字符个数
+	 * @param interfereCount 验证码干扰元素个数
+	 * @param sizeBaseHeight           字体的大小 高度的倍数
+	 */
+	public CircleCaptcha(final int width, final int height, final int codeCount, final int interfereCount, final float sizeBaseHeight) {
+		super(width, height, new RandomGenerator(codeCount), interfereCount, sizeBaseHeight);
+	}
+
 	@Override
 	public Image createImage(final String code) {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
-		try{
+		try {
 			// 随机画干扰圈圈
 			drawInterfere(g);
 
@@ -99,10 +111,11 @@ public class CircleCaptcha extends AbstractCaptcha {
 	}
 
 	// ----------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 绘制字符串
 	 *
-	 * @param g {@link Graphics2D}画笔
+	 * @param g    {@link Graphics2D}画笔
 	 * @param code 验证码
 	 */
 	private void drawString(final Graphics2D g, final String code) {

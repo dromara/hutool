@@ -81,6 +81,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private final AtomicInteger currentRow;
 
 	// region Constructors
+
 	/**
 	 * 构造，默认生成xls格式的Excel文件<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
@@ -449,6 +450,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 设置是否只保留别名中的字段值，如果为true，则不设置alias的字段将不被输出，false表示原样输出
+	 * Bean中设置@Alias时，setOnlyAlias是无效的，这个参数只和addHeaderAlias配合使用，原因是注解是Bean内部的操作，而addHeaderAlias是Writer的操作，不互通。
 	 *
 	 * @param isOnlyAlias 是否只保留别名中的字段值
 	 * @return this
@@ -799,6 +801,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	// region ----- writeImg
+
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 添加图片到当前sheet中 / 默认图片类型png / 默认的起始坐标和结束坐标都为0
@@ -899,6 +902,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	// endregion
 
 	// region ----- writeRow
+
 	/**
 	 * 写出一行标题数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
@@ -1070,6 +1074,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	// endregion
 
 	// region ----- writeCol
+
 	/**
 	 * 从第1列开始按列写入数据(index 从0开始)<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
@@ -1080,7 +1085,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
 	 * @return this
 	 */
-	public ExcelWriter writeCol(final Map<?,? extends Iterable<?>> colMap, final boolean isWriteKeyAsHead){
+	public ExcelWriter writeCol(final Map<?, ? extends Iterable<?>> colMap, final boolean isWriteKeyAsHead) {
 		return writeCol(colMap, 0, isWriteKeyAsHead);
 	}
 
@@ -1095,12 +1100,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
 	 * @return this
 	 */
-	public ExcelWriter writeCol(final Map<?,? extends Iterable<?>> colMap, int startColIndex, final boolean isWriteKeyAsHead){
+	public ExcelWriter writeCol(final Map<?, ? extends Iterable<?>> colMap, int startColIndex, final boolean isWriteKeyAsHead) {
 		for (final Object k : colMap.keySet()) {
 			final Iterable<?> v = colMap.get(k);
-			if(v != null){
-				writeCol(isWriteKeyAsHead?k:null,startColIndex, v, startColIndex != colMap.size() - 1);
-				startColIndex ++;
+			if (v != null) {
+				writeCol(isWriteKeyAsHead ? k : null, startColIndex, v, startColIndex != colMap.size() - 1);
+				startColIndex++;
 			}
 		}
 		return this;
@@ -1118,8 +1123,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
 	 * @return this
 	 */
-	public ExcelWriter writeCol(final Object headerVal, final Iterable<?> colData, final boolean isResetRowIndex){
-		return writeCol(headerVal,0,colData,isResetRowIndex);
+	public ExcelWriter writeCol(final Object headerVal, final Iterable<?> colData, final boolean isResetRowIndex) {
+		return writeCol(headerVal, 0, colData, isResetRowIndex);
 	}
 
 	/**
@@ -1134,18 +1139,18 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
 	 * @return this
 	 */
-	public ExcelWriter writeCol(final Object headerVal, final int colIndex, final Iterable<?> colData, final boolean isResetRowIndex){
+	public ExcelWriter writeCol(final Object headerVal, final int colIndex, final Iterable<?> colData, final boolean isResetRowIndex) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		int currentRowIndex = currentRow.get();
-		if(null != headerVal){
-			writeCellValue(colIndex, currentRowIndex, headerVal,true);
+		if (null != headerVal) {
+			writeCellValue(colIndex, currentRowIndex, headerVal, true);
 			currentRowIndex++;
 		}
 		for (final Object colDatum : colData) {
 			writeCellValue(colIndex, currentRowIndex, colDatum);
 			currentRowIndex++;
 		}
-		if(!isResetRowIndex){
+		if (!isResetRowIndex) {
 			currentRow.set(currentRowIndex);
 		}
 		return this;
@@ -1153,6 +1158,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	// endregion
 
 	// region ----- writeCellValue
+
 	/**
 	 * 给指定单元格赋值，使用默认单元格样式
 	 *
@@ -1196,6 +1202,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	// endregion
 
 	// region ----- setStyle
+
 	/**
 	 * 设置某个单元格的样式<br>
 	 * 此方法用于多个单元格共享样式的情况<br>
@@ -1313,6 +1320,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	// endregion
 
 	// region ----- flush
+
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>

@@ -352,4 +352,11 @@ public class JSONUtilTest {
 		final String jsonStr = JSONUtil.toJsonStr(true);
 		Assertions.assertEquals("true", jsonStr);
 	}
+
+	@Test
+	public void issue3540Test() {
+		final Long userId=10101010L;
+		final String jsonStr = JSONUtil.toJsonStr(userId);
+		Assertions.assertEquals("10101010", jsonStr);
+	}
 }

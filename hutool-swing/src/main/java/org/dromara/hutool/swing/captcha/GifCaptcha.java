@@ -87,6 +87,19 @@ public class GifCaptcha extends AbstractCaptcha {
 	}
 
 	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount      验证码个数
+	 * @param interfereCount 验证码干扰元素个数
+	 * @param sizeBaseHeight           字体的大小 高度的倍数
+	 */
+	public GifCaptcha(final int width, final int height, final int codeCount, final int interfereCount, final float sizeBaseHeight) {
+		super(width, height, new RandomGenerator(codeCount), interfereCount, sizeBaseHeight);
+	}
+
+	/**
 	 * 设置图像的颜色量化(转换质量 由GIF规范允许的最大256种颜色)。
 	 * 低的值(最小值= 1)产生更好的颜色,但处理显著缓慢。
 	 * 10是默认,并产生良好的颜色而且有以合理的速度。

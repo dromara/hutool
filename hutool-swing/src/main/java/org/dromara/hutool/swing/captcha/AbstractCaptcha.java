@@ -99,12 +99,25 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public AbstractCaptcha(final int width, final int height, final CodeGenerator generator, final int interfereCount) {
+		this(width, height, generator, interfereCount, 0.75f);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 * @param sizeBaseHeight 字体的大小 高度的倍数
+	 */
+	public AbstractCaptcha(final int width, final int height, final CodeGenerator generator, final int interfereCount, final float sizeBaseHeight) {
 		this.width = width;
 		this.height = height;
 		this.generator = generator;
 		this.interfereCount = interfereCount;
 		// 字体高度设为验证码高度-2，留边距
-		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, (int) (this.height * 0.75));
+		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, (int) (this.height * sizeBaseHeight));
 	}
 
 	@Override
@@ -114,7 +127,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		Image image = null;
-		try{
+		try {
 			image = createImage(this.code);
 			ImgUtil.writePng(image, out);
 		} finally {
@@ -222,7 +235,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @return 图片带文件格式的 Base64
 	 * @since 5.3.11
 	 */
-	public String getImageBase64Data(){
+	public String getImageBase64Data() {
 		return UrlUtil.getDataUriBase64("image/png", getImageBase64());
 	}
 

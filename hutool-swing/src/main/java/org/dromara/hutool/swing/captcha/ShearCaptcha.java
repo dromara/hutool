@@ -30,7 +30,6 @@ import java.awt.image.BufferedImage;
  *
  * @author looly
  * @since 3.2.3
- *
  */
 public class ShearCaptcha extends AbstractCaptcha {
 	private static final long serialVersionUID = -7096627300356535494L;
@@ -38,7 +37,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
+	 * @param width  图片宽
 	 * @param height 图片高
 	 */
 	public ShearCaptcha(final int width, final int height) {
@@ -48,8 +47,8 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
-	 * @param height 图片高
+	 * @param width     图片宽
+	 * @param height    图片高
 	 * @param codeCount 字符个数
 	 */
 	public ShearCaptcha(final int width, final int height, final int codeCount) {
@@ -59,8 +58,8 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
-	 * @param height 图片高
+	 * @param width     图片宽
+	 * @param height    图片高
 	 * @param codeCount 字符个数
 	 * @param thickness 干扰线宽度
 	 */
@@ -80,12 +79,25 @@ public class ShearCaptcha extends AbstractCaptcha {
 		super(width, height, generator, interfereCount);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount      字符个数
+	 * @param interfereCount 验证码干扰元素个数
+	 * @param sizeBaseHeight 字体的大小 高度的倍数
+	 */
+	public ShearCaptcha(final int width, final int height, final int codeCount, final int interfereCount, final float sizeBaseHeight) {
+		super(width, height, new RandomGenerator(codeCount), interfereCount, sizeBaseHeight);
+	}
+
 	@Override
 	public Image createImage(final String code) {
 		final BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
-		try{
+		try {
 			// 画字符串
 			drawString(g, code);
 			// 扭曲
@@ -100,10 +112,11 @@ public class ShearCaptcha extends AbstractCaptcha {
 	}
 
 	// ----------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 绘制字符串
 	 *
-	 * @param g {@link Graphics}画笔
+	 * @param g    {@link Graphics}画笔
 	 * @param code 验证码
 	 */
 	private void drawString(final Graphics2D g, final String code) {
@@ -117,9 +130,9 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * 扭曲
 	 *
-	 * @param g {@link Graphics}
-	 * @param w1 w1
-	 * @param h1 h1
+	 * @param g     {@link Graphics}
+	 * @param w1    w1
+	 * @param h1    h1
 	 * @param color 颜色
 	 */
 	private void shear(final Graphics g, final int w1, final int h1, final Color color) {
@@ -130,9 +143,9 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * X坐标扭曲
 	 *
-	 * @param g {@link Graphics}
-	 * @param w1 宽
-	 * @param h1 高
+	 * @param g     {@link Graphics}
+	 * @param w1    宽
+	 * @param h1    高
 	 * @param color 颜色
 	 */
 	private void shearX(final Graphics g, final int w1, final int h1, final Color color) {
@@ -155,9 +168,9 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * Y坐标扭曲
 	 *
-	 * @param g {@link Graphics}
-	 * @param w1 宽
-	 * @param h1 高
+	 * @param g     {@link Graphics}
+	 * @param w1    宽
+	 * @param h1    高
 	 * @param color 颜色
 	 */
 	private void shearY(final Graphics g, final int w1, final int h1, final Color color) {
@@ -180,13 +193,13 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * 干扰线
 	 *
-	 * @param g {@link Graphics}
-	 * @param x1 x1
-	 * @param y1 y1
-	 * @param x2 x2
-	 * @param y2 y2
+	 * @param g         {@link Graphics}
+	 * @param x1        x1
+	 * @param y1        y1
+	 * @param x2        x2
+	 * @param y2        y2
 	 * @param thickness 粗细
-	 * @param c 颜色
+	 * @param c         颜色
 	 */
 	@SuppressWarnings("SameParameterValue")
 	private void drawInterfere(final Graphics g, final int x1, final int y1, final int x2, final int y2, final int thickness, final Color c) {

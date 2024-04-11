@@ -36,10 +36,11 @@ public class LineCaptcha extends AbstractCaptcha {
 	private static final long serialVersionUID = 8691294460763091089L;
 
 	// -------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造，默认5位验证码，150条干扰线
 	 *
-	 * @param width 图片宽
+	 * @param width  图片宽
 	 * @param height 图片高
 	 */
 	public LineCaptcha(final int width, final int height) {
@@ -49,8 +50,8 @@ public class LineCaptcha extends AbstractCaptcha {
 	/**
 	 * 构造
 	 *
-	 * @param width 图片宽
-	 * @param height 图片高
+	 * @param width     图片宽
+	 * @param height    图片高
 	 * @param codeCount 字符个数
 	 * @param lineCount 干扰线条数
 	 */
@@ -69,6 +70,19 @@ public class LineCaptcha extends AbstractCaptcha {
 	public LineCaptcha(final int width, final int height, final CodeGenerator generator, final int interfereCount) {
 		super(width, height, generator, interfereCount);
 	}
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount      字符个数
+	 * @param interfereCount 验证码干扰元素个数
+	 * @param sizeBaseHeight 字体的大小 高度的倍数
+	 */
+	public LineCaptcha(final int width, final int height, final int codeCount, final int interfereCount, final float sizeBaseHeight) {
+		super(width, height, new RandomGenerator(codeCount), interfereCount, sizeBaseHeight);
+	}
 	// -------------------------------------------------------------------- Constructor end
 
 	@Override
@@ -77,7 +91,7 @@ public class LineCaptcha extends AbstractCaptcha {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
-		try{
+		try {
 			// 干扰线
 			drawInterfere(g);
 
@@ -91,10 +105,11 @@ public class LineCaptcha extends AbstractCaptcha {
 	}
 
 	// ----------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 绘制字符串
 	 *
-	 * @param g {@link Graphics}画笔
+	 * @param g    {@link Graphics}画笔
 	 * @param code 验证码
 	 */
 	private void drawString(final Graphics2D g, final String code) {
