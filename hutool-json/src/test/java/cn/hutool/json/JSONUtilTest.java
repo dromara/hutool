@@ -280,4 +280,10 @@ public class JSONUtilTest {
 		private Byte[] e = new Byte[1];
 	}
 
+	@Test
+	public void issue3540Test() {
+		Long userId=10101010L;
+		final String jsonStr = JSONUtil.toJsonStr(userId);
+		Assert.assertEquals("{}", jsonStr);
+	}
 }
