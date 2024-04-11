@@ -48,6 +48,21 @@ public class CaptchaUtil {
 	}
 
 	/**
+	 * 创建线干扰的验证码
+	 *
+	 * @param width     图片宽
+	 * @param height    图片高
+	 * @param codeCount 字符个数
+	 * @param lineCount 干扰线条数
+	 * @param size      字体的大小 高度的倍数
+	 * @return {@link LineCaptcha}
+	 */
+	public static LineCaptcha createLineCaptcha(int width, int height, int codeCount, int lineCount, float size) {
+		return new LineCaptcha(width, height, codeCount, lineCount, size);
+	}
+	// ------------------------- lineCaptcha end -------------------------
+
+	/**
 	 * 创建圆圈干扰的验证码，默认5位验证码，15个干扰圈
 	 *
 	 * @param width  图片宽
@@ -85,6 +100,21 @@ public class CaptchaUtil {
 	public static CircleCaptcha createCircleCaptcha(int width, int height, CodeGenerator generator, int circleCount) {
 		return new CircleCaptcha(width, height, generator, circleCount);
 	}
+
+	/**
+	 * 创建圆圈干扰的验证码
+	 *
+	 * @param width       图片宽
+	 * @param height      图片高
+	 * @param codeCount   字符个数
+	 * @param circleCount 干扰圆圈条数
+	 * @param size        字体的大小 高度的倍数
+	 * @return {@link CircleCaptcha}
+	 */
+	public static CircleCaptcha createCircleCaptcha(int width, int height, int codeCount, int circleCount, float size) {
+		return new CircleCaptcha(width, height, codeCount, circleCount, size);
+	}
+	// ------------------------- circleCaptcha end -------------------------
 
 	/**
 	 * 创建扭曲干扰的验证码，默认5位验证码
@@ -126,9 +156,24 @@ public class CaptchaUtil {
 	}
 
 	/**
+	 * 创建扭曲干扰的验证码，默认5位验证码
+	 *
+	 * @param width     图片宽
+	 * @param height    图片高
+	 * @param codeCount 字符个数
+	 * @param thickness 干扰线宽度
+	 * @param size      字体的大小 高度的倍数
+	 * @return {@link ShearCaptcha}
+	 */
+	public static ShearCaptcha createShearCaptcha(int width, int height, int codeCount, int thickness, float size) {
+		return new ShearCaptcha(width, height, codeCount, thickness, size);
+	}
+	// ------------------------- shearCaptcha end -------------------------
+
+	/**
 	 * 创建GIF验证码
 	 *
-	 * @param width 宽
+	 * @param width  宽
 	 * @param height 高
 	 * @return {@link GifCaptcha}
 	 */
@@ -139,8 +184,8 @@ public class CaptchaUtil {
 	/**
 	 * 创建GIF验证码
 	 *
-	 * @param width 宽
-	 * @param height 高
+	 * @param width     宽
+	 * @param height    高
 	 * @param codeCount 字符个数
 	 * @return {@link GifCaptcha}
 	 */
@@ -151,8 +196,8 @@ public class CaptchaUtil {
 	/**
 	 * 创建GIF验证码
 	 *
-	 * @param width 宽
-	 * @param height 高
+	 * @param width     宽
+	 * @param height    高
 	 * @param generator 验证码生成器
 	 * @param thickness 验证码干扰元素个数
 	 * @return {@link GifCaptcha}
@@ -160,4 +205,20 @@ public class CaptchaUtil {
 	public static GifCaptcha createGifCaptcha(int width, int height, CodeGenerator generator, int thickness) {
 		return new GifCaptcha(width, height, generator, thickness);
 	}
+
+	/**
+	 * 创建圆圈干扰的验证码
+	 *
+	 * @param width     图片宽
+	 * @param height    图片高
+	 * @param codeCount 字符个数
+	 * @param thickness 验证码干扰元素个数
+	 * @param size      字体的大小 高度的倍数
+	 * @return {@link GifCaptcha}
+	 */
+	public static GifCaptcha createGifCaptcha(int width, int height, int codeCount, int thickness, float size) {
+		return new GifCaptcha(width, height, codeCount, thickness, size);
+	}
+	// ------------------------- gifCaptcha end -------------------------
+
 }

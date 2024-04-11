@@ -68,6 +68,20 @@ public class ShearCaptcha extends AbstractCaptcha {
 		super(width, height, generator, interfereCount);
 	}
 
+
+	/**
+	 * 构造
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount 	 字符个数
+	 * @param interfereCount 验证码干扰元素个数
+	 * @param size           字体的大小 高度的倍数
+	 */
+	public ShearCaptcha(int width, int height, int codeCount, int interfereCount, float size) {
+		super(width, height, new RandomGenerator(codeCount), interfereCount, size);
+	}
+
 	@Override
 	public Image createImage(String code) {
 		final BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);

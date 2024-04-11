@@ -480,6 +480,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 设置是否只保留别名中的字段值，如果为true，则不设置alias的字段将不被输出，false表示原样输出
+	 * Bean中设置@Alias时，setOnlyAlias是无效的，这个参数只和addHeaderAlias配合使用，原因是注解是Bean内部的操作，而addHeaderAlias是Writer的操作，不互通。
 	 *
 	 * @param isOnlyAlias 是否只保留别名中的字段值
 	 * @return this
