@@ -22,6 +22,12 @@ import org.dromara.hutool.json.JSONConfig;
  * @since 6.0.0
  */
 public class NumberValueWriter implements JSONValueWriter<Number> {
+
+	/**
+	 * JS中表示的数字最大值
+	 */
+	private static final long JS_MAX_NUMBER = 9007199254740992L;
+
 	/**
 	 * 单例对象
 	 */
@@ -39,7 +45,24 @@ public class NumberValueWriter implements JSONValueWriter<Number> {
 	public void write(final JSONWriter writer, final Number number) {
 		final JSONConfig config = writer.getConfig();
 		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
-		final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
-		writer.writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
+		final boolean isStripTrailingZeros = (null == config) || config.isStripTrailingZeros();
+		final String numberStr = NumberUtil.toStr(number, isStripTrailingZeros);
+
+		final NumberWriteMode numberWriteMode = (null == config) ? NumberWriteMode.NORMAL : config.getNumberWriteMode();
+		switch (numberWriteMode){
+			case JS:
+				if(number.longValue() > JS_MAX_NUMBER){
+					writer.writeQuoteStrValue(numberStr);
+				} else{
+					writer.writeRaw(numberStr);
+				}
+				break;
+			case STRING:
+				writer.writeQuoteStrValue(numberStr);
+				break;
+			default:
+				writer.writeRaw(numberStr);
+				break;
+		}
 	}
 }

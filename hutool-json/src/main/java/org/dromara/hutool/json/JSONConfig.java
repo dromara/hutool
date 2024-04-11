@@ -15,6 +15,7 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.json.convert.JSONConverter;
+import org.dromara.hutool.json.writer.NumberWriteMode;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -64,6 +65,10 @@ public class JSONConfig implements Serializable {
 	 * 自定义的类型转换器，用于在getXXX操作中自动转换类型
 	 */
 	private Converter converter = JSONConverter.of(this);
+	/**
+	 * Number写出模式
+	 */
+	private NumberWriteMode numberWriteMode = NumberWriteMode.NORMAL;
 
 	/**
 	 * 创建默认的配置项
@@ -257,6 +262,7 @@ public class JSONConfig implements Serializable {
 
 	/**
 	 * 获取自定义的类型转换器，用于在序列化、反序列化操作中实现对象类型转换
+	 *
 	 * @return 转换器
 	 */
 	public Converter getConverter() {
@@ -265,9 +271,33 @@ public class JSONConfig implements Serializable {
 
 	/**
 	 * 设置自定义的类型转换器，用于在序列化、反序列化操作中实现对象类型转换
+	 *
 	 * @param converter 转换器
 	 */
 	public void setConverter(final Converter converter) {
 		this.converter = converter;
+	}
+
+	/**
+	 * 获取Number写出模式
+	 *
+	 * @return Number写出模式
+	 * @since 6.0.0
+	 */
+	public NumberWriteMode getNumberWriteMode() {
+		return numberWriteMode;
+	}
+
+	/**
+	 * 设置数字写出模式<br>
+	 * 考虑到在JS或其他环境中，Number超过一定长度会丢失精度，因此针对Number类型值，可选写出规则
+	 *
+	 * @param numberWriteMode Number写出模式
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public JSONConfig setNumberWriteMode(final NumberWriteMode numberWriteMode) {
+		this.numberWriteMode = numberWriteMode;
+		return this;
 	}
 }
