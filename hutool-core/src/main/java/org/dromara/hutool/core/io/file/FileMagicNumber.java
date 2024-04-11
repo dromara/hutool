@@ -14,6 +14,7 @@ package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -1392,6 +1393,10 @@ public enum FileMagicNumber {
 	 * @return {@code FileMagicNumber}
 	 */
 	public static FileMagicNumber getMagicNumber(final byte[] bytes) {
+		if(ObjUtil.isNull(bytes)){
+			return UNKNOWN;
+		}
+
 		final FileMagicNumber number = Arrays.stream(values())
 			.filter(fileMagicNumber -> fileMagicNumber.match(bytes))
 			.findFirst()
