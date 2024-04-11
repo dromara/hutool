@@ -9,6 +9,7 @@
 * 【core   】      StrUtil增加toStringOrEmpty方法（issue#I9CPC7@Gitee）
 * 【extra  】      设置jsch登录认证方式，跳过Kerberos身份验证（pr#3530@Github）
 * 【extra  】      增加设置验证码大小和针对alias注释（pr#3533@Github）
+* 【json   】      JSONConfig增加setWriteLongAsString可选是否将Long写出为String类型（issue#3541@Github）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）

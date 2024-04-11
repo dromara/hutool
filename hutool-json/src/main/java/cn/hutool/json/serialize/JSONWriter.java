@@ -261,7 +261,13 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
 			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
-			writeNumberValue((Number) value);
+			if(value instanceof Long && config.isWriteLongAsString()){
+				// issue#3541
+				// long可能溢出，此时可选是否将long写出为字符串类型
+				writeStrValue(value.toString());
+			} else {
+				writeNumberValue((Number) value);
+			}
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
 			// issue#2572@Github
 			if(value instanceof MonthDay){

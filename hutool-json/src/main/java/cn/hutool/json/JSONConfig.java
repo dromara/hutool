@@ -50,6 +50,12 @@ public class JSONConfig implements Serializable {
 	private boolean checkDuplicate;
 
 	/**
+	 * 是否将Long值写出为字符串类型
+	 * @since 5.8.28
+	 */
+	private boolean writeLongAsString;
+
+	/**
 	 * 创建默认的配置项
 	 *
 	 * @return JSONConfig
@@ -260,6 +266,25 @@ public class JSONConfig implements Serializable {
 	 */
 	public JSONConfig setCheckDuplicate(boolean checkDuplicate) {
 		this.checkDuplicate = checkDuplicate;
+		return this;
+	}
+
+	/**
+	 * 是否将Long值写出为字符串类型
+	 * @return 是否将Long值写出为字符串类型
+	 * @since 5.8.28
+	 */
+	public boolean isWriteLongAsString() {
+		return writeLongAsString;
+	}
+
+	/**
+	 * 设置是否将Long值写出为字符串类型
+	 * @param writeLongAsString 是否将Long值写出为字符串类型
+	 * @return this
+	 */
+	public JSONConfig setWriteLongAsString(boolean writeLongAsString) {
+		this.writeLongAsString = writeLongAsString;
 		return this;
 	}
 }
