@@ -14,7 +14,7 @@ import java.util.Map;
  * 签名工具类<br>
  * 封装包括：
  * <ul>
- *     <li>非堆成签名，签名算法支持见{@link SignAlgorithm}</li>
+ *     <li>非对称签名，签名算法支持见{@link SignAlgorithm}</li>
  *     <li>对称签名，支持Map类型参数排序后签名</li>
  *     <li>摘要签名，支持Map类型参数排序后签名，签名方法见：{@link DigestAlgorithm}</li>
  * </ul>
