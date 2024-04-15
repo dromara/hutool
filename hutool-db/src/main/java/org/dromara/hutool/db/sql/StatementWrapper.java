@@ -696,6 +696,18 @@ public class StatementWrapper extends SimpleWrapper<PreparedStatement> implement
 			// 忽略其它数字类型，按照默认类型传入
 		}
 
+		//Oracle中stream和Blob不能直接通过setObject转换，单独处理
+		//InputStream，解决oracle情况下setObject(inputStream)报错问题，java.sql.SQLException: 无效的列类型
+		if(param instanceof InputStream){
+			this.raw.setBinaryStream(paramIndex, (InputStream) param);
+			return;
+		}
+
+		//java.sql.Blob
+		if(param instanceof Blob){
+			this.raw.setBlob(paramIndex, (Blob) param);
+		}
+
 		// 其它参数类型
 		this.raw.setObject(paramIndex, param);
 	}
