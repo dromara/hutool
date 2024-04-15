@@ -15,6 +15,7 @@
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）
 * 【core   】      修复FileMagicNumber.getMagicNumber空指针问题（issue#I9FE8B@Gitee）
 * 【extra  】      修复CompressUtil工具多出\问题（issue#I71K5V@Gitee）
+* 【db     】      解决oracle情况下setObject(inputStream)报错问题，java.sql.SQLException: 无效的列类型问题（pr#1207@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.27(2024-03-29)
