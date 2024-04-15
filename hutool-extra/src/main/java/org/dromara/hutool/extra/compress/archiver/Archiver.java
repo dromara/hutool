@@ -12,8 +12,6 @@
 
 package org.dromara.hutool.extra.compress.archiver;
 
-import org.dromara.hutool.core.text.StrUtil;
-
 import java.io.Closeable;
 import java.io.File;
 import java.util.function.Predicate;
@@ -43,7 +41,7 @@ public interface Archiver extends Closeable {
 	 * @return this
 	 */
 	default Archiver add(final File file, final Predicate<File> predicate) {
-		return add(file, StrUtil.SLASH, predicate);
+		return add(file, null, predicate);
 	}
 
 	/**
