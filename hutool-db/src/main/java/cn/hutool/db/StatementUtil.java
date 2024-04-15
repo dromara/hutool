@@ -13,16 +13,10 @@ import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlLog;
 import cn.hutool.db.sql.SqlUtil;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ParameterMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -379,6 +373,18 @@ public class StatementUtil {
 			}
 			// 忽略其它数字类型，按照默认类型传入
 		}
+
+		//InputStream，解决oracle情况下setObject(inputStream)报错问题，java.sql.SQLException: 无效的列类型
+		if(param instanceof InputStream){
+			ps.setBinaryStream(paramIndex, (InputStream) param);
+			return;
+		}
+
+		//java.sql.Blob
+		if(param instanceof Blob){
+			ps.setBlob(paramIndex, (Blob) param);
+		}
+
 
 		// 其它参数类型
 		ps.setObject(paramIndex, param);
