@@ -5,6 +5,7 @@ import cn.hutool.core.convert.NumberChineseFormatter;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.FastDateParser;
 import cn.hutool.core.date.format.GlobalCustomFormat;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -356,9 +357,10 @@ public class CalendarUtil {
 			throw new IllegalArgumentException("The date must not be null");
 		}
 
-		// 统一时区
-		cal1 = toDefaultTimeZone(cal1);
-		cal2 = toDefaultTimeZone(cal2);
+		if(ObjUtil.notEqual(cal1.getTimeZone(), cal2.getTimeZone())){
+			// 统一时区
+			cal2 = changeTimeZone(cal2, cal1.getTimeZone());
+		}
 
 		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
 			cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
@@ -424,9 +426,10 @@ public class CalendarUtil {
 			throw new IllegalArgumentException("The date must not be null");
 		}
 
-		// 统一时区
-		cal1 = toDefaultTimeZone(cal1);
-		cal2 = toDefaultTimeZone(cal2);
+		if(ObjUtil.notEqual(cal1.getTimeZone(), cal2.getTimeZone())){
+			// 统一时区
+			cal2 = changeTimeZone(cal2, cal1.getTimeZone());
+		}
 
 		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
 			cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
@@ -805,10 +808,10 @@ public class CalendarUtil {
 	 * @param cal 时间
 	 * @return 默认时区的calendar对象
 	 */
-	private static Calendar toDefaultTimeZone(Calendar cal) {
+	private static Calendar changeTimeZone(Calendar cal, TimeZone timeZone) {
 		// 转换到统一时区，例如UTC
 		cal = (Calendar) cal.clone();
-		cal.setTimeZone(TimeZone.getDefault());
+		cal.setTimeZone(timeZone);
 		return cal;
 	}
 }
