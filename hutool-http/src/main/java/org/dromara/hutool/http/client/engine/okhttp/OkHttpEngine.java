@@ -85,31 +85,31 @@ public class OkHttpEngine implements ClientEngine {
 
 		final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		final ClientConfig conf = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
 		// 连接超时
-		final int connectionTimeout = config.getConnectionTimeout();
+		final int connectionTimeout = conf.getConnectionTimeout();
 		if (connectionTimeout > 0) {
 			builder.connectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 		}
 		// 读写超时
-		final int readTimeout = config.getReadTimeout();
+		final int readTimeout = conf.getReadTimeout();
 		if (readTimeout > 0) {
 			// 读写共用读取超时
-			builder.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS)
-				.writeTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
+			builder.readTimeout(conf.getReadTimeout(), TimeUnit.MILLISECONDS)
+				.writeTimeout(conf.getReadTimeout(), TimeUnit.MILLISECONDS);
 		}
 
 		// SSL
-		final SSLInfo sslInfo = config.getSslInfo();
-		if (null != sslInfo) {
+		final SSLInfo sslInfo = conf.getSslInfo();
+		if (null != sslInfo && null != sslInfo.getSocketFactory() && null != sslInfo.getTrustManager()){
 			builder.sslSocketFactory(sslInfo.getSocketFactory(), sslInfo.getTrustManager());
 		}
 
 		// 设置代理
-		setProxy(builder, config);
+		setProxy(builder, conf);
 
 		// 默认关闭自动跳转
-		builder.setFollowRedirects$okhttp(false);
+		builder.followRedirects(false);
 
 		this.client = builder.build();
 	}
@@ -127,7 +127,6 @@ public class OkHttpEngine implements ClientEngine {
 		// 填充方法
 		final String method = message.method().name();
 		final HttpBody body = message.handledBody();
-		// if (HttpMethod.permitsRequestBody(method)) {
 		if (null != body) {
 			// 为了兼容支持rest请求，在此不区分是否为GET等方法，一律按照body是否有值填充，兼容
 			builder.method(method, new OkHttpRequestBody(body));
@@ -150,10 +149,10 @@ public class OkHttpEngine implements ClientEngine {
 	private static void setProxy(final OkHttpClient.Builder builder, final ClientConfig config) {
 		final HttpProxy proxy = config.getProxy();
 		if (null != proxy) {
-			builder.setProxy$okhttp(proxy);
+			builder.proxy(proxy);
 			final PasswordAuthentication auth = proxy.getAuth();
 			if (null != auth) {
-				builder.setProxyAuthenticator$okhttp(new BasicProxyAuthenticator(auth));
+				builder.proxyAuthenticator(new BasicProxyAuthenticator(auth));
 			}
 		}
 	}
