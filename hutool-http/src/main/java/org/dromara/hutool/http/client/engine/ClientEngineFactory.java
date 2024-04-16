@@ -38,7 +38,7 @@ public class ClientEngineFactory {
 	}
 
 	/**
-	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的拼音引擎对象<br>
+	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的HTTP客户端引擎对象<br>
 	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
 	 *
 	 * @param config Http客户端配置
@@ -70,7 +70,7 @@ public class ClientEngineFactory {
 	}
 
 	/**
-	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的拼音引擎对象<br>
+	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的HTTP客户端引擎对象<br>
 	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
 	 *
 	 * @return {@code ClientEngine}
@@ -82,7 +82,7 @@ public class ClientEngineFactory {
 	}
 
 	/**
-	 * 根据用户引入的拼音引擎jar，自动创建对应的拼音引擎对象<br>
+	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的HTTP客户端引擎对象<br>
 	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
 	 *
 	 * @return {@code EngineFactory}
