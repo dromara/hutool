@@ -38,6 +38,8 @@ import java.util.TimeZone;
  */
 public class CalendarUtil {
 
+	// region ----- calendar
+
 	/**
 	 * 创建Calendar对象，时间为默认时区的当前时间
 	 *
@@ -95,6 +97,21 @@ public class CalendarUtil {
 		cal.setTimeInMillis(millis);
 		return cal;
 	}
+
+	/**
+	 * 转换为指定时区的Calendar，返回新的Calendar
+	 *
+	 * @param calendar 时间
+	 * @param timeZone 新时区
+	 * @return 指定时区的新的calendar对象
+	 */
+	public static Calendar calendar(Calendar calendar, final TimeZone timeZone) {
+		// 转换到统一时区，例如UTC
+		calendar = (Calendar) calendar.clone();
+		calendar.setTimeZone(timeZone);
+		return calendar;
+	}
+	// endregion
 
 	/**
 	 * 是否为上午
@@ -379,7 +396,11 @@ public class CalendarUtil {
 	 * @param cal2 日期2
 	 * @return 是否为同一天
 	 */
-	public static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
+	public static boolean isSameDay(final Calendar cal1, Calendar cal2) {
+		if (ObjUtil.notEquals(cal1.getTimeZone(), cal2.getTimeZone())) {
+			// 统一时区
+			cal2 = calendar(cal2, cal1.getTimeZone());
+		}
 		return isSameYear(cal1, cal2) && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 	}
 
@@ -400,7 +421,13 @@ public class CalendarUtil {
 
 		// 防止比较前修改原始Calendar对象
 		cal1 = (Calendar) cal1.clone();
-		cal2 = (Calendar) cal2.clone();
+
+		if (ObjUtil.notEquals(cal1.getTimeZone(), cal2.getTimeZone())) {
+			// 统一时区
+			cal2 = calendar(cal2, cal1.getTimeZone());
+		} else {
+			cal2 = (Calendar) cal2.clone();
+		}
 
 		// 把所传日期设置为其当前周的第一天
 		// 比较设置后的两个日期是否是同一天：true 代表同一周
@@ -427,7 +454,12 @@ public class CalendarUtil {
 	 * @return 是否为同一月
 	 * @since 5.4.1
 	 */
-	public static boolean isSameMonth(final Calendar cal1, final Calendar cal2) {
+	public static boolean isSameMonth(final Calendar cal1, Calendar cal2) {
+		if (ObjUtil.notEquals(cal1.getTimeZone(), cal2.getTimeZone())) {
+			// 统一时区
+			cal2 = calendar(cal2, cal1.getTimeZone());
+		}
+
 		return isSameYear(cal1, cal2) && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
 	}
 
@@ -439,10 +471,16 @@ public class CalendarUtil {
 	 * @param cal2 日期2
 	 * @return 是否为同一年
 	 */
-	public static boolean isSameYear(final Calendar cal1, final Calendar cal2) {
+	public static boolean isSameYear(final Calendar cal1, Calendar cal2) {
 		if (cal1 == null || cal2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
+
+		if (ObjUtil.notEquals(cal1.getTimeZone(), cal2.getTimeZone())) {
+			// 统一时区
+			cal2 = calendar(cal2, cal1.getTimeZone());
+		}
+
 		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
 			// issue#3011@Github
 			cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
