@@ -60,13 +60,7 @@ public class OkHttpResponse implements Response {
 
 	@Override
 	public Map<String, List<String>> headers() {
-		final Headers headers = rawRes.headers();
-		final HashMap<String, List<String>> result = new LinkedHashMap<>(headers.size(), 1);
-		for (final Pair<? extends String, ? extends String> header : headers) {
-			final List<String> valueList = result.computeIfAbsent(header.getFirst(), k -> new ArrayList<>());
-			valueList.add(header.getSecond());
-		}
-		return result;
+		return rawRes.headers().toMultimap();
 	}
 
 	@Override
