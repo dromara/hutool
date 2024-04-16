@@ -355,6 +355,11 @@ public class CalendarUtil {
 		if (cal1 == null || cal2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
+
+		// 统一时区
+		cal1 = toDefaultTimeZone(cal1);
+		cal2 = toDefaultTimeZone(cal2);
+
 		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
 			cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
 			cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
@@ -418,6 +423,11 @@ public class CalendarUtil {
 		if (cal1 == null || cal2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
+
+		// 统一时区
+		cal1 = toDefaultTimeZone(cal1);
+		cal2 = toDefaultTimeZone(cal2);
+
 		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
 			cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
 			// issue#3011@Github
@@ -787,5 +797,18 @@ public class CalendarUtil {
 		calendar.setLenient(lenient);
 
 		return parser.parse(StrUtil.str(str), new ParsePosition(0), calendar) ? calendar : null;
+	}
+
+	/**
+	 * 转换为默认时区的Calendar
+	 *
+	 * @param cal 时间
+	 * @return 默认时区的calendar对象
+	 */
+	private static Calendar toDefaultTimeZone(Calendar cal) {
+		// 转换到统一时区，例如UTC
+		cal = (Calendar) cal.clone();
+		cal.setTimeZone(TimeZone.getDefault());
+		return cal;
 	}
 }
