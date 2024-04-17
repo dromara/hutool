@@ -76,11 +76,9 @@ public class RandomUtilTest {
 	}
 
 	@Test
-	@Disabled
-	public void randomStringWithoutStrTest() {
+	public void randomStringLowerWithoutStrTest() {
 		for (int i = 0; i < 100; i++) {
-			final String s = RandomUtil.randomStringWithoutStr(8, "0IPOL");
-			System.out.println(s);
+			final String s = RandomUtil.randomStringLowerWithoutStr(8, "0IPOL");
 			for (final char c : "0IPOL".toCharArray()) {
 				Assertions.assertFalse(s.contains((String.valueOf(c).toLowerCase(Locale.ROOT))));
 			}
