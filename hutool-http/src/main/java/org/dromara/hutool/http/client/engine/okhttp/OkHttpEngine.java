@@ -23,6 +23,8 @@ import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.PasswordAuthentication;
 import java.util.concurrent.TimeUnit;
@@ -101,8 +103,12 @@ public class OkHttpEngine implements ClientEngine {
 
 		// SSL
 		final SSLInfo sslInfo = conf.getSslInfo();
-		if (null != sslInfo && null != sslInfo.getSocketFactory() && null != sslInfo.getTrustManager()){
-			builder.sslSocketFactory(sslInfo.getSocketFactory(), sslInfo.getTrustManager());
+		if (null != sslInfo){
+			final SSLSocketFactory socketFactory = sslInfo.getSocketFactory();
+			final X509TrustManager trustManager = sslInfo.getTrustManager();
+			if(null != socketFactory && null != trustManager){
+				builder.sslSocketFactory(socketFactory, trustManager);
+			}
 		}
 
 		// 设置代理
