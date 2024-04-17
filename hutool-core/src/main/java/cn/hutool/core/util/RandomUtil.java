@@ -600,14 +600,28 @@ public class RandomUtil {
 	}
 
 	/**
+	 * 获得一个随机的字符串（只包含数字和字母） 并排除指定字符串
+	 *
+	 * @param length   字符串的长度
+	 * @param elemData 要排除的字符串,如：去重容易混淆的字符串，oO0、lL1、q9Q、pP，区分大小写
+	 * @return 随机字符串
+	 */
+	public static String randomStringWithoutStr(final int length, final String elemData) {
+		String baseStr = BASE_CHAR_NUMBER;
+		baseStr = StrUtil.removeAll(baseStr, elemData.toCharArray());
+		return randomString(baseStr, length);
+	}
+
+	/**
 	 * 获得一个随机的字符串（只包含数字和小写字母） 并排除指定字符串
 	 *
 	 * @param length   字符串的长度
 	 * @param elemData 要排除的字符串,如：去重容易混淆的字符串，oO0、lL1、q9Q、pP，不区分大小写
 	 * @return 随机字符串
+	 * @since 5.8.28
 	 */
-	public static String randomStringWithoutStr(final int length, final String elemData) {
-		String baseStr = BASE_CHAR_NUMBER;
+	public static String randomStringLowerWithoutStr(final int length, final String elemData) {
+		String baseStr = BASE_CHAR_NUMBER_LOWER;
 		baseStr = StrUtil.removeAll(baseStr, elemData.toLowerCase().toCharArray());
 		return randomString(baseStr, length);
 	}

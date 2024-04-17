@@ -17,6 +17,7 @@
 * 【extra  】      修复CompressUtil工具多出\问题（issue#I71K5V@Gitee）
 * 【db     】      解决oracle情况下setObject(inputStream)报错问题，java.sql.SQLException: 无效的列类型问题（pr#1207@Gitee）
 * 【core   】      解决CalendarUtil.isSameDay时区不同导致结果错误问题（pr#3548@Github）
+* 【core   】      修复RandomUtil.randomStringWithoutStr方法问题（pr#1209@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.27(2024-03-29)
