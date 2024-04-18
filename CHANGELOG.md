@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.28(2024-04-16)
+# 5.8.28(2024-04-18)
 
 ### 🐣新特性
 * 【core   】      修正XmlUtil的omitXmlDeclaration描述注释（issue#I9CPC7@Gitee）
@@ -10,6 +10,7 @@
 * 【extra  】      设置jsch登录认证方式，跳过Kerberos身份验证（pr#3530@Github）
 * 【extra  】      增加设置验证码大小和针对alias注释（pr#3533@Github）
 * 【json   】      JSONConfig增加setWriteLongAsString可选是否将Long写出为String类型（issue#3541@Github）
+* 【cache  】      CacheUtil.newTimedCache增加有schedulePruneDelay参数的重载方法（issue#I9HO25@Gitee）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）
