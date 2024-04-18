@@ -21,8 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Spring-cglib实现的动态代理切面<br>
- * 只用于JDK8
+ * Spring-cglib实现的动态代理切面
  *
  * @author looly
  */
