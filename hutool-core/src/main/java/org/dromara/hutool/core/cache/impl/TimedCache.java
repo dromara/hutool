@@ -83,9 +83,11 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	 * 定时清理
 	 *
 	 * @param delay 间隔时长，单位毫秒
+	 * @return this
 	 */
-	public void schedulePrune(final long delay) {
+	public TimedCache<K, V> schedulePrune(final long delay) {
 		this.pruneJobFuture = GlobalPruneTimer.INSTANCE.schedule(this::prune, delay);
+		return this;
 	}
 
 	/**

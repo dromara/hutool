@@ -103,6 +103,21 @@ public class CacheUtil {
 	}
 
 	/**
+	 * 创建定时缓存，通过定时任务自动清除过期缓存对象
+	 *
+	 * @param <K>                Key类型
+	 * @param <V>                Value类型
+	 * @param timeout            过期时长，单位：毫秒
+	 * @param schedulePruneDelay 间隔时长，单位毫秒
+	 * @return {@link TimedCache}
+	 * @since 5.8.28
+	 */
+	public static <K, V> TimedCache<K, V> newTimedCache(final long timeout, final long schedulePruneDelay) {
+		final TimedCache<K, V> cache = newTimedCache(timeout);
+		return cache.schedulePrune(schedulePruneDelay);
+	}
+
+	/**
 	 * 创建定时缓存.
 	 *
 	 * @param <K> Key类型
