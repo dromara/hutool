@@ -20,6 +20,7 @@
 * 【core   】      解决CalendarUtil.isSameDay时区不同导致结果错误问题（pr#3548@Github）
 * 【core   】      修复RandomUtil.randomStringWithoutStr方法问题（pr#1209@Gitee）
 * 【http   】      修复HttpRequest.header相同key被覆盖问题（issue#I9I61C@Gitee）
+* 【core   】      修复TemporalAccessorConverter自定义格式转换问题（issue#I9HQQE@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.27(2024-03-29)

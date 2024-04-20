@@ -117,7 +117,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 				return LocalDate.of(Convert.toInt(map.get("year")), Convert.toInt(map.get("month")), Convert.toInt(map.get("day")));
 			} else if (LocalDateTime.class.equals(this.targetType)) {
 				return LocalDateTime.of(Convert.toInt(map.get("year")), Convert.toInt(map.get("month")), Convert.toInt(map.get("day")),
-						Convert.toInt(map.get("hour")), Convert.toInt(map.get("minute")), Convert.toInt(map.get("second")), Convert.toInt(map.get("second")));
+					Convert.toInt(map.get("hour")), Convert.toInt(map.get("minute")), Convert.toInt(map.get("second")), Convert.toInt(map.get("second")));
 			} else if (LocalTime.class.equals(this.targetType)) {
 				return LocalTime.of(Convert.toInt(map.get("hour")), Convert.toInt(map.get("minute")), Convert.toInt(map.get("second")), Convert.toInt(map.get("nano")));
 			}
@@ -138,13 +138,13 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 			return null;
 		}
 
-		if(DayOfWeek.class.equals(this.targetType)){
+		if (DayOfWeek.class.equals(this.targetType)) {
 			return DayOfWeek.valueOf(StrUtil.toString(value));
-		} else if(Month.class.equals(this.targetType)){
+		} else if (Month.class.equals(this.targetType)) {
 			return Month.valueOf(StrUtil.toString(value));
-		} else if(Era.class.equals(this.targetType)){
+		} else if (Era.class.equals(this.targetType)) {
 			return IsoEra.valueOf(StrUtil.toString(value));
-		} else if(MonthDay.class.equals(this.targetType)){
+		} else if (MonthDay.class.equals(this.targetType)) {
 			return MonthDay.parse(value);
 		}
 
@@ -152,6 +152,13 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		ZoneId zoneId;
 		if (null != this.format) {
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(this.format);
+
+			// issue#I9HQQE
+			final TemporalAccessor temporalAccessor = parseWithFormat(this.targetType, value, formatter);
+			if (null != temporalAccessor) {
+				return temporalAccessor;
+			}
+
 			instant = formatter.parse(value, Instant::from);
 			zoneId = formatter.getZone();
 		} else {
@@ -163,26 +170,46 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	}
 
 	/**
+	 * 对于自定义格式的字符串，单独解析为{@link TemporalAccessor}
+	 *
+	 * @param targetClass 目标类型
+	 * @param value       日期字符串
+	 * @param formatter   格式
+	 * @return {@link TemporalAccessor}
+	 */
+	private TemporalAccessor parseWithFormat(final Class<?> targetClass, final CharSequence value, final DateTimeFormatter formatter) {
+		// issue#I9HQQE
+		if (LocalDate.class == targetClass) {
+			return LocalDate.parse(value, formatter);
+		} else if (LocalDateTime.class == targetClass) {
+			return LocalDateTime.parse(value, formatter);
+		} else if (LocalTime.class == targetClass) {
+			return LocalTime.parse(value, formatter);
+		}
+		return null;
+	}
+
+	/**
 	 * 将Long型时间戳转换为java.time中的对象
 	 *
 	 * @param time 时间戳
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromLong(Long time) {
-		if(DayOfWeek.class.equals(this.targetType)){
+		if (DayOfWeek.class.equals(this.targetType)) {
 			return DayOfWeek.of(Math.toIntExact(time));
-		} else if(Month.class.equals(this.targetType)){
+		} else if (Month.class.equals(this.targetType)) {
 			return Month.of(Math.toIntExact(time));
-		} else if(Era.class.equals(this.targetType)){
+		} else if (Era.class.equals(this.targetType)) {
 			return IsoEra.of(Math.toIntExact(time));
 		}
 
 		final Instant instant;
-		if(GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)){
+		if (GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)) {
 			// https://gitee.com/dromara/hutool/issues/I6IS5B
 			// Unix时间戳
 			instant = Instant.ofEpochSecond(time);
-		}else{
+		} else {
 			instant = Instant.ofEpochMilli(time);
 		}
 		return parseFromInstant(instant, null);
@@ -195,11 +222,11 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromTemporalAccessor(TemporalAccessor temporalAccessor) {
-		if(DayOfWeek.class.equals(this.targetType)){
+		if (DayOfWeek.class.equals(this.targetType)) {
 			return DayOfWeek.from(temporalAccessor);
-		} else if(Month.class.equals(this.targetType)){
+		} else if (Month.class.equals(this.targetType)) {
 			return Month.from(temporalAccessor);
-		} else if(MonthDay.class.equals(this.targetType)){
+		} else if (MonthDay.class.equals(this.targetType)) {
 			return MonthDay.from(temporalAccessor);
 		}
 
