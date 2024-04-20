@@ -1227,7 +1227,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				// 流方式上传数据
 				.setChunkedStreamingMode(config.blockSize)
 				// 覆盖默认Header
-				.header(this.headers, true);
+				.header(this.headers, false);
 
 		if (null != this.cookie) {
 			// 当用户自定义Cookie时，全局Cookie自动失效
