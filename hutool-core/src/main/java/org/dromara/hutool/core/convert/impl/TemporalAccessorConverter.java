@@ -15,21 +15,12 @@ package org.dromara.hutool.core.convert.impl;
 import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.date.TimeUtil;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.chrono.Era;
 import java.time.chrono.IsoEra;
 import java.time.format.DateTimeFormatter;
@@ -75,7 +66,7 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	/**
 	 * 构造
 	 *
-	 * @param format     日期格式
+	 * @param format 日期格式
 	 */
 	public TemporalAccessorConverter(final String format) {
 		this.format = format;
@@ -103,7 +94,7 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	protected TemporalAccessor convertInternal(final Class<?> targetClass, final Object value) {
 		if (value instanceof Long) {
 			return parseFromLong(targetClass, (Long) value);
-		}else if (value instanceof Integer) {
+		} else if (value instanceof Integer) {
 			return parseFromLong(targetClass, ((Integer) value).longValue());
 		} else if (value instanceof TemporalAccessor) {
 			return parseFromTemporalAccessor(targetClass, (TemporalAccessor) value);
@@ -129,20 +120,27 @@ public class TemporalAccessorConverter extends AbstractConverter {
 			return null;
 		}
 
-		if(DayOfWeek.class == targetClass){
+		if (DayOfWeek.class == targetClass) {
 			return DayOfWeek.valueOf(StrUtil.toString(value));
-		} else if(Month.class == targetClass){
+		} else if (Month.class == targetClass) {
 			return Month.valueOf(StrUtil.toString(value));
-		} else if(Era.class == targetClass){
+		} else if (Era.class == targetClass) {
 			return IsoEra.valueOf(StrUtil.toString(value));
-		} else if(MonthDay.class == targetClass){
+		} else if (MonthDay.class == targetClass) {
 			return MonthDay.parse(value);
 		}
 
 		final Instant instant;
 		final ZoneId zoneId;
 		if (null != this.format) {
-			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(this.format);
+			final DateTimeFormatter formatter = TimeUtil.ofPattern(this.format);
+
+			// issue#I9HQQE
+			final TemporalAccessor temporalAccessor = parseWithFormat(targetClass, value, formatter);
+			if(null != temporalAccessor){
+				return temporalAccessor;
+			}
+
 			instant = formatter.parse(value, Instant::from);
 			zoneId = formatter.getZone();
 		} else {
@@ -154,27 +152,47 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	}
 
 	/**
+	 * 对于自定义格式的字符串，单独解析为{@link TemporalAccessor}
+	 *
+	 * @param targetClass 目标类型
+	 * @param value       日期字符串
+	 * @param formatter   格式
+	 * @return {@link TemporalAccessor}
+	 */
+	private TemporalAccessor parseWithFormat(final Class<?> targetClass, final CharSequence value, final DateTimeFormatter formatter) {
+		// issue#I9HQQE
+		if (LocalDate.class == targetClass) {
+			return LocalDate.parse(value, formatter);
+		} else if (LocalDateTime.class == targetClass) {
+			return LocalDateTime.parse(value, formatter);
+		} else if (LocalTime.class == targetClass) {
+			return LocalTime.parse(value, formatter);
+		}
+		return null;
+	}
+
+	/**
 	 * 将Long型时间戳转换为java.time中的对象
 	 *
 	 * @param targetClass 目标类型
-	 * @param time 时间戳
+	 * @param time        时间戳
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromLong(final Class<?> targetClass, final Long time) {
-		if(targetClass == Month.class){
+		if (targetClass == Month.class) {
 			return Month.of(Math.toIntExact(time));
-		} else if(targetClass == DayOfWeek.class){
+		} else if (targetClass == DayOfWeek.class) {
 			return DayOfWeek.of(Math.toIntExact(time));
-		} else if(Era.class == targetClass){
+		} else if (Era.class == targetClass) {
 			return IsoEra.of(Math.toIntExact(time));
 		}
 
 		final Instant instant;
-		if(GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)){
+		if (GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)) {
 			// https://gitee.com/dromara/hutool/issues/I6IS5B
 			// Unix时间戳
 			instant = Instant.ofEpochSecond(time);
-		}else{
+		} else {
 			instant = Instant.ofEpochMilli(time);
 		}
 		return parseFromInstant(targetClass, instant, null);
@@ -187,11 +205,11 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromTemporalAccessor(final Class<?> targetClass, final TemporalAccessor temporalAccessor) {
-		if(DayOfWeek.class == targetClass){
+		if (DayOfWeek.class == targetClass) {
 			return DayOfWeek.from(temporalAccessor);
-		} else if(Month.class == targetClass){
+		} else if (Month.class == targetClass) {
 			return Month.from(temporalAccessor);
-		} else if(MonthDay.class == targetClass){
+		} else if (MonthDay.class == targetClass) {
 			return MonthDay.from(temporalAccessor);
 		}
 
@@ -212,7 +230,7 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	/**
 	 * 将TemporalAccessor型时间戳转换为java.time中的对象
 	 *
-	 * @param targetClass 目标类
+	 * @param targetClass   目标类
 	 * @param localDateTime {@link LocalDateTime}对象
 	 * @return java.time中的对象
 	 */

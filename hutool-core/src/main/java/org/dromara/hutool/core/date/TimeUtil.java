@@ -21,6 +21,7 @@ import java.time.*;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.*;
 import java.util.Date;
 import java.util.TimeZone;
@@ -167,37 +168,37 @@ public class TimeUtil extends TemporalAccessorUtil {
 
 		if (temporalAccessor instanceof LocalDate) {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
-		} else if(temporalAccessor instanceof Instant){
+		} else if (temporalAccessor instanceof Instant) {
 			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
 		}
 
 		// issue#3301
-		try{
+		try {
 			return LocalDateTime.from(temporalAccessor);
-		} catch (final Exception ignore){
+		} catch (final Exception ignore) {
 			//ignore
 		}
 
-		try{
+		try {
 			return ZonedDateTime.from(temporalAccessor).toLocalDateTime();
-		} catch (final Exception ignore){
+		} catch (final Exception ignore) {
 			//ignore
 		}
 
-		try{
+		try {
 			return LocalDateTime.ofInstant(Instant.from(temporalAccessor), ZoneId.systemDefault());
-		} catch (final Exception ignore){
+		} catch (final Exception ignore) {
 			//ignore
 		}
 
 		return LocalDateTime.of(
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.YEAR),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.MONTH_OF_YEAR),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.DAY_OF_MONTH),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.HOUR_OF_DAY),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.MINUTE_OF_HOUR),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.SECOND_OF_MINUTE),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.NANO_OF_SECOND)
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.YEAR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.MONTH_OF_YEAR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.DAY_OF_MONTH),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.HOUR_OF_DAY),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.MINUTE_OF_HOUR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.SECOND_OF_MINUTE),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.NANO_OF_SECOND)
 		);
 	}
 
@@ -220,9 +221,9 @@ public class TimeUtil extends TemporalAccessorUtil {
 		}
 
 		return LocalDate.of(
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.YEAR),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.MONTH_OF_YEAR),
-				TemporalAccessorUtil.get(temporalAccessor, ChronoField.DAY_OF_MONTH)
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.YEAR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.MONTH_OF_YEAR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.DAY_OF_MONTH)
 		);
 	}
 
@@ -604,5 +605,23 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 */
 	public static boolean isSameDay(final ChronoLocalDate date1, final ChronoLocalDate date2) {
 		return date1 != null && date2 != null && date1.isEqual(date2);
+	}
+
+	/**
+	 * 通过日期时间字符串构建{@link DateTimeFormatter}
+	 *
+	 * @param pattern 格式，如yyyy-MM-dd
+	 * @return {@link DateTimeFormatter}
+	 * @since 6.0.0
+	 */
+	public static DateTimeFormatter ofPattern(final String pattern) {
+		return new DateTimeFormatterBuilder()
+			.appendPattern(pattern)
+			//
+			.parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+			.parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+			.parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+			.parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
+			.toFormatter();
 	}
 }
