@@ -16,7 +16,7 @@ import org.dromara.hutool.core.convert.Convert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class NumberChineseFormatterTest {
+public class ChineseNumberFormatterTest {
 
 	@Test
 	public void formatThousandTest(){
