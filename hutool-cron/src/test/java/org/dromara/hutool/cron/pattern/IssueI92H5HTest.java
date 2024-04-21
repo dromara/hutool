@@ -14,6 +14,7 @@ package org.dromara.hutool.cron.pattern;
 
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -28,6 +29,6 @@ public class IssueI92H5HTest {
 		final CronPattern pattern = new CronPattern("0 0 0 L 2 ?");
 		//noinspection ConstantConditions
 		final Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
-		System.out.println(DateUtil.date(calendar));
+		Console.log(DateUtil.date(calendar));
 	}
 }

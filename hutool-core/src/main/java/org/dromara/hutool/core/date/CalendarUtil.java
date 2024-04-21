@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.comparator.CompareUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.ChineseNumberFormatter;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.date.format.parser.DateParser;
@@ -578,6 +579,20 @@ public class CalendarUtil {
 	}
 
 	/**
+	 * 获得日期的某个部分<br>
+	 * 例如获得年的部分，则使用 getField(DatePart.YEAR)
+	 *
+	 * @param calendar {@link Calendar}
+	 * @param field    表示日期的哪个部分的枚举 {@link DateField}
+	 * @return 某个部分的值
+	 * @since 6.0.0
+	 */
+	@SuppressWarnings("MagicConstant")
+	public static int getField(final Calendar calendar, final DateField field) {
+		return Assert.notNull(calendar).get(Assert.notNull(field).getValue());
+	}
+
+	/**
 	 * Calendar{@link Instant}对象
 	 *
 	 * @param calendar Date对象
@@ -596,6 +611,9 @@ public class CalendarUtil {
 	 * @since 5.0.5
 	 */
 	public static LocalDateTime toLocalDateTime(final Calendar calendar) {
+		if(null == calendar){
+			return null;
+		}
 		return LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
 	}
 

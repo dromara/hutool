@@ -59,9 +59,9 @@ class PatternUtil {
 		final int minute = calendar.get(Calendar.MINUTE);
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
-		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
+		final int monthBase1 = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
+		final int dayOfWeekBase0 = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
 		final int year = calendar.get(Calendar.YEAR);
-		return new int[]{second, minute, hour, dayOfMonth, month, dayOfWeek, year};
+		return new int[]{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year};
 	}
 }
