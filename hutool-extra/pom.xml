@@ -37,7 +37,7 @@
 		<freemarker.version>2.3.32</freemarker.version>
 		<enjoy.version>5.1.3</enjoy.version>
 		<thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
-		<jte.version>3.1.9</jte.version>
+		<jte.version>2.3.2</jte.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.38.0</sshj.version>
