@@ -15,6 +15,7 @@ package org.dromara.hutool.cron.pattern;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -22,13 +23,11 @@ import java.util.Calendar;
 public class IssueI92H5HTest {
 	@Test
 	void nextMatchAfterTest() {
-		// TODO 待解决
-
 		// 匹配所有月，返回下一月
 		final DateTime date = DateUtil.parse("2022-04-08 07:44:16");
 		final CronPattern pattern = new CronPattern("0 0 0 L 2 ?");
 		//noinspection ConstantConditions
 		final Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
-		Console.log(DateUtil.date(calendar));
+		Assertions.assertEquals("2023-02-28 00:00:00", DateUtil.date(calendar).toString());
 	}
 }

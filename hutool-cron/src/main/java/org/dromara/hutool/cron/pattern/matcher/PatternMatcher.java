@@ -199,7 +199,7 @@ public class PatternMatcher {
 				continue;
 			}
 
-			if (i == Part.DAY_OF_MONTH.ordinal()) {
+			if (i == Part.DAY_OF_MONTH.ordinal() && matchers[i] instanceof DayOfMonthMatcher) {
 				final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
 				final int month = newValues[Part.MONTH.ordinal()];
 				nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i], month, isLeapYear);
@@ -232,7 +232,7 @@ public class PatternMatcher {
 					continue;
 				}
 
-				if (i == Part.DAY_OF_MONTH.ordinal()) {
+				if (i == Part.DAY_OF_MONTH.ordinal() && matchers[i] instanceof DayOfMonthMatcher) {
 					final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
 					final int month = newValues[Part.MONTH.ordinal()];
 					nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i] + 1, month, isLeapYear);
@@ -262,8 +262,18 @@ public class PatternMatcher {
 	 */
 	private void setToMin(final int[] values, final int toPart) {
 		Part part;
-		for (int i = 0; i <= toPart; i++) {
+		for (int i = toPart; i >= 0; i--) {
 			part = Part.of(i);
+			if(part == Part.DAY_OF_MONTH){
+				final boolean isLeapYear = DateUtil.isLeapYear(values[Part.YEAR.ordinal()]);
+				final int month = values[Part.MONTH.ordinal()];
+				final PartMatcher partMatcher = get(part);
+				if(partMatcher instanceof DayOfMonthMatcher){
+					values[i] = ((DayOfMonthMatcher) partMatcher).getMinValue(month, isLeapYear);
+					continue;
+				}
+			}
+
 			values[i] = getMin(part);
 		}
 	}
