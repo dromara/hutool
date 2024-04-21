@@ -1582,7 +1582,7 @@ public class NumberUtil extends NumberValidator {
 	 * @author dazer
 	 */
 	public static String intToRoman(final int num) {
-		return NumberRomanFormatter.intToRoman(num);
+		return RomanNumberFormatter.intToRoman(num);
 	}
 
 	/**
@@ -1594,6 +1594,6 @@ public class NumberUtil extends NumberValidator {
 	 * @author dazer
 	 */
 	public static int romanToInt(final String roman) {
-		return NumberRomanFormatter.romanToInt(roman);
+		return RomanNumberFormatter.romanToInt(roman);
 	}
 }

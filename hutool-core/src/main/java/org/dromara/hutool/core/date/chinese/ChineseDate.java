@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.date.chinese;
 
-import org.dromara.hutool.core.math.NumberChineseFormatter;
+import org.dromara.hutool.core.math.ChineseNumberFormatter;
 import org.dromara.hutool.core.date.CalendarUtil;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
@@ -310,7 +310,7 @@ public class ChineseDate {
 			case 30:
 				return "三十";
 			default:
-				return chineseTen[day / 10] + NumberChineseFormatter.of().format(n + 1);
+				return chineseTen[day / 10] + ChineseNumberFormatter.of().format(n + 1);
 		}
 	}
 

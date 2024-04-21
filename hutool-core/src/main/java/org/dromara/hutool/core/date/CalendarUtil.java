@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.comparator.CompareUtil;
-import org.dromara.hutool.core.math.NumberChineseFormatter;
+import org.dromara.hutool.core.math.ChineseNumberFormatter;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.date.format.parser.DateParser;
 import org.dromara.hutool.core.date.format.parser.FastDateParser;
@@ -647,18 +647,18 @@ public class CalendarUtil {
 		final String year = String.valueOf(calendar.get(Calendar.YEAR));
 		final int length = year.length();
 		for (int i = 0; i < length; i++) {
-			result.append(NumberChineseFormatter.numberCharToChinese(year.charAt(i), false));
+			result.append(ChineseNumberFormatter.formatChar(year.charAt(i), false));
 		}
 		result.append('年');
 
 		// 月
 		final int month = calendar.get(Calendar.MONTH) + 1;
-		result.append(NumberChineseFormatter.of().setColloquialMode(true).format(month));
+		result.append(ChineseNumberFormatter.of().setColloquialMode(true).format(month));
 		result.append('月');
 
 		// 日
 		final int day = calendar.get(Calendar.DAY_OF_MONTH);
-		result.append(NumberChineseFormatter.of().setColloquialMode(true).format(day));
+		result.append(ChineseNumberFormatter.of().setColloquialMode(true).format(day));
 		result.append('日');
 
 		// 只替换年月日，时分秒中零不需要替换
@@ -670,15 +670,15 @@ public class CalendarUtil {
 		if (withTime) {
 			// 时
 			final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-			result.append(NumberChineseFormatter.of().setColloquialMode(true).format(hour));
+			result.append(ChineseNumberFormatter.of().setColloquialMode(true).format(hour));
 			result.append('时');
 			// 分
 			final int minute = calendar.get(Calendar.MINUTE);
-			result.append(NumberChineseFormatter.of().setColloquialMode(true).format(minute));
+			result.append(ChineseNumberFormatter.of().setColloquialMode(true).format(minute));
 			result.append('分');
 			// 秒
 			final int second = calendar.get(Calendar.SECOND);
-			result.append(NumberChineseFormatter.of().setColloquialMode(true).format(second));
+			result.append(ChineseNumberFormatter.of().setColloquialMode(true).format(second));
 			result.append('秒');
 		}
 

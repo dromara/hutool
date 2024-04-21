@@ -20,7 +20,7 @@ import org.dromara.hutool.core.text.StrUtil;
  * @author dazer
  * @since 6.0.0
  */
-public class NumberRomanFormatter {
+public class RomanNumberFormatter {
 
 	/**
 	 * 整数转罗马数字<br>

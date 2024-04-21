@@ -20,201 +20,201 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void formatThousandTest(){
-		String f = NumberChineseFormatter.of().setColloquialMode(true).format(10);
+		String f = ChineseNumberFormatter.of().setColloquialMode(true).format(10);
 		Assertions.assertEquals("十", f);
-		f = NumberChineseFormatter.of().setColloquialMode(true).format(11);
+		f = ChineseNumberFormatter.of().setColloquialMode(true).format(11);
 		Assertions.assertEquals("十一", f);
-		f = NumberChineseFormatter.of().setColloquialMode(true).format(19);
+		f = ChineseNumberFormatter.of().setColloquialMode(true).format(19);
 		Assertions.assertEquals("十九", f);
 	}
 
 	// 测试千
 	@Test
 	public void formatThousandLongTest(){
-		String f = NumberChineseFormatter.of().format(0);
+		String f = ChineseNumberFormatter.of().format(0);
 		Assertions.assertEquals("零", f);
-		f = NumberChineseFormatter.of().format(1);
+		f = ChineseNumberFormatter.of().format(1);
 		Assertions.assertEquals("一", f);
-		f = NumberChineseFormatter.of().format(10);
+		f = ChineseNumberFormatter.of().format(10);
 		Assertions.assertEquals("一十", f);
-		f = NumberChineseFormatter.of().format(12);
+		f = ChineseNumberFormatter.of().format(12);
 		Assertions.assertEquals("一十二", f);
-		f = NumberChineseFormatter.of().format(100);
+		f = ChineseNumberFormatter.of().format(100);
 		Assertions.assertEquals("一百", f);
-		f = NumberChineseFormatter.of().format(101);
+		f = ChineseNumberFormatter.of().format(101);
 		Assertions.assertEquals("一百零一", f);
-		f = NumberChineseFormatter.of().format(110);
+		f = ChineseNumberFormatter.of().format(110);
 		Assertions.assertEquals("一百一十", f);
-		f = NumberChineseFormatter.of().format(112);
+		f = ChineseNumberFormatter.of().format(112);
 		Assertions.assertEquals("一百一十二", f);
-		f = NumberChineseFormatter.of().format(1000);
+		f = ChineseNumberFormatter.of().format(1000);
 		Assertions.assertEquals("一千", f);
-		f = NumberChineseFormatter.of().format(1001);
+		f = ChineseNumberFormatter.of().format(1001);
 		Assertions.assertEquals("一千零一", f);
-		f = NumberChineseFormatter.of().format(1010);
+		f = ChineseNumberFormatter.of().format(1010);
 		Assertions.assertEquals("一千零一十", f);
-		f = NumberChineseFormatter.of().format(1100);
+		f = ChineseNumberFormatter.of().format(1100);
 		Assertions.assertEquals("一千一百", f);
-		f = NumberChineseFormatter.of().format(1101);
+		f = ChineseNumberFormatter.of().format(1101);
 		Assertions.assertEquals("一千一百零一", f);
-		f = NumberChineseFormatter.of().format(9999);
+		f = ChineseNumberFormatter.of().format(9999);
 		Assertions.assertEquals("九千九百九十九", f);
 	}
 
 	// 测试万
 	@Test
 	public void formatTenThousandLongTest(){
-		String f = NumberChineseFormatter.of().format(1_0000);
+		String f = ChineseNumberFormatter.of().format(1_0000);
 		Assertions.assertEquals("一万", f);
-		f = NumberChineseFormatter.of().format(1_0001);
+		f = ChineseNumberFormatter.of().format(1_0001);
 		Assertions.assertEquals("一万零一", f);
-		f = NumberChineseFormatter.of().format(1_0010);
+		f = ChineseNumberFormatter.of().format(1_0010);
 		Assertions.assertEquals("一万零一十", f);
-		f = NumberChineseFormatter.of().format(1_0100);
+		f = ChineseNumberFormatter.of().format(1_0100);
 		Assertions.assertEquals("一万零一百", f);
-		f = NumberChineseFormatter.of().format(1_1000);
+		f = ChineseNumberFormatter.of().format(1_1000);
 		Assertions.assertEquals("一万一千", f);
-		f = NumberChineseFormatter.of().format(10_1000);
+		f = ChineseNumberFormatter.of().format(10_1000);
 		Assertions.assertEquals("一十万零一千", f);
-		f = NumberChineseFormatter.of().format(10_0100);
+		f = ChineseNumberFormatter.of().format(10_0100);
 		Assertions.assertEquals("一十万零一百", f);
-		f = NumberChineseFormatter.of().format(100_1000);
+		f = ChineseNumberFormatter.of().format(100_1000);
 		Assertions.assertEquals("一百万零一千", f);
-		f = NumberChineseFormatter.of().format(100_0100);
+		f = ChineseNumberFormatter.of().format(100_0100);
 		Assertions.assertEquals("一百万零一百", f);
-		f = NumberChineseFormatter.of().format(1000_1000);
+		f = ChineseNumberFormatter.of().format(1000_1000);
 		Assertions.assertEquals("一千万零一千", f);
-		f = NumberChineseFormatter.of().format(1000_0100);
+		f = ChineseNumberFormatter.of().format(1000_0100);
 		Assertions.assertEquals("一千万零一百", f);
-		f = NumberChineseFormatter.of().format(9999_0000);
+		f = ChineseNumberFormatter.of().format(9999_0000);
 		Assertions.assertEquals("九千九百九十九万", f);
 	}
 
 	// 测试亿
 	@Test
 	public void formatHundredMillionLongTest(){
-		String f = NumberChineseFormatter.of().format(1_0000_0000L);
+		String f = ChineseNumberFormatter.of().format(1_0000_0000L);
 		Assertions.assertEquals("一亿", f);
-		f = NumberChineseFormatter.of().format(1_0000_0001L);
+		f = ChineseNumberFormatter.of().format(1_0000_0001L);
 		Assertions.assertEquals("一亿零一", f);
-		f = NumberChineseFormatter.of().format(1_0000_1000L);
+		f = ChineseNumberFormatter.of().format(1_0000_1000L);
 		Assertions.assertEquals("一亿零一千", f);
-		f = NumberChineseFormatter.of().format(1_0001_0000L);
+		f = ChineseNumberFormatter.of().format(1_0001_0000L);
 		Assertions.assertEquals("一亿零一万", f);
-		f = NumberChineseFormatter.of().format(1_0010_0000L);
+		f = ChineseNumberFormatter.of().format(1_0010_0000L);
 		Assertions.assertEquals("一亿零一十万", f);
-		f = NumberChineseFormatter.of().format(1_0010_0000L);
+		f = ChineseNumberFormatter.of().format(1_0010_0000L);
 		Assertions.assertEquals("一亿零一十万", f);
-		f = NumberChineseFormatter.of().format(1_0100_0000L);
+		f = ChineseNumberFormatter.of().format(1_0100_0000L);
 		Assertions.assertEquals("一亿零一百万", f);
-		f = NumberChineseFormatter.of().format(1_1000_0000L);
+		f = ChineseNumberFormatter.of().format(1_1000_0000L);
 		Assertions.assertEquals("一亿一千万", f);
-		f = NumberChineseFormatter.of().format(10_1000_0000L);
+		f = ChineseNumberFormatter.of().format(10_1000_0000L);
 		Assertions.assertEquals("一十亿零一千万", f);
-		f = NumberChineseFormatter.of().format(100_1000_0000L);
+		f = ChineseNumberFormatter.of().format(100_1000_0000L);
 		Assertions.assertEquals("一百亿零一千万", f);
-		f = NumberChineseFormatter.of().format(1000_1000_0000L);
+		f = ChineseNumberFormatter.of().format(1000_1000_0000L);
 		Assertions.assertEquals("一千亿零一千万", f);
-		f = NumberChineseFormatter.of().format(1100_1000_0000L);
+		f = ChineseNumberFormatter.of().format(1100_1000_0000L);
 		Assertions.assertEquals("一千一百亿零一千万", f);
-		f = NumberChineseFormatter.of().format(9999_0000_0000L);
+		f = ChineseNumberFormatter.of().format(9999_0000_0000L);
 		Assertions.assertEquals("九千九百九十九亿", f);
 	}
 
 	// 测试万亿
 	@Test
 	public void formatTrillionsLongTest(){
-		String f = NumberChineseFormatter.of().format(1_0000_0000_0000L);
+		String f = ChineseNumberFormatter.of().format(1_0000_0000_0000L);
 		Assertions.assertEquals("一万亿", f);
-		f = NumberChineseFormatter.of().format(1_0000_1000_0000L);
+		f = ChineseNumberFormatter.of().format(1_0000_1000_0000L);
 		Assertions.assertEquals("一万亿零一千万", f);
-		f = NumberChineseFormatter.of().format(1_0010_0000_0000L);
+		f = ChineseNumberFormatter.of().format(1_0010_0000_0000L);
 		Assertions.assertEquals("一万零一十亿", f);
 	}
 
 	@Test
 	public void formatTest() {
-		final String f0 = NumberChineseFormatter.of().format(5000_8000);
+		final String f0 = ChineseNumberFormatter.of().format(5000_8000);
 		Assertions.assertEquals("五千万零八千", f0);
-		String f1 = NumberChineseFormatter.of().format(1_0889.72356);
+		String f1 = ChineseNumberFormatter.of().format(1_0889.72356);
 		Assertions.assertEquals("一万零八百八十九点七二", f1);
-		f1 = NumberChineseFormatter.of().format(12653);
+		f1 = ChineseNumberFormatter.of().format(12653);
 		Assertions.assertEquals("一万二千六百五十三", f1);
-		f1 = NumberChineseFormatter.of().format(215.6387);
+		f1 = ChineseNumberFormatter.of().format(215.6387);
 		Assertions.assertEquals("二百一十五点六四", f1);
-		f1 = NumberChineseFormatter.of().format(1024);
+		f1 = ChineseNumberFormatter.of().format(1024);
 		Assertions.assertEquals("一千零二十四", f1);
-		f1 = NumberChineseFormatter.of().format(100350089);
+		f1 = ChineseNumberFormatter.of().format(100350089);
 		Assertions.assertEquals("一亿零三十五万零八十九", f1);
-		f1 = NumberChineseFormatter.of().format(1200);
+		f1 = ChineseNumberFormatter.of().format(1200);
 		Assertions.assertEquals("一千二百", f1);
-		f1 = NumberChineseFormatter.of().format(12);
+		f1 = ChineseNumberFormatter.of().format(12);
 		Assertions.assertEquals("一十二", f1);
-		f1 = NumberChineseFormatter.of().format(0.05);
+		f1 = ChineseNumberFormatter.of().format(0.05);
 		Assertions.assertEquals("零点零五", f1);
 	}
 
 	@Test
 	public void formatTest2() {
-		String f1 = NumberChineseFormatter.of().format(-0.3);
+		String f1 = ChineseNumberFormatter.of().format(-0.3);
 		Assertions.assertEquals("负零点三", f1);
 
-		f1 = NumberChineseFormatter.of().format(10);
+		f1 = ChineseNumberFormatter.of().format(10);
 		Assertions.assertEquals("一十", f1);
 	}
 
 	@Test
 	public void formatTest3() {
-		final String f1 = NumberChineseFormatter.of().format(5000_8000);
+		final String f1 = ChineseNumberFormatter.of().format(5000_8000);
 		Assertions.assertEquals("五千万零八千", f1);
 
-		final String f2 = NumberChineseFormatter.of().format(1_0035_0089);
+		final String f2 = ChineseNumberFormatter.of().format(1_0035_0089);
 		Assertions.assertEquals("一亿零三十五万零八十九", f2);
 	}
 
 	@Test
 	public void formatMaxTest() {
-		final String f3 = NumberChineseFormatter.of().format(99_9999_9999_9999L);
+		final String f3 = ChineseNumberFormatter.of().format(99_9999_9999_9999L);
 		Assertions.assertEquals("九十九万九千九百九十九亿九千九百九十九万九千九百九十九", f3);
 	}
 
 	@Test
 	public void formatTraditionalTest() {
-		String f1 = NumberChineseFormatter.of().setUseTraditional(true).format(10889.72356);
+		String f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(10889.72356);
 		Assertions.assertEquals("壹万零捌佰捌拾玖点柒贰", f1);
-		f1 = NumberChineseFormatter.of().setUseTraditional(true).format(12653);
+		f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(12653);
 		Assertions.assertEquals("壹万贰仟陆佰伍拾叁", f1);
-		f1 = NumberChineseFormatter.of().setUseTraditional(true).format(215.6387);
+		f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(215.6387);
 		Assertions.assertEquals("贰佰壹拾伍点陆肆", f1);
-		f1 = NumberChineseFormatter.of().setUseTraditional(true).format(1024);
+		f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(1024);
 		Assertions.assertEquals("壹仟零贰拾肆", f1);
-		f1 = NumberChineseFormatter.of().setUseTraditional(true).format(100350089);
+		f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(100350089);
 		Assertions.assertEquals("壹亿零叁拾伍万零捌拾玖", f1);
-		f1 = NumberChineseFormatter.of().setUseTraditional(true).format(1200);
+		f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(1200);
 		Assertions.assertEquals("壹仟贰佰", f1);
-		f1 = NumberChineseFormatter.of().setUseTraditional(true).format(12);
+		f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(12);
 		Assertions.assertEquals("壹拾贰", f1);
-		f1 = NumberChineseFormatter.of().setUseTraditional(true).format(0.05);
+		f1 = ChineseNumberFormatter.of().setUseTraditional(true).format(0.05);
 		Assertions.assertEquals("零点零伍", f1);
 	}
 
 	@Test
 	public void formatSimpleTest() {
-		String f1 = NumberChineseFormatter.formatSimple(1_2345);
+		String f1 = ChineseNumberFormatter.formatSimple(1_2345);
 		Assertions.assertEquals("1.23万", f1);
-		f1 = NumberChineseFormatter.formatSimple(-5_5555);
+		f1 = ChineseNumberFormatter.formatSimple(-5_5555);
 		Assertions.assertEquals("-5.56万", f1);
-		f1 = NumberChineseFormatter.formatSimple(1_2345_6789);
+		f1 = ChineseNumberFormatter.formatSimple(1_2345_6789);
 		Assertions.assertEquals("1.23亿", f1);
-		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555);
+		f1 = ChineseNumberFormatter.formatSimple(-5_5555_5555);
 		Assertions.assertEquals("-5.56亿", f1);
-		f1 = NumberChineseFormatter.formatSimple(1_2345_6789_1011L);
+		f1 = ChineseNumberFormatter.formatSimple(1_2345_6789_1011L);
 		Assertions.assertEquals("1.23万亿", f1);
-		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555_5555L);
+		f1 = ChineseNumberFormatter.formatSimple(-5_5555_5555_5555L);
 		Assertions.assertEquals("-5.56万亿", f1);
-		f1 = NumberChineseFormatter.formatSimple(123);
+		f1 = ChineseNumberFormatter.formatSimple(123);
 		Assertions.assertEquals("123", f1);
-		f1 = NumberChineseFormatter.formatSimple(-123);
+		f1 = ChineseNumberFormatter.formatSimple(-123);
 		Assertions.assertEquals("-123", f1);
 	}
 
@@ -269,35 +269,35 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void numberCharToChineseTest(){
-		String s = NumberChineseFormatter.numberCharToChinese('1', false);
-		Assertions.assertEquals("一", s);
-		s = NumberChineseFormatter.numberCharToChinese('2', false);
-		Assertions.assertEquals("二", s);
-		s = NumberChineseFormatter.numberCharToChinese('0', false);
-		Assertions.assertEquals("零", s);
+		char s = ChineseNumberFormatter.formatChar('1', false);
+		Assertions.assertEquals('一', s);
+		s = ChineseNumberFormatter.formatChar('2', false);
+		Assertions.assertEquals('二', s);
+		s = ChineseNumberFormatter.formatChar('0', false);
+		Assertions.assertEquals('零', s);
 
 		// 非数字字符原样返回
-		s = NumberChineseFormatter.numberCharToChinese('A', false);
-		Assertions.assertEquals("A", s);
+		s = ChineseNumberFormatter.formatChar('A', false);
+		Assertions.assertEquals('A', s);
 	}
 
 	@Test
 	public void chineseToNumberTest(){
-		Assertions.assertEquals(0, NumberChineseFormatter.chineseToNumber("零"));
-		Assertions.assertEquals(102, NumberChineseFormatter.chineseToNumber("一百零二"));
-		Assertions.assertEquals(112, NumberChineseFormatter.chineseToNumber("一百一十二"));
-		Assertions.assertEquals(1012, NumberChineseFormatter.chineseToNumber("一千零一十二"));
-		Assertions.assertEquals(1000000, NumberChineseFormatter.chineseToNumber("一百万"));
-		Assertions.assertEquals(2000100112, NumberChineseFormatter.chineseToNumber("二十亿零一十万零一百一十二"));
+		Assertions.assertEquals(0, ChineseNumberFormatter.parseFromChinese("零"));
+		Assertions.assertEquals(102, ChineseNumberFormatter.parseFromChinese("一百零二"));
+		Assertions.assertEquals(112, ChineseNumberFormatter.parseFromChinese("一百一十二"));
+		Assertions.assertEquals(1012, ChineseNumberFormatter.parseFromChinese("一千零一十二"));
+		Assertions.assertEquals(1000000, ChineseNumberFormatter.parseFromChinese("一百万"));
+		Assertions.assertEquals(2000100112, ChineseNumberFormatter.parseFromChinese("二十亿零一十万零一百一十二"));
 	}
 
 	@Test
 	public void chineseToNumberTest2(){
-		Assertions.assertEquals(120, NumberChineseFormatter.chineseToNumber("一百二"));
-		Assertions.assertEquals(1200, NumberChineseFormatter.chineseToNumber("一千二"));
-		Assertions.assertEquals(22000, NumberChineseFormatter.chineseToNumber("两万二"));
-		Assertions.assertEquals(22003, NumberChineseFormatter.chineseToNumber("两万二零三"));
-		Assertions.assertEquals(22010, NumberChineseFormatter.chineseToNumber("两万二零一十"));
+		Assertions.assertEquals(120, ChineseNumberFormatter.parseFromChinese("一百二"));
+		Assertions.assertEquals(1200, ChineseNumberFormatter.parseFromChinese("一千二"));
+		Assertions.assertEquals(22000, ChineseNumberFormatter.parseFromChinese("两万二"));
+		Assertions.assertEquals(22003, ChineseNumberFormatter.parseFromChinese("两万二零三"));
+		Assertions.assertEquals(22010, ChineseNumberFormatter.parseFromChinese("两万二零一十"));
 	}
 
 	@Test
@@ -305,16 +305,16 @@ public class NumberChineseFormatterTest {
 		// issue#1726，对于单位开头的数组，默认赋予1
 		// 十二 -> 一十二
 		// 百二 -> 一百二
-		Assertions.assertEquals(12, NumberChineseFormatter.chineseToNumber("十二"));
-		Assertions.assertEquals(120, NumberChineseFormatter.chineseToNumber("百二"));
-		Assertions.assertEquals(1300, NumberChineseFormatter.chineseToNumber("千三"));
+		Assertions.assertEquals(12, ChineseNumberFormatter.parseFromChinese("十二"));
+		Assertions.assertEquals(120, ChineseNumberFormatter.parseFromChinese("百二"));
+		Assertions.assertEquals(1300, ChineseNumberFormatter.parseFromChinese("千三"));
 	}
 
 	@Test
 	public void badNumberTest(){
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
 			// 连续数字检查
-			NumberChineseFormatter.chineseToNumber("一百一二三");
+			ChineseNumberFormatter.parseFromChinese("一百一二三");
 		});
 	}
 
@@ -322,41 +322,41 @@ public class NumberChineseFormatterTest {
 	public void badNumberTest2(){
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
 			// 非法字符
-			NumberChineseFormatter.chineseToNumber("一百你三");
+			ChineseNumberFormatter.parseFromChinese("一百你三");
 		});
 	}
 
 	@Test
 	public void singleMoneyTest(){
-		String format = NumberChineseFormatter.of().setMoneyMode(true).format(0.01);
+		String format = ChineseNumberFormatter.of().setMoneyMode(true).format(0.01);
 		Assertions.assertEquals("一分", format);
-		format = NumberChineseFormatter.of().setMoneyMode(true).format(0.10);
+		format = ChineseNumberFormatter.of().setMoneyMode(true).format(0.10);
 		Assertions.assertEquals("一角", format);
-		format = NumberChineseFormatter.of().setMoneyMode(true).format(0.12);
+		format = ChineseNumberFormatter.of().setMoneyMode(true).format(0.12);
 		Assertions.assertEquals("一角二分", format);
 
-		format = NumberChineseFormatter.of().setMoneyMode(true).format(1.00);
+		format = ChineseNumberFormatter.of().setMoneyMode(true).format(1.00);
 		Assertions.assertEquals("一元整", format);
-		format = NumberChineseFormatter.of().setMoneyMode(true).format(1.10);
+		format = ChineseNumberFormatter.of().setMoneyMode(true).format(1.10);
 		Assertions.assertEquals("一元一角", format);
-		format = NumberChineseFormatter.of().setMoneyMode(true).format(1.02);
+		format = ChineseNumberFormatter.of().setMoneyMode(true).format(1.02);
 		Assertions.assertEquals("一元零二分", format);
 	}
 
 	@Test
 	public void singleNumberTest(){
-		String format = NumberChineseFormatter.of().format(0.01);
+		String format = ChineseNumberFormatter.of().format(0.01);
 		Assertions.assertEquals("零点零一", format);
-		format = NumberChineseFormatter.of().format(0.10);
+		format = ChineseNumberFormatter.of().format(0.10);
 		Assertions.assertEquals("零点一", format);
-		format = NumberChineseFormatter.of().format(0.12);
+		format = ChineseNumberFormatter.of().format(0.12);
 		Assertions.assertEquals("零点一二", format);
 
-		format = NumberChineseFormatter.of().format(1.00);
+		format = ChineseNumberFormatter.of().format(1.00);
 		Assertions.assertEquals("一", format);
-		format = NumberChineseFormatter.of().format(1.10);
+		format = ChineseNumberFormatter.of().format(1.10);
 		Assertions.assertEquals("一点一", format);
-		format = NumberChineseFormatter.of().format(1.02);
+		format = ChineseNumberFormatter.of().format(1.02);
 		Assertions.assertEquals("一点零二", format);
 	}
 
@@ -373,13 +373,13 @@ public class NumberChineseFormatterTest {
 		 * s=叁角贰分, n=0.32
 		 * s=陆万柒仟伍佰伍拾陆元叁角贰分, n=67556.32
 		 */
-		Assertions.assertEquals(67556, NumberChineseFormatter.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆圆").longValue());
-		Assertions.assertEquals(67556, NumberChineseFormatter.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元").longValue());
-		Assertions.assertEquals(0.3D, NumberChineseFormatter.chineseMoneyToNumber("叁角").doubleValue(), 0);
-		Assertions.assertEquals(0.02, NumberChineseFormatter.chineseMoneyToNumber("贰分").doubleValue(), 0);
-		Assertions.assertEquals(67556.3, NumberChineseFormatter.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元叁角").doubleValue(), 0);
-		Assertions.assertEquals(67556.02, NumberChineseFormatter.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元贰分").doubleValue(), 0);
-		Assertions.assertEquals(0.32, NumberChineseFormatter.chineseMoneyToNumber("叁角贰分").doubleValue(), 0);
-		Assertions.assertEquals(67556.32, NumberChineseFormatter.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元叁角贰分").doubleValue(), 0);
+		Assertions.assertEquals(67556, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆圆").longValue());
+		Assertions.assertEquals(67556, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元").longValue());
+		Assertions.assertEquals(0.3D, ChineseNumberFormatter.parseFromChineseMoney("叁角").doubleValue(), 0);
+		Assertions.assertEquals(0.02, ChineseNumberFormatter.parseFromChineseMoney("贰分").doubleValue(), 0);
+		Assertions.assertEquals(67556.3, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元叁角").doubleValue(), 0);
+		Assertions.assertEquals(67556.02, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元贰分").doubleValue(), 0);
+		Assertions.assertEquals(0.32, ChineseNumberFormatter.parseFromChineseMoney("叁角贰分").doubleValue(), 0);
+		Assertions.assertEquals(67556.32, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元叁角贰分").doubleValue(), 0);
 	}
 }
