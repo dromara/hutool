@@ -3,6 +3,8 @@ package cn.hutool.core.convert;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class NumberChineseFormatterTest {
 
 	@Test
@@ -341,5 +343,11 @@ public class NumberChineseFormatterTest {
 		Assert.assertEquals("一点一", format);
 		format = NumberChineseFormatter.format(1.02, false, false);
 		Assert.assertEquals("一点零二", format);
+	}
+
+	@Test
+	public void dotTest() {
+		final String format = NumberChineseFormatter.format(new BigDecimal("3.1415926"), false, false);
+		Assert.assertEquals("三点一四一五九二六", format);
 	}
 }

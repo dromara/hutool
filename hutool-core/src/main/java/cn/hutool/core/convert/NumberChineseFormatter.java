@@ -51,6 +51,7 @@ public class NumberChineseFormatter {
 	 * 口语化映射
 	 */
 	private static final Map<String, String> COLLOQUIAL_WORDS = new HashMap<String, String>() {
+		private static final long serialVersionUID = 1L;
 		{
 			put("一十", "十");
 			put("一拾", "拾");
@@ -244,6 +245,7 @@ public class NumberChineseFormatter {
 	 * @param isUseTraditional 是否使用繁体
 	 * @param isUseColloquial  是否使用口语化(e.g. 一十 -> 十)
 	 * @return 中文
+	 * @since 5.8.28
 	 */
 	public static String format(BigDecimal amount, boolean isUseTraditional, boolean isUseColloquial) {
 		String formatAmount;
