@@ -1047,7 +1047,7 @@ public class Convert {
 	 * @return 数字
 	 * @since 5.6.0
 	 */
-	public static int chineseToNumber(final String number){
+	public static BigDecimal chineseToNumber(final String number){
 		return ChineseNumberParser.parseFromChineseNumber(number);
 	}
 

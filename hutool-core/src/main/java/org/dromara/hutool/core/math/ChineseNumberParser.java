@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.math;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
@@ -52,8 +53,8 @@ public class ChineseNumberParser {
 	 * @return 数字
 	 * @since 5.6.0
 	 */
-	public static Number parseFromChinese(final String chinese) {
-		if(StrUtil.containsAny(chinese, '元', '圆', '角', '分')){
+	public static BigDecimal parseFromChinese(final String chinese) {
+		if (StrUtil.containsAny(chinese, '元', '圆', '角', '分')) {
 			return parseFromChineseMoney(chinese);
 		}
 
@@ -61,74 +62,36 @@ public class ChineseNumberParser {
 	}
 
 	/**
-	 * 把中文转换为数字 如 二百二十 220<br>
+	 * 把中文转换为数字<br>
 	 * <ul>
 	 *     <li>一百一十二 -》 112</li>
 	 *     <li>一千零一十二 -》 1012</li>
+	 *     <li>十二点二三 -》 12.23</li>
+	 *     <li>三点一四一五九二六五四 -》 3.141592654</li>
 	 * </ul>
 	 *
 	 * @param chinese 中文字符
 	 * @return 数字
 	 * @since 5.6.0
 	 */
-	public static int parseFromChineseNumber(final String chinese) {
-		final int length = chinese.length();
-		int result = 0;
+	public static BigDecimal parseFromChineseNumber(final String chinese) {
+		Assert.notBlank(chinese, "Chinese number is blank!");
+		final int dotIndex = chinese.indexOf('点');
 
-		// 节总和
-		int section = 0;
-		int number = 0;
-		ChineseUnit unit = null;
-		char c;
-		for (int i = 0; i < length; i++) {
-			c = chinese.charAt(i);
-			final int num = chineseToNumber(c);
-			if (num >= 0) {
-				if (num == 0) {
-					// 遇到零时节结束，权位失效，比如两万二零一十
-					if (number > 0 && null != unit) {
-						section += number * (unit.value / 10);
-					}
-					unit = null;
-				} else if (number > 0) {
-					// 多个数字同时出现，报错
-					throw new IllegalArgumentException(StrUtil.format("Bad number '{}{}' at: {}", chinese.charAt(i - 1), c, i));
-				}
-				// 普通数字
-				number = num;
-			} else {
-				unit = chineseToUnit(c);
-				if (null == unit) {
-					// 出现非法字符
-					throw new IllegalArgumentException(StrUtil.format("Unknown unit '{}' at: {}", c, i));
-				}
+		// 整数部分
+		BigDecimal result = NumberUtil.toBigDecimal(parseLongFromChineseNumber(chinese, dotIndex > 0 ? dotIndex : chinese.length()));
 
-				//单位
-				if (unit.secUnit) {
-					// 节单位，按照节求和
-					section = (section + number) * unit.value;
-					result += section;
-					section = 0;
-				} else {
-					// 非节单位，和单位前的单数字组合为值
-					int unitNumber = number;
-					if (0 == number && 0 == i) {
-						// issue#1726，对于单位开头的数组，默认赋予1
-						// 十二 -> 一十二
-						// 百二 -> 一百二
-						unitNumber = 1;
-					}
-					section += (unitNumber * unit.value);
-				}
-				number = 0;
+		// 小数部分
+		if (dotIndex > 0) {
+			final int length = chinese.length();
+			for (int i = dotIndex + 1; i < length; i++) {
+				// 保留位数取决于实际数字的位数
+				// result + (numberChar / 10^(i-dotIndex))
+				result = result.add(NumberUtil.div(chineseToNumber(chinese.charAt(i)), BigDecimal.TEN.pow(i-dotIndex), (length - dotIndex + 1)));
 			}
 		}
 
-		if (number > 0 && null != unit) {
-			number = number * (unit.value / 10);
-		}
-
-		return result + section + number;
+		return result.stripTrailingZeros();
 	}
 
 	/**
@@ -192,21 +155,91 @@ public class ChineseNumberParser {
 		}
 
 		//元、角、分
-		int y = 0, j = 0, f = 0;
+		long y = 0, j = 0, f = 0;
 		if (StrUtil.isNotBlank(yStr)) {
-			y = parseFromChineseNumber(yStr);
+			y = parseLongFromChineseNumber(yStr, yStr.length());
 		}
 		if (StrUtil.isNotBlank(jStr)) {
-			j = parseFromChineseNumber(jStr);
+			j = parseLongFromChineseNumber(jStr, jStr.length());
 		}
 		if (StrUtil.isNotBlank(fStr)) {
-			f = parseFromChineseNumber(fStr);
+			f = parseLongFromChineseNumber(fStr, fStr.length());
 		}
 
 		BigDecimal amount = new BigDecimal(y);
 		amount = amount.add(BigDecimal.valueOf(j).divide(BigDecimal.TEN, 2, RoundingMode.HALF_UP));
 		amount = amount.add(BigDecimal.valueOf(f).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
 		return amount;
+	}
+
+	/**
+	 * 把中文整数转换为数字 如 二百二十 220<br>
+	 * <ul>
+	 *     <li>一百一十二 -》 112</li>
+	 *     <li>一千零一十二 -》 1012</li>
+	 * </ul>
+	 *
+	 * @param chinese 中文字符
+	 * @param toIndex 结束位置（不包括），如果提供的是整数，这个为length()，小数则是“点”的位置
+	 * @return 数字
+	 */
+	public static long parseLongFromChineseNumber(final String chinese, final int toIndex) {
+		long result = 0;
+
+		// 节总和
+		long section = 0;
+		long number = 0;
+		ChineseUnit unit = null;
+		char c;
+		for (int i = 0; i < toIndex; i++) {
+			c = chinese.charAt(i);
+			final int num = chineseToNumber(c);
+			if (num >= 0) {
+				if (num == 0) {
+					// 遇到零时节结束，权位失效，比如两万二零一十
+					if (number > 0 && null != unit) {
+						section += number * (unit.value / 10);
+					}
+					unit = null;
+				} else if (number > 0) {
+					// 多个数字同时出现，报错
+					throw new IllegalArgumentException(StrUtil.format("Bad number '{}{}' at: {}", chinese.charAt(i - 1), c, i));
+				}
+				// 普通数字
+				number = num;
+			} else {
+				unit = chineseToUnit(c);
+				if (null == unit) {
+					// 出现非法字符
+					throw new IllegalArgumentException(StrUtil.format("Unknown unit '{}' at: {}", c, i));
+				}
+
+				//单位
+				if (unit.secUnit) {
+					// 节单位，按照节求和
+					section = (section + number) * unit.value;
+					result += section;
+					section = 0;
+				} else {
+					// 非节单位，和单位前的单数字组合为值
+					long unitNumber = number;
+					if (0 == number && 0 == i) {
+						// issue#1726，对于单位开头的数组，默认赋予1
+						// 十二 -> 一十二
+						// 百二 -> 一百二
+						unitNumber = 1;
+					}
+					section += (unitNumber * unit.value);
+				}
+				number = 0;
+			}
+		}
+
+		if (number > 0 && null != unit) {
+			number = number * (unit.value / 10);
+		}
+
+		return result + section + number;
 	}
 
 	/**
