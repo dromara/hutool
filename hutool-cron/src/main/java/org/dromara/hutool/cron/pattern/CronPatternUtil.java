@@ -12,12 +12,12 @@
 
 package org.dromara.hutool.cron.pattern;
 
-import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.date.DateUnit;
+import org.dromara.hutool.core.date.CalendarUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Assert;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,16 +34,11 @@ public class CronPatternUtil {
 	 *
 	 * @param pattern 表达式
 	 * @param start 起始时间
-	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期
 	 * @since 4.5.8
 	 */
-	public static Date nextDateAfter(final CronPattern pattern, final Date start, final boolean isMatchSecond) {
-		final List<Date> matchedDates = matchedDates(pattern, start.getTime(), DateUtil.endOfYear(start).getTime(), 1, isMatchSecond);
-		if (CollUtil.isNotEmpty(matchedDates)) {
-			return matchedDates.get(0);
-		}
-		return null;
+	public static Date nextDateAfter(final CronPattern pattern, final Date start) {
+		return DateUtil.date(pattern.nextMatchAfter(CalendarUtil.calendar(start)));
 	}
 
 	/**
@@ -52,11 +47,10 @@ public class CronPatternUtil {
 	 * @param patternStr 表达式字符串
 	 * @param start 起始时间
 	 * @param count 列举数量
-	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(final String patternStr, final Date start, final int count, final boolean isMatchSecond) {
-		return matchedDates(patternStr, start, DateUtil.endOfYear(start), count, isMatchSecond);
+	public static List<Date> matchedDates(final String patternStr, final Date start, final int count) {
+		return matchedDates(patternStr, start, DateUtil.endOfYear(start), count);
 	}
 
 	/**
@@ -66,11 +60,10 @@ public class CronPatternUtil {
 	 * @param start 起始时间
 	 * @param end 结束时间
 	 * @param count 列举数量
-	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(final String patternStr, final Date start, final Date end, final int count, final boolean isMatchSecond) {
-		return matchedDates(patternStr, start.getTime(), end.getTime(), count, isMatchSecond);
+	public static List<Date> matchedDates(final String patternStr, final Date start, final Date end, final int count) {
+		return matchedDates(patternStr, start.getTime(), end.getTime(), count);
 	}
 
 	/**
@@ -80,11 +73,10 @@ public class CronPatternUtil {
 	 * @param start 起始时间
 	 * @param end 结束时间
 	 * @param count 列举数量
-	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(final String patternStr, final long start, final long end, final int count, final boolean isMatchSecond) {
-		return matchedDates(new CronPattern(patternStr), start, end, count, isMatchSecond);
+	public static List<Date> matchedDates(final String patternStr, final long start, final long end, final int count) {
+		return matchedDates(new CronPattern(patternStr), start, end, count);
 	}
 
 	/**
@@ -94,22 +86,22 @@ public class CronPatternUtil {
 	 * @param start 起始时间
 	 * @param end 结束时间
 	 * @param count 列举数量
-	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(final CronPattern pattern, final long start, final long end, final int count, final boolean isMatchSecond) {
+	public static List<Date> matchedDates(final CronPattern pattern, final long start, final long end, final int count) {
 		Assert.isTrue(start < end, "Start date is later than end !");
 
 		final List<Date> result = new ArrayList<>(count);
-		final long step = isMatchSecond ? DateUnit.SECOND.getMillis() : DateUnit.MINUTE.getMillis();
-		for (long i = start; i < end; i += step) {
-			if (pattern.match(i, isMatchSecond)) {
-				result.add(DateUtil.date(i));
-				if (result.size() >= count) {
-					break;
-				}
+
+		Calendar calendar = pattern.nextMatchAfter(CalendarUtil.calendar(start));
+		while(calendar.getTimeInMillis() < end){
+			result.add(DateUtil.date(calendar));
+			if(result.size() >= count){
+				break;
 			}
+			calendar = pattern.nextMatchAfter(calendar);
 		}
+
 		return result;
 	}
 }

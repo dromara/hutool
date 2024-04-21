@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.cron.pattern;
 
-import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.date.CalendarUtil;
 import org.dromara.hutool.cron.pattern.matcher.PatternMatcher;
 import org.dromara.hutool.cron.pattern.parser.PatternParser;
@@ -156,7 +156,14 @@ public class CronPattern {
 	 * @param calendar 时间
 	 * @return 匹配到的下一个时间
 	 */
-	public Calendar nextMatchAfter(final Calendar calendar) {
+	public Calendar nextMatchAfter(Calendar calendar) {
+		// issue#I9FQUA，当提供的时间已经匹配表达式时，增加1秒以匹配下一个时间
+		if(match(calendar, true)){
+			final Calendar newCalendar = Calendar.getInstance(calendar.getTimeZone());
+			newCalendar.setTimeInMillis(calendar.getTimeInMillis() + 1000);
+			calendar = newCalendar;
+		}
+
 		Calendar next = nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
 		if (!match(next, true)) {
 			next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);
@@ -211,11 +218,15 @@ public class CronPattern {
 	 * @return {@link Calendar}，毫秒数为0
 	 */
 	private Calendar nextMatchAfter(final int[] values, final TimeZone zone) {
-		final List<Calendar> nextMatches = new ArrayList<>(matchers.size());
+		Calendar minMatch = null;
 		for (final PatternMatcher matcher : matchers) {
-			nextMatches.add(matcher.nextMatchAfter(values, zone));
+			if(null == minMatch){
+				minMatch = matcher.nextMatchAfter(values, zone);
+			}else{
+				minMatch = CompareUtil.min(minMatch, matcher.nextMatchAfter(values, zone));
+			}
 		}
 		// 返回匹配到的最早日期
-		return CollUtil.min(nextMatches);
+		return minMatch;
 	}
 }

@@ -150,7 +150,8 @@ public class PatternMatcher {
 	 *     下 &lt;-----------------&gt; 上
 	 * </pre>
 	 *
-	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year}
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year},
+	 *               注意这个字段值会被修改
 	 * @param zone   时区
 	 * @return {@link Calendar}，毫秒数为0
 	 */
@@ -187,8 +188,6 @@ public class PatternMatcher {
 	 * @return {@link Calendar}，毫秒数为0
 	 */
 	private int[] nextMatchValuesAfter(final int[] values) {
-		final int[] newValues = values.clone();
-
 		int i = Part.YEAR.ordinal();
 		// 新值，-1表示标识为回退
 		int nextValue = 0;
@@ -199,11 +198,11 @@ public class PatternMatcher {
 				continue;
 			}
 
-			nextValue = getNextMatch(newValues, i, 0);
+			nextValue = getNextMatch(values, i, 0);
 
 			if (nextValue > values[i]) {
 				// 此部分正常获取新值，结束循环，后续的部分置最小值
-				newValues[i] = nextValue;
+				values[i] = nextValue;
 				i--;
 				break;
 			} else if (nextValue < values[i]) {
@@ -226,10 +225,10 @@ public class PatternMatcher {
 					continue;
 				}
 
-				nextValue = getNextMatch(newValues, i, 1);
+				nextValue = getNextMatch(values, i, 1);
 
 				if (nextValue > values[i]) {
-					newValues[i] = nextValue;
+					values[i] = nextValue;
 					i--;
 					break;
 				}
@@ -238,8 +237,8 @@ public class PatternMatcher {
 		}
 
 		// 修改值以下的字段全部归最小值
-		setToMin(newValues, i);
-		return newValues;
+		setToMin(values, i);
+		return values;
 	}
 
 	/**
