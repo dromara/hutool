@@ -101,6 +101,18 @@ public class CronPatternNextMatchTest {
 	}
 
 	@Test
+	public void nextMatchAfterTest2(){
+		final CronPattern pattern = new CronPattern("23 12 * 12 * * *");
+
+		// 秒超出规定值的最大值，分不变，小时+1，秒和分使用最小值
+		//noinspection ConstantConditions
+		final Calendar calendar = pattern.nextMatchAfter(
+			DateUtil.parse("2022-04-12 09:12:24").toCalendar());
+		Assertions.assertTrue(pattern.match(calendar, true));
+		Assertions.assertEquals("2022-04-12 10:12:23", DateUtil.date(calendar).toString());
+	}
+
+	@Test
 	public void nextMatchAfterByWeekTest(){
 		final CronPattern pattern = new CronPattern("1 1 1 * * Sat *");
 		// 周日，下个周六在4月9日

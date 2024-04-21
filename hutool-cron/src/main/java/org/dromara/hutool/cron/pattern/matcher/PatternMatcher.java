@@ -178,10 +178,10 @@ public class PatternMatcher {
 	 *     <li>如果此部分下个值小于给定值，回退到上一个值获取下一个新值，之后的值置为最小值</li>
 	 * </ul>
 	 *
-	 * <pre>
-	 *        秒 分 时 日 月 周 年
-	 *     下 &lt;-----------------&gt; 上
-	 * </pre>
+	 * <pre>{@code
+	 *          秒 分 时 日 月 周 年
+	 *     下 <--------------------> 上
+	 * }</pre>
 	 *
 	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year}
 	 * @return {@link Calendar}，毫秒数为0
@@ -199,13 +199,7 @@ public class PatternMatcher {
 				continue;
 			}
 
-			if (i == Part.DAY_OF_MONTH.ordinal() && matchers[i] instanceof DayOfMonthMatcher) {
-				final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
-				final int month = newValues[Part.MONTH.ordinal()];
-				nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i], month, isLeapYear);
-			} else {
-				nextValue = matchers[i].nextAfter(values[i]);
-			}
+			nextValue = getNextMatch(newValues, i, 0);
 
 			if (nextValue > values[i]) {
 				// 此部分正常获取新值，结束循环，后续的部分置最小值
@@ -232,13 +226,7 @@ public class PatternMatcher {
 					continue;
 				}
 
-				if (i == Part.DAY_OF_MONTH.ordinal() && matchers[i] instanceof DayOfMonthMatcher) {
-					final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
-					final int month = newValues[Part.MONTH.ordinal()];
-					nextValue = ((DayOfMonthMatcher) matchers[i]).nextAfter(values[i] + 1, month, isLeapYear);
-				} else {
-					nextValue = matchers[i].nextAfter(values[i] + 1);
-				}
+				nextValue = getNextMatch(newValues, i, 1);
 
 				if (nextValue > values[i]) {
 					newValues[i] = nextValue;
@@ -255,6 +243,28 @@ public class PatternMatcher {
 	}
 
 	/**
+	 * 获取指定部分的下一个匹配值，三种结果：
+	 * <ul>
+	 *     <li>结果值大于原值：此部分已更新，后续部分取匹配的最小值。</li>
+	 *     <li>结果值小于原值：此部分获取到了最小值，上一个部分需要继续取下一个值。</li>
+	 *     <li>结果值等于原值：此部分匹配，获取下一个部分的next值</li>
+	 * </ul>
+	 *
+	 * @param newValues   时间字段值，{second, minute, hour, dayOfMonth, monthBase1, dayOfWeekBase0, year}
+	 * @param partOrdinal 序号
+	 * @return 下一个值
+	 */
+	private int getNextMatch(final int[] newValues, final int partOrdinal, final int plusValue) {
+		if (partOrdinal == Part.DAY_OF_MONTH.ordinal() && matchers[partOrdinal] instanceof DayOfMonthMatcher) {
+			final boolean isLeapYear = DateUtil.isLeapYear(newValues[Part.YEAR.ordinal()]);
+			final int month = newValues[Part.MONTH.ordinal()];
+			return ((DayOfMonthMatcher) matchers[partOrdinal]).nextAfter(newValues[partOrdinal] + plusValue, month, isLeapYear);
+		}
+
+		return matchers[partOrdinal].nextAfter(newValues[partOrdinal] + plusValue);
+	}
+
+	/**
 	 * 设置从{@link Part#SECOND}到指定部分，全部设置为最小值
 	 *
 	 * @param values 值数组
@@ -264,11 +274,11 @@ public class PatternMatcher {
 		Part part;
 		for (int i = toPart; i >= 0; i--) {
 			part = Part.of(i);
-			if(part == Part.DAY_OF_MONTH){
+			if (part == Part.DAY_OF_MONTH) {
 				final boolean isLeapYear = DateUtil.isLeapYear(values[Part.YEAR.ordinal()]);
 				final int month = values[Part.MONTH.ordinal()];
 				final PartMatcher partMatcher = get(part);
-				if(partMatcher instanceof DayOfMonthMatcher){
+				if (partMatcher instanceof DayOfMonthMatcher) {
 					values[i] = ((DayOfMonthMatcher) partMatcher).getMinValue(month, isLeapYear);
 					continue;
 				}
