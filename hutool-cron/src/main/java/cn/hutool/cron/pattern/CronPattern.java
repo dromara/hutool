@@ -149,6 +149,13 @@ public class CronPattern {
 	 * @return 匹配到的下一个时间
 	 */
 	public Calendar nextMatchAfter(Calendar calendar) {
+		// issue#I9FQUA，当提供的时间已经匹配表达式时，增加1秒以匹配下一个时间
+		if(match(calendar, true)){
+			final Calendar newCalendar = Calendar.getInstance(calendar.getTimeZone());
+			newCalendar.setTimeInMillis(calendar.getTimeInMillis() + 1000);
+			calendar = newCalendar;
+		}
+
 		Calendar next = nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
 		if (false == match(next, true)) {
 			next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);

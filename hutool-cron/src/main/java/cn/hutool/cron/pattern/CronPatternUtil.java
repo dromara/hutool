@@ -1,6 +1,6 @@
 package cn.hutool.cron.pattern;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.CalendarUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -11,32 +11,28 @@ import java.util.List;
 
 /**
  * 定时任务表达式工具类
- * 
+ *
  * @author looly
  *
  */
 public class CronPatternUtil {
 
 	/**
-	 * 列举指定日期之后（到开始日期对应年年底）内第一个匹配表达式的日期
-	 * 
+	 * 列举指定日期之后内第一个匹配表达式的日期
+	 *
 	 * @param pattern 表达式
 	 * @param start 起始时间
-	 * @param isMatchSecond 是否匹配秒
+	 * @param isMatchSecond 是否匹配秒（无效）
 	 * @return 日期
 	 * @since 4.5.8
 	 */
 	public static Date nextDateAfter(CronPattern pattern, Date start, boolean isMatchSecond) {
-		List<Date> matchedDates = matchedDates(pattern, start.getTime(), DateUtil.endOfYear(start).getTime(), 1, isMatchSecond);
-		if (CollUtil.isNotEmpty(matchedDates)) {
-			return matchedDates.get(0);
-		}
-		return null;
+		return DateUtil.date(pattern.nextMatchAfter(CalendarUtil.calendar(start)));
 	}
 
 	/**
 	 * 列举指定日期之后（到开始日期对应年年底）内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param patternStr 表达式字符串
 	 * @param start 起始时间
 	 * @param count 列举数量
@@ -49,7 +45,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期范围内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param patternStr 表达式字符串
 	 * @param start 起始时间
 	 * @param end 结束时间
@@ -63,7 +59,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期范围内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param patternStr 表达式字符串
 	 * @param start 起始时间
 	 * @param end 结束时间
@@ -77,7 +73,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期范围内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param pattern 表达式
 	 * @param start 起始时间
 	 * @param end 结束时间

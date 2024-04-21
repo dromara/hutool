@@ -16,7 +16,7 @@ public class CronPatternNextMatchTest {
 		CronPattern pattern = new CronPattern("* * * * * * *");
 		DateTime date = DateUtil.truncate(DateUtil.date(), DateField.SECOND);
 		Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
-		Assert.assertEquals(date.getTime(), DateUtil.date(calendar).getTime());
+		Assert.assertEquals(date.getTime() + 1000, DateUtil.date(calendar).getTime());
 
 		// 匹配所有分，返回下一分钟
 		pattern = new CronPattern("0 * * * * * *");
