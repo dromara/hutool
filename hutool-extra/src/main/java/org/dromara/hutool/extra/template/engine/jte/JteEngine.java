@@ -32,9 +32,9 @@ import java.nio.file.Paths;
  */
 public class JteEngine implements TemplateEngine {
 
+	private final ContentType contentType = ContentType.Plain;
 	private TemplateConfig config = TemplateConfig.DEFAULT;
 	private gg.jte.TemplateEngine engine;
-	private final ContentType contentType = ContentType.Plain;
 
 	// --------------------------------------------------------------------------------- Constructor start
 
@@ -60,7 +60,7 @@ public class JteEngine implements TemplateEngine {
 	 * @param codeResolver {@link CodeResolver}
 	 */
 	public JteEngine(final CodeResolver codeResolver) {
-		createEngine(codeResolver, contentType);
+		this.engine = createEngine(codeResolver);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
 
@@ -76,11 +76,13 @@ public class JteEngine implements TemplateEngine {
 	@Override
 	public Template getTemplate(final String resource) {
 		if (TemplateConfig.ResourceMode.STRING.equals(config.getResourceMode())) {
-			if (!StrUtil.endWithAny(config.getPath(), ".jte", ".kte")) {
-				throw new RuntimeException("path need to end with '.jte' or '.kte'");
+			String path = config.getPath();
+			if(!StrUtil.endWithAny(path, ".jte", ".kte")){
+				path = StrUtil.addSuffixIfNot(StrUtil.defaultIfEmpty(path, "hutool"), ".jte");
 			}
-			createEngine(new SimpleStringCodeResolver(MapUtil.of(config.getPath(), resource)), contentType);
-			return new JteTemplate(engine, config.getPath(), config.getCharset());
+			return new JteTemplate(createEngine(
+				new SimpleStringCodeResolver(MapUtil.of(path, resource)))
+				, path, config.getCharset());
 		} else {
 			return new JteTemplate(engine, resource, config.getCharset());
 		}
@@ -97,10 +99,10 @@ public class JteEngine implements TemplateEngine {
 	private void createEngine() {
 		switch (config.getResourceMode()) {
 			case CLASSPATH:
-				createEngine(new ResourceCodeResolver(config.getPath(), JteEngine.class.getClassLoader()), contentType);
+				this.engine = createEngine(new ResourceCodeResolver(config.getPath(), JteEngine.class.getClassLoader()));
 				break;
 			case FILE:
-				createEngine(new DirectoryCodeResolver(Paths.get(config.getPath())), contentType);
+				this.engine = createEngine(new DirectoryCodeResolver(Paths.get(config.getPath())));
 				break;
 			case STRING:
 				// 这里无法直接创建引擎
@@ -114,9 +116,8 @@ public class JteEngine implements TemplateEngine {
 	 * 创建引擎 {@link gg.jte.TemplateEngine }
 	 *
 	 * @param codeResolver CodeResolver
-	 * @param contentType  ContentType
 	 */
-	private void createEngine(final CodeResolver codeResolver, final ContentType contentType) {
-		this.engine = gg.jte.TemplateEngine.create(codeResolver, contentType);
+	private gg.jte.TemplateEngine createEngine(final CodeResolver codeResolver) {
+		return gg.jte.TemplateEngine.create(codeResolver, this.contentType);
 	}
 }

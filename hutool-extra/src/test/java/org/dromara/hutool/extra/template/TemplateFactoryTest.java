@@ -162,10 +162,10 @@ public class TemplateFactoryTest {
 	public void jteEngineTest() {
 		// 字符串模板
 		TemplateEngine engine = TemplateEngineFactory.createEngine(
-				new TemplateConfig("templates.jte").setCustomEngine(JteEngine.class));
+				new TemplateConfig().setCustomEngine(JteEngine.class));
 		Template template = engine.getTemplate("@param java.util.HashMap<String, String> map\n" +
 			"<h3>${map.get(\"message\")}</h3>");
-		Map<String, String> model = new HashMap<>();
+		final Map<String, String> model = new HashMap<>();
 		model.put("message", "Hutool");
 		String result = template.render(model);
 		Assertions.assertEquals("<h3>Hutool</h3>", result);
