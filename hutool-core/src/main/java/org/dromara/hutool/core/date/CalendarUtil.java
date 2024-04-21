@@ -653,12 +653,12 @@ public class CalendarUtil {
 
 		// 月
 		final int month = calendar.get(Calendar.MONTH) + 1;
-		result.append(NumberChineseFormatter.formatThousand(month, false));
+		result.append(NumberChineseFormatter.of().setColloquialMode(true).format(month));
 		result.append('月');
 
 		// 日
 		final int day = calendar.get(Calendar.DAY_OF_MONTH);
-		result.append(NumberChineseFormatter.formatThousand(day, false));
+		result.append(NumberChineseFormatter.of().setColloquialMode(true).format(day));
 		result.append('日');
 
 		// 只替换年月日，时分秒中零不需要替换
@@ -670,15 +670,15 @@ public class CalendarUtil {
 		if (withTime) {
 			// 时
 			final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-			result.append(NumberChineseFormatter.formatThousand(hour, false));
+			result.append(NumberChineseFormatter.of().setColloquialMode(true).format(hour));
 			result.append('时');
 			// 分
 			final int minute = calendar.get(Calendar.MINUTE);
-			result.append(NumberChineseFormatter.formatThousand(minute, false));
+			result.append(NumberChineseFormatter.of().setColloquialMode(true).format(minute));
 			result.append('分');
 			// 秒
 			final int second = calendar.get(Calendar.SECOND);
-			result.append(NumberChineseFormatter.formatThousand(second, false));
+			result.append(NumberChineseFormatter.of().setColloquialMode(true).format(second));
 			result.append('秒');
 		}
 

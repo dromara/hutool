@@ -1030,7 +1030,9 @@ public class Convert {
 	 * @since 3.2.3
 	 */
 	public static String numberToChinese(final double number, final boolean isUseTraditional) {
-		return NumberChineseFormatter.format(number, isUseTraditional);
+		return NumberChineseFormatter.of()
+			.setUseTraditional(isUseTraditional)
+			.format(number);
 	}
 
 	/**
@@ -1059,7 +1061,10 @@ public class Convert {
 		if(null == n) {
 			return "零";
 		}
-		return NumberChineseFormatter.format(n.doubleValue(), true, true);
+		return NumberChineseFormatter.of()
+			.setUseTraditional(true)
+			.setMoneyMode(true)
+			.format(n.doubleValue());
 	}
 
 	/**

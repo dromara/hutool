@@ -310,7 +310,7 @@ public class ChineseDate {
 			case 30:
 				return "三十";
 			default:
-				return chineseTen[day / 10] + NumberChineseFormatter.format(n + 1, false);
+				return chineseTen[day / 10] + NumberChineseFormatter.of().format(n + 1);
 		}
 	}
 
