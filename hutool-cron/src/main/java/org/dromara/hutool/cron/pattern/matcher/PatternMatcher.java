@@ -279,8 +279,10 @@ public class PatternMatcher {
 
 		final int min;
 		if (matcher instanceof AlwaysTrueMatcher) {
+			// 匹配所有时，获取这个字段本身的最小值
 			min = part.getMin();
 		} else if (matcher instanceof BoolArrayMatcher) {
+			// 获取用户定义的最小值
 			min = ((BoolArrayMatcher) matcher).getMinValue();
 		} else {
 			throw new IllegalArgumentException("Invalid matcher: " + matcher.getClass().getName());
