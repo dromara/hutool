@@ -283,21 +283,21 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void chineseToNumberTest(){
-		Assertions.assertEquals(0, ChineseNumberFormatter.parseFromChinese("零"));
-		Assertions.assertEquals(102, ChineseNumberFormatter.parseFromChinese("一百零二"));
-		Assertions.assertEquals(112, ChineseNumberFormatter.parseFromChinese("一百一十二"));
-		Assertions.assertEquals(1012, ChineseNumberFormatter.parseFromChinese("一千零一十二"));
-		Assertions.assertEquals(1000000, ChineseNumberFormatter.parseFromChinese("一百万"));
-		Assertions.assertEquals(2000100112, ChineseNumberFormatter.parseFromChinese("二十亿零一十万零一百一十二"));
+		Assertions.assertEquals(0, ChineseNumberParser.parseFromChinese("零"));
+		Assertions.assertEquals(102, ChineseNumberParser.parseFromChinese("一百零二"));
+		Assertions.assertEquals(112, ChineseNumberParser.parseFromChinese("一百一十二"));
+		Assertions.assertEquals(1012, ChineseNumberParser.parseFromChinese("一千零一十二"));
+		Assertions.assertEquals(1000000, ChineseNumberParser.parseFromChinese("一百万"));
+		Assertions.assertEquals(2000100112, ChineseNumberParser.parseFromChinese("二十亿零一十万零一百一十二"));
 	}
 
 	@Test
 	public void chineseToNumberTest2(){
-		Assertions.assertEquals(120, ChineseNumberFormatter.parseFromChinese("一百二"));
-		Assertions.assertEquals(1200, ChineseNumberFormatter.parseFromChinese("一千二"));
-		Assertions.assertEquals(22000, ChineseNumberFormatter.parseFromChinese("两万二"));
-		Assertions.assertEquals(22003, ChineseNumberFormatter.parseFromChinese("两万二零三"));
-		Assertions.assertEquals(22010, ChineseNumberFormatter.parseFromChinese("两万二零一十"));
+		Assertions.assertEquals(120, ChineseNumberParser.parseFromChinese("一百二"));
+		Assertions.assertEquals(1200, ChineseNumberParser.parseFromChinese("一千二"));
+		Assertions.assertEquals(22000, ChineseNumberParser.parseFromChinese("两万二"));
+		Assertions.assertEquals(22003, ChineseNumberParser.parseFromChinese("两万二零三"));
+		Assertions.assertEquals(22010, ChineseNumberParser.parseFromChinese("两万二零一十"));
 	}
 
 	@Test
@@ -305,16 +305,16 @@ public class NumberChineseFormatterTest {
 		// issue#1726，对于单位开头的数组，默认赋予1
 		// 十二 -> 一十二
 		// 百二 -> 一百二
-		Assertions.assertEquals(12, ChineseNumberFormatter.parseFromChinese("十二"));
-		Assertions.assertEquals(120, ChineseNumberFormatter.parseFromChinese("百二"));
-		Assertions.assertEquals(1300, ChineseNumberFormatter.parseFromChinese("千三"));
+		Assertions.assertEquals(12, ChineseNumberParser.parseFromChinese("十二"));
+		Assertions.assertEquals(120, ChineseNumberParser.parseFromChinese("百二"));
+		Assertions.assertEquals(1300, ChineseNumberParser.parseFromChinese("千三"));
 	}
 
 	@Test
 	public void badNumberTest(){
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
 			// 连续数字检查
-			ChineseNumberFormatter.parseFromChinese("一百一二三");
+			ChineseNumberParser.parseFromChinese("一百一二三");
 		});
 	}
 
@@ -322,7 +322,7 @@ public class NumberChineseFormatterTest {
 	public void badNumberTest2(){
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
 			// 非法字符
-			ChineseNumberFormatter.parseFromChinese("一百你三");
+			ChineseNumberParser.parseFromChinese("一百你三");
 		});
 	}
 
@@ -373,13 +373,13 @@ public class NumberChineseFormatterTest {
 		 * s=叁角贰分, n=0.32
 		 * s=陆万柒仟伍佰伍拾陆元叁角贰分, n=67556.32
 		 */
-		Assertions.assertEquals(67556, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆圆").longValue());
-		Assertions.assertEquals(67556, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元").longValue());
-		Assertions.assertEquals(0.3D, ChineseNumberFormatter.parseFromChineseMoney("叁角").doubleValue(), 0);
-		Assertions.assertEquals(0.02, ChineseNumberFormatter.parseFromChineseMoney("贰分").doubleValue(), 0);
-		Assertions.assertEquals(67556.3, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元叁角").doubleValue(), 0);
-		Assertions.assertEquals(67556.02, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元贰分").doubleValue(), 0);
-		Assertions.assertEquals(0.32, ChineseNumberFormatter.parseFromChineseMoney("叁角贰分").doubleValue(), 0);
-		Assertions.assertEquals(67556.32, ChineseNumberFormatter.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元叁角贰分").doubleValue(), 0);
+		Assertions.assertEquals(67556, ChineseNumberParser.parseFromChineseMoney("陆万柒仟伍佰伍拾陆圆").longValue());
+		Assertions.assertEquals(67556, ChineseNumberParser.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元").longValue());
+		Assertions.assertEquals(0.3D, ChineseNumberParser.parseFromChineseMoney("叁角").doubleValue(), 0);
+		Assertions.assertEquals(0.02, ChineseNumberParser.parseFromChineseMoney("贰分").doubleValue(), 0);
+		Assertions.assertEquals(67556.3, ChineseNumberParser.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元叁角").doubleValue(), 0);
+		Assertions.assertEquals(67556.02, ChineseNumberParser.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元贰分").doubleValue(), 0);
+		Assertions.assertEquals(0.32, ChineseNumberParser.parseFromChineseMoney("叁角贰分").doubleValue(), 0);
+		Assertions.assertEquals(67556.32, ChineseNumberParser.parseFromChineseMoney("陆万柒仟伍佰伍拾陆元叁角贰分").doubleValue(), 0);
 	}
 }

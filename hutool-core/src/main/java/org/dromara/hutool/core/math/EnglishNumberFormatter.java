@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.math;
 
-import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**
@@ -22,7 +21,7 @@ import org.dromara.hutool.core.text.StrUtil;
  * @author Looly, totalo
  * @since 3.0.9
  */
-public class NumberWordFormatter {
+public class EnglishNumberFormatter {
 
 	private static final String[] NUMBER = new String[]{"", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN",
 			"EIGHT", "NINE"};

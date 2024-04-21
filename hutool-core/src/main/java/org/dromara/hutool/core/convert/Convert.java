@@ -20,7 +20,8 @@ import org.dromara.hutool.core.convert.impl.EnumConverter;
 import org.dromara.hutool.core.convert.impl.MapConverter;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.ChineseNumberFormatter;
-import org.dromara.hutool.core.math.NumberWordFormatter;
+import org.dromara.hutool.core.math.ChineseNumberParser;
+import org.dromara.hutool.core.math.EnglishNumberFormatter;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.UnicodeUtil;
@@ -1003,7 +1004,7 @@ public class Convert {
 	 * @since 3.0.9
 	 */
 	public static String numberToWord(final Number number) {
-		return NumberWordFormatter.format(number);
+		return EnglishNumberFormatter.format(number);
 	}
 
 	/**
@@ -1018,7 +1019,7 @@ public class Convert {
 	 * @since 5.5.9
 	 */
 	public static String numberToSimple(final Number number) {
-		return NumberWordFormatter.formatSimple(number.longValue());
+		return EnglishNumberFormatter.formatSimple(number.longValue());
 	}
 
 	/**
@@ -1047,7 +1048,7 @@ public class Convert {
 	 * @since 5.6.0
 	 */
 	public static int chineseToNumber(final String number){
-		return ChineseNumberFormatter.parseFromChinese(number);
+		return ChineseNumberParser.parseFromChineseNumber(number);
 	}
 
 	/**
@@ -1078,7 +1079,7 @@ public class Convert {
 	 * @since 5.8.5
 	 */
 	public static BigDecimal chineseMoneyToNumber(final String chineseMoneyAmount){
-		return ChineseNumberFormatter.parseFromChineseMoney(chineseMoneyAmount);
+		return ChineseNumberParser.parseFromChineseMoney(chineseMoneyAmount);
 	}
 
 	// -------------------------------------------------------------------------- 数字转换
