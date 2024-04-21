@@ -103,7 +103,7 @@ public class CollStreamUtil {
 			return MapUtil.zero();
 		}
 		return StreamUtil.of(collection, isParallel)
-				.collect(HashMap::new, (m, v) -> m.put(key.apply(v), value.apply(v)), HashMap::putAll);
+			.collect(HashMap::new, (m, v) -> m.put(key.apply(v), value.apply(v)), HashMap::putAll);
 	}
 
 
@@ -322,9 +322,9 @@ public class CollStreamUtil {
 			return ListUtil.zero();
 		}
 		return StreamUtil.of(collection, isParallel)
-				.map(function)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+			.map(function)
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -357,9 +357,9 @@ public class CollStreamUtil {
 			return SetUtil.zero();
 		}
 		return StreamUtil.of(collection, isParallel)
-				.map(function)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toSet());
+			.map(function)
+			.filter(Objects::nonNull)
+			.collect(Collectors.toSet());
 	}
 
 
