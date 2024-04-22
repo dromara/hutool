@@ -74,7 +74,7 @@ public class SingletonTest {
 	@Disabled
 	void issue3435Test() {
 		final String key = "123";
-		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 		for (int i = 0; i < 100; i++) {
 			threadPoolExecutor.execute(() -> {
 				Singleton.get(key, () -> {

@@ -380,7 +380,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 */
 	@Override
 	public int hashCode() {
-		return (int) (cent ^ (cent >>> 32));
+		return Long.hashCode(cent);
 	}
 
 	/**
