@@ -47,8 +47,8 @@ remarks = true
 
 # 测试用Oracle数据库
 [orcl]
-url = jdbc:oracle:thin:@//looly.centos:1521/XE
-user = looly
+url = jdbc:oracle:thin:@//localhost:1521/XEPDB1
+user = system
 pass = 123456
 remarks = true
 
