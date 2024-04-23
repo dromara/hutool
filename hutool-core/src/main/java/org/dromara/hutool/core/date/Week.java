@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.time.DayOfWeek;
 import java.util.Calendar;
@@ -63,10 +62,6 @@ public enum Week {
 	SATURDAY(Calendar.SATURDAY);
 
 	// ---------------------------------------------------------------
-	/**
-	 * Weeks aliases.
-	 */
-	private static final String[] ALIASES = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 	private static final Week[] ENUMS = Week.values();
 
 	/**
@@ -98,9 +93,9 @@ public enum Week {
 	 * @return ISO8601规范的int值
 	 * @since 5.8.0
 	 */
-	public int getIso8601Value(){
-		int iso8601IntValue = getValue() -1;
-		if(0 == iso8601IntValue){
+	public int getIso8601Value() {
+		int iso8601IntValue = getValue() - 1;
+		if (0 == iso8601IntValue) {
 			iso8601IntValue = 7;
 		}
 		return iso8601IntValue;
@@ -183,12 +178,37 @@ public enum Week {
 	 * @since 5.8.0
 	 */
 	public static Week of(final String name) throws IllegalArgumentException {
-		Assert.notBlank(name);
-		Week of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name) + 1);
-		if (null == of) {
-			of = Week.valueOf(name.toUpperCase());
+		if (null != name && name.length() > 1) {
+			final char firstChar = Character.toLowerCase(name.charAt(0));
+			switch (firstChar) {
+				case 'm':
+					return MONDAY; // monday
+				case 'w':
+					return WEDNESDAY; // wednesday
+				case 'f':
+					return FRIDAY; // friday
+				case 't':
+					final char secondChar = Character.toLowerCase(name.charAt(1));
+					switch (secondChar) {
+						case 'u':
+							return TUESDAY; // tuesday
+						case 'h':
+							return THURSDAY; // thursday
+					}
+					break;
+				case 's':
+					final char secondChar2 = Character.toLowerCase(name.charAt(1));
+					switch (secondChar2) {
+						case 'a':
+							return SATURDAY; // saturday
+						case 'u':
+							return SUNDAY; // sunday
+					}
+					break;
+			}
 		}
-		return of;
+
+		throw new IllegalArgumentException("Invalid week name: " + name);
 	}
 
 	/**
@@ -208,7 +228,7 @@ public enum Week {
 	public static Week of(final DayOfWeek dayOfWeek) {
 		Assert.notNull(dayOfWeek);
 		int week = dayOfWeek.getValue() + 1;
-		if(8 == week){
+		if (8 == week) {
 			// 周日
 			week = 1;
 		}
