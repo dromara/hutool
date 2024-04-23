@@ -170,7 +170,8 @@ public enum Week {
 	}
 
 	/**
-	 * 解析别名为Week对象，别名如：sun或者SUNDAY，不区分大小写
+	 * 解析别名为Week对象，别名如：sun或者SUNDAY，不区分大小写<br>
+	 * 参考：https://github.com/sisyphsu/dateparser/blob/master/src/main/java/com/github/sisyphsu/dateparser/DateParser.java#L319
 	 *
 	 * @param name 别名值
 	 * @return 周枚举Week，非空
