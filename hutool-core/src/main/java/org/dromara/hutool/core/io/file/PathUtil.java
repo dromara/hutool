@@ -266,6 +266,9 @@ public class PathUtil {
 	public static Path copy(final InputStream src, final Path target, final CopyOption... options) throws IORuntimeException {
 		Assert.notNull(target, "Destination File or directory is null !");
 
+		// 创建级联父目录
+		mkParentDirs(target);
+
 		try {
 			Files.copy(src, target, options);
 		} catch (final IOException e) {
