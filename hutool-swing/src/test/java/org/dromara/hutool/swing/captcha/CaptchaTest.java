@@ -46,6 +46,15 @@ public class CaptchaTest {
 
 	@Test
 	@Disabled
+	public void noBackgroundCaptchaTest() {
+		// 定义图形验证码的长和宽
+		final LineCaptcha lineCaptcha = CaptchaUtil.ofLineCaptcha(200, 70, 4, 15);
+		lineCaptcha.setBackground(null);
+		lineCaptcha.write("d:/test/captcha/tellow.png");
+	}
+
+	@Test
+	@Disabled
 	public void lineCaptchaWithMathTest() {
 		// 定义图形验证码的长和宽
 		final LineCaptcha lineCaptcha = CaptchaUtil.ofLineCaptcha(200, 80);
