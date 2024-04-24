@@ -14,10 +14,10 @@ package org.dromara.hutool.swing.captcha;
 
 
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.swing.captcha.generator.CodeGenerator;
 import org.dromara.hutool.swing.captcha.generator.RandomGenerator;
+import org.dromara.hutool.swing.img.GraphicsUtil;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -193,13 +193,10 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @return BufferedImage
 	 */
 	private BufferedImage graphicsImage(final char[] chars, final Color[] fontColor, final char[] words, final int flag) {
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		//或得图形上下文
-		final Graphics2D g2d = image.createGraphics();
+		final BufferedImage image = new BufferedImage(width, height, (null == this.background) ? BufferedImage.TYPE_4BYTE_ABGR : BufferedImage.TYPE_INT_RGB);
+		//利用指定颜色填充背景
+		final Graphics2D g2d = GraphicsUtil.createGraphics(image, this.background);
 		try{
-			//利用指定颜色填充背景
-			g2d.setColor(ObjUtil.defaultIfNull(this.background, Color.WHITE));
-			g2d.fillRect(0, 0, width, height);
 			AlphaComposite ac;
 			// 字符的y坐标
 			final float y = (height >> 1) + (font.getSize() >> 1);
