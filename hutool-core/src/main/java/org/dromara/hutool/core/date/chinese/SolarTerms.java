@@ -189,11 +189,11 @@ public class SolarTerms {
 	 * 根据年月日获取节气, 内部方法，不对月和日做有效校验
 	 *
 	 * @param year  公历年
-	 * @param mouth 公历月，从1开始
+	 * @param month 公历月，从1开始
 	 * @param day   公历日，从1开始
 	 * @return 返回指定年月日所处的节气，若不是一个节气则返回空字符串
 	 */
-	private static String getTermInternal(final int year, final int mouth, final int day) {
+	private static String getTermInternal(final int year, final int month, final int day) {
 		if (year < 1900 || year > 2100) {
 			throw new IllegalArgumentException("只支持1900-2100之间的日期获取节气");
 		}
@@ -201,7 +201,7 @@ public class SolarTerms {
 		final String termTable = S_TERM_INFO[year - 1900];
 
 		// 节气速查表中每5个字符含有4个节气，通过月份直接计算偏移
-		final int segment = (mouth + 1) / 2 - 1;
+		final int segment = (month + 1) / 2 - 1;
 		final int termInfo = Integer.parseInt(termTable.substring(segment * 5, (segment + 1) * 5), 16);
 		final String termInfoStr = String.valueOf(termInfo);
 
@@ -212,7 +212,7 @@ public class SolarTerms {
 		segmentTable[3] = termInfoStr.substring(4, 6);
 
 		// 奇数月份的节气在前2个，偶数月份的节气在后两个
-		final int segmentOffset = (mouth & 1) == 1 ? 0 : 2;
+		final int segmentOffset = (month & 1) == 1 ? 0 : 2;
 
 		if (day == Integer.parseInt(segmentTable[segmentOffset])) {
 			return TERMS[segment * 4 + segmentOffset];
