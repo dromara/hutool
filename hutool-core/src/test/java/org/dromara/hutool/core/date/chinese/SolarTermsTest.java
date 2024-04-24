@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 public class SolarTermsTest {
 
 	@Test
-	public void getTermTest1(){
+	public void getTermTest1() {
 		final int term = SolarTerms.getTerm(1987, 3);
 		Assertions.assertEquals(4, term);
 	}
