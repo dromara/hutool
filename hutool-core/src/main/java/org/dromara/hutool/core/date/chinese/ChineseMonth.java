@@ -20,7 +20,7 @@ package org.dromara.hutool.core.date.chinese;
  */
 public class ChineseMonth {
 
-	private static final String[] MONTH_NAME = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
+	private static final String[] MONTH_NAME = {"正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
 	private static final String[] MONTH_NAME_TRADITIONAL = {"正", "二", "三", "四", "五", "六", "七", "八", "九", "寒", "冬", "腊"};
 
 	/**

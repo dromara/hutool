@@ -200,4 +200,24 @@ public class ChineseDateTest {
 		Assertions.assertEquals(chineseDate2, chineseDate3);
 		Assertions.assertNotEquals(chineseDate2, chineseDate4);
 	}
+	@Test
+	public void getNormalizedDateTest(){
+		final Date date = DateUtil.parse("2024-4-24");
+		final Date date2 = DateUtil.parse("2024-4-30");
+
+		final ChineseDate chineseDate = new ChineseDate(date);
+		final ChineseDate chineseDate2 = new ChineseDate(date2);
+
+		Assertions.assertEquals("公元2024年农历甲辰年三月十六", chineseDate.getNormalizedDate());
+		Assertions.assertEquals("农历甲辰年三月十六", chineseDate.getNormalizedDate("GSS"));
+		Assertions.assertEquals("农历龙年三月十六", chineseDate.getNormalizedDate("XSS"));
+		Assertions.assertEquals("农历甲辰年三月戊午日", chineseDate.getNormalizedDate("GSG"));
+		Assertions.assertEquals("公元2024年农历甲辰年三月十六", chineseDate.getNormalizedDate("Mix"));
+
+		Assertions.assertEquals("公元2024年农历甲辰年三月廿二", chineseDate2.getNormalizedDate());
+		Assertions.assertEquals("农历甲辰年三月廿二", chineseDate2.getNormalizedDate("GSS"));
+		Assertions.assertEquals("农历龙年三月廿二", chineseDate2.getNormalizedDate("XSS"));
+		Assertions.assertEquals("农历甲辰年三月甲子日", chineseDate2.getNormalizedDate("GSG"));
+		Assertions.assertEquals("公元2024年农历甲辰年三月廿二", chineseDate2.getNormalizedDate("Mix"));
+	}
 }
