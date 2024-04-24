@@ -28,8 +28,8 @@ public class CaptchaTest {
 	public void lineCaptchaTest3() {
 		// 定义图形验证码的长和宽
 		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 70, 4, 15);
-		lineCaptcha.setBackground(Color.yellow);
-		lineCaptcha.write("f:/test/captcha/tellow.png");
+		lineCaptcha.setBackground(null);
+		lineCaptcha.write("d:/test/captcha/tellow.png");
 	}
 
 	@Test

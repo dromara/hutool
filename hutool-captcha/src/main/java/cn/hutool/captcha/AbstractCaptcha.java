@@ -60,7 +60,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	/**
 	 * 背景色
 	 */
-	protected Color background;
+	protected Color background = Color.WHITE;
 	/**
 	 * 文字透明度
 	 */
