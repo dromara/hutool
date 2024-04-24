@@ -72,7 +72,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	/**
 	 * 背景色
 	 */
-	protected Color background;
+	protected Color background = Color.WHITE;
 	/**
 	 * 文字透明度
 	 */
@@ -267,7 +267,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	}
 
 	/**
-	 * 设置背景色
+	 * 设置背景色，{@code null}表示透明背景
 	 *
 	 * @param background 背景色
 	 * @since 4.1.22

@@ -94,8 +94,8 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	@Override
 	public Image createImage(final String code) {
-		final BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
+		final BufferedImage image = new BufferedImage(width, height, (null == this.background) ? BufferedImage.TYPE_4BYTE_ABGR : BufferedImage.TYPE_INT_RGB);
+		final Graphics2D g = GraphicsUtil.createGraphics(image, this.background);
 
 		try {
 			// 画字符串
