@@ -217,6 +217,9 @@ public class PathUtil {
 		Assert.notNull(src, "Source is null !");
 		Assert.notNull(target, "Destination File or directory is null !");
 
+		// 创建级联父目录
+		mkParentDirs(target);
+
 		try {
 			Files.copy(src, target, options);
 		} catch (IOException e) {
