@@ -52,7 +52,19 @@ public class HttpDownloader {
 	 * @return 文件数据
 	 */
 	public static byte[] downloadBytes(final String url) {
-		return requestDownload(url, -1).bodyBytes();
+		return downloadBytes(url, 0);
+	}
+
+	/**
+	 * 下载远程文件数据，支持30x跳转
+	 *
+	 * @param url     请求的url
+	 * @param timeout 超时毫秒数
+	 * @return 文件数据
+	 * @since 5.8.28
+	 */
+	public static byte[] downloadBytes(final String url, final int timeout) {
+		return requestDownload(url, timeout).bodyBytes();
 	}
 
 	/**
@@ -75,6 +87,7 @@ public class HttpDownloader {
 	 * @return 文件
 	 */
 	public static File downloadFile(final String url, final File targetFileOrDir, final int timeout) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
 		return downloadFile(url, targetFileOrDir, timeout, null);
 	}
 
@@ -88,6 +101,7 @@ public class HttpDownloader {
 	 * @return 文件
 	 */
 	public static File downloadFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
 		return requestDownload(url, timeout).body().write(targetFileOrDir, streamProgress);
 	}
 
@@ -105,6 +119,7 @@ public class HttpDownloader {
 	 * @since 5.7.12
 	 */
 	public static File downloadFile(final String url, final File targetFileOrDir, final String tempFileSuffix, final int timeout, final StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
 		return requestDownload(url, timeout).body().write(targetFileOrDir, tempFileSuffix, streamProgress);
 	}
 
@@ -119,7 +134,6 @@ public class HttpDownloader {
 	 */
 	public static long download(final String url, final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
 		Assert.notNull(out, "[out] is null !");
-
 		return requestDownload(url, -1).body().write(out, isCloseOut, streamProgress);
 	}
 
@@ -134,8 +148,13 @@ public class HttpDownloader {
 	private static Response requestDownload(final String url, final int timeout) {
 		Assert.notBlank(url, "[url] is blank !");
 
+		final ClientConfig config = ClientConfig.of();
+		if(timeout > 0){
+			config.setTimeout(timeout);
+		}
+
 		final Response response = ClientEngineFactory.getEngine()
-				.init(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
+				.init(config)
 				.send(Request.of(url));
 
 		if (response.isOk()) {
