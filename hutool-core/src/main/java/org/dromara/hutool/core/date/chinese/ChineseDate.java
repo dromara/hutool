@@ -378,12 +378,58 @@ public class ChineseDate {
 	}
 
 	/**
+	 * 农历标准化输出格式枚举
+	 */
+	public enum ChineseDateFormat{
+
+		/**
+		 * 干支纪年 数序纪月 数序纪日
+		 */
+		GSS("干支纪年 数序纪月 数序纪日"),
+		/**
+		 * 生肖纪年 数序纪月 数序纪日
+		 */
+		XSS("生肖纪年 数序纪月 数序纪日"),
+		/**
+		 * 干支纪年 数序纪月 干支纪日
+		 */
+		GSG("干支纪年 数序纪月 干支纪日"),
+		/**
+		 * 农历年年首所在的公历年份 干支纪年 数序纪月 数序纪日
+		 */
+		Mix("农历年年首所在的公历年份 干支纪年 数序纪月 数序纪日");
+
+		/**
+		 * 农历标准化输出格式信息
+		 */
+		private final String info;
+
+		/**
+		 * 构造
+		 *
+		 * @param info 输出格式信息
+		 */
+		ChineseDateFormat(final String info) {
+			this.info = info;
+		}
+
+		/**
+		 * 获取农历日期输出格式相关描述
+		 *
+		 * @return 输出格式信息
+		 */
+		public String getName() {
+			return this.info;
+		}
+	}
+
+	/**
 	 *获取标准化农历日期,默认Mix
 	 *
 	 * @return 获取的标准化农历日期
 	 */
 	public String getNormalizedDate() {
-		return getNormalizedDate("Mix");
+		return getNormalizedDate(ChineseDateFormat.Mix);
 	}
 
 	/**
@@ -398,7 +444,7 @@ public class ChineseDate {
 	 * @param format 选择输出的标准格式
 	 * @return 获取的标准化农历日期
 	 */
-	public String getNormalizedDate(final String format) {
+	public String getNormalizedDate(final ChineseDateFormat format) {
 		if (gyear >= LunarInfo.BASE_YEAR && gmonthBase1 > 0 && gday > 0) {
 			return normalized(gyear, gmonthBase1, gday, format);
 		}
@@ -475,29 +521,31 @@ public class ChineseDate {
 	 * @param format 农历输出格式
 	 * @return	标准化农历日期输出
 	 */
-	private String normalized(final int year, final int month, final int day, final String format) {
+	private String normalized(final int year, final int month, final int day, final ChineseDateFormat format) {
 		//根据选择的格式返回不同标准化日期输出，默认为Mix
 		String normalizedYear = "";
 		String normalizedMonth = getChineseMonth();
 		String normalizedDay = "";
 		CharSequence dateTemplate = "农历{}年{}{}";
+
 		switch (format){
-			case "Mix":
+			case Mix:
 				dateTemplate = "公元"+ year +"年农历{}年{}{}";
-			case "GSS":
+			case GSS:
 				normalizedYear = GanZhi.getGanzhiOfYear(this.year);
 				normalizedDay = getChineseDay();
 				break;
-			case "XSS" :
+			case XSS :
 				normalizedYear = getChineseZodiac();
 				normalizedDay = getChineseDay();
 				break;
-			case "GSG":
+			case GSG:
 				dateTemplate = "农历{}年{}{}日";
 				normalizedYear = GanZhi.getGanzhiOfYear(this.year);
 				normalizedDay = GanZhi.getGanzhiOfDay(year, month, day);
 				break;
 		}
+
 		return StrUtil.format(dateTemplate,
 			normalizedYear,
 			normalizedMonth,
