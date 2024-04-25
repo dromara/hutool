@@ -37,7 +37,18 @@ public class HttpDownloader {
 	 * @return 文件数据
 	 */
 	public static byte[] downloadBytes(String url) {
-		return requestDownload(url, -1).bodyBytes();
+		return downloadBytes(url, 0);
+	}
+
+	/**
+	 * 下载远程文件数据，支持30x跳转
+	 *
+	 * @param url     请求的url
+	 * @param timeout 超时毫秒数
+	 * @return 文件数据
+	 */
+	public static byte[] downloadBytes(String url, int timeout) {
+		return requestDownload(url, timeout).bodyBytes();
 	}
 
 	/**
@@ -50,6 +61,8 @@ public class HttpDownloader {
 	 * @return 文件大小
 	 */
 	public static long downloadFile(String url, File targetFileOrDir, int timeout, StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
+
 		return requestDownload(url, timeout).writeBody(targetFileOrDir, streamProgress);
 	}
 
@@ -67,6 +80,8 @@ public class HttpDownloader {
 	 * @since 5.7.12
 	 */
 	public static long downloadFile(String url, File targetFileOrDir, String tempFileSuffix, int timeout, StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
+
 		return requestDownload(url, timeout).writeBody(targetFileOrDir, tempFileSuffix, streamProgress);
 	}
 
@@ -80,6 +95,9 @@ public class HttpDownloader {
 	 * @return 文件
 	 */
 	public static File downloadForFile(String url, File targetFileOrDir, int timeout, StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
+
+		// writeBody后会自动关闭网络流
 		return requestDownload(url, timeout).writeBodyForFile(targetFileOrDir, streamProgress);
 	}
 
@@ -95,6 +113,7 @@ public class HttpDownloader {
 	public static long download(String url, OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
 		Assert.notNull(out, "[out] is null !");
 
+		// writeBody后会自动关闭网络流
 		return requestDownload(url, -1).writeBody(out, isCloseOut, streamProgress);
 	}
 
@@ -109,10 +128,14 @@ public class HttpDownloader {
 	private static HttpResponse requestDownload(String url, int timeout) {
 		Assert.notBlank(url, "[url] is blank !");
 
-		final HttpResponse response = HttpUtil.createGet(url, true)
-				.timeout(timeout)
-				.executeAsync();
+		final HttpRequest request = HttpUtil.createGet(url, true);
+		if (timeout > 0) {
+			// 只有用户自定义了超时时长才有效，否则使用全局默认的超时时长。
+			request.timeout(timeout);
+		}
 
+
+		final HttpResponse response = request.executeAsync();
 		if (response.isOk()) {
 			return response;
 		}
