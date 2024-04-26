@@ -8,7 +8,7 @@ public class IssueI97WU6Test {
 	public void getTermTest() {
 		// 润十月没有三十，十月有三十
 		final ChineseDate chineseDate = new ChineseDate(1984, 10, 30, false);
-		Assertions.assertEquals("甲子鼠年 寒月三十", chineseDate.toString());
+		Assertions.assertEquals("农历甲子鼠年寒月三十", chineseDate.toString());
 		Assertions.assertEquals("小雪", chineseDate.getTerm());
 	}
 }

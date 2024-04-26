@@ -12,13 +12,9 @@
 
 package org.dromara.hutool.core.date.chinese;
 
-import org.dromara.hutool.core.math.ChineseNumberFormatter;
-import org.dromara.hutool.core.date.CalendarUtil;
-import org.dromara.hutool.core.date.DateTime;
-import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.date.TimeUtil;
-import org.dromara.hutool.core.date.Zodiac;
+import org.dromara.hutool.core.date.*;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.math.ChineseNumberFormatter;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.LocalDate;
@@ -34,6 +30,8 @@ import java.util.Objects;
  *     <li>通过公历日期构造获取对应农历</li>
  *     <li>通过农历日期直接构造</li>
  * </ul>
+ * <br>
+ * 规范参考：<a href="https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=E107EA4DE9725EDF819F33C60A44B296">GB/T 33661-2017</a>
  *
  * @author zjw, looly
  * @since 5.1.1
@@ -150,7 +148,7 @@ public class ChineseDate {
 	 * @since 5.7.18
 	 */
 	public ChineseDate(final int chineseYear, final int chineseMonth, final int chineseDay, boolean isLeapMonth) {
-		if(chineseMonth != LunarInfo.leapMonth(chineseYear)){
+		if (chineseMonth != LunarInfo.leapMonth(chineseYear)) {
 			// issue#I5YB1A，用户传入的月份可能非闰月，此时此参数无效。
 			isLeapMonth = false;
 		}
@@ -268,7 +266,7 @@ public class ChineseDate {
 	 */
 	public String getChineseMonth(final boolean isTraditional) {
 		return ChineseMonth.getChineseMonthName(isLeapMonth(),
-				isLeapMonth() ? this.month - 1 : this.month, isTraditional);
+			isLeapMonth() ? this.month - 1 : this.month, isTraditional);
 	}
 
 	/**
@@ -366,92 +364,6 @@ public class ChineseDate {
 	}
 
 	/**
-	 * 干支纪年信息
-	 *
-	 * @return 获得天干地支的年月日信息
-	 */
-	public String getCyclicalYMD() {
-		if (gyear >= LunarInfo.BASE_YEAR && gmonthBase1 > 0 && gday > 0) {
-			return cyclicalm(gyear, gmonthBase1, gday);
-		}
-		return null;
-	}
-
-	/**
-	 * 农历标准化输出格式枚举
-	 */
-	public enum ChineseDateFormat{
-
-		/**
-		 * 干支纪年 数序纪月 数序纪日
-		 */
-		GSS("干支纪年 数序纪月 数序纪日"),
-		/**
-		 * 生肖纪年 数序纪月 数序纪日
-		 */
-		XSS("生肖纪年 数序纪月 数序纪日"),
-		/**
-		 * 干支纪年 数序纪月 干支纪日
-		 */
-		GSG("干支纪年 数序纪月 干支纪日"),
-		/**
-		 * 农历年年首所在的公历年份 干支纪年 数序纪月 数序纪日
-		 */
-		Mix("农历年年首所在的公历年份 干支纪年 数序纪月 数序纪日");
-
-		/**
-		 * 农历标准化输出格式信息
-		 */
-		private final String info;
-
-		/**
-		 * 构造
-		 *
-		 * @param info 输出格式信息
-		 */
-		ChineseDateFormat(final String info) {
-			this.info = info;
-		}
-
-		/**
-		 * 获取农历日期输出格式相关描述
-		 *
-		 * @return 输出格式信息
-		 */
-		public String getName() {
-			return this.info;
-		}
-	}
-
-	/**
-	 *获取标准化农历日期,默认Mix
-	 *
-	 * @return 获取的标准化农历日期
-	 */
-	public String getNormalizedDate() {
-		return getNormalizedDate(ChineseDateFormat.Mix);
-	}
-
-	/**
-	 * 获取标准化农历日期
-	 * 支持格式
-	 *<ol
-	 *     <li>GSS 干支纪年 数序纪月 数序纪日</li>
-	 *     <li>XSS 生肖纪年 数序纪月 数序纪日</li>
-	 *     <li>GSG 干支纪年 数序纪月 干支纪日</li>
-	 *     <li>Mix 农历年年首所在的公历年份 干支纪年 数序纪月 数序纪日</li>
-	 *</ol>
-	 * @param format 选择输出的标准格式
-	 * @return 获取的标准化农历日期
-	 */
-	public String getNormalizedDate(final ChineseDateFormat format) {
-		if (gyear >= LunarInfo.BASE_YEAR && gmonthBase1 > 0 && gday > 0) {
-			return normalized(gyear, gmonthBase1, gday, format);
-		}
-		return null;
-	}
-
-	/**
 	 * 获得节气
 	 *
 	 * @return 获得节气
@@ -470,12 +382,70 @@ public class ChineseDate {
 	 */
 	public String toStringNormal() {
 		return String.format("%04d-%02d-%02d", this.year,
-				isLeapMonth() ? this.month - 1 : this.month, this.day);
+			isLeapMonth() ? this.month - 1 : this.month, this.day);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s%s年 %s%s", getCyclical(), getChineseZodiac(), getChineseMonthName(), getChineseDay());
+		return toString(ChineseDateFormat.GXSS);
+	}
+
+	/**
+	 * 获取标准化农历日期
+	 * 支持格式
+	 * <ol>
+	 *   <li>{@link ChineseDateFormat#GSS} 干支纪年 数序纪月 数序纪日</li>
+	 *   <li>{@link ChineseDateFormat#XSS} 生肖纪年 数序纪月 数序纪日</li>
+	 *   <li>{@link ChineseDateFormat#GXSS} 干支生肖纪年 数序纪月（传统表示） 数序纪日日</li>
+	 *   <li>{@link ChineseDateFormat#GSG} 干支纪年 数序纪月 干支纪日</li>
+	 *   <li>{@link ChineseDateFormat#GGG} 干支纪年 干支纪月 干支纪日</li>
+	 *   <li>{@link ChineseDateFormat#MIX} 农历年年首所在的公历年份 干支纪年 数序纪月 数序纪日</li>
+	 * </ol>
+	 *
+	 * @param format 选择输出的标准格式
+	 * @return 获取的标准化农历日期
+	 * @since 6.0.0
+	 */
+	public String toString(ChineseDateFormat format) {
+		if(null == format){
+			format = ChineseDateFormat.MIX;
+		}
+
+		final int year = this.year;
+		CharSequence dateTemplate = "农历{}年{}{}";
+		String normalizedYear = GanZhi.getGanzhiOfYear(year);
+		String normalizedMonth = getChineseMonth();
+		String normalizedDay = getChineseDay();
+		switch (format){
+			case GXSS:
+				dateTemplate = "农历{}" + getChineseZodiac() + "年{}{}";
+				normalizedMonth = getChineseMonthName();
+				break;
+			case XSS :
+				normalizedYear = getChineseZodiac();
+				break;
+			case GSG:
+				dateTemplate = "农历{}年{}{}日";
+				normalizedDay = GanZhi.getGanzhiOfDay(this.gyear, this.gmonthBase1, this.gday);
+				break;
+			case GGG:
+				dateTemplate = "农历{}年{}月{}日";
+				normalizedMonth = GanZhi.getGanzhiOfMonth(this.gyear, this.gmonthBase1, this.gday);
+				normalizedDay = GanZhi.getGanzhiOfDay(this.gyear, this.gmonthBase1, this.gday);
+				break;
+			case MIX:
+				//根据选择的格式返回不同标准化日期输出，默认为Mix
+				dateTemplate = "公元"+ this.year +"年农历{}年{}{}";
+			case GSS:
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported format: " + format);
+		}
+
+		return StrUtil.format(dateTemplate,
+			normalizedYear,
+			normalizedMonth,
+			normalizedDay);
 	}
 
 	@Override
@@ -507,49 +477,9 @@ public class ChineseDate {
 	 */
 	private String cyclicalm(final int year, final int month, final int day) {
 		return StrUtil.format("{}年{}月{}日",
-				GanZhi.getGanzhiOfYear(this.year),
-				GanZhi.getGanzhiOfMonth(year, month, day),
-				GanZhi.getGanzhiOfDay(year, month, day));
-	}
-
-	/**
-	 * 获取不同格式的标准化农历日期输出
-	 *
-	 * @param year 	公历年
-	 * @param month	公历月
-	 * @param day	公历日
-	 * @param format 农历输出格式
-	 * @return	标准化农历日期输出
-	 */
-	private String normalized(final int year, final int month, final int day, final ChineseDateFormat format) {
-		//根据选择的格式返回不同标准化日期输出，默认为Mix
-		String normalizedYear = "";
-		String normalizedMonth = getChineseMonth();
-		String normalizedDay = "";
-		CharSequence dateTemplate = "农历{}年{}{}";
-
-		switch (format){
-			case Mix:
-				dateTemplate = "公元"+ year +"年农历{}年{}{}";
-			case GSS:
-				normalizedYear = GanZhi.getGanzhiOfYear(this.year);
-				normalizedDay = getChineseDay();
-				break;
-			case XSS :
-				normalizedYear = getChineseZodiac();
-				normalizedDay = getChineseDay();
-				break;
-			case GSG:
-				dateTemplate = "农历{}年{}{}日";
-				normalizedYear = GanZhi.getGanzhiOfYear(this.year);
-				normalizedDay = GanZhi.getGanzhiOfDay(year, month, day);
-				break;
-		}
-
-		return StrUtil.format(dateTemplate,
-			normalizedYear,
-			normalizedMonth,
-			normalizedDay);
+			GanZhi.getGanzhiOfYear(this.year),
+			GanZhi.getGanzhiOfMonth(year, month, day),
+			GanZhi.getGanzhiOfDay(year, month, day));
 	}
 
 	/**
@@ -564,7 +494,7 @@ public class ChineseDate {
 	private DateTime lunar2solar(final int chineseYear, final int chineseMonth, final int chineseDay, final boolean isLeapMonth) {
 		//超出了最大极限值
 		if ((chineseYear == 2100 && chineseMonth == 12 && chineseDay > 1) ||
-				(chineseYear == LunarInfo.BASE_YEAR && chineseMonth == 1 && chineseDay < 31)) {
+			(chineseYear == LunarInfo.BASE_YEAR && chineseMonth == 1 && chineseDay < 31)) {
 			return null;
 		}
 		final int day = LunarInfo.monthDays(chineseYear, chineseMonth);

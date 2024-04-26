@@ -27,13 +27,13 @@ import java.util.Map;
  */
 public class LunarFestival {
 
-	//农历节日  *表示放假日
+	//农历节日
 	// 来自：https://baike.baidu.com/item/%E4%B8%AD%E5%9B%BD%E4%BC%A0%E7%BB%9F%E8%8A%82%E6%97%A5/396100
 	private static final TableMap<Map.Entry<Integer, Integer>, String> L_FTV = new TableMap<>(16);
 
 	static {
 		// 节日
-		L_FTV.put(MapUtil.entry(1, 1), "春节*");
+		L_FTV.put(MapUtil.entry(1, 1), "春节");
 		L_FTV.put(MapUtil.entry(1, 2), "犬日");
 		L_FTV.put(MapUtil.entry(1, 3), "猪日");
 		L_FTV.put(MapUtil.entry(1, 4), "羊日");
@@ -63,7 +63,7 @@ public class LunarFestival {
 		L_FTV.put(MapUtil.entry(4, 8), "佛诞节");
 
 		// 五月
-		L_FTV.put(MapUtil.entry(5, 5), "端午节 端阳节*");
+		L_FTV.put(MapUtil.entry(5, 5), "端午节 端阳节");
 
 		// 六月
 		L_FTV.put(MapUtil.entry(6, 6), "晒衣节 姑姑节");
@@ -78,7 +78,7 @@ public class LunarFestival {
 		L_FTV.put(MapUtil.entry(7, 30), "地藏节");
 
 		// 八月
-		L_FTV.put(MapUtil.entry(8, 15), "中秋节*");
+		L_FTV.put(MapUtil.entry(8, 15), "中秋节");
 
 		// 九月
 		L_FTV.put(MapUtil.entry(9, 9), "重阳节");

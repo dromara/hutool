@@ -78,15 +78,15 @@ public class GanZhi {
 	/**
 	 * 获取干支日
 	 *
-	 * @param year  公历年
-	 * @param month 公历月，从1开始
-	 * @param day   公历日
+	 * @param year       公历年
+	 * @param monthBase1 公历月，从1开始
+	 * @param day        公历日
 	 * @return 干支
 	 * @since 5.4.7
 	 */
-	public static String getGanzhiOfDay(final int year, final int month, final int day) {
+	public static String getGanzhiOfDay(final int year, final int monthBase1, final int day) {
 		// 与1970-01-01相差天数，不包括当天
-		final long days = LocalDate.of(year, month, day).toEpochDay() - 1;
+		final long days = LocalDate.of(year, monthBase1, day).toEpochDay() - 1;
 		//1899-12-21是农历1899年腊月甲子日  41：相差1900-01-31有41天
 		return cyclicalm((int) (days - LunarInfo.BASE_DAY + 41));
 	}
