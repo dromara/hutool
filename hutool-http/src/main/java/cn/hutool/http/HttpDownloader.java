@@ -46,6 +46,7 @@ public class HttpDownloader {
 	 * @param url     请求的url
 	 * @param timeout 超时毫秒数
 	 * @return 文件数据
+	 * @since 5.8.28
 	 */
 	public static byte[] downloadBytes(String url, int timeout) {
 		return requestDownload(url, timeout).bodyBytes();
