@@ -33,7 +33,7 @@ public class LunarFestival {
 
 	static {
 		// 节日
-		L_FTV.put(MapUtil.entry(1, 1), "春节");
+		L_FTV.put(MapUtil.entry(1, 1), "春节*");
 		L_FTV.put(MapUtil.entry(1, 2), "犬日");
 		L_FTV.put(MapUtil.entry(1, 3), "猪日");
 		L_FTV.put(MapUtil.entry(1, 4), "羊日");
@@ -50,7 +50,7 @@ public class LunarFestival {
 
 		// 二月
 		L_FTV.put(MapUtil.entry(2, 1), "中和节 太阳生日");
-		L_FTV.put(MapUtil.entry(2, 2), "龙抬头");
+		L_FTV.put(MapUtil.entry(2, 2), "龙头节 龙抬头");
 		L_FTV.put(MapUtil.entry(2, 12), "花朝节");
 		L_FTV.put(MapUtil.entry(2, 19), "观世音圣诞");
 
@@ -63,7 +63,7 @@ public class LunarFestival {
 		L_FTV.put(MapUtil.entry(4, 8), "佛诞节");
 
 		// 五月
-		L_FTV.put(MapUtil.entry(5, 5), "端午节 端阳节");
+		L_FTV.put(MapUtil.entry(5, 5), "端午节 端阳节*");
 
 		// 六月
 		L_FTV.put(MapUtil.entry(6, 6), "晒衣节 姑姑节");
@@ -71,14 +71,14 @@ public class LunarFestival {
 		L_FTV.put(MapUtil.entry(6, 24), "彝族火把节");
 
 		// 七月
-		L_FTV.put(MapUtil.entry(7, 7), "七夕");
+		L_FTV.put(MapUtil.entry(7, 7), "七夕节");
 		L_FTV.put(MapUtil.entry(7, 14), "鬼节(南方)");
 		L_FTV.put(MapUtil.entry(7, 15), "中元节");
 		L_FTV.put(MapUtil.entry(7, 15), "盂兰盆节 中元节");
 		L_FTV.put(MapUtil.entry(7, 30), "地藏节");
 
 		// 八月
-		L_FTV.put(MapUtil.entry(8, 15), "中秋节");
+		L_FTV.put(MapUtil.entry(8, 15), "中秋节*");
 
 		// 九月
 		L_FTV.put(MapUtil.entry(9, 9), "重阳节");
