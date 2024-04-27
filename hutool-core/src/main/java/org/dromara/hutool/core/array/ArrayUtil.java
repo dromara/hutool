@@ -1152,7 +1152,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 	// endregion
 
-	// region ----- indexOf and lastIndexOf and contains
+	// region ----- indexOf and lastIndexOf
 
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}

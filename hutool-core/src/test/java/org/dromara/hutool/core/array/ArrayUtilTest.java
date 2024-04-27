@@ -163,10 +163,58 @@ public class ArrayUtilTest {
 	public void containsAllTest() {
 		final Integer[] a = {1, 2, 3, 4, 3, 6};
 		boolean contains = ArrayUtil.containsAll(a, 4, 2, 6);
+		// 提供的可变参数中元素顺序不需要一致
 		Assertions.assertTrue(contains);
 
 		contains = ArrayUtil.containsAll(a, 1, 2, 3, 5);
 		Assertions.assertFalse(contains);
+	}
+
+	@Test
+	void containsIgnoreCaseTest() {
+		final String[] keys = {"a", "B", "c"};
+		final boolean b = ArrayUtil.containsIgnoreCase(keys, "b");
+		Assertions.assertTrue(b);
+	}
+
+	@Test
+	public void testContainsIgnoreCaseWithEmptyArray() {
+		final CharSequence[] array = new CharSequence[0];
+		final CharSequence value = "test";
+		final boolean result = ArrayUtil.containsIgnoreCase(array, value);
+		Assertions.assertFalse(result, "Expected the result to be false for an empty array.");
+	}
+
+	@Test
+	public void testContainsIgnoreCaseWithNullValue() {
+		final CharSequence[] array = {"Hello", "World"};
+		final CharSequence value = null;
+		final boolean result = ArrayUtil.containsIgnoreCase(array, value);
+		Assertions.assertFalse(result, "Expected the result to be false when the value is null.");
+	}
+
+	@Test
+	public void testContainsIgnoreCaseWithExistingValue() {
+		final CharSequence[] array = {"Hello", "World"};
+		final CharSequence value = "world";
+		final boolean result = ArrayUtil.containsIgnoreCase(array, value);
+		Assertions.assertTrue(result, "Expected the result to be true when the value exists in the array.");
+	}
+
+	@Test
+	public void testContainsIgnoreCaseWithNonExistingValue() {
+		final CharSequence[] array = {"Hello", "World"};
+		final CharSequence value = "Java";
+		final boolean result = ArrayUtil.containsIgnoreCase(array, value);
+		Assertions.assertFalse(result, "Expected the result to be false when the value does not exist in the array.");
+	}
+
+	@Test
+	public void testContainsIgnoreCaseWithCaseSensitiveValue() {
+		final CharSequence[] array = {"Hello", "World"};
+		final CharSequence value = "HELLO";
+		final boolean result = ArrayUtil.containsIgnoreCase(array, value);
+		Assertions.assertTrue(result, "Expected the result to be true when the value exists in the array with different case sensitivity.");
 	}
 
 	@Test
@@ -523,6 +571,13 @@ public class ArrayUtilTest {
 		final String[] a = {"a", "b", "c"};
 		final Object o = ArrayUtil.get(a, -1);
 		Assertions.assertEquals("c", o);
+	}
+
+	@Test
+	public void getByPredicateTest() {
+		final String[] a = {"a", "b", "c"};
+		final Object o = ArrayUtil.get(a, "b"::equals);
+		Assertions.assertEquals("b", o);
 	}
 
 	@Test
