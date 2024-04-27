@@ -145,7 +145,7 @@ public class StrJoiner implements Appendable, Serializable {
 	/**
 	 * 设置分隔符
 	 *
-	 * @param delimiter 分隔符
+	 * @param delimiter 分隔符，{@code null}表示无连接符，直接拼接
 	 * @return this
 	 */
 	public StrJoiner setDelimiter(final CharSequence delimiter) {
@@ -422,7 +422,9 @@ public class StrJoiner implements Appendable, Serializable {
 	 */
 	private Appendable prepare() throws IOException {
 		if (hasContent) {
-			this.appendable.append(delimiter);
+			if(null != delimiter){
+				this.appendable.append(delimiter);
+			}
 		} else {
 			if (null == this.appendable) {
 				this.appendable = new StringBuilder();

@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,10 +25,9 @@ import java.util.*;
  *
  * @author Looly
  */
-@SuppressWarnings("ConstantValue")
 public class ArrayUtilTest {
 
-	@SuppressWarnings("DataFlowIssue")
+	@SuppressWarnings({"DataFlowIssue", "ConstantValue"})
 	@Test
 	public void isEmptyTest() {
 		final int[] a = {};
@@ -328,6 +326,41 @@ public class ArrayUtilTest {
 		final Object array2 = new String[]{"aa", "bb", "cc", "dd"};
 		final String join2 = ArrayUtil.join(array2, ",");
 		Assertions.assertEquals("aa,bb,cc,dd", join2);
+	}
+
+	@Test
+	public void testJoinWithNullElement() {
+		final String[] array = { "Java", null, "Python" };
+		final String result = ArrayUtil.join(array, ", ", value -> value == null ? "null" : value);
+		Assertions.assertEquals("Java, null, Python", result);
+	}
+
+	@Test
+	public void testJoinWithEmptyArray() {
+		final String[] array = {};
+		final String result = ArrayUtil.join(array, ", ", String::toUpperCase);
+		Assertions.assertEquals("", result);
+	}
+
+	@Test
+	public void testJoinWithoutEditor() {
+		final Integer[] array = { 1, 2, 3 };
+		final String result = ArrayUtil.join(array, ", ");
+		Assertions.assertEquals("1, 2, 3", result);
+	}
+
+	@Test
+	public void testJoinWithEditor() {
+		final String[] array = { "java", "scala", "kotlin" };
+		final String result = ArrayUtil.join(array, " -> ", String::toUpperCase);
+		Assertions.assertEquals("JAVA -> SCALA -> KOTLIN", result);
+	}
+
+	@Test
+	public void testJoinWithNullConjunction() {
+		final String[] array = { "one", "two", "three" };
+		final String result = ArrayUtil.join(array, null, value -> value + "!");
+		Assertions.assertEquals("one!two!three!", result);
 	}
 
 	@Test
@@ -656,7 +689,6 @@ public class ArrayUtilTest {
 	void setOrPaddingTest(){
 		final String[] arr = new String[0];
 		final String[] newArr = ArrayUtil.setOrPadding(arr, 2, "Good");
-		Console.log(newArr);
 		Assertions.assertArrayEquals(new String[]{null, null, "Good"}, newArr);
 	}
 
