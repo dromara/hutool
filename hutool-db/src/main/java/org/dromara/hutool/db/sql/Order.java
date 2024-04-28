@@ -79,10 +79,13 @@ public class Order implements Serializable{
 	}
 	/**
 	 * 设置排序方向
+	 *
 	 * @param direction 排序方向
+	 * @return this
 	 */
-	public void setDirection(final Direction direction) {
+	public Order setDirection(final Direction direction) {
 		this.direction = direction;
+		return this;
 	}
 	//---------------------------------------------------------- Getters and Setters end
 

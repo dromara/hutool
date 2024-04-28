@@ -147,9 +147,11 @@ public class Page implements Segment<Integer>, Serializable {
 	 * 设置排序
 	 *
 	 * @param orders 排序
+	 * @return this
 	 */
-	public void addOrder(final Order... orders) {
+	public Page addOrder(final Order... orders) {
 		this.orders = ArrayUtil.append(this.orders, orders);
+		return this;
 	}
 	// ---------------------------------------------------------- Getters and Setters end
 

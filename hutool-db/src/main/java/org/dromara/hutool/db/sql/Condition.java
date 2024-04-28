@@ -336,10 +336,12 @@ public class Condition implements Cloneable, Serializable {
 	 * 设置与前一个Condition连接的逻辑运算符，可以是and或or
 	 *
 	 * @param linkOperator 与前一个Condition连接的逻辑运算符，可以是and或or
+	 * @return this
 	 * @since 5.4.3
 	 */
-	public void setLinkOperator(final LogicalOperator linkOperator) {
+	public Condition setLinkOperator(final LogicalOperator linkOperator) {
 		this.linkOperator = linkOperator;
+		return this;
 	}
 
 	// --------------------------------------------------------------- Getters and Setters end
