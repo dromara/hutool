@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.time.format.TextStyle;
 import java.util.Calendar;
@@ -93,10 +92,6 @@ public enum Month {
 	UNDECIMBER(Calendar.UNDECIMBER);
 
 	// ---------------------------------------------------------------
-	/**
-	 * Months aliases.
-	 */
-	private static final String[] ALIASES = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
 	private static final Month[] ENUMS = Month.values();
 
 	/**
@@ -192,12 +187,49 @@ public enum Month {
 	 * @since 5.8.0
 	 */
 	public static Month of(final String name) throws IllegalArgumentException {
-		Assert.notBlank(name);
-		Month of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name));
-		if (null == of) {
-			of = Month.valueOf(name.toUpperCase());
+		if (null != name && name.length() > 2) {
+			switch (Character.toLowerCase(name.charAt(0))) {
+				case 'a':
+					switch (Character.toLowerCase(name.charAt(1))) {
+						case 'p':
+							return APRIL; // april
+						case 'u':
+							return AUGUST; // august
+					}
+					break;
+				case 'j':
+					if (Character.toLowerCase(name.charAt(1)) == 'a') {
+						return JANUARY; // january
+					}
+					switch (Character.toLowerCase(name.charAt(2))) {
+						case 'n':
+							return JUNE; // june
+						case 'l':
+							return JULY; // july
+					}
+					break;
+				case 'f':
+					return FEBRUARY; // february
+				case 'm':
+					switch (Character.toLowerCase(name.charAt(2))) {
+						case 'r':
+							return MARCH; // march
+						case 'y':
+							return MAY; // may
+					}
+					break;
+				case 's':
+					return SEPTEMBER; // september
+				case 'o':
+					return OCTOBER; // october
+				case 'n':
+					return NOVEMBER; // november
+				case 'd':
+					return DECEMBER; // december
+			}
 		}
-		return of;
+
+		throw new IllegalArgumentException("Invalid Month name: " + name);
 	}
 
 	/**

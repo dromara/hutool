@@ -180,8 +180,7 @@ public enum Week {
 	 */
 	public static Week of(final String name) throws IllegalArgumentException {
 		if (null != name && name.length() > 1) {
-			final char firstChar = Character.toLowerCase(name.charAt(0));
-			switch (firstChar) {
+			switch (Character.toLowerCase(name.charAt(0))) {
 				case 'm':
 					return MONDAY; // monday
 				case 'w':
@@ -189,8 +188,7 @@ public enum Week {
 				case 'f':
 					return FRIDAY; // friday
 				case 't':
-					final char secondChar = Character.toLowerCase(name.charAt(1));
-					switch (secondChar) {
+					switch (Character.toLowerCase(name.charAt(1))) {
 						case 'u':
 							return TUESDAY; // tuesday
 						case 'h':
@@ -198,8 +196,7 @@ public enum Week {
 					}
 					break;
 				case 's':
-					final char secondChar2 = Character.toLowerCase(name.charAt(1));
-					switch (secondChar2) {
+					switch (Character.toLowerCase(name.charAt(1))) {
 						case 'a':
 							return SATURDAY; // saturday
 						case 'u':
@@ -209,7 +206,7 @@ public enum Week {
 			}
 		}
 
-		throw new IllegalArgumentException("Invalid week name: " + name);
+		throw new IllegalArgumentException("Invalid Week name: " + name);
 	}
 
 	/**
