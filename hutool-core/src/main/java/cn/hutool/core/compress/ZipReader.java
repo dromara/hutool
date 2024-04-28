@@ -252,12 +252,14 @@ public class ZipReader implements Closeable {
 	 * @return 检查后的{@link ZipEntry}
 	 */
 	private ZipEntry checkZipBomb(ZipEntry entry) {
-		if(maxSizeDiff < 0){
-			return entry;
-		}
 		if (null == entry) {
 			return null;
 		}
+		if(maxSizeDiff < 0 || entry.isDirectory()){
+			// 目录不检查
+			return entry;
+		}
+
 		final long compressedSize = entry.getCompressedSize();
 		final long uncompressedSize = entry.getSize();
 		if (compressedSize < 0 || uncompressedSize < 0 ||
