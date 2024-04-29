@@ -16,13 +16,15 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.Entity;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 数据库元数据信息工具类
@@ -253,17 +255,20 @@ public class MetaUtil {
 		table.setSchema(schema);
 
 		final DatabaseMetaData metaData = getMetaData(conn);
+		final DatabaseMetaDataWrapper metaDataWrapper = DatabaseMetaDataWrapper.of(metaData, catalog, schema);
+
 		// 获取原始表名
-		final String pureTableName = unWrapIfOracle(metaData, tableName);
+		final String pureTableName = metaDataWrapper.getPureTableName(tableName);
 		table.setPureTableName(pureTableName);
+
 		// 获得表元数据（表注释）
-		table.setRemarks(getRemarks(metaData, catalog, schema, pureTableName));
+		table.setRemarks(metaDataWrapper.getRemarks(pureTableName));
 		// 获得主键
-		table.setPkNames(getPrimaryKeys(metaData, catalog, schema, pureTableName));
+		table.setPkNames(metaDataWrapper.getPrimaryKeys(pureTableName));
 		// 获得列
-		fetchColumns(metaData, catalog, schema, table);
+		metaDataWrapper.fetchColumns(table);
 		// 获得索引信息(since 5.7.23)
-		final Map<String, IndexInfo> indexInfoMap = getIndexInfo(metaData, catalog, schema, tableName);
+		final Map<String, IndexInfo> indexInfoMap = metaDataWrapper.getIndexInfo(tableName);
 		table.setIndexInfoList(ListUtil.of(indexInfoMap.values()));
 
 		return table;
@@ -339,21 +344,8 @@ public class MetaUtil {
 	 * @return 表的备注信息。未找到指定的表或查询成功但无结果，则返回null。
 	 * @since 5.8.28
 	 */
-	public static String getRemarks(final DatabaseMetaData metaData, final String catalog, final String schema, String tableName) {
-		// issue#I9BANE Oracle中特殊表名需要解包
-		tableName = unWrapIfOracle(metaData, tableName);
-
-		try (final ResultSet rs = metaData.getTables(catalog, schema, tableName, new String[]{TableType.TABLE.value()})) {
-			if (null != rs) {
-				if (rs.next()) {
-					return rs.getString("REMARKS");
-				}
-			}
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
-		// 未找到指定的表或查询成功但无结果
-		return null;
+	public static String getRemarks(final DatabaseMetaData metaData, final String catalog, final String schema, final String tableName) {
+		return DatabaseMetaDataWrapper.of(metaData, catalog, schema).getRemarks(tableName);
 	}
 
 	/**
@@ -367,25 +359,8 @@ public class MetaUtil {
 	 * @throws DbException 如果查询过程中发生SQLException，将抛出DbException。
 	 * @since 5.8.28
 	 */
-	public static Set<String> getPrimaryKeys(final DatabaseMetaData metaData, final String catalog, final String schema, String tableName) {
-		// issue#I9BANE Oracle中特殊表名需要解包
-		tableName = unWrapIfOracle(metaData, tableName);
-
-		// 初始化主键列表
-		Set<String> primaryKeys = null;
-		try (final ResultSet rs = metaData.getPrimaryKeys(catalog, schema, tableName)) {
-			// 如果结果集不为空，遍历结果集获取主键列名
-			if (null != rs) {
-				primaryKeys = new LinkedHashSet<>(rs.getFetchSize(), 1);
-				while (rs.next()) {
-					primaryKeys.add(rs.getString("COLUMN_NAME"));
-				}
-			}
-		} catch (final SQLException e) {
-			// 将SQLException转换为自定义的DbException抛出
-			throw new DbException(e);
-		}
-		return primaryKeys;
+	public static Set<String> getPrimaryKeys(final DatabaseMetaData metaData, final String catalog, final String schema, final String tableName) {
+		return DatabaseMetaDataWrapper.of(metaData, catalog, schema).getPrimaryKeys(tableName);
 	}
 
 	/**
@@ -399,31 +374,7 @@ public class MetaUtil {
 	 * @since 5.8.28
 	 */
 	public static Map<String, IndexInfo> getIndexInfo(final DatabaseMetaData metaData, final String catalog, final String schema, final String tableName) {
-		final Map<String, IndexInfo> indexInfoMap = new LinkedHashMap<>();
-
-		try (final ResultSet rs = metaData.getIndexInfo(catalog, schema, tableName, false, false)) {
-			if (null != rs) {
-				while (rs.next()) {
-					//排除统计（tableIndexStatistic）类型索引
-					if (0 == rs.getShort("TYPE")) {
-						continue;
-					}
-
-					final String indexName = rs.getString("INDEX_NAME");
-					final String key = StrUtil.join("&", tableName, indexName);
-					// 联合索引情况下一个索引会有多个列，此处须组合索引列到一个索引信息对象下
-					IndexInfo indexInfo = indexInfoMap.get(key);
-					if (null == indexInfo) {
-						indexInfo = new IndexInfo(rs.getBoolean("NON_UNIQUE"), indexName, tableName, schema, catalog);
-						indexInfoMap.put(key, indexInfo);
-					}
-					indexInfo.getColumnIndexInfoList().add(ColumnIndexInfo.of(rs));
-				}
-			}
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
-		return indexInfoMap;
+		return DatabaseMetaDataWrapper.of(metaData, catalog, schema).getIndexInfo(tableName);
 	}
 
 	/**
@@ -437,46 +388,6 @@ public class MetaUtil {
 	public static boolean isOracle(final DatabaseMetaData metaData) throws DbException {
 		try {
 			return StrUtil.equalsIgnoreCase("Oracle", metaData.getDatabaseProductName());
-		} catch (final SQLException e) {
-			throw new DbException(e);
-		}
-	}
-
-	/**
-	 * 如果是在Oracle数据库中并且表名被双引号包裹，则移除这些引号。
-	 *
-	 * @param metaData  数据库元数据，用于判断是否为Oracle数据库。
-	 * @param tableName 待处理的表名，可能被双引号包裹。
-	 * @return 处理后的表名，如果原表名被双引号包裹且是Oracle数据库，则返回去除了双引号的表名；否则返回原表名。
-	 */
-	private static String unWrapIfOracle(final DatabaseMetaData metaData, String tableName) {
-		final char wrapChar = '"';
-		// 判断表名是否被双引号包裹且当前数据库为Oracle，如果是，则移除双引号
-		if (StrUtil.isWrap(tableName, wrapChar) && isOracle(metaData)) {
-			tableName = StrUtil.unWrap(tableName, wrapChar);
-		}
-		return tableName;
-	}
-
-	/**
-	 * 从数据库元数据中获取指定表的列信息。
-	 *
-	 * @param metaData 数据库元数据，用于查询列信息。
-	 * @param catalog  数据库目录，用于过滤列信息。
-	 * @param schema   数据库模式，用于过滤列信息。
-	 * @param table    表对象，用于存储获取到的列信息。
-	 */
-	private static void fetchColumns(final DatabaseMetaData metaData, final String catalog, final String schema, final Table table) {
-		// issue#I9BANE Oracle中特殊表名需要解包
-		final String tableName = unWrapIfOracle(metaData, ObjUtil.defaultIfNull(table.getPureTableName(), table::getTableName));
-
-		// 获得列
-		try (final ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
-			if (null != rs) {
-				while (rs.next()) {
-					table.addColumn(Column.of(table, rs));
-				}
-			}
 		} catch (final SQLException e) {
 			throw new DbException(e);
 		}
