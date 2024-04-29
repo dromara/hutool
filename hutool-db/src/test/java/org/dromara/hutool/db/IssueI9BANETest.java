@@ -12,11 +12,11 @@ public class IssueI9BANETest {
 	@Test
 	@Disabled
 	void metaTest() {
-		final Db db = Db.of("orcl");
-		db.find(Entity.of("\"1234\""));
-
 		final DSWrapper ds = DSUtil.getDS("orcl");
 		final Table tableMeta = MetaUtil.getTableMeta(ds, null, null, "\"1234\"");
-		Console.log(tableMeta.getIndexInfoList());
+		Console.log("remarks: " + tableMeta.getRemarks());
+		Console.log("pks: " + tableMeta.getPkNames());
+		Console.log("columns: " + tableMeta.getColumns());
+		Console.log("index: " + tableMeta.getIndexInfoList());
 	}
 }

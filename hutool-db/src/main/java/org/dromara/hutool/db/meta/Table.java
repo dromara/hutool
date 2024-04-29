@@ -37,13 +37,17 @@ public class Table implements Serializable, Cloneable {
 	 */
 	private String catalog;
 	/**
-	 * 表名
+	 * 表名，特殊表名一般带包装符号，如："1234"
 	 */
 	private String tableName;
 	/**
+	 * 表名（无包装符号），如"1234"对应的pureTableName为1234
+	 */
+	private String pureTableName;
+	/**
 	 * 注释
 	 */
-	private String comment;
+	private String remarks;
 	/**
 	 * 主键字段名列表
 	 */
@@ -57,6 +61,12 @@ public class Table implements Serializable, Cloneable {
 	 */
 	private final Map<String, Column> columns = new LinkedHashMap<>();
 
+	/**
+	 * 根据提供的表名创建一个新的Table实例。
+	 *
+	 * @param tableName 表的名称，用于标识数据库中的特定表。
+	 * @return 返回一个新的Table实例，其名称为传入的表名。
+	 */
 	public static Table of(final String tableName) {
 		return new Table(tableName);
 	}
@@ -138,22 +148,40 @@ public class Table implements Serializable, Cloneable {
 	}
 
 	/**
+	 * 获取表名（无包装符号），如"1234"对应的pureTableName为1234
+	 *
+	 * @return 表名（无包装符号）
+	 */
+	public String getPureTableName() {
+		return pureTableName;
+	}
+
+	/**
+	 * 设置表名（无包装符号），如"1234"对应的pureTableName为1234
+	 *
+	 * @param pureTableName 表名
+	 */
+	public void setPureTableName(final String pureTableName) {
+		this.pureTableName = pureTableName;
+	}
+
+	/**
 	 * 获取注释
 	 *
 	 * @return 注释
 	 */
-	public String getComment() {
-		return comment;
+	public String getRemarks() {
+		return remarks;
 	}
 
 	/**
 	 * 设置注释
 	 *
-	 * @param comment 注释
+	 * @param remarks 注释
 	 * @return this
 	 */
-	public Table setComment(final String comment) {
-		this.comment = comment;
+	public Table setRemarks(final String remarks) {
+		this.remarks = remarks;
 		return this;
 	}
 
@@ -193,7 +221,7 @@ public class Table implements Serializable, Cloneable {
 	 * @param column 列对象
 	 * @return 自己
 	 */
-	public Table setColumn(final Column column) {
+	public Table addColumn(final Column column) {
 		this.columns.put(column.getName(), column);
 		return this;
 	}
