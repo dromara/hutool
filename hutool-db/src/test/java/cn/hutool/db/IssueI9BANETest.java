@@ -19,6 +19,9 @@ public class IssueI9BANETest {
 
 		final DataSource ds = DSFactory.get("orcl");
 		final Table tableMeta = MetaUtil.getTableMeta(ds, null, null, "\"1234\"");
-		Console.log(tableMeta.getIndexInfoList());
+		Console.log("remarks: " + tableMeta.getComment());
+		Console.log("pks: " + tableMeta.getPkNames());
+		Console.log("columns: " + tableMeta.getColumns());
+		Console.log("index: " + tableMeta.getIndexInfoList());
 	}
 }
