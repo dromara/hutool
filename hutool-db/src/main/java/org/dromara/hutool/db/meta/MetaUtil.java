@@ -65,7 +65,7 @@ public class MetaUtil {
 	 * 获得所有表名
 	 *
 	 * @param ds     数据源
-	 * @param schema 表数据库名，对于Oracle为用户名
+	 * @param schema 要使用的数据库模式（在某些数据库系统中相当于命名空间，对于Oracle为用户名）
 	 * @param types  表类型
 	 * @return 表名列表
 	 * @since 3.3.1
@@ -78,13 +78,13 @@ public class MetaUtil {
 	 * 获得所有表名
 	 *
 	 * @param ds               数据源
-	 * @param schema           表数据库名，对于Oracle为用户名
-	 * @param tableNamePattern 表名匹配模式
+	 * @param schema           要使用的数据库模式（在某些数据库系统中相当于命名空间，对于Oracle为用户名）
+	 * @param tableNamePattern 表名匹配模式，null表示匹配所有表
 	 * @param types            表类型
 	 * @return 表名列表
 	 * @since 3.3.1
 	 */
-	public static List<String> getTableNames(final DataSource ds, String schema, final String tableNamePattern, final TableType... types) {
+	public static List<String> getTableNames(final DataSource ds, final String schema, final String tableNamePattern, final TableType... types) {
 		return getTableNames(ds, null, schema, tableNamePattern, types);
 	}
 
@@ -92,8 +92,9 @@ public class MetaUtil {
 	 * 获得所有表名
 	 *
 	 * @param ds               数据源
-	 * @param schema           表数据库名，对于Oracle为用户名
-	 * @param tableNamePattern 表名匹配模式
+	 * @param catalog          要使用的数据库目录（在某些数据库系统中相当于数据库名称）
+	 * @param schema           要使用的数据库模式（在某些数据库系统中相当于命名空间，对于Oracle为用户名）
+	 * @param tableNamePattern 表名匹配模式，null表示匹配所有表
 	 * @param types            表类型
 	 * @return 表名列表
 	 * @since 3.3.1
@@ -104,7 +105,7 @@ public class MetaUtil {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			if(null == schema){
+			if (null == schema) {
 				catalog = getCatalog(conn);
 			}
 			if (null == schema) {

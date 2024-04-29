@@ -110,23 +110,35 @@ public class DatabaseMetaDataWrapper extends SimpleWrapper<DatabaseMetaData> {
 		}
 	}
 
-	public List<String> getTableNames(final String tableNamePattern, final TableType... types){
+	/**
+	 * 获取符合指定模式的表名称列表。
+	 *
+	 * @param tableNamePattern 表名模式，用于匹配表名。
+	 * @param types            表类型数组，可选，指定要查询的表的类型。
+	 * @return 包含匹配表名的列表。如果没有匹配的表，则返回空列表。
+	 */
+	public List<String> getTableNames(final String tableNamePattern, final TableType... types) {
 		List<String> result = null;
 		try (final ResultSet rs = this.raw.getTables(catalog, schema, tableNamePattern, Convert.toStrArray(types))) {
 			if (null != rs) {
+				// 初始化结果列表，大小为ResultSet的获取大小。
 				result = new ArrayList<>(rs.getFetchSize());
 				String table;
+				// 遍历ResultSet，获取每个表的名称。
 				while (rs.next()) {
 					table = rs.getString("TABLE_NAME");
 					if (StrUtil.isNotBlank(table)) {
+						// 如果表名不为空，则添加到结果列表中。
 						result.add(table);
 					}
 				}
 			}
-		} catch (final SQLException e){
+		} catch (final SQLException e) {
+			// 处理SQL异常，转换为DbException抛出。
 			throw new DbException(e);
 		}
 
+		// 返回结果列表，如果为空则返回空列表。
 		return CollUtil.emptyIfNull(result);
 	}
 
@@ -247,7 +259,7 @@ public class DatabaseMetaDataWrapper extends SimpleWrapper<DatabaseMetaData> {
 					}
 				}
 			}
-			return (CollUtil.isEmpty(columnNames)) ? new String[0] :columnNames.toArray(new String[0]);
+			return (CollUtil.isEmpty(columnNames)) ? new String[0] : columnNames.toArray(new String[0]);
 		} catch (final Exception e) {
 			throw new DbException("Get columns error!", e);
 		}

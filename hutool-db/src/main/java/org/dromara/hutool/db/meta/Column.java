@@ -61,7 +61,7 @@ public class Column implements Serializable, Cloneable {
 	/**
 	 * 注释
 	 */
-	private String comment;
+	private String remarks;
 	/**
 	 * 是否自增
 	 */
@@ -135,7 +135,7 @@ public class Column implements Serializable, Cloneable {
 
 		this.size = columnMetaRs.getLong("COLUMN_SIZE");
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
-		this.comment = columnMetaRs.getString("REMARKS");
+		this.remarks = columnMetaRs.getString("REMARKS");
 		this.columnDef = columnMetaRs.getString("COLUMN_DEF");
 
 		// 保留小数位数
@@ -313,18 +313,18 @@ public class Column implements Serializable, Cloneable {
 	 *
 	 * @return 注释
 	 */
-	public String getComment() {
-		return comment;
+	public String getRemarks() {
+		return remarks;
 	}
 
 	/**
 	 * 设置注释
 	 *
-	 * @param comment 注释
+	 * @param remarks 注释
 	 * @return this
 	 */
-	public Column setComment(final String comment) {
-		this.comment = comment;
+	public Column setRemarks(final String remarks) {
+		this.remarks = remarks;
 		return this;
 	}
 
