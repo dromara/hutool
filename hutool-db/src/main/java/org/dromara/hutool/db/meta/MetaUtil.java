@@ -13,7 +13,6 @@
 package org.dromara.hutool.db.meta;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbException;
@@ -21,7 +20,6 @@ import org.dromara.hutool.db.Entity;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,14 +37,17 @@ import java.util.Set;
  * @author looly
  */
 public class MetaUtil {
+
+	// region ----- getTableNames
+
 	/**
 	 * 获得所有表名
 	 *
 	 * @param ds 数据源
 	 * @return 表名列表
 	 */
-	public static List<String> getTables(final DataSource ds) {
-		return getTables(ds, TableType.TABLE);
+	public static List<String> getTableNames(final DataSource ds) {
+		return getTableNames(ds, TableType.TABLE);
 	}
 
 	/**
@@ -56,8 +57,8 @@ public class MetaUtil {
 	 * @param types 表类型
 	 * @return 表名列表
 	 */
-	public static List<String> getTables(final DataSource ds, final TableType... types) {
-		return getTables(ds, null, null, types);
+	public static List<String> getTableNames(final DataSource ds, final TableType... types) {
+		return getTableNames(ds, null, null, types);
 	}
 
 	/**
@@ -69,51 +70,57 @@ public class MetaUtil {
 	 * @return 表名列表
 	 * @since 3.3.1
 	 */
-	public static List<String> getTables(final DataSource ds, final String schema, final TableType... types) {
-		return getTables(ds, schema, null, types);
+	public static List<String> getTableNames(final DataSource ds, final String schema, final TableType... types) {
+		return getTableNames(ds, schema, null, types);
 	}
 
 	/**
 	 * 获得所有表名
 	 *
-	 * @param ds        数据源
-	 * @param schema    表数据库名，对于Oracle为用户名
-	 * @param tableName 表名
-	 * @param types     表类型
+	 * @param ds               数据源
+	 * @param schema           表数据库名，对于Oracle为用户名
+	 * @param tableNamePattern 表名匹配模式
+	 * @param types            表类型
 	 * @return 表名列表
 	 * @since 3.3.1
 	 */
-	public static List<String> getTables(final DataSource ds, String schema, final String tableName, final TableType... types) {
-		final List<String> tables = new ArrayList<>();
+	public static List<String> getTableNames(final DataSource ds, String schema, final String tableNamePattern, final TableType... types) {
+		return getTableNames(ds, null, schema, tableNamePattern, types);
+	}
+
+	/**
+	 * 获得所有表名
+	 *
+	 * @param ds               数据源
+	 * @param schema           表数据库名，对于Oracle为用户名
+	 * @param tableNamePattern 表名匹配模式
+	 * @param types            表类型
+	 * @return 表名列表
+	 * @since 3.3.1
+	 */
+	public static List<String> getTableNames(final DataSource ds, String catalog, String schema, final String tableNamePattern, final TableType... types) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			final String catalog = getCatalog(conn);
+			if(null == schema){
+				catalog = getCatalog(conn);
+			}
 			if (null == schema) {
 				schema = getSchema(conn);
 			}
 
-			final DatabaseMetaData metaData = conn.getMetaData();
-			try (final ResultSet rs = metaData.getTables(catalog, schema, tableName, Convert.toStrArray(types))) {
-				if (null != rs) {
-					String table;
-					while (rs.next()) {
-						table = rs.getString("TABLE_NAME");
-						if (StrUtil.isNotBlank(table)) {
-							tables.add(table);
-						}
-					}
-				}
-			}
+			return DatabaseMetaDataWrapper.of(conn.getMetaData(), catalog, schema).getTableNames(tableNamePattern, types);
 		} catch (final Exception e) {
 			throw new DbException("Get tables error!", e);
 		} finally {
 			IoUtil.closeQuietly(conn);
 		}
-		return tables;
 	}
+	// endregion
+
+	// region ----- getColumnNames
 
 	/**
 	 * 获得结果集的所有列名
@@ -123,15 +130,31 @@ public class MetaUtil {
 	 * @throws DbException SQL执行异常
 	 */
 	public static String[] getColumnNames(final ResultSet rs) throws DbException {
+		final ResultSetMetaData metaData;
 		try {
-			final ResultSetMetaData rsmd = rs.getMetaData();
-			final int columnCount = rsmd.getColumnCount();
+			metaData = rs.getMetaData();
+		} catch (final SQLException e) {
+			throw new DbException(e);
+		}
+		return getColumnNames(metaData);
+	}
+
+	/**
+	 * 获得结果集的所有列名
+	 *
+	 * @param metaData {@link ResultSetMetaData}
+	 * @return 列名数组
+	 * @throws DbException SQL执行异常
+	 */
+	public static String[] getColumnNames(final ResultSetMetaData metaData) throws DbException {
+		try {
+			final int columnCount = metaData.getColumnCount();
 			final String[] labelNames = new String[columnCount];
 			for (int i = 0; i < labelNames.length; i++) {
-				labelNames[i] = rsmd.getColumnLabel(i + 1);
+				labelNames[i] = metaData.getColumnLabel(i + 1);
 			}
 			return labelNames;
-		} catch (final Exception e) {
+		} catch (final SQLException e) {
 			throw new DbException("Get colunms error!", e);
 		}
 	}
@@ -145,30 +168,17 @@ public class MetaUtil {
 	 * @throws DbException SQL执行异常
 	 */
 	public static String[] getColumnNames(final DataSource ds, final String tableName) {
-		final List<String> columnNames = new ArrayList<>();
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-
-			// catalog和schema获取失败默认使用null代替
-			final String catalog = getCatalog(conn);
-			final String schema = getSchema(conn);
-
-			final DatabaseMetaData metaData = conn.getMetaData();
-			try (final ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
-				if (null != rs) {
-					while (rs.next()) {
-						columnNames.add(rs.getString("COLUMN_NAME"));
-					}
-				}
-			}
-			return columnNames.toArray(new String[0]);
+			return DatabaseMetaDataWrapper.of(conn).getColumnNames(tableName);
 		} catch (final Exception e) {
 			throw new DbException("Get columns error!", e);
 		} finally {
 			IoUtil.closeQuietly(conn);
 		}
 	}
+	// endregion
 
 	/**
 	 * 创建带有字段限制的Entity对象<br>
@@ -219,7 +229,7 @@ public class MetaUtil {
 		try {
 			conn = ds.getConnection();
 			return getTableMeta(conn, catalog, schema, tableName);
-		} catch (final SQLException e){
+		} catch (final SQLException e) {
 			throw new DbException(e);
 		} finally {
 			IoUtil.closeQuietly(conn);
@@ -234,7 +244,7 @@ public class MetaUtil {
 	 *     useInformationSchema = true
 	 * </pre>
 	 *
-	 * @param conn       数据库连接对象，使用结束后不会关闭。
+	 * @param conn      数据库连接对象，使用结束后不会关闭。
 	 * @param tableName 表名
 	 * @param catalog   catalog name，{@code null}表示自动获取，见：{@link #getCatalog(Connection)}
 	 * @param schema    a schema name pattern，{@code null}表示自动获取，见：{@link #getSchema(Connection)}

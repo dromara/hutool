@@ -32,8 +32,8 @@ public class MetaUtilTest {
 	final DataSource ds = DSUtil.getDS("test");
 
 	@Test
-	public void getTablesTest() {
-		final List<String> tables = MetaUtil.getTables(ds);
+	public void getTableNamesTest() {
+		final List<String> tables = MetaUtil.getTableNames(ds);
 		Assertions.assertTrue(tables.contains("user"));
 	}
 

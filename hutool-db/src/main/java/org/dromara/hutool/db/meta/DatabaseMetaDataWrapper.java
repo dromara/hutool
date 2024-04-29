@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.db.meta;
 
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -21,10 +23,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用于封装DatabaseMetaData对象，并提供特定数据库的元数据访问。
@@ -109,6 +108,26 @@ public class DatabaseMetaDataWrapper extends SimpleWrapper<DatabaseMetaData> {
 		} catch (final SQLException e) {
 			throw new DbException(e);
 		}
+	}
+
+	public List<String> getTableNames(final String tableNamePattern, final TableType... types){
+		List<String> result = null;
+		try (final ResultSet rs = this.raw.getTables(catalog, schema, tableNamePattern, Convert.toStrArray(types))) {
+			if (null != rs) {
+				result = new ArrayList<>(rs.getFetchSize());
+				String table;
+				while (rs.next()) {
+					table = rs.getString("TABLE_NAME");
+					if (StrUtil.isNotBlank(table)) {
+						result.add(table);
+					}
+				}
+			}
+		} catch (final SQLException e){
+			throw new DbException(e);
+		}
+
+		return CollUtil.emptyIfNull(result);
 	}
 
 	/**
@@ -203,6 +222,35 @@ public class DatabaseMetaDataWrapper extends SimpleWrapper<DatabaseMetaData> {
 			throw new DbException(e);
 		}
 		return indexInfoMap;
+	}
+
+	/**
+	 * 获得表的所有列名
+	 *
+	 * @param tableName 表名
+	 * @return 列数组
+	 * @throws DbException SQL执行异常
+	 */
+	public String[] getColumnNames(String tableName) {
+		final String catalog = this.catalog;
+		final String schema = this.schema;
+		// issue#I9BANE Oracle中特殊表名需要解包
+		tableName = getPureTableName(tableName);
+
+		List<String> columnNames = null;
+		try {
+			try (final ResultSet rs = this.raw.getColumns(catalog, schema, tableName, null)) {
+				if (null != rs) {
+					columnNames = new ArrayList<>(rs.getFetchSize());
+					while (rs.next()) {
+						columnNames.add(rs.getString("COLUMN_NAME"));
+					}
+				}
+			}
+			return (CollUtil.isEmpty(columnNames)) ? new String[0] :columnNames.toArray(new String[0]);
+		} catch (final Exception e) {
+			throw new DbException("Get columns error!", e);
+		}
 	}
 
 	/**
