@@ -17,7 +17,6 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.DialectName;
-import org.dromara.hutool.db.sql.QuoteWrapper;
 import org.dromara.hutool.db.sql.SqlBuilder;
 import org.dromara.hutool.db.sql.StatementUtil;
 
@@ -41,7 +40,8 @@ public class DmDialect extends AnsiSqlDialect {
 	 */
 	public DmDialect(final DbConfig dbConfig) {
 		super(dbConfig);
-		quoteWrapper = new QuoteWrapper('\'');
+		// 默认不使用引号，避免表找不到的问题
+		//quoteWrapper = new QuoteWrapper('\"');
 	}
 
 	@Override

@@ -83,8 +83,9 @@ pass = 123
 remarks = true
 
 # 测试用dm数据库
+# 测试环境使用docker启动，见：https://eco.dameng.com/document/dm/zh-cn/start/dm-install-docker.html
 [dm]
-url = jdbc:dm://localhost:30236/schema=dm8_test
+url = jdbc:dm://localhost:5236
 user = SYSDBA
-pass = 123456
+pass = SYSDBA001
 remarks = true
