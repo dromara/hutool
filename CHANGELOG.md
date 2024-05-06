@@ -30,6 +30,7 @@
 * 【http   】      修复HttpDownloader全局超时无效问题（issue#3556@Github）
 * 【core   】      修复ZipReader.checkZipBomb遇到空目录报错问题（issue#I9K494@Gitee）
 * 【db     】      修复Oracle下特殊表名导致meta信息获取不到问题（issue#I9BANE@Gitee）
+* 【db     】      修复FuncComparator.thenComparing不生效问题（issue#3569@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.27(2024-03-29)
