@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.28(2024-04-29)
+# 5.8.28(2024-05-06)
 
 ### 🐣新特性
 * 【core   】      修正XmlUtil的omitXmlDeclaration描述注释（issue#I9CPC7@Gitee）
@@ -14,6 +14,7 @@
 * 【core   】      NumberChineseFormatter提供阿拉伯转中文支持多位小数的方法（pr#3552@Github）
 * 【captcha】      Captcha.setBackground为null时背景透明（issue#3558@Github）
 * 【captcha】      HttpDownloader.downloadBytes增加超时参数重载（issue#3556@Github）
+* 【http   】      增加ExceptionFilter和DefaultExceptionFilter支持异常处理（issue#3568@Github）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）
