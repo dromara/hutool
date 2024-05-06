@@ -153,5 +153,11 @@
 			<version>21.13.0.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.oceanbase</groupId>
+			<artifactId>oceanbase-client</artifactId>
+			<version>2.4.9</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

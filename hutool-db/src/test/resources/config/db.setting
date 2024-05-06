@@ -82,10 +82,18 @@ user = looly@looly
 pass = 123
 remarks = true
 
-# 测试用dm数据库
+# 测试用达梦8数据库
 # 测试环境使用docker启动，见：https://eco.dameng.com/document/dm/zh-cn/start/dm-install-docker.html
 [dm]
 url = jdbc:dm://localhost:5236
 user = SYSDBA
 pass = SYSDBA001
+remarks = true
+
+# OceanBase
+# 测试环境使用docker启动，见：https://www.oceanbase.com/docs/common-oceanbase-database-cn-1000000000217958
+[ob]
+url = jdbc:oceanbase://localhost:2881/test
+user = root
+pass = 123456
 remarks = true
