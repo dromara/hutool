@@ -20,20 +20,11 @@ import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.Align;
 import org.apache.poi.common.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HeaderFooter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.io.File;
 import java.io.IOException;
@@ -589,6 +580,26 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				break;
 		}
 		return this;
+	}
+
+	/**
+	 * 设置忽略错误，即Excel中的绿色警告小标，只支持XSSFSheet<br>
+	 * 见：https://stackoverflow.com/questions/23488221/how-to-remove-warning-in-excel-using-apache-poi-in-java
+	 *
+	 * @param cellRangeAddress  指定单元格范围
+	 * @param ignoredErrorTypes 忽略的错误类型列表
+	 * @return this
+	 * @throws UnsupportedOperationException 如果sheet不是XSSFSheet
+	 * @since 5.8.28
+	 */
+	public ExcelWriter addIgnoredErrors(final CellRangeAddress cellRangeAddress, final IgnoredErrorType... ignoredErrorTypes) throws UnsupportedOperationException {
+		final Sheet sheet = this.sheet;
+		if (sheet instanceof XSSFSheet) {
+			((XSSFSheet) sheet).addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
+			return this;
+		}
+
+		throw new UnsupportedOperationException("Only XSSFSheet supports addIgnoredErrors");
 	}
 
 	/**
