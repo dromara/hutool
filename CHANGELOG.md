@@ -17,6 +17,7 @@
 * 【http   】      增加ExceptionFilter和DefaultExceptionFilter支持异常处理（issue#3568@Github）
 * 【poi    】      增加ExcelWriter.addIgnoredErrors，支持忽略警告小标
 * 【core   】      PropertyComparator增加compareSelf构造重载（issue#3569@Github）
+* 【db     】      增加OceanBase的driver推断（pr#1217@Gitee）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）
