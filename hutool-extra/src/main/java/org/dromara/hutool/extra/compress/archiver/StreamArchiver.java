@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -116,20 +117,10 @@ public class StreamArchiver implements Archiver {
 			((ArArchiveOutputStream) out).setLongFileMode(ArArchiveOutputStream.LONGFILE_BSD);
 		}
 	}
-
-	/**
-	 * 将文件或目录加入归档包，目录采取递归读取方式按照层级加入
-	 *
-	 * @param file      文件或目录
-	 * @param path      文件或目录的初始路径，null表示位于根路径
-	 * @param predicate 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}加入，null表示全部加入
-	 * @return this
-	 * @throws IORuntimeException IO异常
-	 */
 	@Override
-	public StreamArchiver add(final File file, final String path, final Predicate<File> predicate) throws IORuntimeException {
+	public StreamArchiver add(final File file, final String path, final Function<String, String> fileNameEditor, final Predicate<File> predicate) throws IORuntimeException {
 		try {
-			addInternal(file, path, predicate);
+			addInternal(file, path, fileNameEditor, predicate);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -165,24 +156,22 @@ public class StreamArchiver implements Archiver {
 	/**
 	 * 将文件或目录加入归档包，目录采取递归读取方式按照层级加入
 	 *
-	 * @param file      文件或目录
-	 * @param path      文件或目录的初始路径，{@code null}表示位于根路径
-	 * @param predicate 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}加入。
+	 * @param file           文件或目录
+	 * @param path           文件或目录的初始路径，{@code null}表示位于根路径
+	 * @param fileNameEditor 文件名编辑器
+	 * @param predicate      文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}加入。
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private void addInternal(final File file, final String path, final Predicate<File> predicate) throws IOException {
+	private void addInternal(final File file, final String path, final Function<String, String> fileNameEditor, final Predicate<File> predicate) throws IOException {
 		if (null != predicate && !predicate.test(file)) {
 			return;
 		}
 		final ArchiveOutputStream out = this.out;
 
-		final String entryName;
+		String entryName = (fileNameEditor == null) ? file.getName() : fileNameEditor.apply(file.getName());
 		if (StrUtil.isNotEmpty(path)) {
 			// 非空拼接路径，格式为：path/name
-			entryName = StrUtil.addSuffixIfNot(path, StrUtil.SLASH) + file.getName();
-		} else {
-			// 路径空直接使用文件名或目录名
-			entryName = file.getName();
+			entryName = StrUtil.addSuffixIfNot(path, StrUtil.SLASH) + entryName;
 		}
 		out.putArchiveEntry(out.createArchiveEntry(file, entryName));
 
@@ -191,7 +180,7 @@ public class StreamArchiver implements Archiver {
 			final File[] files = file.listFiles();
 			if (ArrayUtil.isNotEmpty(files)) {
 				for (final File childFile : files) {
-					addInternal(childFile, entryName, predicate);
+					addInternal(childFile, entryName, fileNameEditor, predicate);
 				}
 			} else {
 				// 空文件夹也需要关闭

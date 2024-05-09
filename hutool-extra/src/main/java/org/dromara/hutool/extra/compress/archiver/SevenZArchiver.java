@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.SeekableByteChannel;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -89,9 +90,9 @@ public class SevenZArchiver implements Archiver {
 	}
 
 	@Override
-	public SevenZArchiver add(final File file, final String path, final Predicate<File> filter) {
+	public SevenZArchiver add(final File file, final String path, final Function<String, String> fileNameEditor, final Predicate<File> filter) {
 		try {
-			addInternal(file, path, filter);
+			addInternal(file, path, fileNameEditor, filter);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -128,23 +129,21 @@ public class SevenZArchiver implements Archiver {
 	/**
 	 * 将文件或目录加入归档包，目录采取递归读取方式按照层级加入
 	 *
-	 * @param file   文件或目录
-	 * @param path   文件或目录的初始路径，null表示位于根路径
-	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}保留，null表示保留全部
+	 * @param file           文件或目录
+	 * @param path           文件或目录的初始路径，null表示位于根路径
+	 * @param fileNameEditor 文件名编辑器
+	 * @param filter         文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}保留，null表示保留全部
 	 */
-	private void addInternal(final File file, final String path, final Predicate<File> filter) throws IOException {
+	private void addInternal(final File file, final String path, final Function<String, String> fileNameEditor, final Predicate<File> filter) throws IOException {
 		if (null != filter && !filter.test(file)) {
 			return;
 		}
 		final SevenZOutputFile out = this.sevenZOutputFile;
 
-		final String entryName;
+		String entryName = (null == fileNameEditor) ? file.getName() : fileNameEditor.apply(file.getName());
 		if (StrUtil.isNotEmpty(path)) {
 			// 非空拼接路径，格式为：path/name
-			entryName = StrUtil.addSuffixIfNot(path, StrUtil.SLASH) + file.getName();
-		} else {
-			// 路径空直接使用文件名或目录名
-			entryName = file.getName();
+			entryName = StrUtil.addSuffixIfNot(path, StrUtil.SLASH) + entryName;
 		}
 		out.putArchiveEntry(out.createArchiveEntry(file, entryName));
 
@@ -153,7 +152,7 @@ public class SevenZArchiver implements Archiver {
 			final File[] files = file.listFiles();
 			if (ArrayUtil.isNotEmpty(files)) {
 				for (final File childFile : files) {
-					addInternal(childFile, entryName, filter);
+					addInternal(childFile, entryName, fileNameEditor, filter);
 				}
 			}
 		} else {
