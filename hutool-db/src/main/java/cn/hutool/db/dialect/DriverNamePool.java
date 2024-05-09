@@ -13,6 +13,10 @@ public interface DriverNamePool {
 	 */
 	String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
 	/**
+	 * JDBC 驱动 Oceanbase
+	 */
+	String DRIVER_OCEANBASE = "com.oceanbase.jdbc.Driver";
+	/**
 	 * JDBC 驱动 MySQL，在6.X版本中变动驱动类名，且使用SPI机制
 	 */
 	String DRIVER_MYSQL_V6 = "com.mysql.cj.jdbc.Driver";
