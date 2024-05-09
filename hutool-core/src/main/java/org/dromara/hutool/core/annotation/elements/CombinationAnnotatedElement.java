@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.annotation.elements;
 
 import org.dromara.hutool.core.annotation.AnnotationUtil;
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.map.TableMap;
 
@@ -144,6 +145,9 @@ public class CombinationAnnotatedElement implements AnnotatedElement, Serializab
 	 * @param annotations Class, Method, Field等
 	 */
 	private void parseDeclared(final Annotation[] annotations) {
+		if(ArrayUtil.isEmpty(annotations)){
+			return;
+		}
 		Class<? extends Annotation> annotationType;
 		// 直接注解
 		for (final Annotation annotation : annotations) {
@@ -166,6 +170,10 @@ public class CombinationAnnotatedElement implements AnnotatedElement, Serializab
 	 * @param annotations Class, Method, Field等
 	 */
 	private void parse(final Annotation[] annotations) {
+		if(ArrayUtil.isEmpty(annotations)){
+			return;
+		}
+
 		Class<? extends Annotation> annotationType;
 		for (final Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
