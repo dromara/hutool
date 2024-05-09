@@ -37,10 +37,23 @@ public class PropertyComparator<T> extends FuncComparator<T> {
 	/**
 	 * 构造
 	 *
-	 * @param property 属性名
-	 * @param isNullGreater {@code null}值是否排在后（从小到大排序）
+	 * @param property      属性名
+	 * @param isNullGreater null值是否排在后（从小到大排序）
 	 */
 	public PropertyComparator(final String property, final boolean isNullGreater) {
-		super(isNullGreater, true, (bean)-> BeanUtil.getProperty(bean, property));
+		this(property, true, isNullGreater);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param property      属性名
+	 * @param compareSelf   在字段值相同情况下，是否比较对象本身。
+	 *                      如果此项为{@code false}，字段值比较后为0会导致对象被认为相同，可能导致被去重。
+	 * @param isNullGreater null值是否排在后（从小到大排序）
+	 * @since 5.8.28
+	 */
+	public PropertyComparator(final String property, final boolean compareSelf, final boolean isNullGreater) {
+		super(isNullGreater, compareSelf, (bean) -> BeanUtil.getProperty(bean, property));
 	}
 }
