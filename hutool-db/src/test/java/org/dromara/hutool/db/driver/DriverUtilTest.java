@@ -40,7 +40,7 @@ public class DriverUtilTest {
 		map.put("jdbc:microsoft:", "com.microsoft.jdbc.sqlserver.SQLServerDriver");
 		map.put("jdbc:h2:", "org.h2.Driver");
 		map.put("jdbc:derby:", "org.apache.derby.jdbc.EmbeddedDriver");
-		map.put("jdbc:hsqldb:", "org.hsqldb.jdbcDriver");
+		map.put("jdbc:hsqldb:", "org.hsqldb.jdbc.JDBCDriver");
 		map.put("jdbc:dm:", "dm.jdbc.driver.DmDriver");
 		map.put("jdbc:kingbase8:", "com.kingbase8.Driver");
 		map.put("jdbc:ignite:thin:", "org.apache.ignite.IgniteJdbcThinDriver");

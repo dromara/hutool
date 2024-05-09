@@ -16,6 +16,7 @@ import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.dialect.impl.*;
+import org.dromara.hutool.db.driver.DriverNames;
 import org.dromara.hutool.db.ds.DSWrapper;
 import org.dromara.hutool.log.LogUtil;
 
@@ -27,7 +28,7 @@ import java.util.Map;
  *
  * @author loolly
  */
-public class DialectFactory implements DriverNamePool {
+public class DialectFactory{
 
 	private static final Map<DataSource, Dialect> DIALECT_POOL = new SafeConcurrentHashMap<>();
 
@@ -58,21 +59,21 @@ public class DialectFactory implements DriverNamePool {
 		final String driverName = dbConfig.getDriver();
 
 		if (StrUtil.isNotBlank(driverName)) {
-			if (DRIVER_MYSQL.equalsIgnoreCase(driverName) || DRIVER_MYSQL_V6.equalsIgnoreCase(driverName)) {
+			if (DriverNames.DRIVER_MYSQL.equalsIgnoreCase(driverName) || DriverNames.DRIVER_MYSQL_V6.equalsIgnoreCase(driverName)) {
 				return new MysqlDialect(dbConfig);
-			} else if (DRIVER_ORACLE.equalsIgnoreCase(driverName) || DRIVER_ORACLE_OLD.equalsIgnoreCase(driverName)) {
+			} else if (DriverNames.DRIVER_ORACLE.equalsIgnoreCase(driverName) || DriverNames.DRIVER_ORACLE_OLD.equalsIgnoreCase(driverName)) {
 				return new OracleDialect(dbConfig);
-			} else if (DRIVER_SQLLITE3.equalsIgnoreCase(driverName)) {
+			} else if (DriverNames.DRIVER_SQLLITE3.equalsIgnoreCase(driverName)) {
 				return new Sqlite3Dialect(dbConfig);
-			} else if (DRIVER_POSTGRESQL.equalsIgnoreCase(driverName)) {
+			} else if (DriverNames.DRIVER_POSTGRESQL.equalsIgnoreCase(driverName)) {
 				return new PostgresqlDialect(dbConfig);
-			} else if (DRIVER_H2.equalsIgnoreCase(driverName)) {
+			} else if (DriverNames.DRIVER_H2.equalsIgnoreCase(driverName)) {
 				return new H2Dialect(dbConfig);
-			} else if (DRIVER_SQLSERVER.equalsIgnoreCase(driverName)) {
+			} else if (DriverNames.DRIVER_SQLSERVER.equalsIgnoreCase(driverName)) {
 				return new SqlServer2012Dialect(dbConfig);
-			} else if (DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
+			} else if (DriverNames.DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
 				return new PhoenixDialect(dbConfig);
-			} else if (DRIVER_DM.equalsIgnoreCase(driverName)) {
+			} else if (DriverNames.DRIVER_DM.equalsIgnoreCase(driverName)) {
 				return new DmDialect(dbConfig);
 			}
 		}

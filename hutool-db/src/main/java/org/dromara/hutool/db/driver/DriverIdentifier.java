@@ -29,7 +29,7 @@ import java.util.List;
  * @author looly
  * @since 6.0.0
  */
-public class DriverIdentifier {
+public class DriverIdentifier implements DriverNames{
 
 	/**
 	 * 单例驱动识别器
@@ -48,84 +48,84 @@ public class DriverIdentifier {
 			// Mysql
 			new MysqlDriverMatcher(classLoader),
 			// Mariadb
-			new StartsWithDriverMatcher("org.mariadb.jdbc.Driver", "jdbc:mariadb:"),
+			new StartsWithDriverMatcher(DRIVER_MARIADB, "jdbc:mariadb:"),
 			// Oracle
-			new StartsWithDriverMatcher("oracle.jdbc.OracleDriver", "jdbc:oracle:", "JDBC:oracle:"),
+			new StartsWithDriverMatcher(DRIVER_ORACLE, "jdbc:oracle:", "JDBC:oracle:"),
 			new StartsWithDriverMatcher("com.alibaba.jdbc.AlibabaDriver", "jdbc:alibaba:oracle:"),
 			// PostgreSQL
-			new StartsWithDriverMatcher("org.postgresql.Driver", "jdbc:postgresql:"),
+			new StartsWithDriverMatcher(DRIVER_POSTGRESQL, "jdbc:postgresql:"),
 			// SQLServer
-			new StartsWithDriverMatcher("com.microsoft.sqlserver.jdbc.SQLServerDriver", "jdbc:sqlserver:"),
-			new StartsWithDriverMatcher("com.microsoft.jdbc.sqlserver.SQLServerDriver", "jdbc:microsoft:"),
+			new StartsWithDriverMatcher(DRIVER_SQLSERVER, "jdbc:sqlserver:"),
+			new StartsWithDriverMatcher(DRIVER_SQLSERVER_OLD, "jdbc:microsoft:"),
 			// SQLite3
-			new StartsWithDriverMatcher("org.sqlite.JDBC", "jdbc:sqlite:"),
+			new StartsWithDriverMatcher(DRIVER_SQLLITE3, "jdbc:sqlite:"),
 			// H2
-			new StartsWithDriverMatcher("org.h2.Driver", "jdbc:h2:"),
+			new StartsWithDriverMatcher(DRIVER_H2, "jdbc:h2:"),
 			// Hive
-			new StartsWithDriverMatcher("org.apache.hadoop.hive.jdbc.HiveDriver", "jdbc:hive:"),
-			new StartsWithDriverMatcher("org.apache.hive.jdbc.HiveDriver", "jdbc:hive2:"),
+			new StartsWithDriverMatcher(DRIVER_HIVE, "jdbc:hive:"),
+			new StartsWithDriverMatcher(DRIVER_HIVE2, "jdbc:hive2:"),
 			// Apache Derby
-			new StartsWithDriverMatcher("org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:"),
+			new StartsWithDriverMatcher(DRIVER_DERBY_EMBEDDED, "jdbc:derby:"),
 			// log4jdbc
-			new StartsWithDriverMatcher("net.sf.log4jdbc.DriverSpy", "jdbc:log4jdbc:"),
+			new StartsWithDriverMatcher(DRIVER_LOG4J, "jdbc:log4jdbc:"),
 			// tidb
-			new StartsWithDriverMatcher("io.tidb.bigdata.jdbc.TiDBDriver", "jdbc:tidb:"),
+			new StartsWithDriverMatcher(DRIVER_TIDB, "jdbc:tidb:"),
 			// oceanbase
-			new StartsWithDriverMatcher("com.oceanbase.jdbc.Driver", "jdbc:oceanbase:"),
+			new StartsWithDriverMatcher(DRIVER_OCEANBASE, "jdbc:oceanbase:"),
 			// SyBase JConnect，见：https://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.infocenter.dc39001.0700/html/prjdbc0700/X28208.htm
-			new StartsWithDriverMatcher("com.sybase.jdbc4.jdbc.SybDriver", "jdbc:sybase:Tds:"),
-			new StartsWithDriverMatcher("net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:"),
-			new StartsWithDriverMatcher("com.alibaba.druid.mock.MockDriver", "jdbc:fake:", "jdbc:mock:"),
-			new StartsWithDriverMatcher("com.edb.Driver", "jdbc:edb:"),
-			new StartsWithDriverMatcher("com.aliyun.odps.jdbc.OdpsDriver", "jdbc:odps:"),
+			new StartsWithDriverMatcher(DRIVER_SYBASE, "jdbc:sybase:Tds:"),
+			new StartsWithDriverMatcher(DRIVER_JTDS, "jdbc:jtds:"),
+			new StartsWithDriverMatcher(DRIVER_DRUID, "jdbc:fake:", "jdbc:mock:"),
+			new StartsWithDriverMatcher(DRIVER_EDB, "jdbc:edb:"),
+			new StartsWithDriverMatcher(DRIVER_ODPS, "jdbc:odps:"),
 			// HSQLDB
-			new StartsWithDriverMatcher("org.hsqldb.jdbcDriver", "jdbc:hsqldb:"),
+			new StartsWithDriverMatcher(DRIVER_HSQLDB, "jdbc:hsqldb:"),
 			new Db2DriverMatcher(),
-			new StartsWithDriverMatcher("com.ingres.jdbc.IngresDriver", "jdbc:ingres:"),
-			new StartsWithDriverMatcher("com.mckoi.JDBCDriver", "jdbc:mckoi:"),
-			new StartsWithDriverMatcher("COM.cloudscape.core.JDBCDriver", "jdbc:cloudscape:"),
-			new StartsWithDriverMatcher("com.informix.jdbc.IfxDriver", "jdbc:informix-sqli:"),
-			new StartsWithDriverMatcher("com.timesten.jdbc.TimesTenDriver", "jdbc:timesten:"),
-			new StartsWithDriverMatcher("com.ibm.as400.access.AS400JDBCDriver", "jdbc:as400:"),
-			new StartsWithDriverMatcher("com.attunity.jdbc.NvDriver", "jdbc:attconnect:"),
-			new StartsWithDriverMatcher("com.jnetdirect.jsql.JSQLDriver", "jdbc:JSQLConnect:"),
-			new StartsWithDriverMatcher("com.newatlanta.jturbo.driver.Driver", "jdbc:JTurbo:"),
-			new StartsWithDriverMatcher("interbase.interclient.Driver", "jdbc:interbase:"),
-			new StartsWithDriverMatcher("com.pointbase.jdbc.jdbcUniversalDriver", "jdbc:pointbase:"),
-			new StartsWithDriverMatcher("ca.edbc.jdbc.EdbcDriver", "jdbc:edbc:"),
-			new StartsWithDriverMatcher("com.mimer.jdbc.Driver", "jdbc:mimer:multi1:"),
+			new StartsWithDriverMatcher(DRIVER_INGRES, "jdbc:ingres:"),
+			new StartsWithDriverMatcher(DRIVER_MCKOI, "jdbc:mckoi:"),
+			new StartsWithDriverMatcher(DRIVER_CLOUDSCAPE, "jdbc:cloudscape:"),
+			new StartsWithDriverMatcher(DRIVER_INFORMIX, "jdbc:informix-sqli:"),
+			new StartsWithDriverMatcher(DRIVER_TIMESTEN, "jdbc:timesten:"),
+			new StartsWithDriverMatcher(DRIVER_AS400, "jdbc:as400:"),
+			new StartsWithDriverMatcher(DRIVER_ATTUNITY, "jdbc:attconnect:"),
+			new StartsWithDriverMatcher(DRIVER_JSQL, "jdbc:JSQLConnect:"),
+			new StartsWithDriverMatcher(DRIVER_JTURBO, "jdbc:JTurbo:"),
+			new StartsWithDriverMatcher(DRIVER_INTERBASE, "jdbc:interbase:"),
+			new StartsWithDriverMatcher(DRIVER_POINTBASE, "jdbc:pointbase:"),
+			new StartsWithDriverMatcher(DRIVER_EDBC, "jdbc:edbc:"),
+			new StartsWithDriverMatcher(DRIVER_MIMER, "jdbc:mimer:multi1:"),
 			// Apache Ignite
-			new StartsWithDriverMatcher("org.apache.ignite.IgniteJdbcThinDriver", "jdbc:ignite:thin:"),
+			new StartsWithDriverMatcher(DRIVER_IGNITE_THIN, "jdbc:ignite:thin:"),
 			// 达梦7
-			new StartsWithDriverMatcher("dm.jdbc.driver.DmDriver", "jdbc:dm:"),
+			new StartsWithDriverMatcher(DRIVER_DM, "jdbc:dm:"),
 			// 人大金仓
-			new StartsWithDriverMatcher("com.kingbase.Driver", "jdbc:kingbase:"),
+			new StartsWithDriverMatcher(DRIVER_KINGBASE, "jdbc:kingbase:"),
 			// 人大金仓8
-			new StartsWithDriverMatcher("com.kingbase8.Driver", "jdbc:kingbase8:"),
+			new StartsWithDriverMatcher(DRIVER_KINGBASE8, "jdbc:kingbase8:"),
 			// 南大通用
-			new StartsWithDriverMatcher("com.gbase.jdbc.Driver", "jdbc:gbase:"),
+			new StartsWithDriverMatcher(DRIVER_GBASE, "jdbc:gbase:"),
 			// 虚谷
-			new StartsWithDriverMatcher("com.xugu.cloudjdbc.Driver", "jdbc:xugu:"),
+			new StartsWithDriverMatcher(DRIVER_XUGU, "jdbc:xugu:"),
 			// 神通
-			new StartsWithDriverMatcher("com.oscar.Driver", "jdbc:oscar:"),
+			new StartsWithDriverMatcher(DRIVER_OSCAR, "jdbc:oscar:"),
 			// Apache Phoenix轻客户端
-			new StartsWithDriverMatcher("org.apache.phoenix.queryserver.client.Driver", "jdbc:phoenix:thin:"),
+			new StartsWithDriverMatcher(DRIVER_PHOENIX_THIN, "jdbc:phoenix:thin:"),
 			// Apache Phoenix重客户端（在轻客户端后检测）
-			new StartsWithDriverMatcher("org.apache.phoenix.jdbc.PhoenixDriver", "jdbc:phoenix:"),
-			new StartsWithDriverMatcher("org.apache.kylin.jdbc.Driver", "jdbc:kylin:"),
-			new StartsWithDriverMatcher("com.alibaba.xdriver.elastic.jdbc.ElasticDriver", "jdbc:elastic:"),
-			new StartsWithDriverMatcher("com.clickhouse.jdbc.ClickHouseDriver", "jdbc:clickhouse:"),
-			new StartsWithDriverMatcher("com.facebook.presto.jdbc.PrestoDriver", "jdbc:presto:"),
-			new StartsWithDriverMatcher("io.trino.jdbc.TrinoDriver", "jdbc:trino:"),
+			new StartsWithDriverMatcher(DRIVER_PHOENIX, "jdbc:phoenix:"),
+			new StartsWithDriverMatcher(DRIVER_KYLIN, "jdbc:kylin:"),
+			new StartsWithDriverMatcher(DRIVER_ELASTIC, "jdbc:elastic:"),
+			new StartsWithDriverMatcher(DRIVER_CLICK_HOUSE, "jdbc:clickhouse:"),
+			new StartsWithDriverMatcher(DRIVER_PRESTO, "jdbc:presto:"),
+			new StartsWithDriverMatcher(DRIVER_TRINO, "jdbc:trino:"),
 			// 浪潮K-DB
-			new StartsWithDriverMatcher("com.inspur.jdbc.KdDriver", "jdbc:inspur:"),
-			new StartsWithDriverMatcher("com.aliyun.polardb.Driver", "jdbc:polardb"),
+			new StartsWithDriverMatcher(DRIVER_INSPUR, "jdbc:inspur:"),
+			new StartsWithDriverMatcher(DRIVER_POLARDB, "jdbc:polardb"),
 			// 瀚高
-			new StartsWithDriverMatcher("com.highgo.jdbc.Driver", "jdbc:highgo:"),
-			new StartsWithDriverMatcher("com.pivotal.jdbc.GreenplumDriver", "jdbc:pivotal:greenplum:"),
+			new StartsWithDriverMatcher(DRIVER_HIGHGO, "jdbc:highgo:"),
+			new StartsWithDriverMatcher(DRIVER_GREENPLUM, "jdbc:pivotal:greenplum:"),
 			// 华为OpenGauss
-			new StartsWithDriverMatcher("com.huawei.gauss.jdbc.ZenithDriver", "jdbc:zenith:"),
-			new StartsWithDriverMatcher("org.opengauss.Driver", "jdbc:opengauss:")
+			new StartsWithDriverMatcher(DRIVER_GAUSS, "jdbc:zenith:"),
+			new StartsWithDriverMatcher(DRIVER_OPENGAUSS, "jdbc:opengauss:")
 		);
 	}
 
