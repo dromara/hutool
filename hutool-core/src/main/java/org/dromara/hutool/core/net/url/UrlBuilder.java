@@ -138,11 +138,12 @@ public final class UrlBuilder implements Builder<String> {
 			httpUrl = "http://" + httpUrl;
 		}
 
-		return of(httpUrl, charset);
+		return of(UrlUtil.toUrlForHttp(httpUrl), charset);
 	}
 
 	/**
-	 * 使用URL字符串构建UrlBuilder，默认使用UTF-8编码
+	 * 使用URL字符串构建UrlBuilder，默认使用UTF-8编码<br>
+	 * 注意：此方法如果提供的URL为非网络协议，自动尝试使用文件协议
 	 *
 	 * @param url URL字符串
 	 * @return UrlBuilder
