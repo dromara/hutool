@@ -113,7 +113,7 @@ public final class UrlBuilder implements Builder<String> {
 		if(false == StrUtil.startWithAnyIgnoreCase(httpUrl, "http://", "https://")){
 			httpUrl = "http://" + httpUrl;
 		}
-		return of(httpUrl, charset);
+		return of(URLUtil.toUrlForHttp(httpUrl), charset);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	public static UrlBuilder of(String url, Charset charset) {
 		Assert.notBlank(url, "Url must be not blank!");
-		return of(URLUtil.urlForNet(StrUtil.trim(url)), charset);
+		return of(URLUtil.url(StrUtil.trim(url)), charset);
 	}
 
 	/**

@@ -165,22 +165,6 @@ public class URLUtil extends URLEncodeUtil {
 	}
 
 	/**
-	 * 根据提供的路径创建一个URL对象，如果给定路径非网络协议路径直接抛出异常
-	 *
-	 * @param path 表示URL路径的字符串。
-	 * @return 返回一个新创建的URL对象。
-	 * @throws UtilException 如果给定的路径不能构造一个有效的URL，则抛出UtilException。
-	 * @since 5.8.28
-	 */
-	public static URL urlForNet(String path) throws UtilException{
-		try {
-			return new URL(path);
-		} catch (MalformedURLException e) {
-			throw new UtilException(e);
-		}
-	}
-
-	/**
 	 * 获取string协议的URL，类似于string:///xxxxx
 	 *
 	 * @param content 正文
