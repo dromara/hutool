@@ -14,13 +14,12 @@ package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.io.CharsetDetector;
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
+import java.nio.charset.*;
 
 /**
  * 字符集工具类
@@ -235,5 +234,37 @@ public class CharsetUtil {
 	 */
 	public static Charset detect(final int bufferSize, final InputStream in, final Charset... charsets) {
 		return CharsetDetector.detect(bufferSize, in, charsets);
+	}
+
+	/**
+	 * 创建一个新的CharsetEncoder实例，配置指定的字符集和错误处理策略。
+	 *
+	 * @param charset 指定的字符集，不允许为null。
+	 * @param action  对于不合法的字符或无法映射的字符的处理策略，不允许为null。
+	 * @return 配置好的CharsetEncoder实例。
+	 * @since 6.0.0
+	 */
+	public static CharsetEncoder newEncoder(final Charset charset, final CodingErrorAction action) {
+		return Assert.notNull(charset)
+			.newEncoder()
+			.onMalformedInput(action)
+			.onUnmappableCharacter(action);
+	}
+
+	/**
+	 * 创建一个新的CharsetDecoder实例，配置指定的字符集和错误处理行为。
+	 *
+	 * @param charset 指定的字符集，不允许为null。
+	 * @param action  当遇到不合法的字符编码或不可映射字符时采取的行动，例如忽略、替换等。
+	 * @return 配置好的CharsetDecoder实例，用于解码字符。
+	 * @since 6.0.0
+	 */
+	public static CharsetDecoder newDecoder(final Charset charset, final CodingErrorAction action) {
+		return Assert.notNull(charset)
+			.newDecoder()
+			.onMalformedInput(action)
+			.onUnmappableCharacter(action)
+			// 设置遇到无法解码的字符时的替换字符串。
+			.replaceWith("?");
 	}
 }

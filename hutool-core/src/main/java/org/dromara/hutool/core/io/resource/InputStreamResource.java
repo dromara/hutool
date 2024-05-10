@@ -13,11 +13,14 @@
 package org.dromara.hutool.core.io.resource;
 
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.stream.ReaderInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.Serializable;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 /**
  * 基于{@link InputStream}的资源获取器<br>
@@ -31,6 +34,16 @@ public class InputStreamResource implements Resource, Serializable {
 
 	private final InputStream in;
 	private final String name;
+
+	/**
+	 * 构造
+	 *
+	 * @param reader {@link Reader}
+	 * @param charset 编码
+	 */
+	public InputStreamResource(final Reader reader, final Charset charset) {
+		this(new ReaderInputStream(reader, charset));
+	}
 
 	/**
 	 * 构造

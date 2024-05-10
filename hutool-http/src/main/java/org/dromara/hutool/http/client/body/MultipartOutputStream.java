@@ -13,20 +13,17 @@
 package org.dromara.hutool.http.client.body;
 
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.resource.HttpResource;
-import org.dromara.hutool.core.io.resource.MultiResource;
-import org.dromara.hutool.core.io.resource.Resource;
-import org.dromara.hutool.core.io.resource.StringResource;
+import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.io.resource.*;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpGlobalConfig;
 import org.dromara.hutool.http.meta.ContentType;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 /**
  * Multipart/form-data输出流封装<br>
@@ -110,6 +107,16 @@ public class MultipartOutputStream extends OutputStream {
 
 		if (value instanceof Resource) {
 			appendResource(formFieldName, (Resource) value);
+		}else if(value instanceof File) {
+			appendResource(formFieldName, new FileResource((File) value));
+		}else if(value instanceof Path) {
+			appendResource(formFieldName, new FileResource((Path) value));
+		} else if(value instanceof byte[]) {
+			appendResource(formFieldName, new BytesResource((byte[]) value));
+		} else if(value instanceof InputStream) {
+			appendResource(formFieldName, new InputStreamResource((InputStream) value));
+		} else if(value instanceof Reader) {
+			appendResource(formFieldName, new InputStreamResource((Reader) value, this.charset));
 		} else {
 			appendResource(formFieldName,
 					new StringResource(Convert.toStr(value), null, this.charset));
