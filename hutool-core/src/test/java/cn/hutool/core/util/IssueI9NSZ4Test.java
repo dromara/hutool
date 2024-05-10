@@ -17,7 +17,6 @@ public class IssueI9NSZ4Test {
 
 	@Test
 	public void getByTest2() {
-		// AnimalKindInZoo所有枚举结果的getMappedValue结果值中都无AnimalKind.DOG，返回null
 		final AnimalKindInZoo by = EnumUtil.getBy(AnimalKindInZoo::getMappedValue, AnimalKind.BIRD);
 		Assert.assertEquals(AnimalKindInZoo.BIRD, by);
 	}
