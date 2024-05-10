@@ -135,7 +135,7 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	public static UrlBuilder of(String url, Charset charset) {
 		Assert.notBlank(url, "Url must be not blank!");
-		return of(URLUtil.url(StrUtil.trim(url)), charset);
+		return of(URLUtil.urlForNet(StrUtil.trim(url)), charset);
 	}
 
 	/**
