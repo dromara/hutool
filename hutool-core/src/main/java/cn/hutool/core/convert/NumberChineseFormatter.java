@@ -243,7 +243,7 @@ public class NumberChineseFormatter {
 	 *
 	 * @param amount           数字
 	 * @param isUseTraditional 是否使用繁体
-	 * @param isUseColloquial  是否使用口语化(e.g. 一十 -> 十)
+	 * @param isUseColloquial  是否使用口语化(e.g. 一十 -》 十)
 	 * @return 中文
 	 * @since 5.8.28
 	 */
