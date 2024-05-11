@@ -21,6 +21,7 @@ import org.dromara.hutool.core.reflect.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -45,9 +46,9 @@ import java.util.function.Predicate;
  * 若我们希望获得类所有方法范围中首个匹配的方法，则应当调用{@link #getFromAllMethods}。
  *
  * <p><strong>匹配规则</strong>
- * <p>方法查找的规则由{@link MethodMetadataLookup}实现。<br>
- * 规定，当{@link MethodMetadataLookup#inspect(Method)}方法返回元数据不为{@code null}时，则认为方法与其匹配，返回结果时将同时返回匹配的方法与元数据。<br>
- * 因此，我们可以通过实现{@link MethodMetadataLookup}接口来同时实现方法的查找与元数据的获取：<br>
+ * <p>方法查找的规则由{@link Function}实现。<br>
+ * 规定，当{@link Function#apply(Object)}方法返回元数据不为{@code null}时，则认为方法与其匹配，返回结果时将同时返回匹配的方法与元数据。<br>
+ * 因此，我们可以通过实现{@link Function}接口来同时实现方法的查找与元数据的获取：<br>
  * 比如，我们希望查找所有方法上带有{@code Annotation}注解的方法，则可以实现如下：
  * <pre>{@code
  * 		Map<Method, Annotation> methods = MethodScanner.findFromAllMethods(Foo.class, method -> method.getAnnotation(Annotation.class));
@@ -69,12 +70,10 @@ import java.util.function.Predicate;
  * 缓存在GC时会被回收，但是也可以通过{@link #clearCaches}手动清除缓存。
  *
  * @author huangchengxing
- * @see MethodMetadataLookup
- * @see MethodMatcher
  * @see MethodMatcherUtil
  * @since 6.0.0
  */
-public class MethodScanner {
+public class MethodScanner2 {
 	/*
 	  TODO 替换{@link MethodUtil}中的部分方法实现
 	 */
@@ -106,7 +105,7 @@ public class MethodScanner {
 		if (Objects.isNull(type)) {
 			return EMPTY_METHODS;
 		}
-		return MapUtil.computeIfAbsentForJdk8(METHODS_CACHE, type, Class::getMethods);
+		return METHODS_CACHE.computeIfAbsent(type, Class::getMethods);
 	}
 
 	/**
@@ -119,7 +118,7 @@ public class MethodScanner {
 		if (Objects.isNull(type)) {
 			return EMPTY_METHODS;
 		}
-		return MapUtil.computeIfAbsentForJdk8(DECLARED_METHODS_CACHE, type, Class::getDeclaredMethods);
+		return DECLARED_METHODS_CACHE.computeIfAbsent(type, Class::getDeclaredMethods);
 	}
 
 	/**
@@ -168,13 +167,13 @@ public class MethodScanner {
 	 * @return 方法与对应的元数据集合
 	 * @param <T> 结果类型
 	 */
-	public static <T> Map<Method, T> findWithMetadataFromSpecificMethods(final Method[] methods, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map<Method, T> findWithMetadataFromSpecificMethods(final Method[] methods, final Function<Method, T> lookup) {
 		if (ArrayUtil.isEmpty(methods)) {
 			return Collections.emptyMap();
 		}
 		final Map<Method, T> results = new LinkedHashMap<>();
 		for (final Method method : methods) {
-			final T result = lookup.inspect(method);
+			final T result = lookup.apply(method);
 			if (Objects.nonNull(result)) {
 				results.put(method, result);
 			}
@@ -189,7 +188,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法集合
 	 */
-	public static Set<Method> findFromSpecificMethods(final Method[] methods, final MethodMetadataLookup<?> lookup) {
+	public static Set<Method> findFromSpecificMethods(final Method[] methods, final Function<Method, ?> lookup) {
 		return findWithMetadataFromSpecificMethods(methods, lookup).keySet();
 	}
 
@@ -201,9 +200,9 @@ public class MethodScanner {
 	 * @return 方法与对应的元数据
 	 * @param <T> 值类型
 	 */
-	public static <T> Map.Entry<Method, T> getWithMetadataFromSpecificMethods(final Method[] methods, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map.Entry<Method, T> getWithMetadataFromSpecificMethods(final Method[] methods, final Function<Method, T> lookup) {
 		for (final Method method : methods) {
-			final T result = lookup.inspect(method);
+			final T result = lookup.apply(method);
 			if (Objects.nonNull(result)) {
 				return MapUtil.entry(method, result);
 			}
@@ -218,7 +217,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法
 	 */
-	public static Method getFromSpecificMethods(final Method[] methods, final MethodMetadataLookup<?> lookup) {
+	public static Method getFromSpecificMethods(final Method[] methods, final Function<Method, ?> lookup) {
 		final Map.Entry<Method, ?> result = getWithMetadataFromSpecificMethods(methods, lookup);
 		return Objects.isNull(result) ? null : result.getKey();
 	}
@@ -235,7 +234,7 @@ public class MethodScanner {
 	 * @return 方法与对应的元数据集合
 	 * @param <T> 值类型
 	 */
-	public static <T> Map<Method, T> findWithMetadataFromMethods(final Class<?> type, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map<Method, T> findWithMetadataFromMethods(final Class<?> type, final Function<Method, T> lookup) {
 		return findWithMetadataFromSpecificMethods(getMethods(type), lookup);
 	}
 
@@ -246,7 +245,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法集合
 	 */
-	public static Set<Method> findFromMethods(final Class<?> type, final MethodMetadataLookup<?> lookup) {
+	public static Set<Method> findFromMethods(final Class<?> type, final Function<Method, ?> lookup) {
 		return findFromSpecificMethods(getMethods(type), lookup);
 	}
 
@@ -258,7 +257,7 @@ public class MethodScanner {
 	 * @return 方法及元数据，若无任何匹配的结果则返回{@code null}
 	 * @param <T> 值类型
 	 */
-	public static <T> Map.Entry<Method, T> getWithMetadataFromMethods(final Class<?> type, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map.Entry<Method, T> getWithMetadataFromMethods(final Class<?> type, final Function<Method, T> lookup) {
 		return getWithMetadataFromSpecificMethods(getMethods(type), lookup);
 	}
 
@@ -269,7 +268,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法，若无任何匹配的结果则返回{@code null}
 	 */
-	public static Method getFromMethods(final Class<?> type, final MethodMetadataLookup<?> lookup) {
+	public static Method getFromMethods(final Class<?> type, final Function<Method, ?> lookup) {
 		return getFromSpecificMethods(getMethods(type), lookup);
 	}
 
@@ -285,7 +284,7 @@ public class MethodScanner {
 	 * @return 方法与对应的元数据集合
 	 * @param <T> 值类型
 	 */
-	public static <T> Map<Method, T> findWithMetadataFromDeclaredMethods(final Class<?> type, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map<Method, T> findWithMetadataFromDeclaredMethods(final Class<?> type, final Function<Method, T> lookup) {
 		return findWithMetadataFromSpecificMethods(getDeclaredMethods(type), lookup);
 	}
 
@@ -296,7 +295,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法集合
 	 */
-	public static Set<Method> findFromDeclaredMethods(final Class<?> type, final MethodMetadataLookup<?> lookup) {
+	public static Set<Method> findFromDeclaredMethods(final Class<?> type, final Function<Method, ?> lookup) {
 		return findFromSpecificMethods(getDeclaredMethods(type), lookup);
 	}
 
@@ -308,7 +307,7 @@ public class MethodScanner {
 	 * @return 方法及元数据，若无任何匹配的结果则返回{@code null}
 	 * @param <T> 值类型
 	 */
-	public static <T> Map.Entry<Method, T> getWithMetadataFromDeclaredMethods(final Class<?> type, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map.Entry<Method, T> getWithMetadataFromDeclaredMethods(final Class<?> type, final Function<Method, T> lookup) {
 		return getWithMetadataFromSpecificMethods(getDeclaredMethods(type), lookup);
 	}
 
@@ -319,7 +318,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法，若无任何匹配的结果则返回{@code null}
 	 */
-	public static Method getFromDeclaredMethods(final Class<?> type, final MethodMetadataLookup<?> lookup) {
+	public static Method getFromDeclaredMethods(final Class<?> type, final Function<Method, ?> lookup) {
 		return getFromSpecificMethods(getDeclaredMethods(type), lookup);
 	}
 
@@ -336,7 +335,7 @@ public class MethodScanner {
 	 * @return 方法与对应的元数据集合
 	 * @param <T> 值类型
 	 */
-	public static <T> Map<Method, T> findWithMetadataFromAllMethods(final Class<?> type, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map<Method, T> findWithMetadataFromAllMethods(final Class<?> type, final Function<Method, T> lookup) {
 		return findWithMetadataFromSpecificMethods(getAllMethods(type), lookup);
 	}
 
@@ -347,7 +346,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法集合
 	 */
-	public static Set<Method> findFromAllMethods(final Class<?> type, final MethodMetadataLookup<?> lookup) {
+	public static Set<Method> findFromAllMethods(final Class<?> type, final Function<Method, ?> lookup) {
 		return findFromSpecificMethods(getAllMethods(type), lookup);
 	}
 
@@ -359,7 +358,7 @@ public class MethodScanner {
 	 * @return 方法及元数据，若无任何匹配的结果则返回{@code null}
 	 * @param <T> 值类型
 	 */
-	public static <T> Map.Entry<Method, T> getWithMetadataFromAllMethods(final Class<?> type, final MethodMetadataLookup<T> lookup) {
+	public static <T> Map.Entry<Method, T> getWithMetadataFromAllMethods(final Class<?> type, final Function<Method, T> lookup) {
 		if (Objects.isNull(type)) {
 			return null;
 		}
@@ -382,7 +381,7 @@ public class MethodScanner {
 	 * @param lookup 查找器
 	 * @return 方法，若无任何匹配的结果则返回{@code null}
 	 */
-	public static Method getFromAllMethods(final Class<?> type, final MethodMetadataLookup<?> lookup) {
+	public static Method getFromAllMethods(final Class<?> type, final Function<Method, ?> lookup) {
 		final Map.Entry<Method, ?> target = getWithMetadataFromAllMethods(type, lookup);
 		return Objects.isNull(target) ? null : target.getKey();
 	}

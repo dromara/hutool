@@ -25,6 +25,16 @@ import java.util.function.Predicate;
 public class PredicateUtil {
 
 	/**
+	 * <p>创建一个匹配任何方法的方法匹配器
+	 *
+	 * @param <T> 参数类型
+	 * @return 方法匹配器
+	 */
+	public static <T> Predicate<T> alwaysTrue() {
+		return method -> true;
+	}
+
+	/**
 	 * 强制转换 {@code Predicate<? super T>} 为 {@code Predicate<T>}.
 	 *
 	 * @param <T>       参数类型

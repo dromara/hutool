@@ -29,33 +29,12 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * 方法匹配器工具类，用于基于各种预设条件创建方法匹配器，用于配合{@link MethodScanner}从各种范围中寻找匹配的方法。
+ * 方法匹配器工具类，用于基于各种预设条件创建方法匹配器，用于配合{@link MethodScanner2}从各种范围中寻找匹配的方法。
  *
  * @author huangchengxing
- * @see MethodMatcher
  * @since 6.0.0
  */
 public class MethodMatcherUtil {
-
-
-	/**
-	 * <p>创建一个匹配任何方法的方法匹配器
-	 *
-	 * @return 方法匹配器
-	 */
-	public static MethodMatcher alwaysMatch() {
-		return method -> true;
-	}
-
-	/**
-	 * <p>创建一个方法匹配器
-	 *
-	 * @param predicate 条件
-	 * @return 方法匹配器
-	 */
-	public static MethodMatcher of(final Predicate<Method> predicate) {
-		return predicate::test;
-	}
 
 	/**
 	 * <p>用于组合多个方法匹配器的方法匹配器，仅当所有方法匹配器均匹配失败时才认为方法匹配。
@@ -64,7 +43,8 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 * @see Stream#noneMatch
 	 */
-	public static MethodMatcher noneMatch(final MethodMatcher... matchers) {
+	@SafeVarargs
+	public static Predicate<Method> noneMatch(final Predicate<Method>... matchers) {
 		return method -> Stream.of(matchers).noneMatch(matcher -> matcher.test(method));
 	}
 
@@ -75,7 +55,8 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 * @see Stream#anyMatch
 	 */
-	public static MethodMatcher anyMatch(final MethodMatcher... matchers) {
+	@SafeVarargs
+	public static Predicate<Method> anyMatch(final Predicate<Method>... matchers) {
 		return method -> Stream.of(matchers).anyMatch(matcher -> matcher.test(method));
 	}
 
@@ -86,7 +67,8 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 * @see Stream#allMatch
 	 */
-	public static MethodMatcher allMatch(final MethodMatcher... matchers) {
+	@SafeVarargs
+	public static Predicate<Method> allMatch(final Predicate<Method>... matchers) {
 		return method -> Stream.of(matchers).allMatch(matcher -> matcher.test(method));
 	}
 
@@ -97,7 +79,7 @@ public class MethodMatcherUtil {
 	 *
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher isPublic() {
+	public static Predicate<Method> isPublic() {
 		return forModifiers(Modifier.PUBLIC);
 	}
 
@@ -106,7 +88,7 @@ public class MethodMatcherUtil {
 	 *
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher isStatic() {
+	public static Predicate<Method> isStatic() {
 		return forModifiers(Modifier.STATIC);
 	}
 
@@ -115,7 +97,7 @@ public class MethodMatcherUtil {
 	 *
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher isPublicStatic() {
+	public static Predicate<Method> isPublicStatic() {
 		return forModifiers(Modifier.PUBLIC, Modifier.STATIC);
 	}
 
@@ -125,7 +107,7 @@ public class MethodMatcherUtil {
 	 * @param modifiers 修饰符
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forModifiers(final int... modifiers) {
+	public static Predicate<Method> forModifiers(final int... modifiers) {
 		return method -> {
 			final int methodModifiers = method.getModifiers();
 			return Arrays.stream(modifiers).allMatch(modifier -> (methodModifiers & modifier) != 0);
@@ -144,7 +126,7 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 * @see AnnotatedElementUtil#isAnnotationPresent
 	 */
-	public static MethodMatcher hasDeclaredAnnotation(final Class<? extends Annotation> annotationType) {
+	public static Predicate<Method> hasDeclaredAnnotation(final Class<? extends Annotation> annotationType) {
 		return method -> method.isAnnotationPresent(annotationType);
 	}
 
@@ -160,7 +142,7 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 * @see AnnotatedElementUtil#isAnnotationPresent
 	 */
-	public static MethodMatcher hasAnnotation(final Class<? extends Annotation> annotationType) {
+	public static Predicate<Method> hasAnnotation(final Class<? extends Annotation> annotationType) {
 		return method -> AnnotatedElementUtil.isAnnotationPresent(method, annotationType);
 	}
 
@@ -176,7 +158,7 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 * @see AnnotatedElementUtil#isAnnotationPresent
 	 */
-	public static MethodMatcher hasAnnotationOnDeclaringClass(final Class<? extends Annotation> annotationType) {
+	public static Predicate<Method> hasAnnotationOnDeclaringClass(final Class<? extends Annotation> annotationType) {
 		return method -> AnnotatedElementUtil.isAnnotationPresent(method.getDeclaringClass(), annotationType);
 	}
 
@@ -193,7 +175,7 @@ public class MethodMatcherUtil {
 	 * @param annotationType 注解类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher hasAnnotationOnMethodOrDeclaringClass(final Class<? extends Annotation> annotationType) {
+	public static Predicate<Method> hasAnnotationOnMethodOrDeclaringClass(final Class<? extends Annotation> annotationType) {
 		return method -> AnnotatedElementUtil.isAnnotationPresent(method, annotationType)
 			|| AnnotatedElementUtil.isAnnotationPresent(method.getDeclaringClass(), annotationType);
 	}
@@ -214,11 +196,11 @@ public class MethodMatcherUtil {
 	 * @param fieldType 属性类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forGetterMethod(final String fieldName, final Class<?> fieldType) {
+	public static Predicate<Method> forGetterMethod(final String fieldName, final Class<?> fieldType) {
 		Objects.requireNonNull(fieldName);
 		Objects.requireNonNull(fieldType);
 		// 匹配方法名为 get + 首字母大写的属性名的无参数方法
-		MethodMatcher nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, "get"));
+		Predicate<Method> nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, "get"));
 		// 查找方法名为属性名的无参数方法
 		nameMatcher = nameMatcher.or(forName(fieldName));
 		if (Objects.equals(boolean.class, fieldType) || Objects.equals(Boolean.class, fieldType)) {
@@ -239,7 +221,7 @@ public class MethodMatcherUtil {
 	 * @param field 属性
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forGetterMethod(final Field field) {
+	public static Predicate<Method> forGetterMethod(final Field field) {
 		Objects.requireNonNull(field);
 		return forGetterMethod(field.getName(), field.getType());
 	}
@@ -255,10 +237,10 @@ public class MethodMatcherUtil {
 	 * @param fieldType 属性类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forSetterMethod(final String fieldName, final Class<?> fieldType) {
+	public static Predicate<Method> forSetterMethod(final String fieldName, final Class<?> fieldType) {
 		Objects.requireNonNull(fieldName);
 		Objects.requireNonNull(fieldType);
-		final MethodMatcher nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, "set"))
+		final Predicate<Method> nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, "set"))
 			.or(forName(fieldName));
 		return allMatch(nameMatcher, forParameterTypes(fieldType));
 	}
@@ -273,7 +255,7 @@ public class MethodMatcherUtil {
 	 * @param field 属性
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forSetterMethod(final Field field) {
+	public static Predicate<Method> forSetterMethod(final Field field) {
 		Objects.requireNonNull(field);
 		return forSetterMethod(field.getName(), field.getType());
 	}
@@ -289,7 +271,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forNameAndParameterTypes(final String methodName, final Class<?>... parameterTypes) {
+	public static Predicate<Method> forNameAndParameterTypes(final String methodName, final Class<?>... parameterTypes) {
 		Objects.requireNonNull(methodName);
 		Objects.requireNonNull(parameterTypes);
 		return allMatch(forName(methodName), forParameterTypes(parameterTypes));
@@ -302,7 +284,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forNameAndStrictParameterTypes(final String methodName, final Class<?>... parameterTypes) {
+	public static Predicate<Method> forNameAndStrictParameterTypes(final String methodName, final Class<?>... parameterTypes) {
 		Objects.requireNonNull(methodName);
 		Objects.requireNonNull(parameterTypes);
 		return allMatch(forName(methodName), forStrictParameterTypes(parameterTypes));
@@ -315,7 +297,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forNameIgnoreCaseAndParameterTypes(
+	public static Predicate<Method> forNameIgnoreCaseAndParameterTypes(
 		final String methodName, final Class<?>... parameterTypes) {
 		Objects.requireNonNull(methodName);
 		Objects.requireNonNull(parameterTypes);
@@ -329,7 +311,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forNameIgnoreCaseAndStrictParameterTypes(
+	public static Predicate<Method> forNameIgnoreCaseAndStrictParameterTypes(
 		final String methodName, final Class<?>... parameterTypes) {
 		Objects.requireNonNull(methodName);
 		Objects.requireNonNull(parameterTypes);
@@ -351,7 +333,7 @@ public class MethodMatcherUtil {
 	 * @param method 方法
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forMethodSignature(final Method method) {
+	public static Predicate<Method> forMethodSignature(final Method method) {
 		Objects.requireNonNull(method);
 		return forMethodSignature(method.getName(), method.getReturnType(), method.getParameterTypes());
 	}
@@ -369,12 +351,12 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型，若为{@code null}则表示匹配无参数的方法
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forMethodSignature(
+	public static Predicate<Method> forMethodSignature(
 		final String methodName, final Class<?> returnType, final Class<?>... parameterTypes) {
 		Objects.requireNonNull(methodName);
-		final MethodMatcher resultMatcher = Objects.isNull(returnType) ?
+		final Predicate<Method> resultMatcher = Objects.isNull(returnType) ?
 			forNoneReturnType() : forReturnType(returnType);
-		final MethodMatcher parameterMatcher = Objects.isNull(parameterTypes) ?
+		final Predicate<Method> parameterMatcher = Objects.isNull(parameterTypes) ?
 			forNoneParameter() : forParameterTypes(parameterTypes);
 		return allMatch(forName(methodName), resultMatcher, parameterMatcher);
 	}
@@ -392,12 +374,12 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型，若为{@code null}则表示匹配无参数的方法
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forStrictMethodSignature(
+	public static Predicate<Method> forStrictMethodSignature(
 		final String methodName, final Class<?> returnType, final Class<?>... parameterTypes) {
 		Objects.requireNonNull(methodName);
-		final MethodMatcher resultMatcher = Objects.isNull(returnType) ?
+		final Predicate<Method> resultMatcher = Objects.isNull(returnType) ?
 			forNoneReturnType() : forReturnType(returnType);
-		final MethodMatcher parameterMatcher = Objects.isNull(parameterTypes) ?
+		final Predicate<Method> parameterMatcher = Objects.isNull(parameterTypes) ?
 			forNoneParameter() : forStrictParameterTypes(parameterTypes);
 		return allMatch(forName(methodName), resultMatcher, parameterMatcher);
 	}
@@ -413,7 +395,7 @@ public class MethodMatcherUtil {
 	 * @param method 方法
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forStrictMethodSignature(final Method method) {
+	public static Predicate<Method> forStrictMethodSignature(final Method method) {
 		Objects.requireNonNull(method);
 		return forMethodSignature(method.getName(), method.getReturnType(), method.getParameterTypes());
 	}
@@ -428,7 +410,7 @@ public class MethodMatcherUtil {
 	 * @param methodName 方法名
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forName(final String methodName) {
+	public static Predicate<Method> forName(final String methodName) {
 		return method -> Objects.equals(method.getName(), methodName);
 	}
 
@@ -438,7 +420,7 @@ public class MethodMatcherUtil {
 	 * @param methodName 方法名
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forNameIgnoreCase(final String methodName) {
+	public static Predicate<Method> forNameIgnoreCase(final String methodName) {
 		return method -> CharSequenceUtil.endWithIgnoreCase(method.getName(), methodName);
 	}
 
@@ -447,7 +429,7 @@ public class MethodMatcherUtil {
 	 *
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forNoneReturnType() {
+	public static Predicate<Method> forNoneReturnType() {
 		return method -> Objects.equals(method.getReturnType(), Void.TYPE);
 	}
 
@@ -457,7 +439,7 @@ public class MethodMatcherUtil {
 	 * @param returnType 返回值类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forReturnType(final Class<?> returnType) {
+	public static Predicate<Method> forReturnType(final Class<?> returnType) {
 		return method -> ClassUtil.isAssignable(returnType, method.getReturnType());
 	}
 
@@ -467,7 +449,7 @@ public class MethodMatcherUtil {
 	 * @param returnType 返回值类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forStrictReturnType(final Class<?> returnType) {
+	public static Predicate<Method> forStrictReturnType(final Class<?> returnType) {
 		return method -> Objects.equals(method.getReturnType(), returnType);
 	}
 
@@ -476,7 +458,7 @@ public class MethodMatcherUtil {
 	 *
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forNoneParameter() {
+	public static Predicate<Method> forNoneParameter() {
 		return method -> method.getParameterCount() == 0;
 	}
 
@@ -486,7 +468,7 @@ public class MethodMatcherUtil {
 	 * @param count 参数个数
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forParameterCount(final int count) {
+	public static Predicate<Method> forParameterCount(final int count) {
 		return method -> method.getParameterCount() == count;
 	}
 
@@ -497,7 +479,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forParameterTypes(final Class<?>... parameterTypes) {
+	public static Predicate<Method> forParameterTypes(final Class<?>... parameterTypes) {
 		Objects.requireNonNull(parameterTypes);
 		return method -> ClassUtil.isAllAssignableFrom(parameterTypes, method.getParameterTypes());
 	}
@@ -530,7 +512,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forMostSpecificParameterTypes(final Class<?>... parameterTypes) {
+	public static Predicate<Method> forMostSpecificParameterTypes(final Class<?>... parameterTypes) {
 		return mostSpecificStrictParameterTypesMatcher(parameterTypes, ClassUtil::isAssignable);
 	}
 
@@ -561,7 +543,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forMostSpecificStrictParameterTypes(final Class<?>... parameterTypes) {
+	public static Predicate<Method> forMostSpecificStrictParameterTypes(final Class<?>... parameterTypes) {
 		return mostSpecificStrictParameterTypesMatcher(parameterTypes, Objects::equals);
 	}
 
@@ -571,7 +553,7 @@ public class MethodMatcherUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forStrictParameterTypes(final Class<?>... parameterTypes) {
+	public static Predicate<Method> forStrictParameterTypes(final Class<?>... parameterTypes) {
 		Objects.requireNonNull(parameterTypes);
 		return method -> ArrayUtil.equals(method.getParameterTypes(), parameterTypes);
 	}
@@ -579,7 +561,7 @@ public class MethodMatcherUtil {
 	// endregion
 
 	@NotNull
-	private static MethodMatcher mostSpecificStrictParameterTypesMatcher(
+	private static Predicate<Method> mostSpecificStrictParameterTypesMatcher(
 		final Class<?>[] parameterTypes, final BiPredicate<Class<?>, Class<?>> typeMatcher) {
 		Objects.requireNonNull(parameterTypes);
 		// 若参数为空，则表示匹配无参数方法

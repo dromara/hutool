@@ -17,15 +17,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 /**
- * test for {@link MethodMatcher}
- *
  * @author huangchengxing
  */
 class MethodMatcherTest {
 
-	private final MethodMatcher matchToString = t -> "toString".equals(t.getName());
+	private final Predicate<Method> matchToString = t -> "toString".equals(t.getName());
 
 	@SneakyThrows
 	@Test
@@ -41,7 +40,7 @@ class MethodMatcherTest {
 	void and() {
 		final Method toString = Object.class.getDeclaredMethod("toString");
 		Assertions.assertTrue(matchToString.test(toString));
-		final MethodMatcher newMatcher = matchToString.and(t -> t.getReturnType() == String.class);
+		final Predicate<Method> newMatcher = matchToString.and(t -> t.getReturnType() == String.class);
 		Assertions.assertTrue(newMatcher.test(toString));
 	}
 
@@ -50,14 +49,14 @@ class MethodMatcherTest {
 	void negate() {
 		final Method toString = Object.class.getDeclaredMethod("toString");
 		Assertions.assertTrue(matchToString.test(toString));
-		final MethodMatcher newMatcher = matchToString.negate();
+		final Predicate<Method> newMatcher = matchToString.negate();
 		Assertions.assertFalse(newMatcher.test(toString));
 	}
 
 	@SneakyThrows
 	@Test
 	void or() {
-		final MethodMatcher newMatcher = matchToString.or(t -> "hashCode".equals(t.getName()));
+		final Predicate<Method> newMatcher = matchToString.or(t -> "hashCode".equals(t.getName()));
 		final Method toString = Object.class.getDeclaredMethod("toString");
 		final Method hashCode = Object.class.getDeclaredMethod("hashCode");
 		Assertions.assertTrue(newMatcher.test(toString));
@@ -68,8 +67,8 @@ class MethodMatcherTest {
 	@Test
 	void inspect() {
 		final Method toString = Object.class.getDeclaredMethod("toString");
-		Assertions.assertTrue(matchToString.inspect(toString));
+		Assertions.assertTrue(matchToString.test(toString));
 		final Method hashCode = Object.class.getDeclaredMethod("hashCode");
-		Assertions.assertNull(matchToString.inspect(hashCode));
+		Assertions.assertFalse(matchToString.test(hashCode));
 	}
 }
