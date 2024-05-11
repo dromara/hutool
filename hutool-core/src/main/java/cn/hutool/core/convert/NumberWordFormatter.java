@@ -1,5 +1,6 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -121,16 +122,12 @@ public class NumberWordFormatter {
 			}
 		}
 
-		String xs = ""; // 用来存放转换后小数部分
+		String xs = lm.length() == 0 ? "ZERO " : " "; // 用来存放转换后小数部分
 		if (z > -1) {
-			xs = "AND CENTS " + transTwo(rstr) + " "; // 小数部分存在时转换小数
+			xs += "AND CENTS " + transTwo(rstr) + " "; // 小数部分存在时转换小数
 		}
 
-		return lm.toString().trim() + " " + xs + "ONLY";
-	}
-
-	private static String parseFirst(String s) {
-		return NUMBER[Integer.parseInt(s.substring(s.length() - 1))];
+		return lm.toString().trim() + xs + "ONLY";
 	}
 
 	private static String parseTeen(String s) {
@@ -152,17 +149,17 @@ public class NumberWordFormatter {
 		if (s.length() > 2) {
 			s = s.substring(0, 2);
 		} else if (s.length() < 2) {
-			s = "0" + s;
+			s = s + "0";
 		}
 
 		if (s.startsWith("0")) {// 07 - seven 是否小於10
-			value = parseFirst(s);
+			value = parseLast(s);
 		} else if (s.startsWith("1")) {// 17 seventeen 是否在10和20之间
 			value = parseTeen(s);
 		} else if (s.endsWith("0")) {// 是否在10与100之间的能被10整除的数
 			value = parseTen(s);
 		} else {
-			value = parseTen(s) + " " + parseFirst(s);
+			value = parseTen(s) + " " + parseLast(s);
 		}
 		return value;
 	}
@@ -174,10 +171,14 @@ public class NumberWordFormatter {
 		if (s.startsWith("0")) {// 是否小於100
 			value = transTwo(s.substring(1));
 		} else if ("00".equals(s.substring(1))) {// 是否被100整除
-			value = parseFirst(s.substring(0, 1)) + " HUNDRED";
+			value = parseLast(s.substring(0, 1)) + " HUNDRED";
 		} else {
-			value = parseFirst(s.substring(0, 1)) + " HUNDRED AND " + transTwo(s.substring(1));
+			value = parseLast(s.substring(0, 1)) + " HUNDRED AND " + transTwo(s.substring(1));
 		}
 		return value;
+	}
+
+	private static String parseLast(String s) {
+		return NUMBER[Integer.parseInt(s.substring(s.length() - 1))];
 	}
 }
