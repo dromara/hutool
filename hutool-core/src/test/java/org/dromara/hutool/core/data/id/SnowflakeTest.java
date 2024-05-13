@@ -13,8 +13,6 @@
 package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.collection.ConcurrentHashSet;
-import org.dromara.hutool.core.data.id.IdUtil;
-import org.dromara.hutool.core.data.id.Snowflake;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.tuple.Pair;
@@ -72,6 +70,22 @@ public class SnowflakeTest {
 	public void uniqueTest(){
 		// 测试并发环境下生成ID是否重复
 		final Snowflake snowflake = IdUtil.getSnowflake(0, 0);
+
+		final Set<Long> ids = new ConcurrentHashSet<>();
+		ThreadUtil.concurrencyTest(100, () -> {
+			for (int i = 0; i < 50000; i++) {
+				if(!ids.add(snowflake.next())){
+					throw new HutoolException("重复ID！");
+				}
+			}
+		});
+	}
+
+	@Test
+	@Disabled
+	public void uniqueTest2(){
+		// 测试并发环境下生成ID是否重复
+		final Snowflake snowflake = IdUtil.getSnowflake();
 
 		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {

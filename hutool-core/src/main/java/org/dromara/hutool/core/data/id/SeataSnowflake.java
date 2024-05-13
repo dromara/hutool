@@ -14,7 +14,6 @@ package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.lang.generator.Generator;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.RandomUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -48,7 +47,7 @@ public class SeataSnowflake implements Generator<Long>, Serializable {
 	// 节点ID长度
 	private static final int NODE_ID_BITS = 10;
 	// 节点ID的最大值，1023
-	private final int MAX_NODE_ID = ~(-1 << NODE_ID_BITS);
+	protected static final int MAX_NODE_ID = ~(-1 << NODE_ID_BITS);
 	// 时间戳长度
 	private static final int TIMESTAMP_BITS = 41;
 	// 序列号12位（表示只允许序号的范围为：0-4095）
@@ -79,7 +78,7 @@ public class SeataSnowflake implements Generator<Long>, Serializable {
 	 * 构造
 	 *
 	 * @param epochDate 初始化时间起点（null表示默认起始日期）,后期修改会导致id重复,如果要修改连workerId dataCenterId，慎用
-	 * @param nodeId    节点ID
+	 * @param nodeId    节点ID, 默认为DataCenterId或随机生成
 	 */
 	public SeataSnowflake(final Date epochDate, final Long nodeId) {
 		final long twepoch = (null == epochDate) ? DEFAULT_TWEPOCH : epochDate.getTime();
@@ -117,25 +116,12 @@ public class SeataSnowflake implements Generator<Long>, Serializable {
 	 */
 	private void initNodeId(Long nodeId) {
 		if (nodeId == null) {
-			nodeId = generateNodeId();
+			nodeId = IdConstants.DEFAULT_SEATA_NODE_ID;
 		}
 		if (nodeId > MAX_NODE_ID || nodeId < 0) {
 			final String message = StrUtil.format("worker Id can't be greater than {} or less than 0", MAX_NODE_ID);
 			throw new IllegalArgumentException(message);
 		}
 		this.nodeId = nodeId << (TIMESTAMP_BITS + SEQUENCE_BITS);
-	}
-
-	/**
-	 * 基于网卡MAC地址生成节点ID，失败则使用随机数
-	 *
-	 * @return workerId
-	 */
-	private long generateNodeId() {
-		try {
-			return IdUtil.getDataCenterId(MAX_NODE_ID);
-		} catch (final Exception e) {
-			return RandomUtil.randomLong(MAX_NODE_ID + 1);
-		}
 	}
 }

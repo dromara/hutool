@@ -33,7 +33,7 @@ import org.dromara.hutool.core.util.RuntimeUtil;
  */
 public class IdUtil {
 
-	// ------------------------------------------------------------------- UUID
+	// region ----- UUID
 
 	/**
 	 * 获取随机UUID
@@ -73,6 +73,10 @@ public class IdUtil {
 		return UUID.fastUUID().toString(true);
 	}
 
+	// endregion
+
+	// region ----- ObjectId
+
 	/**
 	 * 创建MongoDB ID生成策略实现<br>
 	 * ObjectId由以下几部分组成：
@@ -91,6 +95,10 @@ public class IdUtil {
 	public static String objectId() {
 		return ObjectId.next();
 	}
+
+	// endregion
+
+	// region ----- Snowflake
 
 	/**
 	 * 获取单例的Twitter的Snowflake 算法生成器对象<br>
@@ -164,11 +172,63 @@ public class IdUtil {
 	 * 参考：<a href="http://www.cnblogs.com/relucent/p/4955340.html">http://www.cnblogs.com/relucent/p/4955340.html</a>
 	 *
 	 * @return {@link Snowflake}
+	 * @see IdConstants#DEFAULT_SNOWFLAKE
 	 * @since 5.7.3
 	 */
 	public static Snowflake getSnowflake() {
-		return Singleton.get(Snowflake.class);
+		return IdConstants.DEFAULT_SNOWFLAKE;
 	}
+
+	/**
+	 * 简单获取Snowflake 的 nextId<br>
+	 * 终端ID 数据中心ID 默认为根据PID和MAC地址生成
+	 *
+	 * @return nextId
+	 * @since 5.7.18
+	 */
+	public static long getSnowflakeNextId() {
+		return getSnowflake().next();
+	}
+
+	/**
+	 * 简单获取Snowflake 的 nextId<br>
+	 * 终端ID 数据中心ID 默认为根据PID和MAC地址生成
+	 *
+	 * @return nextIdStr
+	 * @since 5.7.18
+	 */
+	public static String getSnowflakeNextIdStr() {
+		return getSnowflake().nextStr();
+	}
+
+	// endregion
+
+	// region ----- NanoId
+
+	/**
+	 * 获取随机NanoId
+	 *
+	 * @return 随机NanoId
+	 * @since 5.7.5
+	 */
+	public static String nanoId() {
+		return NanoId.randomNanoId();
+	}
+
+	/**
+	 * 获取随机NanoId
+	 *
+	 * @param size ID中的字符数量
+	 * @return 随机NanoId
+	 * @since 5.7.5
+	 */
+	public static String nanoId(final int size) {
+		return NanoId.randomNanoId(size);
+	}
+
+	// endregion
+
+	// region ----- DataCenterId and WorkerId
 
 	/**
 	 * 获取数据中心ID<br>
@@ -183,19 +243,19 @@ public class IdUtil {
 	 */
 	public static long getDataCenterId(long maxDatacenterId) {
 		Assert.isTrue(maxDatacenterId > 0, "maxDatacenterId must be > 0");
-		if(maxDatacenterId == Long.MAX_VALUE){
+		if (maxDatacenterId == Long.MAX_VALUE) {
 			maxDatacenterId -= 1;
 		}
 		long id = 1L;
 		byte[] mac = null;
-		try{
+		try {
 			mac = Ipv4Util.getLocalHardwareAddress();
-		}catch (final HutoolException ignore){
+		} catch (final HutoolException ignore) {
 			// ignore
 		}
 		if (null != mac) {
 			id = ((0x000000FF & (long) mac[mac.length - 2])
-					| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
+				| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
 			id = id % (maxDatacenterId + 1);
 		}
 
@@ -229,49 +289,59 @@ public class IdUtil {
 		return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
 	}
 
-	// ------------------------------------------------------------------- NanoId
+	// endregion
+
+	// region ----- SeateSnowflake
 
 	/**
-	 * 获取随机NanoId
+	 * 获取默认的SeataSnowflake单例实例。
 	 *
-	 * @return 随机NanoId
-	 * @since 5.7.5
+	 * <p>该方法为静态方法，无需实例化对象即可调用。它返回的是一个默认配置的SeataSnowflake实例，
+	 * 可以直接用于生成分布式ID。在应用程序中，如果未显式设置自定义的SeataSnowflake实例，
+	 * 则会使用此默认实例。
+	 *
+	 * @return SeataSnowflake 返回一个默认配置的SeataSnowflake实例。
+	 *
+	 * @see IdConstants#DEFAULT_SNOWFLAKE
 	 */
-	public static String nanoId() {
-		return NanoId.randomNanoId();
+	public static SeataSnowflake getSeataSnowflake() {
+		return IdConstants.DEFAULT_SEATA_SNOWFLAKE;
 	}
 
 	/**
-	 * 获取随机NanoId
+	 * 获取SeataSnowflake单例实例。
 	 *
-	 * @param size ID中的字符数量
-	 * @return 随机NanoId
-	 * @since 5.7.5
+	 * <p>该方法为静态方法，无需实例化对象即可调用。它返回的是一个自定义配置的SeataSnowflake实例，
+	 * 可以用于生成具有特定节点ID的分布式ID。
+	 *
+	 * @param nodeId 节点ID
+	 * @return SeataSnowflake 返回一个自定义配置的SeataSnowflake实例。
+	 *
+	 * @see IdConstants#DEFAULT_SEATA_SNOWFLAKE
 	 */
-	public static String nanoId(final int size) {
-		return NanoId.randomNanoId(size);
+	public static SeataSnowflake getSeataSnowflake(final long nodeId) {
+		return Singleton.get(SeataSnowflake.class, nodeId);
 	}
 
 	/**
-	 * 简单获取Snowflake 的 nextId
-	 * 终端ID 数据中心ID 默认为1
+	 * 简单获取SeataSnowflake 的 nextId<br>
+	 * NodeId默认为DataCenterId
 	 *
 	 * @return nextId
-	 * @since 5.7.18
 	 */
-	public static long getSnowflakeNextId() {
-		return getSnowflake().next();
+	public static long getSeataSnowflakeNextId() {
+		return getSeataSnowflake().next();
 	}
 
 	/**
-	 * 简单获取Snowflake 的 nextId
-	 * 终端ID 数据中心ID 默认为1
+	 * 简单获取SeataSnowflake 的 nextId<br>
+	 * NodeId默认为DataCenterId
 	 *
 	 * @return nextIdStr
-	 * @since 5.7.18
 	 */
-	public static String getSnowflakeNextIdStr() {
-		return getSnowflake().nextStr();
+	public static String getSeataSnowflakeNextIdStr() {
+		return getSeataSnowflake().nextStr();
 	}
 
+	// endregion
 }
