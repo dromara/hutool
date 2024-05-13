@@ -276,7 +276,7 @@ public class IdUtil {
 
 	/**
 	 * 简单获取Snowflake 的 nextId
-	 * 终端ID 数据中心ID 默认为1
+	 * 终端ID 数据中心ID 默认为PID和MAC地址生成
 	 *
 	 * @return nextId
 	 * @since 5.7.18
@@ -287,7 +287,7 @@ public class IdUtil {
 
 	/**
 	 * 简单获取Snowflake 的 nextId
-	 * 终端ID 数据中心ID 默认为1
+	 * 终端ID 数据中心ID 默认为PID和MAC地址生成
 	 *
 	 * @return nextIdStr
 	 * @since 5.7.18
