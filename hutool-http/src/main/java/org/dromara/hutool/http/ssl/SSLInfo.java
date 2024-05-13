@@ -40,7 +40,9 @@ public class SSLInfo {
 	/**
 	 * 默认{@code SSLInfo}，全部为{@code null}，使用客户端引擎默认配置
 	 */
-	public static final SSLInfo DEFAULT = SSLInfo.of();
+	public static final SSLInfo DEFAULT = SSLInfo.of()
+		// issue#3582
+		.setSslContext(SSLContextUtil.getDefault());
 
 	/**
 	 * 信任所有的{@code SSLInfo}

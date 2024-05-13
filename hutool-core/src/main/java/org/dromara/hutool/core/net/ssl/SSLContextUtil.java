@@ -12,11 +12,13 @@
 
 package org.dromara.hutool.core.net.ssl;
 
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * SSL(Secure Sockets Layer 安全套接字协议)中的{@link SSLContext}相关工具封装
@@ -25,6 +27,20 @@ import javax.net.ssl.TrustManager;
  * @since 5.5.2
  */
 public class SSLContextUtil {
+
+	/**
+	 * 获取默认的{@link SSLContext}
+	 *
+	 * @return {@link SSLContext}
+	 * @since 6.0.0
+	 */
+	public static SSLContext getDefault() {
+		try {
+			return SSLContext.getDefault();
+		} catch (final NoSuchAlgorithmException e) {
+			throw new HutoolException(e);
+		}
+	}
 
 	/**
 	 * 创建{@link SSLContext}，信任全部，协议为TLS

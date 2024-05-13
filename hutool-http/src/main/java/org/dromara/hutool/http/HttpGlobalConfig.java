@@ -229,7 +229,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @param customTrustAnyHost 如果设置为{@code false}，则按照JDK默认验证机制，验证目标服务器的证书host和请求host是否一致，{@code true}表示不验证。
 	 * @since 5.8.27
 	 */
-	public static void setTrustAnyHost(boolean customTrustAnyHost) {
+	public static void setTrustAnyHost(final boolean customTrustAnyHost) {
 		trustAnyHost = customTrustAnyHost;
 	}
 }
