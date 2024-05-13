@@ -1,6 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.date.SystemClock;
+import cn.hutool.core.lang.id.IdConstants;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -48,11 +49,11 @@ public class Snowflake implements Serializable {
 	private static final long WORKER_ID_BITS = 5L;
 	// 最大支持机器节点数0~31，一共32个
 	@SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
-	private static final long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
+	public static final long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
 	private static final long DATA_CENTER_ID_BITS = 5L;
 	// 最大支持数据中心节点数0~31，一共32个
 	@SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
-	private static final long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
+	public static final long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
 	// 序列号12位（表示只允许workId的范围为：0-4095）
 	private static final long SEQUENCE_BITS = 12L;
 	// 机器节点左移12位
@@ -93,7 +94,7 @@ public class Snowflake implements Serializable {
 	 * 构造，使用自动生成的工作节点ID和数据中心ID
 	 */
 	public Snowflake() {
-		this(IdUtil.getWorkerId(IdUtil.getDataCenterId(MAX_DATA_CENTER_ID), MAX_WORKER_ID));
+		this(IdConstants.DEFAULT_WORKER_ID);
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class Snowflake implements Serializable {
 	 * @param workerId 终端ID
 	 */
 	public Snowflake(long workerId) {
-		this(workerId, IdUtil.getDataCenterId(MAX_DATA_CENTER_ID));
+		this(workerId, IdConstants.DEFAULT_DATACENTER_ID);
 	}
 
 	/**

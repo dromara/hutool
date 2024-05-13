@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.28(2024-05-11)
+# 5.8.28(2024-05-13)
 
 ### 🐣新特性
 * 【core   】      修正XmlUtil的omitXmlDeclaration描述注释（issue#I9CPC7@Gitee）
@@ -19,6 +19,7 @@
 * 【core   】      PropertyComparator增加compareSelf构造重载（issue#3569@Github）
 * 【db     】      增加OceanBase的driver推断（pr#1217@Gitee）
 * 【http   】      HttpRequest#get不再尝试File路径（issue#I9O6DA@Gitee）
+* 【core   】      增加IdConstants，提高Snowflake初始化性能（issue#3581@Github）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）
