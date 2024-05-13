@@ -28,4 +28,11 @@ public class IdConstants {
 	 * @see Snowflake#MAX_WORKER_ID Snowflake算法中定义的最大Worker ID
 	 */
 	public static final long DEFAULT_WORKER_ID = IdUtil.getWorkerId(DEFAULT_DATACENTER_ID, Snowflake.MAX_WORKER_ID);
+
+	/**
+	 * 默认的Snowflake单例，使用默认的Worker ID和数据中心ID。<br>
+	 * 传入{@link #DEFAULT_WORKER_ID}和{@link #DEFAULT_DATACENTER_ID}作为参数。<br>
+	 * 此单例对象保证在同一JVM实例中获取ID唯一，唯一性使用进程ID和MAC地址保证。
+	 */
+	public static final Snowflake DEFAULT_SNOWFLAKE = new Snowflake(DEFAULT_WORKER_ID, DEFAULT_DATACENTER_ID);
 }
