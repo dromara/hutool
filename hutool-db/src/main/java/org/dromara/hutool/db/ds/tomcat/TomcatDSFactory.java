@@ -16,7 +16,7 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.db.config.ConnectionConfig;
-import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.AbstractDSFactory;
 import org.dromara.hutool.setting.props.Props;
 
 import java.util.Properties;
@@ -26,12 +26,14 @@ import java.util.Properties;
  *
  * @author Looly
  */
-public class TomcatDSFactory implements DSFactory {
-	private static final long serialVersionUID = 4925514193275150156L;
+public class TomcatDSFactory extends AbstractDSFactory {
+	private static final long serialVersionUID = 1L;
 
-	@Override
-	public String getDataSourceName() {
-		return "Tomcat-Jdbc-Pool";
+	/**
+	 * 构造
+	 */
+	public TomcatDSFactory() {
+		super(DataSource.class, "Tomcat-Jdbc-Pool");
 	}
 
 	@Override

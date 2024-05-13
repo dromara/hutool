@@ -15,7 +15,7 @@ package org.dromara.hutool.db.ds.dbcp;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.db.config.ConnectionConfig;
-import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.AbstractDSFactory;
 import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
@@ -27,12 +27,14 @@ import java.util.Properties;
  * @author Looly
  *
  */
-public class DbcpDSFactory implements DSFactory {
+public class DbcpDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public String getDataSourceName() {
-		return "commons-dbcp2";
+	/**
+	 * 构造
+	 */
+	public DbcpDSFactory() {
+		super(BasicDataSource.class, "commons-dbcp2");
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.ConnectionConfig;
-import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.AbstractDSFactory;
 import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
@@ -29,13 +29,16 @@ import java.util.Properties;
  * @author Looly
  *
  */
-public class C3p0DSFactory implements DSFactory {
-	private static final long serialVersionUID = -6090788225842047281L;
+public class C3p0DSFactory extends AbstractDSFactory {
+	private static final long serialVersionUID = 1L;
 
-	@Override
-	public String getDataSourceName() {
-		return "C3P0";
+	/**
+	 * 构造
+	 */
+	public C3p0DSFactory() {
+		super(ComboPooledDataSource.class, "C3P0");
 	}
+
 
 	@Override
 	public DataSource createDataSource(final ConnectionConfig<?> config) {

@@ -14,7 +14,7 @@ package org.dromara.hutool.db.ds.bee;
 
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.db.config.ConnectionConfig;
-import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.AbstractDSFactory;
 import org.dromara.hutool.setting.props.Props;
 import org.stone.beecp.BeeDataSource;
 import org.stone.beecp.BeeDataSourceConfig;
@@ -27,12 +27,14 @@ import java.util.Properties;
  *
  * @author Looly
  */
-public class BeeDSFactory implements DSFactory {
+public class BeeDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public String getDataSourceName() {
-		return "BeeCP";
+	/**
+	 * 构造
+	 */
+	public BeeDSFactory() {
+		super(BeeDataSource.class, "BeeCP");
 	}
 
 	@Override

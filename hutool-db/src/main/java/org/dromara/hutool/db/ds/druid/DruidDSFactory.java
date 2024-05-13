@@ -16,7 +16,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.config.ConnectionConfig;
-import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.AbstractDSFactory;
 import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
@@ -28,12 +28,14 @@ import java.util.Properties;
  * @author Looly
  *
  */
-public class DruidDSFactory implements DSFactory {
-	private static final long serialVersionUID = 4680621702534433222L;
+public class DruidDSFactory extends AbstractDSFactory {
+	private static final long serialVersionUID = 1L;
 
-	@Override
-	public String getDataSourceName() {
-		return "Druid";
+	/**
+	 * 构造
+	 */
+	public DruidDSFactory() {
+		super(DruidDataSource.class, "Druid");
 	}
 
 	@Override
