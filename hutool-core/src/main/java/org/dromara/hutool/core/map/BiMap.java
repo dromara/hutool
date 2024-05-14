@@ -51,7 +51,6 @@ public class BiMap<K, V> extends MapWrapper<K, V> {
 			}
 			this.inverse.put(value, key);
 		}
-
 		return oldValue;
 	}
 
