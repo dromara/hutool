@@ -15,13 +15,13 @@ import cn.hutool.setting.Setting;
  * [group]<br>
  * jndi = jdbc/TestDB<br>
  * ---------------------<br>
- * 
+ *
  * @author Looly
  *
  */
 public class JndiDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 1573625812927370432L;
-	
+
 	public static final String DS_NAME = "JNDI DataSource";
 
 	public JndiDSFactory() {
@@ -29,7 +29,7 @@ public class JndiDSFactory extends AbstractDSFactory {
 	}
 
 	public JndiDSFactory(Setting setting) {
-		super(DS_NAME, null, setting);
+		super(DS_NAME, DataSource.class, setting);
 	}
 
 	@Override

@@ -20,6 +20,7 @@
 * 【db     】      增加OceanBase的driver推断（pr#1217@Gitee）
 * 【http   】      HttpRequest#get不再尝试File路径（issue#I9O6DA@Gitee）
 * 【core   】      增加IdConstants，提高Snowflake初始化性能（issue#3581@Github）
+* 【core   】      优化 CharSequenceUtil工具类 startWithAny()、startWithAnyIgnoreCase() 参数命名错误问题（pr#1219@Gitee）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）
@@ -38,6 +39,7 @@
 * 【db     】      修复FuncComparator.thenComparing不生效问题（issue#3569@Github）
 * 【core   】      修复EnumUtil空指针问题（issue#I9NSZ4@Gitee）
 * 【core   】      修复NumberWordFormatter.format小数问题（issue#3579@Github）
+* 【db     】      修复JndiDSFactory空指针问题
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.27(2024-03-29)
