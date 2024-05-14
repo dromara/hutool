@@ -40,6 +40,7 @@
 * 【core   】      修复EnumUtil空指针问题（issue#I9NSZ4@Gitee）
 * 【core   】      修复NumberWordFormatter.format小数问题（issue#3579@Github）
 * 【db     】      修复JndiDSFactory空指针问题
+* 【core   】      修复BiMap.put错误的返回值（pr#1218@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.27(2024-03-29)
