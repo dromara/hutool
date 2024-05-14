@@ -140,8 +140,8 @@ public class MethodScanner2 {
 			return EMPTY_METHODS;
 		}
 		final List<Method> methods = new ArrayList<>();
-		ClassUtil.traverseTypeHierarchyWhile(type, t -> {
-			methods.addAll(Arrays.asList(getDeclaredMethods(t)));
+		ClassUtil.traverseTypeHierarchyWhile(type, clazz -> {
+			methods.addAll(Arrays.asList(getDeclaredMethods(clazz)));
 			return true;
 		});
 		return methods.isEmpty() ? EMPTY_METHODS : methods.toArray(new Method[0]);

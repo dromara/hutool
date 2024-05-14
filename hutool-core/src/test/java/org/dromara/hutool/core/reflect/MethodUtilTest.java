@@ -180,14 +180,14 @@ public class MethodUtilTest {
 
 	@Test
 	public void getPublicMethod() {
-		final Method superPublicMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, "publicMethod");
+		final Method superPublicMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "publicMethod");
 		Assertions.assertNotNull(superPublicMethod);
-		final Method superPrivateMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, "privateMethod");
+		final Method superPrivateMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "privateMethod");
 		Assertions.assertNull(superPrivateMethod);
 
-		final Method publicMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, "publicSubMethod");
+		final Method publicMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "publicSubMethod");
 		Assertions.assertNotNull(publicMethod);
-		final Method privateMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, "privateSubMethod");
+		final Method privateMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "privateSubMethod");
 		Assertions.assertNull(privateMethod);
 	}
 

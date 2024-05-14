@@ -63,7 +63,7 @@ public class InvokeTask implements Task{
 		if(StrUtil.isBlank(methodName)) {
 			throw new IllegalArgumentException("Method name is blank !");
 		}
-		this.method = MethodUtil.getPublicMethod(clazz, methodName);
+		this.method = MethodUtil.getPublicMethod(clazz, false, methodName);
 		if(null == this.method) {
 			throw new IllegalArgumentException("No method with name of [" + methodName + "] !");
 		}
