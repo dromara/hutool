@@ -31,7 +31,7 @@
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.json</Automatic-Module-Name>
 		<!-- versions -->
-		<bouncycastle.version>1.77</bouncycastle.version>
+		<bouncycastle.version>1.78.1</bouncycastle.version>
 		<jjwt.version>0.12.5</jjwt.version>
 	</properties>
 
