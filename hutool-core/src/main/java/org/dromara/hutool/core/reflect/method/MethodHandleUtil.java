@@ -18,6 +18,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
 /**
@@ -105,14 +106,33 @@ public class MethodHandleUtil {
 	 * @return 结果
 	 * @throws HutoolException 执行异常包装
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T invokeExact(final Object obj, final Method method, final Object... args) throws HutoolException{
 		Assert.notNull(method, "Method must be not null!");
+		MethodHandle handle;
 		try {
-			MethodHandle handle = LookupUtil.unreflectMethod(method);
-			if (null != obj) {
-				handle = handle.bindTo(obj);
-			}
+			handle = LookupUtil.unreflectMethod(method);
+		} catch (final Throwable e) {
+			throw ExceptionUtil.wrapRuntime(e);
+		}
+
+		if (null != obj) {
+			handle = handle.bindTo(obj);
+		}
+		return invokeWithArguments(handle, args);
+	}
+
+	/**
+	 * 执行方法句柄，{@link MethodHandle#invokeWithArguments(Object...)}包装<br>
+	 *
+	 * @param handle {@link MethodHandle}
+	 * @param args         方法参数值，支持子类转换和自动拆装箱
+	 * @param <T>          返回值类型
+	 * @return 方法返回值
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T invokeWithArguments(final MethodHandle handle, final Object... args){
+		Assert.notNull(handle, "MethodHandle must be not null!");
+		try {
 			return (T) handle.invokeWithArguments(args);
 		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
