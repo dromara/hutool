@@ -28,7 +28,6 @@ import org.dromara.hutool.core.stream.StreamUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -530,20 +529,7 @@ public class MethodUtil {
 	 * @throws HutoolException 一些列异常的包装
 	 */
 	public static <T> T invokeWithCheck(final Object obj, final Method method, final Object... args) throws HutoolException {
-		final Class<?>[] types = method.getParameterTypes();
-		if (null != args) {
-			Assert.isTrue(args.length == types.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, types.length);
-			Class<?> type;
-			for (int i = 0; i < args.length; i++) {
-				type = types[i];
-				if (type.isPrimitive() && null == args[i]) {
-					// 参数是原始类型，而传入参数为null时赋予默认值
-					args[i] = ClassUtil.getDefaultValue(type);
-				}
-			}
-		}
-
-		return invoke(obj, method, args);
+		return (new MethodInvoker(method)).setCheckArgs(true).invoke(obj, args);
 	}
 
 	/**
@@ -566,18 +552,8 @@ public class MethodUtil {
 	 * @throws HutoolException 一些列异常的包装
 	 * @see MethodHandleUtil#invoke(Object, Method, Object...)
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException {
-		try {
-			return MethodHandleUtil.invoke(obj, method, args);
-		} catch (final Exception e) {
-			// 传统反射方式执行方法
-			try {
-				return (T) method.invoke(ModifierUtil.isStatic(method) ? null : obj, actualArgs(method, args));
-			} catch (final IllegalAccessException | InvocationTargetException ex) {
-				throw new HutoolException(ex);
-			}
-		}
+		return (new MethodInvoker(method)).invoke(obj, args);
 	}
 
 	/**
