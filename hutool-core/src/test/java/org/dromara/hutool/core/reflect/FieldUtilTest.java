@@ -22,34 +22,34 @@ public class FieldUtilTest {
 	@Test
 	public void getFieldTest() {
 		// 能够获取到父类字段
-		final Field privateField = FieldUtil.getField(ReflectUtilTest.TestSubClass.class, "privateField");
+		final Field privateField = FieldUtil.getField(ReflectTestBeans.TestSubClass.class, "privateField");
 		Assertions.assertNotNull(privateField);
 	}
 
 	@Test
 	public void getFieldsTest() {
 		// 能够获取到父类字段
-		final Field[] fields = FieldUtil.getFields(ReflectUtilTest.TestSubClass.class);
+		final Field[] fields = FieldUtil.getFields(ReflectTestBeans.TestSubClass.class);
 		Assertions.assertEquals(4, fields.length);
 	}
 
 	@Test
 	public void setFieldTest() {
-		final ReflectUtilTest.AClass testClass = new ReflectUtilTest.AClass();
+		final ReflectTestBeans.AClass testClass = new ReflectTestBeans.AClass();
 		FieldUtil.setFieldValue(testClass, "a", "111");
 		Assertions.assertEquals(111, testClass.getA());
 	}
 
 	@Test
 	public void getDeclaredField() {
-		final Field noField = FieldUtil.getField(ReflectUtilTest.TestSubClass.class, "noField");
+		final Field noField = FieldUtil.getField(ReflectTestBeans.TestSubClass.class, "noField");
 		Assertions.assertNull(noField);
 
 		// 获取不到父类字段
-		final Field field = FieldUtil.getDeclearField(ReflectUtilTest.TestSubClass.class, "field");
+		final Field field = FieldUtil.getDeclearField(ReflectTestBeans.TestSubClass.class, "field");
 		Assertions.assertNull(field);
 
-		final Field subField = FieldUtil.getField(ReflectUtilTest.TestSubClass.class, "subField");
+		final Field subField = FieldUtil.getField(ReflectTestBeans.TestSubClass.class, "subField");
 		Assertions.assertNotNull(subField);
 	}
 

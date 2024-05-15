@@ -10,14 +10,15 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.reflect;
+package org.dromara.hutool.core.reflect.method;
 
 import lombok.Data;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.test.bean.ExamInfoDict;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
+import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.ReflectTestBeans;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.JdkUtil;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
-public class MethodUtilTest {
+public class MethodUtilTest extends ReflectTestBeans {
 
 	private static final boolean isGteJdk15 = getJavaVersion() >= 15;
 	/**
@@ -87,14 +88,14 @@ public class MethodUtilTest {
 
 	@Test
 	public void invokeTest() {
-		final ReflectUtilTest.AClass testClass = new ReflectUtilTest.AClass();
+		final AClass testClass = new AClass();
 		MethodUtil.invoke(testClass, "setA", 10);
 		Assertions.assertEquals(10, testClass.getA());
 	}
 
 	@Test
 	public void getDeclaredMethodsTest() {
-		Class<?> type = ReflectUtilTest.TestBenchClass.class;
+		Class<?> type = TestBenchClass.class;
 		Method[] methods = type.getDeclaredMethods();
 		Assertions.assertArrayEquals(methods, MethodUtil.getDeclaredMethods(type));
 		Assertions.assertSame(MethodUtil.getDeclaredMethods(type), MethodUtil.getDeclaredMethods(type));
@@ -108,19 +109,19 @@ public class MethodUtilTest {
 	@Disabled
 	public void getMethodBenchTest() {
 		// 预热
-		getMethodWithReturnTypeCheck(ReflectUtilTest.TestBenchClass.class, false, "getH");
+		getMethodWithReturnTypeCheck(TestBenchClass.class, false, "getH");
 
 		final StopWatch timer = new StopWatch();
 		timer.start();
 		for (int i = 0; i < 100000000; i++) {
-			MethodUtil.getMethod(ReflectUtilTest.TestBenchClass.class, false, "getH");
+			MethodUtil.getMethod(TestBenchClass.class, false, "getH");
 		}
 		timer.stop();
 		Console.log(timer.getLastTaskTimeMillis());
 
 		timer.start();
 		for (int i = 0; i < 100000000; i++) {
-			getMethodWithReturnTypeCheck(ReflectUtilTest.TestBenchClass.class, false, "getH");
+			getMethodWithReturnTypeCheck(TestBenchClass.class, false, "getH");
 		}
 		timer.stop();
 		Console.log(timer.getLastTaskTimeMillis());
@@ -150,60 +151,60 @@ public class MethodUtilTest {
 	@Test
 	public void getMethodsFromClassExtends() {
 		// 继承情况下，需解决方法去重问题
-		Method[] methods = MethodUtil.getMethods(ReflectUtilTest.C2.class);
+		Method[] methods = MethodUtil.getMethods(C2.class);
 		Assertions.assertEquals(isGteJdk15 ? 14 : 15, methods.length);
 
 		// 排除Object中的方法
 		// 3个方法包括类
-		methods = MethodUtil.getMethodsDirectly(ReflectUtilTest.C2.class, true, false);
+		methods = MethodUtil.getMethodsDirectly(C2.class, true, false);
 		Assertions.assertEquals(3, methods.length);
 
 		// getA属于本类
-		Assertions.assertEquals("public void org.dromara.hutool.core.reflect.ReflectUtilTest$C2.getA()", methods[0].toString());
+		Assertions.assertEquals("public void org.dromara.hutool.core.reflect.ReflectTestBeans$C2.getA()", methods[0].toString());
 		// getB属于父类
-		Assertions.assertEquals("public void org.dromara.hutool.core.reflect.ReflectUtilTest$C1.getB()", methods[1].toString());
+		Assertions.assertEquals("public void org.dromara.hutool.core.reflect.ReflectTestBeans$C1.getB()", methods[1].toString());
 		// getC属于接口中的默认方法
-		Assertions.assertEquals("public default void org.dromara.hutool.core.reflect.ReflectUtilTest$TestInterface1.getC()", methods[2].toString());
+		Assertions.assertEquals("public default void org.dromara.hutool.core.reflect.ReflectTestBeans$TestInterface1.getC()", methods[2].toString());
 	}
 
 	@Test
 	public void getMethodsFromInterfaceTest() {
 		// 对于接口，直接调用Class.getMethods方法获取所有方法，因为接口都是public方法
 		// 因此此处得到包括TestInterface1、TestInterface2、TestInterface3中一共4个方法
-		final Method[] methods = MethodUtil.getMethods(ReflectUtilTest.TestInterface3.class);
+		final Method[] methods = MethodUtil.getMethods(TestInterface3.class);
 		Assertions.assertEquals(4, methods.length);
 
 		// 接口里，调用getMethods和getPublicMethods效果相同
-		final Method[] publicMethods = MethodUtil.getPublicMethods(ReflectUtilTest.TestInterface3.class);
+		final Method[] publicMethods = MethodUtil.getPublicMethods(TestInterface3.class);
 		Assertions.assertArrayEquals(methods, publicMethods);
 	}
 
 	@Test
 	public void getPublicMethod() {
-		final Method superPublicMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "publicMethod");
+		final Method superPublicMethod = MethodUtil.getPublicMethod(TestSubClass.class, false, "publicMethod");
 		Assertions.assertNotNull(superPublicMethod);
-		final Method superPrivateMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "privateMethod");
+		final Method superPrivateMethod = MethodUtil.getPublicMethod(TestSubClass.class, false, "privateMethod");
 		Assertions.assertNull(superPrivateMethod);
 
-		final Method publicMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "publicSubMethod");
+		final Method publicMethod = MethodUtil.getPublicMethod(TestSubClass.class, false, "publicSubMethod");
 		Assertions.assertNotNull(publicMethod);
-		final Method privateMethod = MethodUtil.getPublicMethod(ReflectUtilTest.TestSubClass.class, false, "privateSubMethod");
+		final Method privateMethod = MethodUtil.getPublicMethod(TestSubClass.class, false, "privateSubMethod");
 		Assertions.assertNull(privateMethod);
 	}
 
 	@Test
 	public void getDeclaredMethod() {
-		final Method noMethod = MethodUtil.getMethod(ReflectUtilTest.TestSubClass.class, "noMethod");
+		final Method noMethod = MethodUtil.getMethod(TestSubClass.class, "noMethod");
 		Assertions.assertNull(noMethod);
 
-		final Method privateMethod = MethodUtil.getMethod(ReflectUtilTest.TestSubClass.class, "privateMethod");
+		final Method privateMethod = MethodUtil.getMethod(TestSubClass.class, "privateMethod");
 		Assertions.assertNotNull(privateMethod);
-		final Method publicMethod = MethodUtil.getMethod(ReflectUtilTest.TestSubClass.class, "publicMethod");
+		final Method publicMethod = MethodUtil.getMethod(TestSubClass.class, "publicMethod");
 		Assertions.assertNotNull(publicMethod);
 
-		final Method publicSubMethod = MethodUtil.getMethod(ReflectUtilTest.TestSubClass.class, "publicSubMethod");
+		final Method publicSubMethod = MethodUtil.getMethod(TestSubClass.class, "publicSubMethod");
 		Assertions.assertNotNull(publicSubMethod);
-		final Method privateSubMethod = MethodUtil.getMethod(ReflectUtilTest.TestSubClass.class, "privateSubMethod");
+		final Method privateSubMethod = MethodUtil.getMethod(TestSubClass.class, "privateSubMethod");
 		Assertions.assertNotNull(privateSubMethod);
 	}
 

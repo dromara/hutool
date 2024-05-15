@@ -45,6 +45,13 @@ public class MethodUtil {
 	 */
 	private static final WeakConcurrentMap<Class<?>, MethodReflect> METHODS_CACHE = new WeakConcurrentMap<>();
 
+	/**
+	 * 清除方法缓存
+	 */
+	synchronized static void clearCache() {
+		METHODS_CACHE.clear();
+	}
+
 	// region ----- getMethods
 
 	/**
@@ -255,7 +262,7 @@ public class MethodUtil {
 	/**
 	 * 获得一个类中所有方法列表，包括其父类中的方法
 	 *
-	 * @param clazz 类，非{@code null}
+	 * @param clazz     类，非{@code null}
 	 * @param predicate 方法过滤器，{@code null}表示无过滤
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
@@ -267,7 +274,7 @@ public class MethodUtil {
 	/**
 	 * 获得本类及其父类所有Public方法
 	 *
-	 * @param clazz     查找方法的类
+	 * @param clazz 查找方法的类
 	 * @return 过滤后的方法列表
 	 */
 	public static Method[] getPublicMethods(final Class<?> clazz) {
@@ -288,7 +295,7 @@ public class MethodUtil {
 	/**
 	 * 获得类中所有直接声明方法，不包括其父类中的方法
 	 *
-	 * @param clazz     类，非{@code null}
+	 * @param clazz 类，非{@code null}
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
@@ -529,7 +536,7 @@ public class MethodUtil {
 	 * @throws HutoolException 一些列异常的包装
 	 */
 	public static <T> T invokeWithCheck(final Object obj, final Method method, final Object... args) throws HutoolException {
-		return (new MethodInvoker(method)).setCheckArgs(true).invoke(obj, args);
+		return MethodInvoker.of(method).setCheckArgs(true).invoke(obj, args);
 	}
 
 	/**
@@ -553,7 +560,7 @@ public class MethodUtil {
 	 * @see MethodHandleUtil#invoke(Object, Method, Object...)
 	 */
 	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException {
-		return (new MethodInvoker(method)).invoke(obj, args);
+		return MethodInvoker.of(method).invoke(obj, args);
 	}
 
 	/**

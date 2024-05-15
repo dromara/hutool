@@ -78,6 +78,20 @@ public class MethodHandleUtilTest {
 		Assertions.assertEquals("Duck 78", result);
 	}
 
+	@Test
+	public void testInvokeExact() {
+		final Duck duck = new BigDuck();
+
+		final Method method = MethodUtil.getMethod(BigDuck.class, "toString");
+		final Object[] args = {};
+
+		// 执行测试方法
+		final String result = MethodHandleUtil.invokeExact(duck, method, args);
+
+		// 验证结果
+		Assertions.assertEquals(duck.toString(), result);
+	}
+
 	interface Duck {
 		default String quack() {
 			return "Quack";
@@ -101,6 +115,11 @@ public class MethodHandleUtilTest {
 		@SuppressWarnings("unused")
 		private static String getPrivateStaticValue(){
 			return "private static value";
+		}
+
+		@Override
+		public String toString() {
+			return super.toString();
 		}
 	}
 }

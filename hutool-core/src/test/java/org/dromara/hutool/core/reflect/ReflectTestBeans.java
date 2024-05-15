@@ -15,14 +15,14 @@ package org.dromara.hutool.core.reflect;
 import lombok.Data;
 
 /**
- * 反射工具类单元测试
+ * 反射工具用于测试的类
  *
  * @author Looly
  */
-public class ReflectUtilTest {
+public class ReflectTestBeans {
 
 	@Data
-	static class AClass {
+	protected static class AClass {
 		private int a;
 	}
 
@@ -33,7 +33,7 @@ public class ReflectUtilTest {
 	}
 
 	@Data
-	static class TestBenchClass {
+	protected static class TestBenchClass {
 		private int a;
 		private String b;
 		private String c;
@@ -69,7 +69,7 @@ public class ReflectUtilTest {
 		void getB();
 	}
 
-	interface TestInterface3 extends TestInterface2 {
+	protected interface TestInterface3 extends TestInterface2 {
 		void get3();
 	}
 
@@ -88,7 +88,7 @@ public class ReflectUtilTest {
 	}
 
 	@SuppressWarnings("RedundantMethodOverride")
-	class C2 extends C1 {
+	protected class C2 extends C1 {
 		@Override
 		public void getA() {
 
@@ -108,7 +108,7 @@ public class ReflectUtilTest {
 	}
 
 	@SuppressWarnings({"InnerClassMayBeStatic", "unused"})
-	class TestSubClass extends TestClass {
+	protected class TestSubClass extends TestClass {
 		private String subField;
 
 		private void privateSubMethod() {

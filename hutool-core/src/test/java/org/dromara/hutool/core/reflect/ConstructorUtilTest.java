@@ -26,7 +26,7 @@ import java.util.Map;
 public class ConstructorUtilTest {
 	@Test
 	public void noneStaticInnerClassTest() {
-		final ReflectUtilTest.NoneStaticClass testAClass = ConstructorUtil.newInstanceIfPossible(ReflectUtilTest.NoneStaticClass.class);
+		final ReflectTestBeans.NoneStaticClass testAClass = ConstructorUtil.newInstanceIfPossible(ReflectTestBeans.NoneStaticClass.class);
 		Assertions.assertNotNull(testAClass);
 		Assertions.assertEquals(2, testAClass.getA());
 	}

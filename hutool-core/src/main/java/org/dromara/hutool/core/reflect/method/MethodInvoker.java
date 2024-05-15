@@ -28,6 +28,16 @@ import java.lang.reflect.Method;
  */
 public class MethodInvoker implements Invoker {
 
+	/**
+	 * 创建方法调用器
+	 *
+	 * @param method 方法
+	 * @return 方法调用器
+	 */
+	public static MethodInvoker of(final Method method) {
+		return new MethodInvoker(method);
+	}
+
 	private final Method method;
 	private final Class<?>[] paramTypes;
 	private final Class<?> type;
@@ -43,6 +53,7 @@ public class MethodInvoker implements Invoker {
 
 		this.paramTypes = method.getParameterTypes();
 		if (paramTypes.length == 1) {
+			// setter方法读取参数类型
 			type = paramTypes[0];
 		} else {
 			type = method.getReturnType();
@@ -64,25 +75,42 @@ public class MethodInvoker implements Invoker {
 		return this;
 	}
 
-	
-
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T invoke(final Object target, final Object... args) throws HutoolException{
+	public <T> T invoke(Object target, final Object... args) throws HutoolException{
 		if(this.checkArgs){
 			checkArgs(args);
 		}
 
+		final Method method = this.method;
+		// static方法调用则target为null
+		if(ModifierUtil.isStatic(method)){
+			target = null;
+		}
+		// 根据方法定义的参数类型，将用户传入的参数规整和转换
+		final Object[] actualArgs = MethodUtil.actualArgs(method, args);
 		try {
-			return MethodHandleUtil.invoke(target, method, args);
+			return MethodHandleUtil.invokeExact(target, method, actualArgs);
 		} catch (final Exception e) {
 			// 传统反射方式执行方法
 			try {
-				return (T) method.invoke(ModifierUtil.isStatic(method) ? null : target, MethodUtil.actualArgs(method, args));
+				return (T) method.invoke(target, actualArgs);
 			} catch (final IllegalAccessException | InvocationTargetException ex) {
 				throw new HutoolException(ex);
 			}
 		}
+	}
+
+	/**
+	 * 执行静态方法
+	 *
+	 * @param <T>    对象类型
+	 * @param args   参数对象
+	 * @return 结果
+	 * @throws HutoolException 多种异常包装
+	 */
+	public <T> T invokeStatic(final Object... args) throws HutoolException {
+		return invoke(null, args);
 	}
 
 	@Override
