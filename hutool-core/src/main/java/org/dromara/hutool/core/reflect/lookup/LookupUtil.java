@@ -163,6 +163,7 @@ public class LookupUtil {
 
 		MethodHandle handle = null;
 		final MethodHandles.Lookup lookup = LookupUtil.lookup(callerClass);
+		// 成员方法
 		try {
 			handle = lookup.findVirtual(callerClass, name, type);
 		} catch (final IllegalAccessException | NoSuchMethodException ignore) {

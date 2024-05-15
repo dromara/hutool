@@ -18,7 +18,6 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
 /**
@@ -42,6 +41,12 @@ public class MethodHandleUtil {
 
 	/**
 	 * 执行方法句柄，{@link MethodHandle#invokeWithArguments(Object...)}包装<br>
+	 * 非static方法需先调用{@link MethodHandle#bindTo(Object)}绑定执行对象。
+	 *
+	 * <p>
+	 * 需要注意的是，此处没有使用{@link MethodHandle#invoke(Object...)}，因为其参数第一个必须为对象或类。<br>
+	 * {@link MethodHandle#invokeWithArguments(Object...)}只需传参数即可。
+	 * </p>
 	 *
 	 * @param methodHandle {@link MethodHandle}
 	 * @param args         方法参数值，支持子类转换和自动拆装箱
@@ -72,14 +77,14 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invoke);
 	 * </pre>
 	 *
-	 * @param <T>       返回结果类型
-	 * @param obj       接口的子对象或代理对象
-	 * @param method    方法
-	 * @param args      参数，自动根据{@link Method}定义类型转换
+	 * @param <T>    返回结果类型
+	 * @param obj    接口的子对象或代理对象
+	 * @param method 方法
+	 * @param args   参数，自动根据{@link Method}定义类型转换
 	 * @return 结果
 	 * @throws HutoolException 执行异常包装
 	 */
-	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException{
+	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException {
 		Assert.notNull(method, "Method must be not null!");
 		return invokeExact(obj, method, MethodUtil.actualArgs(method, args));
 	}
@@ -99,14 +104,14 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invoke);
 	 * </pre>
 	 *
-	 * @param <T>       返回结果类型
-	 * @param obj       接口的子对象或代理对象
-	 * @param method    方法
-	 * @param args      参数
+	 * @param <T>    返回结果类型
+	 * @param obj    接口的子对象或代理对象
+	 * @param method 方法
+	 * @param args   参数
 	 * @return 结果
 	 * @throws HutoolException 执行异常包装
 	 */
-	public static <T> T invokeExact(final Object obj, final Method method, final Object... args) throws HutoolException{
+	public static <T> T invokeExact(final Object obj, final Method method, final Object... args) throws HutoolException {
 		Assert.notNull(method, "Method must be not null!");
 		MethodHandle handle;
 		try {
@@ -118,24 +123,6 @@ public class MethodHandleUtil {
 		if (null != obj) {
 			handle = handle.bindTo(obj);
 		}
-		return invokeWithArguments(handle, args);
-	}
-
-	/**
-	 * 执行方法句柄，{@link MethodHandle#invokeWithArguments(Object...)}包装<br>
-	 *
-	 * @param handle {@link MethodHandle}
-	 * @param args         方法参数值，支持子类转换和自动拆装箱
-	 * @param <T>          返回值类型
-	 * @return 方法返回值
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T invokeWithArguments(final MethodHandle handle, final Object... args){
-		Assert.notNull(handle, "MethodHandle must be not null!");
-		try {
-			return (T) handle.invokeWithArguments(args);
-		} catch (final Throwable e) {
-			throw ExceptionUtil.wrapRuntime(e);
-		}
+		return invokeHandle(handle, args);
 	}
 }
