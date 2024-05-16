@@ -36,9 +36,29 @@ public class FieldUtil {
 	/**
 	 * 字段缓存
 	 */
-	private static final WeakConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakConcurrentMap<>();
+	private static final WeakConcurrentMap<Class<?>, FieldReflect> FIELDS_CACHE = new WeakConcurrentMap<>();
 
-	// --------------------------------------------------------------------------------------------------------- Field
+	/**
+	 * 清除方法缓存
+	 */
+	synchronized static void clearCache() {
+		FIELDS_CACHE.clear();
+	}
+
+	/**
+	 * 是否为父类引用字段<br>
+	 * 当字段所在类是对象子类时（对象中定义的非static的class），会自动生成一个以"this$0"为名称的字段，指向父类对象
+	 *
+	 * @param field 字段
+	 * @return 是否为父类引用字段
+	 * @since 5.7.20
+	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public static boolean isOuterClassField(final Field field) {
+		return "this$0".equals(field.getName());
+	}
+
+	// region ----- Field
 
 	/**
 	 * 查找指定类中是否包含指定名称对应的字段，包括所有字段（包括非public字段），也包括父类和Object类的字段
@@ -86,6 +106,18 @@ public class FieldUtil {
 	}
 
 	/**
+	 * 获取本类定义的指定名称的字段，包括私有字段，但是不包括父类字段
+	 *
+	 * @param beanClass Bean的Class
+	 * @param name      字段名称
+	 * @return 字段对象，如果未找到返回{@code null}
+	 */
+	public static Field getDeclearField(final Class<?> beanClass, final String name) {
+		final Field[] fields = getDeclaredFields(beanClass, (field -> StrUtil.equals(name, field.getName())));
+		return ArrayUtil.isEmpty(fields) ? null : fields[0];
+	}
+
+	/**
 	 * 查找指定类中的指定name的字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回{@code null}
 	 *
 	 * @param beanClass 被查找字段的类,不能为null
@@ -94,28 +126,13 @@ public class FieldUtil {
 	 * @throws SecurityException 安全异常
 	 */
 	public static Field getField(final Class<?> beanClass, final String name) throws SecurityException {
-		final Field[] fields = getFields(beanClass);
-		return ArrayUtil.firstMatch((field) -> name.equals(getFieldName(field)), fields);
-	}
-
-	/**
-	 * 获取本类定义的指定名称的字段，包括私有字段，但是不包括父类字段
-	 *
-	 * @param beanClass Bean的Class
-	 * @param name      字段名称
-	 * @return 字段对象，如果未找到返回{@code null}
-	 */
-	public static Field getDeclearField(final Class<?> beanClass, final String name) {
-		try {
-			return beanClass.getDeclaredField(name);
-		} catch (final NoSuchFieldException e) {
-			return null;
-		}
+		final Field[] fields = getFields(beanClass, (field -> StrUtil.equals(name, field.getName())));
+		return ArrayUtil.isEmpty(fields) ? null : fields[0];
 	}
 
 	/**
 	 * 获取指定类中字段名和字段对应的有序Map，包括其父类中的字段<br>
-	 * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
+	 * 如果子类与父类中存在同名字段，则父类字段忽略
 	 *
 	 * @param beanClass 类
 	 * @return 字段名和字段对应的Map，有序
@@ -125,7 +142,7 @@ public class FieldUtil {
 		final Field[] fields = getFields(beanClass);
 		final HashMap<String, Field> map = MapUtil.newHashMap(fields.length, true);
 		for (final Field field : fields) {
-			map.put(field.getName(), field);
+			map.putIfAbsent(field.getName(), field);
 		}
 		return map;
 	}
@@ -139,8 +156,7 @@ public class FieldUtil {
 	 * @throws SecurityException 安全检查异常
 	 */
 	public static Field[] getFields(final Class<?> beanClass) throws SecurityException {
-		Assert.notNull(beanClass);
-		return FIELDS_CACHE.computeIfAbsent(beanClass, (key) -> getFieldsDirectly(beanClass, true));
+		return getFields(beanClass, null);
 	}
 
 
@@ -155,7 +171,22 @@ public class FieldUtil {
 	 * @since 5.7.14
 	 */
 	public static Field[] getFields(final Class<?> beanClass, final Predicate<Field> fieldPredicate) throws SecurityException {
-		return ArrayUtil.filter(getFields(beanClass), fieldPredicate);
+		Assert.notNull(beanClass);
+		return FIELDS_CACHE.computeIfAbsent(beanClass, FieldReflect::of).getAllFields(fieldPredicate);
+	}
+
+	/**
+	 * 获得当前类声明的所有字段（包括非public字段），但不包括父类的字段<br>
+	 *
+	 * @param beanClass      类
+	 * @param fieldPredicate field过滤器，过滤掉不需要的field，{@link Predicate#test(Object)}为{@code true}保留，null表示全部保留
+	 * @return 字段列表
+	 * @throws SecurityException 安全检查异常
+	 * @since 6.0.0
+	 */
+	public static Field[] getDeclaredFields(final Class<?> beanClass, final Predicate<Field> fieldPredicate) throws SecurityException {
+		Assert.notNull(beanClass);
+		return FIELDS_CACHE.computeIfAbsent(beanClass, FieldReflect::of).getDeclaredFields(fieldPredicate);
 	}
 
 	/**
@@ -168,23 +199,12 @@ public class FieldUtil {
 	 * @throws SecurityException 安全检查异常
 	 */
 	public static Field[] getFieldsDirectly(final Class<?> beanClass, final boolean withSuperClassFields) throws SecurityException {
-		Assert.notNull(beanClass);
-
-		Field[] allFields = null;
-		Class<?> searchType = beanClass;
-		Field[] declaredFields;
-		while (searchType != null) {
-			declaredFields = searchType.getDeclaredFields();
-			if (null == allFields) {
-				allFields = declaredFields;
-			} else {
-				allFields = ArrayUtil.append(allFields, declaredFields);
-			}
-			searchType = withSuperClassFields ? searchType.getSuperclass() : null;
-		}
-
-		return allFields;
+		return FieldReflect.of(beanClass).getFieldsDirectly(withSuperClassFields);
 	}
+
+	// endregion
+
+	// region ----- Field Value
 
 	/**
 	 * 获取字段值
@@ -343,15 +363,5 @@ public class FieldUtil {
 		}
 	}
 
-	/**
-	 * 是否为父类引用字段<br>
-	 * 当字段所在类是对象子类时（对象中定义的非static的class），会自动生成一个以"this$0"为名称的字段，指向父类对象
-	 *
-	 * @param field 字段
-	 * @return 是否为父类引用字段
-	 * @since 5.7.20
-	 */
-	public static boolean isOuterClassField(final Field field) {
-		return "this$0".equals(field.getName());
-	}
+	// endregion
 }

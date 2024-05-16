@@ -30,7 +30,15 @@ public class ConstructorUtil {
 	 * 构造对象缓存
 	 */
 	private static final WeakConcurrentMap<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new WeakConcurrentMap<>();
-	// --------------------------------------------------------------------------------------------------------- Constructor
+
+	/**
+	 * 清除方法缓存
+	 */
+	synchronized static void clearCache() {
+		CONSTRUCTORS_CACHE.clear();
+	}
+
+	// region ----- Constructor
 
 	/**
 	 * 查找类中的指定参数的构造方法，如果找到构造方法，会自动设置可访问为true
@@ -84,7 +92,9 @@ public class ConstructorUtil {
 		return beanClass.getDeclaredConstructors();
 	}
 
-	// --------------------------------------------------------------------------------------------------------- newInstance
+	// endregion
+
+	// region ----- newInstance
 
 	/**
 	 * 实例化对象<br>
@@ -131,4 +141,5 @@ public class ConstructorUtil {
 	public static <T> T newInstanceIfPossible(final Class<T> type) {
 		return PossibleObjectCreator.of(type).create();
 	}
+	// endregion
 }

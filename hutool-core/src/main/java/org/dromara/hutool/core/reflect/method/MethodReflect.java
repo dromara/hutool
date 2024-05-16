@@ -73,13 +73,8 @@ public class MethodReflect {
 		allMethods = null;
 	}
 
-	// region ----- getMathod
+	// region ----- getMethods
 
-
-
-	// endregion
-
-	// region ----- getMathods
 	/**
 	 * 获取当前类及父类的所有公共方法，等同于{@link Class#getMethods()}
 	 *
