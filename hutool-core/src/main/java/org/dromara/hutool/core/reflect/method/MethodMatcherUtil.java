@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * 方法匹配器工具类，用于基于各种预设条件创建方法匹配器，用于配合{@link MethodScanner2}从各种范围中寻找匹配的方法。
+ * 方法匹配器工具类，用于基于各种预设条件创建方法匹配器。
  *
  * @author huangchengxing
  * @since 6.0.0
