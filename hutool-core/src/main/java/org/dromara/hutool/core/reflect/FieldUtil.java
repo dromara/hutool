@@ -204,7 +204,7 @@ public class FieldUtil {
 
 	// endregion
 
-	// region ----- Field Value
+	// region ----- get Field Value
 
 	/**
 	 * 获取字段值
@@ -288,6 +288,10 @@ public class FieldUtil {
 		}
 		return null;
 	}
+
+	// endregion
+
+	// region ----- set Field Value
 
 	/**
 	 * 设置字段值
