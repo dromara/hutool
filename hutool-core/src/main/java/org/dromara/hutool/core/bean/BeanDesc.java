@@ -164,15 +164,14 @@ public class BeanDesc implements Serializable {
 	 */
 	private void initForRecord() {
 		final Method[] getters = MethodUtil.getPublicMethods(this.beanClass, method -> 0 == method.getParameterCount());
-		for (final Field field : FieldUtil.getFields(this.beanClass)) {
-			// 排除静态属性和对象子类
-			if (!ModifierUtil.isStatic(field) && !FieldUtil.isOuterClassField(field)) {
-				for (final Method getter : getters) {
-					if (field.getName().equals(getter.getName())) {
-						//record对象，getter方法与字段同名
-						final PropDesc prop = new PropDesc(field, getter, null);
-						this.propMap.putIfAbsent(prop.getFieldName(), prop);
-					}
+		// 排除静态属性和对象子类
+		final Field[] fields = FieldUtil.getFields(this.beanClass, field -> !ModifierUtil.isStatic(field) && !FieldUtil.isOuterClassField(field));
+		for (final Field field : fields) {
+			for (final Method getter : getters) {
+				if (field.getName().equals(getter.getName())) {
+					//record对象，getter方法与字段同名
+					final PropDesc prop = new PropDesc(field, getter, null);
+					this.propMap.putIfAbsent(prop.getFieldName(), prop);
 				}
 			}
 		}
@@ -183,14 +182,13 @@ public class BeanDesc implements Serializable {
 	 */
 	private void initForBean() {
 		final Method[] gettersAndSetters = MethodUtil.getPublicMethods(this.beanClass, MethodUtil::isGetterOrSetterIgnoreCase);
+		// 排除静态属性和对象子类
+		final Field[] fields = FieldUtil.getFields(this.beanClass, field -> !ModifierUtil.isStatic(field) && !FieldUtil.isOuterClassField(field));
 		PropDesc prop;
-		for (final Field field : FieldUtil.getFields(this.beanClass)) {
-			// 排除静态属性和对象子类
-			if (!ModifierUtil.isStatic(field) && !FieldUtil.isOuterClassField(field)) {
-				prop = createProp(field, gettersAndSetters);
-				// 只有不存在时才放入，防止父类属性覆盖子类属性
-				this.propMap.putIfAbsent(prop.getFieldName(), prop);
-			}
+		for (final Field field : fields) {
+			prop = createProp(field, gettersAndSetters);
+			// 只有不存在时才放入，防止父类属性覆盖子类属性
+			this.propMap.putIfAbsent(prop.getFieldName(), prop);
 		}
 	}
 

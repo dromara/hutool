@@ -108,8 +108,8 @@ public class ModifierUtil {
 	/**
 	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
 	 *
-	 * @param clazz         类
-	 * @param modifierTypes 修饰符枚举
+	 * @param clazz         类，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasModifier(final Class<?> clazz, final ModifierType... modifierTypes) {
@@ -122,8 +122,8 @@ public class ModifierUtil {
 	/**
 	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
 	 *
-	 * @param member        构造、字段或方法
-	 * @param modifierTypes 修饰符枚举
+	 * @param member        构造、字段或方法，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasModifier(final Member member, final ModifierType... modifierTypes) {
@@ -136,74 +136,74 @@ public class ModifierUtil {
 	/**
 	 * 提供的方法是否为default方法
 	 *
-	 * @param method 方法
+	 * @param method 方法，如果为{@code null}返回{@code false}
 	 * @return 是否为default方法
 	 * @since 6.0.0
 	 */
 	public static boolean isDefault(final Method method) {
-		return method.isDefault();
+		return null != method && method.isDefault();
 	}
 
 	/**
 	 * 是否是public成员，可检测包括构造、字段和方法
 	 *
-	 * @param member 构造、字段或方法
+	 * @param member 构造、字段或方法，如果为{@code null}返回{@code false}
 	 * @return 是否是public
 	 */
 	public static boolean isPublic(final Member member) {
-		return Modifier.isPublic(member.getModifiers());
+		return null != member && Modifier.isPublic(member.getModifiers());
 	}
 
 	/**
 	 * 是否是public类
 	 *
-	 * @param clazz 类
+	 * @param clazz 类，如果为{@code null}返回{@code false}
 	 * @return 是否是public
 	 */
 	public static boolean isPublic(final Class<?> clazz) {
-		return Modifier.isPublic(clazz.getModifiers());
+		return null != clazz && Modifier.isPublic(clazz.getModifiers());
 	}
 
 	/**
 	 * 是否是private成员，可检测包括构造、字段和方法
 	 *
-	 * @param member 构造、字段或方法
+	 * @param member 构造、字段或方法，如果为{@code null}返回{@code false}
 	 * @return 是否是private
 	 */
 	public static boolean isPrivate(final Member member) {
-		return Modifier.isPrivate(member.getModifiers());
+		return null != member && Modifier.isPrivate(member.getModifiers());
 	}
 
 	/**
 	 * 是否是private类
 	 *
-	 * @param clazz 类
+	 * @param clazz 类，如果为{@code null}返回{@code false}
 	 * @return 是否是private类
 	 */
 	public static boolean isPrivate(final Class<?> clazz) {
-		return Modifier.isPrivate(clazz.getModifiers());
+		return null != clazz && Modifier.isPrivate(clazz.getModifiers());
 	}
 
 	/**
 	 * 是否是static成员，包括构造、字段或方法
 	 *
-	 * @param member 构造、字段或方法
+	 * @param member 构造、字段或方法，如果为{@code null}返回{@code false}
 	 * @return 是否是static
 	 * @since 4.0.8
 	 */
 	public static boolean isStatic(final Member member) {
-		return Modifier.isStatic(member.getModifiers());
+		return null != member && Modifier.isStatic(member.getModifiers());
 	}
 
 	/**
 	 * 是否是static类
 	 *
-	 * @param clazz 类
+	 * @param clazz 类，如果为{@code null}返回{@code false}
 	 * @return 是否是static
 	 * @since 4.0.8
 	 */
 	public static boolean isStatic(final Class<?> clazz) {
-		return Modifier.isStatic(clazz.getModifiers());
+		return null != clazz && Modifier.isStatic(clazz.getModifiers());
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class ModifierUtil {
 	 * @since 5.6.3
 	 */
 	public static boolean isSynthetic(final Member member) {
-		return member.isSynthetic();
+		return null != member && member.isSynthetic();
 	}
 
 	/**
@@ -225,7 +225,7 @@ public class ModifierUtil {
 	 * @since 5.6.3
 	 */
 	public static boolean isSynthetic(final Class<?> clazz) {
-		return clazz.isSynthetic();
+		return null != clazz && clazz.isSynthetic();
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class ModifierUtil {
 	 * @since 5.7.23
 	 */
 	public static boolean isAbstract(final Member member) {
-		return Modifier.isAbstract(member.getModifiers());
+		return null != member && Modifier.isAbstract(member.getModifiers());
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class ModifierUtil {
 	 * @since 5.7.23
 	 */
 	public static boolean isAbstract(final Class<?> clazz) {
-		return Modifier.isAbstract(clazz.getModifiers());
+		return null != clazz && Modifier.isAbstract(clazz.getModifiers());
 	}
 
 	/**
