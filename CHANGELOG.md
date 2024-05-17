@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.28(2024-05-13)
+# 5.8.28(2024-05-17)
 
 ### 🐣新特性
 * 【core   】      修正XmlUtil的omitXmlDeclaration描述注释（issue#I9CPC7@Gitee）
@@ -21,6 +21,7 @@
 * 【http   】      HttpRequest#get不再尝试File路径（issue#I9O6DA@Gitee）
 * 【core   】      增加IdConstants，提高Snowflake初始化性能（issue#3581@Github）
 * 【core   】      优化 CharSequenceUtil工具类 startWithAny()、startWithAnyIgnoreCase() 参数命名错误问题（pr#1219@Gitee）
+* 【core   】      ListUtil.setOrPadding增加重载，可选限制index大小（issue#3586@Github）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）

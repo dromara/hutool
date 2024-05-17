@@ -2,6 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
+import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.Validator;
@@ -416,7 +417,8 @@ public class ListUtil {
 	}
 
 	/**
-	 * 在指定位置设置元素。当index小于List的长度时，替换指定位置的值，否则追加{@code paddingElement}直到到达index后，设置值
+	 * 在指定位置设置元素。当index小于List的长度时，替换指定位置的值，否则追加{@code paddingElement}直到到达index后，设置值<br>
+	 * 注意：为避免OOM问题，此方法限制index的最大值为{@code (list.size() + 1) * 10}
 	 *
 	 * @param <T>     元素类型
 	 * @param list    List列表
@@ -424,16 +426,36 @@ public class ListUtil {
 	 * @param element 新元素
 	 * @param paddingElement 填充的值
 	 * @return 原List
-	 * @since 5。8.4
+	 * @since 5.8.4
 	 */
 	public static <T> List<T> setOrPadding(List<T> list, int index, T element, T paddingElement) {
+		return setOrPadding(list, index, element, paddingElement, (list.size() + 1) * 10);
+	}
+
+	/**
+	 * 在指定位置设置元素。当index小于List的长度时，替换指定位置的值，否则追加{@code paddingElement}直到到达index后，设置值
+	 *
+	 * @param <T>     元素类型
+	 * @param list    List列表
+	 * @param index   位置
+	 * @param element 新元素
+	 * @param paddingElement 填充的值
+	 * @param indexLimit 最大索引限制
+	 * @return 原List
+	 * @since 5.8.28
+	 */
+	public static <T> List<T> setOrPadding(List<T> list, int index, T element, T paddingElement, int indexLimit) {
 		Assert.notNull(list, "List must be not null !");
 		final int size = list.size();
 		if (index < size) {
 			list.set(index, element);
 		} else {
-			// issue#3286, 增加安全检查，最多增加10倍
-			Validator.checkIndexLimit(index, list.size());
+			if(indexLimit > 0){
+				// issue#3286, 增加安全检查
+				if (index > indexLimit) {
+					throw new ValidateException("Index [{}] is too large for limit: [{}]", index, indexLimit);
+				}
+			}
 			for (int i = size; i < index; i++) {
 				list.add(paddingElement);
 			}
