@@ -455,7 +455,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			// issue#3286, 如果用户指定的index太大，容易造成Java heap space错误。
 			if (!config.isIgnoreNullValue()) {
 				// issue#3286, 增加安全检查，最多增加10倍
-				Validator.checkIndexLimit(index, this.size());
+				Validator.checkIndexLimit(index, (this.size() + 1) * 10);
 				while (index != this.size()) {
 					// 非末尾，则填充null
 					this.add(null);

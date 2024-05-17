@@ -303,11 +303,25 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 	 * @since 6.0.0
 	 */
 	public ArrayWrapper<A, E> setOrPadding(final int index, final E value, final E paddingElement) {
+		return setOrPadding(index, value, paddingElement, (this.length + 1) * 10);
+	}
+
+	/**
+	 * 将元素值设置为数组的某个位置，当index小于数组的长度时，替换指定位置的值，否则追加{@code paddingElement}直到到达index后，设置值
+	 *
+	 * @param index 位置
+	 * @param value 新元素或新数组
+	 * @param paddingElement 填充
+	 * @param indexLimit 索引限制
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ArrayWrapper<A, E> setOrPadding(final int index, final E value, final E paddingElement, final int indexLimit) {
 		if (index < this.length) {
 			Array.set(array, index, value);
 		} else {
 			// issue#3286, 增加安全检查，最多增加10倍
-			Validator.checkIndexLimit(index, this.length);
+			Validator.checkIndexLimit(index, indexLimit);
 
 			for (int i = length; i < index; i++) {
 				append(paddingElement);

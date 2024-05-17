@@ -1247,7 +1247,7 @@ public class Validator {
 	}
 
 	/**
-	 * 检查给定的index是否超出长度限制，默认检查超出倍数（10倍），此方法主要用于内部，检查包括：
+	 * 检查给定的index是否超出长度限制：
 	 * <ul>
 	 *     <li>数组调用setOrPadding时，最多允许padding的长度</li>
 	 *     <li>List调用setOrPadding时，最多允许padding的长度</li>
@@ -1255,13 +1255,13 @@ public class Validator {
 	 * </ul>
 	 *
 	 * @param index 索引
-	 * @param size  数组、列表长度
+	 * @param limit 限制大小
 	 * @since 6.0.0
 	 */
-	public static void checkIndexLimit(final int index, final int size) {
+	public static void checkIndexLimit(final int index, final int limit) {
 		// issue#3286, 增加安全检查，最多增加10倍
-		if (index > (size + 1) * 10) {
-			throw new ValidateException("Index [{}] is too large for size: [{}]", index, size);
+		if (index > limit) {
+			throw new ValidateException("Index [{}] is too large for limit: [{}]", index, limit);
 		}
 	}
 }
