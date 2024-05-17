@@ -42,6 +42,7 @@
 * 【core   】      修复NumberWordFormatter.format小数问题（issue#3579@Github）
 * 【db     】      修复JndiDSFactory空指针问题
 * 【core   】      修复BiMap.put错误的返回值（pr#1218@Gitee）
+* 【core   】      修复BooleanUtil.andOfWrap针对null错误问题（issue#3587@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.27(2024-03-29)

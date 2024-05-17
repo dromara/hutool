@@ -380,7 +380,7 @@ public class BooleanUtil {
 		}
 
 		for (final Boolean b : array) {
-			if(isFalse(b)){
+			if(!isTrue(b)){
 				return false;
 			}
 		}

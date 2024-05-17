@@ -72,4 +72,12 @@ public class BooleanUtilTest {
 		Assert.assertEquals("on", BooleanUtil.toStringOnOff(true));
 		Assert.assertEquals("off", BooleanUtil.toStringOnOff(false));
 	}
+
+	@Test
+	public void issue3587Test() {
+		Boolean boolean1 = true;
+		Boolean boolean2 = null;
+		Boolean result = BooleanUtil.andOfWrap(boolean1, boolean2);
+		Assert.assertFalse(result);
+	}
 }
