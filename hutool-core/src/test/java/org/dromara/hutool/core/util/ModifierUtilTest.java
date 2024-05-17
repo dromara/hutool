@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.reflect.FieldUtil;
+import org.dromara.hutool.core.reflect.ModifierType;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,10 +29,10 @@ public class ModifierUtilTest {
 	@Test
 	public void hasModifierTest() throws NoSuchMethodException {
 		final Method method = ModifierUtilTest.class.getDeclaredMethod("ddd");
-		Assertions.assertTrue(ModifierUtil.hasModifier(method, ModifierUtil.ModifierType.PRIVATE));
+		Assertions.assertTrue(ModifierUtil.hasModifier(method, ModifierType.PRIVATE));
 		Assertions.assertTrue(ModifierUtil.hasModifier(method,
-				ModifierUtil.ModifierType.PRIVATE,
-				ModifierUtil.ModifierType.STATIC)
+				ModifierType.PRIVATE,
+				ModifierType.STATIC)
 		);
 	}
 

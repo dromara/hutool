@@ -16,10 +16,7 @@ import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.func.LambdaUtil;
-import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.ModifierUtil;
-import org.dromara.hutool.core.reflect.ReflectUtil;
-import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.reflect.*;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.beans.Transient;
@@ -392,11 +389,11 @@ public class PropDesc {
 	 * @since 5.3.11
 	 */
 	private boolean isTransientForGet() {
-		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierUtil.ModifierType.TRANSIENT);
+		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierType.TRANSIENT);
 
 		// 检查Getter方法
 		if (!isTransient && null != this.getter) {
-			isTransient = ModifierUtil.hasModifier(this.getter, ModifierUtil.ModifierType.TRANSIENT);
+			isTransient = ModifierUtil.hasModifier(this.getter, ModifierType.TRANSIENT);
 
 			// 检查注解
 			if (!isTransient) {
@@ -414,11 +411,11 @@ public class PropDesc {
 	 * @since 5.3.11
 	 */
 	private boolean isTransientForSet() {
-		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierUtil.ModifierType.TRANSIENT);
+		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierType.TRANSIENT);
 
 		// 检查Getter方法
 		if (!isTransient && null != this.setter) {
-			isTransient = ModifierUtil.hasModifier(this.setter, ModifierUtil.ModifierType.TRANSIENT);
+			isTransient = ModifierUtil.hasModifier(this.setter, ModifierType.TRANSIENT);
 
 			// 检查注解
 			if (!isTransient) {

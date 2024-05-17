@@ -55,6 +55,18 @@ public class MethodUtil {
 	// region ----- getMethods
 
 	/**
+	 * 通过给定的条件（Predicate）从一个Method数组中查找第一个匹配的方法。
+	 *
+	 * @param methods   Method数组，是被搜索的目标对象。
+	 * @param predicate 一个Predicate接口实例，用于定义查找方法的条件。
+	 * @return 返回第一个满足predicate条件的Method对象，如果没有找到匹配的方法则返回null。
+	 */
+	public static Method getMethod(final Method[] methods, final Predicate<Method> predicate) {
+		// 使用ArrayUtil的get方法，通过predicate对methods数组进行搜索
+		return ArrayUtil.get(methods, predicate);
+	}
+
+	/**
 	 * 获得指定类本类及其父类中的Public方法名<br>
 	 * 去重重载的方法
 	 *
@@ -81,15 +93,7 @@ public class MethodUtil {
 		if (null == clazz || StrUtil.isBlank(methodName)) {
 			return null;
 		}
-
-		final Method[] methods = getPublicMethods(clazz, method ->
-			StrUtil.equals(methodName, method.getName(), ignoreCase)
-				&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
-				//排除桥接方法，pr#1965@Github
-				//排除协变桥接方法，pr#1965@Github
-				&& (method.getReturnType().isAssignableFrom(method.getReturnType())));
-
-		return ArrayUtil.isEmpty(methods) ? null : methods[0];
+		return getMethod(getPublicMethods(clazz), ignoreCase, methodName, paramTypes);
 	}
 
 	/**
@@ -164,15 +168,40 @@ public class MethodUtil {
 		if (null == clazz || StrUtil.isBlank(methodName)) {
 			return null;
 		}
+		return getMethod(getMethods(clazz), ignoreCase, methodName, paramTypes);
+	}
 
-		final Method[] methods = getMethods(clazz, method ->
-			StrUtil.equals(methodName, method.getName(), ignoreCase)
-				&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
-				//排除桥接方法，pr#1965@Github
-				//排除协变桥接方法，pr#1965@Github
-				&& (method.getReturnType().isAssignableFrom(method.getReturnType())));
+	/**
+	 * 查找指定方法 如果找不到对应的方法则返回{@code null}<br>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回{@code null}。<br>
+	 * 如果查找的方法有多个同参数类型重载，查找最后一个非协变桥接方法
+	 *
+	 * @param methods    方法列表
+	 * @param ignoreCase 是否忽略大小写
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @param paramTypes 参数类型，指定参数类型如果是方法的子类也算
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 3.2.0
+	 */
+	public static Method getMethod(final Method[] methods, final boolean ignoreCase, final String methodName, final Class<?>... paramTypes) throws SecurityException {
+		if (ArrayUtil.isEmpty(methods) || StrUtil.isBlank(methodName)) {
+			return null;
+		}
 
-		return ArrayUtil.isEmpty(methods) ? null : methods[0];
+		Method res = null;
+		if (ArrayUtil.isNotEmpty(methods)) {
+			for (final Method method : methods) {
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
+					&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
+					//排除协变桥接方法，pr#1965@Github
+					&& (res == null
+					|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
+				}
+			}
+		}
+		return res;
 	}
 
 	/**
@@ -724,5 +753,4 @@ public class MethodUtil {
 
 		return actualArgs;
 	}
-
 }

@@ -19,7 +19,7 @@ public class Issue3096Test {
 
 	@Test
 	void beanDescTest() {
-		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		final StrictBeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
 		// https://github.com/dromara/hutool/issues/3096
 		// 新修改的规则中，isLastPage字段优先匹配setIsLastPage，这个顺序固定。

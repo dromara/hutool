@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.bean.copier.provider;
 
-import org.dromara.hutool.core.bean.BeanDesc;
+import org.dromara.hutool.core.bean.StrictBeanDesc;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
@@ -28,7 +28,7 @@ import java.lang.reflect.Type;
 public class BeanValueProvider implements ValueProvider<String> {
 
 	private final Object bean;
-	private final BeanDesc beanDesc;
+	private final StrictBeanDesc beanDesc;
 
 	/**
 	 * 构造

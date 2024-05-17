@@ -14,7 +14,9 @@ package org.dromara.hutool.core.reflect.method;
 
 import org.dromara.hutool.core.annotation.AnnotatedElementUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.func.PredicateUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +24,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -45,7 +46,7 @@ public class MethodMatcherUtil {
 	 */
 	@SafeVarargs
 	public static Predicate<Method> noneMatch(final Predicate<Method>... matchers) {
-		return method -> Stream.of(matchers).noneMatch(matcher -> matcher.test(method));
+		return PredicateUtil.none(matchers);
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class MethodMatcherUtil {
 	 */
 	@SafeVarargs
 	public static Predicate<Method> anyMatch(final Predicate<Method>... matchers) {
-		return method -> Stream.of(matchers).anyMatch(matcher -> matcher.test(method));
+		return PredicateUtil.or(matchers);
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class MethodMatcherUtil {
 	 */
 	@SafeVarargs
 	public static Predicate<Method> allMatch(final Predicate<Method>... matchers) {
-		return method -> Stream.of(matchers).allMatch(matcher -> matcher.test(method));
+		return PredicateUtil.and(matchers);
 	}
 
 	// region ============= 访问修饰符 =============
@@ -108,10 +109,7 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 */
 	public static Predicate<Method> forModifiers(final int... modifiers) {
-		return method -> {
-			final int methodModifiers = method.getModifiers();
-			return Arrays.stream(modifiers).allMatch(modifier -> (methodModifiers & modifier) != 0);
-		};
+		return method -> ModifierUtil.hasAllModifier(method.getModifiers(), modifiers);
 	}
 
 	// endregion
