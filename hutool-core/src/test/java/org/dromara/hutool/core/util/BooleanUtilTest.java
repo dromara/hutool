@@ -107,4 +107,12 @@ public class BooleanUtilTest {
 		Assertions.assertNull(BooleanUtil.toBooleanObject(null));
 		Assertions.assertNull(BooleanUtil.toBooleanObject("不识别"));
 	}
+
+	@Test
+	public void issue3587Test() {
+		final Boolean boolean1 = true;
+		final Boolean boolean2 = null;
+		final Boolean result = BooleanUtil.andOfWrap(boolean1, boolean2);
+		Assertions.assertFalse(result);
+	}
 }
