@@ -64,6 +64,9 @@ public class ModifierUtil {
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasModifier(final int modifiers, final int... checkedModifiers) {
+		if(ArrayUtil.isEmpty(checkedModifiers)){
+			return false;
+		}
 		return 0 != (modifiers & ModifierType.orToInt(checkedModifiers));
 	}
 
@@ -75,12 +78,11 @@ public class ModifierUtil {
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasAllModifier(final int modifiers, final int... checkedModifiers) {
-		for (final int checkedModifier : checkedModifiers) {
-			if (0 == (modifiers & checkedModifier)) {
-				return false;
-			}
+		if(ArrayUtil.isEmpty(checkedModifiers)){
+			return false;
 		}
-		return true;
+		final int checkedModifiersInt = ModifierType.orToInt(checkedModifiers);
+		return checkedModifiersInt == (modifiers & checkedModifiersInt);
 	}
 
 	/**
