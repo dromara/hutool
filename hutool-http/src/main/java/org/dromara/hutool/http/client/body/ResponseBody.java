@@ -12,26 +12,20 @@
 
 package org.dromara.hutool.http.client.body;
 
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.StreamProgress;
 import org.dromara.hutool.core.io.file.FileNameUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.stream.SyncInputStream;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpGlobalConfig;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.html.HtmlUtil;
 import org.dromara.hutool.http.meta.HeaderName;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * 响应体部分封装
@@ -234,30 +228,11 @@ public class ResponseBody implements HttpBody, Closeable {
 		}
 
 		// 从头信息中获取文件名
-		final String fileName = getFileNameFromDisposition(ObjUtil.defaultIfNull(customParamName, "filename"));
+		final String fileName = response.getFileNameFromDisposition(customParamName);
 		if (StrUtil.isBlank(fileName)) {
 			throw new HttpException("Can`t get file name from [Content-Disposition]!");
 		}
 		return FileUtil.file(targetFileOrDir, fileName);
-	}
-
-	/**
-	 * 从Content-Disposition头中获取文件名
-	 *
-	 * @param paramName 文件名的参数名
-	 * @return 文件名，empty表示无
-	 * @since 5.8.10
-	 */
-	private String getFileNameFromDisposition(final String paramName) {
-		String fileName = null;
-		final String disposition = response.header(HeaderName.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(disposition)) {
-			fileName = ReUtil.get(paramName + "=\"(.*?)\"", disposition, 1);
-			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(disposition, paramName + "=", true);
-			}
-		}
-		return fileName;
 	}
 	// endregion ---------------------------------------------------------------------------- Private Methods
 }

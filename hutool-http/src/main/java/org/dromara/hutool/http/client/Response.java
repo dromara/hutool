@@ -19,6 +19,7 @@ import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.body.ResponseBody;
 import org.dromara.hutool.http.meta.ContentTypeUtil;
 import org.dromara.hutool.http.meta.HeaderName;
+import org.dromara.hutool.http.meta.HttpHeaderUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -92,7 +93,7 @@ public interface Response extends Closeable {
 	 * @throws HttpException 包装IO异常
 	 */
 	default String bodyStr() throws HttpException {
-		try(final ResponseBody body = body()){
+		try (final ResponseBody body = body()) {
 			return body.getString();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
@@ -106,7 +107,7 @@ public interface Response extends Closeable {
 	 * @return byte[]
 	 */
 	default byte[] bodyBytes() {
-		try(final ResponseBody body = body()){
+		try (final ResponseBody body = body()) {
 			return body.getBytes();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
@@ -134,6 +135,16 @@ public interface Response extends Closeable {
 			return null;
 		}
 		return header(name.toString());
+	}
+
+	/**
+	 * 根据name获取对应的头信息列表
+	 *
+	 * @param name Header名
+	 * @return Header值
+	 */
+	default List<String> headerList(final String name) {
+		return HttpHeaderUtil.headerList(headers(), name);
 	}
 
 	/**
@@ -172,8 +183,7 @@ public interface Response extends Closeable {
 	 * @since 4.6.2
 	 */
 	default boolean isChunked() {
-		final String transferEncoding = header(HeaderName.TRANSFER_ENCODING);
-		return "Chunked".equalsIgnoreCase(transferEncoding);
+		return "Chunked".equalsIgnoreCase(header(HeaderName.TRANSFER_ENCODING));
 	}
 
 	/**
@@ -184,6 +194,22 @@ public interface Response extends Closeable {
 	 */
 	default String getCookieStr() {
 		return header(HeaderName.SET_COOKIE);
+	}
+
+	/**
+	 * 从Content-Disposition头中获取文件名，以参数名为`filename`为例，规则为：
+	 * <ul>
+	 *     <li>首先按照RFC5987规范检查`filename*`参数对应的值，即：`filename*="example.txt"`，则获取`example.txt`</li>
+	 *     <li>如果找不到`filename*`参数，则检查`filename`参数对应的值，即：`filename="example.txt"`，则获取`example.txt`</li>
+	 * </ul>
+	 * 按照规范，`Content-Disposition`可能返回多个，此处遍历所有返回头，并且`filename*`始终优先获取，即使`filename`存在并更靠前。<br>
+	 * 参考：https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Disposition
+	 *
+	 * @param paramName 文件参数名，如果为{@code null}则使用默认的`filename`
+	 * @return 文件名，empty表示无
+	 */
+	default String getFileNameFromDisposition(final String paramName) {
+		return HttpHeaderUtil.getFileNameFromDisposition(headers(), paramName);
 	}
 
 	/**
