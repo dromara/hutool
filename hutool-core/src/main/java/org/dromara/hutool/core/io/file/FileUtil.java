@@ -544,25 +544,66 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 计算文件的总行数<br>
-	 * 读取文件采用系统默认编码，一般乱码不会造成行数错误。
+	 * 参考：https://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java
 	 *
 	 * @param file 文件
 	 * @return 该文件总行数
 	 * @since 5.7.22
 	 */
 	public static int getTotalLines(final File file) {
-		if (!isFile(file)) {
+		return getTotalLines(file, 1024);
+	}
+
+	/**
+	 * 计算文件的总行数<br>
+	 * 参考：https://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java
+	 *
+	 * @param file       文件
+	 * @param bufferSize 缓存大小，小于1则使用默认的1024
+	 * @return 该文件总行数
+	 * @since 5.8.28
+	 */
+	public static int getTotalLines(final File file, int bufferSize) {
+		if (false == isFile(file)) {
 			throw new IORuntimeException("Input must be a File");
 		}
-		try (final LineNumberReader lineNumberReader = new LineNumberReader(new java.io.FileReader(file))) {
-			// 设置起始为1
-			lineNumberReader.setLineNumber(1);
-			// 跳过文件中内容
-			//noinspection ResultOfMethodCallIgnored
-			lineNumberReader.skip(Long.MAX_VALUE);
-			// 获取当前行号
-			return lineNumberReader.getLineNumber();
-		} catch (final IOException e) {
+		if (bufferSize < 1) {
+			bufferSize = 1024;
+		}
+		try (InputStream is = getInputStream(file)) {
+			byte[] c = new byte[bufferSize];
+			int readChars = is.read(c);
+			if (readChars == -1) {
+				// 空文件，返回0
+				return 0;
+			}
+
+			// 起始行为1
+			// 如果只有一行，无换行符，则读取结束后返回1
+			// 如果多行，最后一行无换行符，最后一行需要单独计数
+			// 如果多行，最后一行有换行符，则空行算作一行
+			int count = 1;
+			while (readChars == bufferSize) {
+				for (int i = 0; i < bufferSize; i++) {
+					if (c[i] == CharUtil.LF) {
+						++count;
+					}
+				}
+				readChars = is.read(c);
+			}
+
+			// count remaining characters
+			while (readChars != -1) {
+				for (int i = 0; i < readChars; i++) {
+					if (c[i] == CharUtil.LF) {
+						++count;
+					}
+				}
+				readChars = is.read(c);
+			}
+
+			return count;
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

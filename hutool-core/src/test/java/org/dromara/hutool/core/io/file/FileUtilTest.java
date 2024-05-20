@@ -495,11 +495,17 @@ public class FileUtilTest {
 	}
 
 	@Test
-	@Disabled
 	public void getTotalLinesTest() {
-		// 千万行秒级内返回
-		final int totalLines = FileUtil.getTotalLines(FileUtil.file(""));
-		Assertions.assertEquals(10000000, totalLines);
+		// 此文件最后一行有换行符，则最后的空行算作一行
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file("test_lines.csv"));
+		Assertions.assertEquals(8, totalLines);
+	}
+
+	@Test
+	public void issue3591Test() {
+		// 此文件最后一行末尾无换行符
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file("1_psi_index_0.txt"));
+		Assertions.assertEquals(11, totalLines);
 	}
 
 	@Test
