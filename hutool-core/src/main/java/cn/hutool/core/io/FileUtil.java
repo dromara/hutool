@@ -14,6 +14,7 @@ import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -24,20 +25,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.util.ZipUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.io.Reader;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -580,24 +568,65 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 计算文件的总行数<br>
-	 * 读取文件采用系统默认编码，一般乱码不会造成行数错误。
+	 * 参考：https://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java
 	 *
 	 * @param file 文件
 	 * @return 该文件总行数
 	 * @since 5.7.22
 	 */
 	public static int getTotalLines(File file) {
+		return getTotalLines(file, 1024);
+	}
+
+	/**
+	 * 计算文件的总行数<br>
+	 * 参考：https://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java
+	 *
+	 * @param file       文件
+	 * @param bufferSize 缓存大小，小于1则使用默认的1024
+	 * @return 该文件总行数
+	 * @since 5.8.28
+	 */
+	public static int getTotalLines(File file, int bufferSize) {
 		if (false == isFile(file)) {
 			throw new IORuntimeException("Input must be a File");
 		}
-		try (final LineNumberReader lineNumberReader = new LineNumberReader(new java.io.FileReader(file))) {
-			// 设置起始为1
-			lineNumberReader.setLineNumber(1);
-			// 跳过文件中内容
-			//noinspection ResultOfMethodCallIgnored
-			lineNumberReader.skip(Long.MAX_VALUE);
-			// 获取当前行号
-			return lineNumberReader.getLineNumber();
+		if (bufferSize < 1) {
+			bufferSize = 1024;
+		}
+		try (InputStream is = getInputStream(file)) {
+			byte[] c = new byte[bufferSize];
+			int readChars = is.read(c);
+			if (readChars == -1) {
+				// 空文件，返回0
+				return 0;
+			}
+
+			// 起始行为1
+			// 如果只有一行，无换行符，则读取结束后返回1
+			// 如果多行，最后一行无换行符，最后一行需要单独计数
+			// 如果多行，最后一行有换行符，则空行算作一行
+			int count = 1;
+			while (readChars == bufferSize) {
+				for (int i = 0; i < bufferSize; i++) {
+					if (c[i] == CharUtil.LF) {
+						++count;
+					}
+				}
+				readChars = is.read(c);
+			}
+
+			// count remaining characters
+			while (readChars != -1) {
+				for (int i = 0; i < readChars; i++) {
+					if (c[i] == CharUtil.LF) {
+						++count;
+					}
+				}
+				readChars = is.read(c);
+			}
+
+			return count;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -1415,8 +1444,8 @@ public class FileUtil extends PathUtil {
 		if (false == file1.exists() || false == file2.exists()) {
 			// 两个文件都不存在判断其路径是否相同， 对于一个存在一个不存在的情况，一定不相同
 			return false == file1.exists()//
-					&& false == file2.exists()//
-					&& pathEquals(file1, file2);
+				&& false == file2.exists()//
+				&& pathEquals(file1, file2);
 		}
 		return equals(file1.toPath(), file2.toPath());
 	}
@@ -3510,7 +3539,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.15
 	 */
 	public static String getMimeType(String filePath) {
-		if(StrUtil.isBlank(filePath)){
+		if (StrUtil.isBlank(filePath)) {
 			return null;
 		}
 
@@ -3637,8 +3666,8 @@ public class FileUtil extends PathUtil {
 		// 替换Windows路径分隔符为Linux路径分隔符，便于统一处理
 		fileName = fileName.replace('\\', '/');
 		if (false == isWindows()
-				// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
-				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
+			// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
+			&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
 			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理
 			// 使用/拆分路径（zip中无\），级联创建父目录
 			final List<String> pathParts = StrUtil.split(fileName, '/', false, true);
