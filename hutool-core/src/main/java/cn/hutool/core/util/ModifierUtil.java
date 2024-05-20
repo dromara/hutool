@@ -319,10 +319,10 @@ public class ModifierUtil {
 	//-------------------------------------------------------------------------------------------------------- Private method start
 
 	/**
-	 * 多个修饰符做“与”操作，表示同时存在多个修饰符
+	 * 多个修饰符做“或”操作，表示同时存在多个修饰符
 	 *
 	 * @param modifierTypes 修饰符列表，元素不能为空
-	 * @return “与”之后的修饰符
+	 * @return “或”之后的修饰符
 	 */
 	private static int modifiersToInt(ModifierType... modifierTypes) {
 		int modifier = modifierTypes[0].getValue();
