@@ -138,6 +138,41 @@ public class CsvUtilTest {
 
 	@Test
 	@Ignore
+	public void writeBeansWithPropertiesTest() {
+
+		@Data
+		class Student {
+			Integer id;
+			String name;
+			Integer age;
+		}
+
+		String path = FileUtil.isWindows() ? "d:/test/testWriteBeans.csv" : "~/tmp/testWriteBeans.csv";
+		CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.CHARSET_UTF_8);
+		List<Student> students = new ArrayList<>();
+		Student student1 = new Student();
+		student1.setId(1);
+		student1.setName("张三");
+		student1.setAge(18);
+
+		Student student2 = new Student();
+		student2.setId(2);
+		student2.setName("李四");
+		student2.setAge(22);
+
+		Student student3 = new Student();
+		student3.setId(3);
+		student3.setName("王五");
+		student3.setAge(31);
+
+		students.add(student1);
+		students.add(student2);
+		students.add(student3);
+		writer.writeBeans(students,"name","age");
+		writer.close();
+	}
+	@Test
+	@Ignore
 	public void readLfTest(){
 		final CsvReader reader = CsvUtil.getReader();
 		String path = FileUtil.isWindows() ? "d:/test/rw_test.csv" : "~/test/rw_test.csv";
