@@ -479,6 +479,17 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 修改为一天的开始时间，例如：2020-02-02 00:00:00,000
+	 *
+	 * @param date 日期时间
+	 * @return 一天的开始时间
+	 * @since 5.8.28
+	 */
+	public static LocalDateTime beginOfDay(LocalDate date) {
+		return LocalDateTime.of(date, LocalTime.MIN);
+	}
+
+	/**
 	 * 修改为一天的结束时间，例如：2020-02-02 23:59:59,999
 	 *
 	 * @param time 日期时间
@@ -486,6 +497,17 @@ public class LocalDateTimeUtil {
 	 */
 	public static LocalDateTime endOfDay(LocalDateTime time) {
 		return endOfDay(time, false);
+	}
+
+	/**
+	 * 修改为一天的结束时间，例如：2020-02-02 23:59:59,999
+	 *
+	 * @param date 日期时间
+	 * @return 一天的结束时间
+	 * @since 5.8.28
+	 */
+	public static LocalDateTime endOfDay(LocalDate date) {
+		return endOfDay(date, false);
 	}
 
 	/**
@@ -505,6 +527,25 @@ public class LocalDateTimeUtil {
 			return time.with(LocalTime.of(23, 59, 59));
 		}
 		return time.with(LocalTime.MAX);
+	}
+
+	/**
+	 * 修改为一天的结束时间，例如：
+	 * <ul>
+	 * 	<li>毫秒不归零：2020-02-02 23:59:59,999</li>
+	 * 	<li>毫秒归零：2020-02-02 23:59:59,000</li>
+	 * </ul>
+	 *
+	 * @param date                日期时间
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return 一天的结束时间
+	 * @since 5.7.18
+	 */
+	public static LocalDateTime endOfDay(LocalDate date, boolean truncateMillisecond) {
+		if (truncateMillisecond) {
+			return LocalDateTime.of(date, LocalTime.of(23, 59, 59));
+		}
+		return LocalDateTime.of(date, LocalTime.MAX);
 	}
 
 	/**
