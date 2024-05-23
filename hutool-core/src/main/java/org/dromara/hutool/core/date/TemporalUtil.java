@@ -61,6 +61,7 @@ public class TemporalUtil {
 	 * @param unit 被转换的{@link TimeUnit}单位，如果为{@code null}返回{@code null}
 	 * @return {@link ChronoUnit}
 	 * @since 5.7.16
+	 * @throws IllegalArgumentException Unknown TimeUnit
 	 */
 	public static ChronoUnit toChronoUnit(final TimeUnit unit) throws IllegalArgumentException {
 		if (null == unit) {
