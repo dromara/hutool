@@ -256,15 +256,16 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * 将一个Bean集合写出到Writer，并自动生成表头
 	 *
 	 * @param beans Bean集合
+	 * @param properties 可选属性列表，空表示全部属性
 	 * @return this
 	 */
 	@SuppressWarnings("resource")
-	public CsvWriter writeBeans(final Iterable<?> beans) {
+	public CsvWriter writeBeans(final Iterable<?> beans, final String... properties) {
 		if (CollUtil.isNotEmpty(beans)) {
 			boolean isFirst = true;
 			Map<String, Object> map;
 			for (final Object bean : beans) {
-				map = BeanUtil.beanToMap(bean);
+				map = BeanUtil.beanToMap(bean, properties);
 				if (isFirst) {
 					writeHeaderLine(map.keySet().toArray(new String[0]));
 					isFirst = false;
