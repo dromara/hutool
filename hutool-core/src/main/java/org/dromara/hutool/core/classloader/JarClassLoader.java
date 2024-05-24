@@ -175,7 +175,7 @@ public class JarClassLoader extends URLClassLoader {
 	 */
 	private static boolean isJarFile(final File file) {
 		return FileUtil.isFile(file) &&
-			FileNameUtil.isType(file.getName(), FileNameUtil.EXT_JAR);
+			FileNameUtil.isType(file.getName(), "jar");
 	}
 	// ------------------------------------------------------------------- Private method end
 }
