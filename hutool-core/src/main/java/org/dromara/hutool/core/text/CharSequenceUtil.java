@@ -645,11 +645,15 @@ public class CharSequenceUtil extends StrValidator {
 
 	/**
 	 * 检查指定字符串中是否只包含给定的字符<br>
+	 * 这里的containsOnly并不是必须全部给定的testChars都需要有，而是一个子集。testChars是个限定集合，检查字符串中的字符是否在这个限定集合中。<br>
 	 * <ul>
 	 *     <li>str 是 null，testChars 也是 null，直接返回 true</li>
 	 *     <li>str 是 null，testChars 不是 null，直接返回 true</li>
 	 *     <li>str 不是 null，testChars 是 null，直接返回 false</li>
 	 * </ul>
+	 * <pre>{@code
+	 *   StrUtil.containsOnly("asdas", 'a', 'd', 's','l');   --> true
+	 * }</pre>
 	 *
 	 * @param str       字符串
 	 * @param testChars 检查的字符

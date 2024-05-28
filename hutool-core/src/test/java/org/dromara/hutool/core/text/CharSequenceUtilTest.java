@@ -370,4 +370,22 @@ public class CharSequenceUtilTest {
 		final String s3 = CharSequenceUtil.lowerAt(sb, 2);
 		Assertions.assertEquals("KEy", s3);
 	}
+
+	@Test
+	public void testContainsOnly() {
+		// 测试空字符串
+		Assertions.assertTrue(CharSequenceUtil.containsOnly("", 'a', 'b'));
+
+		// 测试字符串只包含testChars中的字符
+		Assertions.assertTrue(CharSequenceUtil.containsOnly("asdf", 'a', 's', 'd', 'f'));
+
+		// 测试字符串包含testChars中的字符和其它字符
+		Assertions.assertFalse(CharSequenceUtil.containsOnly("asdf123", 'a', 's', 'd', 'f'));
+
+		// 测试字符串不包含testChars中的任何字符
+		Assertions.assertFalse(CharSequenceUtil.containsOnly("hello", 'a', 'b'));
+
+		// 测试字符串为null
+		Assertions.assertTrue(CharSequenceUtil.containsOnly(null, 'a', 'b'));
+	}
 }
