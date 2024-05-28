@@ -107,8 +107,9 @@ public class HttpUtil {
 	 * @param urlString 网址
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
+	@SuppressWarnings("resource")
 	public static String get(final String urlString) {
-		return get(urlString, HttpGlobalConfig.getTimeout());
+		return ClientEngineFactory.getEngine().send(Request.of(urlString)).bodyStr();
 	}
 
 	/**
@@ -121,7 +122,8 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final int timeout) {
-		return ClientEngineFactory.getEngine()
+		// 创建自定义客户端
+		return ClientEngineFactory.createEngine()
 			.init(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
 			.send(Request.of(urlString)).bodyStr();
 	}
