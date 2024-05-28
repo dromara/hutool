@@ -8,6 +8,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.signers.AlgorithmUtil;
 import cn.hutool.jwt.signers.JWTSigner;
@@ -95,8 +96,12 @@ public class JWT implements RegisteredPayload<JWT> {
 		Assert.notBlank(token, "Token String must be not blank!");
 		final List<String> tokens = splitToken(token);
 		this.tokens = tokens;
-		this.header.parse(tokens.get(0), this.charset);
-		this.payload.parse(tokens.get(1), this.charset);
+		try {
+			this.header.parse(tokens.get(0), this.charset);
+			this.payload.parse(tokens.get(1), this.charset);
+		} catch (JSONException e) {
+			throw new JWTException("Invalid token: JSON parse error!");
+		}
 		return this;
 	}
 
