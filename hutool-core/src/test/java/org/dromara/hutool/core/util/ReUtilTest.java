@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class ReUtilTest {
 
 	static final String content = "ZZZaaabbbccc中文1234";
@@ -33,28 +36,28 @@ public class ReUtilTest {
 	@Test
 	public void getTest() {
 		final String resultGet = ReUtil.get("\\w{2}", content, 0);
-		Assertions.assertEquals("ZZ", resultGet);
+		assertEquals("ZZ", resultGet);
 	}
 
 	@Test
 	public void extractMultiTest() {
 		// 抽取多个分组然后把它们拼接起来
 		final String resultExtractMulti = ReUtil.extractMulti("(\\w)aa(\\w)", content, "$1-$2");
-		Assertions.assertEquals("Z-a", resultExtractMulti);
+		assertEquals("Z-a", resultExtractMulti);
 	}
 
 	@Test
 	public void extractMultiTest2() {
 		// 抽取多个分组然后把它们拼接起来
 		final String resultExtractMulti = ReUtil.extractMulti("(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)", content, "$1-$2-$3-$4-$5-$6-$7-$8-$9-$10");
-		Assertions.assertEquals("Z-Z-Z-a-a-a-b-b-b-c", resultExtractMulti);
+		assertEquals("Z-Z-Z-a-a-a-b-b-b-c", resultExtractMulti);
 	}
 
 	@Test
 	public void delFirstTest() {
 		// 删除第一个匹配到的内容
 		final String resultDelFirst = ReUtil.delFirst("(\\w)aa(\\w)", content);
-		Assertions.assertEquals("ZZbbbccc中文1234", resultDelFirst);
+		assertEquals("ZZbbbccc中文1234", resultDelFirst);
 	}
 
 	@Test
@@ -63,22 +66,22 @@ public class ReUtilTest {
 		final String word = "180公斤";
 		final String sentence = "10.商品KLS100021型号xxl适合身高180体重130斤的用户";
 		//空字符串兼容
-		Assertions.assertEquals(blank,ReUtil.delLast("\\d+", blank));
-		Assertions.assertEquals(blank,ReUtil.delLast(PatternPool.NUMBERS, blank));
+		assertEquals(blank,ReUtil.delLast("\\d+", blank));
+		assertEquals(blank,ReUtil.delLast(PatternPool.NUMBERS, blank));
 
 		//去除数字
-		Assertions.assertEquals("公斤",ReUtil.delLast("\\d+", word));
-		Assertions.assertEquals("公斤",ReUtil.delLast(PatternPool.NUMBERS, word));
+		assertEquals("公斤",ReUtil.delLast("\\d+", word));
+		assertEquals("公斤",ReUtil.delLast(PatternPool.NUMBERS, word));
 		//去除汉字
 		//noinspection UnnecessaryUnicodeEscape
-		Assertions.assertEquals("180",ReUtil.delLast("[\u4E00-\u9FFF]+", word));
-		Assertions.assertEquals("180",ReUtil.delLast(PatternPool.CHINESES, word));
+		assertEquals("180",ReUtil.delLast("[\u4E00-\u9FFF]+", word));
+		assertEquals("180",ReUtil.delLast(PatternPool.CHINESES, word));
 
 		//多个匹配删除最后一个 判断是否不在包含最后的数字
 		String s = ReUtil.delLast("\\d+", sentence);
-		Assertions.assertEquals("10.商品KLS100021型号xxl适合身高180体重斤的用户", s);
+		assertEquals("10.商品KLS100021型号xxl适合身高180体重斤的用户", s);
 		s = ReUtil.delLast(PatternPool.NUMBERS, sentence);
-		Assertions.assertEquals("10.商品KLS100021型号xxl适合身高180体重斤的用户", s);
+		assertEquals("10.商品KLS100021型号xxl适合身高180体重斤的用户", s);
 
 		//多个匹配删除最后一个 判断是否不在包含最后的数字
 		//noinspection UnnecessaryUnicodeEscape
@@ -91,7 +94,7 @@ public class ReUtilTest {
 		// 删除所有匹配到的内容
 		final String content = "发东方大厦eee![images]http://abc.com/2.gpg]好机会eee![images]http://abc.com/2.gpg]好机会";
 		final String resultDelAll = ReUtil.delAll("!\\[images\\][^\\u4e00-\\u9fa5\\\\s]*", content);
-		Assertions.assertEquals("发东方大厦eee好机会eee好机会", resultDelAll);
+		assertEquals("发东方大厦eee好机会eee好机会", resultDelAll);
 	}
 
 	@Test
@@ -99,14 +102,14 @@ public class ReUtilTest {
 		// 查找所有匹配文本
 		final List<String> resultFindAll = ReUtil.findAll("\\w{2}", content, 0, new ArrayList<>());
 		final List<String> expected = ListUtil.of("ZZ", "Za", "aa", "bb", "bc", "cc", "12", "34");
-		Assertions.assertEquals(expected, resultFindAll);
+		assertEquals(expected, resultFindAll);
 	}
 
 	@Test
 	public void getFirstNumberTest() {
 		// 找到匹配的第一个数字
 		final Integer resultGetFirstNumber = ReUtil.getFirstNumber(content);
-		Assertions.assertEquals(Integer.valueOf(1234), resultGetFirstNumber);
+		assertEquals(Integer.valueOf(1234), resultGetFirstNumber);
 	}
 
 	@Test
@@ -122,14 +125,14 @@ public class ReUtilTest {
 		//通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
 		//此处把1234替换为 ->1234<-
 		final String replaceAll = ReUtil.replaceAll(content, "(\\d+)", "->$1<-");
-		Assertions.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
+		assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 	}
 
 	@Test
 	public void replaceAllTest2() {
 		//此处把1234替换为 ->1234<-
 		final String replaceAll = ReUtil.replaceAll(content, "(\\d+)", parameters -> "->" + parameters.group(1) + "<-");
-		Assertions.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
+		assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 	}
 
 	@Test
@@ -141,7 +144,7 @@ public class ReUtilTest {
 
 		// 修改后：测试正常的方法访问是否有效
 		final String replaceAll = ReUtil.replaceAll(content, pattern, parameters -> "->" + parameters.group(1) + "<-");
-		Assertions.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
+		assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 
 		// 修改后：判断ReUtil.replaceAll()方法，当replacementTemplate为null对象时，提示为非法的参数异常：ReplacementTemplate must be not null !
 		Assertions.assertThrows(IllegalArgumentException.class, () -> ReUtil.replaceAll(content, pattern, str));
@@ -151,7 +154,7 @@ public class ReUtilTest {
 	public void escapeTest() {
 		//转义给定字符串，为正则相关的特殊符号转义
 		final String escape = ReUtil.escape("我有个$符号{}");
-		Assertions.assertEquals("我有个\\$符号\\{\\}", escape);
+		assertEquals("我有个\\$符号\\{\\}", escape);
 	}
 
 	@Test
@@ -159,7 +162,7 @@ public class ReUtilTest {
 		final String str = "a[bbbc";
 		final String re = "[";
 		final String s = ReUtil.get(ReUtil.escape(re), str, 0);
-		Assertions.assertEquals("[", s);
+		assertEquals("[", s);
 	}
 
 	@Test
@@ -175,15 +178,15 @@ public class ReUtilTest {
 		//转义给定字符串，为正则相关的特殊符号转义
 		final Pattern pattern = Pattern.compile("(\\d+)-(\\d+)-(\\d+)");
 		List<String> allGroups = ReUtil.getAllGroups(pattern, "192-168-1-1");
-		Assertions.assertEquals("192-168-1", allGroups.get(0));
-		Assertions.assertEquals("192", allGroups.get(1));
-		Assertions.assertEquals("168", allGroups.get(2));
-		Assertions.assertEquals("1", allGroups.get(3));
+		assertEquals("192-168-1", allGroups.get(0));
+		assertEquals("192", allGroups.get(1));
+		assertEquals("168", allGroups.get(2));
+		assertEquals("1", allGroups.get(3));
 
 		allGroups = ReUtil.getAllGroups(pattern, "192-168-1-1", false);
-		Assertions.assertEquals("192", allGroups.get(0));
-		Assertions.assertEquals("168", allGroups.get(1));
-		Assertions.assertEquals("1", allGroups.get(2));
+		assertEquals("192", allGroups.get(0));
+		assertEquals("168", allGroups.get(1));
+		assertEquals("1", allGroups.get(2));
 	}
 
 	@Test
@@ -198,11 +201,11 @@ public class ReUtilTest {
 		final String content = "2021-10-11";
 		final String regex = "(?<year>\\d+)-(?<month>\\d+)-(?<day>\\d+)";
 		final String year = ReUtil.get(regex, content, "year");
-		Assertions.assertEquals("2021", year);
+		assertEquals("2021", year);
 		final String month = ReUtil.get(regex, content, "month");
-		Assertions.assertEquals("10", month);
+		assertEquals("10", month);
 		final String day = ReUtil.get(regex, content, "day");
-		Assertions.assertEquals("11", day);
+		assertEquals("11", day);
 	}
 
 	@Test
@@ -211,9 +214,9 @@ public class ReUtilTest {
 		final String content = "2021-10-11";
 		final String regex = "(?<year>\\d+)-(?<month>\\d+)-(?<day>\\d+)";
 		final Map<String, String> map = ReUtil.getAllGroupNames(PatternPool.get(regex, Pattern.DOTALL), content);
-		Assertions.assertEquals(map.get("year"), "2021");
-		Assertions.assertEquals(map.get("month"), "10");
-		Assertions.assertEquals(map.get("day"), "11");
+		assertEquals(map.get("year"), "2021");
+		assertEquals(map.get("month"), "10");
+		assertEquals(map.get("day"), "11");
 	}
 
 	@Test
@@ -221,11 +224,24 @@ public class ReUtilTest {
 		final Pattern patternIp = Pattern.compile("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})\\.((2(5[0-5]|[0-4]\\d))"
 				+ "|[0-1]?\\d{1,2})\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})");
 		final String s = ReUtil.replaceAll("1.2.3.4", patternIp, "$1.**.**.$10");
-		Assertions.assertEquals("1.**.**.4", s);
+		assertEquals("1.**.**.4", s);
 	}
 
 	@Test
 	public void issueI6GIMTTest(){
-		Assertions.assertEquals(StrUtil.EMPTY, ReUtil.delAll("[\\s]*", " "));
+		assertEquals(StrUtil.EMPTY, ReUtil.delAll("[\\s]*", " "));
+	}
+
+	@Test
+	public void issueI9T1TGTest() {
+		String regex = "^model";
+		String content = "model-v";
+		final String result = ReUtil.get(regex, content, 0);
+		assertEquals("model", result);
+
+		regex = "^model.*?";
+		content = "model-v";
+		final boolean match = ReUtil.isMatch(regex, content);
+		assertTrue(match);
 	}
 }
