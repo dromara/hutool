@@ -1440,6 +1440,18 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 偏移年
+	 *
+	 * @param date   日期
+	 * @param offset 偏移年数，正数向未来偏移，负数向历史偏移
+	 * @return 偏移后的日期
+	 * @since 5.8.29
+	 */
+	public static DateTime offsetYear(final Date date, final int offset) {
+		return offset(date, DateField.YEAR, offset);
+	}
+
+	/**
 	 * 获取指定日期偏移指定时间后的时间，生成的偏移日期不影响原日期
 	 *
 	 * @param date      基准日期
