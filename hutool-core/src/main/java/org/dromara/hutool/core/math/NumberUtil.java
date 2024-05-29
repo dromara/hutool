@@ -1162,14 +1162,19 @@ public class NumberUtil extends NumberValidator {
 	}
 
 	/**
-	 * 提供精确的幂运算
+	 * 提供精确的幂运算<br>
+	 * 如果n为负数，则返回1/a的-n次方，默认四舍五入
 	 *
 	 * @param number 底数
-	 * @param n      指数
+	 * @param n      指数，如果为负数，则返回1/a的-n次方
 	 * @return 幂的积
 	 * @since 4.1.0
 	 */
 	public static BigDecimal pow(final BigDecimal number, final int n) {
+		if(n < 0){
+			// a的n次方，如果n为负数，则返回1/a的-n次方
+			return BigDecimal.ONE.divide(pow(number, -n), RoundingMode.HALF_UP);
+		}
 		return number.pow(n);
 	}
 
