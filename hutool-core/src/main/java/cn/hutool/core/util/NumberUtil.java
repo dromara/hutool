@@ -49,9 +49,9 @@ public class NumberUtil {
 	 * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
 	 */
 	private static final long[] FACTORIALS = new long[]{
-			1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
-			87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
-			2432902008176640000L};
+		1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
+		87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
+		2432902008176640000L};
 
 	/**
 	 * 提供精确的加法运算
@@ -115,9 +115,9 @@ public class NumberUtil {
 	 * 如果传入多个值为null或者空，则返回0
 	 *
 	 * <p>
-	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
-	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
-	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * 需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 * 德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 * 也就是说，在这些国家地区，1.20表示120，而非1.2。
 	 * </p>
 	 *
 	 * @param v1 被加数
@@ -133,9 +133,9 @@ public class NumberUtil {
 	 * 如果传入多个值为null或者空，则返回0
 	 *
 	 * <p>
-	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
-	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
-	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * 需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 * 德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 * 也就是说，在这些国家地区，1.20表示120，而非1.2。
 	 * </p>
 	 *
 	 * @param values 多个被加值
@@ -2242,9 +2242,9 @@ public class NumberUtil {
 			return BigDecimal.ZERO;
 		}
 
-		try{
+		try {
 			return new BigDecimal(numberStr);
-		} catch (Exception ignore){
+		} catch (Exception ignore) {
 			// 忽略解析错误
 		}
 
@@ -2516,14 +2516,19 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 提供精确的幂运算
+	 * 提供精确的幂运算<br>
+	 * 如果n为负数，则返回1/a的-n次方，默认四舍五入
 	 *
 	 * @param number 底数
-	 * @param n      指数
+	 * @param n      指数，如果为负数，则返回1/a的-n次方
 	 * @return 幂的积
 	 * @since 4.1.0
 	 */
 	public static BigDecimal pow(BigDecimal number, int n) {
+		if (n < 0) {
+			// a的n次方，如果n为负数，则返回1/a的-n次方
+			return BigDecimal.ONE.divide(pow(number, -n), 2, RoundingMode.HALF_UP);
+		}
 		return number.pow(n);
 	}
 
@@ -2565,7 +2570,7 @@ public class NumberUtil {
 			return Integer.parseInt(number.substring(2), 16);
 		}
 
-		if(StrUtil.containsIgnoreCase(number, "E")){
+		if (StrUtil.containsIgnoreCase(number, "E")) {
 			// 科学计数法忽略支持，科学计数法一般用于表示非常小和非常大的数字，这类数字转换为int后精度丢失，没有意义。
 			throw new NumberFormatException(StrUtil.format("Unsupported int format: [{}]", number));
 		}
@@ -2667,9 +2672,9 @@ public class NumberUtil {
 	 * 此方法不支持科学计数法
 	 *
 	 * <p>
-	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
-	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
-	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * 需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 * 德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 * 也就是说，在这些国家地区，1.20表示120，而非1.2。
 	 * </p>
 	 *
 	 * @param numberStr Number字符串
@@ -2681,7 +2686,7 @@ public class NumberUtil {
 		if (StrUtil.startWithIgnoreCase(numberStr, "0x")) {
 			// 0x04表示16进制数
 			return Long.parseLong(numberStr.substring(2), 16);
-		}else if(StrUtil.startWith(numberStr, '+')){
+		} else if (StrUtil.startWith(numberStr, '+')) {
 			// issue#I79VS7
 			numberStr = StrUtil.subSuf(numberStr, 1);
 		}
@@ -2870,9 +2875,9 @@ public class NumberUtil {
 	 */
 	public static int toInt(byte[] bytes) {
 		return (bytes[0] & 0xff) << 24//
-				| (bytes[1] & 0xff) << 16//
-				| (bytes[2] & 0xff) << 8//
-				| (bytes[3] & 0xff);
+			| (bytes[1] & 0xff) << 16//
+			| (bytes[2] & 0xff) << 8//
+			| (bytes[3] & 0xff);
 	}
 
 	/**

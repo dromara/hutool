@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.28(2024-05-23)
+# 5.8.28(2024-05-29)
 
 ### 🐣新特性
 * 【core   】      修正XmlUtil的omitXmlDeclaration描述注释（issue#I9CPC7@Gitee）
@@ -25,6 +25,7 @@
 * 【http   】      getFileNameFromDisposition更加规范，从多个头的值中获取，且`filename*`优先级更高（pr#3590@Gitee）
 * 【core   】      CsvWriter增加重载writeBeans方法，支持可选bean字段（pr#1222@Gitee）
 * 【core   】      LocalDateTimeUtil增加beginOfDay和endOfDay重载（issue#3594@Github）
+* 【core   】      NumberUtil.pow支持负数（issue#3598@Github）
 
 ### 🐞Bug修复
 * 【http   】      修复HttpUtil.urlWithFormUrlEncoded方法重复编码问题（issue#3536@Github）
