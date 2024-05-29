@@ -910,14 +910,14 @@ public class NumberUtil extends NumberValidator {
 	 * @return {@link BigDecimal}
 	 * @throws IllegalArgumentException null或""或"NaN"或空白符抛出此异常
 	 */
-	public static BigDecimal toBigDecimal(final String numberStr) throws IllegalArgumentException{
+	public static BigDecimal toBigDecimal(final String numberStr) throws IllegalArgumentException {
 		// 统一规则，不再转换带有歧义的null、""和空格
 		Assert.notBlank(numberStr, "Number str must be not blank!");
 
 		// issue#3241，优先调用构造解析
-		try{
+		try {
 			return new BigDecimal(numberStr);
-		} catch (final Exception ignore){
+		} catch (final Exception ignore) {
 			// 忽略解析错误
 		}
 
@@ -958,9 +958,9 @@ public class NumberUtil extends NumberValidator {
 		// 统一规则，不再转换带有歧义的null、""和空格
 		Assert.notBlank(numberStr, "Number str must be not blank!");
 
-		try{
+		try {
 			return new BigInteger(numberStr);
-		} catch (final Exception ignore){
+		} catch (final Exception ignore) {
 			// 忽略解析错误
 		}
 
@@ -998,6 +998,7 @@ public class NumberUtil extends NumberValidator {
 	}
 
 	// region nullToZero
+
 	/**
 	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
@@ -1171,9 +1172,24 @@ public class NumberUtil extends NumberValidator {
 	 * @since 4.1.0
 	 */
 	public static BigDecimal pow(final BigDecimal number, final int n) {
-		if(n < 0){
+		return pow(number, n, 2, RoundingMode.HALF_UP);
+	}
+
+	/**
+	 * 提供精确的幂运算<br>
+	 * 如果n为负数，则返回1/a的-n次方，默认四舍五入
+	 *
+	 * @param number       底数
+	 * @param scale        保留小数位数
+	 * @param roundingMode 舍入模式
+	 * @param n            指数，如果为负数，则返回1/a的-n次方
+	 * @return 幂的积
+	 * @since 4.1.0
+	 */
+	public static BigDecimal pow(final BigDecimal number, final int n, final int scale, final RoundingMode roundingMode) {
+		if (n < 0) {
 			// a的n次方，如果n为负数，则返回1/a的-n次方
-			return BigDecimal.ONE.divide(pow(number, -n), RoundingMode.HALF_UP);
+			return BigDecimal.ONE.divide(pow(number, -n), scale, roundingMode);
 		}
 		return number.pow(n);
 	}
@@ -1583,8 +1599,8 @@ public class NumberUtil extends NumberValidator {
 	 *
 	 * @param num [1,3999]的正整数
 	 * @return 罗马数字
-	 * @since 6.0.0
 	 * @author dazer
+	 * @since 6.0.0
 	 */
 	public static String intToRoman(final int num) {
 		return RomanNumberFormatter.intToRoman(num);
@@ -1592,11 +1608,12 @@ public class NumberUtil extends NumberValidator {
 
 	/**
 	 * 罗马数字转整数<br>
+	 *
 	 * @param roman 罗马字符
 	 * @return 整数
 	 * @throws IllegalArgumentException 如果传入非罗马字符串，抛出异常
-	 * @since 6.0.0
 	 * @author dazer
+	 * @since 6.0.0
 	 */
 	public static int romanToInt(final String roman) {
 		return RomanNumberFormatter.romanToInt(roman);

@@ -25,6 +25,8 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link NumberUtil} 单元测试类
  *
@@ -37,7 +39,7 @@ public class NumberUtilTest {
 		final Float a = 3.15f;
 		final Double b = 4.22;
 		final double result = NumberUtil.add(a, b).doubleValue();
-		Assertions.assertEquals(7.37, result, 0);
+		assertEquals(7.37, result, 0);
 	}
 
 	@Test
@@ -45,7 +47,7 @@ public class NumberUtilTest {
 		final double a = 3.15f;// 转换丢失精度
 		final double b = 4.22;
 		final double result = NumberUtil.add(a, b).doubleValue();
-		Assertions.assertEquals(7.37, result, 0.0001);
+		assertEquals(7.37, result, 0.0001);
 	}
 
 	@Test
@@ -53,52 +55,52 @@ public class NumberUtilTest {
 		final float a = 3.15f;
 		final double b = 4.22;
 		final double result = NumberUtil.add(a, b, a, b).doubleValue();
-		Assertions.assertEquals(14.74, result, 0);
+		assertEquals(14.74, result, 0);
 	}
 
 	@Test
 	public void addTest4() {
 		BigDecimal result = NumberUtil.add(new BigDecimal("133"), new BigDecimal("331"));
-		Assertions.assertEquals(new BigDecimal("464"), result);
+		assertEquals(new BigDecimal("464"), result);
 
 		result = NumberUtil.add(new BigDecimal[]{new BigDecimal("133"), new BigDecimal("331")});
-		Assertions.assertEquals(new BigDecimal("464"), result);
+		assertEquals(new BigDecimal("464"), result);
 	}
 
 	@Test
 	void addTest5() {
 		final BigDecimal add = NumberUtil.add(1686036549717L, 1000);
-		Assertions.assertEquals(1686036550717L, add.longValue());
+		assertEquals(1686036550717L, add.longValue());
 	}
 
 	@Test
 	public void addBlankTest() {
 		final BigDecimal result = NumberUtil.add("123", " ");
-		Assertions.assertEquals(new BigDecimal("123"), result);
+		assertEquals(new BigDecimal("123"), result);
 	}
 
 	@Test
 	public void subTest() {
 		BigDecimal result = NumberUtil.sub(new BigDecimal("133"), new BigDecimal("331"));
-		Assertions.assertEquals(new BigDecimal("-198"), result);
+		assertEquals(new BigDecimal("-198"), result);
 
 		result = NumberUtil.sub(new BigDecimal[]{new BigDecimal("133"), new BigDecimal("331")});
-		Assertions.assertEquals(new BigDecimal("-198"), result);
+		assertEquals(new BigDecimal("-198"), result);
 	}
 
 	@Test
 	public void mulTest() {
 		BigDecimal result = NumberUtil.mul(new BigDecimal("133"), new BigDecimal("331"));
-		Assertions.assertEquals(new BigDecimal("44023"), result);
+		assertEquals(new BigDecimal("44023"), result);
 
 		result = NumberUtil.mul(new BigDecimal[]{new BigDecimal("133"), new BigDecimal("331")});
-		Assertions.assertEquals(new BigDecimal("44023"), result);
+		assertEquals(new BigDecimal("44023"), result);
 	}
 
 	@Test
 	public void mulNullTest() {
 		final BigDecimal mul = NumberUtil.mul(new BigDecimal("10"), null);
-		Assertions.assertEquals(BigDecimal.ZERO, mul);
+		assertEquals(BigDecimal.ZERO, mul);
 	}
 
 	@Test
@@ -118,7 +120,7 @@ public class NumberUtilTest {
 
 	private void privateIsIntegerTest(final String[] numStrArr, final boolean expected) {
 		for (final String numStr : numStrArr) {
-			Assertions.assertEquals(expected, NumberUtil.isInteger(numStr), "未通过的数字为: " + numStr);
+			assertEquals(expected, NumberUtil.isInteger(numStr), "未通过的数字为: " + numStr);
 		}
 	}
 
@@ -145,7 +147,7 @@ public class NumberUtilTest {
 
 	private void privateIsLongTest(final String[] numStrArr, final boolean expected) {
 		for (final String numStr : numStrArr) {
-			Assertions.assertEquals(expected, NumberUtil.isLong(numStr), "未通过的数字为: " + numStr);
+			assertEquals(expected, NumberUtil.isLong(numStr), "未通过的数字为: " + numStr);
 		}
 	}
 
@@ -217,19 +219,19 @@ public class NumberUtilTest {
 	}
 
 	private void privateIsNumberTest(final String numStr, final boolean expected) {
-		Assertions.assertEquals(expected, NumberUtil.isNumber(numStr));
+		assertEquals(expected, NumberUtil.isNumber(numStr));
 	}
 
 	@Test
 	public void divTest() {
 		final double result = NumberUtil.div(0, 1).doubleValue();
-		Assertions.assertEquals(0.0, result, 0);
+		assertEquals(0.0, result, 0);
 	}
 
 	@Test
 	public void divBigDecimalTest() {
 		final BigDecimal result = NumberUtil.div(BigDecimal.ZERO, BigDecimal.ONE);
-		Assertions.assertEquals(BigDecimal.ZERO, result.stripTrailingZeros());
+		assertEquals(BigDecimal.ZERO, result.stripTrailingZeros());
 	}
 
 	@Test
@@ -238,74 +240,74 @@ public class NumberUtilTest {
 		// 四舍
 		final String round1 = NumberUtil.roundStr(2.674, 2);
 		final String round2 = NumberUtil.roundStr("2.674", 2);
-		Assertions.assertEquals("2.67", round1);
-		Assertions.assertEquals("2.67", round2);
+		assertEquals("2.67", round1);
+		assertEquals("2.67", round2);
 
 		// 五入
 		final String round3 = NumberUtil.roundStr(2.675, 2);
 		final String round4 = NumberUtil.roundStr("2.675", 2);
-		Assertions.assertEquals("2.68", round3);
-		Assertions.assertEquals("2.68", round4);
+		assertEquals("2.68", round3);
+		assertEquals("2.68", round4);
 
 		// 四舍六入五成双
 		final String round31 = NumberUtil.roundStr(4.245, 2, RoundingMode.HALF_EVEN);
 		final String round41 = NumberUtil.roundStr("4.2451", 2, RoundingMode.HALF_EVEN);
-		Assertions.assertEquals("4.24", round31);
-		Assertions.assertEquals("4.25", round41);
+		assertEquals("4.24", round31);
+		assertEquals("4.25", round41);
 
 		// 补0
 		final String round5 = NumberUtil.roundStr(2.6005, 2);
 		final String round6 = NumberUtil.roundStr("2.6005", 2);
-		Assertions.assertEquals("2.60", round5);
-		Assertions.assertEquals("2.60", round6);
+		assertEquals("2.60", round5);
+		assertEquals("2.60", round6);
 
 		// 补0
 		final String round7 = NumberUtil.roundStr(2.600, 2);
 		final String round8 = NumberUtil.roundStr("2.600", 2);
-		Assertions.assertEquals("2.60", round7);
-		Assertions.assertEquals("2.60", round8);
+		assertEquals("2.60", round7);
+		assertEquals("2.60", round8);
 	}
 
 	@Test
 	public void roundStrTest() {
 		final String roundStr = NumberUtil.roundStr(2.647, 2);
-		Assertions.assertEquals(roundStr, "2.65");
+		assertEquals(roundStr, "2.65");
 
 		final String roundStr1 = NumberUtil.roundStr(0, 10);
-		Assertions.assertEquals(roundStr1, "0.0000000000");
+		assertEquals(roundStr1, "0.0000000000");
 	}
 
 	@Test
 	public void roundHalfEvenTest() {
 		String roundStr = NumberUtil.roundHalfEven(4.245, 2).toString();
-		Assertions.assertEquals(roundStr, "4.24");
+		assertEquals(roundStr, "4.24");
 		roundStr = NumberUtil.roundHalfEven(4.2450, 2).toString();
-		Assertions.assertEquals(roundStr, "4.24");
+		assertEquals(roundStr, "4.24");
 		roundStr = NumberUtil.roundHalfEven(4.2451, 2).toString();
-		Assertions.assertEquals(roundStr, "4.25");
+		assertEquals(roundStr, "4.25");
 		roundStr = NumberUtil.roundHalfEven(4.2250, 2).toString();
-		Assertions.assertEquals(roundStr, "4.22");
+		assertEquals(roundStr, "4.22");
 
 		roundStr = NumberUtil.roundHalfEven(1.2050, 2).toString();
-		Assertions.assertEquals(roundStr, "1.20");
+		assertEquals(roundStr, "1.20");
 		roundStr = NumberUtil.roundHalfEven(1.2150, 2).toString();
-		Assertions.assertEquals(roundStr, "1.22");
+		assertEquals(roundStr, "1.22");
 		roundStr = NumberUtil.roundHalfEven(1.2250, 2).toString();
-		Assertions.assertEquals(roundStr, "1.22");
+		assertEquals(roundStr, "1.22");
 		roundStr = NumberUtil.roundHalfEven(1.2350, 2).toString();
-		Assertions.assertEquals(roundStr, "1.24");
+		assertEquals(roundStr, "1.24");
 		roundStr = NumberUtil.roundHalfEven(1.2450, 2).toString();
-		Assertions.assertEquals(roundStr, "1.24");
+		assertEquals(roundStr, "1.24");
 		roundStr = NumberUtil.roundHalfEven(1.2550, 2).toString();
-		Assertions.assertEquals(roundStr, "1.26");
+		assertEquals(roundStr, "1.26");
 		roundStr = NumberUtil.roundHalfEven(1.2650, 2).toString();
-		Assertions.assertEquals(roundStr, "1.26");
+		assertEquals(roundStr, "1.26");
 		roundStr = NumberUtil.roundHalfEven(1.2750, 2).toString();
-		Assertions.assertEquals(roundStr, "1.28");
+		assertEquals(roundStr, "1.28");
 		roundStr = NumberUtil.roundHalfEven(1.2850, 2).toString();
-		Assertions.assertEquals(roundStr, "1.28");
+		assertEquals(roundStr, "1.28");
 		roundStr = NumberUtil.roundHalfEven(1.2950, 2).toString();
-		Assertions.assertEquals(roundStr, "1.30");
+		assertEquals(roundStr, "1.30");
 	}
 
 	@Test
@@ -313,7 +315,7 @@ public class NumberUtilTest {
 		final long c = 299792458;// 光速
 
 		final String format = NumberUtil.format(",###", c);
-		Assertions.assertEquals("299,792,458", format);
+		assertEquals("299,792,458", format);
 	}
 
 	@Test
@@ -342,7 +344,7 @@ public class NumberUtilTest {
 		final Double c = 467.8101;
 
 		final String format = NumberUtil.format("0.00", c);
-		Assertions.assertEquals("467.81", format);
+		assertEquals("467.81", format);
 	}
 
 	@Test
@@ -350,11 +352,11 @@ public class NumberUtilTest {
 		final double c = 299792400.543534534;
 
 		final String format = NumberUtil.formatMoney(c);
-		Assertions.assertEquals("299,792,400.54", format);
+		assertEquals("299,792,400.54", format);
 
 		final double value = 0.5;
 		final String money = NumberUtil.formatMoney(value);
-		Assertions.assertEquals("0.50", money);
+		assertEquals("0.50", money);
 	}
 
 	@Test
@@ -367,16 +369,16 @@ public class NumberUtilTest {
 		final double a = 3.14;
 
 		BigDecimal bigDecimal = NumberUtil.toBigDecimal(a);
-		Assertions.assertEquals("3.14", bigDecimal.toString());
+		assertEquals("3.14", bigDecimal.toString());
 
 		bigDecimal = NumberUtil.toBigDecimal("1,234.55");
-		Assertions.assertEquals("1234.55", bigDecimal.toString());
+		assertEquals("1234.55", bigDecimal.toString());
 
 		bigDecimal = NumberUtil.toBigDecimal("1,234.56D");
-		Assertions.assertEquals("1234.56", bigDecimal.toString());
+		assertEquals("1234.56", bigDecimal.toString());
 
 		// issue#3241
-		Assertions.assertEquals(new BigDecimal("9.0E+7"), NumberUtil.toBigDecimal("9.0E+7"));
+		assertEquals(new BigDecimal("9.0E+7"), NumberUtil.toBigDecimal("9.0E+7"));
 	}
 
 	@Test
@@ -388,7 +390,7 @@ public class NumberUtilTest {
 
 	@Test
 	void naNToBigDecimalTest(){
-		Assertions.assertEquals(BigDecimal.ZERO, NumberUtil.toBigDecimal("NaN"));
+		assertEquals(BigDecimal.ZERO, NumberUtil.toBigDecimal("NaN"));
 	}
 
 	@Test
@@ -396,41 +398,41 @@ public class NumberUtilTest {
 		// https://github.com/dromara/hutool/issues/2878
 		// 当数字中包含一些非数字字符时，按照JDK的规则，不做修改。
 		final BigDecimal bigDecimal = NumberUtil.toBigDecimal("345.sdf");
-		Assertions.assertEquals(NumberFormat.getInstance().parse("345.sdf"), bigDecimal.longValue());
+		assertEquals(NumberFormat.getInstance().parse("345.sdf"), bigDecimal.longValue());
 	}
 
 	@Test
 	public void parseIntTest() {
 		int number = NumberUtil.parseInt("0xFF");
-		Assertions.assertEquals(255, number);
+		assertEquals(255, number);
 
 		number = NumberUtil.parseInt("0xFE");
-		Assertions.assertEquals(254, number);
+		assertEquals(254, number);
 
 		// 0开头
 		number = NumberUtil.parseInt("010");
-		Assertions.assertEquals(10, number);
+		assertEquals(10, number);
 
 		number = NumberUtil.parseInt("10");
-		Assertions.assertEquals(10, number);
+		assertEquals(10, number);
 
 		number = NumberUtil.parseInt("   ");
-		Assertions.assertEquals(0, number);
+		assertEquals(0, number);
 
 		number = NumberUtil.parseInt("10F");
-		Assertions.assertEquals(10, number);
+		assertEquals(10, number);
 
 		number = NumberUtil.parseInt("22.4D");
-		Assertions.assertEquals(22, number);
+		assertEquals(22, number);
 
 		number = NumberUtil.parseInt("22.6D");
-		Assertions.assertEquals(22, number);
+		assertEquals(22, number);
 
 		number = NumberUtil.parseInt("0");
-		Assertions.assertEquals(0, number);
+		assertEquals(0, number);
 
 		number = NumberUtil.parseInt(".123");
-		Assertions.assertEquals(0, number);
+		assertEquals(0, number);
 	}
 
 	@Test
@@ -438,14 +440,14 @@ public class NumberUtilTest {
 		// from 5.4.8 issue#I23ORQ@Gitee
 		// 千位分隔符去掉
 		final int v1 = NumberUtil.parseInt("1,482.00");
-		Assertions.assertEquals(1482, v1);
+		assertEquals(1482, v1);
 	}
 
 	@Test
 	public void parseIntTest3() {
 		Assertions.assertThrows(NumberFormatException.class, ()->{
 			final int v1 = NumberUtil.parseInt("d");
-			Assertions.assertEquals(0, v1);
+			assertEquals(0, v1);
 		});
 	}
 
@@ -466,13 +468,13 @@ public class NumberUtilTest {
 
 		Assertions.assertNull(NumberUtil.parseInt("abc", null));
 
-		Assertions.assertEquals(456, NumberUtil.parseInt("abc", 456));
+		assertEquals(456, NumberUtil.parseInt("abc", 456));
 
 		// -------------------------- Parse success -----------------------
 
-		Assertions.assertEquals(123, NumberUtil.parseInt("123.abc", 789));
+		assertEquals(123, NumberUtil.parseInt("123.abc", 789));
 
-		Assertions.assertEquals(123, NumberUtil.parseInt("123.3", null));
+		assertEquals(123, NumberUtil.parseInt("123.3", null));
 
 	}
 
@@ -480,7 +482,7 @@ public class NumberUtilTest {
 	public void parseIntOfNaNTest() {
 		// https://stackoverflow.com/questions/5876369/why-does-casting-double-nan-to-int-not-throw-an-exception-in-java
 		final int v1 = NumberUtil.parseInt("NaN");
-		Assertions.assertEquals(0, v1);
+		assertEquals(0, v1);
 	}
 
 	@Test
@@ -488,10 +490,10 @@ public class NumberUtilTest {
 		// from 5.4.8 issue#I23ORQ@Gitee
 		// 千位分隔符去掉
 		final int v1 = NumberUtil.parseNumber("1,482.00").intValue();
-		Assertions.assertEquals(1482, v1);
+		assertEquals(1482, v1);
 
 		final Number v2 = NumberUtil.parseNumber("1,482.00D");
-		Assertions.assertEquals(1482L, v2.longValue());
+		assertEquals(1482L, v2.longValue());
 	}
 
 	@Test
@@ -514,15 +516,15 @@ public class NumberUtilTest {
 
 		Assertions.assertNull(NumberUtil.parseNumber(StrUtil.repeat(StrUtil.SPACE, 10), (Number) null));
 
-		Assertions.assertEquals(456, NumberUtil.parseNumber("abc", 456).intValue());
+		assertEquals(456, NumberUtil.parseNumber("abc", 456).intValue());
 
 		// -------------------------- Parse success -----------------------
 
-		Assertions.assertEquals(123, NumberUtil.parseNumber("123.abc", 789).intValue());
+		assertEquals(123, NumberUtil.parseNumber("123.abc", 789).intValue());
 
-		Assertions.assertEquals(123.3D, NumberUtil.parseNumber("123.3", (Number) null).doubleValue());
+		assertEquals(123.3D, NumberUtil.parseNumber("123.3", (Number) null).doubleValue());
 
-		Assertions.assertEquals(0.123D, NumberUtil.parseNumber("0.123.3", (Number) null).doubleValue());
+		assertEquals(0.123D, NumberUtil.parseNumber("0.123.3", (Number) null).doubleValue());
 
 	}
 
@@ -530,45 +532,45 @@ public class NumberUtilTest {
 	public void parseHexNumberTest() {
 		// 千位分隔符去掉
 		final int v1 = NumberUtil.parseNumber("0xff").intValue();
-		Assertions.assertEquals(255, v1);
+		assertEquals(255, v1);
 	}
 
 	@Test
 	public void parseNumberOfNaNTest() {
 		// https://stackoverflow.com/questions/5876369/why-does-casting-double-nan-to-int-not-throw-an-exception-in-java
 		final Number v1 = NumberUtil.parseNumber("NaN");
-		Assertions.assertEquals(0, v1.intValue());
+		assertEquals(0, v1.intValue());
 	}
 
 	@Test
 	public void parseLongTest() {
 		long number = NumberUtil.parseLong("0xFF");
-		Assertions.assertEquals(255, number);
+		assertEquals(255, number);
 
 		// 0开头
 		number = NumberUtil.parseLong("010");
-		Assertions.assertEquals(10, number);
+		assertEquals(10, number);
 
 		number = NumberUtil.parseLong("10");
-		Assertions.assertEquals(10, number);
+		assertEquals(10, number);
 
 		number = NumberUtil.parseLong("   ");
-		Assertions.assertEquals(0, number);
+		assertEquals(0, number);
 
 		number = NumberUtil.parseLong("10F");
-		Assertions.assertEquals(10, number);
+		assertEquals(10, number);
 
 		number = NumberUtil.parseLong("22.4D");
-		Assertions.assertEquals(22, number);
+		assertEquals(22, number);
 
 		number = NumberUtil.parseLong("22.6D");
-		Assertions.assertEquals(22, number);
+		assertEquals(22, number);
 
 		number = NumberUtil.parseLong("0");
-		Assertions.assertEquals(0, number);
+		assertEquals(0, number);
 
 		number = NumberUtil.parseLong(".123");
-		Assertions.assertEquals(0, number);
+		assertEquals(0, number);
 	}
 
 	@Test
@@ -583,12 +585,12 @@ public class NumberUtilTest {
 		Assertions.assertNull(v2);
 
 		final Long v3 = NumberUtil.parseLong("L3221", 1233L);
-		Assertions.assertEquals(1233L, v3);
+		assertEquals(1233L, v3);
 
 		// -------------------------- Parse success -----------------------
 
 		final Long v4 = NumberUtil.parseLong("1233L", null);
-		Assertions.assertEquals(1233L, v4);
+		assertEquals(1233L, v4);
 
 	}
 
@@ -603,17 +605,17 @@ public class NumberUtilTest {
 
 	@Test
 	public void toStrTest() {
-		Assertions.assertEquals("1", NumberUtil.toStr(new BigDecimal("1.0000000000")));
-		Assertions.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.00000"), new BigDecimal("9600.00000"))));
-		Assertions.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.0000000000"), new BigDecimal("9600.000000"))));
-		Assertions.assertEquals("0", NumberUtil.toStr(new BigDecimal("9600.00000").subtract(new BigDecimal("9600.000000000"))));
+		assertEquals("1", NumberUtil.toStr(new BigDecimal("1.0000000000")));
+		assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.00000"), new BigDecimal("9600.00000"))));
+		assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.0000000000"), new BigDecimal("9600.000000"))));
+		assertEquals("0", NumberUtil.toStr(new BigDecimal("9600.00000").subtract(new BigDecimal("9600.000000000"))));
 	}
 
 	@Test
 	public void toPlainNumberTest() {
 		final String num = "5344.34234e3";
 		final String s = new BigDecimal(num).toPlainString();
-		Assertions.assertEquals("5344342.34", s);
+		assertEquals("5344342.34", s);
 	}
 
 	@Test
@@ -646,7 +648,7 @@ public class NumberUtilTest {
 	@Test
 	public void divIntegerTest() {
 		final BigDecimal div = NumberUtil.div(100101300, 100);
-		Assertions.assertEquals(1001013, div.intValue());
+		assertEquals(1001013, div.intValue());
 	}
 
 	@Test
@@ -675,17 +677,17 @@ public class NumberUtilTest {
 	@Test
 	public void rangeTest() {
 		final int[] range = NumberUtil.range(0, 10);
-		Assertions.assertEquals(0, range[0]);
-		Assertions.assertEquals(1, range[1]);
-		Assertions.assertEquals(2, range[2]);
-		Assertions.assertEquals(3, range[3]);
-		Assertions.assertEquals(4, range[4]);
-		Assertions.assertEquals(5, range[5]);
-		Assertions.assertEquals(6, range[6]);
-		Assertions.assertEquals(7, range[7]);
-		Assertions.assertEquals(8, range[8]);
-		Assertions.assertEquals(9, range[9]);
-		Assertions.assertEquals(10, range[10]);
+		assertEquals(0, range[0]);
+		assertEquals(1, range[1]);
+		assertEquals(2, range[2]);
+		assertEquals(3, range[3]);
+		assertEquals(4, range[4]);
+		assertEquals(5, range[5]);
+		assertEquals(6, range[6]);
+		assertEquals(7, range[7]);
+		assertEquals(8, range[8]);
+		assertEquals(9, range[9]);
+		assertEquals(10, range[10]);
 	}
 
 	@Test
@@ -720,13 +722,13 @@ public class NumberUtilTest {
 
 		Assertions.assertNull(NumberUtil.parseFloat("..123", null));
 
-		Assertions.assertEquals(1233F, NumberUtil.parseFloat(StrUtil.EMPTY, 1233F));
+		assertEquals(1233F, NumberUtil.parseFloat(StrUtil.EMPTY, 1233F));
 
 		// -------------------------- Parse success -----------------------
 
-		Assertions.assertEquals(123.33F, NumberUtil.parseFloat("123.33a", null));
+		assertEquals(123.33F, NumberUtil.parseFloat("123.33a", null));
 
-		Assertions.assertEquals(0.123F, NumberUtil.parseFloat(".123", null));
+		assertEquals(0.123F, NumberUtil.parseFloat(".123", null));
 
 	}
 
@@ -738,17 +740,17 @@ public class NumberUtilTest {
 		Assertions.assertNull(NumberUtil.parseDouble("abc", null));
 		Assertions.assertNull(NumberUtil.parseDouble("a123.33", null));
 		Assertions.assertNull(NumberUtil.parseDouble("..123", null));
-		Assertions.assertEquals(1233D, NumberUtil.parseDouble(StrUtil.EMPTY, 1233D));
+		assertEquals(1233D, NumberUtil.parseDouble(StrUtil.EMPTY, 1233D));
 
 		// -------------------------- Parse success -----------------------
 
-		Assertions.assertEquals(123.33D, NumberUtil.parseDouble("123.33a", null));
-		Assertions.assertEquals(0.123D, NumberUtil.parseDouble(".123", null));
+		assertEquals(123.33D, NumberUtil.parseDouble("123.33a", null));
+		assertEquals(0.123D, NumberUtil.parseDouble(".123", null));
 	}
 
 	@Test
 	void naNToIntTest() {
-		Assertions.assertEquals(0, Double.valueOf(Double.NaN).intValue());
+		assertEquals(0, Double.valueOf(Double.NaN).intValue());
 	}
 
 	@Test
@@ -768,27 +770,51 @@ public class NumberUtilTest {
 	@Test
 	void formatThousands() {
 		// issue#I7OIA6
-		Assertions.assertEquals(
+		assertEquals(
 			"123,456,789.111111",
 			NumberUtil.formatThousands(123456789.111111D, 6));
 	}
 
 	@Test
 	void nullToZeroTest() {
-		Assertions.assertEquals(0, NumberUtil.nullToZero((Integer)null));
-		Assertions.assertEquals(0L, NumberUtil.nullToZero((Long)null));
-		Assertions.assertEquals(0D, NumberUtil.nullToZero((Double)null));
-		Assertions.assertEquals(0D, NumberUtil.nullToZero((Double)null));
-		Assertions.assertEquals(0F, NumberUtil.nullToZero((Float) null));
-		Assertions.assertEquals(0, NumberUtil.nullToZero((Short) null));
-		Assertions.assertEquals(0, NumberUtil.nullToZero((Byte) null));
-		Assertions.assertEquals(BigDecimal.ZERO, NumberUtil.nullToZero((BigDecimal) null));
-		Assertions.assertEquals(BigInteger.ZERO, NumberUtil.nullToZero((BigInteger) null));
+		assertEquals(0, NumberUtil.nullToZero((Integer)null));
+		assertEquals(0L, NumberUtil.nullToZero((Long)null));
+		assertEquals(0D, NumberUtil.nullToZero((Double)null));
+		assertEquals(0D, NumberUtil.nullToZero((Double)null));
+		assertEquals(0F, NumberUtil.nullToZero((Float) null));
+		assertEquals(0, NumberUtil.nullToZero((Short) null));
+		assertEquals(0, NumberUtil.nullToZero((Byte) null));
+		assertEquals(BigDecimal.ZERO, NumberUtil.nullToZero((BigDecimal) null));
+		assertEquals(BigInteger.ZERO, NumberUtil.nullToZero((BigInteger) null));
 	}
 
 	@Test
 	public void isValidNumberTest() {
 		final boolean validNumber = NumberUtil.isValidNumber(1);
 		Assertions.assertTrue(validNumber);
+	}
+
+	@Test
+	public void testPowZero() {
+		final BigDecimal number = new BigDecimal("2.5");
+		final int exponent = 0;
+		final BigDecimal expected = new BigDecimal("1");
+		assertEquals(expected, NumberUtil.pow(number, exponent));
+	}
+
+	@Test
+	public void testPowNegative() {
+		final BigDecimal number = new BigDecimal("2.5");
+		final int exponent = -2;
+		final BigDecimal expected = new BigDecimal("0.16");
+		assertEquals(expected, NumberUtil.pow(number, exponent));
+	}
+
+	@Test
+	public void testPowSmallNumber() {
+		final BigDecimal number = new BigDecimal("0.1");
+		final int exponent = -3;
+		final BigDecimal expected = new BigDecimal("1000.00");
+		assertEquals(expected, NumberUtil.pow(number, exponent));
 	}
 }
