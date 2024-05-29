@@ -2,7 +2,9 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.poi.excel.cell.CellSetter;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.junit.Ignore;
@@ -31,6 +33,11 @@ public class WriteStyleTest {
 		cellStyle.setFont(StyleUtil.createFont(writer.getWorkbook(), Font.COLOR_RED, (short) 12, "宋体"));
 
 		writer.write(rows);
+
+		writer.writeCellValue(0, 0, (CellSetter) cell -> {
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue("1234");
+		});
 
 		for (int i = 0; i < writer.getRowCount(); i++) {
 			writer.setStyle(cellStyle, 2, i);
