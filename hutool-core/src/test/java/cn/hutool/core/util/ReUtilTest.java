@@ -215,4 +215,17 @@ public class ReUtilTest {
 	public void issueI6GIMTTest(){
 		Assert.assertEquals(StrUtil.EMPTY, ReUtil.delAll("[\\s]*", " "));
 	}
+
+	@Test
+	public void issueI9T1TGTest() {
+		String regex = "^model";
+		String content = "model-v";
+		String result = ReUtil.get(regex, content, 0);
+		Assert.assertEquals("model", result);
+
+		regex = "^model.*?";
+		content = "model-v";
+		boolean match = ReUtil.isMatch(regex, content);
+		Assert.assertTrue(match);
+	}
 }
