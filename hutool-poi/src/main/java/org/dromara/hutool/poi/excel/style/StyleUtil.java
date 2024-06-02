@@ -12,17 +12,11 @@
 
 package org.dromara.hutool.poi.excel.style;
 
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.dromara.hutool.core.text.StrUtil;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.dromara.hutool.core.util.ObjUtil;
 
 /**
  * Excel样式工具类
@@ -32,129 +26,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public class StyleUtil {
 
-	/**
-	 * 克隆新的{@link CellStyle}
-	 *
-	 * @param cell      单元格
-	 * @param cellStyle 被复制的样式
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle cloneCellStyle(final Cell cell, final CellStyle cellStyle) {
-		return cloneCellStyle(cell.getSheet().getWorkbook(), cellStyle);
-	}
-
-	/**
-	 * 克隆新的{@link CellStyle}
-	 *
-	 * @param workbook  工作簿
-	 * @param cellStyle 被复制的样式
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle cloneCellStyle(final Workbook workbook, final CellStyle cellStyle) {
-		final CellStyle newCellStyle = createCellStyle(workbook);
-		newCellStyle.cloneStyleFrom(cellStyle);
-		return newCellStyle;
-	}
-
-	/**
-	 * 设置cell文本对齐样式
-	 *
-	 * @param cellStyle {@link CellStyle}
-	 * @param halign    横向位置
-	 * @param valign    纵向位置
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle setAlign(final CellStyle cellStyle, final HorizontalAlignment halign, final VerticalAlignment valign) {
-		cellStyle.setAlignment(halign);
-		cellStyle.setVerticalAlignment(valign);
-		return cellStyle;
-	}
-
-	/**
-	 * 设置cell的四个边框粗细和颜色
-	 *
-	 * @param cellStyle  {@link CellStyle}
-	 * @param borderSize 边框粗细{@link BorderStyle}枚举
-	 * @param colorIndex 颜色的short值
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle setBorder(final CellStyle cellStyle, final BorderStyle borderSize, final IndexedColors colorIndex) {
-		cellStyle.setBorderBottom(borderSize);
-		cellStyle.setBottomBorderColor(colorIndex.index);
-
-		cellStyle.setBorderLeft(borderSize);
-		cellStyle.setLeftBorderColor(colorIndex.index);
-
-		cellStyle.setBorderRight(borderSize);
-		cellStyle.setRightBorderColor(colorIndex.index);
-
-		cellStyle.setBorderTop(borderSize);
-		cellStyle.setTopBorderColor(colorIndex.index);
-
-		return cellStyle;
-	}
-
-	/**
-	 * 给cell设置颜色
-	 *
-	 * @param cellStyle   {@link CellStyle}
-	 * @param color       背景颜色
-	 * @param fillPattern 填充方式 {@link FillPatternType}枚举
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle setColor(final CellStyle cellStyle, final IndexedColors color, final FillPatternType fillPattern) {
-		return setColor(cellStyle, color.index, fillPattern);
-	}
-
-	/**
-	 * 给cell设置颜色
-	 *
-	 * @param cellStyle   {@link CellStyle}
-	 * @param color       背景颜色
-	 * @param fillPattern 填充方式 {@link FillPatternType}枚举
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle setColor(final CellStyle cellStyle, final short color, final FillPatternType fillPattern) {
-		cellStyle.setFillForegroundColor(color);
-		cellStyle.setFillPattern(fillPattern);
-		return cellStyle;
-	}
-
-	/**
-	 * 创建字体
-	 *
-	 * @param workbook {@link Workbook}
-	 * @param color    字体颜色
-	 * @param fontSize 字体大小
-	 * @param fontName 字体名称，可以为null使用默认字体
-	 * @return {@link Font}
-	 */
-	public static Font createFont(final Workbook workbook, final short color, final short fontSize, final String fontName) {
-		final Font font = workbook.createFont();
-		return setFontStyle(font, color, fontSize, fontName);
-	}
-
-	/**
-	 * 设置字体样式
-	 *
-	 * @param font     字体{@link Font}
-	 * @param color    字体颜色
-	 * @param fontSize 字体大小
-	 * @param fontName 字体名称，可以为null使用默认字体
-	 * @return {@link Font}
-	 */
-	public static Font setFontStyle(final Font font, final short color, final short fontSize, final String fontName) {
-		if (color > 0) {
-			font.setColor(color);
-		}
-		if (fontSize > 0) {
-			font.setFontHeightInPoints(fontSize);
-		}
-		if (StrUtil.isNotBlank(fontName)) {
-			font.setFontName(fontName);
-		}
-		return font;
-	}
+	// region ----- create or clone style
 
 	/**
 	 * 创建单元格样式
@@ -214,6 +86,155 @@ public class StyleUtil {
 	public static boolean isNullOrDefaultStyle(final Workbook workbook, final CellStyle style) {
 		return (null == style) || style.equals(workbook.getCellStyleAt(0));
 	}
+
+	/**
+	 * 克隆新的{@link CellStyle}
+	 *
+	 * @param cell      单元格
+	 * @param cellStyle 被复制的样式
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle cloneCellStyle(final Cell cell, final CellStyle cellStyle) {
+		return cloneCellStyle(cell.getSheet().getWorkbook(), cellStyle);
+	}
+
+	/**
+	 * 克隆新的{@link CellStyle}
+	 *
+	 * @param workbook  工作簿
+	 * @param cellStyle 被复制的样式
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle cloneCellStyle(final Workbook workbook, final CellStyle cellStyle) {
+		final CellStyle newCellStyle = createCellStyle(workbook);
+		newCellStyle.cloneStyleFrom(cellStyle);
+		return newCellStyle;
+	}
+
+	// endregion
+
+	/**
+	 * 设置cell文本对齐样式
+	 *
+	 * @param cellStyle {@link CellStyle}
+	 * @param halign    横向位置
+	 * @param valign    纵向位置
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle setAlign(final CellStyle cellStyle, final HorizontalAlignment halign, final VerticalAlignment valign) {
+		cellStyle.setAlignment(halign);
+		cellStyle.setVerticalAlignment(valign);
+		return cellStyle;
+	}
+
+	/**
+	 * 设置cell的四个边框粗细和颜色
+	 *
+	 * @param cellStyle  {@link CellStyle}
+	 * @param borderSize 边框粗细{@link BorderStyle}枚举
+	 * @param colorIndex 预定义颜色的short值，见{@link IndexedColors}枚举
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle setBorder(final CellStyle cellStyle, final BorderStyle borderSize, final IndexedColors colorIndex) {
+		return setBorder(cellStyle, CellBorderStyle.of(borderSize, colorIndex));
+	}
+
+	/**
+	 * 设置cell的四个边框粗细和颜色
+	 *
+	 * @param cellStyle       {@link CellStyle}
+	 * @param cellBorderStyle {@link CellBorderStyle}单元格边框样式和颜色
+	 *                        }
+	 * @return {@link CellStyle}
+	 * @since 6.0.0
+	 */
+	public static CellStyle setBorder(final CellStyle cellStyle, final CellBorderStyle cellBorderStyle) {
+		return cellBorderStyle.setTo(cellStyle);
+	}
+
+	// region ----- color
+
+	/**
+	 * 给cell设置颜色
+	 *
+	 * @param cellStyle   {@link CellStyle}
+	 * @param color       预定义的背景颜色，见{@link IndexedColors}枚举
+	 * @param fillPattern 填充方式 {@link FillPatternType}枚举
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle setColor(final CellStyle cellStyle, final IndexedColors color, final FillPatternType fillPattern) {
+		return setColor(cellStyle, color.index, fillPattern);
+	}
+
+	/**
+	 * 给cell设置颜色（即单元格背景色）
+	 *
+	 * @param cellStyle   {@link CellStyle}
+	 * @param color       预定义的背景颜色，见{@link IndexedColors}枚举
+	 * @param fillPattern 填充方式 {@link FillPatternType}枚举
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle setColor(final CellStyle cellStyle, final short color, final FillPatternType fillPattern) {
+		cellStyle.setFillForegroundColor(color);
+		cellStyle.setFillPattern(ObjUtil.defaultIfNull(fillPattern, FillPatternType.SOLID_FOREGROUND));
+		return cellStyle;
+	}
+
+	/**
+	 * 给cell设置颜色（即单元格背景色）
+	 *
+	 * @param cellStyle   {@link CellStyle}
+	 * @param color       背景颜色
+	 * @param fillPattern 填充方式 {@link FillPatternType}枚举
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle setColor(final XSSFCellStyle cellStyle, final XSSFColor color, final FillPatternType fillPattern) {
+		cellStyle.setFillForegroundColor(color);
+		cellStyle.setFillPattern(ObjUtil.defaultIfNull(fillPattern, FillPatternType.SOLID_FOREGROUND));
+		return cellStyle;
+	}
+
+	// endregion
+
+	// region ----- font
+
+	/**
+	 * 创建字体
+	 *
+	 * @param workbook {@link Workbook}
+	 * @param color    字体颜色
+	 * @param fontSize 字体大小
+	 * @param fontName 字体名称，可以为null使用默认字体
+	 * @return {@link Font}
+	 */
+	public static Font createFont(final Workbook workbook, final short color, final short fontSize, final String fontName) {
+		final Font font = workbook.createFont();
+		return setFontStyle(font, color, fontSize, fontName);
+	}
+
+	/**
+	 * 设置字体样式
+	 *
+	 * @param font     字体{@link Font}
+	 * @param color    字体颜色
+	 * @param fontSize 字体大小
+	 * @param fontName 字体名称，可以为null使用默认字体
+	 * @return {@link Font}
+	 */
+	public static Font setFontStyle(final Font font, final short color, final short fontSize, final String fontName) {
+		if (color > 0) {
+			font.setColor(color);
+		}
+		if (fontSize > 0) {
+			font.setFontHeightInPoints(fontSize);
+		}
+		if (StrUtil.isNotBlank(fontName)) {
+			font.setFontName(fontName);
+		}
+		return font;
+	}
+
+	// endregion
 
 	/**
 	 * 创建数据格式并获取格式
