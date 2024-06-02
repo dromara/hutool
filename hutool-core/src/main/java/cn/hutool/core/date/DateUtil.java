@@ -375,7 +375,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * @return 当前月份
+	 * @return 当前月份，从0开始计数
 	 */
 	public static int thisMonth() {
 		return month(date());
