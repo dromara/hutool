@@ -1,6 +1,7 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.map.TableMap;
+import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -116,6 +117,10 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @param annotations Class, Method, Field等
 	 */
 	private void parseDeclared(Annotation[] annotations) {
+		if(ArrayUtil.isEmpty(annotations)){
+			return;
+		}
+
 		Class<? extends Annotation> annotationType;
 		// 直接注解
 		for (Annotation annotation : annotations) {
@@ -138,6 +143,10 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @param annotations Class, Method, Field等
 	 */
 	private void parse(Annotation[] annotations) {
+		if(ArrayUtil.isEmpty(annotations)){
+			return;
+		}
+
 		Class<? extends Annotation> annotationType;
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
