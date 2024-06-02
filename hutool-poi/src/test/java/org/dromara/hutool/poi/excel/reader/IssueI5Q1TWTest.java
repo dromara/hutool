@@ -10,25 +10,23 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.reader;
 
-import org.dromara.hutool.core.lang.Console;
-import org.junit.jupiter.api.Disabled;
+import org.dromara.hutool.poi.excel.ExcelReader;
+import org.dromara.hutool.poi.excel.ExcelUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-public class Issue3118Test {
+public class IssueI5Q1TWTest {
 
 	@Test
-	@Disabled
-	void readValueTest() {
-		final ExcelReader excelReader = ExcelUtil.getReader("d:/test/bug.xlsx");
+	public void readTest() {
+		final ExcelReader reader = ExcelUtil.getReader("I5Q1TW.xlsx");
 
-		// 忽略表头，直接从第三行开始读取
-		final List<List<Object>> list = excelReader.read(2);
-		for (final List<Object> objects : list) {
-			Console.log(objects);
-		}
+		// 自定义时间格式1
+		Assertions.assertEquals("18:56", reader.readCellValue(0, 0).toString());
+
+		// 自定义时间格式2
+		Assertions.assertEquals("18:56", reader.readCellValue(1, 0).toString());
 	}
 }

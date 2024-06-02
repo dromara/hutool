@@ -10,10 +10,12 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.writer;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.poi.excel.ExcelUtil;
+import org.dromara.hutool.poi.excel.ExcelWriter;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;

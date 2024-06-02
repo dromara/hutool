@@ -10,21 +10,26 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.reader;
 
+import org.dromara.hutool.poi.excel.ExcelReader;
+import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class IssueI5Q1TWTest {
+import java.util.List;
+
+/**
+ *
+ */
+public class Issue3120Test {
 
 	@Test
-	public void readTest() {
-		final ExcelReader reader = ExcelUtil.getReader("I5Q1TW.xlsx");
-
-		// 自定义时间格式1
-		Assertions.assertEquals("18:56", reader.readCellValue(0, 0).toString());
-
-		// 自定义时间格式2
-		Assertions.assertEquals("18:56", reader.readCellValue(1, 0).toString());
+	void readTest() {
+		final ExcelReader reader = ExcelUtil.getReader("issue3120.xlsx");
+		final List<List<Object>> read = reader.read(2, Integer.MAX_VALUE, false);
+		Assertions.assertEquals("[1, null, 100, null, 20]", read.get(0).toString());
+		Assertions.assertEquals("[32, null, 200, null, 30]", read.get(1).toString());
 	}
+
 }

@@ -1025,7 +1025,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		} else if (rowBean instanceof Hyperlink) {
 			// Hyperlink当成一个值
 			return writeRow(ListUtil.of(rowBean), isWriteKeyAsHead);
-		} else if (BeanUtil.isWritableBean(rowBean.getClass())) {
+		} else if (BeanUtil.isReadableBean(rowBean.getClass())) {
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 			} else {

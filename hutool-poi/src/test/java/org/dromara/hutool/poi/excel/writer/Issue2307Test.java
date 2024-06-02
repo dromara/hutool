@@ -10,13 +10,17 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.writer;
 
-import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.poi.excel.ExcelUtil;
+import org.dromara.hutool.poi.excel.ExcelWriter;
+import org.dromara.hutool.poi.excel.StyleSet;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -63,9 +67,9 @@ public class Issue2307Test {
 			}
 
 			// 空串,实际应该有值
-			System.out.println("writer.getCell(1,0): " + writer.getCell(0,1));
-			System.out.println("writer.getCell(1,1): " + writer.getCell(1,1));
-			System.out.println("sheet.getRow(1).getCell(0): " + sheet.getRow(1).getCell(0));
+			Console.log("writer.getCell(1,0): " + writer.getCell(0,1));
+			Console.log("writer.getCell(1,1): " + writer.getCell(1,1));
+			Console.log("sheet.getRow(1).getCell(0): " + sheet.getRow(1).getCell(0));
 		}
 	}
 }
