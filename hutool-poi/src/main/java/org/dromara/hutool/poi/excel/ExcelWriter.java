@@ -16,6 +16,7 @@ import org.apache.poi.common.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.dromara.hutool.core.bean.BeanUtil;
@@ -26,10 +27,11 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.map.TableMap;
+import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.map.multi.RowKeyTable;
 import org.dromara.hutool.core.map.multi.Table;
+import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.poi.excel.cell.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellLocation;
@@ -564,7 +566,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 设置忽略错误，即Excel中的绿色警告小标，只支持XSSFSheet<br>
+	 * 设置忽略错误，即Excel中的绿色警告小标，只支持XSSFSheet和SXSSFSheet<br>
 	 * 见：https://stackoverflow.com/questions/23488221/how-to-remove-warning-in-excel-using-apache-poi-in-java
 	 *
 	 * @param cellRangeAddress  指定单元格范围
@@ -578,6 +580,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (sheet instanceof XSSFSheet) {
 			((XSSFSheet) sheet).addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
 			return this;
+		} else if(sheet instanceof SXSSFSheet){
+			// SXSSFSheet并未提供忽略错误方法，获得其内部_sh字段设置
+			final XSSFSheet xssfSheet = (XSSFSheet) FieldUtil.getFieldValue(sheet, "_sh");
+			if(null != xssfSheet){
+				xssfSheet.addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
+			}
 		}
 
 		throw new UnsupportedOperationException("Only XSSFSheet supports addIgnoredErrors");
