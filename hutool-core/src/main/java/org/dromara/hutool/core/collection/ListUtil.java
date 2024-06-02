@@ -770,4 +770,29 @@ public class ListUtil {
 		}
 		return resList;
 	}
+
+	/**
+	 * 将元素移动到指定列表的新位置。
+	 * <ul>
+	 *     <li>如果元素不在列表中，则将其添加到新位置。</li>
+	 *     <li>如果元素已在列表中，则先移除它，然后再将其添加到新位置。</li>
+	 * </ul>
+	 *
+	 * @param list        原始列表，元素将在这个列表上进行操作。
+	 * @param element     需要移动的元素。
+	 * @param newPosition 元素的新位置，从0开始计数，位置计算是以移除元素后的列表位置计算的
+	 * @param <T>         列表和元素的通用类型。
+	 * @return 更新后的列表。
+	 * @since 5.8.29
+	 */
+	public static <T> List<T> move(final List<T> list, final T element, final int newPosition) {
+		Assert.notNull(list);
+		if (!list.contains(element)) {
+			list.add(newPosition, element);
+		} else {
+			list.remove(element);
+			list.add(newPosition, element);
+		}
+		return list;
+	}
 }

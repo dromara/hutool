@@ -25,23 +25,25 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ListUtilTest {
 
 	@Test
 	public void partitionTest() {
 		List<List<Object>> lists = ListUtil.partition(null, 3);
-		Assertions.assertEquals(ListUtil.empty(), lists);
+		assertEquals(ListUtil.empty(), lists);
 
 		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 1);
-		Assertions.assertEquals("[[1], [2], [3], [4]]", lists.toString());
+		assertEquals("[[1], [2], [3], [4]]", lists.toString());
 		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 2);
-		Assertions.assertEquals("[[1, 2], [3, 4]]", lists.toString());
+		assertEquals("[[1, 2], [3, 4]]", lists.toString());
 		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 3);
-		Assertions.assertEquals("[[1, 2, 3], [4]]", lists.toString());
+		assertEquals("[[1, 2, 3], [4]]", lists.toString());
 		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 4);
-		Assertions.assertEquals("[[1, 2, 3, 4]]", lists.toString());
+		assertEquals("[[1, 2, 3, 4]]", lists.toString());
 		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 5);
-		Assertions.assertEquals("[[1, 2, 3, 4]]", lists.toString());
+		assertEquals("[[1, 2, 3, 4]]", lists.toString());
 	}
 
 	@Test
@@ -63,7 +65,7 @@ public class ListUtilTest {
 		final List<List<String>> ListSplitResult = ListUtil.partition(list, size);
 		stopWatch.stop();
 
-		Assertions.assertEquals(CollSplitResult, ListSplitResult);
+		assertEquals(CollSplitResult, ListSplitResult);
 
 		Console.log(stopWatch.prettyPrint());
 	}
@@ -71,26 +73,26 @@ public class ListUtilTest {
 	@Test
 	public void splitAvgTest() {
 		List<List<Object>> lists = ListUtil.avgPartition(null, 3);
-		Assertions.assertEquals(ListUtil.empty(), lists);
+		assertEquals(ListUtil.empty(), lists);
 
 		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 1);
-		Assertions.assertEquals("[[1, 2, 3, 4]]", lists.toString());
+		assertEquals("[[1, 2, 3, 4]]", lists.toString());
 		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 2);
-		Assertions.assertEquals("[[1, 2], [3, 4]]", lists.toString());
+		assertEquals("[[1, 2], [3, 4]]", lists.toString());
 		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 3);
-		Assertions.assertEquals("[[1, 2], [3], [4]]", lists.toString());
+		assertEquals("[[1, 2], [3], [4]]", lists.toString());
 		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 4);
-		Assertions.assertEquals("[[1], [2], [3], [4]]", lists.toString());
+		assertEquals("[[1], [2], [3], [4]]", lists.toString());
 
 		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3), 5);
-		Assertions.assertEquals("[[1], [2], [3], [], []]", lists.toString());
+		assertEquals("[[1], [2], [3], [], []]", lists.toString());
 		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3), 2);
-		Assertions.assertEquals("[[1, 2], [3]]", lists.toString());
+		assertEquals("[[1, 2], [3]]", lists.toString());
 	}
 
 	@Test
 	public void splitAvgNotZero() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			// limit不能小于等于0
 			ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 0);
 		});
@@ -100,9 +102,9 @@ public class ListUtilTest {
 	public void editTest() {
 		final List<String> a = ListUtil.ofLinked("1", "2", "3");
 		final List<String> filter = CollUtil.edit(a, str -> "edit" + str);
-		Assertions.assertEquals("edit1", filter.get(0));
-		Assertions.assertEquals("edit2", filter.get(1));
-		Assertions.assertEquals("edit3", filter.get(2));
+		assertEquals("edit1", filter.get(0));
+		assertEquals("edit2", filter.get(1));
+		assertEquals("edit3", filter.get(2));
 	}
 
 	@Test
@@ -134,7 +136,7 @@ public class ListUtilTest {
 	public void pageTest2() {
 		final List<Integer> a = ListUtil.ofLinked(1, 2, 3, 4, 5);
 		final int[] d1 = ListUtil.page(a, PageInfo.of(a.size(), 8).setFirstPageNo(0).setPageNo(0))
-				.stream().mapToInt(Integer::valueOf).toArray();
+			.stream().mapToInt(Integer::valueOf).toArray();
 		Assertions.assertArrayEquals(new int[]{1, 2, 3, 4, 5}, d1);
 	}
 
@@ -168,8 +170,8 @@ public class ListUtilTest {
 		sub.remove(0);
 
 		// 对子列表操作不影响原列表
-		Assertions.assertEquals(4, of.size());
-		Assertions.assertEquals(1, sub.size());
+		assertEquals(4, of.size());
+		assertEquals(1, sub.size());
 	}
 
 	@Test
@@ -182,26 +184,26 @@ public class ListUtilTest {
 		}
 
 		final List<TestBean> beanList = ListUtil.of(
-				new TestBean(2, "test2"),
-				new TestBean(1, "test1"),
-				new TestBean(5, "test5"),
-				new TestBean(4, "test4"),
-				new TestBean(3, "test3")
+			new TestBean(2, "test2"),
+			new TestBean(1, "test1"),
+			new TestBean(5, "test5"),
+			new TestBean(4, "test4"),
+			new TestBean(3, "test3")
 		);
 
 		final List<TestBean> order = ListUtil.sortByProperty(beanList, "order");
-		Assertions.assertEquals("test1", order.get(0).getName());
-		Assertions.assertEquals("test2", order.get(1).getName());
-		Assertions.assertEquals("test3", order.get(2).getName());
-		Assertions.assertEquals("test4", order.get(3).getName());
-		Assertions.assertEquals("test5", order.get(4).getName());
+		assertEquals("test1", order.get(0).getName());
+		assertEquals("test2", order.get(1).getName());
+		assertEquals("test3", order.get(2).getName());
+		assertEquals("test4", order.get(3).getName());
+		assertEquals("test5", order.get(4).getName());
 	}
 
 	@Test
 	public void swapIndex() {
 		final List<Integer> list = Arrays.asList(7, 2, 8, 9);
 		ListUtil.swapTo(list, 8, 1);
-		Assertions.assertEquals(8, (int) list.get(1));
+		assertEquals(8, (int) list.get(1));
 	}
 
 	@Test
@@ -215,11 +217,11 @@ public class ListUtilTest {
 		final List<Map<String, String>> list = Arrays.asList(map1, map2, map3);
 		ListUtil.swapElement(list, map2, map3);
 		Map<String, String> map = list.get(2);
-		Assertions.assertEquals("李四", map.get("2"));
+		assertEquals("李四", map.get("2"));
 
 		ListUtil.swapElement(list, map2, map1);
 		map = list.get(0);
-		Assertions.assertEquals("李四", map.get("2"));
+		assertEquals("李四", map.get("2"));
 	}
 
 	@Test
@@ -232,10 +234,10 @@ public class ListUtilTest {
 		list2.add("3");
 		ListUtil.addAllIfNotContains(list1, list2);
 
-		Assertions.assertEquals(3, list1.size());
-		Assertions.assertEquals("1", list1.get(0));
-		Assertions.assertEquals("2", list1.get(1));
-		Assertions.assertEquals("3", list1.get(2));
+		assertEquals(3, list1.size());
+		assertEquals("1", list1.get(0));
+		assertEquals("2", list1.get(1));
+		assertEquals("3", list1.get(2));
 	}
 
 	@Test
@@ -245,40 +247,60 @@ public class ListUtilTest {
 
 		// 替换原值
 		ListUtil.setOrPadding(list, 0, "a");
-		Assertions.assertEquals("[a]", list.toString());
+		assertEquals("[a]", list.toString());
 
 		//append值
 		ListUtil.setOrPadding(list, 1, "a");
-		Assertions.assertEquals("[a, a]", list.toString());
+		assertEquals("[a, a]", list.toString());
 
 		// padding null 后加入值
 		ListUtil.setOrPadding(list, 3, "a");
-		Assertions.assertEquals(4, list.size());
+		assertEquals(4, list.size());
 	}
 
 	@Test
-	public void ofCopyOnWriteTest(){
+	public void ofCopyOnWriteTest() {
 		final CopyOnWriteArrayList<String> strings = ListUtil.ofCopyOnWrite(ListUtil.of("a", "b"));
-		Assertions.assertEquals(2, strings.size());
+		assertEquals(2, strings.size());
 	}
 
 	@Test
-	public void ofCopyOnWriteTest2(){
+	public void ofCopyOnWriteTest2() {
 		final CopyOnWriteArrayList<String> strings = ListUtil.ofCopyOnWrite("a", "b");
-		Assertions.assertEquals(2, strings.size());
+		assertEquals(2, strings.size());
 	}
 
 	@Test
 	void reverseNewTest() {
 		final List<Integer> view = ListUtil.view(1, 2, 3);
 		final List<Integer> reverse = ListUtil.reverseNew(view);
-		Assertions.assertEquals("[3, 2, 1]", reverse.toString());
+		assertEquals("[3, 2, 1]", reverse.toString());
 	}
 
 	@Test
 	void reverseNewTest2() {
 		final List<Integer> list = ListUtil.of(1, 2, 3);
-
 		ListUtil.reverseNew(list);
+	}
+
+	@Test
+	public void testMoveElementToPosition() {
+		List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+
+		// Move "B" to position 2
+		final List<String> expectedResult1 = new ArrayList<>(Arrays.asList("A", "C", "B", "D"));
+		assertEquals(expectedResult1, ListUtil.move(list, "B", 2));
+
+		list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+
+		// Move "D" to position 0
+		final List<String> expectedResult2 = new ArrayList<>(Arrays.asList("D", "A", "B", "C"));
+		assertEquals(expectedResult2, ListUtil.move(list, "D", 0));
+
+		list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+
+		// Move "E" (not in list) to position 1
+		final List<String> expectedResult3 = new ArrayList<>(Arrays.asList("A", "E", "B", "C", "D"));
+		assertEquals(expectedResult3, ListUtil.move(list, "E", 1));
 	}
 }
