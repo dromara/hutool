@@ -721,4 +721,30 @@ public class ListUtil {
 		}
 		return list;
 	}
+
+	/**
+	 * 将指定元素移动到目标元素的后一个位置，其他元素的相对位置不变
+	 *
+	 * @param list          原始列表，元素将在这个列表上进行操作
+	 * @param element       需要移动的元素
+	 * @param targetElement 目标元素
+	 * @param <T>           列表和元素的通用类型
+	 * @return 更新后的列表
+	 */
+	public static <T> List<T> moveAfter(List<T> list, T element, T targetElement) {
+		Assert.notNull(list, "List must be not null !");
+		if (!list.contains(targetElement)) {
+			throw new NoSuchElementException("TargetElement is not found !");
+		}
+		if (element.equals(targetElement)) {
+			return list;
+		}
+		if (list.indexOf(element) < list.indexOf(targetElement)) {
+			final int targetNewPosition = list.indexOf(targetElement);
+			return move(list, element, targetNewPosition);
+		} else {
+			final int targetNewPosition = list.indexOf(targetElement) + 1;
+			return move(list, element, targetNewPosition);
+		}
+	}
 }
