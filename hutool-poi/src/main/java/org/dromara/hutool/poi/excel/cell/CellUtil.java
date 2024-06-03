@@ -12,18 +12,18 @@
 
 package org.dromara.hutool.poi.excel.cell;
 
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.ss.util.RegionUtil;
+import org.apache.poi.ss.util.SheetUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.StyleSet;
 import org.dromara.hutool.poi.excel.cell.editors.TrimEditor;
 import org.dromara.hutool.poi.excel.cell.setters.CellSetterFactory;
 import org.dromara.hutool.poi.excel.cell.values.ErrorCellValue;
 import org.dromara.hutool.poi.excel.cell.values.NumericCellValue;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.ss.util.SheetUtil;
 
 /**
  * Excel表格中单元格工具类
@@ -261,56 +261,6 @@ public class CellUtil {
 	}
 	// endregion
 
-	// region ----- getCellRangeAddress
-	/**
-	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
-	 *
-	 * @param sheet       {@link Sheet}
-	 * @param locationRef 单元格地址标识符，例如A11，B5
-	 * @return {@link CellRangeAddress}
-	 * @since 5.8.0
-	 */
-	public static CellRangeAddress getCellRangeAddress(final Sheet sheet, final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return getCellRangeAddress(sheet, cellLocation.getX(), cellLocation.getY());
-	}
-
-	/**
-	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
-	 *
-	 * @param cell {@link Cell}
-	 * @return {@link CellRangeAddress}
-	 * @since 5.8.0
-	 */
-	public static CellRangeAddress getCellRangeAddress(final Cell cell) {
-		return getCellRangeAddress(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
-	}
-
-	/**
-	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
-	 *
-	 * @param sheet {@link Sheet}
-	 * @param x     列号，从0开始
-	 * @param y     行号，从0开始
-	 * @return {@link CellRangeAddress}
-	 * @since 5.8.0
-	 */
-	public static CellRangeAddress getCellRangeAddress(final Sheet sheet, final int x, final int y) {
-		if (sheet != null) {
-			final int sheetMergeCount = sheet.getNumMergedRegions();
-			CellRangeAddress ca;
-			for (int i = 0; i < sheetMergeCount; i++) {
-				ca = sheet.getMergedRegion(i);
-				if (y >= ca.getFirstRow() && y <= ca.getLastRow()
-						&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
-					return ca;
-				}
-			}
-		}
-		return null;
-	}
-	// endregion
-
 	// region ----- merging 合并单元格
 	/**
 	 * 判断指定的单元格是否是合并单元格
@@ -321,8 +271,8 @@ public class CellUtil {
 	 * @since 5.1.5
 	 */
 	public static boolean isMergedRegion(final Sheet sheet, final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return isMergedRegion(sheet, cellLocation.getX(), cellLocation.getY());
+		final CellReference cellReference = new CellReference(locationRef);
+		return isMergedRegion(sheet, cellReference.getCol(), cellReference.getRow());
 	}
 
 	/**
@@ -361,35 +311,22 @@ public class CellUtil {
 	 * 合并单元格，可以根据设置的值来合并行和列
 	 *
 	 * @param sheet       表对象
-	 * @param firstRow    起始行，0开始
-	 * @param lastRow     结束行，0开始
-	 * @param firstColumn 起始列，0开始
-	 * @param lastColumn  结束列，0开始
+	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
 	 * @return 合并后的单元格号
 	 */
-	public static int mergingCells(final Sheet sheet, final int firstRow, final int lastRow, final int firstColumn, final int lastColumn) {
-		return mergingCells(sheet, firstRow, lastRow, firstColumn, lastColumn, null);
+	public static int mergingCells(final Sheet sheet, final CellRangeAddress cellRangeAddress) {
+		return mergingCells(sheet, cellRangeAddress, null);
 	}
 
 	/**
 	 * 合并单元格，可以根据设置的值来合并行和列
 	 *
 	 * @param sheet       表对象
-	 * @param firstRow    起始行，0开始
-	 * @param lastRow     结束行，0开始
-	 * @param firstColumn 起始列，0开始
-	 * @param lastColumn  结束列，0开始
+	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
 	 * @param cellStyle   单元格样式，只提取边框样式，null表示无样式
 	 * @return 合并后的单元格号
 	 */
-	public static int mergingCells(final Sheet sheet, final int firstRow, final int lastRow, final int firstColumn, final int lastColumn, final CellStyle cellStyle) {
-		final CellRangeAddress cellRangeAddress = new CellRangeAddress(//
-				firstRow, // first row (0-based)
-				lastRow, // last row (0-based)
-				firstColumn, // first column (0-based)
-				lastColumn // last column (0-based)
-		);
-
+	public static int mergingCells(final Sheet sheet, final CellRangeAddress cellRangeAddress, final CellStyle cellStyle) {
 		setMergeCellStyle(cellStyle, cellRangeAddress, sheet);
 		return sheet.addMergedRegion(cellRangeAddress);
 	}
@@ -404,8 +341,8 @@ public class CellUtil {
 	 * @since 5.1.5
 	 */
 	public static Object getMergedRegionValue(final Sheet sheet, final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return getMergedRegionValue(sheet, cellLocation.getX(), cellLocation.getY());
+		final CellReference cellReference = new CellReference(locationRef);
+		return getMergedRegionValue(sheet, cellReference.getCol(), cellReference.getRow());
 	}
 
 	/**

@@ -12,6 +12,11 @@
 
 package org.dromara.hutool.poi.excel.writer;
 
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -22,10 +27,6 @@ import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.ExcelWriter;
 import org.dromara.hutool.poi.excel.TestBean;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -102,7 +103,7 @@ public class BigExcelWriteTest {
 		writer.write(rows);
 
 		// 合并单元格后的标题行，使用默认标题样式
-		writer.merge(7, 10, 4, 10, "测试Merge", false);
+		writer.merge(new CellRangeAddress(7, 10, 4, 10), "测试Merge", false);
 
 		// 关闭writer，释放内存
 		writer.close();

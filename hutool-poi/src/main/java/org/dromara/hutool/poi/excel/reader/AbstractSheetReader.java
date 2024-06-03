@@ -12,12 +12,12 @@
 
 package org.dromara.hutool.poi.excel.reader;
 
+import org.apache.poi.ss.usermodel.Sheet;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.RowUtil;
 import org.dromara.hutool.poi.excel.cell.CellEditor;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.dromara.hutool.poi.excel.cell.CellReferenceUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -137,7 +137,7 @@ public abstract class AbstractSheetReader<T> implements SheetReader<T> {
 	 */
 	protected String aliasHeader(final Object headerObj, final int index) {
 		if (null == headerObj) {
-			return ExcelUtil.indexToColName(index);
+			return CellReferenceUtil.indexToColName(index);
 		}
 
 		final String header = headerObj.toString();

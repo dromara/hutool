@@ -16,6 +16,7 @@ import org.apache.poi.common.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -34,7 +35,7 @@ import org.dromara.hutool.core.map.multi.Table;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.poi.excel.cell.CellEditor;
-import org.dromara.hutool.poi.excel.cell.CellLocation;
+import org.dromara.hutool.poi.excel.cell.CellRangeUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.style.Align;
 
@@ -681,7 +682,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
 		final int rowIndex = this.currentRow.get();
-		merge(rowIndex, rowIndex, 0, lastColumn, content, isSetHeaderStyle);
+		merge(CellRangeUtil.ofSingleRow(rowIndex, lastColumn), content, isSetHeaderStyle);
 
 		// 设置内容后跳到下一行
 		if (null != content) {
@@ -694,16 +695,13 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 合并某行的单元格，并写入对象到单元格<br>
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
 	 *
-	 * @param firstRow         起始行，0开始
-	 * @param lastRow          结束行，0开始
-	 * @param firstColumn      起始列，0开始
-	 * @param lastColumn       结束列，0开始
+	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
 	 * @param content          合并单元格后的内容
 	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式，只提取边框样式
 	 * @return this
 	 * @since 4.0.10
 	 */
-	public ExcelWriter merge(final int firstRow, final int lastRow, final int firstColumn, final int lastColumn, final Object content, final boolean isSetHeaderStyle) {
+	public ExcelWriter merge(final CellRangeAddress cellRangeAddress, final Object content, final boolean isSetHeaderStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
 		CellStyle style = null;
@@ -711,30 +709,27 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			style = styleSet.getStyleByValueType(content, isSetHeaderStyle);
 		}
 
-		return merge(firstRow, lastRow, firstColumn, lastColumn, content, style);
+		return merge(cellRangeAddress, content, style);
 	}
 
 	/**
 	 * 合并单元格，并写入对象到单元格,使用指定的样式<br>
 	 * 指定样式传入null，则不使用任何样式
 	 *
-	 * @param firstRow    起始行，0开始
-	 * @param lastRow     结束行，0开始
-	 * @param firstColumn 起始列，0开始
-	 * @param lastColumn  结束列，0开始
+	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
 	 * @param content     合并单元格后的内容
 	 * @param cellStyle   合并后单元格使用的样式，可以为null
 	 * @return this
 	 * @since 5.6.5
 	 */
-	public ExcelWriter merge(final int firstRow, final int lastRow, final int firstColumn, final int lastColumn, final Object content, final CellStyle cellStyle) {
+	public ExcelWriter merge(final CellRangeAddress cellRangeAddress, final Object content, final CellStyle cellStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
-		CellUtil.mergingCells(this.getSheet(), firstRow, lastRow, firstColumn, lastColumn, cellStyle);
+		CellUtil.mergingCells(this.getSheet(), cellRangeAddress, cellStyle);
 
 		// 设置内容
 		if (null != content) {
-			final Cell cell = getOrCreateCell(firstColumn, firstRow);
+			final Cell cell = getOrCreateCell(cellRangeAddress.getFirstColumn(), cellRangeAddress.getFirstRow());
 			CellUtil.setCellValue(cell, content, cellStyle, this.cellEditor);
 		}
 		return this;
@@ -1198,8 +1193,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 5.1.4
 	 */
 	public ExcelWriter writeCellValue(final String locationRef, final Object value) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return writeCellValue(cellLocation.getX(), cellLocation.getY(), value);
+		final CellReference cellReference = new CellReference(locationRef);
+		return writeCellValue(cellReference.getCol(), cellReference.getRow(), value);
 	}
 
 	/**
@@ -1247,8 +1242,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 5.1.4
 	 */
 	public ExcelWriter setStyle(final CellStyle style, final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return setStyle(style, cellLocation.getX(), cellLocation.getY());
+		final CellReference cellReference = new CellReference(locationRef);
+		return setStyle(style, cellReference.getCol(), cellReference.getRow());
 	}
 
 	/**

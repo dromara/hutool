@@ -17,8 +17,6 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.poi.PoiChecker;
-import org.dromara.hutool.poi.excel.cell.CellLocation;
-import org.dromara.hutool.poi.excel.cell.CellLocationUtil;
 import org.dromara.hutool.poi.excel.sax.ExcelSaxReader;
 import org.dromara.hutool.poi.excel.sax.ExcelSaxUtil;
 import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
@@ -453,39 +451,5 @@ public class ExcelUtil {
 		} catch (final NoClassDefFoundError e) {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
-	}
-
-	/**
-	 * 将Sheet列号变为列名
-	 *
-	 * @param index 列号, 从0开始
-	 * @return 0-》A; 1-》B...26-》AA
-	 * @since 4.1.20
-	 */
-	public static String indexToColName(final int index) {
-		return CellLocationUtil.indexToColName(index);
-	}
-
-	/**
-	 * 根据表元的列名转换为列号
-	 *
-	 * @param colName 列名, 从A开始
-	 * @return A1-》0; B1-》1...AA1-》26
-	 * @since 4.1.20
-	 */
-	public static int colNameToIndex(final String colName) {
-		return CellLocationUtil.colNameToIndex(colName);
-	}
-
-	/**
-	 * 将Excel中地址标识符（例如A11，B5）等转换为行列表示<br>
-	 * 例如：A11 -》 x:0,y:10，B5-》x:1,y:4
-	 *
-	 * @param locationRef 单元格地址标识符，例如A11，B5
-	 * @return 坐标点，x表示行，从0开始，y表示列，从0开始
-	 * @since 5.1.4
-	 */
-	public static CellLocation toLocation(final String locationRef) {
-		return CellLocationUtil.toLocation(locationRef);
 	}
 }

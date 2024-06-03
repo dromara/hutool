@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.poi.excel.writer;
 
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.poi.excel.ExcelUtil;
@@ -84,9 +85,9 @@ public class Issue2221Test {
 		writer.setOnlyAlias(true);
 
 		// 设置合并的单元格
-		writer.merge(0, 1, 0, 0, "日期", true);
-		writer.merge(0, 0, 1, 2, "运行次数", true);
-		writer.merge(0, 0, 3, 4, "新增人数", true);
+		writer.merge(new CellRangeAddress(0, 1, 0, 0), "日期", true);
+		writer.merge(new CellRangeAddress(0, 0, 1, 2), "运行次数", true);
+		writer.merge(new CellRangeAddress(0, 0, 3, 4), "新增人数", true);
 
 		// 写入数据
 		final List<Map<Object, Object>> data = ListUtil.view(

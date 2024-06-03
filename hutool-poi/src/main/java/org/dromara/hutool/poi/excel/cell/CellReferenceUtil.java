@@ -12,16 +12,16 @@
 
 package org.dromara.hutool.poi.excel.cell;
 
-import org.dromara.hutool.core.regex.ReUtil;
+import org.apache.poi.ss.util.CellReference;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**
- * 单元格位置工具类，提供包括行号转行名称、列号转列名称等功能。
+ * 单元格位置{@link CellReference}工具类，提供包括行号转行名称、列号转列名称等功能。
  *
  * @author looly
  * @since 6.0.0
  */
-public class CellLocationUtil {
+public class CellReferenceUtil {
 	/**
 	 * 将Sheet列号变为列名
 	 *
@@ -66,14 +66,12 @@ public class CellLocationUtil {
 
 	/**
 	 * 将Excel中地址标识符（例如A11，B5）等转换为行列表示<br>
-	 * 例如：A11 -》 x:0,y:10，B5-》x:1,y:4
+	 * 例如：A11 -》 col:0,row:10，B5-》col:1,row:4
 	 *
 	 * @param locationRef 单元格地址标识符，例如A11，B5
-	 * @return 坐标点，x表示行，从0开始，y表示列，从0开始
+	 * @return 坐标点
 	 */
-	public static CellLocation toLocation(final String locationRef) {
-		final int x = colNameToIndex(locationRef);
-		final int y = ReUtil.getFirstNumber(locationRef) - 1;
-		return new CellLocation(x, y);
+	public static CellReference toCellReference(final String locationRef) {
+		return new CellReference(locationRef);
 	}
 }

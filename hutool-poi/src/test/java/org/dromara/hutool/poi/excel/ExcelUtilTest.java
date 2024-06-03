@@ -12,7 +12,8 @@
 
 package org.dromara.hutool.poi.excel;
 
-import org.dromara.hutool.poi.excel.cell.CellLocation;
+import org.apache.poi.ss.util.CellReference;
+import org.dromara.hutool.poi.excel.cell.CellReferenceUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,39 +24,39 @@ public class ExcelUtilTest {
 
 	@Test
 	public void indexToColNameTest() {
-		Assertions.assertEquals("A", ExcelUtil.indexToColName(0));
-		Assertions.assertEquals("B", ExcelUtil.indexToColName(1));
-		Assertions.assertEquals("C", ExcelUtil.indexToColName(2));
+		Assertions.assertEquals("A", CellReferenceUtil.indexToColName(0));
+		Assertions.assertEquals("B", CellReferenceUtil.indexToColName(1));
+		Assertions.assertEquals("C", CellReferenceUtil.indexToColName(2));
 
-		Assertions.assertEquals("AA", ExcelUtil.indexToColName(26));
-		Assertions.assertEquals("AB", ExcelUtil.indexToColName(27));
-		Assertions.assertEquals("AC", ExcelUtil.indexToColName(28));
+		Assertions.assertEquals("AA", CellReferenceUtil.indexToColName(26));
+		Assertions.assertEquals("AB", CellReferenceUtil.indexToColName(27));
+		Assertions.assertEquals("AC", CellReferenceUtil.indexToColName(28));
 
-		Assertions.assertEquals("AAA", ExcelUtil.indexToColName(702));
-		Assertions.assertEquals("AAB", ExcelUtil.indexToColName(703));
-		Assertions.assertEquals("AAC", ExcelUtil.indexToColName(704));
+		Assertions.assertEquals("AAA", CellReferenceUtil.indexToColName(702));
+		Assertions.assertEquals("AAB", CellReferenceUtil.indexToColName(703));
+		Assertions.assertEquals("AAC", CellReferenceUtil.indexToColName(704));
 	}
 
 	@Test
 	public void colNameToIndexTest() {
-		Assertions.assertEquals(704, ExcelUtil.colNameToIndex("AAC"));
-		Assertions.assertEquals(703, ExcelUtil.colNameToIndex("AAB"));
-		Assertions.assertEquals(702, ExcelUtil.colNameToIndex("AAA"));
+		Assertions.assertEquals(704, CellReferenceUtil.colNameToIndex("AAC"));
+		Assertions.assertEquals(703, CellReferenceUtil.colNameToIndex("AAB"));
+		Assertions.assertEquals(702, CellReferenceUtil.colNameToIndex("AAA"));
 
-		Assertions.assertEquals(28, ExcelUtil.colNameToIndex("AC"));
-		Assertions.assertEquals(27, ExcelUtil.colNameToIndex("AB"));
-		Assertions.assertEquals(26, ExcelUtil.colNameToIndex("AA"));
+		Assertions.assertEquals(28, CellReferenceUtil.colNameToIndex("AC"));
+		Assertions.assertEquals(27, CellReferenceUtil.colNameToIndex("AB"));
+		Assertions.assertEquals(26, CellReferenceUtil.colNameToIndex("AA"));
 
-		Assertions.assertEquals(2, ExcelUtil.colNameToIndex("C"));
-		Assertions.assertEquals(1, ExcelUtil.colNameToIndex("B"));
-		Assertions.assertEquals(0, ExcelUtil.colNameToIndex("A"));
+		Assertions.assertEquals(2, CellReferenceUtil.colNameToIndex("C"));
+		Assertions.assertEquals(1, CellReferenceUtil.colNameToIndex("B"));
+		Assertions.assertEquals(0, CellReferenceUtil.colNameToIndex("A"));
 	}
 
 	@Test
-	public void toLocationTest() {
-		final CellLocation a11 = ExcelUtil.toLocation("A11");
-		Assertions.assertEquals(0, a11.getX());
-		Assertions.assertEquals(10, a11.getY());
+	public void cellReferenceTest() {
+		final CellReference a11 = new CellReference("A11");
+		Assertions.assertEquals(0, a11.getCol());
+		Assertions.assertEquals(10, a11.getRow());
 	}
 
 	@Test

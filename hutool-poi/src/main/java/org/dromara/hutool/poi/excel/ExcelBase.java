@@ -12,20 +12,20 @@
 
 package org.dromara.hutool.poi.excel;
 
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.net.url.UrlEncoder;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.poi.excel.cell.CellLocation;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
-import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.Closeable;
 import java.io.File;
@@ -229,8 +229,8 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @since 5.1.4
 	 */
 	public Cell getCell(final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return getCell(cellLocation.getX(), cellLocation.getY());
+		final CellReference cellReference = new CellReference(locationRef);
+		return getCell(cellReference.getCol(), cellReference.getRow());
 	}
 
 	/**
@@ -253,8 +253,8 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @since 5.1.4
 	 */
 	public Cell getOrCreateCell(final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return getOrCreateCell(cellLocation.getX(), cellLocation.getY());
+		final CellReference cellReference = new CellReference(locationRef);
+		return getOrCreateCell(cellReference.getCol(), cellReference.getRow());
 	}
 
 	/**
@@ -278,8 +278,8 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @since 5.1.4
 	 */
 	public Cell getCell(final String locationRef, final boolean isCreateIfNotExist) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return getCell(cellLocation.getX(), cellLocation.getY(), isCreateIfNotExist);
+		final CellReference cellReference = new CellReference(locationRef);
+		return getCell(cellReference.getCol(), cellReference.getRow(), isCreateIfNotExist);
 	}
 
 	/**
@@ -319,8 +319,8 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @since 5.1.4
 	 */
 	public CellStyle getOrCreateCellStyle(final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return getOrCreateCellStyle(cellLocation.getX(), cellLocation.getY());
+		final CellReference cellReference = new CellReference(locationRef);
+		return getOrCreateCellStyle(cellReference.getCol(), cellReference.getRow());
 	}
 
 	/**
@@ -344,8 +344,8 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @since 5.1.4
 	 */
 	public CellStyle createCellStyle(final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return createCellStyle(cellLocation.getX(), cellLocation.getY());
+		final CellReference cellReference = new CellReference(locationRef);
+		return createCellStyle(cellReference.getCol(), cellReference.getRow());
 	}
 
 	/**

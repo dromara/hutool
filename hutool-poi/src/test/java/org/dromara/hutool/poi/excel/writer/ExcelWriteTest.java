@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.poi.excel.writer;
 
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -187,7 +188,7 @@ public class ExcelWriteTest {
 		writer.write(rows);
 
 		// 合并单元格后的标题行，使用默认标题样式
-		writer.merge(7, 10, 4, 10, "测试Merge", false);
+		writer.merge(new CellRangeAddress(7, 10, 4, 10), "测试Merge", false);
 
 		// 关闭writer，释放内存
 		writer.close();
@@ -705,14 +706,14 @@ public class ExcelWriteTest {
 		cellStyle.setFont(font);
 
 		// 合并单元格后的标题行，使用设置好的样式
-		writer.merge(0, 1, 0, row1.size() - 1, "标题XXXXXXXX", cellStyle);
+		writer.merge(new CellRangeAddress(0, 1, 0, row1.size() - 1), "标题XXXXXXXX", cellStyle);
 		Console.log(writer.getCurrentRow());
 
 		//设置复杂表头
-		writer.merge(2, 3, 0, 0, "序号", true);
-		writer.merge(2, 2, 1, 2, "AABB", true);
-		writer.merge(2, 3, 3, 3, "CCCC", true);
-		writer.merge(2, 2, 4, 5, "DDEE", true);
+		writer.merge(new CellRangeAddress(2, 3, 0, 0), "序号", true);
+		writer.merge(new CellRangeAddress(2, 2, 1, 2), "AABB", true);
+		writer.merge(new CellRangeAddress(2, 3, 3, 3), "CCCC", true);
+		writer.merge(new CellRangeAddress(2, 2, 4, 5), "DDEE", true);
 		writer.setCurrentRow(3);
 
 		final List<String> sechead = ListUtil.of("AA", "BB", "DD", "EE");
@@ -775,7 +776,7 @@ public class ExcelWriteTest {
 
 		//合并单元格后的标题行，使用默认标题样式
 		writer.merge(7, "测试标题");
-		writer.merge(3, 4, 0, 0, new XSSFRichTextString("9999"), true);
+		writer.merge(new CellRangeAddress(3, 4, 0, 0), new XSSFRichTextString("9999"), true);
 		writer.write(list, true);
 		writer.close();
 	}
@@ -789,7 +790,7 @@ public class ExcelWriteTest {
 		final String path = "d:/test/mergeForDate.xlsx";
 		FileUtil.del(FileUtil.file(path));
 		final ExcelWriter writer = ExcelUtil.getWriter(path);
-		writer.merge(0, 3, 0, 2, DateUtil.now(), false);
+		writer.merge(new CellRangeAddress(0, 3, 0, 2), DateUtil.now(), false);
 		writer.close();
 	}
 
@@ -870,7 +871,7 @@ public class ExcelWriteTest {
 		FileUtil.del(tempFile);
 
 		final BigExcelWriter writer = new BigExcelWriter(tempFile);
-		writer.merge(0, 1, 2, 2, 3.99, false);
+		writer.merge(new CellRangeAddress(0, 1, 2, 2), 3.99, false);
 		writer.close();
 	}
 
