@@ -733,8 +733,11 @@ public class ListUtil {
 	 */
 	public static <T> List<T> moveAfter(List<T> list, T element, T targetElement) {
 		Assert.notNull(list, "List must be not null !");
+		if (!list.contains(element)) {
+			throw new NoSuchElementException("Element not found !");
+		}
 		if (!list.contains(targetElement)) {
-			throw new NoSuchElementException("TargetElement is not found !");
+			throw new NoSuchElementException("TargetElement not found !");
 		}
 		if (element.equals(targetElement)) {
 			return list;

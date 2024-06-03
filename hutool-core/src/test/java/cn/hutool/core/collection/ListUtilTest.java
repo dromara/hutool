@@ -284,4 +284,23 @@ public class ListUtilTest {
 		List<String> expectedResult3 = new ArrayList<>(Arrays.asList("A", "E", "B", "C", "D"));
 		assertEquals(expectedResult3, ListUtil.move(list, "E", 1));
 	}
+
+	@Test
+	public void testMoveAfter() {
+		// Move 1 after 4
+		List<Integer> list1 = new ArrayList<>();
+		for (int i = 1; i <= 4; i++) {
+			list1.add(i);
+		}
+		List<Integer> expectedResult1 = new ArrayList<>(Arrays.asList(2, 3, 4, 1));
+		assertEquals(expectedResult1, ListUtil.moveAfter(list1, 1, 4));
+
+		// Move 2 after 2
+		List<Integer> list2 = new ArrayList<>();
+		for (int i = 1; i <= 4; i++) {
+			list2.add(i);
+		}
+		List<Integer> expectedResult2 = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
+		assertEquals(expectedResult2, ListUtil.moveAfter(list2, 2, 2));
+	}
 }
