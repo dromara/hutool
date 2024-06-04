@@ -97,7 +97,7 @@ public class SplitUtil {
 
 	/**
 	 * 切分字符串，不忽略大小写
-	 *
+	 *os
 	 * @param str         被切分的字符串
 	 * @param separator   分隔符字符串
 	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
