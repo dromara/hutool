@@ -13,7 +13,8 @@
 package org.dromara.hutool.poi.excel.style;
 
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.util.CellReference;
 
 public interface StyleSet {
-	CellStyle getStyleFor(int x, int y, Object cellValue);
+	CellStyle getStyleFor(CellReference reference, Object cellValue);
 }

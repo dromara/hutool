@@ -17,13 +17,11 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.ss.util.SheetUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.poi.excel.StyleSet;
 import org.dromara.hutool.poi.excel.cell.editors.TrimEditor;
 import org.dromara.hutool.poi.excel.cell.setters.CellSetterFactory;
-import org.dromara.hutool.poi.excel.cell.values.ErrorCellValue;
-import org.dromara.hutool.poi.excel.cell.values.NumericCellValue;
+import org.dromara.hutool.poi.excel.cell.values.CompositeCellValue;
 
 /**
  * Excel表格中单元格工具类
@@ -91,47 +89,10 @@ public class CellUtil {
 	 * @param cellEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
-	public static Object getCellValue(Cell cell, CellType cellType, final CellEditor cellEditor) {
-		if (null == cell) {
-			return null;
-		}
-		if (cell instanceof NullCell) {
-			return null == cellEditor ? null : cellEditor.edit(cell, null);
-		}
-		if (null == cellType) {
-			cellType = cell.getCellType();
-		}
-
-		// 尝试获取合并单元格，如果是合并单元格，则重新获取单元格类型
-		final Cell mergedCell = getMergedRegionCell(cell);
-		if (mergedCell != cell) {
-			cell = mergedCell;
-			cellType = cell.getCellType();
-		}
-
-		final Object value;
-		switch (cellType) {
-			case NUMERIC:
-				value = new NumericCellValue(cell).getValue();
-				break;
-			case BOOLEAN:
-				value = cell.getBooleanCellValue();
-				break;
-			case FORMULA:
-				value = getCellValue(cell, cell.getCachedFormulaResultType(), cellEditor);
-				break;
-			case BLANK:
-				value = StrUtil.EMPTY;
-				break;
-			case ERROR:
-				value = new ErrorCellValue(cell).getValue();
-				break;
-			default:
-				value = cell.getStringCellValue();
-		}
-
-		return null == cellEditor ? value : cellEditor.edit(cell, value);
+	public static Object getCellValue(final Cell cell, final CellType cellType, final CellEditor cellEditor) {
+		return CompositeCellValue.of(cell, cellType, cellEditor).getValue();
 	}
+
 	// endregion
 
 	// region ----- setCellValue
@@ -151,11 +112,12 @@ public class CellUtil {
 			return;
 		}
 
+		CellStyle cellStyle = null;
 		if (null != styleSet) {
-			cell.setCellStyle(styleSet.getStyleByValueType(value, isHeader));
+			cellStyle = styleSet.getStyleByValueType(value, isHeader);
 		}
 
-		setCellValue(cell, value, cellEditor);
+		setCellValue(cell, value, cellStyle, cellEditor);
 	}
 
 	/**
