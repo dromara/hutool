@@ -397,6 +397,10 @@ public class CollUtil {
 	 * @return 单差集
 	 */
 	public static <T> Collection<T> subtract(final Collection<T> coll1, final Collection<T> coll2) {
+		if(isEmpty(coll1) || isEmpty(coll2)){
+			return coll1;
+		}
+
 		Collection<T> result = ObjUtil.clone(coll1);
 		if (null == result) {
 			result = CollUtil.create(coll1.getClass());
