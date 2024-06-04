@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,19 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.style;
 
-import org.dromara.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -31,11 +23,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * 样式集合，此样式集合汇集了整个工作簿的样式，用于减少样式的创建和冗余
+ * 默认样式集合，定义了标题、数字、日期等默认样式
  *
- * @author looly
+ * @author Looly
+ * @since 6.0.0
  */
-public class StyleSet implements Serializable {
+public class DefaultStyleSet implements StyleSet, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -45,30 +38,30 @@ public class StyleSet implements Serializable {
 	/**
 	 * 标题样式
 	 */
-	protected final CellStyle headCellStyle;
+	private final CellStyle headCellStyle;
 	/**
 	 * 默认样式
 	 */
-	protected final CellStyle cellStyle;
+	private final CellStyle cellStyle;
 	/**
 	 * 默认数字样式
 	 */
-	protected final CellStyle cellStyleForNumber;
+	private final CellStyle cellStyleForNumber;
 	/**
 	 * 默认日期样式
 	 */
-	protected final CellStyle cellStyleForDate;
+	private final CellStyle cellStyleForDate;
 	/**
 	 * 默认链接样式
 	 */
-	protected final CellStyle cellStyleForHyperlink;
+	private final CellStyle cellStyleForHyperlink;
 
 	/**
 	 * 构造
 	 *
 	 * @param workbook 工作簿
 	 */
-	public StyleSet(final Workbook workbook) {
+	public DefaultStyleSet(final Workbook workbook) {
 		this.workbook = workbook;
 		this.headCellStyle = StyleUtil.createHeadCellStyle(workbook);
 		this.cellStyle = StyleUtil.createDefaultCellStyle(workbook);
@@ -86,10 +79,44 @@ public class StyleSet implements Serializable {
 
 		// 默认链接样式
 		this.cellStyleForHyperlink = StyleUtil.cloneCellStyle(workbook, this.cellStyle);
-		final Font font = this.workbook.createFont();
+		final Font font = workbook.createFont();
 		font.setUnderline((byte) 1);
 		font.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
 		this.cellStyleForHyperlink.setFont(font);
+	}
+
+
+	@Override
+	public CellStyle getStyleFor(final CellReference reference, final Object cellValue, final boolean isHeader) {
+		CellStyle style = null;
+
+		if (isHeader && null != this.headCellStyle) {
+			style = headCellStyle;
+		} else if (null != cellStyle) {
+			style = cellStyle;
+		}
+
+		if (cellValue instanceof Date
+			|| cellValue instanceof TemporalAccessor
+			|| cellValue instanceof Calendar) {
+			// 日期单独定义格式
+			if (null != this.cellStyleForDate) {
+				style = this.cellStyleForDate;
+			}
+		} else if (cellValue instanceof Number) {
+			// 数字单独定义格式
+			if ((cellValue instanceof Double || cellValue instanceof Float || cellValue instanceof BigDecimal) &&
+				null != this.cellStyleForNumber) {
+				style = this.cellStyleForNumber;
+			}
+		} else if (cellValue instanceof Hyperlink) {
+			// 自定义超链接样式
+			if (null != this.cellStyleForHyperlink) {
+				style = this.cellStyleForHyperlink;
+			}
+		}
+
+		return style;
 	}
 
 	/**
@@ -146,7 +173,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public StyleSet setBorder(final BorderStyle borderSize, final IndexedColors colorIndex) {
+	public DefaultStyleSet setBorder(final BorderStyle borderSize, final IndexedColors colorIndex) {
 		StyleUtil.setBorder(this.headCellStyle, borderSize, colorIndex);
 		StyleUtil.setBorder(this.cellStyle, borderSize, colorIndex);
 		StyleUtil.setBorder(this.cellStyleForNumber, borderSize, colorIndex);
@@ -163,7 +190,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public StyleSet setAlign(final HorizontalAlignment halign, final VerticalAlignment valign) {
+	public DefaultStyleSet setAlign(final HorizontalAlignment halign, final VerticalAlignment valign) {
 		StyleUtil.setAlign(this.headCellStyle, halign, valign);
 		StyleUtil.setAlign(this.cellStyle, halign, valign);
 		StyleUtil.setAlign(this.cellStyleForNumber, halign, valign);
@@ -180,7 +207,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public StyleSet setBackgroundColor(final IndexedColors backgroundColor, final boolean withHeadCell) {
+	public DefaultStyleSet setBackgroundColor(final IndexedColors backgroundColor, final boolean withHeadCell) {
 		if (withHeadCell) {
 			StyleUtil.setColor(this.headCellStyle, backgroundColor, FillPatternType.SOLID_FOREGROUND);
 		}
@@ -200,7 +227,7 @@ public class StyleSet implements Serializable {
 	 * @param ignoreHead 是否跳过头部样式
 	 * @return this
 	 */
-	public StyleSet setFont(final short color, final short fontSize, final String fontName, final boolean ignoreHead) {
+	public DefaultStyleSet setFont(final short color, final short fontSize, final String fontName, final boolean ignoreHead) {
 		final Font font = StyleUtil.createFont(this.workbook, color, fontSize, fontName);
 		return setFont(font, ignoreHead);
 	}
@@ -213,7 +240,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.1.0
 	 */
-	public StyleSet setFont(final Font font, final boolean ignoreHead) {
+	public DefaultStyleSet setFont(final Font font, final boolean ignoreHead) {
 		if (!ignoreHead) {
 			this.headCellStyle.setFont(font);
 		}
@@ -230,52 +257,11 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.5.16
 	 */
-	public StyleSet setWrapText() {
+	public DefaultStyleSet setWrapText() {
 		this.cellStyle.setWrapText(true);
 		this.cellStyleForNumber.setWrapText(true);
 		this.cellStyleForDate.setWrapText(true);
 		this.cellStyleForHyperlink.setWrapText(true);
 		return this;
 	}
-
-	/**
-	 * 获取值对应的公共单元格样式
-	 *
-	 * @param value    值
-	 * @param isHeader 是否为标题单元格
-	 * @return 值对应单元格样式
-	 * @since 5.7.16
-	 */
-	public CellStyle getStyleByValueType(final Object value, final boolean isHeader) {
-		CellStyle style = null;
-
-		if (isHeader && null != this.headCellStyle) {
-			style = headCellStyle;
-		} else if (null != cellStyle) {
-			style = cellStyle;
-		}
-
-		if (value instanceof Date
-				|| value instanceof TemporalAccessor
-				|| value instanceof Calendar) {
-			// 日期单独定义格式
-			if (null != this.cellStyleForDate) {
-				style = this.cellStyleForDate;
-			}
-		} else if (value instanceof Number) {
-			// 数字单独定义格式
-			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) &&
-					null != this.cellStyleForNumber) {
-				style = this.cellStyleForNumber;
-			}
-		} else if (value instanceof Hyperlink) {
-			// 自定义超链接样式
-			if (null != this.cellStyleForHyperlink) {
-				style = this.cellStyleForHyperlink;
-			}
-		}
-
-		return style;
-	}
-
 }

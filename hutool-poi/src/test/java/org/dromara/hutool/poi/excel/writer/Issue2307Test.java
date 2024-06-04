@@ -20,7 +20,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.ExcelWriter;
-import org.dromara.hutool.poi.excel.StyleSet;
+import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +52,7 @@ public class Issue2307Test {
 			writer.write(rows, true);
 
 
-			final StyleSet style = writer.getStyleSet();
+			final DefaultStyleSet style = (DefaultStyleSet) writer.getStyleSet();
 			final CellStyle cellStyleForNumber = style.getCellStyleForNumber();
 			cellStyleForNumber.setAlignment(HorizontalAlignment.RIGHT);
 

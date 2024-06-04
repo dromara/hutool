@@ -26,6 +26,7 @@ import org.dromara.hutool.poi.excel.BigExcelWriter;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.ExcelWriter;
 import org.dromara.hutool.poi.excel.TestBean;
+import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -92,7 +93,7 @@ public class BigExcelWriteTest {
 
 		// 通过工具类创建writer
 		final BigExcelWriter writer = ExcelUtil.getBigWriter("e:/mergeTest.xlsx");
-		final CellStyle style = writer.getStyleSet().getHeadCellStyle();
+		final CellStyle style = ((DefaultStyleSet)writer.getStyleSet()).getHeadCellStyle();
 		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
 
 		// 跳过当前行，即第一行，非必须，在此演示用
@@ -138,7 +139,7 @@ public class BigExcelWriteTest {
 		font.setBold(true);
 		font.setColor(Font.COLOR_RED);
 		font.setItalic(true);
-		writer.getStyleSet().setFont(font, true);
+		((DefaultStyleSet)writer.getStyleSet()).setFont(font, true);
 
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");

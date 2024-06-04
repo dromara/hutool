@@ -38,6 +38,8 @@ import org.dromara.hutool.poi.excel.cell.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellRangeUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.style.Align;
+import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
+import org.dromara.hutool.poi.excel.style.StyleSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -184,7 +186,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter(final Sheet sheet) {
 		super(sheet);
-		this.styleSet = new StyleSet(workbook);
+		this.styleSet = new DefaultStyleSet(workbook);
 		this.currentRow = new AtomicInteger(0);
 	}
 	// endregion
@@ -336,27 +338,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public StyleSet getStyleSet() {
 		return this.styleSet;
-	}
-
-	/**
-	 * 获取头部样式，获取样式后可自定义样式
-	 *
-	 * @return 头部样式
-	 */
-	public CellStyle getHeadCellStyle() {
-		return this.styleSet.headCellStyle;
-	}
-
-	/**
-	 * 获取单元格样式，获取样式后可自定义样式
-	 *
-	 * @return 单元格样式
-	 */
-	public CellStyle getCellStyle() {
-		if (null == this.styleSet) {
-			return null;
-		}
-		return this.styleSet.cellStyle;
 	}
 
 	/**
@@ -644,8 +625,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 合并当前行的单元格<br>
-	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 合并当前行的单元格
 	 *
 	 * @param lastColumn 合并到的最后一个列号
 	 * @return this
@@ -656,8 +636,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 合并当前行的单元格，并写入对象到单元格<br>
-	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
-	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变
 	 *
 	 * @param lastColumn 合并到的最后一个列号
 	 * @param content    合并单元格后的内容
@@ -669,8 +648,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 合并某行的单元格，并写入对象到单元格<br>
-	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
-	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变
 	 *
 	 * @param lastColumn       合并到的最后一个列号
 	 * @param content          合并单元格后的内容
@@ -692,8 +670,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 合并某行的单元格，并写入对象到单元格<br>
-	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 合并某行的单元格，并写入对象到单元格
 	 *
 	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
 	 * @param content          合并单元格后的内容
@@ -706,7 +683,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 		CellStyle style = null;
 		if (null != this.styleSet) {
-			style = styleSet.getStyleByValueType(content, isSetHeaderStyle);
+			style = styleSet.getStyleFor(new CellReference(cellRangeAddress.getFirstRow(), cellRangeAddress.getFirstColumn()), content, isSetHeaderStyle);
 		}
 
 		return merge(cellRangeAddress, content, style);
@@ -737,8 +714,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加
 	 * 默认的，当当前行号为0时，写出标题（如果为Map或Bean），否则不写标题
 	 *
 	 * <p>
@@ -760,8 +736,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加
 	 *
 	 * <p>
 	 * data中元素支持的类型有：
@@ -791,8 +766,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加
 	 * data中元素支持的类型有：
 	 *
 	 * <p>
@@ -931,8 +905,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 写出一行标题数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
-	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
 	 *
 	 * @param rowData 一行的数据
 	 * @return this
@@ -955,8 +928,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 写出复杂标题的第二行标题数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
-	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
 	 *
 	 * <p>
 	 * 此方法的逻辑是：将一行数据写出到当前行，遇到已存在的单元格跳过，不存在的创建并赋值。
@@ -1085,8 +1057,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 写出一行数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
 	 *
 	 * @param rowData 一行的数据
 	 * @return this
@@ -1103,8 +1074,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 从第1列开始按列写入数据(index 从0开始)<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
 	 *
 	 * @param colMap           一列的数据
 	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
@@ -1117,8 +1087,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 从指定列开始按列写入数据(index 从0开始)<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
 	 *
 	 * @param colMap           一列的数据
 	 * @param startColIndex    起始的列号，从0开始
@@ -1140,8 +1109,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 为第一列写入数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
 	 *
 	 * @param headerVal       表头名称,如果为null则不写入
 	 * @param colData         需要写入的列数据
@@ -1155,8 +1123,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 为第指定列写入数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
 	 *
 	 * @param headerVal       表头名称,如果为null则不写入
 	 * @param colIndex        列index

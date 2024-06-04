@@ -18,10 +18,10 @@ import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.ss.util.SheetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.StyleSet;
 import org.dromara.hutool.poi.excel.cell.editors.TrimEditor;
 import org.dromara.hutool.poi.excel.cell.setters.CellSetterFactory;
 import org.dromara.hutool.poi.excel.cell.values.CompositeCellValue;
+import org.dromara.hutool.poi.excel.style.StyleSet;
 
 /**
  * Excel表格中单元格工具类
@@ -114,7 +114,7 @@ public class CellUtil {
 
 		CellStyle cellStyle = null;
 		if (null != styleSet) {
-			cellStyle = styleSet.getStyleByValueType(value, isHeader);
+			cellStyle = styleSet.getStyleFor(new CellReference(cell), value, isHeader);
 		}
 
 		setCellValue(cell, value, cellStyle, cellEditor);

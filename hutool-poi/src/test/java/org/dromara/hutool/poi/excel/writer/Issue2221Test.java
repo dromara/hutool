@@ -12,15 +12,16 @@
 
 package org.dromara.hutool.poi.excel.writer;
 
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.ExcelWriter;
+import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -58,17 +59,17 @@ public class Issue2221Test {
 		final ExcelWriter writer = ExcelUtil.getBigWriter("d:/test/duplicateAlias2.xlsx");
 
 		// 设置头部的背景颜色
-		StyleUtil.setColor(writer.getHeadCellStyle(), IndexedColors.GREY_50_PERCENT, FillPatternType.SOLID_FOREGROUND);
+		StyleUtil.setColor(((DefaultStyleSet)writer.getStyleSet()).getHeadCellStyle(), IndexedColors.GREY_50_PERCENT, FillPatternType.SOLID_FOREGROUND);
 
 		//设置全局字体
 		final Font font = writer.createFont();
 		font.setFontName("Microsoft YaHei");
-		writer.getStyleSet().setFont(font, false);
+		((DefaultStyleSet)writer.getStyleSet()).setFont(font, false);
 
 		// 设置头部的字体为白颜色
 		final Font headerFont = writer.createFont();
 		headerFont.setColor(IndexedColors.WHITE.getIndex());
-		writer.getHeadCellStyle().setFont(headerFont);
+		((DefaultStyleSet)writer.getStyleSet()).getHeadCellStyle().setFont(headerFont);
 
 		// 跳过多少行
 		writer.passRows(1);

@@ -23,6 +23,7 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.poi.excel.*;
 import org.dromara.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
+import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.*;
@@ -177,7 +178,7 @@ public class ExcelWriteTest {
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/mergeTest.xlsx");
-		final CellStyle style = writer.getStyleSet().getHeadCellStyle();
+		final CellStyle style = ((DefaultStyleSet)writer.getStyleSet()).getHeadCellStyle();
 		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
 
 		// 跳过当前行，即第一行，非必须，在此演示用
@@ -251,7 +252,7 @@ public class ExcelWriteTest {
 		font.setBold(true);
 		font.setColor(Font.COLOR_RED);
 		font.setItalic(true);
-		writer.getStyleSet().setFont(font, true);
+		((DefaultStyleSet)writer.getStyleSet()).setFont(font, true);
 
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");
@@ -617,7 +618,7 @@ public class ExcelWriteTest {
 		headFont.setBold(true);
 		headFont.setFontHeightInPoints((short) 50);
 		headFont.setFontName("Microsoft YaHei");
-		writer.getStyleSet().getHeadCellStyle().setFont(headFont);
+		((DefaultStyleSet)writer.getStyleSet()).getHeadCellStyle().setFont(headFont);
 
 		//表2
 		writer.setSheet("表2");
@@ -799,7 +800,7 @@ public class ExcelWriteTest {
 	public void changeHeaderStyleTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
 		writer.writeHeadRow(ListUtil.view("姓名", "性别", "年龄"));
-		final CellStyle headCellStyle = writer.getStyleSet().getHeadCellStyle();
+		final CellStyle headCellStyle = ((DefaultStyleSet)writer.getStyleSet()).getHeadCellStyle();
 		headCellStyle.setFillForegroundColor(IndexedColors.YELLOW1.index);
 		headCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
