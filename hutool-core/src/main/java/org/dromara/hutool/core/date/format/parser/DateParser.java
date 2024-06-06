@@ -31,5 +31,5 @@ public interface DateParser extends DateBasic{
 	 * @return {@link Date}对象
 	 * @throws DateException 转换异常，被转换的字符串格式错误。
 	 */
-	Date parse(String source) throws DateException;
+	Date parse(CharSequence source) throws DateException;
 }

@@ -44,7 +44,7 @@ public class TimeParser extends DefaultDateBasic implements PredicateDateParser 
 	}
 
 	@Override
-	public DateTime parse(String source) {
+	public DateTime parse(CharSequence source) {
 		// issue#I9C2D4 处理时分秒
 		//15时45分59秒 修正为 15:45:59
 		source = StrUtil.replaceChars(source, "时分秒", ":");

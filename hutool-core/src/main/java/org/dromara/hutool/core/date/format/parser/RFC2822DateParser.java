@@ -57,7 +57,7 @@ public class RFC2822DateParser extends DefaultDateBasic implements PredicateDate
 	}
 
 	@Override
-	public DateTime parse(final String source) {
+	public DateTime parse(final CharSequence source) {
 		// issue#I9C2D4
 		if(StrUtil.contains(source, ',')){
 			if(StrUtil.contains(source, KEYWORDS_LOCALE_CHINA)){

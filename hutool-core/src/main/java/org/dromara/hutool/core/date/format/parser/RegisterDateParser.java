@@ -46,7 +46,7 @@ public class RegisterDateParser extends DefaultDateBasic implements DateParser {
 	}
 
 	@Override
-	public Date parse(final String source) throws DateException {
+	public Date parse(final CharSequence source) throws DateException {
 		return parserList
 			.stream()
 			.filter(predicateDateParser -> predicateDateParser.test(source))

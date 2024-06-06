@@ -717,7 +717,7 @@ public class CalendarUtil {
 	 * @throws DateException            if none of the date patterns were suitable
 	 * @since 5.3.11
 	 */
-	public static Calendar parseByPatterns(final String str, final String... parsePatterns) throws DateException {
+	public static Calendar parseByPatterns(final CharSequence str, final String... parsePatterns) throws DateException {
 		return parseByPatterns(str, null, parsePatterns);
 	}
 
@@ -734,7 +734,7 @@ public class CalendarUtil {
 	 * @throws DateException            if none of the date patterns were suitable
 	 * @since 5.3.11
 	 */
-	public static Calendar parseByPatterns(final String str, final Locale locale, final String... parsePatterns) throws DateException {
+	public static Calendar parseByPatterns(final CharSequence str, final Locale locale, final String... parsePatterns) throws DateException {
 		return parseByPatterns(str, locale, true, parsePatterns);
 	}
 
@@ -753,7 +753,7 @@ public class CalendarUtil {
 	 * @see java.util.Calendar#isLenient()
 	 * @since 5.3.11
 	 */
-	public static Calendar parseByPatterns(final String str, final Locale locale, final boolean lenient, final String... parsePatterns) throws DateException {
+	public static Calendar parseByPatterns(final CharSequence str, final Locale locale, final boolean lenient, final String... parsePatterns) throws DateException {
 		if (str == null || parsePatterns == null) {
 			throw new IllegalArgumentException("Date and Patterns must not be null");
 		}

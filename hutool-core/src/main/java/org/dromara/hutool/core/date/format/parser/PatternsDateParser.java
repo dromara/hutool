@@ -80,7 +80,7 @@ public class PatternsDateParser extends DefaultDateBasic implements DateParser {
 	}
 
 	@Override
-	public DateTime parse(final String source) {
+	public DateTime parse(final CharSequence source) {
 		return new DateTime(CalendarUtil.parseByPatterns(source, this.locale, this.parsePatterns));
 	}
 }

@@ -48,7 +48,7 @@ public class ISO8601DateParser extends DefaultDateBasic implements PredicateDate
 	}
 
 	@Override
-	public DateTime parse(String source) throws DateException{
+	public DateTime parse(CharSequence source) throws DateException{
 		final int length = source.length();
 		if (StrUtil.contains(source, 'Z')) {
 			if (length == DatePattern.UTC_PATTERN.length() - 4) {
@@ -65,7 +65,7 @@ public class ISO8601DateParser extends DefaultDateBasic implements PredicateDate
 			}
 		} else if (StrUtil.contains(source, '+')) {
 			// 去除类似2019-06-01T19:45:43 +08:00加号前的空格
-			source = source.replace(" +", "+");
+			source = StrUtil.replace(source, " +", "+");
 			final String zoneOffset = StrUtil.subAfter(source, '+', true);
 			if (StrUtil.isBlank(zoneOffset)) {
 				throw new DateException("Invalid format: [{}]", source);
@@ -88,9 +88,9 @@ public class ISO8601DateParser extends DefaultDateBasic implements PredicateDate
 			// Issue#2612，类似 2022-09-14T23:59:00-08:00 或者 2022-09-14T23:59:00-0800
 
 			// 去除类似2019-06-01T19:45:43 -08:00加号前的空格
-			source = source.replace(" -", "-");
+			source = StrUtil.replace(source, " -", "-");
 			if(':' != source.charAt(source.length() - 3)){
-				source = source.substring(0, source.length() - 2) + ":00";
+				source = StrUtil.sub(source, 0, source.length() - 2) + ":00";
 			}
 
 			if (StrUtil.contains(source, CharUtil.DOT)) {
@@ -128,7 +128,7 @@ public class ISO8601DateParser extends DefaultDateBasic implements PredicateDate
 	 * @return 规范之后的毫秒部分
 	 */
 	@SuppressWarnings("SameParameterValue")
-	private static String normalizeMillSeconds(final String dateStr, final CharSequence before, final CharSequence after) {
+	private static String normalizeMillSeconds(final CharSequence dateStr, final CharSequence before, final CharSequence after) {
 		if (StrUtil.isBlank(after)) {
 			final String millOrNaco = StrUtil.subPre(StrUtil.subAfter(dateStr, before, true), 3);
 			return StrUtil.subBefore(dateStr, before, true) + before + millOrNaco;

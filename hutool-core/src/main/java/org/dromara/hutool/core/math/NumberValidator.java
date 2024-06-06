@@ -166,7 +166,6 @@ public class NumberValidator {
 			return false;
 		}
 		try {
-			//noinspection ResultOfMethodCallIgnored
 			Integer.decode(s);
 		} catch (final NumberFormatException e) {
 			return false;

@@ -51,7 +51,7 @@ public class NormalDateParser extends DefaultDateBasic implements PredicateDateP
 	}
 
 	@Override
-	public DateTime parse(String source) throws DateException{
+	public DateTime parse(CharSequence source) throws DateException{
 		final int colonCount = StrUtil.count(source, CharUtil.COLON);
 		switch (colonCount) {
 			case 0:

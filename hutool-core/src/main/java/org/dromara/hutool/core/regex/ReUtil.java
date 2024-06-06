@@ -884,7 +884,7 @@ public class ReUtil {
 		boolean result = matcher.find();
 		if (result) {
 			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1,
-					new TreeSet<>(StrLengthComparator.INSTANCE.reversed()));
+				new TreeSet<>(StrLengthComparator.INSTANCE.reversed()));
 			final StringBuffer sb = new StringBuffer();
 			do {
 				String replacement = replacementTemplate;
@@ -984,5 +984,25 @@ public class ReUtil {
 			builder.append(current);
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * 根据提供的匹配器和组名尝试获取匹配的字符串。
+	 * <p>
+	 * 此方法旨在方便地从匹配器中提取指定名称的组匹配的字符串。如果指定的组不存在，
+	 * 则通过捕获异常并返回null来优雅地处理错误。
+	 *
+	 * @param matcher 匹配器对象，用于查找和匹配文本。
+	 * @param name    组的名称，用于指定要提取的匹配字符串的组。
+	 * @return 如果找到并成功提取了指定组的匹配字符串，则返回该字符串；如果组不存在，则返回null。
+	 */
+	public static String group(final Matcher matcher, final String name) {
+		try {
+			// 尝试根据组名获取匹配的字符串。
+			return matcher.group(name);
+		} catch (final IllegalArgumentException e) {
+			// 如果组名无效，捕获异常并返回null。
+			return null;
+		}
 	}
 }

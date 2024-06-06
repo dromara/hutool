@@ -32,7 +32,7 @@ public interface PositionDateParser extends DateParser {
 	 * @param pos    {@link ParsePosition}
 	 * @return {@link Date}
 	 */
-	Date parse(String source, ParsePosition pos);
+	Date parse(CharSequence source, ParsePosition pos);
 
 	/**
 	 * 根据给定格式更新{@link Calendar}
@@ -46,5 +46,5 @@ public interface PositionDateParser extends DateParser {
 	 * @return true, if source has been parsed (pos parsePosition is updated); otherwise false (and pos errorIndex is updated)
 	 * @throws IllegalArgumentException when Calendar has been set to be not lenient, and a parsed field is out of range.
 	 */
-	boolean parse(String source, ParsePosition pos, Calendar calendar);
+	boolean parse(CharSequence source, ParsePosition pos, Calendar calendar);
 }

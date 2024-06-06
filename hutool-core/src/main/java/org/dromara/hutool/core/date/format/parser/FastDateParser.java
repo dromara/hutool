@@ -17,6 +17,7 @@ import org.dromara.hutool.core.date.format.FastDateFormat;
 import org.dromara.hutool.core.date.format.FastDatePrinter;
 import org.dromara.hutool.core.date.format.SimpleDateBasic;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -224,7 +225,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	}
 
 	@Override
-	public Date parse(final String source) throws DateException {
+	public Date parse(final CharSequence source) throws DateException {
 		final ParsePosition pp = new ParsePosition(0);
 		final Date date = parse(source, pp);
 		if (date == null) {
@@ -239,7 +240,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	}
 
 	@Override
-	public Date parse(final String source, final ParsePosition pos) {
+	public Date parse(final CharSequence source, final ParsePosition pos) {
 		// timing tests indicate getting new instance is 19% faster than cloning
 		final Calendar cal = Calendar.getInstance(timeZone, locale);
 		cal.clear();
@@ -248,7 +249,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	}
 
 	@Override
-	public boolean parse(final String source, final ParsePosition pos, final Calendar calendar) {
+	public boolean parse(final CharSequence source, final ParsePosition pos, final Calendar calendar) {
 		final ListIterator<StrategyAndWidth> lt = patterns.listIterator();
 		while (lt.hasNext()) {
 			final StrategyAndWidth strategyAndWidth = lt.next();
@@ -337,7 +338,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 			return false;
 		}
 
-		abstract boolean parse(FastDateParser parser, Calendar calendar, String source, ParsePosition pos, int maxWidth);
+		abstract boolean parse(FastDateParser parser, Calendar calendar, CharSequence source, ParsePosition pos, int maxWidth);
 	}
 
 	/**
@@ -356,8 +357,8 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		}
 
 		@Override
-		boolean parse(final FastDateParser parser, final Calendar calendar, final String source, final ParsePosition pos, final int maxWidth) {
-			final Matcher matcher = pattern.matcher(source.substring(pos.getIndex()));
+		boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
+			final Matcher matcher = pattern.matcher(source.subSequence(pos.getIndex(), source.length()));
 			if (!matcher.lookingAt()) {
 				pos.setErrorIndex(pos.getIndex());
 				return false;
@@ -486,7 +487,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		}
 
 		@Override
-		boolean parse(final FastDateParser parser, final Calendar calendar, final String source, final ParsePosition pos, final int maxWidth) {
+		boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
 			for (int idx = 0; idx < formatField.length(); ++idx) {
 				final int sIdx = idx + pos.getIndex();
 				if (sIdx == source.length()) {
@@ -558,7 +559,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		}
 
 		@Override
-		boolean parse(final FastDateParser parser, final Calendar calendar, final String source, final ParsePosition pos, final int maxWidth) {
+		boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
 			int idx = pos.getIndex();
 			int last = source.length();
 
@@ -590,7 +591,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 				return false;
 			}
 
-			final int value = Integer.parseInt(source.substring(pos.getIndex(), idx));
+			final int value = Integer.parseInt(StrUtil.sub(source, pos.getIndex(), idx));
 			pos.setIndex(idx);
 
 			calendar.set(field, modify(parser, value));

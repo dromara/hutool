@@ -37,9 +37,9 @@ public final class DateBuilder {
 	// region ----- fields
 	// 年份
 	private int year;
-	// 月份
+	// 月份，从1开始
 	private int month;
-	// 周数
+	// 周数，ISO8601规范，1代表Monday，2代表Tuesday，以此类推。
 	private int week;
 	// 日
 	private int day;
@@ -88,18 +88,18 @@ public final class DateBuilder {
 	}
 
 	/**
-	 * 获取月份。
+	 * 获取月份，从1开始。
 	 *
-	 * @return 返回设置的月份。
+	 * @return 返回设置的月份，从1开始。
 	 */
 	public int getMonth() {
 		return month;
 	}
 
 	/**
-	 * 设置月份。
+	 * 设置月份，从1开始。
 	 *
-	 * @param month 要设置的月份。
+	 * @param month 要设置的月份，从1开始。
 	 * @return this
 	 */
 	public DateBuilder setMonth(final int month) {
@@ -117,9 +117,9 @@ public final class DateBuilder {
 	}
 
 	/**
-	 * 设置日期构建器的周数。
+	 * 设置日期构建器的周数，ISO8601规范，1代表Monday，2代表Tuesday，以此类推。
 	 *
-	 * @param week 指定的周数，通常用于构建具体的日期对象。
+	 * @param week 指定的周数，通常用于构建具体的日期对象，ISO8601规范，1代表Monday，2代表Tuesday，以此类推。
 	 * @return this。
 	 */
 	public DateBuilder setWeek(final int week) {
