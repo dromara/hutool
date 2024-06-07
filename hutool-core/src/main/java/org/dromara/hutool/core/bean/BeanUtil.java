@@ -24,6 +24,7 @@ import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.convert.impl.RecordConverter;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
+import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
@@ -742,6 +743,11 @@ public class BeanUtil {
 		if (null == clazz) {
 			return false;
 		}
+		// issue#I9VTZG，排除定义setXXX的预定义类
+		if(Dict.class == clazz){
+			return false;
+		}
+
 		return hasSetter(clazz) || hasPublicField(clazz);
 	}
 
