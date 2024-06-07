@@ -14,4 +14,12 @@ public class RegexDateParserTest {
 		final Date parse = parser.parse("20220101");
 		Assertions.assertEquals("2022-01-01", DateUtil.date(parse).toDateStr());
 	}
+
+	@Test
+	void parseMonthFirstTest() {
+		// May 8, 2009 5:57:51 PM
+		final RegexDateParser parser = RegexDateParser.of("(?<month>\\w+)\\W+(?<day>\\d{1,2})(?:th)?\\W+(?<year>\\d{2,4}) ");
+		final Date parse = parser.parse("May 8, 2009");
+		Assertions.assertEquals("2009-05-08", DateUtil.date(parse).toDateStr());
+	}
 }
