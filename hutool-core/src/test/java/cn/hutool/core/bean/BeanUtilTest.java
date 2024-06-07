@@ -5,6 +5,8 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.thread.ThreadUtil;
@@ -924,5 +926,11 @@ public class BeanUtilTest {
 		// https://gitee.com/dromara/hutool/issues/I6M7Z7
 		final boolean b = BeanUtil.hasGetter(Object.class);
 		Assert.assertFalse(b);
+	}
+
+	@Test
+	public void issueI9VTZGTest() {
+		final boolean bean = BeanUtil.isBean(Dict.class);
+		Assert.assertFalse(bean);
 	}
 }

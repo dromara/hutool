@@ -6,6 +6,7 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
@@ -74,6 +75,14 @@ public class BeanUtil {
 	 * @since 4.2.2
 	 */
 	public static boolean hasSetter(Class<?> clazz) {
+		if(null == clazz){
+			return false;
+		}
+		// issue#I9VTZG，排除定义setXXX的预定义类
+		if(Dict.class == clazz){
+			return false;
+		}
+
 		if (ClassUtil.isNormalClass(clazz)) {
 			for (Method method : clazz.getMethods()) {
 				if (method.getParameterCount() == 1 && method.getName().startsWith("set")) {
@@ -117,6 +126,9 @@ public class BeanUtil {
 	 * @since 5.1.0
 	 */
 	public static boolean hasPublicField(Class<?> clazz) {
+		if(null == clazz){
+			return false;
+		}
 		if (ClassUtil.isNormalClass(clazz)) {
 			for (Field field : clazz.getFields()) {
 				if (ModifierUtil.isPublic(field) && false == ModifierUtil.isStatic(field)) {
