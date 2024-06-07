@@ -133,7 +133,9 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 		final List<Object> paramsBatch = this.boundSql.getParams();
 
-		sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
+		if(null != this.sqlFilter){
+			this.sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
+		}
 
 		final StatementWrapper ps;
 		try {
@@ -175,7 +177,9 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 		final Object[] params = this.boundSql.getParamArray();
 		Assert.notBlank(sql, "Sql String must be not blank!");
 
-		sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
+		if(null != this.sqlFilter){
+			this.sqlFilter.filter(this.connection, this.boundSql, this.returnGeneratedKey);
+		}
 
 		try {
 			return (CallableStatement) StatementWrapper
