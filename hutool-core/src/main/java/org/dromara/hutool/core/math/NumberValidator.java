@@ -197,7 +197,6 @@ public class NumberValidator {
 			return true;
 		}
 		try {
-			//noinspection ResultOfMethodCallIgnored
 			Long.decode(s);
 		} catch (final NumberFormatException e) {
 			return false;
