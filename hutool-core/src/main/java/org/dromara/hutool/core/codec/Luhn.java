@@ -23,26 +23,40 @@ import org.dromara.hutool.core.text.StrUtil;
  *     <li>把步骤1种获得的乘积的各位数字与原号码中未乘2的各位数字相加</li>
  *     <li>如果步骤2得到的总和模10为0，则校验通过</li>
  * </ol>
- *
  */
 public class Luhn {
 
 	/**
 	 * 校验字符串
 	 *
-	 * @param withCheckDigitString 含校验数字的字符串
+	 * @param strWithCheckDigit 含校验数字的字符串
 	 * @return true - 校验通过，false-校验不通过
 	 * @throws IllegalArgumentException 如果字符串为空或不是8~19位的数字
 	 */
-	public static boolean check(final String withCheckDigitString) {
-		if(StrUtil.isBlank(withCheckDigitString)){
+	public static boolean check(final String strWithCheckDigit) {
+		if (StrUtil.isBlank(strWithCheckDigit)) {
 			return false;
 		}
-		if(!ReUtil.isMatch(PatternPool.NUMBERS, withCheckDigitString)){
+		if (!ReUtil.isMatch(PatternPool.NUMBERS, strWithCheckDigit)) {
 			// 必须为全数字
 			return false;
 		}
-		return sum(withCheckDigitString) % 10 == 0;
+		return sum(strWithCheckDigit) % 10 == 0;
+	}
+
+	/**
+	 * 计算校验位数字<br>
+	 * 忽略已有的校验位数字，根据前N位计算最后一位校验位数字
+	 *
+	 * @param str            被检查的数字
+	 * @param withCheckDigit 是否含有校验位
+	 * @return 校验位数字
+	 */
+	public static int getCheckDigit(String str, final boolean withCheckDigit) {
+		if (withCheckDigit) {
+			str = str.substring(0, str.length() - 1);
+		}
+		return 10 - (sum(str + "0") % 10);
 	}
 
 	/**
@@ -54,7 +68,8 @@ public class Luhn {
 	private static int sum(final String str) {
 		final char[] strArray = str.toCharArray();
 		final int n = strArray.length;
-		int sum = strArray[n - 1] - '0';;
+		int sum = strArray[n - 1] - '0';
+		;
 		for (int i = 2; i <= n; i++) {
 			int a = strArray[n - i] - '0';
 			// 偶数位乘以2
