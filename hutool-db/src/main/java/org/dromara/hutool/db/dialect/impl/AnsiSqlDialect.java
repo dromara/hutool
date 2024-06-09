@@ -144,7 +144,7 @@ public class AnsiSqlDialect implements Dialect {
 			.append(" limit ")
 			.append(page.getPageSize())
 			.append(" offset ")
-			.append(page.getStartPosition());
+			.append(page.getBeginIndex());
 	}
 
 	@Override

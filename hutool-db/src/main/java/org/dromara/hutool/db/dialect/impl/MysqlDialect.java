@@ -44,7 +44,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 
 	@Override
 	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
-		return find.append(" LIMIT ").append(page.getStartPosition()).append(", ").append(page.getPageSize());
+		return find.append(" LIMIT ").append(page.getBeginIndex()).append(", ").append(page.getPageSize());
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 			find.append(" order by current_timestamp");
 		}
 		return find.append(" offset ")
-			.append(page.getStartPosition())//
+			.append(page.getBeginIndex())//
 			.append(" row fetch next ")//row和rows同义词
 			.append(page.getPageSize())//
 			.append(" row only");//

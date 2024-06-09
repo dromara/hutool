@@ -155,26 +155,10 @@ public class Page implements Segment<Integer>, Serializable {
 	}
 	// ---------------------------------------------------------- Getters and Setters end
 
-	/**
-	 * @return 开始位置
-	 * @see #getBeginIndex()
-	 */
-	public int getStartPosition() {
-		return getBeginIndex();
-	}
-
 	@Override
 	public Integer getBeginIndex() {
 		return PageInfo.of(Integer.MAX_VALUE, this.pageSize)
 				.setFirstPageNo(0).setPageNo(this.pageNumber).getBeginIndex();
-	}
-
-	/**
-	 * @return 结束位置
-	 * @see #getEndIndex()
-	 */
-	public int getEndPosition() {
-		return getEndIndex();
 	}
 
 	@Override
