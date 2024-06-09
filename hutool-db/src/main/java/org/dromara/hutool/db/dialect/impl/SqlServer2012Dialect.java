@@ -38,6 +38,11 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 	}
 
 	@Override
+	public String dialectName() {
+		return DialectName.SQLSERVER2012.name();
+	}
+
+	@Override
 	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
 		if (!StrUtil.containsIgnoreCase(find.toString(), "order by")) {
 			//offset 分页必须要跟在order by后面，没有情况下补充默认排序
@@ -48,10 +53,5 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 			.append(" row fetch next ")//row和rows同义词
 			.append(page.getPageSize())//
 			.append(" row only");//
-	}
-
-	@Override
-	public String dialectName() {
-		return DialectName.SQLSERVER2012.name();
 	}
 }

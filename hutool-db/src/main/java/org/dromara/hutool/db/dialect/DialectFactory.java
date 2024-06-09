@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @author loolly
  */
-public class DialectFactory{
+public class DialectFactory {
 
 	private static final Map<DataSource, Dialect> DIALECT_POOL = new SafeConcurrentHashMap<>();
 
@@ -71,6 +71,8 @@ public class DialectFactory{
 				return new H2Dialect(dbConfig);
 			} else if (DriverNames.DRIVER_SQLSERVER.equalsIgnoreCase(driverName)) {
 				return new SqlServer2012Dialect(dbConfig);
+			} else if (DriverNames.DRIVER_SQLSERVER_OLD.equalsIgnoreCase(driverName)) {
+				return new SqlServer2005Dialect(dbConfig);
 			} else if (DriverNames.DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
 				return new PhoenixDialect(dbConfig);
 			} else if (DriverNames.DRIVER_DM.equalsIgnoreCase(driverName)) {
