@@ -214,6 +214,12 @@ public class TimeUtil extends TemporalAccessorUtil {
 			return null;
 		}
 
+		try {
+			return LocalDate.from(temporalAccessor);
+		} catch (final Exception ignore) {
+			//ignore
+		}
+
 		if (temporalAccessor instanceof LocalDateTime) {
 			return ((LocalDateTime) temporalAccessor).toLocalDate();
 		} else if (temporalAccessor instanceof Instant) {
@@ -224,6 +230,43 @@ public class TimeUtil extends TemporalAccessorUtil {
 			TemporalAccessorUtil.get(temporalAccessor, ChronoField.YEAR),
 			TemporalAccessorUtil.get(temporalAccessor, ChronoField.MONTH_OF_YEAR),
 			TemporalAccessorUtil.get(temporalAccessor, ChronoField.DAY_OF_MONTH)
+		);
+	}
+
+	/**
+	 * {@link TemporalAccessor}转{@link ZonedDateTime}
+	 *
+	 * @param temporalAccessor {@link TemporalAccessor}
+	 * @param zoneId           时区ID
+	 * @return {@link ZonedDateTime}
+	 */
+	public static ZonedDateTime ofZoned(final TemporalAccessor temporalAccessor, ZoneId zoneId) {
+		if (null == temporalAccessor) {
+			return null;
+		}
+		if (null == zoneId) {
+			zoneId = ZoneId.systemDefault();
+		}
+
+		if (temporalAccessor instanceof Instant) {
+			return ZonedDateTime.ofInstant((Instant) temporalAccessor, zoneId);
+		} else if (temporalAccessor instanceof LocalDateTime) {
+			return ZonedDateTime.of((LocalDateTime) temporalAccessor, zoneId);
+		} else if (temporalAccessor instanceof LocalDate) {
+			return ZonedDateTime.of((LocalDate) temporalAccessor, LocalTime.MIN, zoneId);
+		} else if (temporalAccessor instanceof LocalTime) {
+			return ZonedDateTime.of(LocalDate.now(), (LocalTime) temporalAccessor, zoneId);
+		}
+
+		return ZonedDateTime.of(
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.YEAR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.MONTH_OF_YEAR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.DAY_OF_MONTH),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.HOUR_OF_DAY),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.MINUTE_OF_HOUR),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.SECOND_OF_MINUTE),
+			TemporalAccessorUtil.get(temporalAccessor, ChronoField.NANO_OF_SECOND),
+			zoneId
 		);
 	}
 
@@ -568,7 +611,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	/**
 	 * 修改为一年的结束时间
 	 *
-	 * @param date                日期
+	 * @param date 日期
 	 * @return 一年的结束时间
 	 * @since 6.0.0
 	 */
