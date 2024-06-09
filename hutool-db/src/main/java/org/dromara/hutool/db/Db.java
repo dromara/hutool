@@ -77,7 +77,7 @@ public class Db extends AbstractDb<Db> {
 	 */
 	public static Db of(final DbConfig config){
 		final DSWrapper ds = DSUtil.createDS(config);
-		final Dialect dialect = ObjUtil.defaultIfNull(config.getDialect(), DialectFactory.newDialect(ds));
+		final Dialect dialect = DialectFactory.newDialect(ds);
 		return of(ds, dialect);
 	}
 

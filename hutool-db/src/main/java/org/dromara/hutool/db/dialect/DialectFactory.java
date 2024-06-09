@@ -36,14 +36,18 @@ public class DialectFactory {
 	}
 
 	/**
-	 * 根据驱动名创建方言<br>
+	 * 创建方言，如果配置中用户指定了方言，则直接返回用户指定的方言，否则根据驱动名等信息自动创建方言<br>
 	 * 驱动名是不分区大小写完全匹配的
 	 *
 	 * @param dbConfig 数据库配置
 	 * @return 方言
 	 */
 	public static Dialect newDialect(final DbConfig dbConfig) {
-		final Dialect dialect = internalNewDialect(dbConfig);
+		Dialect dialect = dbConfig.getDialect();
+		if(null == dialect){
+			dialect = internalNewDialect(dbConfig);
+		}
+
 		LogUtil.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
 		return dialect;
 	}
