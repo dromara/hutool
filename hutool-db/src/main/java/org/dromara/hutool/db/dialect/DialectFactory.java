@@ -72,6 +72,7 @@ public class DialectFactory {
 			} else if (DriverNames.DRIVER_SQLSERVER.equalsIgnoreCase(driverName)) {
 				return new SqlServer2012Dialect(dbConfig);
 			} else if (DriverNames.DRIVER_SQLSERVER_OLD.equalsIgnoreCase(driverName)) {
+				// TODO 无法简单通过jdbc url 判断SqlServer版本
 				return new SqlServer2005Dialect(dbConfig);
 			} else if (DriverNames.DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
 				return new PhoenixDialect(dbConfig);
