@@ -15,11 +15,11 @@ package org.dromara.hutool.core.date.format.parser;
 import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
 import org.dromara.hutool.core.regex.ReUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * @author looly
  * @since 6.0.0
  */
-public class NormalDateParser extends DefaultDateBasic implements PredicateDateParser {
+public class NormalDateParser implements PredicateDateParser, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final Pattern patternNorm = Pattern.compile("\\d{4}-\\d{1,2}-\\d{1,2}(\\s\\d{1,2}:\\d{1,2}(:\\d{1,2})?(.\\d{1,6})?)?");

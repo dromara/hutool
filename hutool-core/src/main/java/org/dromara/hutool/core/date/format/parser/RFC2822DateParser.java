@@ -14,10 +14,10 @@ package org.dromara.hutool.core.date.format.parser;
 
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
 import org.dromara.hutool.core.date.format.FastDateFormat;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -32,7 +32,7 @@ import java.util.Locale;
  * @author looly
  * @since 6.0.0
  */
-public class RFC2822DateParser extends DefaultDateBasic implements PredicateDateParser {
+public class RFC2822DateParser implements PredicateDateParser, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String KEYWORDS_LOCALE_CHINA = "星期";
@@ -59,8 +59,8 @@ public class RFC2822DateParser extends DefaultDateBasic implements PredicateDate
 	@Override
 	public DateTime parse(final CharSequence source) {
 		// issue#I9C2D4
-		if(StrUtil.contains(source, ',')){
-			if(StrUtil.contains(source, KEYWORDS_LOCALE_CHINA)){
+		if (StrUtil.contains(source, ',')) {
+			if (StrUtil.contains(source, KEYWORDS_LOCALE_CHINA)) {
 				// 例如：星期四, 28 三月 2024 14:33:49 GMT
 				return new DateTime(source, FastDateFormat.getInstance(DatePattern.HTTP_DATETIME_PATTERN, Locale.CHINA));
 			}
@@ -68,7 +68,7 @@ public class RFC2822DateParser extends DefaultDateBasic implements PredicateDate
 			return new DateTime(source, DatePattern.HTTP_DATETIME_FORMAT);
 		}
 
-		if(StrUtil.contains(source, KEYWORDS_LOCALE_CHINA)){
+		if (StrUtil.contains(source, KEYWORDS_LOCALE_CHINA)) {
 			// 例如：星期四, 28 三月 2024 14:33:49 GMT
 			return new DateTime(source, FastDateFormat.getInstance(DatePattern.JDK_DATETIME_PATTERN, Locale.CHINA));
 		}

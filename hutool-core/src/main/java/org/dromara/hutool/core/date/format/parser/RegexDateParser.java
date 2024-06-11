@@ -13,7 +13,8 @@
 package org.dromara.hutool.core.date.format.parser;
 
 import org.dromara.hutool.core.date.*;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
+import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -31,8 +32,7 @@ import java.util.regex.Pattern;
  * @author Looly
  * @since 6.0.0
  */
-public class RegexDateParser extends DefaultDateBasic implements PredicateDateParser {
-	private static final long serialVersionUID = 1L;
+public class RegexDateParser implements PredicateDateParser {
 
 	private static final int[] NSS = {100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
 
@@ -43,7 +43,7 @@ public class RegexDateParser extends DefaultDateBasic implements PredicateDatePa
 	 * @return RegexDateParser
 	 */
 	public static RegexDateParser of(final String regex) {
-		return new RegexDateParser(Pattern.compile(regex));
+		return new RegexDateParser(PatternPool.get(regex));
 	}
 
 	private final Pattern pattern;
@@ -66,86 +66,7 @@ public class RegexDateParser extends DefaultDateBasic implements PredicateDatePa
 	public Date parse(final CharSequence source) throws DateException {
 		final Matcher matcher = this.pattern.matcher(source);
 		if(!matcher.matches()){
-			throw new DateException("Invalid date string: [{}]", source);
-		}
-
-		final DateBuilder dateBuilder = DateBuilder.of();
-		// year
-		final String year = ReUtil.group(matcher, "year");
-		if (StrUtil.isNotEmpty(year)) {
-			dateBuilder.setYear(parseYear(year));
-		}
-
-		// month
-		final String month = ReUtil.group(matcher, "month");
-		if (StrUtil.isNotEmpty(month)) {
-			dateBuilder.setMonth(parseMonth(month));
-		}
-
-		// week
-		final String week = ReUtil.group(matcher, "week");
-		if (StrUtil.isNotEmpty(week)) {
-			dateBuilder.setWeek(parseWeek(week));
-		}
-
-		// day
-		final String day = ReUtil.group(matcher, "day");
-		if (StrUtil.isNotEmpty(day)) {
-			dateBuilder.setDay(parseNumberLimit(day, 1, 31));
-		}
-
-		// hour
-		final String hour = ReUtil.group(matcher, "hour");
-		if (StrUtil.isNotEmpty(hour)) {
-			dateBuilder.setHour(parseNumberLimit(hour, 0, 23));
-		}
-
-		// minute
-		final String minute = ReUtil.group(matcher, "minute");
-		if (StrUtil.isNotEmpty(minute)) {
-			dateBuilder.setMinute(parseNumberLimit(minute, 0, 59));
-		}
-
-		// second
-		final String second = ReUtil.group(matcher, "second");
-		if (StrUtil.isNotEmpty(second)) {
-			dateBuilder.setSecond(parseNumberLimit(second, 0, 59));
-		}
-
-		// ns
-		final String ns = ReUtil.group(matcher, "ns");
-		if (StrUtil.isNotEmpty(ns)) {
-			dateBuilder.setNs(parseNano(ns));
-		}
-
-		// am or pm
-		final String m = ReUtil.group(matcher, "m");
-		if (StrUtil.isNotEmpty(m)) {
-			if ('p' == m.charAt(0)) {
-				dateBuilder.setPm(true);
-			} else {
-				dateBuilder.setAm(true);
-			}
-		}
-
-		// zero zone offset
-		final String zero = ReUtil.group(matcher, "zero");
-		if (StrUtil.isNotEmpty(zero)) {
-			dateBuilder.setZoneOffsetSetted(true);
-			dateBuilder.setZoneOffset(0);
-		}
-
-		// zone offset
-		final String zoneOffset = ReUtil.group(matcher, "zoneOffset");
-		if (StrUtil.isNotEmpty(zoneOffset)) {
-			dateBuilder.setZoneOffsetSetted(true);
-			dateBuilder.setZoneOffset(parseZoneOffset(zoneOffset));
-		}
-
-		// unix时间戳
-		final String unixsecond = ReUtil.group(matcher, "unixsecond");
-		if (StrUtil.isNotEmpty(unixsecond)) {
-			dateBuilder.setUnixsecond(parseLong(unixsecond));
+			throw new DateException("Invalid date string: [{}], not match the date regex: [{}].", source, this.pattern.pattern());
 		}
 
 		// 毫秒时间戳
@@ -153,6 +74,49 @@ public class RegexDateParser extends DefaultDateBasic implements PredicateDatePa
 		if (StrUtil.isNotEmpty(millisecond)) {
 			return DateUtil.date(parseLong(millisecond));
 		}
+
+		final DateBuilder dateBuilder = DateBuilder.of();
+		// year
+		Opt.ofNullable(ReUtil.group(matcher, "year")).ifPresent((year) -> dateBuilder.setYear(parseYear(year)));
+		// month
+		Opt.ofNullable(ReUtil.group(matcher, "month")).ifPresent((month) -> dateBuilder.setMonth(parseMonth(month)));
+		// week
+		Opt.ofNullable(ReUtil.group(matcher, "week")).ifPresent((week) -> dateBuilder.setWeek(parseWeek(week)));
+		// day
+		Opt.ofNullable(ReUtil.group(matcher, "day")).ifPresent((day) -> dateBuilder.setDay(parseNumberLimit(day, 1, 31)));
+		// hour
+		Opt.ofNullable(ReUtil.group(matcher, "hour")).ifPresent((hour) -> dateBuilder.setHour(parseNumberLimit(hour, 0, 23)));
+		// minute
+		Opt.ofNullable(ReUtil.group(matcher, "minute")).ifPresent((minute) -> dateBuilder.setMinute(parseNumberLimit(minute, 0, 59)));
+		// second
+		Opt.ofNullable(ReUtil.group(matcher, "second")).ifPresent((second) -> dateBuilder.setSecond(parseNumberLimit(second, 0, 59)));
+		// ns
+		Opt.ofNullable(ReUtil.group(matcher, "ns")).ifPresent((ns) -> dateBuilder.setNs(parseNano(ns)));
+		// am or pm
+		Opt.ofNullable(ReUtil.group(matcher, "m")).ifPresent((m) -> {
+			if ('p' == m.charAt(0)) {
+				dateBuilder.setPm(true);
+			} else {
+				dateBuilder.setAm(true);
+			}
+		});
+
+		// zero zone offset
+		Opt.ofNullable(ReUtil.group(matcher, "zero")).ifPresent((zero) -> {
+			dateBuilder.setZoneOffsetSetted(true);
+			dateBuilder.setZoneOffset(0);
+		});
+
+		// zone offset
+		Opt.ofNullable(ReUtil.group(matcher, "zoneOffset")).ifPresent((zoneOffset) -> {
+			dateBuilder.setZoneOffsetSetted(true);
+			dateBuilder.setZoneOffset(parseZoneOffset(zoneOffset));
+		});
+
+		// unix时间戳
+		Opt.ofNullable(ReUtil.group(matcher, "unixsecond")).ifPresent((unixsecond) -> {
+			dateBuilder.setUnixsecond(parseLong(unixsecond));
+		});
 
 		return dateBuilder.toDate();
 	}

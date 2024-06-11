@@ -13,19 +13,19 @@
 package org.dromara.hutool.core.date.format.parser;
 
 import org.dromara.hutool.core.date.DateException;
-import org.dromara.hutool.core.date.format.DateBasic;
 
 import java.util.Date;
 
 /**
- * 日期解析接口，用于解析日期字符串为 {@link Date} 对象<br>
- * Thanks to Apache Commons Lang 3.5
+ * 日期解析接口，用于解析日期字符串为 {@link Date} 对象
+ *
+ * @author Looly
  */
-public interface DateParser extends DateBasic{
+@FunctionalInterface
+public interface DateParser {
 
 	/**
-	 * 将日期字符串解析并转换为  {@link Date} 对象<br>
-	 * 等价于 {@link java.text.DateFormat#parse(String)}
+	 * 将日期字符串解析并转换为  {@link Date} 对象
 	 *
 	 * @param source 被解析的日期字符串
 	 * @return {@link Date}对象

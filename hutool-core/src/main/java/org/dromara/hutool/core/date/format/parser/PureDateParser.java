@@ -15,9 +15,10 @@ package org.dromara.hutool.core.date.format.parser;
 import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
+
+import java.io.Serializable;
 
 /**
  * 纯数字的日期字符串解析，支持格式包括；
@@ -32,7 +33,7 @@ import org.dromara.hutool.core.text.StrUtil;
  * @author looly
  * @since 6.0.0
  */
-public class PureDateParser extends DefaultDateBasic implements PredicateDateParser {
+public class PureDateParser implements PredicateDateParser, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**

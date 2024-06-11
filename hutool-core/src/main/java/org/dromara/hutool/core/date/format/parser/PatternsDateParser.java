@@ -15,8 +15,8 @@ package org.dromara.hutool.core.date.format.parser;
 import org.dromara.hutool.core.date.CalendarUtil;
 import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DateTime;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -27,7 +27,7 @@ import java.util.Locale;
  * @author looly
  * @since 6.0.0
  */
-public class PatternsDateParser extends DefaultDateBasic implements DateParser {
+public class PatternsDateParser implements DateParser, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -74,7 +74,11 @@ public class PatternsDateParser extends DefaultDateBasic implements DateParser {
 		return this;
 	}
 
-	@Override
+	/**
+	 * 获取{@link Locale}
+	 *
+	 * @return {@link Locale}
+	 */
 	public Locale getLocale() {
 		return locale;
 	}

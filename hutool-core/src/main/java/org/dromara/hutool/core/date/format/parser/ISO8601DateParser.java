@@ -15,10 +15,11 @@ package org.dromara.hutool.core.date.format.parser;
 import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
 import org.dromara.hutool.core.regex.ReUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
+
+import java.io.Serializable;
 
 /**
  * ISO8601日期字符串（JDK的Date对象toString默认格式）解析，支持格式；
@@ -34,7 +35,7 @@ import org.dromara.hutool.core.text.CharUtil;
  * @author looly
  * @since 6.0.0
  */
-public class ISO8601DateParser extends DefaultDateBasic implements PredicateDateParser {
+public class ISO8601DateParser implements PredicateDateParser, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**

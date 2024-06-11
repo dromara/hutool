@@ -2,8 +2,8 @@ package org.dromara.hutool.core.date.format.parser;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateException;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author looly
  * @since 6.0.0
  */
-public class RegisterDateParser extends DefaultDateBasic implements DateParser {
+public class RegisterDateParser implements DateParser, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**

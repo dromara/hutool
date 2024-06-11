@@ -15,10 +15,11 @@ package org.dromara.hutool.core.date.format.parser;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.date.format.DefaultDateBasic;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
+
+import java.io.Serializable;
 
 /**
  * 时间日期字符串，日期默认为当天，支持格式类似于；
@@ -30,7 +31,7 @@ import org.dromara.hutool.core.text.StrUtil;
  * @author looly
  * @since 6.0.0
  */
-public class TimeParser extends DefaultDateBasic implements PredicateDateParser {
+public class TimeParser implements PredicateDateParser, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
