@@ -43,7 +43,17 @@ public class RegexDateParser implements PredicateDateParser {
 	 * @return RegexDateParser
 	 */
 	public static RegexDateParser of(final String regex) {
-		return new RegexDateParser(PatternPool.get(regex));
+		return of(PatternPool.get(regex));
+	}
+
+	/**
+	 * 根据给定带名称的分组正则，创建RegexDateParser
+	 *
+	 * @param pattern 正则表达式
+	 * @return RegexDateParser
+	 */
+	public static RegexDateParser of(final Pattern pattern) {
+		return new RegexDateParser(pattern);
 	}
 
 	private final Pattern pattern;
@@ -65,10 +75,21 @@ public class RegexDateParser implements PredicateDateParser {
 	@Override
 	public Date parse(final CharSequence source) throws DateException {
 		final Matcher matcher = this.pattern.matcher(source);
-		if(!matcher.matches()){
+		if (!matcher.matches()) {
 			throw new DateException("Invalid date string: [{}], not match the date regex: [{}].", source, this.pattern.pattern());
 		}
 
+		return parse(matcher);
+	}
+
+	/**
+	 * 解析日期
+	 *
+	 * @param matcher 正则匹配器
+	 * @return 日期
+	 * @throws DateException 日期解析异常
+	 */
+	public static Date parse(final Matcher matcher) throws DateException {
 		// 毫秒时间戳
 		final String millisecond = ReUtil.group(matcher, "millisecond");
 		if (StrUtil.isNotEmpty(millisecond)) {
@@ -147,7 +168,7 @@ public class RegexDateParser implements PredicateDateParser {
 		throw new DateException("Invalid month: [{}]", month);
 	}
 
-	private static int parseWeek(final String week){
+	private static int parseWeek(final String week) {
 		return Week.of(week).getIso8601Value();
 	}
 
@@ -184,10 +205,11 @@ public class RegexDateParser implements PredicateDateParser {
 
 	/**
 	 * 解析时区偏移，类似于'+0800', '+08', '+8:00', '+08:00'
+	 *
 	 * @param zoneOffset 时区偏移
 	 * @return 偏移量
 	 */
-	private int parseZoneOffset(final String zoneOffset) {
+	private static int parseZoneOffset(final String zoneOffset) {
 		int from = 0;
 		final int to = zoneOffset.length();
 		final boolean neg = '-' == zoneOffset.charAt(from);
