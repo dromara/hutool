@@ -19,7 +19,7 @@ import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class JdkEngineTest {
+public class JdkClientEngineTest {
 
 	@Test
 	@Disabled
@@ -27,6 +27,22 @@ public class JdkEngineTest {
 		final ClientEngine engine = HttpUtil.createClient("jdkClient");
 
 		final Request req = Request.of("https://www.hutool.cn/").method(Method.GET);
+		final Response res = engine.send(req);
+
+		Console.log(res.getStatus());
+		Console.log(res.headers().getClass());
+		Console.log(res.headers());
+		Console.log(res.bodyStr());
+	}
+
+	@Test
+	@Disabled
+	public void postTest(){
+		final ClientEngine engine = HttpUtil.createClient("jdkClient");
+
+		final Request req = Request.of("https://www.hutool.cn/")
+			.method(Method.POST)
+			.body("a=1&b=2");
 		final Response res = engine.send(req);
 
 		Console.log(res.getStatus());

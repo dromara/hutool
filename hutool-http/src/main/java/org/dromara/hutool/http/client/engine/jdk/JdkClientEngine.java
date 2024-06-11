@@ -21,14 +21,13 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
-import org.dromara.hutool.http.meta.Method;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -125,10 +124,20 @@ public class JdkClientEngine implements ClientEngine {
 			.setSSLInfo(config.getSslInfo())
 			// 关闭JDK自动转发，采用手动转发方式
 			.setInstanceFollowRedirects(false)
-			.setChunkedStreamingMode(message.isChunked() ? 4096 : -1)
 			.setDisableCache(config.isDisableCache())
 			// 覆盖默认Header
 			.header(message.headers(), true);
+
+		if(!message.method().isIgnoreBody()){
+			// 在允许发送body的情况下，如果用户自定义了Content-Length，则使用用户定义的值
+			final long contentLength = message.contentLength();
+			if(contentLength > 0){
+				// 固定请求长度
+				conn.setFixedLengthStreamingMode(contentLength);
+			} else if(message.isChunked()){
+				conn.setChunkedStreamingMode(4096);
+			}
+		}
 
 		if (null == message.header(HeaderName.COOKIE)) {
 			// 用户没有自定义Cookie，则读取全局Cookie信息并附带到请求中
@@ -169,8 +178,7 @@ public class JdkClientEngine implements ClientEngine {
 		}
 
 		// 最终页面
-		return new JdkHttpResponse(conn, true, message.charset(), isAsync,
-			isIgnoreResponseBody(message.method()));
+		return new JdkHttpResponse(conn, true, message.charset(), isAsync, message.method().isIgnoreBody());
 	}
 
 	/**
@@ -207,19 +215,5 @@ public class JdkClientEngine implements ClientEngine {
 		}
 
 		return redirectUrl;
-	}
-
-	/**
-	 * 是否忽略读取响应body部分<br>
-	 * HEAD、CONNECT、TRACE方法将不读取响应体
-	 *
-	 * @return 是否需要忽略响应body部分
-	 */
-	private boolean isIgnoreResponseBody(final Method method) {
-		//https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/OPTIONS
-		// OPTIONS请求可以带有响应体
-		return Method.HEAD == method
-			|| Method.CONNECT == method
-			|| Method.TRACE == method;
 	}
 }

@@ -205,16 +205,6 @@ public class Request implements HeaderOperation<Request> {
 	}
 
 	/**
-	 * 是否为Transfer-Encoding:Chunked的内容
-	 *
-	 * @return 是否为Transfer-Encoding:Chunked的内容
-	 */
-	public boolean isChunked() {
-		final String transferEncoding = header(HeaderName.TRANSFER_ENCODING);
-		return "Chunked".equalsIgnoreCase(transferEncoding);
-	}
-
-	/**
 	 * 设置一个header<br>
 	 * 如果覆盖模式，则替换之前的值，否则加入到值列表中<br>
 	 * 如果给定值为{@code null}，则删除这个头信息

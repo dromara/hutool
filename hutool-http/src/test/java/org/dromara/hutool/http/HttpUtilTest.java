@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("resource")
 public class HttpUtilTest {
@@ -97,6 +96,8 @@ public class HttpUtilTest {
 	@Test
 	@Disabled
 	public void get12306Test() {
+		// 某些网站需要打开信任全部域
+		// HttpGlobalConfig.setTrustAnyHost(true);
 		HttpUtil.send(Request.of("https://kyfw.12306.cn/otn/").setMaxRedirectCount(2))
 				.then(response -> Console.log(response.bodyStr()));
 	}
@@ -195,7 +196,7 @@ public class HttpUtilTest {
 	@Test
 	@Disabled
 	public void httpUtilCreateRequest1PostSoap11Test(){
-		String requestBody = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+		final String requestBody = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
 			"<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n" +
 			"  xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
 			"  <soap:Body>\n" +
@@ -205,7 +206,7 @@ public class HttpUtilTest {
 			"  </soap:Body>\n" +
 			"</soap:Envelope>";
 
-		String body = HttpUtil.createRequest("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx", Method.POST)
+		final String body = HttpUtil.createRequest("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx", Method.POST)
 			.header(HeaderName.CONTENT_TYPE, "text/xml; charset=utf-8")
 			.header("Accept", "application/xml")
 			.header("accessId", "")
@@ -222,7 +223,7 @@ public class HttpUtilTest {
 	@Test
 	@Disabled
 	public void httpUtilCreateRequest2PostSoap12Test(){
-		String requestBody = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+		final String requestBody = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
 			"<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n" +
 			"  xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n" +
 			"  <soap12:Body>\n" +
@@ -232,7 +233,7 @@ public class HttpUtilTest {
 			"  </soap12:Body>\n" +
 			"</soap12:Envelope>";
 
-		String body = HttpUtil.createPost("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
+		final String body = HttpUtil.createPost("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 			.header(HeaderName.CONTENT_TYPE, "application/soap+xml; charset=utf-8")
 			.header("Accept", "application/xml")
 			.header("accessId", "")
@@ -255,7 +256,7 @@ public class HttpUtilTest {
 			;
 		//设置超时
 		HttpGlobalConfig.setTimeout(1);
-		String body = HttpUtil.createGet("https://echo.apifox.com/get")
+		final String body = HttpUtil.createGet("https://echo.apifox.com/get")
 			.header(HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded; charset=utf-8")
 			.header("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
 			.header("Accept", "*/*")
@@ -272,8 +273,8 @@ public class HttpUtilTest {
 	@Test
 	@Disabled
 	public void httpUtilCreateRequest4PostTest(){
-		String requestBodyJson = "{\n\"username\": \"张三\",\n    \"password\": \"abcdefg@123\"\n}";
-		String body = HttpUtil.createPost("https://echo.apifox.com/post?q1=v1&q2=v2")
+		final String requestBodyJson = "{\n\"username\": \"张三\",\n    \"password\": \"abcdefg@123\"\n}";
+		final String body = HttpUtil.createPost("https://echo.apifox.com/post?q1=v1&q2=v2")
 			.header("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
 			.header("Content-Type", "application/json")
 			.header("Accept", "*/*")
