@@ -14,7 +14,6 @@ package org.dromara.hutool.core.date.format.parser;
 
 import org.dromara.hutool.core.date.*;
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -43,7 +42,8 @@ public class RegexDateParser implements PredicateDateParser {
 	 * @return RegexDateParser
 	 */
 	public static RegexDateParser of(final String regex) {
-		return of(PatternPool.get(regex));
+		// 日期正则忽略大小写
+		return of(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
 	}
 
 	/**

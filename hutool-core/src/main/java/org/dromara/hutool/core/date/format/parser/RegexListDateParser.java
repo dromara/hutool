@@ -58,7 +58,8 @@ public class RegexListDateParser implements DateParser, Serializable {
 	 * @return this
 	 */
 	public RegexListDateParser addRegex(final String regex) {
-		return addPattern(Pattern.compile(regex));
+		// 日期正则忽略大小写
+		return addPattern(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
 	}
 
 	/**
