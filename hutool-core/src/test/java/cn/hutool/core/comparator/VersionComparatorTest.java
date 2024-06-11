@@ -3,15 +3,23 @@ package cn.hutool.core.comparator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 /**
  * 版本比较单元测试
  *
  * @author looly
  */
 public class VersionComparatorTest {
+
+	@Test
+	public void compareEmptyTest() {
+		int compare = VersionComparator.INSTANCE.compare("", "1.12.1");
+		Assert.assertTrue(compare < 0);
+
+		compare = VersionComparator.INSTANCE.compare("", null);
+		Assert.assertTrue(compare > 0);
+		compare = VersionComparator.INSTANCE.compare(null, "");
+		Assert.assertTrue(compare < 0);
+	}
 
 	@Test
 	public void versionComparatorTest1() {

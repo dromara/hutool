@@ -60,13 +60,15 @@ public class Version implements Comparable<Version>, Serializable {
 	public Version(final String v) {
 		Assert.notNull(v, "Null version string");
 		final int n = v.length();
-		if (n == 0){
-			throw new IllegalArgumentException("Empty version string");
-		}
+
 		this.version = v;
 		this.sequence = new ArrayList<>(4);
 		this.pre = new ArrayList<>(2);
 		this.build = new ArrayList<>(2);
+
+		if (n == 0){
+			return;
+		}
 
 		int i = 0;
 		char c = v.charAt(i);
