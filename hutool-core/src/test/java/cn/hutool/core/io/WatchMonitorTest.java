@@ -5,6 +5,7 @@ import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -67,4 +68,19 @@ public class WatchMonitorTest {
 		monitor.run();
 	}
 
+	@Test
+	@Ignore
+	public void testDelay() {
+		monitor = WatchMonitor.createAll("d:/test", new DelayWatcher(new SimpleWatcher(){
+			@Override
+			public void onModify(final WatchEvent<?> event, final Path currentPath) {
+				final Object obj = event.context();
+				Console.log("修改：{}-> {}", currentPath, obj);
+				ThreadUtil.sleep(5000);
+				Console.log("sleep end");
+			}
+
+		}, 500));
+		monitor.run();
+	}
 }
