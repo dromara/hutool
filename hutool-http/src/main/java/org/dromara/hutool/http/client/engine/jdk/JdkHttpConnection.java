@@ -203,6 +203,7 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 	 * @param timeout 超时时间
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public JdkHttpConnection setConnectionAndReadTimeout(final int timeout) {
 		setConnectTimeout(timeout);
 		setReadTimeout(timeout);
@@ -230,6 +231,22 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 			Opt.ofNullable(sslInfo.getSocketFactory()).ifPresent(httpsConn::setSSLSocketFactory);
 		}
 
+		return this;
+	}
+
+	/**
+	 * 设置固定长度的流模式，会设置HTTP请求头中的Content-Length字段，告知服务器整个请求体的精确字节大小。<br>
+	 * 这在上传文件或大数据量时非常有用，因为它允许服务器准确地知道何时接收完所有的请求数据，而不需要依赖于连接的关闭来判断数据传输的结束。
+	 *
+	 * @param contentLength 请求体的长度。如果内容长度大于0，则启用固定长度流模式。
+	 * @return this
+	 */
+	public JdkHttpConnection setFixedLengthStreamingMode(final long contentLength) {
+		// 当内容长度大于0时，启用固定长度流模式
+		if (contentLength > 0) {
+			conn.setFixedLengthStreamingMode(contentLength);
+		}
+		// 返回当前实例，支持方法链式调用
 		return this;
 	}
 

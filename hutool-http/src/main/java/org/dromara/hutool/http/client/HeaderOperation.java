@@ -15,6 +15,7 @@ package org.dromara.hutool.http.client;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpUtil;
@@ -171,6 +172,44 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	default T keepAlive(final boolean isKeepAlive) {
 		header(HeaderName.CONNECTION, isKeepAlive ? "Keep-Alive" : "Close");
 		return (T) this;
+	}
+
+	/**
+	 * 获取内容长度，以下情况长度无效：
+	 * <ul>
+	 *     <li>Transfer-Encoding: Chunked</li>
+	 *     <li>Content-Encoding: XXX</li>
+	 * </ul>
+	 *
+	 * @return 长度，-1表示服务端未返回或长度无效
+	 * @since 5.7.9
+	 */
+	default long contentLength() {
+		long contentLength = Convert.toLong(header(HeaderName.CONTENT_LENGTH), -1L);
+		if (contentLength > 0 && (isChunked() || StrUtil.isNotBlank(contentEncoding()))) {
+			//按照HTTP协议规范，在 Transfer-Encoding和Content-Encoding设置后 Content-Length 无效。
+			contentLength = -1;
+		}
+		return contentLength;
+	}
+
+	/**
+	 * 是否为Transfer-Encoding:Chunked的内容
+	 *
+	 * @return 是否为Transfer-Encoding:Chunked的内容
+	 * @since 4.6.2
+	 */
+	default boolean isChunked() {
+		return "Chunked".equalsIgnoreCase(header(HeaderName.TRANSFER_ENCODING));
+	}
+
+	/**
+	 * 获取内容编码
+	 *
+	 * @return String
+	 */
+	default String contentEncoding() {
+		return header(HeaderName.CONTENT_ENCODING);
 	}
 
 	// endregion -----------------------------------------------------------  headers

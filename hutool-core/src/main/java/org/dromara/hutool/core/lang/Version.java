@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.lang;
 
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.text.CharUtil;
 
@@ -61,7 +62,11 @@ public class Version implements Comparable<Version>, Serializable {
 		Assert.notNull(v, "Null version string");
 		final int n = v.length();
 		if (n == 0){
-			throw new IllegalArgumentException("Empty version string");
+			this.version = v;
+			this.sequence = ListUtil.empty();
+			this.pre = ListUtil.empty();
+			this.build = ListUtil.empty();
+			return;
 		}
 		this.version = v;
 		this.sequence = new ArrayList<>(4);
