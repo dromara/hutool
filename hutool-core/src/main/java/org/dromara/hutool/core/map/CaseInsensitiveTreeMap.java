@@ -14,7 +14,6 @@ package org.dromara.hutool.core.map;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -52,20 +51,10 @@ public class CaseInsensitiveTreeMap<K, V> extends CaseInsensitiveMap<K, V> {
 	/**
 	 * 构造
 	 *
-	 * @param m Map，初始Map，键值对会被复制到新的TreeMap中
-	 * @since 3.1.2
-	 */
-	public CaseInsensitiveTreeMap(final SortedMap<? extends K, ? extends V> m) {
-		super(new TreeMap<K, V>(m));
-	}
-
-	/**
-	 * 构造
-	 *
 	 * @param comparator 比较器，{@code null}表示使用默认比较器
 	 */
 	public CaseInsensitiveTreeMap(final Comparator<? super K> comparator) {
-		super(new TreeMap<>(comparator));
+		super(MapBuilder.of(new TreeMap<>(comparator)));
 	}
 	// ------------------------------------------------------------------------- Constructor end
 }

@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CaseInsensitiveMapTest {
 
@@ -23,16 +26,16 @@ public class CaseInsensitiveMapTest {
 	public void caseInsensitiveMapTest() {
 		final CaseInsensitiveMap<String, String> map = new CaseInsensitiveMap<>();
 		map.put("aAA", "OK");
-		Assertions.assertEquals("OK", map.get("aaa"));
-		Assertions.assertEquals("OK", map.get("AAA"));
+		assertEquals("OK", map.get("aaa"));
+		assertEquals("OK", map.get("AAA"));
 	}
 
 	@Test
 	public void caseInsensitiveLinkedMapTest() {
 		final CaseInsensitiveLinkedMap<String, String> map = new CaseInsensitiveLinkedMap<>();
 		map.put("aAA", "OK");
-		Assertions.assertEquals("OK", map.get("aaa"));
-		Assertions.assertEquals("OK", map.get("AAA"));
+		assertEquals("OK", map.get("aaa"));
+		assertEquals("OK", map.get("AAA"));
 	}
 
 	@Test
@@ -44,6 +47,42 @@ public class CaseInsensitiveMapTest {
 		map.merge(b.getKey(), b.getValue(), (A, B) -> A);
 		map.merge(a.getKey(), a.getValue(), (A, B) -> A);
 
-		Assertions.assertEquals(1, map.size());
+		assertEquals(1, map.size());
+	}
+
+	@Test
+	public void issueIA4K4FTest() {
+		final Map<String, Object> map = new CaseInsensitiveLinkedMap<>();
+		map.put("b", 2);
+		map.put("a", 1);
+
+		final AtomicInteger index = new AtomicInteger();
+		map.forEach((k, v) -> {
+			if(0 == index.get()){
+				assertEquals("b", k);
+			} else if(1 == index.get()){
+				assertEquals("a", k);
+			}
+
+			index.getAndIncrement();
+		});
+	}
+
+	@Test
+	public void issueIA4K4FTest2() {
+		final Map<String, Object> map = new CaseInsensitiveTreeMap<>();
+		map.put("b", 2);
+		map.put("a", 1);
+
+		final AtomicInteger index = new AtomicInteger();
+		map.forEach((k, v) -> {
+			if(0 == index.get()){
+				assertEquals("a", k);
+			} else if(1 == index.get()){
+				assertEquals("b", k);
+			}
+
+			index.getAndIncrement();
+		});
 	}
 }

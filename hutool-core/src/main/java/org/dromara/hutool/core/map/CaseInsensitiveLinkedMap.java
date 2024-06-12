@@ -73,7 +73,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends CaseInsensitiveMap<K, V> {
 	 * @param loadFactor 加载因子
 	 */
 	public CaseInsensitiveLinkedMap(final int initialCapacity, final float loadFactor) {
-		super(new LinkedHashMap<>(initialCapacity, loadFactor));
+		super(MapBuilder.of(new LinkedHashMap<>(initialCapacity, loadFactor)));
 	}
 	// ------------------------------------------------------------------------- Constructor end
 }
