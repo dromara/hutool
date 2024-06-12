@@ -570,8 +570,8 @@ public class FileUtil extends PathUtil {
 		if (bufferSize < 1) {
 			bufferSize = 1024;
 		}
-		try (InputStream is = getInputStream(file)) {
-			byte[] c = new byte[bufferSize];
+		try (final InputStream is = getInputStream(file)) {
+			final byte[] c = new byte[bufferSize];
 			int readChars = is.read(c);
 			if (readChars == -1) {
 				// 空文件，返回0
@@ -603,7 +603,7 @@ public class FileUtil extends PathUtil {
 			}
 
 			return count;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
