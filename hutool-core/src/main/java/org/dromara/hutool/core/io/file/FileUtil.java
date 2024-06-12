@@ -23,6 +23,7 @@ import org.dromara.hutool.core.io.resource.FileResource;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.io.stream.BOMInputStream;
+import org.dromara.hutool.core.io.stream.LineCounter;
 import org.dromara.hutool.core.io.unit.DataSizeUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Console;
@@ -551,7 +552,7 @@ public class FileUtil extends PathUtil {
 	 * @since 5.7.22
 	 */
 	public static int getTotalLines(final File file) {
-		return getTotalLines(file, 1024);
+		return getTotalLines(file, -1);
 	}
 
 	/**
@@ -563,46 +564,12 @@ public class FileUtil extends PathUtil {
 	 * @return 该文件总行数
 	 * @since 5.8.28
 	 */
-	public static int getTotalLines(final File file, int bufferSize) {
+	public static int getTotalLines(final File file, final int bufferSize) {
 		if (false == isFile(file)) {
 			throw new IORuntimeException("Input must be a File");
 		}
-		if (bufferSize < 1) {
-			bufferSize = 1024;
-		}
-		try (final InputStream is = getInputStream(file)) {
-			final byte[] c = new byte[bufferSize];
-			int readChars = is.read(c);
-			if (readChars == -1) {
-				// 空文件，返回0
-				return 0;
-			}
-
-			// 起始行为1
-			// 如果只有一行，无换行符，则读取结束后返回1
-			// 如果多行，最后一行无换行符，最后一行需要单独计数
-			// 如果多行，最后一行有换行符，则空行算作一行
-			int count = 1;
-			while (readChars == bufferSize) {
-				for (int i = 0; i < bufferSize; i++) {
-					if (c[i] == CharUtil.LF) {
-						++count;
-					}
-				}
-				readChars = is.read(c);
-			}
-
-			// count remaining characters
-			while (readChars != -1) {
-				for (int i = 0; i < readChars; i++) {
-					if (c[i] == CharUtil.LF) {
-						++count;
-					}
-				}
-				readChars = is.read(c);
-			}
-
-			return count;
+		try (final LineCounter lineCounter = new LineCounter(getInputStream(file), bufferSize)) {
+			return lineCounter.getCount();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
