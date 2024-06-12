@@ -13,6 +13,7 @@
 * 【core   】      修复AnnotationUtil可能的空指针错误
 * 【core   】      修复BeanUtil.isBean判断Dict错误问题（issue#I9VTZG@Gitee）
 * 【core   】      修复VersionComparator传入空字符串报错问题（pr#3614@Github）
+* 【core   】      修复CaseInsensitiveLinkedMap顺序错误问题（issue#IA4K4F@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.28(2024-05-29)

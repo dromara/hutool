@@ -37,7 +37,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 
 	/**
 	 * 构造<br>
-	 * 注意此构造将传入的Map作为被包装的Map，针对任何修改，传入的Map都会被同样修改。
+	 * 注意此构造将传入的Map所有值复制到当前map中，不修改传入map。
 	 *
 	 * @param m 被包装的自定义Map创建器
 	 */

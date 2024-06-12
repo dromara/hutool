@@ -44,7 +44,7 @@ public class CaseInsensitiveTreeMap<K, V> extends CaseInsensitiveMap<K, V> {
 	 * @since 3.1.2
 	 */
 	public CaseInsensitiveTreeMap(SortedMap<? extends K, ? extends V> m) {
-		super(new TreeMap<K, V>(m));
+		super(MapBuilder.create(new TreeMap<K, V>(m)));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class CaseInsensitiveTreeMap<K, V> extends CaseInsensitiveMap<K, V> {
 	 * @param comparator 比较器，{@code null}表示使用默认比较器
 	 */
 	public CaseInsensitiveTreeMap(Comparator<? super K> comparator) {
-		super(new TreeMap<>(comparator));
+		super(MapBuilder.create(new TreeMap<>(comparator)));
 	}
 	// ------------------------------------------------------------------------- Constructor end
 }
