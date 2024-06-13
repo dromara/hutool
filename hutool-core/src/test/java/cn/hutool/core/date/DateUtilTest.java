@@ -1183,4 +1183,45 @@ public class DateUtilTest {
 		final DateTime parse = DateUtil.parse(str);
 		Assert.assertEquals("2023-12-11 10:42:04", Objects.requireNonNull(parse).toString());
 	}
+
+	@Test
+	public void formatSpeedTest(){
+		Date value = new Date();
+		long t0 = System.currentTimeMillis();
+		//此处先加载FastDateFormat对象，保存到FastDateFormat.CACHE中
+		//解决后面两个for循环中保存到FastDateFormat对象创建未时差异的问题。
+		FastDateFormat.getInstance("YYYY-MM-dd HH:mm:ss.SSS");
+
+		long t1 = System.currentTimeMillis();
+		String strTime = null;
+		for(int i=0; i<50000; i++){
+			strTime = DateUtil.format(value, "YYYY-MM-dd HH:mm:ss.SSS");
+		}
+		long t2 = System.currentTimeMillis();
+
+		for(int i=0; i<50000; i++){
+			strTime = FastDateFormat.getInstance("YYYY-MM-dd HH:mm:ss.SSS").format(value);
+		}
+		long t3 = System.currentTimeMillis();
+
+		long initTime = t1 - t0;
+		long formtTime1 = t2 - t1;
+		long formatTime2 = t3 - t2;
+
+		//此处仍然不明白，两个for循环实际执行format方法都一样，为什么第1个for时间大致是第2个for的3倍。
+		Assert.assertTrue(formtTime1 > formatTime2);
+/**
+ * 		System.out.println("t1-t0="+(t1-t0));
+ * 		System.out.println("t2-t1="+(t2-t1));
+ * 		System.out.println("t3-t2="+(t3-t2));
+ *
+ * 由日志可以看出，第1个for时间大致是第2个for的3倍
+ *
+ * t1-t0=46
+ * t2-t1=65
+ * t3-t2=25
+ */
+
+	}
+
 }
