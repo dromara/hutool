@@ -143,8 +143,8 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	public CsvWriter(final File file, final Charset charset, final boolean isAppend, final CsvWriteConfig config) {
 		this(FileUtil.getWriter(file, charset, isAppend),
 			// https://gitee.com/dromara/hutool/pulls/1011
-			isAppend?(config==null?CsvWriteConfig.defaultConfig().setEndingLineBreak(true)
-				:config.setEndingLineBreak(true)):config);
+			isAppend ? (config == null ? CsvWriteConfig.defaultConfig().setEndingLineBreak(true)
+				: config.setEndingLineBreak(true)) : config);
 	}
 
 	/**
@@ -255,14 +255,26 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	/**
 	 * 将一个Bean集合写出到Writer，并自动生成表头
 	 *
-	 * @param beans Bean集合
+	 * @param beans      Bean集合
 	 * @param properties 可选属性列表，空表示全部属性
 	 * @return this
 	 */
-	@SuppressWarnings("resource")
 	public CsvWriter writeBeans(final Iterable<?> beans, final String... properties) {
+		return writeBeans(beans, true, properties);
+	}
+
+	/**
+	 * 将一个Bean集合写出到Writer，并自动生成表头
+	 *
+	 * @param beans           Bean集合
+	 * @param writeHeaderLine 是否写出表头，即Bean的字段名称列表作为首行
+	 * @param properties      可选属性列表，空表示全部属性
+	 * @return this
+	 */
+	@SuppressWarnings("resource")
+	public CsvWriter writeBeans(final Iterable<?> beans, final boolean writeHeaderLine, final String... properties) {
 		if (CollUtil.isNotEmpty(beans)) {
-			boolean isFirst = true;
+			boolean isFirst = writeHeaderLine;
 			Map<String, Object> map;
 			for (final Object bean : beans) {
 				map = BeanUtil.beanToMap(bean, properties);
@@ -362,7 +374,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	@SuppressWarnings("resource")
 	@Override
 	public void close() {
-		if(this.config.endingLineBreak){
+		if (this.config.endingLineBreak) {
 			writeLine();
 		}
 		IoUtil.closeQuietly(this.writer);
@@ -496,9 +508,9 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	private static boolean isDDEUnsafeChar(final char c) {
 		return c == CharUtil.AT ||
-				c == CharUtil.PLUS ||
-				c == CharUtil.DASHED ||
-				c == CharUtil.EQUAL;
+			c == CharUtil.PLUS ||
+			c == CharUtil.DASHED ||
+			c == CharUtil.EQUAL;
 	}
 	// --------------------------------------------------------------------------------------------------- Private method end
 }
