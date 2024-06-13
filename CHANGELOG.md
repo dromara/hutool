@@ -9,6 +9,7 @@
 * 【core   】      ListUtil增加move方法（issue#3603@Github）
 * 【core   】      CollUtil.subtract增加空判定（issue#3605@Github）
 * 【core   】      优化DateUtil.format(Date date, String format)接口效率（pr#1226@Gitee）
+* 【csv    】      CsvWriter.writeBeans增加重载，可选是否写出表头（issue#IA57W2@Gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复AnnotationUtil可能的空指针错误
