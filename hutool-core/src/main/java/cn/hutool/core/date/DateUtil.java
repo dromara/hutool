@@ -522,7 +522,7 @@ public class DateUtil extends CalendarUtil {
 		if (date instanceof DateTime) {
 			timeZone = ((DateTime) date).getTimeZone();
 		}
-		return format(date, FastDateFormat.getInstance(format));
+		return format(date, FastDateFormat.getInstance(format, timeZone));
 	}
 
 	/**
