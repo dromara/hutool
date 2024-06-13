@@ -1217,6 +1217,9 @@ public class DateUtil extends CalendarUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offset(final Date date, final DateField dateField, final int offset) {
+		if (date == null) {
+			return null;
+		}
 		return dateNew(date).offset(dateField, offset);
 	}
 	// endregion
