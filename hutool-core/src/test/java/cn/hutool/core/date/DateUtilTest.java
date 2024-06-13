@@ -1183,4 +1183,30 @@ public class DateUtilTest {
 		final DateTime parse = DateUtil.parse(str);
 		Assert.assertEquals("2023-12-11 10:42:04", Objects.requireNonNull(parse).toString());
 	}
+
+	@Test
+	public void formatSpeedTest(){
+		Date value = new Date();
+		long t0 = System.currentTimeMillis();
+		FastDateFormat.getInstance("YYYY-MM-dd HH:mm:ss.SSSSSS");
+		long t1 = System.currentTimeMillis();
+		String strTime = null;
+		for(int i=0; i<5000; i++){
+			strTime = DateUtil.format(value, "YYYY-MM-dd HH:mm:ss.SSSSSS");
+		}
+		System.out.println("format="+strTime);
+		long t2 = System.currentTimeMillis();
+
+		for(int i=0; i<5000; i++){
+			strTime = FastDateFormat.getInstance("YYYY-MM-dd HH:mm:ss.SSSSSS").format(value);
+		}
+		System.out.println("FastDateFormat="+strTime);
+
+		long t3 = System.currentTimeMillis();
+
+		System.out.println("t1-t0="+(t1-t0));
+		System.out.println("t2-t1="+(t2-t1));
+		System.out.println("t3-t2="+(t3-t2));
+	}
+
 }
