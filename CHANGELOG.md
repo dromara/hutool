@@ -2,12 +2,13 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.29(2024-06-12)
+# 5.8.29(2024-06-14)
 
 ### 🐣新特性
 * 【core   】      DateUtil增加offsetYear方法
 * 【core   】      ListUtil增加move方法（issue#3603@Github）
 * 【core   】      CollUtil.subtract增加空判定（issue#3605@Github）
+* 【core   】      优化DateUtil.format(Date date, String format)接口效率（pr#1226@Gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复AnnotationUtil可能的空指针错误

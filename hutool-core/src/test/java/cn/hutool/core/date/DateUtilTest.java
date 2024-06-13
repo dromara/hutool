@@ -1210,18 +1210,18 @@ public class DateUtilTest {
 
 		//此处仍然不明白，两个for循环实际执行format方法都一样，为什么第1个for时间大致是第2个for的3倍。
 		Assert.assertTrue(formtTime1 > formatTime2);
-/**
- * 		System.out.println("t1-t0="+(t1-t0));
- * 		System.out.println("t2-t1="+(t2-t1));
- * 		System.out.println("t3-t2="+(t3-t2));
- *
- * 由日志可以看出，第1个for时间大致是第2个for的3倍
- *
- * t1-t0=46
- * t2-t1=65
- * t3-t2=25
- */
 
+		/*
+		 * 		System.out.println("t1-t0="+(t1-t0));
+		 * 		System.out.println("t2-t1="+(t2-t1));
+		 * 		System.out.println("t3-t2="+(t3-t2));
+		 *
+		 * 由日志可以看出，第1个for时间大致是第2个for的3倍
+		 *
+		 * t1-t0=46
+		 * t2-t1=65
+		 * t3-t2=25
+		 */
 	}
 
 }
