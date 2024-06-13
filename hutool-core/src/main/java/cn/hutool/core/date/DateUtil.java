@@ -1460,6 +1460,9 @@ public class DateUtil extends CalendarUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offset(Date date, DateField dateField, int offset) {
+		if (date == null) {
+			return null;
+		}
 		return dateNew(date).offset(dateField, offset);
 	}
 
