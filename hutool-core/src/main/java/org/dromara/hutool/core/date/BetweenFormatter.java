@@ -15,6 +15,7 @@ package org.dromara.hutool.core.date;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
+import java.util.function.Function;
 
 /**
  * 时长格式化器，用于格式化输出两个日期相差的时长<br>
@@ -30,6 +31,10 @@ import java.io.Serializable;
 public class BetweenFormatter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单位格式化器
+	 */
+	public static Function<Level, String> DEFAULT_LEVEL_FORMATTER = (level) -> level.name;
 	/**
 	 * 时长毫秒数
 	 */
@@ -47,6 +52,14 @@ public class BetweenFormatter implements Serializable {
 	 * 如为{@code true}，输出 1小时3秒，为{@code false}输出 1小时0分3秒
 	 */
 	private boolean simpleMode = true;
+	/**
+	 * 格式化器
+	 */
+	private Function<Level, String> levelFormatter = DEFAULT_LEVEL_FORMATTER;
+	/**
+	 * 分隔符
+	 */
+	private String separator = StrUtil.EMPTY;
 
 	/**
 	 * 创建 BetweenFormatter
@@ -105,46 +118,50 @@ public class BetweenFormatter implements Serializable {
 
 			// 天
 			if (isLevelCountValid(levelCount) && day > 0) {
-				sb.append(day).append(Level.DAY.name);
+				sb.append(day).append(levelFormatter.apply(Level.DAY)).append(separator);
 				levelCount++;
 			}
 
 			// 时
 			if (isLevelCountValid(levelCount) && level >= Level.HOUR.ordinal()) {
-				if(hour >0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))){
-					sb.append(hour).append(Level.HOUR.name);
+				if (hour > 0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))) {
+					sb.append(hour).append(levelFormatter.apply(Level.HOUR)).append(separator);
 					levelCount++;
 				}
 			}
 
 			// 分
 			if (isLevelCountValid(levelCount) && level >= Level.MINUTE.ordinal()) {
-				if(minute >0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))){
-					sb.append(minute).append(Level.MINUTE.name);
+				if (minute > 0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))) {
+					sb.append(minute).append(levelFormatter.apply(Level.MINUTE)).append(separator);
 					levelCount++;
 				}
 			}
 
 			// 秒
 			if (isLevelCountValid(levelCount) && level >= Level.SECOND.ordinal()) {
-				if(second >0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))){
-					sb.append(second).append(Level.SECOND.name);
+				if (second > 0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))) {
+					sb.append(second).append(levelFormatter.apply(Level.SECOND)).append(separator);
 					levelCount++;
 				}
 			}
 
 			// 毫秒
 			if (isLevelCountValid(levelCount) && millisecond > 0 && level >= Level.MILLISECOND.ordinal()) {
-				sb.append(millisecond).append(Level.MILLISECOND.name);
+				sb.append(millisecond).append(levelFormatter.apply(Level.MILLISECOND)).append(separator);
 				// levelCount++;
 			}
 		}
 
 		if (StrUtil.isEmpty(sb)) {
-			sb.append(0).append(this.level.name);
+			sb.append(0).append(levelFormatter.apply(this.level));
+		} else {
+			if (StrUtil.isNotEmpty(separator)) {
+				sb.delete(sb.length() - separator.length(), sb.length());
+			}
 		}
-
-		return sb.toString();
+		// 自定义实现最后可能存在空格
+		return sb.toString().trim();
 	}
 
 	/**
@@ -196,6 +213,28 @@ public class BetweenFormatter implements Serializable {
 	 */
 	public BetweenFormatter setSimpleMode(final boolean simpleMode) {
 		this.simpleMode = simpleMode;
+		return this;
+	}
+
+	/**
+	 * 设置级别格式化器
+	 *
+	 * @param levelFormatter 级别格式化器
+	 * @return this
+	 */
+	public BetweenFormatter setLevelFormatter(Function<Level, String> levelFormatter) {
+		this.levelFormatter = levelFormatter;
+		return this;
+	}
+
+	/**
+	 * 设置分隔符
+	 *
+	 * @param separator 分割符
+	 * @return this
+	 */
+	public BetweenFormatter setSeparator(String separator) {
+		this.separator = separator == null ? StrUtil.EMPTY : separator;
 		return this;
 	}
 
