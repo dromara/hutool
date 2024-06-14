@@ -3,6 +3,7 @@ package cn.hutool.core.date;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
+import java.util.function.Function;
 
 /**
  * 时长格式化器，用于格式化输出两个日期相差的时长<br>
@@ -19,6 +20,10 @@ public class BetweenFormatter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 单位格式化器
+	 */
+	public static Function<Level, String> DEFAULT_LEVEL_FORMATTER = (level) -> level.name;
+	/**
 	 * 时长毫秒数
 	 */
 	private long betweenMs;
@@ -30,6 +35,14 @@ public class BetweenFormatter implements Serializable {
 	 * 格式化级别的最大个数
 	 */
 	private final int levelMaxCount;
+	/**
+	 * 格式化器
+	 */
+	private Function<Level, String> levelFormatter = DEFAULT_LEVEL_FORMATTER;
+	/**
+	 * 分隔符
+	 */
+	private String separator = StrUtil.EMPTY;
 
 	/**
 	 * 构造
@@ -74,31 +87,34 @@ public class BetweenFormatter implements Serializable {
 			int levelCount = 0;
 
 			if (isLevelCountValid(levelCount) && 0 != day && level >= Level.DAY.ordinal()) {
-				sb.append(day).append(Level.DAY.name);
+				sb.append(day).append(levelFormatter.apply(Level.DAY)).append(separator);
 				levelCount++;
 			}
 			if (isLevelCountValid(levelCount) && 0 != hour && level >= Level.HOUR.ordinal()) {
-				sb.append(hour).append(Level.HOUR.name);
+				sb.append(hour).append(levelFormatter.apply(Level.HOUR)).append(separator);
 				levelCount++;
 			}
 			if (isLevelCountValid(levelCount) && 0 != minute && level >= Level.MINUTE.ordinal()) {
-				sb.append(minute).append(Level.MINUTE.name);
+				sb.append(minute).append(levelFormatter.apply(Level.MINUTE)).append(separator);
 				levelCount++;
 			}
 			if (isLevelCountValid(levelCount) && 0 != second && level >= Level.SECOND.ordinal()) {
-				sb.append(second).append(Level.SECOND.name);
+				sb.append(second).append(levelFormatter.apply(Level.SECOND)).append(separator);
 				levelCount++;
 			}
 			if (isLevelCountValid(levelCount) && 0 != millisecond && level >= Level.MILLISECOND.ordinal()) {
-				sb.append(millisecond).append(Level.MILLISECOND.name);
+				sb.append(millisecond).append(levelFormatter.apply(Level.MILLISECOND)).append(separator);
 				// levelCount++;
 			}
 		}
 
 		if (StrUtil.isEmpty(sb)) {
-			sb.append(0).append(this.level.name);
+			sb.append(0).append(levelFormatter.apply(this.level));
+		} else {
+			if (StrUtil.isNotEmpty(separator)) {
+				sb.delete(sb.length() - separator.length(), sb.length());
+			}
 		}
-
 		return sb.toString();
 	}
 
@@ -137,6 +153,29 @@ public class BetweenFormatter implements Serializable {
 	public void setLevel(Level level) {
 		this.level = level;
 	}
+
+	/**
+	 * 设置级别格式化器
+	 *
+	 * @param levelFormatter 级别格式化器
+	 * @return this
+	 */
+	public BetweenFormatter setLevelFormatter(Function<Level, String> levelFormatter) {
+		this.levelFormatter = levelFormatter;
+		return this;
+	}
+
+	/**
+	 * 设置分隔符
+	 *
+	 * @param separator 分割符
+	 * @return this
+	 */
+	public BetweenFormatter setSeparator(String separator) {
+		this.separator = separator == null ? StrUtil.EMPTY : separator;
+		return this;
+	}
+
 
 	/**
 	 * 格式化等级枚举
