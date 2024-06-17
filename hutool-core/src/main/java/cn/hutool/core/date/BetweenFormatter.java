@@ -20,10 +20,6 @@ public class BetweenFormatter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 单位格式化器
-	 */
-	public static Function<Level, String> DEFAULT_LEVEL_FORMATTER = (level) -> level.name;
-	/**
 	 * 时长毫秒数
 	 */
 	private long betweenMs;
@@ -38,7 +34,7 @@ public class BetweenFormatter implements Serializable {
 	/**
 	 * 格式化器
 	 */
-	private Function<Level, String> levelFormatter = DEFAULT_LEVEL_FORMATTER;
+	private Function<Level, String> levelFormatter = Level::getName;
 	/**
 	 * 分隔符
 	 */
@@ -86,7 +82,7 @@ public class BetweenFormatter implements Serializable {
 			final int level = this.level.ordinal();
 			int levelCount = 0;
 
-			if (isLevelCountValid(levelCount) && 0 != day && level >= Level.DAY.ordinal()) {
+			if (isLevelCountValid(levelCount) && day > 0) {
 				sb.append(day).append(levelFormatter.apply(Level.DAY)).append(separator);
 				levelCount++;
 			}
@@ -172,7 +168,7 @@ public class BetweenFormatter implements Serializable {
 	 * @return this
 	 */
 	public BetweenFormatter setSeparator(String separator) {
-		this.separator = separator == null ? StrUtil.EMPTY : separator;
+		this.separator = StrUtil.nullToEmpty(separator);
 		return this;
 	}
 
