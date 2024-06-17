@@ -222,7 +222,7 @@ public class BetweenFormatter implements Serializable {
 	 * @param levelFormatter 级别格式化器
 	 * @return this
 	 */
-	public BetweenFormatter setLevelFormatter(Function<Level, String> levelFormatter) {
+	public BetweenFormatter setLevelFormatter(final Function<Level, String> levelFormatter) {
 		this.levelFormatter = levelFormatter;
 		return this;
 	}
@@ -233,8 +233,8 @@ public class BetweenFormatter implements Serializable {
 	 * @param separator 分割符
 	 * @return this
 	 */
-	public BetweenFormatter setSeparator(String separator) {
-		this.separator = separator == null ? StrUtil.EMPTY : separator;
+	public BetweenFormatter setSeparator(final String separator) {
+		this.separator = StrUtil.emptyIfNull(separator);
 		return this;
 	}
 
