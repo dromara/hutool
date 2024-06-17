@@ -96,7 +96,7 @@ public class PathMover {
 		final CopyOption[] options = this.options;
 
 		if (PathUtil.isSub(src, target)) {
-			if(Files.exists(target) && PathUtil.equals(src, target)){
+			if(PathUtil.equals(src, target)){
 				// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
 				return target;
 			}
@@ -144,15 +144,11 @@ public class PathMover {
 	 */
 	public Path moveContent() {
 		final Path src = this.src;
-		if (PathUtil.isExistsAndNotDirectory(target, false)) {
-			// 文件移动调用move方法
-			return move();
-		}
-
 		final Path target = this.target;
+
+		// 文件移动调用move方法
 		if (PathUtil.isExistsAndNotDirectory(target, false)) {
-			// 目标不能为文件
-			throw new IllegalArgumentException("Can not move dir content to a file");
+			return move();
 		}
 
 		// issue#2893 target 不存在导致NoSuchFileException

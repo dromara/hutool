@@ -19,6 +19,7 @@ import org.dromara.hutool.core.io.resource.FileResource;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -611,6 +612,11 @@ public class PathUtil {
 	/**
 	 * 检查两个文件是否是同一个文件<br>
 	 * 所谓文件相同，是指Path对象是否指向同一个文件或文件夹
+	 * <ul>
+	 *     <li>当两个文件都为{@code null}时，返回{@code true}</li>
+	 *     <li>当两个文件都存在时，检查是否为同一个文件</li>
+	 *     <li>当两个文件都不存在时，检查Path对象是否equals</li>
+	 * </ul>
 	 *
 	 * @param file1 文件1
 	 * @param file2 文件2
@@ -620,6 +626,34 @@ public class PathUtil {
 	 * @since 5.4.1
 	 */
 	public static boolean equals(final Path file1, final Path file2) throws IORuntimeException {
+		// 都为null认定为相同
+		if(null == file1 || null == file2){
+			return null == file1 && null == file2;
+		}
+
+		final boolean exists1 = exists(file1, false);
+		final boolean exists2 = exists(file2, false);
+
+
+		if(exists1 && exists2){
+			return isSameFile(file1, file2);
+		}
+
+		return ObjUtil.equals(file1, file2);
+	}
+
+	/**
+	 * 检查两个文件是否是同一个文件<br>
+	 * 所谓文件相同，是指Path对象是否指向同一个文件或文件夹
+	 *
+	 * @param file1 文件1，必须存在
+	 * @param file2 文件2，必须存在
+	 * @return 是否相同
+	 * @throws IORuntimeException IO异常
+	 * @see Files#isSameFile(Path, Path)
+	 * @since 6.0.0
+	 */
+	public static boolean isSameFile(final Path file1, final Path file2) throws IORuntimeException {
 		try {
 			return Files.isSameFile(file1, file2);
 		} catch (final IOException e) {

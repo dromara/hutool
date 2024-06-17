@@ -967,7 +967,7 @@ public class FileUtil extends PathUtil {
 	 * 将文件写入流中，此方法不会关闭输出流
 	 *
 	 * @param src 文件
-	 * @param out  流
+	 * @param out 流
 	 * @return 写出的流byte数
 	 * @throws IORuntimeException IO异常
 	 * @since 6.0.0
@@ -984,7 +984,7 @@ public class FileUtil extends PathUtil {
 	 * 如果目标文件为目录，则将源文件以相同文件名拷贝到目标目录
 	 *
 	 * @param srcPath    源文件或目录
-	 * @param targetPath   目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param targetPath 目标文件或目录，目标不存在会自动创建（目录、文件都创建）
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
@@ -1275,23 +1275,38 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 检查两个文件是否是同一个文件<br>
-	 * 所谓文件相同，是指File对象是否指向同一个文件或文件夹
+	 * 所谓文件相同，是指File对象是否指向同一个文件或文件夹，规则为：
+	 * <ul>
+	 *     <li>当两个文件都为{@code null}时，返回{@code true}</li>
+	 *     <li>当两个文件都存在时，检查是否为同一个文件</li>
+	 *     <li>当两个文件都不存在时，检查路径是否一致</li>
+	 * </ul>
 	 *
-	 * @param file1 文件1
-	 * @param file2 文件2
+	 * @param file1 文件1，可以为{@code null}
+	 * @param file2 文件2，可以为{@code null}
 	 * @return 是否相同
 	 * @throws IORuntimeException IO异常
 	 */
 	public static boolean equals(final File file1, final File file2) throws IORuntimeException {
-		Assert.notNull(file1);
-		Assert.notNull(file2);
-		if (!file1.exists() || !file2.exists()) {
-			// 两个文件都不存在判断其路径是否相同， 对于一个存在一个不存在的情况，一定不相同
-			return !file1.exists()//
-				&& !file2.exists()//
-				&& pathEquals(file1, file2);
+		// 都为null认定为相同
+		if (null == file1 || null == file2) {
+			return null == file1 && null == file2;
 		}
-		return equals(file1.toPath(), file2.toPath());
+
+		final boolean exists1 = file1.exists();
+		final boolean exists2 = file2.exists();
+
+		// 当两个文件都存在时，检查是否为同一个文件
+		if (exists1 && exists2) {
+			return PathUtil.isSameFile(file1.toPath(), file2.toPath());
+		}
+
+		// 都不存在时，检查路径是否相同
+		if (!exists1 && !exists2) {
+			return pathEquals(file1, file2);
+		}
+
+		return false;
 	}
 
 	/**
