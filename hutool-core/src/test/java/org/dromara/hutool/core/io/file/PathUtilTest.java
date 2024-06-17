@@ -17,9 +17,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PathUtilTest {
 
@@ -28,14 +31,14 @@ public class PathUtilTest {
 	void ofTest() {
 		// 绝对路径测试
 		Path path = PathUtil.of(Paths.get("d:/test/hutool"), Paths.get("data1"), Paths.get("data2"));
-		Assertions.assertEquals("d:/test/hutool/data1/data2", path.toString().replace('\\', '/'));
+		assertEquals("d:/test/hutool/data1/data2", path.toString().replace('\\', '/'));
 
 		// 相对路径测试
 		path = PathUtil.of(Paths.get("hutool"), Paths.get("data1"), Paths.get("data2"));
-		Assertions.assertEquals("hutool/data1/data2", path.toString().replace('\\', '/'));
+		assertEquals("hutool/data1/data2", path.toString().replace('\\', '/'));
 
 		path = PathUtil.of(Paths.get("hutool"));
-		Assertions.assertEquals("hutool", path.toString().replace('\\', '/'));
+		assertEquals("hutool", path.toString().replace('\\', '/'));
 
 		path = PathUtil.of((Path) null);
 		Assertions.assertNull(path);
@@ -92,16 +95,16 @@ public class PathUtilTest {
 	@Disabled
 	public void getMimeTypeTest(){
 		String mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.jpg"));
-		Assertions.assertEquals("image/jpeg", mimeType);
+		assertEquals("image/jpeg", mimeType);
 
 		mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.mov"));
-		Assertions.assertEquals("video/quicktime", mimeType);
+		assertEquals("video/quicktime", mimeType);
 	}
 
 	@Test
 	public void getMimeOfRarTest(){
 		final String contentType = FileUtil.getMimeType("a001.rar");
-		Assertions.assertTrue(
+		assertTrue(
 			ArrayUtil.contains(
 				new String[]{
 					"application/x-rar-compressed",
@@ -113,7 +116,7 @@ public class PathUtilTest {
 	@Test
 	public void getMimeOf7zTest(){
 		final String contentType = FileUtil.getMimeType("a001.7z");
-		Assertions.assertEquals("application/x-7z-compressed", contentType);
+		assertEquals("application/x-7z-compressed", contentType);
 	}
 
 	/**
@@ -128,6 +131,33 @@ public class PathUtilTest {
 	@Test
 	public void issue3179Test() {
 		final String mimeType = PathUtil.getMimeType(Paths.get("xxxx.jpg"));
-		Assertions.assertEquals("image/jpeg", mimeType);
+		assertEquals("image/jpeg", mimeType);
+	}
+
+	@Test
+	public void equalsTest() {
+		// 源文件和目标文件都不存在
+		final File srcFile = FileUtil.file("d:/hutool.jpg");
+		final File destFile = FileUtil.file("d:/hutool.jpg");
+
+		final boolean equals = PathUtil.equals(srcFile.toPath(), destFile.toPath());
+		assertTrue(equals);
+
+		// 源文件存在，目标文件不存在
+		final File srcFile1 = FileUtil.file("hutool.jpg");
+		final File destFile1 = FileUtil.file("d:/hutool.jpg");
+
+		final boolean notEquals = PathUtil.equals(srcFile1.toPath(), destFile1.toPath());
+		assertFalse(notEquals);
+	}
+
+	@Test
+	@Disabled
+	void isSameFileTest() {
+		// 源文件和目标文件都不存在
+		final File srcFile = FileUtil.file("f:/hutool.jpg");
+		final File destFile = FileUtil.file("f:/hutool.jpg");
+
+		assertTrue(PathUtil.isSameFile(srcFile.toPath(), destFile.toPath()));
 	}
 }
