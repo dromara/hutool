@@ -155,10 +155,8 @@ public class BetweenFormatter implements Serializable {
 
 		if (StrUtil.isEmpty(sb)) {
 			sb.append(0).append(levelFormatter.apply(this.level));
-		} else {
-			if (StrUtil.isNotEmpty(separator)) {
-				sb.delete(sb.length() - separator.length(), sb.length());
-			}
+		} else if(StrUtil.isNotEmpty(separator)) {
+			sb.delete(sb.length() - separator.length(), sb.length());
 		}
 		// 自定义实现最后可能存在空格
 		return sb.toString().trim();
