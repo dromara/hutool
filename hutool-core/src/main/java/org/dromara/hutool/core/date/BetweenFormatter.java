@@ -32,10 +32,6 @@ public class BetweenFormatter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 单位格式化器
-	 */
-	public static Function<Level, String> DEFAULT_LEVEL_FORMATTER = (level) -> level.name;
-	/**
 	 * 时长毫秒数
 	 */
 	private long betweenMs;
@@ -55,7 +51,7 @@ public class BetweenFormatter implements Serializable {
 	/**
 	 * 格式化器
 	 */
-	private Function<Level, String> levelFormatter = DEFAULT_LEVEL_FORMATTER;
+	private Function<Level, String> levelFormatter = Level::getName;
 	/**
 	 * 分隔符
 	 */
