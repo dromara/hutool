@@ -81,7 +81,7 @@ public class ReferenceUtil {
 	}
 
 	/**
-	 * {@code null}全的解包获取原始对象
+	 * {@code null}安全的解包获取原始对象
 	 *
 	 * @param <T> 对象类型
 	 * @param obj Ref对象
