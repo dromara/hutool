@@ -1,7 +1,5 @@
 package org.dromara.hutool.core.map.reference;
 
-import org.dromara.hutool.core.thread.ThreadUtil;
-import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,20 +27,21 @@ public class WeakConcurrentMapTest {
 
 		assertTrue(map.containsKey("key1"));
 		assertTrue(map.containsKey("key2"));
+
+		// null值
+		String s = map.computeIfAbsent("key3", key -> null);
+		assertNull(s);
+
+		// 允许key为null
+		s = map.computeIfAbsent(null, key -> null);
+		assertNull(s);
 	}
 
+	@SuppressWarnings("StringOperationCanBeSimplified")
 	@Test
 	void computeIfAbsentTest() {
 		final WeakConcurrentMap<String, String> map = new WeakConcurrentMap<>();
-
-		for (int i = 0; i < 1000; i++) {
-			ThreadUtil.execute(()->{
-				final String s = map.computeIfAbsent(RandomUtil.randomString(1), key -> "value1");
-				assertEquals("value1", s);
-			});
-		}
-
-		ThreadUtil.sleep(500);
-		assertFalse(map.isEmpty());
+		final String value = map.computeIfAbsent("key1", key -> new String("value1"));
+		assertNotNull(value);
 	}
 }

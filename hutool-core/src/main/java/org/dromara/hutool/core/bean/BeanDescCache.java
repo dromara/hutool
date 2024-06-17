@@ -12,8 +12,9 @@
 
 package org.dromara.hutool.core.bean;
 
-import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
+
+import java.util.function.Supplier;
 
 /**
  * Bean属性缓存<br>
@@ -27,18 +28,20 @@ public enum BeanDescCache {
 	 */
 	INSTANCE;
 
-	private final WeakConcurrentMap<Class<?>, StrictBeanDesc> bdCache = new WeakConcurrentMap<>();
+	private final WeakConcurrentMap<Class<?>, BeanDesc> bdCache = new WeakConcurrentMap<>();
 
 	/**
-	 * 获得属性名和{@link StrictBeanDesc}Map映射
+	 * 获得属性名和{@link BeanDesc}Map映射
 	 *
 	 * @param beanClass Bean的类
 	 * @param supplier  对象不存在时创建对象的函数
-	 * @return 属性名和 {@link StrictBeanDesc}映射
+	 * @param <T>       BeanDesc子类
+	 * @return 属性名和 {@link BeanDesc}映射
 	 * @since 5.4.2
 	 */
-	public StrictBeanDesc getBeanDesc(final Class<?> beanClass, final SerSupplier<StrictBeanDesc> supplier) {
-		return bdCache.computeIfAbsent(beanClass, (key) -> supplier.get());
+	@SuppressWarnings("unchecked")
+	public <T extends BeanDesc> T getBeanDesc(final Class<?> beanClass, final Supplier<T> supplier) {
+		return (T) bdCache.computeIfAbsent(beanClass, (key) -> supplier.get());
 	}
 
 	/**

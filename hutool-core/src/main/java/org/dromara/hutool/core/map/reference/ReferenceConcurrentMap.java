@@ -136,18 +136,40 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 
 	@Override
 	public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
-		this.purgeStale();
-		final Ref<V> vReference = this.raw.computeIfAbsent(wrapKey(key),
-			kReference -> wrapValue(mappingFunction.apply(unwrap(kReference))));
-		return unwrap(vReference);
+		V result = null;
+		while(null == result){
+			this.purgeStale();
+			final Ref<V> vReference = this.raw.computeIfAbsent(wrapKey(key),
+				kReference -> wrapValue(mappingFunction.apply(unwrap(kReference))));
+
+			// issue#IA5GMH 如果vReference在此时被GC回收，则unwrap后为null，需要循环计算
+			// 但是当用户提供的值本身为null，则直接返回之
+			if(NullRef.NULL == vReference){
+				// 用户提供的值本身为null
+				return null;
+			}
+			result = unwrap(vReference);
+		}
+		return result;
 	}
 
 	@Override
 	public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-		this.purgeStale();
-		final Ref<V> vReference = this.raw.computeIfPresent(wrapKey(key),
-			(kReference, vReference1) -> wrapValue(remappingFunction.apply(unwrap(kReference), unwrap(vReference1))));
-		return unwrap(vReference);
+		V result = null;
+		while(null == result){
+			this.purgeStale();
+			final Ref<V> vReference = this.raw.computeIfPresent(wrapKey(key),
+				(kReference, vReference1) -> wrapValue(remappingFunction.apply(unwrap(kReference), unwrap(vReference1))));
+
+			// issue#IA5GMH 如果vReference在此时被GC回收，则unwrap后为null，需要循环计算
+			// 但是当用户提供的值本身为null，则直接返回之
+			if(NullRef.NULL == vReference){
+				// 用户提供的值本身为null
+				return null;
+			}
+			result = unwrap(vReference);
+		}
+		return result;
 	}
 
 	@Override
@@ -358,6 +380,9 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 */
 	@SuppressWarnings("unchecked")
 	private Ref<V> wrapValue(final Object value) {
+		if(null == value){
+			return (Ref<V>) NullRef.NULL;
+		}
 		return wrapValue((V) value, this.lastValueQueue);
 	}
 
@@ -370,5 +395,15 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
 	 */
 	private static <T> T unwrap(final Ref<T> obj) {
 		return ReferenceUtil.get(obj);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private static class NullRef implements Ref {
+		public static final Object NULL = new NullRef();
+
+		@Override
+		public Object get() {
+			return null;
+		}
 	}
 }
