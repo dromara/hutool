@@ -92,13 +92,12 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		if (cacheMap.containsKey(mKey)) {
 			// 存在相同key，覆盖之
 			cacheMap.put(mKey, co);
-			return;
+		} else {
+			if (isFull()) {
+				pruneCache();
+			}
+			cacheMap.put(mKey, co);
 		}
-
-		if (isFull()) {
-			pruneCache();
-		}
-		cacheMap.put(mKey, co);
 	}
 	// ---------------------------------------------------------------- put end
 
