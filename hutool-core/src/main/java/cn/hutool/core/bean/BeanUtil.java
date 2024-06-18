@@ -16,6 +16,7 @@ import java.beans.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -793,6 +794,22 @@ public class BeanUtil {
 			return;
 		}
 		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
+	}
+
+	/**
+	 * 通过biFunction自定义一个规则，此规则将原Bean中的元素转换成新的元素，生成新的Bean返回<br>
+	 *
+	 * @param source     源Bean对象
+	 * @param targetType 目标Bean对象
+	 * @param biFunction {@code lambda}，参数包含{@code source}，{@code targetType}，返回值会作为新的{@code targetType}
+	 * @param <S>        {@code source}的类型
+	 * @param <T>        目标Bean对象，修改后的{@code targetType}的类型
+	 * @return 返回一个新Bean，类型为{@code targetType}
+	 * @since 5.8.29
+	 */
+	public static <S, T> T copyToBean(S source, Class<T> targetType, BiFunction<S, T, T> biFunction) {
+		T bean = toBean(source, targetType);
+		return biFunction.apply(source, bean);
 	}
 
 	/**
