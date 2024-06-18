@@ -963,4 +963,29 @@ public class BeanUtilTest {
 		private Long no;
 		private LocalDateTime date;
 	}
+
+	@Test
+	public void copyToListTest() {
+		final Student student1 = new Student();
+		student1.setName("张三");
+		student1.setNo(99999L);
+		student1.setAge(123);
+
+		final Student student2 = new Student();
+		student2.setName("张三");
+		student2.setNo(99999L);
+		student2.setAge(123);
+
+		List<Student> list = Arrays.asList(student1, student2);
+		// 班级
+		final String className = "初一1班：";
+
+		List<StudentVO> studentVOS = BeanUtil.copyToList(list, StudentVO.class, (source, target) -> {
+			target.setFullName(className + source.getName());
+			return target;
+		});
+
+		Assert.assertEquals(list.size(), studentVOS.size());
+		Assert.assertTrue(studentVOS.stream().allMatch(studentVO -> studentVO.getFullName().startsWith(className)));
+	}
 }
