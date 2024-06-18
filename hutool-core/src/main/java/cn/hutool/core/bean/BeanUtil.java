@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -810,6 +811,40 @@ public class BeanUtil {
 	public static <S, T> T copyToBean(S source, Class<T> targetType, BiFunction<S, T, T> biFunction) {
 		T bean = toBean(source, targetType);
 		return biFunction.apply(source, bean);
+	}
+
+	/**
+	 * 通过biFunction自定义一个规则，此规则将原Bean中的元素转换成新的元素，生成新的Bean返回<br>
+	 *
+	 * @param source     源Bean对象
+	 * @param targetType 目标Bean对象
+	 * @param biFunction {@code lambda}，参数包含{@code source}，{@code targetType}，返回值会作为新的{@code targetType}
+	 * @param <S>        {@code source}的类型
+	 * @param <T>        复制后的List，修改后的{@code targetType}的类型
+	 * @since 5.8.29
+	 */
+	public static <S, T> List<T> copyToList(List<S> source, Class<T> targetType, BiFunction<S, T, T> biFunction) {
+		if (source == null) {
+			return null;
+		}
+		if (source.isEmpty()) {
+			return new ArrayList<>(0);
+		}
+		return convertList(source, s -> copyToBean(s, targetType, biFunction));
+	}
+
+	/**
+	 * 通过function自定义一个规则，此规则将原Bean中的元素转换成新的元素，生成新的集合返回<br>
+	 *
+	 * @param source      原集合
+	 * @param function    转换函数：用于处理原集合中的元素与目标元素数据处理
+	 * @param <S>         集合元素类型
+	 * @param <T>         目标元素类型
+	 * @return 转换后的集合
+	 * @since 5.8.29
+	 */
+	private static <S, T> List<T> convertList(Collection<S> source, Function<S, T> function) {
+		return source.stream().map(function).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	/**
