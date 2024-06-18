@@ -15,6 +15,9 @@ package org.dromara.hutool.core.comparator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -133,5 +136,13 @@ public class VersionComparatorTest {
 	void startWithNoneNumberTest() {
 		final int compare = VersionComparator.INSTANCE.compare("V1", "A1");
 		assertTrue(compare > 0);
+	}
+
+	@Test
+	void compareFileNameTest() {
+		final String[] a = {"abc2.doc", "abc1.doc", "abc12.doc"};
+		Arrays.sort(a, VersionComparator.INSTANCE);
+
+		assertArrayEquals(new String[]{"abc1.doc", "abc2.doc", "abc12.doc"}, a);
 	}
 }
