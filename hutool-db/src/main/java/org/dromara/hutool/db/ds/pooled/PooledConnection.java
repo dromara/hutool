@@ -14,6 +14,7 @@ package org.dromara.hutool.db.ds.pooled;
 
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.pool.Poolable;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.setting.props.Props;
@@ -42,6 +43,16 @@ public class PooledConnection extends ConnectionWrapper implements Poolable<Conn
 	 * @param dataSource 数据源
 	 */
 	public PooledConnection(final ConnectionConfig<?> config, final PooledDataSource dataSource) {
+		// issue#IA6EUQ 部分驱动无法自动加载，此处手动完成
+		final String driver = config.getDriver();
+		if(StrUtil.isNotBlank(driver)){
+			try {
+				Class.forName(driver);
+			} catch (ClassNotFoundException e) {
+				throw new DbException(e);
+			}
+		}
+
 		final Props info = new Props();
 		final String user = config.getUser();
 		if (user != null) {
