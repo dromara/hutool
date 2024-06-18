@@ -21,6 +21,7 @@
 * 【core   】      修复CaseInsensitiveLinkedMap顺序错误问题（issue#IA4K4F@Gitee）
 * 【core   】      修复DateUtil.offset空指针问题（issue#3617@Github）
 * 【core   】      修复PathMover.moveContent问题（issue#IA5Q8D@Gitee）
+* 【db     】      修复PooledConnection可能的数据库驱动未找到问题（issue#IA6EUQ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.28(2024-05-29)
