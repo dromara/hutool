@@ -13,14 +13,14 @@
 package org.dromara.hutool.db.driver;
 
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.ds.DSWrapper;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * 驱动相关工具类，包括自动获取驱动类名
@@ -29,6 +29,31 @@ import java.sql.SQLException;
  * @since 4.0.10
  */
 public class DriverUtil {
+
+	/**
+	 * 创建驱动
+	 *
+	 * @param driverName  驱动类名
+	 * @return 驱动
+	 * @since 6.0.0
+	 */
+	public static Driver createDriver(final String driverName) {
+		return createDriver(driverName, null);
+	}
+
+	/**
+	 * 创建驱动
+	 *
+	 * @param driverName  驱动类名
+	 * @param classLoader 类加载器
+	 * @return 驱动
+	 * @since 6.0.0
+	 */
+	public static Driver createDriver(final String driverName, final ClassLoader classLoader) {
+		final Class<?> driverClass = ClassUtil.forName(driverName, true, classLoader);
+		return (Driver) ConstructorUtil.newInstance(driverClass);
+	}
+
 	/**
 	 * 通过JDBC URL等信息识别JDBC驱动名
 	 *

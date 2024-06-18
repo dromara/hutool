@@ -48,7 +48,7 @@ public class PooledConnection extends ConnectionWrapper implements Poolable<Conn
 		if(StrUtil.isNotBlank(driver)){
 			try {
 				Class.forName(driver);
-			} catch (ClassNotFoundException e) {
+			} catch (final ClassNotFoundException e) {
 				throw new DbException(e);
 			}
 		}
@@ -70,7 +70,11 @@ public class PooledConnection extends ConnectionWrapper implements Poolable<Conn
 		}
 
 		try {
-			this.raw = DriverManager.getConnection(config.getUrl(), info);
+			if(null != dataSource.driver){
+				this.raw = dataSource.driver.connect(config.getUrl(), info);
+			}else{
+				this.raw = DriverManager.getConnection(config.getUrl(), info);
+			}
 		} catch (final SQLException e) {
 			throw new DbException(e);
 		}

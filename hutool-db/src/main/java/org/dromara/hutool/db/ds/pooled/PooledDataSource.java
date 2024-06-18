@@ -17,12 +17,15 @@ import org.dromara.hutool.core.pool.ObjectFactory;
 import org.dromara.hutool.core.pool.ObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionPoolConfig;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.ConnectionConfig;
+import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.db.ds.simple.AbstractDataSource;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.SQLException;
 
 /**
@@ -37,6 +40,7 @@ public class PooledDataSource extends AbstractDataSource {
 	private static final String KEY_INITIAL_SIZE = "initialSize";
 	private static final String KEY_MAX_ACTIVE = "maxActive";
 
+	protected Driver driver;
 	private final int maxWait;
 	private final ObjectPool<Connection> connPool;
 
@@ -47,6 +51,10 @@ public class PooledDataSource extends AbstractDataSource {
 	 */
 	public PooledDataSource(final ConnectionConfig<?> config) {
 
+		final String driverName = config.getDriver();
+		if (StrUtil.isNotBlank(driverName)) {
+			this.driver = DriverUtil.createDriver(driverName);
+		}
 		final Props poolProps = Props.of(config.getPoolProps());
 		this.maxWait = poolProps.getInt(KEY_MAX_WAIT, 6000);
 
@@ -57,6 +65,17 @@ public class PooledDataSource extends AbstractDataSource {
 			.setMaxSize(poolProps.getInt(KEY_MAX_ACTIVE, 8));
 
 		this.connPool = new PartitionObjectPool<>(poolConfig, createConnFactory(config));
+	}
+
+	/**
+	 * 设置驱动
+	 *
+	 * @param driver 驱动
+	 * @return this
+	 */
+	public PooledDataSource setDriver(final Driver driver) {
+		this.driver = driver;
+		return this;
 	}
 
 	@Override
