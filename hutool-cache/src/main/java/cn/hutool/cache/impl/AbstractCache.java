@@ -85,10 +85,20 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		if (timeout != 0) {
 			existCustomTimeout = true;
 		}
+
+		final MutableObj<K> mKey = MutableObj.of(key);
+
+		// issue#3618 对于替换的键值对，不做满队列检查和清除
+		if (cacheMap.containsKey(mKey)) {
+			// 存在相同key，覆盖之
+			cacheMap.put(mKey, co);
+			return;
+		}
+
 		if (isFull()) {
 			pruneCache();
 		}
-		cacheMap.put(MutableObj.of(key), co);
+		cacheMap.put(mKey, co);
 	}
 	// ---------------------------------------------------------------- put end
 
