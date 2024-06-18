@@ -933,4 +933,34 @@ public class BeanUtilTest {
 		final boolean bean = BeanUtil.isBean(Dict.class);
 		Assert.assertFalse(bean);
 	}
+
+	@Test
+	public void copyToBeanTest() {
+		final Student student = new Student();
+		student.setName("张三");
+		student.setNo(99999L);
+		student.setAge(123);
+
+		// 班级
+		final String className = "初一1班：";
+		StudentVO studentVO = BeanUtil.copyToBean(student, StudentVO.class, (source, target) -> {
+			// 班级 + 学生名字
+			target.setFullName(className + source.getName());
+			// 更新时间
+			target.setDate(LocalDateTime.now());
+			return target;
+		});
+
+		Assert.assertEquals(student.getNo(), studentVO.getNo());
+		Assert.assertNotNull(studentVO.getFullName());
+	}
+
+	@Data
+	public static class StudentVO implements Serializable{
+		private static final long serialVersionUID = 1L;
+		private String fullName;
+		private int age;
+		private Long no;
+		private LocalDateTime date;
+	}
 }
