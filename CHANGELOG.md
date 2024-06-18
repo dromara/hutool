@@ -12,6 +12,7 @@
 * 【csv    】      CsvWriter.writeBeans增加重载，可选是否写出表头（issue#IA57W2@Gitee）
 * 【core   】      BetweenFormatter支持自定义设置单位（pr#1228@Gitee）
 * 【cache  】      Cache.put变更策略，对于替换的键值对，不清理队列（issue#3618@Github）
+* 【core   】      添加 Windows 资源管理器风格字符串比较器（pr#3620@Github）
 
 ### 🐞Bug修复
 * 【core   】      修复AnnotationUtil可能的空指针错误

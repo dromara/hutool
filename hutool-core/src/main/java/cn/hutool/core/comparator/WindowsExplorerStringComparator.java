@@ -1,5 +1,7 @@
 package cn.hutool.core.comparator;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -19,15 +21,19 @@ import java.util.regex.Pattern;
  * "abc12.doc" }}，这与在资源管理器中看到的相同</p>
  *
  * @author YMNNs
- * @see
- * <a href="https://stackoverflow.com/questions/23205020/java-sort-strings-like-windows-explorer">Java - Sort Strings like Windows Explorer</a>
+ * @see <a href="https://stackoverflow.com/questions/23205020/java-sort-strings-like-windows-explorer">Java - Sort Strings like Windows Explorer</a>
  */
-public class WindowsExplorerStringComparator implements Comparator<String> {
+public class WindowsExplorerStringComparator implements Comparator<CharSequence> {
+
+	/**
+	 * 单例
+	 */
+	public static final WindowsExplorerStringComparator INSTANCE = new WindowsExplorerStringComparator();
 
 	private static final Pattern splitPattern = Pattern.compile("\\d+|\\.|\\s");
 
 	@Override
-	public int compare(String str1, String str2) {
+	public int compare(CharSequence str1, CharSequence str2) {
 		Iterator<String> i1 = splitStringPreserveDelimiter(str1).iterator();
 		Iterator<String> i2 = splitStringPreserveDelimiter(str2).iterator();
 		while (true) {
@@ -65,16 +71,16 @@ public class WindowsExplorerStringComparator implements Comparator<String> {
 		}
 	}
 
-	private List<String> splitStringPreserveDelimiter(String str) {
+	private List<String> splitStringPreserveDelimiter(CharSequence str) {
 		Matcher matcher = splitPattern.matcher(str);
 		List<String> list = new ArrayList<>();
 		int pos = 0;
 		while (matcher.find()) {
-			list.add(str.substring(pos, matcher.start()));
+			list.add(StrUtil.sub(str, pos, matcher.start()));
 			list.add(matcher.group());
 			pos = matcher.end();
 		}
-		list.add(str.substring(pos));
+		list.add(StrUtil.subSuf(str, pos));
 		return list;
 	}
 }

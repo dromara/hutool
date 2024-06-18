@@ -12,6 +12,7 @@ import java.util.List;
  *
  * @author YMNNs
  */
+@SuppressWarnings("serial")
 public class WindowsExplorerStringComparatorTest {
 
 	List<String> answer1 = new ArrayList<String>() {{
