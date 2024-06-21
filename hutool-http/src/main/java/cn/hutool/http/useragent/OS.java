@@ -104,4 +104,14 @@ public class OS extends UserAgentInfo {
 		}
 		return ReUtil.getGroup1(this.versionPattern, userAgentString);
 	}
+
+	/**
+	 * 是否为MacOS
+	 *
+	 * @return 是否为MacOS
+	 * @since 5.8.29
+	 */
+	public boolean isMacOS(){
+		return "OSX".equals(getName());
+	}
 }
