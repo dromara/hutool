@@ -23,6 +23,7 @@
 * 【core   】      修复PathMover.moveContent问题（issue#IA5Q8D@Gitee）
 * 【db     】      修复PooledConnection可能的数据库驱动未找到问题（issue#IA6EUQ@Gitee）
 * 【http   】      修复Mac下的微信浏览器被识别为移动端问题（issue#IA74K2@Gitee）
+* 【core   】      修复Tailer指定初始读取行数的计算错误问题（issue#IA77ML@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.28(2024-05-29)
