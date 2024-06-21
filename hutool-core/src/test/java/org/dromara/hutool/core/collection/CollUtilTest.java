@@ -27,6 +27,9 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.function.Function;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * 集合工具类单元测试
  *
@@ -50,16 +53,16 @@ public class CollUtilTest {
 	@Test
 	public void hasNullTest() {
 		List<Object> list = null;
-		Assertions.assertTrue(CollUtil.hasNull(list));
+		assertTrue(CollUtil.hasNull(list));
 
 		list = ListUtil.of();
-		Assertions.assertFalse(CollUtil.hasNull(list));
+		assertFalse(CollUtil.hasNull(list));
 
 		list = ListUtil.of("");
-		Assertions.assertFalse(CollUtil.hasNull(list));
+		assertFalse(CollUtil.hasNull(list));
 
 		list = ListUtil.of("", null);
-		Assertions.assertTrue(CollUtil.hasNull(list));
+		assertTrue(CollUtil.hasNull(list));
 	}
 
 	@Test
@@ -80,8 +83,8 @@ public class CollUtilTest {
 	@Test
 	public void testPredicateContains() {
 		final List<String> list = ListUtil.of("bbbbb", "aaaaa", "ccccc");
-		Assertions.assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
-		Assertions.assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
+		assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
+		assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
 	}
 
 	@Test
@@ -131,7 +134,7 @@ public class CollUtilTest {
 	@SuppressWarnings("ConstantValue")
 	@Test
 	public void isNotEmptyTest() {
-		Assertions.assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
+		assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
 	}
 
 	@Test
@@ -171,7 +174,7 @@ public class CollUtilTest {
 
 		final Collection<String> intersectionDistinct2 = CollUtil.intersectionDistinct(list1, list2, list3);
 		Console.log(intersectionDistinct2);
-		Assertions.assertTrue(intersectionDistinct2.isEmpty());
+		assertTrue(intersectionDistinct2.isEmpty());
 	}
 
 	@Test
@@ -180,14 +183,14 @@ public class CollUtilTest {
 		final List<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d", "x2");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
-		Assertions.assertTrue(disjunction.contains("b"));
-		Assertions.assertTrue(disjunction.contains("x2"));
-		Assertions.assertTrue(disjunction.contains("x"));
+		assertTrue(disjunction.contains("b"));
+		assertTrue(disjunction.contains("x2"));
+		assertTrue(disjunction.contains("x"));
 
 		final Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
-		Assertions.assertTrue(disjunction2.contains("b"));
-		Assertions.assertTrue(disjunction2.contains("x2"));
-		Assertions.assertTrue(disjunction2.contains("x"));
+		assertTrue(disjunction2.contains("b"));
+		assertTrue(disjunction2.contains("x2"));
+		assertTrue(disjunction2.contains("x"));
 	}
 
 	@Test
@@ -209,19 +212,19 @@ public class CollUtilTest {
 		final List<String> list2 = ListUtil.of("a", "b", "c");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
-		Assertions.assertTrue(disjunction.contains("1"));
-		Assertions.assertTrue(disjunction.contains("2"));
-		Assertions.assertTrue(disjunction.contains("3"));
-		Assertions.assertTrue(disjunction.contains("a"));
-		Assertions.assertTrue(disjunction.contains("b"));
-		Assertions.assertTrue(disjunction.contains("c"));
+		assertTrue(disjunction.contains("1"));
+		assertTrue(disjunction.contains("2"));
+		assertTrue(disjunction.contains("3"));
+		assertTrue(disjunction.contains("a"));
+		assertTrue(disjunction.contains("b"));
+		assertTrue(disjunction.contains("c"));
 		final Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
-		Assertions.assertTrue(disjunction2.contains("1"));
-		Assertions.assertTrue(disjunction2.contains("2"));
-		Assertions.assertTrue(disjunction2.contains("3"));
-		Assertions.assertTrue(disjunction2.contains("a"));
-		Assertions.assertTrue(disjunction2.contains("b"));
-		Assertions.assertTrue(disjunction2.contains("c"));
+		assertTrue(disjunction2.contains("1"));
+		assertTrue(disjunction2.contains("2"));
+		assertTrue(disjunction2.contains("3"));
+		assertTrue(disjunction2.contains("a"));
+		assertTrue(disjunction2.contains("b"));
+		assertTrue(disjunction2.contains("c"));
 	}
 
 	@Test
@@ -408,7 +411,7 @@ public class CollUtilTest {
 	public void groupTest() {
 		final List<String> list = ListUtil.of("1", "2", "3", "4", "5", "6");
 		final List<List<String>> group = CollUtil.group(list, null);
-		Assertions.assertFalse(group.isEmpty());
+		assertFalse(group.isEmpty());
 
 		final List<List<String>> group2 = CollUtil.group(list, t -> {
 			// 按照奇数偶数分类
@@ -625,7 +628,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
-		Assertions.assertTrue(retval.isEmpty());
+		assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -684,7 +687,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
-		Assertions.assertTrue(retval.isEmpty());
+		assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -741,7 +744,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end);
 		// Assert result
-		Assertions.assertTrue(retval.isEmpty());
+		assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -757,18 +760,18 @@ public class CollUtilTest {
 		final List<Integer> list1 = ListUtil.of(1, 2, 3, 4, 5);
 		final List<Integer> list2 = ListUtil.of(5, 3, 1, 9, 11);
 
-		Assertions.assertTrue(CollUtil.containsAny(list1, list2));
+		assertTrue(CollUtil.containsAny(list1, list2));
 	}
 
 	@Test
 	public void containsAllTest() {
 		final List<Integer> list1 = ListUtil.of(1, 2, 3, 4, 5);
 		final List<Integer> list2 = ListUtil.of(5, 3, 1);
-		Assertions.assertTrue(CollUtil.containsAll(list1, list2));
+		assertTrue(CollUtil.containsAll(list1, list2));
 
 		final List<Integer> list3 = ListUtil.of(1);
 		final List<Integer> list4 = ListUtil.of();
-		Assertions.assertTrue(CollUtil.containsAll(list3, list4));
+		assertTrue(CollUtil.containsAll(list3, list4));
 	}
 
 	@Test
@@ -1069,18 +1072,18 @@ public class CollUtilTest {
 	@Test
 	public void addIfAbsentTest() {
 		// 为false的情况
-		Assertions.assertFalse(CollUtil.addIfAbsent(null, null));
-		Assertions.assertFalse(CollUtil.addIfAbsent(ListUtil.of(), null));
-		Assertions.assertFalse(CollUtil.addIfAbsent(null, "123"));
-		Assertions.assertFalse(CollUtil.addIfAbsent(ListUtil.of("123"), "123"));
-		Assertions.assertFalse(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
+		assertFalse(CollUtil.addIfAbsent(null, null));
+		assertFalse(CollUtil.addIfAbsent(ListUtil.of(), null));
+		assertFalse(CollUtil.addIfAbsent(null, "123"));
+		assertFalse(CollUtil.addIfAbsent(ListUtil.of("123"), "123"));
+		assertFalse(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
 			new Animal("jack", 20)));
 
 		// 正常情况
-		Assertions.assertTrue(CollUtil.addIfAbsent(ListUtil.of("456"), "123"));
-		Assertions.assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
+		assertTrue(CollUtil.addIfAbsent(ListUtil.of("456"), "123"));
+		assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
 			new Dog("jack", 20)));
-		Assertions.assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
+		assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
 			new Animal("tom", 20)));
 	}
 
@@ -1155,24 +1158,24 @@ public class CollUtilTest {
 	@Test
 	public void isEqualListTest() {
 		final List<Integer> list = ListUtil.of(1, 2, 3, 4);
-		Assertions.assertTrue(CollUtil.isEqualList(null, null));
-		Assertions.assertTrue(CollUtil.isEqualList(ListUtil.of(), ListUtil.of()));
-		Assertions.assertTrue(CollUtil.isEqualList(list, list));
-		Assertions.assertTrue(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 4)));
+		assertTrue(CollUtil.isEqualList(null, null));
+		assertTrue(CollUtil.isEqualList(ListUtil.of(), ListUtil.of()));
+		assertTrue(CollUtil.isEqualList(list, list));
+		assertTrue(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 4)));
 
-		Assertions.assertFalse(CollUtil.isEqualList(null, ListUtil.of()));
-		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 3)));
-		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3)));
-		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(4, 3, 2, 1)));
+		assertFalse(CollUtil.isEqualList(null, ListUtil.of()));
+		assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 3)));
+		assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3)));
+		assertFalse(CollUtil.isEqualList(list, ListUtil.of(4, 3, 2, 1)));
 	}
 
 	@Test
 	public void testMatch() {
 		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
-		Assertions.assertTrue(CollUtil.anyMatch(list, i -> i == 1));
-		Assertions.assertFalse(CollUtil.anyMatch(list, i -> i > 6));
-		Assertions.assertFalse(CollUtil.allMatch(list, i -> i == 1));
-		Assertions.assertTrue(CollUtil.allMatch(list, i -> i <= 6));
+		assertTrue(CollUtil.anyMatch(list, i -> i == 1));
+		assertFalse(CollUtil.anyMatch(list, i -> i > 6));
+		assertFalse(CollUtil.allMatch(list, i -> i == 1));
+		assertTrue(CollUtil.allMatch(list, i -> i <= 6));
 	}
 
 	@Test
@@ -1280,6 +1283,6 @@ public class CollUtilTest {
 		coll2.add("1");
 		coll2.add("1");
 
-		Assertions.assertTrue(CollUtil.containsAll(coll1, coll2));
+		assertTrue(CollUtil.containsAll(coll1, coll2));
 	}
 }

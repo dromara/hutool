@@ -12,11 +12,9 @@
 
 package org.dromara.hutool.core.collection.queue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.PriorityQueue;
+import org.dromara.hutool.core.collection.BoundedCollection;
+
+import java.util.*;
 
 /**
  * 有界优先队列<br>
@@ -25,13 +23,17 @@ import java.util.PriorityQueue;
  *
  * @param <E> 成员类型
  */
-public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
+public class BoundedPriorityQueue<E> extends PriorityQueue<E> implements BoundedCollection<E> {
 	private static final long serialVersionUID = 3794348988671694820L;
 
 	//容量
 	private final int capacity;
 	private final Comparator<? super E> comparator;
 
+	/**
+	 * 构造
+	 * @param capacity 容量
+	 */
 	public BoundedPriorityQueue(final int capacity) {
 		this(capacity, null);
 	}
@@ -57,6 +59,16 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 		this.comparator = comparator;
 	}
 
+	@Override
+	public boolean isFull() {
+		return size() == capacity;
+	}
+
+	@Override
+	public int maxSize() {
+		return capacity;
+	}
+
 	/**
 	 * 加入元素，当队列满时，淘汰末尾元素
 	 * @param e 元素
@@ -64,7 +76,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 */
 	@Override
 	public boolean offer(final E e) {
-		if(size() >= capacity) {
+		if(isFull()) {
 			final E head = peek();
 			if (this.comparator().compare(e, head) <= 0){
 				return true;

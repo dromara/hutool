@@ -17,6 +17,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrJoiner;
@@ -746,6 +747,44 @@ public class IterUtil {
 	}
 
 	/**
+	 * 判断subIter是否为iter的子集合，不考虑顺序，只考虑元素数量。<br>
+	 * <ul>
+	 *     <li>如果两个集合为同一集合或，则返回true</li>
+	 *     <li>如果两个集合元素都相同，则返回true（无论顺序相同与否）</li>
+	 * </ul>
+	 *
+	 * @param subIter 第一个Iterable对象，即子集合。
+	 * @param iter    第二个Iterable对象，可以为任何实现了Iterable接口的集合。
+	 * @return 如果subIter是iter的子集合，则返回true；否则返回false。
+	 * @since 6.0.0
+	 */
+	public static boolean isSub(final Iterable<?> subIter, final Iterable<?> iter) {
+		// 如果两个Iterable对象引用相同，则肯定是一个的子集合
+		if (subIter == iter) {
+			return true;
+		}
+		// 如果有任何一个Iterable对象为null，则不是子集合关系
+		if (subIter == null || iter == null) {
+			return false;
+		}
+
+		// 使用Map记录每个Iterable中每个元素出现的次数
+		final Map<?, Integer> countMap1 = countMap(subIter.iterator());
+		final Map<?, Integer> countMap2 = countMap(iter.iterator());
+
+		// 遍历第一个Iterable中的每个元素
+		for (final Object obj : subIter) {
+			// 比较第一个Iterable中元素的出现次数和第二个Iterable中元素的出现次数
+			// 如果第一个Iterable中元素的出现次数大于第二个Iterable中元素的出现次数，则不是子集合关系
+			if (NumberUtil.nullToZero(countMap1.get(obj)) > NumberUtil.nullToZero(countMap2.get(obj))) {
+				return false;
+			}
+		}
+		// 如果所有元素的出现次数比较都满足子集合关系，则返回true
+		return true;
+	}
+
+	/**
 	 * <p>判断两个{@link Iterable}中的元素与其顺序是否相同 <br>
 	 * 当满足下列情况时返回{@code true}：
 	 * <ul>
@@ -761,25 +800,66 @@ public class IterUtil {
 	 * @since 5.6.0
 	 */
 	public static boolean isEqualList(final Iterable<?> iterable1, final Iterable<?> iterable2) {
+		return equals(iterable1, iterable2, false);
+	}
+
+	/**
+	 * 判断两个{@link Iterable}中的元素是否相同，可选是否判断顺序
+	 * 当满足下列情况时返回{@code true}：
+	 * <ul>
+	 *     <li>两个{@link Iterable}都为{@code null}；</li>
+	 *     <li>两个{@link Iterable}满足{@code iterable1 == iterable2}；</li>
+	 *     <li>如果忽略顺序，则计算两个集合中元素和数量是否相同</li>
+	 *     <li>如果不忽略顺序，两个{@link Iterable}所有具有相同下标的元素皆满足{@link Objects#equals(Object, Object)}；</li>
+	 * </ul>
+	 *
+	 * @param iterable1 集合1
+	 * @param iterable2 集合2
+	 * @param ignoreOrder 是否忽略顺序
+	 * @return 是否相同
+	 */
+	public static boolean equals(final Iterable<?> iterable1, final Iterable<?> iterable2, final boolean ignoreOrder) {
+		// 如果两个Iterable对象引用相同，则肯定相等
 		if (iterable1 == iterable2) {
 			return true;
 		}
+		// 如果有任何一个Iterable对象为null，则不是子集合关系
 		if (iterable1 == null || iterable2 == null) {
 			return false;
 		}
-		final Iterator<?> iter1 = iterable1.iterator();
-		final Iterator<?> iter2 = iterable2.iterator();
-		Object obj1;
-		Object obj2;
-		while (iter1.hasNext() && iter2.hasNext()) {
-			obj1 = iter1.next();
-			obj2 = iter2.next();
-			if (!Objects.equals(obj1, obj2)) {
+
+		if(ignoreOrder){
+			final Map<?, Integer> countMap1 = countMap(iterable1.iterator());
+			final Map<?, Integer> countMap2 = countMap(iterable2.iterator());
+
+			if(countMap1.size() != countMap2.size()){
+				// 如果两个Iterable中元素种类不同，则肯定不等
 				return false;
 			}
+
+			for (final Object obj : iterable1) {
+				// 比较第一个Iterable中元素的出现次数和第二个Iterable中元素的出现次数
+				if (NumberUtil.nullToZero(countMap1.get(obj)) != NumberUtil.nullToZero(countMap2.get(obj))) {
+					return false;
+				}
+			}
+			// 如果所有元素的出现次数比较都满足子集合关系，则返回true
+			return true;
+		} else{
+			final Iterator<?> iter1 = iterable1.iterator();
+			final Iterator<?> iter2 = iterable2.iterator();
+			Object obj1;
+			Object obj2;
+			while (iter1.hasNext() && iter2.hasNext()) {
+				obj1 = iter1.next();
+				obj2 = iter2.next();
+				if (!Objects.equals(obj1, obj2)) {
+					return false;
+				}
+			}
+			// 当两个Iterable长度不一致时返回false
+			return !(iter1.hasNext() || iter2.hasNext());
 		}
-		// 当两个Iterable长度不一致时返回false
-		return !(iter1.hasNext() || iter2.hasNext());
 	}
 
 	/**

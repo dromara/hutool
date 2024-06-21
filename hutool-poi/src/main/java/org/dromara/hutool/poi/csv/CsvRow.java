@@ -14,6 +14,7 @@ package org.dromara.hutool.poi.csv;
 
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
+import org.dromara.hutool.core.collection.ListWrapper;
 import org.dromara.hutool.core.lang.Assert;
 
 import java.util.*;
@@ -23,13 +24,12 @@ import java.util.*;
  *
  * @author Looly
  */
-public final class CsvRow implements List<String> {
+public final class CsvRow extends ListWrapper<String> {
 
 	/** 原始行号 */
 	private final long originalLineNumber;
 
 	final Map<String, Integer> headerMap;
-	final List<String> fields;
 
 	/**
 	 * 构造
@@ -39,10 +39,9 @@ public final class CsvRow implements List<String> {
 	 * @param fields 数据列表
 	 */
 	public CsvRow(final long originalLineNumber, final Map<String, Integer> headerMap, final List<String> fields) {
-		Assert.notNull(fields, "fields must be not null!");
+		super(Assert.notNull(fields, "fields must be not null!"));
 		this.originalLineNumber = originalLineNumber;
 		this.headerMap = headerMap;
-		this.fields = fields;
 	}
 
 	/**
@@ -69,15 +68,6 @@ public final class CsvRow implements List<String> {
 			return get(col);
 		}
 		return null;
-	}
-
-	/**
-	 * 获取本行所有字段值列表
-	 *
-	 * @return 字段值列表
-	 */
-	public List<String> getRawList() {
-		return fields;
 	}
 
 	/**
@@ -117,128 +107,14 @@ public final class CsvRow implements List<String> {
 		return BeanUtil.toBean(getFieldMap(), clazz, CopyOptions.of().setIgnoreError(true));
 	}
 
-	/**
-	 * 获取字段格式
-	 *
-	 * @return 字段格式
-	 */
-	public int getFieldCount() {
-		return fields.size();
-	}
-
-	@Override
-	public int size() {
-		return this.fields.size();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return this.fields.isEmpty();
-	}
-
-	@Override
-	public boolean contains(final Object o) {
-		return this.fields.contains(o);
-	}
-
-	@Override
-	public Iterator<String> iterator() {
-		return this.fields.iterator();
-	}
-
-	@Override
-	public Object[] toArray() {
-		return this.fields.toArray();
-	}
-
-	@Override
-	public <T> T[] toArray(final T[] a) {
-		return this.fields.toArray(a);
-	}
-
-	@Override
-	public boolean add(final String e) {
-		return this.fields.add(e);
-	}
-
-	@Override
-	public boolean remove(final Object o) {
-		return this.fields.remove(o);
-	}
-
 	@Override
 	public boolean containsAll(final Collection<?> c) {
-		return new HashSet<>(this.fields).containsAll(c);
-	}
-
-	@Override
-	public boolean addAll(final Collection<? extends String> c) {
-		return this.fields.addAll(c);
-	}
-
-	@Override
-	public boolean addAll(final int index, final Collection<? extends String> c) {
-		return this.fields.addAll(index, c);
-	}
-
-	@Override
-	public boolean removeAll(final Collection<?> c) {
-		return this.fields.removeAll(c);
-	}
-
-	@Override
-	public boolean retainAll(final Collection<?> c) {
-		return this.fields.retainAll(c);
-	}
-
-	@Override
-	public void clear() {
-		this.fields.clear();
+		return new HashSet<>(this.raw).containsAll(c);
 	}
 
 	@Override
 	public String get(final int index) {
-		return index >= fields.size() ? null : fields.get(index);
-	}
-
-	@Override
-	public String set(final int index, final String element) {
-		return this.fields.set(index, element);
-	}
-
-	@Override
-	public void add(final int index, final String element) {
-		this.fields.add(index, element);
-	}
-
-	@Override
-	public String remove(final int index) {
-		return this.fields.remove(index);
-	}
-
-	@Override
-	public int indexOf(final Object o) {
-		return this.fields.indexOf(o);
-	}
-
-	@Override
-	public int lastIndexOf(final Object o) {
-		return this.fields.lastIndexOf(o);
-	}
-
-	@Override
-	public ListIterator<String> listIterator() {
-		return this.fields.listIterator();
-	}
-
-	@Override
-	public ListIterator<String> listIterator(final int index) {
-		return this.fields.listIterator(index);
-	}
-
-	@Override
-	public List<String> subList(final int fromIndex, final int toIndex) {
-		return this.fields.subList(fromIndex, toIndex);
+		return index >= size() ? null : super.get(index);
 	}
 
 	@Override
@@ -265,7 +141,7 @@ public final class CsvRow implements List<String> {
 			}
 			sb.append('}');
 		} else {
-			sb.append(fields.toString());
+			sb.append(this.raw.toString());
 		}
 
 		sb.append('}');

@@ -27,7 +27,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assertions.assertEquals("b\"bba\"", row.getRawList().get(1));
+		Assertions.assertEquals("b\"bba\"", row.getRaw().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 
@@ -37,7 +37,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assertions.assertEquals("\"bba\"bbb", row.getRawList().get(1));
+		Assertions.assertEquals("\"bba\"bbb", row.getRaw().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 
@@ -47,7 +47,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assertions.assertEquals("bba", row.getRawList().get(1));
+		Assertions.assertEquals("bba", row.getRaw().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 
@@ -57,7 +57,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assertions.assertEquals("", row.getRawList().get(1));
+		Assertions.assertEquals("", row.getRaw().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 

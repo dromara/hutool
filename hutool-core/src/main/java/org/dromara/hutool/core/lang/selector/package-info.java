@@ -13,6 +13,9 @@
 /**
  * 选择器相关封装，包括：
  * <ul>
+ *     <li>{@link org.dromara.hutool.core.lang.selector.IncrementSelector}</li>
+ *     <li>{@link org.dromara.hutool.core.lang.selector.RandomSelector}</li>
+ *     <li>{@link org.dromara.hutool.core.lang.selector.SmoothWeightSelector}</li>
  *     <li>{@link org.dromara.hutool.core.lang.selector.WeightRandomSelector}</li>
  * </ul>
  *

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,23 +10,30 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang.selector;
+package org.dromara.hutool.core.collection;
+
+import java.util.Collection;
 
 /**
- * 选择器接口<br>
- * 用于抽象负载均衡策略中的选择方式
+ * 有边界限制的集合，边界集合有最大容量限制
  *
- * @param <T> 选择对象类型
- * @author looly
+ * @param <E> 元素类型
  * @since 6.0.0
  */
-@FunctionalInterface
-public interface Selector<T> {
+public interface BoundedCollection<E> extends Collection<E> {
 
 	/**
-	 * 选择下一个对象
+	 * 是否已满，如果集合已满，不允许新增元素
 	 *
-	 * @return 下一个对象
+	 * @return 是否已满
 	 */
-	T select();
+	boolean isFull();
+
+	/**
+	 * 获取集合最大允许容量
+	 *
+	 * @return 容量
+	 */
+	int maxSize();
+
 }

@@ -2305,6 +2305,25 @@ public class CollUtil {
 	}
 
 	/**
+	 * 判断subCollection是否为collection的子集合，不考虑顺序，只考虑元素数量。
+	 * <ul>
+	 *     <li>如果两个集合为同一集合或，则返回true</li>
+	 *     <li>如果两个集合元素都相同，则返回true（无论顺序相同与否）</li>
+	 * </ul>
+	 *
+	 * @param subCollection 第一个Iterable对象，即子集合。
+	 * @param collection 第二个Iterable对象，可以为任何实现了Iterable接口的集合。
+	 * @return 如果subCollection是collection的子集合，则返回true；否则返回false。
+	 * @since 6.0.0
+	 */
+	public static boolean isSub(final Collection<?> subCollection, final Collection<?> collection) {
+		if(size(subCollection) > size(collection)){
+			return false;
+		}
+		return IterUtil.isSub(subCollection, collection);
+	}
+
+	/**
 	 * 判断两个{@link Collection} 是否元素和顺序相同，返回{@code true}的条件是：
 	 * <ul>
 	 *     <li>两个{@link Collection}必须长度相同</li>
@@ -2318,14 +2337,30 @@ public class CollUtil {
 	 * @since 5.6.0
 	 */
 	public static boolean isEqualList(final Collection<?> list1, final Collection<?> list2) {
-		if (list1 == list2) {
-			return true;
-		}
-		if (list1 == null || list2 == null || list1.size() != list2.size()) {
+		return equals(list1, list2, false);
+	}
+
+	/**
+	 * 判断两个{@link Iterable}中的元素是否相同，可选是否判断顺序
+	 * 当满足下列情况时返回{@code true}：
+	 * <ul>
+	 *     <li>两个{@link Iterable}都为{@code null}；</li>
+	 *     <li>两个{@link Iterable}满足{@code coll1 == coll2}；</li>
+	 *     <li>如果忽略顺序，则计算两个集合中元素和数量是否相同</li>
+	 *     <li>如果不忽略顺序，两个{@link Iterable}所有具有相同下标的元素皆满足{@link Objects#equals(Object, Object)}；</li>
+	 * </ul>
+	 *
+	 * @param coll1 集合1
+	 * @param coll2 集合2
+	 * @param ignoreOrder 是否忽略顺序
+	 * @return 是否相同
+	 */
+	public static boolean equals(final Collection<?> coll1, final Collection<?> coll2, final boolean ignoreOrder) {
+		if(size(coll1) != size(coll2)){
 			return false;
 		}
 
-		return IterUtil.isEqualList(list1, list2);
+		return IterUtil.equals(coll1, coll2, ignoreOrder);
 	}
 
 	/**
