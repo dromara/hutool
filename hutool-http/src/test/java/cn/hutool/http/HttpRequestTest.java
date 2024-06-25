@@ -2,6 +2,7 @@ package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.SSLProtocols;
 import cn.hutool.core.net.url.UrlBuilder;
@@ -239,5 +240,20 @@ public class HttpRequestTest {
 	public void issueI5Y68WTest() {
 		final HttpResponse httpResponse = HttpRequest.get("http://82.157.17.173:8100/app/getAddress").execute();
 		Console.log(httpResponse.body());
+	}
+
+	@Test
+	@Ignore
+	public void testHttpResource() {
+
+		HttpRequest httpRequest = HttpRequest.post("http://127.0.0.1:8080/testHttpResource");
+		HttpResponse response = httpRequest.form("user", new HttpResource(new StringResource("{\n" +
+						"    \"name\": \"张三\",\n" +
+						"    \"age\": \"16\"\n" +
+						"}"), "application/json"))
+				.form("passport", "12456")
+				.execute();
+		Console.log(response.body());
+
 	}
 }
