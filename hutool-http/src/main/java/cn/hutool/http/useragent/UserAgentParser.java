@@ -40,7 +40,13 @@ public class UserAgentParser {
 		// 平台
 		final Platform platform = parsePlatform(userAgentString);
 		userAgent.setPlatform(platform);
-		userAgent.setMobile(platform.isMobile() || browser.isMobile());
+
+		// issue#IA74K2 MACOS下的微信不属于移动平台
+		if(platform.isMobile() || browser.isMobile()){
+			if(false == os.isMacOS()){
+				userAgent.setMobile(true);
+			}
+		}
 
 
 		return userAgent;

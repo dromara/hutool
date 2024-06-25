@@ -68,7 +68,7 @@ public class Tailer implements Serializable {
 	 *
 	 * @param file 文件
 	 * @param lineHandler 行处理器
-	 * @param initReadLine 启动时预读取的行数
+	 * @param initReadLine 启动时预读取的行数，1表示一行
 	 */
 	public Tailer(File file, LineHandler lineHandler, int initReadLine) {
 		this(file, CharsetUtil.CHARSET_UTF_8, lineHandler, initReadLine, DateUnit.SECOND.getMillis());
@@ -91,7 +91,7 @@ public class Tailer implements Serializable {
 	 * @param file 文件
 	 * @param charset 编码
 	 * @param lineHandler 行处理器
-	 * @param initReadLine 启动时预读取的行数
+	 * @param initReadLine 启动时预读取的行数，1表示一行
 	 * @param period 检查间隔
 	 */
 	public Tailer(File file, Charset charset, LineHandler lineHandler, int initReadLine, long period) {
@@ -197,7 +197,9 @@ public class Tailer implements Serializable {
 			int currentLine = 0;
 			while (nextEnd > start) {
 				// 满
-				if (currentLine > initReadLine) {
+				if (currentLine >= initReadLine) {
+					// issue#IA77ML initReadLine是行数，从1开始，currentLine是行号，从0开始
+					// 因此行号0表示一行，所以currentLine == initReadLine表示读取完毕
 					break;
 				}
 
