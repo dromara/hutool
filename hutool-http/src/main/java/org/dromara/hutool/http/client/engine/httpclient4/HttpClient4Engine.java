@@ -43,7 +43,6 @@ import org.dromara.hutool.http.ssl.SSLInfo;
 
 import java.io.IOException;
 import java.net.PasswordAuthentication;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -142,11 +141,10 @@ public class HttpClient4Engine implements ClientEngine {
 	private static HttpUriRequest buildRequest(final Request message) {
 		final UrlBuilder url = message.handledUrl();
 		Assert.notNull(url, "Request URL must be not null!");
-		final URI uri = url.toURI();
 
 		final RequestBuilder requestBuilder = RequestBuilder
 			.create(message.method().name())
-			.setUri(uri);
+			.setUri(url.toURI());
 
 		// 填充自定义头
 		message.headers().forEach((k, v1) -> v1.forEach((v2) -> requestBuilder.addHeader(k, v2)));

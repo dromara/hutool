@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.net.url;
 
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.builder.Builder;
 import org.dromara.hutool.core.text.StrUtil;
@@ -565,7 +566,7 @@ public final class UrlBuilder implements Builder<String> {
 		try {
 			return new URL(getSchemeWithDefault(), host, port, fileBuilder.toString(), handler);
 		} catch (final MalformedURLException e) {
-			return null;
+			throw new HutoolException(e);
 		}
 	}
 
@@ -578,7 +579,7 @@ public final class UrlBuilder implements Builder<String> {
 		try {
 			return toURL().toURI();
 		} catch (final URISyntaxException e) {
-			return null;
+			throw new HutoolException(e);
 		}
 	}
 
