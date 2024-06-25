@@ -8,6 +8,7 @@ import cn.hutool.crypto.ECKeyUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
+import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.jcajce.spec.OpenSSHPrivateKeySpec;
@@ -335,5 +336,12 @@ public class SM2Test {
 	public void issueI6ROLTTest(){
 		String publicKey = "04bf347dfa32b9bc4c378232898ea43a210887a9b9ed6cc188f91b653706b44fa8434518d54412606788f34be8097cc233608f780edaf695c7e2b1d1c1b7b0d7c3";
 		new SM2(null, publicKey);
+	}
+
+	@Test(expected = DataLengthException.class)
+	public void issueIA824PTest() {
+		SM2 sm2 = SmUtil.sm2();
+		String emptyStr = "";
+		sm2.encryptHex(emptyStr, KeyType.PublicKey);
 	}
 }
