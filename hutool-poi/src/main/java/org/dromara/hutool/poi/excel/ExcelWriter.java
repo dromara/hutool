@@ -90,14 +90,14 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	// region Constructors
 
 	/**
-	 * 构造，默认生成xls格式的Excel文件<br>
+	 * 构造，默认生成xlsx格式的Excel文件<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
 	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
 	 *
 	 * @since 3.2.1
 	 */
 	public ExcelWriter() {
-		this(false);
+		this(true);
 	}
 
 	/**
