@@ -489,7 +489,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	public String getFileNameFromDisposition(String paramName) {
 		paramName = ObjUtil.defaultIfNull(paramName, "filename");
-		final List<String> dispositions = headerList(Header.CONTENT_DISPOSITION.name());
+		final List<String> dispositions = headerList(Header.CONTENT_DISPOSITION.getValue());
 		String fileName = null;
 		if (CollUtil.isNotEmpty(dispositions)) {
 
