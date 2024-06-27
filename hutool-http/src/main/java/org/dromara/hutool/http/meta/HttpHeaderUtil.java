@@ -60,7 +60,7 @@ public class HttpHeaderUtil {
 	 */
 	public static String getFileNameFromDisposition(final Map<String, List<String>> headers, String paramName) {
 		paramName = ObjUtil.defaultIfNull(paramName, "filename");
-		final List<String> dispositions = headerList(headers, HeaderName.CONTENT_DISPOSITION.name());
+		final List<String> dispositions = headerList(headers, HeaderName.CONTENT_DISPOSITION.getValue());
 		String fileName = null;
 		if (CollUtil.isNotEmpty(dispositions)) {
 

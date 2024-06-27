@@ -12,74 +12,98 @@
 
 package org.dromara.hutool.core.date.format.parser;
 
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.*;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 正则日期解析器<br>
- * 通过定义一个命名分组的正则匹配日期格式，使用正则分组获取日期各部分的值，命名分组使用{@code  (?<xxx>子表达式) }表示，如：<br>
- * <pre>{@code
- *  ^(?<year>\d{4})(?<month>\d{2})$ 匹配 201909
- * }</pre>
+ * 使用正则列表方式的日期解析器<br>
+ * 通过定义若干的日期正则，遍历匹配到给定正则后，按照正则方式解析为日期
  *
  * @author Looly
- * @since 6.0.0
  */
-public class RegexDateParser implements PredicateDateParser {
+public class RegexDateParser implements DateParser, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private static final int[] NSS = {100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
 
 	/**
-	 * 根据给定带名称的分组正则，创建RegexDateParser
+	 * 根据给定的正则列表，创建RegexListDateParser
 	 *
-	 * @param regex 正则表达式
-	 * @return RegexDateParser
+	 * @param regexes 正则列表，默认忽略大小写
+	 * @return RegexListDateParser
 	 */
-	public static RegexDateParser of(final String regex) {
-		// 日期正则忽略大小写
-		return of(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+	public static RegexDateParser of(final String... regexes) {
+		final List<Pattern> patternList = new ArrayList<>(regexes.length);
+		for (final String regex : regexes) {
+			patternList.add(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+		}
+		return new RegexDateParser(patternList);
 	}
 
 	/**
-	 * 根据给定带名称的分组正则，创建RegexDateParser
+	 * 根据给定的正则列表，创建RegexListDateParser
 	 *
-	 * @param pattern 正则表达式
-	 * @return RegexDateParser
+	 * @param patterns 正则列表
+	 * @return RegexListDateParser
 	 */
-	public static RegexDateParser of(final Pattern pattern) {
-		return new RegexDateParser(pattern);
+	public static RegexDateParser of(final Pattern... patterns) {
+		return new RegexDateParser(ListUtil.of(patterns));
 	}
 
-	private final Pattern pattern;
+	private final List<Pattern> patterns;
 
 	/**
 	 * 构造
 	 *
-	 * @param pattern 正则表达式
+	 * @param patterns 正则列表
 	 */
-	public RegexDateParser(final Pattern pattern) {
-		this.pattern = pattern;
+	public RegexDateParser(final List<Pattern> patterns) {
+		this.patterns = patterns;
 	}
 
-	@Override
-	public boolean test(final CharSequence source) {
-		return ReUtil.isMatch(this.pattern, source);
+	/**
+	 * 新增自定义日期正则
+	 *
+	 * @param regex 日期正则
+	 * @return this
+	 */
+	public RegexDateParser addRegex(final String regex) {
+		// 日期正则忽略大小写
+		return addPattern(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+	}
+
+	/**
+	 * 新增自定义日期正则
+	 *
+	 * @param pattern 日期正则
+	 * @return this
+	 */
+	public RegexDateParser addPattern(final Pattern pattern) {
+		this.patterns.add(pattern);
+		return this;
 	}
 
 	@Override
 	public Date parse(final CharSequence source) throws DateException {
-		final Matcher matcher = this.pattern.matcher(source);
-		if (!matcher.matches()) {
-			throw new DateException("Invalid date string: [{}], not match the date regex: [{}].", source, this.pattern.pattern());
+		Matcher matcher;
+		for (final Pattern pattern : this.patterns) {
+			matcher = pattern.matcher(source);
+			if (matcher.matches()) {
+				return parse(matcher);
+			}
 		}
 
-		return parse(matcher);
+		throw new DateException("No valid pattern for date string: [{}]", source);
 	}
 
 	/**
@@ -89,7 +113,7 @@ public class RegexDateParser implements PredicateDateParser {
 	 * @return 日期
 	 * @throws DateException 日期解析异常
 	 */
-	public static Date parse(final Matcher matcher) throws DateException {
+	private static Date parse(final Matcher matcher) throws DateException {
 		// 毫秒时间戳
 		final String millisecond = ReUtil.group(matcher, "millisecond");
 		if (StrUtil.isNotEmpty(millisecond)) {

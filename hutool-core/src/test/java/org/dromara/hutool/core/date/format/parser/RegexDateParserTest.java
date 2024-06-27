@@ -71,11 +71,6 @@ public class RegexDateParserTest {
 	void parseMonthFirstTest() {
 		final String dateRegex = "(?<month>\\w+{3,9})\\W+(?<day>\\d{1,2})(?:th)?\\W+(?<year>\\d{2,4})";
 
-		// +08:00
-		// +0800
-		// +08
-		final String zoneOffsetRegex = "(\\s?(?<zoneOffset>[-+]\\d{1,2}:?(?:\\d{2})?))?";
-
 		// May 8, 2009 5:57:51
 		final RegexDateParser parser = RegexDateParser.of(dateRegex + timeRegex + zoneOffsetRegex);
 
