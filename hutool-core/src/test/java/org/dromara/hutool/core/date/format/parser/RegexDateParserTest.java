@@ -1,6 +1,7 @@
 package org.dromara.hutool.core.date.format.parser;
 
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.date.Week;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.junit.jupiter.api.Test;
 
@@ -57,6 +58,15 @@ public class RegexDateParserTest {
 		assertMatch(zoneNameRegex, " (GMT)");
 		assertMatch(zoneNameRegex, " (CEST)");
 		assertMatch(zoneNameRegex, " (GMT Daylight Time)");
+	}
+
+	@Test
+	void weekMatchTest() {
+		final String weekRegex = "(?<week>[mwfts][oeruha][ndieut](\\w{3,6})?)";
+		for (final Week week : Week.values()) {
+			assertMatch(weekRegex, week.name());
+			assertMatch(weekRegex, week.name().substring(0, 3));
+		}
 	}
 
 	@Test

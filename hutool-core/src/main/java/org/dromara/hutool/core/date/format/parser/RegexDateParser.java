@@ -16,6 +16,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.*;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.regex.ReUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
@@ -95,11 +96,13 @@ public class RegexDateParser implements DateParser, Serializable {
 
 	@Override
 	public Date parse(final CharSequence source) throws DateException {
+		final DateBuilder dateBuilder = DateBuilder.of();
 		Matcher matcher;
 		for (final Pattern pattern : this.patterns) {
 			matcher = pattern.matcher(source);
 			if (matcher.matches()) {
-				return parse(matcher);
+				parse(matcher, dateBuilder);
+				return dateBuilder.toDate();
 			}
 		}
 
@@ -110,17 +113,16 @@ public class RegexDateParser implements DateParser, Serializable {
 	 * 解析日期
 	 *
 	 * @param matcher 正则匹配器
-	 * @return 日期
 	 * @throws DateException 日期解析异常
 	 */
-	private static Date parse(final Matcher matcher) throws DateException {
+	private static void parse(final Matcher matcher, final DateBuilder dateBuilder) throws DateException {
 		// 毫秒时间戳
 		final String millisecond = ReUtil.group(matcher, "millisecond");
 		if (StrUtil.isNotEmpty(millisecond)) {
-			return DateUtil.date(parseLong(millisecond));
+			dateBuilder.setMillisecond(parseLong(millisecond));
+			return;
 		}
 
-		final DateBuilder dateBuilder = DateBuilder.of();
 		// year
 		Opt.ofNullable(ReUtil.group(matcher, "year")).ifPresent((year) -> dateBuilder.setYear(parseYear(year)));
 		// month
@@ -139,7 +141,7 @@ public class RegexDateParser implements DateParser, Serializable {
 		Opt.ofNullable(ReUtil.group(matcher, "ns")).ifPresent((ns) -> dateBuilder.setNs(parseNano(ns)));
 		// am or pm
 		Opt.ofNullable(ReUtil.group(matcher, "m")).ifPresent((m) -> {
-			if ('p' == m.charAt(0)) {
+			if (CharUtil.equals('p', m.charAt(0), true)) {
 				dateBuilder.setPm(true);
 			} else {
 				dateBuilder.setAm(true);
@@ -158,12 +160,15 @@ public class RegexDateParser implements DateParser, Serializable {
 			dateBuilder.setZoneOffset(parseZoneOffset(zoneOffset));
 		});
 
+		// zone name
+		Opt.ofNullable(ReUtil.group(matcher, "zoneName")).ifPresent((zoneOffset) -> {
+			// 暂时不支持解析
+		});
+
 		// unix时间戳
 		Opt.ofNullable(ReUtil.group(matcher, "unixsecond")).ifPresent((unixsecond) -> {
 			dateBuilder.setUnixsecond(parseLong(unixsecond));
 		});
-
-		return dateBuilder.toDate();
 	}
 
 	private static int parseYear(final String year) {

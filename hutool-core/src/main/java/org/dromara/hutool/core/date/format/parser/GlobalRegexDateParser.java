@@ -24,33 +24,41 @@ import java.util.regex.Pattern;
  */
 public class GlobalRegexDateParser {
 
+	private static final String yearRegex = "(?<year>\\d{2,4})";
+	private static final String monthRegex = "(?<month>\\w{3,9})";
+	private static final String dayRegex = "(?<day>\\d{1,2})(?:th)?";
+	// 周的正则，匹配：Mon, Tue, Wed, Thu, Fri, Sat, Sun，或 Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+	// 日期中一般出现在头部，可选
+	private static final String weekRegex = "(?<week>[mwfts][oeruha][ndieut](\\w{3,6})?\\W+)?";
 	// hh:mm:ss.SSSSZ hh:mm:ss.SSSS hh:mm:ss hh:mm
 	private static final String timeRegex = "(" +
-		"\\s(?<hour>\\d{1,2})" +
+		"\\W+(?<hour>\\d{1,2})" +
 		":(?<minute>\\d{1,2})" +
 		"(:(?<second>\\d{1,2}))?" +
 		"(?:[.,](?<ns>\\d{1,9}))?(?<zero>z)?" +
-		"(\\s?(?<m>am|pm))?" +
+		"(\\s?(?<m>[ap]m))?" +
 		")?";
-	// +08:00 +0800 +08
+	// 时区，类似： +08:00 +0800 +08，可选
 	private static final String zoneOffsetRegex = "(\\s?(?<zoneOffset>[-+]\\d{1,2}:?(?:\\d{2})?))?";
-	// CST UTC (CST)
+	// 时区名称，类似： CST UTC (CST)，可选
 	private static final String zoneNameRegex = "(\\s[(]?(?<zoneName>[a-z ]+)[)]?)?";
 
 	private static final RegexDateParser PARSER;
 
 	static {
-		final String dateRegexMonthFirst = "(?<month>\\w+{3,9})\\W+(?<day>\\d{1,2})(?:th)?\\W+(?<year>\\d{2,4})";
+		// 月开头，类似：May 8
+		final String dateRegexMonthFirst = monthRegex + "\\W+" + dayRegex;
 
 		PARSER = RegexDateParser.of(
 			// 年开头
 
-			//月开头，类似：May 8, 2009 5:57:51
-			dateRegexMonthFirst + timeRegex + zoneOffsetRegex
-
-			// 周开头
+			//月在前，类似：May 8, 2009，时间部分可选，类似：5:57:51，5:57:51 +08:00
+			weekRegex + dateRegexMonthFirst + "\\W+" + yearRegex + timeRegex + zoneOffsetRegex,
+			// 年在最后，类似：Mon Jan 2 15:04:05 MST 2006
+			weekRegex + dateRegexMonthFirst + timeRegex + zoneNameRegex + zoneOffsetRegex + "\\W+" + yearRegex
 
 			// 日开头
+
 		);
 	}
 

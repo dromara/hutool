@@ -53,6 +53,8 @@ public final class DateBuilder {
 	private int ns;
 	// Unix时间戳（秒）
 	private long unixsecond;
+	// 时间戳（毫秒）
+	private long millisecond;
 	// 时区偏移量是否已设置
 	private boolean zoneOffsetSetted;
 	// 时区偏移量（分钟）
@@ -248,6 +250,26 @@ public final class DateBuilder {
 	}
 
 	/**
+	 * 获取时间戳（毫秒）。
+	 *
+	 * @return 当前对象的时间戳（以毫秒为单位）。
+	 */
+	public long getMillisecond() {
+		return millisecond;
+	}
+
+	/**
+	 * 设置时间戳（毫秒）。
+	 *
+	 * @param millisecond 要设置的时间戳（以毫秒为单位）。
+	 * @return this
+	 */
+	public DateBuilder setMillisecond(final long millisecond) {
+		this.millisecond = millisecond;
+		return this;
+	}
+
+	/**
 	 * 检查时区偏移量是否已设置。
 	 *
 	 * @return 如果时区偏移量已设置则返回true，否则返回false。
@@ -363,6 +385,7 @@ public final class DateBuilder {
 		this.second = 0;
 		this.ns = 0;
 		this.unixsecond = 0;
+		this.millisecond = 0;
 		this.am = false;
 		this.pm = false;
 		this.zoneOffsetSetted = false;
@@ -403,12 +426,6 @@ public final class DateBuilder {
 		this.prepare();
 		final Calendar calendar = Calendar.getInstance(); // 获取一个Calendar实例
 
-		// 如果有unix时间戳，则据此设置时间
-		if (unixsecond != 0) {
-			calendar.setTimeInMillis(unixsecond * 1000 + ns / 1_000_000); // 设置时间戳对应的毫秒数
-			return calendar;
-		}
-
 		// 设置时区
 		if (zone != null) {
 			calendar.setTimeZone(zone); // 使用指定的时区
@@ -419,6 +436,18 @@ public final class DateBuilder {
 					"because the zoneOffset[{}] can't be converted to an valid TimeZone.", this.zoneOffset);
 			}
 			calendar.setTimeZone(TimeZone.getTimeZone(ids[0])); // 设置第一个找到的时区
+		}
+
+		// 如果毫秒数不为0，则直接使用毫秒数设置时间
+		if(millisecond != 0){
+			calendar.setTimeInMillis(millisecond);
+			return calendar;
+		}
+
+		// 如果有unix时间戳，则据此设置时间
+		if (unixsecond != 0) {
+			calendar.setTimeInMillis(unixsecond * 1000 + ns / 1_000_000); // 设置时间戳对应的毫秒数
+			return calendar;
 		}
 
 		// 设置日期和时间字段
@@ -442,6 +471,11 @@ public final class DateBuilder {
 	 */
 	LocalDateTime toLocalDateTime() {
 		this.prepare();
+
+		if(millisecond > 0){
+			final Instant instant = Instant.ofEpochMilli(millisecond);
+			return LocalDateTime.ofEpochSecond(instant.getEpochSecond(), instant.getNano(), DEFAULT_OFFSET);
+		}
 
 		// 如果unixsecond大于0，使用unix时间戳创建LocalDateTime
 		if (unixsecond > 0) {
@@ -479,6 +513,10 @@ public final class DateBuilder {
 	 */
 	OffsetDateTime toOffsetDateTime() {
 		this.prepare(); // 准备工作，可能涉及一些初始化或数据处理
+
+		if(millisecond > 0){
+			return OffsetDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneUtil.ZONE_ID_UTC);
+		}
 
 		if (unixsecond > 0) {
 			// 如果设置了 unix 时间戳，则使用它和纳秒创建 UTC 时间
