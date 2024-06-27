@@ -35,7 +35,7 @@ public class ThreadUtil {
 	 * @param corePoolSize 同时执行的线程数大小
 	 * @return ExecutorService
 	 */
-	public static ExecutorService newExecutor(int corePoolSize) {
+	public static ThreadPoolExecutor newExecutor(int corePoolSize) {
 		ExecutorBuilder builder = ExecutorBuilder.create();
 		if (corePoolSize > 0) {
 			builder.setCorePoolSize(corePoolSize);
