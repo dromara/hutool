@@ -29,36 +29,44 @@ public class GlobalRegexDateParser {
 	private static final String dayRegex = "(?<day>\\d{1,2})(?:th)?";
 	// 周的正则，匹配：Mon, Tue, Wed, Thu, Fri, Sat, Sun，或 Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 	// 日期中一般出现在头部，可选
-	private static final String weekRegex = "(?<week>[mwfts][oeruha][ndieut](\\w{3,6})?\\W+)?";
+	private static final String weekRegexWithSuff = "(?<week>[mwfts][oeruha][ndieut](\\w{3,6})?\\W+)?";
 	// hh:mm:ss.SSSSZ hh:mm:ss.SSSS hh:mm:ss hh:mm
-	private static final String timeRegex = "(" +
-		"\\W+(?<hour>\\d{1,2})" +
+	private static final String timeRegexWithPre = "(" +
+		"\\W+(at\\s)?(?<hour>\\d{1,2})" +
 		":(?<minute>\\d{1,2})" +
 		"(:(?<second>\\d{1,2}))?" +
 		"(?:[.,](?<ns>\\d{1,9}))?(?<zero>z)?" +
 		"(\\s?(?<m>[ap]m))?" +
 		")?";
 	// 时区，类似： +08:00 +0800 +08，可选
-	private static final String zoneOffsetRegex = "(\\s?(?<zoneOffset>[-+]\\d{1,2}:?(?:\\d{2})?))?";
+	private static final String zoneOffsetRegexWithPre = "(\\s?(?<zoneOffset>[-+]\\d{1,2}:?(?:\\d{2})?))?";
 	// 时区名称，类似： CST UTC (CST)，可选
-	private static final String zoneNameRegex = "(\\s[(]?(?<zoneName>[a-z ]+)[)]?)?";
+	private static final String zoneNameRegexWithPre = "(\\s[(]?(?<zoneName>[a-z ]+)[)]?)?";
+	private static final String zoneNameIgnoreRegexWithPre = "(\\s[(]?(?<zoneNameIgnore>[a-z ]+)[)]?)?";
 
 	private static final RegexDateParser PARSER;
 
 	static {
 		// 月开头，类似：May 8
 		final String dateRegexMonthFirst = monthRegex + "\\W+" + dayRegex;
+		// 日开头，类似：02-Jan
+		final String dateRegexDayFirst = dayRegex + "\\W+" + monthRegex;
+		// 时区拼接，类似：
+		// GMT+0100 (GMT Daylight Time)
+		// +0200 (CEST)
+		// GMT+0100
+		// MST
+		final String zoneRegex =  zoneNameRegexWithPre + zoneOffsetRegexWithPre + zoneNameIgnoreRegexWithPre;
 
 		PARSER = RegexDateParser.of(
 			// 年开头
 
-			//月在前，类似：May 8, 2009，时间部分可选，类似：5:57:51，5:57:51 +08:00
-			weekRegex + dateRegexMonthFirst + "\\W+" + yearRegex + timeRegex + zoneOffsetRegex,
-			// 年在最后，类似：Mon Jan 2 15:04:05 MST 2006
-			weekRegex + dateRegexMonthFirst + timeRegex + zoneNameRegex + zoneOffsetRegex + "\\W+" + yearRegex
-
-			// 日开头
-
+			//【周月日年时】类似：May 8, 2009，时间部分可选，类似：5:57:51，5:57:51 +08:00
+			weekRegexWithSuff + dateRegexMonthFirst + "\\W+" + yearRegex + timeRegexWithPre + zoneRegex,
+			//【周月日时年】类似：Mon Jan 2 15:04:05 MST 2006
+			weekRegexWithSuff + dateRegexMonthFirst + timeRegexWithPre + zoneRegex + "\\W+" + yearRegex,
+			//【周日月年时】类似：Monday, 02-Jan-06 15:04:05 MST
+			weekRegexWithSuff + dateRegexDayFirst + "\\W+" + yearRegex + timeRegexWithPre + zoneRegex
 		);
 	}
 
