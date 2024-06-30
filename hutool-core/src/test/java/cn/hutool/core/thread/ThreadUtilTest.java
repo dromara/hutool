@@ -4,7 +4,18 @@ import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+
 public class ThreadUtilTest {
+
+
+	@Test
+	public void newExecutorTest(){
+		ThreadPoolExecutor executor = ThreadUtil.newExecutor(5);
+		// 查询线程池 线程数
+		Assert.assertEquals(5, executor.getCorePoolSize());
+	}
 
 	@Test
 	public void executeTest() {
