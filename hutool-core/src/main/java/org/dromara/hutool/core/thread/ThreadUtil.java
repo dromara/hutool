@@ -113,7 +113,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadPoolExecutor}
 	 * @since 5.4.1
 	 */
-	public static ExecutorService newExecutor(final int corePoolSize, final int maximumPoolSize, final int maximumQueueSize) {
+	public static ThreadPoolExecutor newExecutor(final int corePoolSize, final int maximumPoolSize, final int maximumQueueSize) {
 		return ExecutorBuilder.of()
 			.setCorePoolSize(corePoolSize)
 			.setMaxPoolSize(maximumPoolSize)
