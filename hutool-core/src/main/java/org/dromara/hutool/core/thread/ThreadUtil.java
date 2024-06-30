@@ -84,7 +84,7 @@ public class ThreadUtil {
 	 * @param poolSize 同时执行的线程数大小
 	 * @return ExecutorService
 	 */
-	public static ExecutorService newExecutor(final int poolSize) {
+	public static ThreadPoolExecutor newExecutor(final int poolSize) {
 		return newExecutor(poolSize, poolSize);
 	}
 

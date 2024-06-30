@@ -14,6 +14,7 @@ package org.dromara.hutool.core.thread;
 
 import org.dromara.hutool.core.date.TimeUtil;
 import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -21,13 +22,17 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadUtilTest {
+
+
+	@Test
+	public void testNewExecutorByBlockingCoefficient(){
+		ThreadPoolExecutor executor = ThreadUtil.newExecutorByBlockingCoefficient(0.5f);
+		Console.log(executor.getCorePoolSize());
+	}
 
 	@Test
 	public void executeTest() {
