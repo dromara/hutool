@@ -54,7 +54,7 @@ public class ThreadUtil {
 	 *
 	 * @return ExecutorService
 	 */
-	public static ExecutorService newExecutor() {
+	public static ThreadPoolExecutor newExecutor() {
 		return ExecutorBuilder.create().useSynchronousQueue().build();
 	}
 
@@ -102,7 +102,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadPoolExecutor}
 	 * @since 5.4.1
 	 */
-	public static ExecutorService newExecutor(int corePoolSize, int maximumPoolSize, int maximumQueueSize) {
+	public static ThreadPoolExecutor newExecutor(int corePoolSize, int maximumPoolSize, int maximumQueueSize) {
 		return ExecutorBuilder.create()
 				.setCorePoolSize(corePoolSize)
 				.setMaxPoolSize(maximumPoolSize)
@@ -147,7 +147,7 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(int nThreads, String threadNamePrefix, boolean isBlocked) {
+	public static ThreadPoolExecutor newFixedExecutor(int nThreads, String threadNamePrefix, boolean isBlocked) {
 		return newFixedExecutor(nThreads, 1024, threadNamePrefix, isBlocked);
 	}
 
@@ -167,7 +167,7 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(int nThreads, int maximumQueueSize, String threadNamePrefix, boolean isBlocked) {
+	public static ThreadPoolExecutor newFixedExecutor(int nThreads, int maximumQueueSize, String threadNamePrefix, boolean isBlocked) {
 		return newFixedExecutor(nThreads, maximumQueueSize, threadNamePrefix,
 				(isBlocked ? RejectPolicy.BLOCK : RejectPolicy.ABORT).getValue());
 	}
@@ -187,7 +187,7 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(int nThreads,
+	public static ThreadPoolExecutor newFixedExecutor(int nThreads,
 												   int maximumQueueSize,
 												   String threadNamePrefix,
 												   RejectedExecutionHandler handler) {

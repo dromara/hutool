@@ -14,6 +14,7 @@
 * 【cache  】      Cache.put变更策略，对于替换的键值对，不清理队列（issue#3618@Github）
 * 【core   】      添加 Windows 资源管理器风格字符串比较器（pr#3620@Github）
 * 【core   】      Week.of支持中文名称（issue#3637@Github）
+* 【core   】      ThreadUtil.newExecutor等方法变更方法签名，返回值变更为ThreadPoolExecutor（pr#1230@Gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复AnnotationUtil可能的空指针错误
