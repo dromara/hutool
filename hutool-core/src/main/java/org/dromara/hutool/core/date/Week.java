@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.DayOfWeek;
 import java.util.Calendar;
@@ -180,6 +181,28 @@ public enum Week {
 	 */
 	public static Week of(final String name) throws IllegalArgumentException {
 		if (null != name && name.length() > 1) {
+			// issue#3637
+			if (StrUtil.startWithAny(name, "星期", "周")) {
+				final char chineseNumber = name.charAt(name.length() - 1);
+				switch (chineseNumber) {
+					case '一':
+						return MONDAY;
+					case '二':
+						return TUESDAY;
+					case '三':
+						return WEDNESDAY;
+					case '四':
+						return THURSDAY;
+					case '五':
+						return FRIDAY;
+					case '六':
+						return SATURDAY;
+					case '日':
+						return SUNDAY;
+				}
+				throw new IllegalArgumentException("Invalid week name: " + name);
+			}
+
 			switch (Character.toLowerCase(name.charAt(0))) {
 				case 'm':
 					return MONDAY; // monday
