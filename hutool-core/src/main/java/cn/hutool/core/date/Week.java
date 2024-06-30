@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.time.DayOfWeek;
 import java.util.Calendar;
@@ -86,9 +87,9 @@ public enum Week {
 	 * @return ISO8601规范的int值
 	 * @since 5.8.0
 	 */
-	public int getIso8601Value(){
-		int iso8601IntValue = getValue() -1;
-		if(0 == iso8601IntValue){
+	public int getIso8601Value() {
+		int iso8601IntValue = getValue() - 1;
+		if (0 == iso8601IntValue) {
 			iso8601IntValue = 7;
 		}
 		return iso8601IntValue;
@@ -172,6 +173,29 @@ public enum Week {
 	 */
 	public static Week of(String name) throws IllegalArgumentException {
 		Assert.notBlank(name);
+
+		// issue#3637
+		if (StrUtil.startWithAny(name, "星期", "周")) {
+			char chineseNumber = name.charAt(name.length() - 1);
+			switch (chineseNumber) {
+				case '一':
+					return MONDAY;
+				case '二':
+					return TUESDAY;
+				case '三':
+					return WEDNESDAY;
+				case '四':
+					return THURSDAY;
+				case '五':
+					return FRIDAY;
+				case '六':
+					return SATURDAY;
+				case '日':
+					return SUNDAY;
+			}
+			throw new IllegalArgumentException("Invalid week name: " + name);
+		}
+
 		Week of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name) + 1);
 		if (null == of) {
 			of = Week.valueOf(name.toUpperCase());
@@ -196,7 +220,7 @@ public enum Week {
 	public static Week of(DayOfWeek dayOfWeek) {
 		Assert.notNull(dayOfWeek);
 		int week = dayOfWeek.getValue() + 1;
-		if(8 == week){
+		if (8 == week) {
 			// 周日
 			week = 1;
 		}
