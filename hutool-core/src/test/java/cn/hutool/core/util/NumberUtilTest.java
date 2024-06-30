@@ -661,4 +661,10 @@ public class NumberUtilTest {
 		BigDecimal expected = new BigDecimal("1000.00");
 		assertEquals(expected, NumberUtil.pow(number, exponent));
 	}
+
+	@Test
+	public void issue3636Test() {
+		final Number number = NumberUtil.parseNumber("12,234,456");
+		Assert.assertEquals(new BigDecimal(12234456), number);
+	}
 }
