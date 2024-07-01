@@ -967,7 +967,12 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
-			mRule.appendTo(buffer, calendar.getWeekYear());
+			int weekYear = calendar.getWeekYear();
+			if (mRule instanceof TwoDigitYearField) {
+				// issue#3641
+				weekYear %= 100;
+			}
+			mRule.appendTo(buffer, weekYear);
 		}
 
 		@Override
