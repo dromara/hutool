@@ -23,19 +23,24 @@ import java.util.concurrent.ConcurrentMap;
 public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	private static final long serialVersionUID = -6305750172255764887L;
 
-	/** 规则列表. */
+	/**
+	 * 规则列表.
+	 */
 	private transient Rule[] rules;
-	/** 估算最大长度. */
+	/**
+	 * 估算最大长度.
+	 */
 	private transient int mMaxLengthEstimate;
 
 	// Constructor
 	// -----------------------------------------------------------------------
+
 	/**
 	 * 构造，内部使用<br>
 	 *
-	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
+	 * @param pattern  使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 非空时区{@link TimeZone}
-	 * @param locale 非空{@link Locale} 日期地理位置
+	 * @param locale   非空{@link Locale} 日期地理位置
 	 */
 	public FastDatePrinter(String pattern, TimeZone timeZone, Locale locale) {
 		super(pattern, timeZone, locale);
@@ -50,7 +55,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		rules = rulesList.toArray(new Rule[0]);
 
 		int len = 0;
-		for (int i = rules.length; --i >= 0;) {
+		for (int i = rules.length; --i >= 0; ) {
 			len += rules[i].estimateLength();
 		}
 
@@ -59,6 +64,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	// Parse the pattern
 	// -----------------------------------------------------------------------
+
 	/**
 	 * <p>
 	 * Returns a list of Rules given a pattern.
@@ -207,7 +213,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * Performs the parsing of tokens.
 	 * </p>
 	 *
-	 * @param pattern the pattern
+	 * @param pattern  the pattern
 	 * @param indexRef index references
 	 * @return parsed token
 	 */
@@ -267,7 +273,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * Gets an appropriate rule for the padding required.
 	 * </p>
 	 *
-	 * @param field the field to get a rule for
+	 * @param field   the field to get a rule for
 	 * @param padding the padding required
 	 * @return a new rule with the correct padding
 	 */
@@ -364,8 +370,8 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * </p>
 	 *
 	 * @param calendar the calendar to format
-	 * @param buf the buffer to format into
-	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
+	 * @param buf      the buffer to format into
+	 * @param <B>      the Appendable class type, usually StringBuilder or StringBuffer.
 	 * @return the specified string buffer
 	 */
 	private <B extends Appendable> B applyRules(Calendar calendar, B buf) {
@@ -380,7 +386,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	}
 
 	/**
-	 *估算生成的日期字符串长度<br>
+	 * 估算生成的日期字符串长度<br>
 	 * 实际生成的字符串长度小于或等于此值
 	 *
 	 * @return 日期字符串长度
@@ -391,11 +397,12 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	// Serializing
 	// -----------------------------------------------------------------------
+
 	/**
 	 * Create the object after serialization. This implementation reinitializes the transient properties.
 	 *
 	 * @param in ObjectInputStream from which the object is being deserialized.
-	 * @throws IOException if there is an IO issue.
+	 * @throws IOException            if there is an IO issue.
 	 * @throws ClassNotFoundException if a class cannot be found.
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -407,7 +414,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * Appends two digits to the given buffer.
 	 *
 	 * @param buffer the buffer to append to.
-	 * @param value the value to append digits from.
+	 * @param value  the value to append digits from.
 	 */
 	private static void appendDigits(Appendable buffer, int value) throws IOException {
 		buffer.append((char) (value / 10 + '0'));
@@ -420,7 +427,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * Appends all digits to the given buffer.
 	 *
 	 * @param buffer the buffer to append to.
-	 * @param value the value to append digits from.
+	 * @param value  the value to append digits from.
 	 */
 	private static void appendFullDigits(Appendable buffer, int value, int minFieldWidth) throws IOException {
 		// specialized paths for 1 to 4 digits -> avoid the memory allocation from the temporary work array
@@ -490,6 +497,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	// Rules
 	// -----------------------------------------------------------------------
+
 	/**
 	 * 规则
 	 */
@@ -504,7 +512,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		/**
 		 * Appends the value of the specified calendar to the output buffer based on the rule implementation.
 		 *
-		 * @param buf the output buffer
+		 * @param buf      the output buffer
 		 * @param calendar calendar to be appended
 		 * @throws IOException if an I/O error occurs
 		 */
@@ -521,7 +529,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * Appends the specified value to the output buffer based on the rule implementation.
 		 *
 		 * @param buffer the output buffer
-		 * @param value the value to be appended
+		 * @param value  the value to be appended
 		 * @throws IOException if an I/O error occurs
 		 */
 		void appendTo(Appendable buffer, int value) throws IOException;
@@ -601,7 +609,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		/**
 		 * Constructs an instance of {@code TextField} with the specified field and values.
 		 *
-		 * @param field the field
+		 * @param field  the field
 		 * @param values the field values
 		 */
 		TextField(int field, String[] values) {
@@ -615,7 +623,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		@Override
 		public int estimateLength() {
 			int max = 0;
-			for (int i = mValues.length; --i >= 0;) {
+			for (int i = mValues.length; --i >= 0; ) {
 				final int len = mValues[i].length();
 				if (len > max) {
 					max = len;
@@ -691,7 +699,6 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 		/**
 		 * Constructs an instance of {@code UnpaddedMonthField}.
-		 *
 		 */
 		UnpaddedMonthField() {
 		}
@@ -738,7 +745,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * Constructs an instance of {@code PaddedNumberField}.
 		 *
 		 * @param field the field
-		 * @param size size of the output field
+		 * @param size  size of the output field
 		 */
 		PaddedNumberField(int field, int size) {
 			if (size < 3) {
@@ -1038,7 +1045,12 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 		@Override
 		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
-			mRule.appendTo(buffer, calendar.getWeekYear());
+			int weekYear = calendar.getWeekYear();
+			if (mRule instanceof TwoDigitYearField) {
+				// issue#3641
+				weekYear %= 100;
+			}
+			mRule.appendTo(buffer, weekYear);
 		}
 
 		@Override
@@ -1056,10 +1068,10 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * Gets the time zone display name, using a cache for performance.
 	 * </p>
 	 *
-	 * @param tz the zone to query
+	 * @param tz       the zone to query
 	 * @param daylight true if daylight savings
-	 * @param style the style to use {@code TimeZone.LONG} or {@code TimeZone.SHORT}
-	 * @param locale the locale to use
+	 * @param style    the style to use {@code TimeZone.LONG} or {@code TimeZone.SHORT}
+	 * @param locale   the locale to use
 	 * @return the textual name of the time zone
 	 */
 	static String getTimeZoneDisplay(TimeZone tz, boolean daylight, int style, Locale locale) {
@@ -1091,8 +1103,8 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * Constructs an instance of {@code TimeZoneNameRule} with the specified properties.
 		 *
 		 * @param timeZone the time zone
-		 * @param locale the locale
-		 * @param style the style
+		 * @param locale   the locale
+		 * @param style    the style
 		 */
 		TimeZoneNameRule(TimeZone timeZone, Locale locale, int style) {
 			mLocale = locale;
@@ -1269,6 +1281,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	}
 
 	// ----------------------------------------------------------------------
+
 	/**
 	 * <p>
 	 * Inner class that acts as a compound key for time zone names.
@@ -1284,8 +1297,8 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 * @param timeZone the time zone
 		 * @param daylight adjust the style for daylight saving time if {@code true}
-		 * @param style the timezone style
-		 * @param locale the timezone locale
+		 * @param style    the timezone style
+		 * @param locale   the timezone locale
 		 */
 		TimeZoneDisplayKey(final TimeZone timeZone, final boolean daylight, final int style, final Locale locale) {
 			mTimeZone = timeZone;

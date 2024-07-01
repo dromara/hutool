@@ -28,6 +28,7 @@
 * 【core   】      修复Tailer指定初始读取行数的计算错误问题（issue#IA77ML@Gitee）
 * 【http   】      修复getFileNameFromDisposition获取头错误问题（issue#3632@Github）
 * 【core   】      修复\n#出现在双引号中解析错误问题（issue#IA8WE0@Gitee）
+* 【core   】      修复FastDatePrinter处理YY错误问题（issue#3641@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.28(2024-05-29)
