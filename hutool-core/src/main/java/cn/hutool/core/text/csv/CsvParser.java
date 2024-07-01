@@ -240,7 +240,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			if(preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF){
 				// 判断行首字符为指定注释字符的注释开始，直到遇到换行符
 				// 行首分两种，1是preChar < 0表示文本开始，2是换行符后紧跟就是下一行的开始
-				if(null != this.config.commentCharacter && c == this.config.commentCharacter){
+				// issue#IA8WE0 如果注释符出现在包装符内，被认为是普通字符
+				if((false == inQuotes) && null != this.config.commentCharacter && c == this.config.commentCharacter){
 					inComment = true;
 				}
 			}
