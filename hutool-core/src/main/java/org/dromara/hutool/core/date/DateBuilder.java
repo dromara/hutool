@@ -421,6 +421,17 @@ public final class DateBuilder {
 	}
 
 	/**
+	 * 转换为带时区信息的{@link DateTime}<br>
+	 * 此方法用于保留原始时间戳，并且不丢失时区信息
+	 *
+	 * @return {@link DateTime}
+	 */
+	public DateTime toZonedDateTime() {
+		final Calendar calendar = toCalendar();
+		return new DateTime(calendar.getTimeInMillis(), calendar.getTimeZone());
+	}
+
+	/**
 	 * 将当前对象的日期时间信息转换为{@link Calendar}实例。
 	 * 如果`unixsecond`不为0，将根据unix时间戳（秒）和纳秒偏移量构造Calendar。
 	 * 否则，根据提供的时区信息`zone`或`zoneOffset`来设置Calendar的时区。
