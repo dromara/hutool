@@ -25,6 +25,8 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.dfa.WordTree;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -115,7 +117,31 @@ public class RegexDateParser implements DateParser, Serializable {
 	@Override
 	public Date parse(final CharSequence source) throws DateException {
 		Assert.notBlank(source, "Date str must be not blank!");
-		return parseToBuilder(source).toDateTime();
+		return parseToBuilder(source).toDate();
+	}
+
+	/**
+	 * 解析日期，结果为{@link LocalDateTime}
+	 *
+	 * @param source 日期字符串
+	 * @return {@link LocalDateTime}
+	 * @throws DateException 解析异常
+	 */
+	public LocalDateTime parseToLocalDateTime(final CharSequence source) throws DateException {
+		Assert.notBlank(source, "Date str must be not blank!");
+		return parseToBuilder(source).toLocalDateTime();
+	}
+
+	/**
+	 * 解析日期，结果为{@link OffsetDateTime}
+	 *
+	 * @param source 日期字符串
+	 * @return {@link OffsetDateTime}
+	 * @throws DateException 解析异常
+	 */
+	public OffsetDateTime parseToOffsetDateTime(final CharSequence source) throws DateException {
+		Assert.notBlank(source, "Date str must be not blank!");
+		return parseToBuilder(source).toOffsetDateTime();
 	}
 
 	/**

@@ -16,7 +16,7 @@ public class DateBuilderTest {
 		builder.setDay(1);
 		final Date date = builder.toDate();
 
-		Assertions.assertEquals("2019-10-01", DateUtil.date(date).toDateStr());
+		Assertions.assertEquals("2019-10-01 00:00:00", date.toString());
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class DateBuilderTest {
 			.setZone(TimeZone.getDefault());
 
 		final LocalDateTime dateTime = builder.toLocalDateTime();
-		Assertions.assertEquals("2019-10-01T10:20:30.900", builder.toLocalDateTime().toString());
+		Assertions.assertEquals("2019-10-01T10:20:30.900", dateTime.toString());
 	}
 
 	@Test

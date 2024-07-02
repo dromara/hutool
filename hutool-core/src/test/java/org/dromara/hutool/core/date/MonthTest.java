@@ -77,5 +77,14 @@ public class MonthTest {
 
 		month = Month.of(java.time.Month.FEBRUARY);
 		Assertions.assertEquals(Month.FEBRUARY, month);
+
+		month = Month.of("二月");
+		Assertions.assertEquals(Month.FEBRUARY, month);
+		month = Month.of("十月");
+		Assertions.assertEquals(Month.OCTOBER, month);
+		month = Month.of("十一月");
+		Assertions.assertEquals(Month.NOVEMBER, month);
+		month = Month.of("十二月");
+		Assertions.assertEquals(Month.DECEMBER, month);
 	}
 }

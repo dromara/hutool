@@ -31,12 +31,12 @@ public class GlobalRegexDateParser {
 		final String yearRegex = "(?<year>\\d{2,4})";
 		// 月的正则，匹配：Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec，
 		// 或 January, February, March, April, May, June, July, August, September, October, November, December
-		final String monthRegex = "(?<month>[jfmaasond][aepucoe][nbrylgptvc]\\w{0,6})";
+		final String monthRegex = "(?<month>[jfmaasond][aepucoe][nbrylgptvc]\\w{0,6}|[一二三四五六七八九十]{1,2}月)";
 		final String dayRegex = "(?<day>\\d{1,2})(?:th)?";
 		// 周的正则，匹配：Mon, Tue, Wed, Thu, Fri, Sat, Sun，
 		// 或 Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 		// 周一般出现在日期头部，可选
-		final String weekRegexWithSuff = "(?<week>[mwfts][oeruha][ndieut](\\w{3,6})?\\W+)?";
+		final String weekRegexWithSuff = "((?<week>[mwfts][oeruha][ndieut](\\w{3,6})?|(星期|周)[一二三四五六日])\\W+)?";
 		// hh:mm:ss.SSSSZ hh:mm:ss.SSSS hh:mm:ss hh:mm
 		final String timeRegexWithPre = "(" +
 			"(\\W+|T)(at\\s)?(?<hour>\\d{1,2})" +

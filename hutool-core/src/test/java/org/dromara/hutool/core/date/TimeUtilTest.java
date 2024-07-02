@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -37,7 +36,8 @@ public class TimeUtilTest {
 	@Test
 	public void ofTest() {
 		final String dateStr = "2020-01-23T12:23:56";
-		final Date dt = DateUtil.parse(dateStr);
+		final DateTime dt = DateUtil.parse(dateStr);
+		Console.log(dt.getTimeZone());
 
 		final LocalDateTime of = TimeUtil.of(dt);
 		Assertions.assertNotNull(of);
@@ -47,9 +47,10 @@ public class TimeUtilTest {
 	@Test
 	public void ofUTCTest() {
 		final String dateStr = "2020-01-23T12:23:56Z";
-		final Date dt = DateUtil.parse(dateStr);
+		// 因为`Z`位于末尾，表示为UTC时间，parse后会自动转换为本地时间
+		final DateTime dt = DateUtil.parse(dateStr);
 
-		final LocalDateTime of = TimeUtil.of(dt);
+		final LocalDateTime of = TimeUtil.of(dt.setTimeZone(ZoneUtil.ZONE_UTC));
 		final LocalDateTime of2 = TimeUtil.ofUTC(dt.getTime());
 		Assertions.assertNotNull(of);
 		Assertions.assertNotNull(of2);

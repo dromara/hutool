@@ -14,7 +14,6 @@ package org.dromara.hutool.core.date;
 
 import java.time.*;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -403,41 +402,22 @@ public final class DateBuilder {
 	}
 
 	/**
-	 * 将当前时间对象转换为{@link Date}类型。此方法根据是否设置了时区偏移量使用不同的转换策略。
-	 * <ul>
-	 *     <li>如果时区偏移量未设置，则将时间转换为 Calendar 对象后获取其 Date 表现形式</li>
-	 *     <li>如果时区偏移量已设置，则直接转换为 OffsetDateTime 对象，进一步转换为 Instant 对象，最后转换为 Date 对象返回。</li>
-	 * </ul>
-	 * 。
-	 *
-	 * @return Date 表示当前时间的 Date 对象。
-	 */
-	public Date toDate() {
-		if (!zoneOffsetSetted) {
-			// 时区偏移量未设置，使用 Calendar 进行转换
-			return toCalendar().getTime();
-		}
-		// 时区偏移量已设置，直接转换为 Date 对象返回
-		return Date.from(toOffsetDateTime().toInstant());
-	}
-
-	/**
 	 * 将当前时间对象转换为{@link DateTime}类型。此方法根据是否设置了时区偏移量使用不同的转换策略。
 	 * <ul>
-	 *     <li>如果时区偏移量未设置，则将时间转换为 Calendar 对象后获取其 DateTime 表现形式</li>
-	 *     <li>如果时区偏移量已设置，则直接转换为 OffsetDateTime 对象，进一步转换为 Instant 对象，最后转换为 DateTime 对象返回。</li>
+	 *     <li>如果时区偏移量未设置，则通过{@link Calendar}创建{@link DateTime}，无需转换时区。</li>
+	 *     <li>如果时区偏移量已设置，则经过OffsetDateTime转换为本地时区的{@link DateTime}。</li>
 	 * </ul>
 	 * 。
 	 *
 	 * @return DateTime 表示当前时间的 DateTime 对象。
 	 */
-	public DateTime toDateTime() {
+	public DateTime toDate() {
 		if (!zoneOffsetSetted) {
-			// 时区偏移量未设置，使用 Calendar 进行转换
-			return new DateTime(toCalendar());
+			// 时区偏移量未设置，使用 Calendar 进行转换，无需读取时区
+			return new DateTime(toCalendar().getTimeInMillis());
 		}
 		// 时区偏移量已设置，直接转换为 Date 对象返回
-		return new DateTime(toOffsetDateTime().toInstant());
+		return new DateTime(toOffsetDateTime().toInstant().toEpochMilli());
 	}
 
 	/**
@@ -495,7 +475,7 @@ public final class DateBuilder {
 	 *
 	 * @return LocalDateTime 表示当前对象日期时间的LocalDateTime实例。
 	 */
-	LocalDateTime toLocalDateTime() {
+	public LocalDateTime toLocalDateTime() {
 		this.prepare();
 
 		if (millisecond > 0) {
@@ -537,7 +517,7 @@ public final class DateBuilder {
 	 *
 	 * @return OffsetDateTime 表示当前时间的 OffsetDateTime 对象。
 	 */
-	OffsetDateTime toOffsetDateTime() {
+	public OffsetDateTime toOffsetDateTime() {
 		this.prepare(); // 准备工作，可能涉及一些初始化或数据处理
 
 		if (millisecond > 0) {

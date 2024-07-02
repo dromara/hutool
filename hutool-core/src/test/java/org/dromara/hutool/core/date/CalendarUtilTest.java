@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.date;
 
+import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -39,5 +40,17 @@ public class CalendarUtilTest {
 			// 在使用严格模式时，秒不正确，抛出异常
 			DateUtil.date(calendar);
 		});
+	}
+
+	@Test
+	void setTimeZoneTest() {
+		// Calendar中，设置时区并不会变化时间戳
+		final Calendar instance = Calendar.getInstance();
+		Console.log(instance.getTimeInMillis());
+		final long timeInMillis = instance.getTimeInMillis();
+		instance.setTimeZone(ZoneUtil.ZONE_UTC);
+		final long timeInMillis2 = instance.getTimeInMillis();
+
+		Assertions.assertEquals(timeInMillis, timeInMillis2);
 	}
 }

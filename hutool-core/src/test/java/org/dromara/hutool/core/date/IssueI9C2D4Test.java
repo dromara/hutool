@@ -18,7 +18,7 @@ public class IssueI9C2D4Test {
 	public void parseHttpTest2() {
 		final String dateStr = "星期四, 28 三月 2024 14:33:49 GMT";
 		final Date parse = DateUtil.parse(dateStr);
-		Assertions.assertEquals("2024-03-28 14:33:49", Objects.requireNonNull(parse).toString());
+		Assertions.assertEquals("2024-03-28 22:33:49", Objects.requireNonNull(parse).toString());
 	}
 
 	@Test

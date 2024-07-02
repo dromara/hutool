@@ -187,7 +187,7 @@ public enum Month {
 	 * @since 5.8.0
 	 */
 	public static Month of(final String name) throws IllegalArgumentException {
-		if (null != name && name.length() > 2) {
+		if (null != name && name.length() > 1) {
 			switch (Character.toLowerCase(name.charAt(0))) {
 				case 'a':
 					switch (Character.toLowerCase(name.charAt(1))) {
@@ -226,6 +226,32 @@ public enum Month {
 					return NOVEMBER; // november
 				case 'd':
 					return DECEMBER; // december
+				case '一':
+					return JANUARY;
+				case '二':
+					return FEBRUARY;
+				case '三':
+					return MARCH;
+				case '四':
+					return APRIL;
+				case '五':
+					return MAY;
+				case '六':
+					return JUNE;
+				case '七':
+					return JULY;
+				case '八':
+					return AUGUST;
+				case '九':
+					return SEPTEMBER;
+				case '十':
+					switch (Character.toLowerCase(name.charAt(1))){
+						case '一':
+							return NOVEMBER;
+						case '二':
+							return DECEMBER;
+					}
+					return OCTOBER;
 			}
 		}
 
@@ -234,11 +260,12 @@ public enum Month {
 
 	/**
 	 * {@link java.time.Month}转换为Month对象
+	 *
 	 * @param month {@link java.time.Month}
 	 * @return Month
 	 * @since 5.8.0
 	 */
-	public static Month of(final java.time.Month month){
+	public static Month of(final java.time.Month month) {
 		return of(month.ordinal());
 	}
 

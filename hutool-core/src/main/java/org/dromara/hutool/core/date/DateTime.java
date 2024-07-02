@@ -38,7 +38,12 @@ import java.util.TimeZone;
 /**
  * 包装{@link Date}<br>
  * 此类继承了{@link Date}，并提供扩展方法，如时区等。<br>
- * 此类重写了父类的{@code toString()}方法，返回值为"yyyy-MM-dd HH:mm:ss"格式
+ * 此类重写了父类的{@code toString()}方法，返回值为"yyyy-MM-dd HH:mm:ss"格式<br>
+ * 相对于{@link Date}，此类定义了时区，用于标识日期所在时区，默认为当前时区
+ * <ul>
+ *     <li>当使用默认时区时，与LocalDateTime类似，标识本地时间</li>
+ *     <li>当使用指定时区时，与ZonedDateTime类似，标识某个地区的时间</li>
+ * </ul>
  *
  * @author Looly
  */
@@ -79,7 +84,7 @@ public class DateTime extends Date {
 	private int minimalDaysInFirstWeek;
 
 	/**
-	 * 转换时间戳为 DateTime
+	 * 转换时间戳为 DateTime，默认时区
 	 *
 	 * @param timeMillis 时间戳，毫秒数
 	 * @return DateTime
@@ -90,7 +95,7 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转换JDK date为 DateTime
+	 * 转换JDK date为 DateTime，如果传入为原生对象，使用默认时区
 	 *
 	 * @param date JDK Date
 	 * @return DateTime
@@ -103,7 +108,7 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转换 {@link Calendar} 为 DateTime
+	 * 转换 {@link Calendar} 为 DateTime，使用{@link Calendar}中指定的时区
 	 *
 	 * @param calendar {@link Calendar}
 	 * @return DateTime
@@ -181,7 +186,7 @@ public class DateTime extends Date {
 	 * @param calendar {@link Calendar}，不能为{@code null}
 	 */
 	public DateTime(final Calendar calendar) {
-		this(calendar.getTime(), calendar.getTimeZone());
+		this(calendar.getTimeInMillis(), calendar.getTimeZone());
 		this.setFirstDayOfWeek(Week.of(calendar.getFirstDayOfWeek()));
 	}
 

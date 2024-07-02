@@ -15,6 +15,8 @@ package org.dromara.hutool.core.date;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.TimeZone;
+
 /**
  * DateTime单元测试
  *
@@ -129,6 +131,17 @@ public class DateTimeTest {
 	}
 
 	@Test
+	public void toStringWithTimeZoneTest() {
+		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+
+		final String dateStr = dateTime.toString(TimeZone.getTimeZone("UTC"));
+		Assertions.assertEquals("2017-01-05 04:34:23", dateStr);
+
+		dateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Assertions.assertEquals("2017-01-05 04:34:23", dateTime.toString());
+	}
+
+	@Test
 	public void monthTest() {
 		//noinspection ConstantConditions
 		final int month = DateUtil.date(DateUtil.parse("2017-07-01")).month();
@@ -138,7 +151,7 @@ public class DateTimeTest {
 	@Test
 	public void weekOfYearTest() {
 		final DateTime date = DateUtil.date(DateUtil.parse("2016-12-27"));
-		//noinspection ConstantConditions
+
 		Assertions.assertEquals(2016, date.year());
 		//跨年的周返回的总是1
 		Assertions.assertEquals(1, date.weekOfYear());

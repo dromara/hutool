@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 public class DateUtil extends CalendarUtil {
 
 	// region  ----- date
+
 	/**
 	 * 当前时间，转换为{@link DateTime}对象
 	 *
@@ -801,7 +802,9 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 将日期字符串转换为{@link DateTime}对象，格式：<br>
+	 * 将日期字符串转换为{@link DateTime}对象，在转换过程中，如果字符串中有时区信息，表示是指定时区的时间<br>
+	 * 此时此方法会将时区转换为当前时区，时间戳会根据时区变化。<br>
+	 * 支持格式：<br>
 	 * <ol>
 	 * <li>yyyy-MM-dd HH:mm:ss</li>
 	 * <li>yyyy/MM/dd HH:mm:ss</li>
@@ -830,7 +833,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 日期
 	 */
 	public static DateTime parse(final CharSequence dateCharSequence) {
-		if(TimeParser.INSTANCE.test(dateCharSequence)){
+		if (TimeParser.INSTANCE.test(dateCharSequence)) {
 			// 独立解析时间，则默认使用今天的日期
 			return TimeParser.INSTANCE.parse(dateCharSequence);
 		}
@@ -1709,6 +1712,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	// region ----- range
+
 	/**
 	 * 创建日期范围生成器
 	 *
@@ -2071,70 +2075,4 @@ public class DateUtil extends CalendarUtil {
 	public static int getLastDayOfMonth(final Date date) {
 		return date(date).getLastDayOfMonth();
 	}
-
-	// ------------------------------------------------------------------------ Private method start
-
-	/**
-	 * 标准化日期，默认处理以空格区分的日期时间格式，空格前为日期，空格后为时间：<br>
-	 * 将以下字符替换为"-"
-	 *
-	 * <pre>
-	 * "."
-	 * "/"
-	 * "年"
-	 * "月"
-	 * </pre>
-	 * <p>
-	 * 将以下字符去除
-	 *
-	 * <pre>
-	 * "日"
-	 * </pre>
-	 * <p>
-	 * 将以下字符替换为":"
-	 *
-	 * <pre>
-	 * "时"
-	 * "分"
-	 * "秒"
-	 * </pre>
-	 * <p>
-	 * 当末位是":"时去除之（不存在毫秒时）
-	 *
-	 * @param dateStr 日期时间字符串
-	 * @return 格式化后的日期字符串
-	 */
-	private static String normalize(final CharSequence dateStr) {
-		if (StrUtil.isBlank(dateStr)) {
-			return StrUtil.str(dateStr);
-		}
-
-		// 日期时间分开处理
-		final List<String> dateAndTime = SplitUtil.splitTrim(dateStr, StrUtil.SPACE);
-		final int size = dateAndTime.size();
-		if (size < 1 || size > 2) {
-			// 非可被标准处理的格式
-			return StrUtil.str(dateStr);
-		}
-
-		final StringBuilder builder = StrUtil.builder();
-
-		// 日期部分（"\"、"/"、"."、"年"、"月"都替换为"-"）
-		String datePart = dateAndTime.get(0).replaceAll("[/.年月]", "-");
-		datePart = StrUtil.removeSuffix(datePart, "日");
-		builder.append(datePart);
-
-		// 时间部分
-		if (size == 2) {
-			builder.append(' ');
-			String timePart = dateAndTime.get(1).replaceAll("[时分秒]", ":");
-			timePart = StrUtil.removeSuffix(timePart, ":");
-			//将ISO8601中的逗号替换为.
-			timePart = timePart.replace(',', '.');
-			builder.append(timePart);
-		}
-
-		return builder.toString();
-	}
-	// ------------------------------------------------------------------------ Private method end
 }

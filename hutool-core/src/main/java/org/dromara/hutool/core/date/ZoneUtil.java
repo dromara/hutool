@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.time.ZoneId;
 import java.util.TimeZone;
@@ -80,10 +81,11 @@ public class ZoneUtil {
 	 *
 	 * @param rawOffset 偏移量
 	 * @param timeUnit  偏移量单位
-	 * @return 时区ID
+	 * @return 时区ID，未找到返回{@link null}
 	 */
 	public static String getAvailableID(final int rawOffset, final TimeUnit timeUnit) {
-		final String[] availableIDs = TimeZone.getAvailableIDs((int) timeUnit.toMillis(rawOffset));
+		final String[] availableIDs = TimeZone.getAvailableIDs(
+			(int) ObjUtil.defaultIfNull(timeUnit, TimeUnit.MILLISECONDS).toMillis(rawOffset));
 		return ArrayUtil.isEmpty(availableIDs) ? null : availableIDs[0];
 	}
 }

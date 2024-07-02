@@ -19,7 +19,8 @@ import java.time.ZoneId;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ZoneUtilTest {
 
@@ -53,21 +54,6 @@ public class ZoneUtilTest {
 
 		// Assert
 		assertNull(result, "Expected null TimeZone for invalid offset");
-	}
-
-	@Test
-	public void testGetTimeZoneByOffsetWithNullTimeUnitThrowsException() {
-		// Arrange
-		final int rawOffset = 8;
-		final TimeUnit timeUnit = null; // Null unit to simulate error condition
-
-		// Act & Assert
-		final NullPointerException thrown = assertThrows(
-			NullPointerException.class,
-			() -> ZoneUtil.getTimeZoneByOffset(rawOffset, timeUnit),
-			"Expected NullPointerException for null TimeUnit"
-		);
-		assertTrue(thrown.getMessage().contains("timeUnit"), "Exception message should mention the null parameter");
 	}
 
 	@Test
