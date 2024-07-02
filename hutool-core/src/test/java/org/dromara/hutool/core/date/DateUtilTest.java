@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.date.format.FastDateFormat;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -120,7 +119,7 @@ public class DateUtilTest {
 
 	@Test
 	public void endOfDayTest() {
-		final DateTime parse = DateUtil.parse("2020-05-31 00:00:00");
+		final Date parse = DateUtil.parse("2020-05-31 00:00:00");
 		Assertions.assertEquals("2020-05-31 23:59:59", DateUtil.endOfDay(parse).toString());
 	}
 
@@ -335,7 +334,7 @@ public class DateUtilTest {
 	@Test
 	public void weekOfYearTest() {
 		// 第一周周日
-		final int weekOfYear1 = DateUtil.weekOfYear(DateUtil.parse("2016-01-03"));
+		final int weekOfYear1 = DateUtil.weekOfYear(DateUtil.date(DateUtil.parse("2016-01-03").getTime()));
 		Assertions.assertEquals(1, weekOfYear1);
 
 		// 第二周周四
@@ -461,7 +460,7 @@ public class DateUtilTest {
 		final String str = "2020-06-28T02:14:13.000Z";
 		final DateTime dateTime = DateUtil.parse(str);
 		assert dateTime != null;
-		Assertions.assertEquals("2020-06-28 02:14:13", dateTime.toString());
+		Assertions.assertEquals("2020-06-28 10:14:13", dateTime.toString());
 	}
 
 	/**
@@ -496,8 +495,7 @@ public class DateUtilTest {
 	@Test
 	public void parseEmptyTest() {
 		final String str = " ";
-		final DateTime dateTime = DateUtil.parse(str);
-		Assertions.assertNull(dateTime);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> DateUtil.parse(str));
 	}
 
 	@Test
@@ -520,10 +518,10 @@ public class DateUtilTest {
 		final String str = "2019-09-17T13:26:17.948Z";
 		final DateTime dateTime = DateUtil.parse(str);
 		assert dateTime != null;
-		Assertions.assertEquals("2019-09-17 13:26:17", dateTime.toString());
+		Assertions.assertEquals("2019-09-17 21:26:17", dateTime.toString());
 
 		final DateTime offset = DateUtil.offsetHour(dateTime, 8);
-		Assertions.assertEquals("2019-09-17 21:26:17", offset.toString());
+		Assertions.assertEquals("2019-09-18 05:26:17", offset.toString());
 	}
 
 	@Test
@@ -613,7 +611,7 @@ public class DateUtilTest {
 
 		// 默认使用Pattern对应的时区，即UTC时区
 		String dateStr = Objects.requireNonNull(dt).toString();
-		Assertions.assertEquals("2018-09-13 05:34:31", dateStr);
+		Assertions.assertEquals("2018-09-13 13:34:31", dateStr);
 
 		// 使用当前（上海）时区
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
@@ -679,15 +677,15 @@ public class DateUtilTest {
 		// 检查不同毫秒长度都可以正常匹配
 		String utcTime = "2021-03-30T12:56:51.3Z";
 		DateTime parse = DateUtil.parse(utcTime);
-		Assertions.assertEquals("2021-03-30 12:56:51", Objects.requireNonNull(parse).toString());
+		Assertions.assertEquals("2021-03-30 20:56:51", Objects.requireNonNull(parse).toString());
 
 		utcTime = "2021-03-30T12:56:51.34Z";
 		parse = DateUtil.parse(utcTime);
-		Assertions.assertEquals("2021-03-30 12:56:51", Objects.requireNonNull(parse).toString());
+		Assertions.assertEquals("2021-03-30 20:56:51", Objects.requireNonNull(parse).toString());
 
 		utcTime = "2021-03-30T12:56:51.345Z";
 		parse = DateUtil.parse(utcTime);
-		Assertions.assertEquals("2021-03-30 12:56:51", Objects.requireNonNull(parse).toString());
+		Assertions.assertEquals("2021-03-30 20:56:51", Objects.requireNonNull(parse).toString());
 	}
 
 	@Test
@@ -701,17 +699,14 @@ public class DateUtilTest {
 
 	@Test
 	public void parseCSTTest() {
-		final String dateStr = "Wed Sep 16 11:26:23 CST 2009";
+		final String dateStr = "Wed Sep 16 11:26:23 +0800 2009";
 
 		final SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
 		// Asia/Shanghai是以地区命名的地区标准时，在中国叫CST，因此如果解析CST时不使用"Asia/Shanghai"而使用"GMT+08:00"，会导致相差一个小时
 		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
-		DateTime dateTime = DateUtil.parse(dateStr);
-		Assertions.assertEquals(parse, dateTime);
-
-		dateTime = DateUtil.parse(dateStr);
+		final DateTime dateTime = DateUtil.parse(dateStr);
 		Assertions.assertEquals(parse, dateTime);
 	}
 
@@ -740,7 +735,7 @@ public class DateUtilTest {
 	public void parseISOTest() {
 		final String dateStr = "2020-04-23T02:31:00.000Z";
 		final DateTime time = DateUtil.parse(dateStr);
-		Assertions.assertEquals("2020-04-23 02:31:00", Objects.requireNonNull(time).toString());
+		Assertions.assertEquals("2020-04-23 10:31:00", Objects.requireNonNull(time).toString());
 	}
 
 	@Test
@@ -1042,12 +1037,6 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseTimeTest(){
-		final DateTime dateTime = DateUtil.parse("12:23:34");
-		Console.log(dateTime);
-	}
-
-	@Test
 	@SuppressWarnings("ConstantConditions")
 	public void isOverlapTest() {
 		final DateTime oneStartTime = DateUtil.parse("2022-01-01 10:10:10");
@@ -1114,7 +1103,7 @@ public class DateUtilTest {
 		final String dateStr2 = "2023-02-07T00:02:16.12345-08:00";
 		final DateTime dateTime2 = DateUtil.parse(dateStr2);
 		Assertions.assertNotNull(dateTime2);
-		Assertions.assertEquals("2023-02-07 00:02:16", dateTime2.toString());
+		Assertions.assertEquals("2023-02-07 16:02:16", dateTime2.toString());
 
 		final String dateStr3 = "2021-03-17T06:31:33.9999";
 		final DateTime dateTime3 = DateUtil.parse(dateStr3);
@@ -1137,7 +1126,7 @@ public class DateUtilTest {
 	void issueI7H34NTest() {
 		final DateTime parse = DateUtil.parse("2019-10-22T09:56:03.000123Z");
 		Assertions.assertNotNull(parse);
-		Assertions.assertEquals("2019-10-22 09:56:03", parse.toString());
+		Assertions.assertEquals("2019-10-22 17:56:03", parse.toString());
 	}
 
 	@Test

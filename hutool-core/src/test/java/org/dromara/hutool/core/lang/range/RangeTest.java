@@ -20,6 +20,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -32,8 +33,8 @@ public class RangeTest {
 
 	@Test
 	public void dateRangeTest() {
-		final DateTime start = DateUtil.parse("2017-01-01");
-		final DateTime end = DateUtil.parse("2017-01-02");
+		final DateTime start = DateUtil.parseDateTime("2017-01-01");
+		final DateTime end = DateUtil.parseDateTime("2017-01-02");
 
 		final Range<DateTime> range = new Range<>(start, end, (current, end1, index) -> {
 			if (current.isAfterOrEquals(end1)) {
@@ -51,8 +52,8 @@ public class RangeTest {
 
 	@Test
 	public void dateRangeFuncTest() {
-		final DateTime start = DateUtil.parse("2021-01-01");
-		final DateTime end = DateUtil.parse("2021-01-03");
+		final Date start = DateUtil.parse("2021-01-01");
+		final Date end = DateUtil.parse("2021-01-03");
 
 		final List<Integer> dayOfMonthList = DateUtil.rangeFunc(start, end, DateField.DAY_OF_YEAR, a -> DateTime.of(a).dayOfMonth());
 		Assertions.assertArrayEquals(dayOfMonthList.toArray(new Integer[]{}), new Integer[]{1, 2, 3});
@@ -63,8 +64,8 @@ public class RangeTest {
 
 	@Test
 	public void dateRangeConsumeTest() {
-		final DateTime start = DateUtil.parse("2021-01-01");
-		final DateTime end = DateUtil.parse("2021-01-03");
+		final Date start = DateUtil.parse("2021-01-01");
+		final Date end = DateUtil.parse("2021-01-03");
 
 		final StringBuilder sb = new StringBuilder();
 		DateUtil.rangeConsume(start, end, DateField.DAY_OF_YEAR, a -> sb.append(DateTime.of(a).dayOfMonth()).append("#"));
@@ -77,8 +78,8 @@ public class RangeTest {
 
 	@Test
 	public void dateRangeTest2() {
-		final DateTime start = DateUtil.parse("2021-01-31");
-		final DateTime end = DateUtil.parse("2021-03-31");
+		final Date start = DateUtil.parse("2021-01-31");
+		final Date end = DateUtil.parse("2021-03-31");
 
 		final DateRange range = DateUtil.range(start, end, DateField.MONTH);
 
@@ -102,8 +103,8 @@ public class RangeTest {
 
 	@Test
 	public void rangeByStepTest() {
-		final DateTime start = DateUtil.parse("2017-01-01");
-		final DateTime end = DateUtil.parse("2017-01-03");
+		final Date start = DateUtil.parse("2017-01-01");
+		final Date end = DateUtil.parse("2017-01-03");
 
 		// 测试包含开始和结束情况下步进为1的情况
 		DateRange range = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
@@ -124,8 +125,8 @@ public class RangeTest {
 
 	@Test
 	public void rangeDayOfYearTest() {
-		final DateTime start = DateUtil.parse("2017-01-01");
-		final DateTime end = DateUtil.parse("2017-01-05");
+		final Date start = DateUtil.parse("2017-01-01");
+		final Date end = DateUtil.parse("2017-01-05");
 
 		// 测试不包含开始结束时间的情况
 		final DateRange range = new DateRange(start, end, DateField.DAY_OF_YEAR, 1, false, false);
@@ -141,8 +142,8 @@ public class RangeTest {
 
 	@Test
 	public void rangeToListTest() {
-		final DateTime start = DateUtil.parse("2017-01-01");
-		final DateTime end = DateUtil.parse("2017-01-31");
+		final Date start = DateUtil.parse("2017-01-01");
+		final Date end = DateUtil.parse("2017-01-31");
 
 		final List<DateTime> rangeToList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR);
 		Assertions.assertEquals(DateUtil.parse("2017-01-01"), rangeToList.get(0));
@@ -153,12 +154,12 @@ public class RangeTest {
 	@Test
 	public void rangeContains() {
 		// 开始区间
-		final DateTime start = DateUtil.parse("2017-01-01");
-		final DateTime end = DateUtil.parse("2017-01-31");
+		final Date start = DateUtil.parse("2017-01-01");
+		final Date end = DateUtil.parse("2017-01-31");
 		final DateRange startRange = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
 		// 结束区间
-		final DateTime start1 = DateUtil.parse("2017-01-31");
-		final DateTime end1 = DateUtil.parse("2017-02-02");
+		final Date start1 = DateUtil.parse("2017-01-31");
+		final Date end1 = DateUtil.parse("2017-02-02");
 		final DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
 		// 交集
 		final List<DateTime> dateTimes = DateUtil.rangeContains(startRange, endRange);
@@ -169,12 +170,12 @@ public class RangeTest {
 	@Test
 	public void rangeNotContains() {
 		// 开始区间
-		final DateTime start = DateUtil.parse("2017-01-01");
-		final DateTime end = DateUtil.parse("2017-01-30");
+		final Date start = DateUtil.parse("2017-01-01");
+		final Date end = DateUtil.parse("2017-01-30");
 		final DateRange startRange = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
 		// 结束区间
-		final DateTime start1 = DateUtil.parse("2017-01-01");
-		final DateTime end1 = DateUtil.parse("2017-01-31");
+		final Date start1 = DateUtil.parse("2017-01-01");
+		final Date end1 = DateUtil.parse("2017-01-31");
 		final DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
 		// 差集
 		final List<DateTime> dateTimes1 = DateUtil.rangeNotContains(startRange, endRange);

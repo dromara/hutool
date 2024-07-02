@@ -12,18 +12,18 @@
 
 package org.dromara.hutool.core.convert;
 
-import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ConvertToNumberTest {
 	@Test
 	public void dateToLongTest(){
-		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
+		final Date date = DateUtil.parse("2020-05-17 12:32:00");
 		final Long dateLong = Convert.toLong(date);
 		assert date != null;
 		Assertions.assertEquals(date.getTime(), dateLong.longValue());
@@ -31,7 +31,7 @@ public class ConvertToNumberTest {
 
 	@Test
 	public void dateToIntTest(){
-		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
+		final Date date = DateUtil.parse("2020-05-17 12:32:00");
 		final Integer dateInt = Convert.toInt(date);
 		assert date != null;
 		Assertions.assertEquals((int)date.getTime(), dateInt.intValue());
@@ -39,7 +39,7 @@ public class ConvertToNumberTest {
 
 	@Test
 	public void dateToAtomicLongTest(){
-		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
+		final Date date = DateUtil.parse("2020-05-17 12:32:00");
 		final AtomicLong dateLong = Convert.convert(AtomicLong.class, date);
 		assert date != null;
 		Assertions.assertEquals(date.getTime(), dateLong.longValue());

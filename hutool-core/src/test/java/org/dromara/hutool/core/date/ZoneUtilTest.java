@@ -17,6 +17,9 @@ import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ZoneUtilTest {
 
@@ -24,5 +27,54 @@ public class ZoneUtilTest {
 	public void test() {
 		Assertions.assertEquals(ZoneId.systemDefault(), ZoneUtil.toZoneId(null));
 		Assertions.assertEquals(TimeZone.getDefault(), ZoneUtil.toTimeZone(null));
+	}
+
+	@Test
+	public void testGetTimeZoneByOffsetReturnsNonNull() {
+		// Arrange
+		final int rawOffset = 8; // Example offset, you may adjust for different cases
+		final TimeUnit timeUnit = TimeUnit.HOURS;
+
+		// Act
+		final TimeZone result = ZoneUtil.getTimeZoneByOffset(rawOffset, timeUnit);
+
+		// Assert
+		assertNotNull(result, "Expected non-null TimeZone for valid offset and unit");
+	}
+
+	@Test
+	public void testGetTimeZoneByOffsetWithInvalidOffsetReturnsNull() {
+		// Arrange
+		final int rawOffset = 999; // Unlikely valid offset to test edge case
+		final TimeUnit timeUnit = TimeUnit.HOURS;
+
+		// Act
+		final TimeZone result = ZoneUtil.getTimeZoneByOffset(rawOffset, timeUnit);
+
+		// Assert
+		assertNull(result, "Expected null TimeZone for invalid offset");
+	}
+
+	@Test
+	public void testGetTimeZoneByOffsetWithNullTimeUnitThrowsException() {
+		// Arrange
+		final int rawOffset = 8;
+		final TimeUnit timeUnit = null; // Null unit to simulate error condition
+
+		// Act & Assert
+		final NullPointerException thrown = assertThrows(
+			NullPointerException.class,
+			() -> ZoneUtil.getTimeZoneByOffset(rawOffset, timeUnit),
+			"Expected NullPointerException for null TimeUnit"
+		);
+		assertTrue(thrown.getMessage().contains("timeUnit"), "Exception message should mention the null parameter");
+	}
+
+	@Test
+	public void testGetAvailableIDWithInvalidOffset() {
+		// Test with an invalid offset that should result in null or an exception.
+		// Assuming that an offset of 25 hours is invalid and should return null.
+		final String result = ZoneUtil.getAvailableID(25, TimeUnit.HOURS);
+		assertNull(result, "Expected null for invalid offset of 25 hours");
 	}
 }

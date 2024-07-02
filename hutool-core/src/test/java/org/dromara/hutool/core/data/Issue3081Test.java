@@ -20,14 +20,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Issue3081Test {
 
 	@Test
 	void dateRangeTest() {
-		final DateTime start = DateUtil.parse("2023-01-01 00:00:00");
-		final DateTime end = DateUtil.parse("2023-04-25 00:00:00");
+		final Date start = DateUtil.parse("2023-01-01 00:00:00");
+		final Date end = DateUtil.parse("2023-04-25 00:00:00");
 
 		final DateRange dateTimes = new DateRange(start, end, DateField.DAY_OF_MONTH, 30, true, true);
 

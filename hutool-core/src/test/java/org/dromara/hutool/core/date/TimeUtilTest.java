@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -36,18 +37,17 @@ public class TimeUtilTest {
 	@Test
 	public void ofTest() {
 		final String dateStr = "2020-01-23T12:23:56";
-		final DateTime dt = DateUtil.parse(dateStr);
+		final Date dt = DateUtil.parse(dateStr);
 
 		final LocalDateTime of = TimeUtil.of(dt);
 		Assertions.assertNotNull(of);
 		assertEquals(dateStr, of.toString());
 	}
 
-	@SuppressWarnings("DataFlowIssue")
 	@Test
 	public void ofUTCTest() {
 		final String dateStr = "2020-01-23T12:23:56Z";
-		final DateTime dt = DateUtil.parse(dateStr);
+		final Date dt = DateUtil.parse(dateStr);
 
 		final LocalDateTime of = TimeUtil.of(dt);
 		final LocalDateTime of2 = TimeUtil.ofUTC(dt.getTime());

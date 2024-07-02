@@ -379,7 +379,7 @@ public class ConvertTest {
 	@Test
 	public void toDateTest2(){
 		final Date date = Convert.toDate("2021-01");
-		Assertions.assertNull(date);
+		Assertions.assertEquals("2021-01-01", DateUtil.formatDate(date));
 	}
 
 	@Test

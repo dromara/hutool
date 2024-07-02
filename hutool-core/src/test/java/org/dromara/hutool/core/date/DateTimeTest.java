@@ -131,13 +131,13 @@ public class DateTimeTest {
 	@Test
 	public void monthTest() {
 		//noinspection ConstantConditions
-		final int month = DateUtil.parse("2017-07-01").month();
+		final int month = DateUtil.date(DateUtil.parse("2017-07-01")).month();
 		Assertions.assertEquals(6, month);
 	}
 
 	@Test
 	public void weekOfYearTest() {
-		final DateTime date = DateUtil.parse("2016-12-27");
+		final DateTime date = DateUtil.date(DateUtil.parse("2016-12-27"));
 		//noinspection ConstantConditions
 		Assertions.assertEquals(2016, date.year());
 		//跨年的周返回的总是1

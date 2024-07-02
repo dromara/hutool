@@ -42,6 +42,21 @@ public class WordTree extends HashMap<Character, WordTree> {
 	private static final long serialVersionUID = -4646423269465809276L;
 
 	/**
+	 * 通过预定义的关键词构造单词树
+	 *
+	 * @param words 初始关键词
+	 * @return WordTree
+	 * @since 6.0.0
+	 */
+	public static WordTree of(final String... words) {
+		final WordTree wordTree = new WordTree(words.length);
+		for (final String word : words) {
+			wordTree.addWord(word);
+		}
+		return wordTree;
+	}
+
+	/**
 	 * 单词字符末尾标识，用于标识单词末尾字符
 	 */
 	private Set<Character> endCharacterSet = null;
@@ -103,7 +118,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * 增加一组单词
 	 *
 	 * @param words 单词数组
-	 *              @return this
+	 * @return this
 	 */
 	public WordTree addWords(final String... words) {
 		for (final String word : SetUtil.of(words)) {
@@ -315,7 +330,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 			}
 
 			// 本次循环结尾，加入遗留匹配的单词
-			if(null != currentFoundWord){
+			if (null != currentFoundWord) {
 				foundWords.add(currentFoundWord);
 				if (limit > 0 && foundWords.size() >= limit) {
 					//超过匹配限制个数，直接返回
@@ -356,8 +371,8 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param entry WordTree每个entry节点
 	 * @return 递归扁平化后的结果
 	 */
-	private Iterable<String> innerFlatten(Entry<Character, WordTree> entry) {
-		List<String> list = EasyStream.of(entry.getValue().entrySet()).flat(this::innerFlatten).map(v -> entry.getKey() + v).toList();
+	private Iterable<String> innerFlatten(final Entry<Character, WordTree> entry) {
+		final List<String> list = EasyStream.of(entry.getValue().entrySet()).flat(this::innerFlatten).map(v -> entry.getKey() + v).toList();
 		if (list.isEmpty()) {
 			return EasyStream.of(entry.getKey().toString());
 		}

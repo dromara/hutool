@@ -21,6 +21,7 @@ import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 日期转换器
@@ -88,11 +89,11 @@ public class DateConverter extends AbstractConverter {
 		} else {
 			// 统一按照字符串处理
 			final String valueStr = convertToStr(value);
-			final DateTime dateTime = StrUtil.isBlank(this.format) //
+			final Date date = StrUtil.isBlank(this.format) //
 				? DateUtil.parse(valueStr) //
 				: DateUtil.parse(valueStr, this.format);
-			if (null != dateTime) {
-				return wrap(targetClass, dateTime);
+			if (null != date) {
+				return wrap(targetClass, date);
 			}
 		}
 
@@ -105,12 +106,8 @@ public class DateConverter extends AbstractConverter {
 	 * @param date Date
 	 * @return 目标类型对象
 	 */
-	private java.util.Date wrap(final Class<?> targetClass, final DateTime date) {
-		// 返回指定类型
-		if (java.util.Date.class == targetClass) {
-			return date.toJdkDate();
-		}
-		if (DateTime.class == targetClass) {
+	private java.util.Date wrap(final Class<?> targetClass, final Date date) {
+		if(targetClass == date.getClass()){
 			return date;
 		}
 

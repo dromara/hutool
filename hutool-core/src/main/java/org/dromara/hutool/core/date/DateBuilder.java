@@ -16,6 +16,7 @@ import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * DateBuilder类用于构建和操作日期。
@@ -66,6 +67,13 @@ public final class DateBuilder {
 	// 下午标志
 	private boolean pm;
 	// endregion
+
+	/**
+	 * 构造
+	 */
+	public DateBuilder() {
+		reset();
+	}
 
 	// region ----- getters and setters
 
@@ -414,6 +422,25 @@ public final class DateBuilder {
 	}
 
 	/**
+	 * 将当前时间对象转换为{@link DateTime}类型。此方法根据是否设置了时区偏移量使用不同的转换策略。
+	 * <ul>
+	 *     <li>如果时区偏移量未设置，则将时间转换为 Calendar 对象后获取其 DateTime 表现形式</li>
+	 *     <li>如果时区偏移量已设置，则直接转换为 OffsetDateTime 对象，进一步转换为 Instant 对象，最后转换为 DateTime 对象返回。</li>
+	 * </ul>
+	 * 。
+	 *
+	 * @return DateTime 表示当前时间的 DateTime 对象。
+	 */
+	public DateTime toDateTime() {
+		if (!zoneOffsetSetted) {
+			// 时区偏移量未设置，使用 Calendar 进行转换
+			return new DateTime(toCalendar());
+		}
+		// 时区偏移量已设置，直接转换为 Date 对象返回
+		return new DateTime(toOffsetDateTime().toInstant());
+	}
+
+	/**
 	 * 将当前对象的日期时间信息转换为{@link Calendar}实例。
 	 * 如果`unixsecond`不为0，将根据unix时间戳（秒）和纳秒偏移量构造Calendar。
 	 * 否则，根据提供的时区信息`zone`或`zoneOffset`来设置Calendar的时区。
@@ -430,16 +457,15 @@ public final class DateBuilder {
 		if (zone != null) {
 			calendar.setTimeZone(zone); // 使用指定的时区
 		} else if (zoneOffsetSetted) { // 如果设置了时区偏移量
-			final String[] ids = TimeZone.getAvailableIDs(zoneOffset * 60_000); // 尝试根据偏移量获取时区ID
-			if (ids.length == 0) { // 如果没有找到有效的时区ID
-				throw new DateException("Can't build Calendar, " +
-					"because the zoneOffset[{}] can't be converted to an valid TimeZone.", this.zoneOffset);
+			final TimeZone timeZone = ZoneUtil.getTimeZoneByOffset(zoneOffset, TimeUnit.SECONDS);
+			if (null == timeZone) { // 如果没有找到有效的时区ID
+				throw new DateException("Invalid zoneOffset: {}", this.zoneOffset);
 			}
-			calendar.setTimeZone(TimeZone.getTimeZone(ids[0])); // 设置第一个找到的时区
+			calendar.setTimeZone(timeZone);
 		}
 
 		// 如果毫秒数不为0，则直接使用毫秒数设置时间
-		if(millisecond != 0){
+		if (millisecond != 0) {
 			calendar.setTimeInMillis(millisecond);
 			return calendar;
 		}
@@ -472,7 +498,7 @@ public final class DateBuilder {
 	LocalDateTime toLocalDateTime() {
 		this.prepare();
 
-		if(millisecond > 0){
+		if (millisecond > 0) {
 			final Instant instant = Instant.ofEpochMilli(millisecond);
 			return LocalDateTime.ofEpochSecond(instant.getEpochSecond(), instant.getNano(), DEFAULT_OFFSET);
 		}
@@ -514,7 +540,7 @@ public final class DateBuilder {
 	OffsetDateTime toOffsetDateTime() {
 		this.prepare(); // 准备工作，可能涉及一些初始化或数据处理
 
-		if(millisecond > 0){
+		if (millisecond > 0) {
 			return OffsetDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneUtil.ZONE_ID_UTC);
 		}
 

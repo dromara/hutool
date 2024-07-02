@@ -49,6 +49,9 @@ import java.util.Objects;
 public class TemporalAccessorConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static final TemporalAccessorConverter INSTANCE = new TemporalAccessorConverter();
 
 	/**
@@ -131,7 +134,7 @@ public class TemporalAccessorConverter extends AbstractConverter {
 		}
 
 		final Instant instant;
-		final ZoneId zoneId;
+		ZoneId zoneId = null;
 		if (null != this.format) {
 			final DateTimeFormatter formatter = TimeUtil.ofPattern(this.format);
 
@@ -144,9 +147,11 @@ public class TemporalAccessorConverter extends AbstractConverter {
 			instant = formatter.parse(value, Instant::from);
 			zoneId = formatter.getZone();
 		} else {
-			final DateTime dateTime = DateUtil.parse(value);
-			instant = Objects.requireNonNull(dateTime).toInstant();
-			zoneId = dateTime.getZoneId();
+			final Date date = DateUtil.parse(value);
+			instant = Objects.requireNonNull(date).toInstant();
+			if(date instanceof DateTime){
+				zoneId = ((DateTime) date).getZoneId();
+			}
 		}
 		return parseFromInstant(targetClass, instant, zoneId);
 	}

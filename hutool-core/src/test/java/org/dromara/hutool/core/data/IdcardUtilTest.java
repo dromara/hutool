@@ -12,10 +12,11 @@
 
 package org.dromara.hutool.core.data;
 
-import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 /**
  * 身份证单元测试
@@ -66,7 +67,7 @@ public class IdcardUtilTest {
 
 	@Test
 	public void getAgeTest() {
-		final DateTime date = DateUtil.parse("2017-04-10");
+		final Date date = DateUtil.parse("2017-04-10");
 
 		final int age = IdcardUtil.getAge(ID_18, date);
 		Assertions.assertEquals(age, 38);
@@ -171,7 +172,7 @@ public class IdcardUtilTest {
 		final String FOREIGN_ID_18 = "932682198501010017";
 		Assertions.assertTrue(IdcardUtil.isValidCard(FOREIGN_ID_18));
 
-		final DateTime date = DateUtil.parse("2017-04-10");
+		final Date date = DateUtil.parse("2017-04-10");
 		Assertions.assertEquals(IdcardUtil.getAge(FOREIGN_ID_18, date), 32);
 
 		// 新版外国人永久居留身份证

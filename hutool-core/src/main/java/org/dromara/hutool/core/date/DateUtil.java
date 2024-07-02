@@ -796,28 +796,45 @@ public class DateUtil extends CalendarUtil {
 	 * @param dateCharSequence 日期字符串
 	 * @return 日期
 	 */
+	public static DateTime parseDateTime(final CharSequence dateCharSequence) {
+		return date(parse(dateCharSequence));
+	}
+
+	/**
+	 * 将日期字符串转换为{@link DateTime}对象，格式：<br>
+	 * <ol>
+	 * <li>yyyy-MM-dd HH:mm:ss</li>
+	 * <li>yyyy/MM/dd HH:mm:ss</li>
+	 * <li>yyyy.MM.dd HH:mm:ss</li>
+	 * <li>yyyy年MM月dd日 HH时mm分ss秒</li>
+	 * <li>yyyy-MM-dd</li>
+	 * <li>yyyy/MM/dd</li>
+	 * <li>yyyy.MM.dd</li>
+	 * <li>HH:mm:ss</li>
+	 * <li>HH时mm分ss秒</li>
+	 * <li>yyyy-MM-dd HH:mm</li>
+	 * <li>yyyy-MM-dd HH:mm:ss.SSS</li>
+	 * <li>yyyy-MM-dd HH:mm:ss.SSSSSS</li>
+	 * <li>yyyyMMddHHmmss</li>
+	 * <li>yyyyMMddHHmmssSSS</li>
+	 * <li>yyyyMMdd</li>
+	 * <li>EEE, dd MMM yyyy HH:mm:ss z</li>
+	 * <li>EEE MMM dd HH:mm:ss zzz yyyy</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
+	 * </ol>
+	 *
+	 * @param dateCharSequence 日期字符串
+	 * @return 日期
+	 */
 	public static DateTime parse(final CharSequence dateCharSequence) {
-		if (StrUtil.isBlank(dateCharSequence)) {
-			return null;
+		if(TimeParser.INSTANCE.test(dateCharSequence)){
+			// 独立解析时间，则默认使用今天的日期
+			return TimeParser.INSTANCE.parse(dateCharSequence);
 		}
-		String dateStr = dateCharSequence.toString();
-		// 去掉两边空格并去掉中文日期中的“日”和“秒”，以规范长度
-		dateStr = StrUtil.removeAll(dateStr.trim(), '日', '秒');
-
-		final Date result = RegisterDateParser.INSTANCE.parse(dateStr);
-		if(null != result){
-			return date(result);
-		}
-
-		//标准日期格式（包括单个数字的日期时间）
-		dateStr = normalize(dateStr);
-
-		if (NormalDateParser.INSTANCE.test(dateStr)) {
-			return NormalDateParser.INSTANCE.parse(dateStr);
-		}
-
-		// 没有更多匹配的时间格式
-		throw new DateException("No format fit for date String [{}] !", dateStr);
+		return GlobalRegexDateParser.parse(dateCharSequence);
 	}
 	// endregion
 
