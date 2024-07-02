@@ -29,7 +29,7 @@ public class IssueI3BS4STest {
 		final String jsonStr = "{date: '2021-03-17T06:31:33.99'}";
 		final Bean1 bean1 = new Bean1();
 		BeanUtil.copyProperties(JSONUtil.parseObj(jsonStr), bean1);
-		Assertions.assertEquals("2021-03-17T06:31:33.099", bean1.getDate().toString());
+		Assertions.assertEquals("2021-03-17T06:31:33.990", bean1.getDate().toString());
 	}
 
 	@Data
