@@ -64,7 +64,7 @@ import java.util.TimeZone;
  *
  * <p>
  * 其中：CST格式，形如："Mon Aug 15 14:23:15 CST 2022",上面未包含
- * 参见：{@link RFC2822DateParser#parse(String)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
+ * 参见：{@link RFC2822DateParser#parse(CharSequence)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
  * </p>
  *
  * <p>
