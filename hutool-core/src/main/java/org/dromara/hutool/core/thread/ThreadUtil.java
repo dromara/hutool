@@ -178,7 +178,7 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(final int nThreads, final int maximumQueueSize, final String threadNamePrefix, final boolean isBlocked) {
+	public static ThreadPoolExecutor newFixedExecutor(final int nThreads, final int maximumQueueSize, final String threadNamePrefix, final boolean isBlocked) {
 		return newFixedExecutor(nThreads, maximumQueueSize, threadNamePrefix,
 			(isBlocked ? RejectPolicy.BLOCK : RejectPolicy.ABORT).getValue());
 	}
@@ -198,7 +198,7 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(final int nThreads,
+	public static ThreadPoolExecutor newFixedExecutor(final int nThreads,
 												   final int maximumQueueSize,
 												   final String threadNamePrefix,
 												   final RejectedExecutionHandler handler) {
