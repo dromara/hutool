@@ -707,6 +707,7 @@ public class DateUtilTest {
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
 		final DateTime dateTime = DateUtil.parse(dateStr);
+		Assertions.assertEquals("2009-09-16 11:26:23", dateTime.toString());
 		Assertions.assertEquals(parse, dateTime);
 	}
 
