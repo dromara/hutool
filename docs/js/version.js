@@ -1,1 +1,1 @@
-var version = '6.0.0-M14'
+var version = '6.0.0-M15'
