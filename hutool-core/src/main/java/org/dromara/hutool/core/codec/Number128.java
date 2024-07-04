@@ -12,8 +12,6 @@
 
 package org.dromara.hutool.core.codec;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.nio.ByteOrder;
 import java.util.Objects;
 
@@ -143,7 +141,7 @@ public class Number128 extends Number implements Comparable<Number128>{
 	}
 
 	@Override
-	public int compareTo(@NotNull final Number128 o) {
+	public int compareTo(final Number128 o) {
 		final int mostSigBits = Long.compare(this.mostSigBits, o.mostSigBits);
 		return mostSigBits != 0 ? mostSigBits : Long.compare(this.leastSigBits, o.leastSigBits);
 	}

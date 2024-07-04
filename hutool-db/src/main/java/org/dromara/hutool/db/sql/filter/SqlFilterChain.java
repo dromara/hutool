@@ -14,7 +14,6 @@ package org.dromara.hutool.db.sql.filter;
 
 import org.dromara.hutool.core.lang.Chain;
 import org.dromara.hutool.db.sql.BoundSql;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.util.Iterator;
@@ -36,7 +35,6 @@ public class SqlFilterChain implements SqlFilter, Chain<SqlFilter, SqlFilterChai
 		return this;
 	}
 
-	@NotNull
 	@Override
 	public Iterator<SqlFilter> iterator() {
 		return filters.iterator();

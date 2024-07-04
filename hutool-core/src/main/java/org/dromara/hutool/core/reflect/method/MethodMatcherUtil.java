@@ -18,7 +18,6 @@ import org.dromara.hutool.core.func.PredicateUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -558,7 +557,6 @@ public class MethodMatcherUtil {
 
 	// endregion
 
-	@NotNull
 	private static Predicate<Method> mostSpecificStrictParameterTypesMatcher(
 		final Class<?>[] parameterTypes, final BiPredicate<Class<?>, Class<?>> typeMatcher) {
 		Objects.requireNonNull(parameterTypes);
