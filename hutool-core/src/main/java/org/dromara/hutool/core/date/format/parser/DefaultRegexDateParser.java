@@ -17,7 +17,7 @@ import org.dromara.hutool.core.date.DateTime;
 import java.util.regex.Pattern;
 
 /**
- * 全局正则日期解析器<br>
+ * 默认正则日期解析器<br>
  * 通过使用预定义或自定义的正则规则，解析日期字符串
  *
  * @author Looly

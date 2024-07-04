@@ -28,9 +28,11 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * <p>
- * FastDateFormat 是一个线程安全的 {@link java.text.SimpleDateFormat} 实现。
- * </p>
+ * FastDateFormat 是一个线程安全的 {@link java.text.SimpleDateFormat} 实现：
+ * <ul>
+ *     <li>日期字符串解析</li>
+ *     <li>日期格式化</li>
+ * </ul>
  *
  * <p>
  * 通过以下静态方法获得此对象: <br>
@@ -39,23 +41,31 @@ import java.util.TimeZone;
  * {@link #getTimeInstance(int, TimeZone, Locale)}<br>
  * {@link #getDateTimeInstance(int, int, TimeZone, Locale)}
  * </p>
- *
  * Thanks to Apache Commons Lang 3.5
+ *
  * @since 2.16.2
  */
 public class FastDateFormat extends Format implements PositionDateParser, DatePrinter {
 	private static final long serialVersionUID = 8097890768636183236L;
 
-	/** FULL locale dependent date or time style. */
+	/**
+	 * FULL locale dependent date or time style.
+	 */
 	public static final int FULL = DateFormat.FULL;
-	/** LONG locale dependent date or time style. */
+	/**
+	 * LONG locale dependent date or time style.
+	 */
 	public static final int LONG = DateFormat.LONG;
-	/** MEDIUM locale dependent date or time style. */
+	/**
+	 * MEDIUM locale dependent date or time style.
+	 */
 	public static final int MEDIUM = DateFormat.MEDIUM;
-	/** SHORT locale dependent date or time style. */
+	/**
+	 * SHORT locale dependent date or time style.
+	 */
 	public static final int SHORT = DateFormat.SHORT;
 
-	private static final FormatCache<FastDateFormat> CACHE = new FormatCache<FastDateFormat>(){
+	private static final FormatCache<FastDateFormat> CACHE = new FormatCache<FastDateFormat>() {
 		@Override
 		protected FastDateFormat createInstance(final String pattern, final TimeZone timeZone, final Locale locale) {
 			return new FastDateFormat(pattern, timeZone, locale);
@@ -66,6 +76,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	private final FastDateParser parser;
 
 	// -----------------------------------------------------------------------
+
 	/**
 	 * 获得 FastDateFormat实例，使用默认格式和地区
 	 *
@@ -91,7 +102,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
+	 * @param pattern  使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 时区{@link TimeZone}
 	 * @return FastDateFormat
 	 * @throws IllegalArgumentException 日期格式问题
@@ -105,7 +116,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 支持缓存
 	 *
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param locale  {@link Locale} 日期地理位置
 	 * @return FastDateFormat
 	 * @throws IllegalArgumentException 日期格式问题
 	 */
@@ -117,9 +128,9 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
+	 * @param pattern  使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 时区{@link TimeZone}
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param locale   {@link Locale} 日期地理位置
 	 * @return FastDateFormat
 	 * @throws IllegalArgumentException 日期格式问题
 	 */
@@ -128,6 +139,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	}
 
 	// -----------------------------------------------------------------------
+
 	/**
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
@@ -143,7 +155,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
+	 * @param style  date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param locale {@link Locale} 日期地理位置
 	 * @return 本地化 FastDateFormat
 	 */
@@ -155,7 +167,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
+	 * @param style    date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone 时区{@link TimeZone}
 	 * @return 本地化 FastDateFormat
 	 */
@@ -167,9 +179,9 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
+	 * @param style    date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone 时区{@link TimeZone}
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param locale   {@link Locale} 日期地理位置
 	 * @return 本地化 FastDateFormat
 	 */
 	public static FastDateFormat getDateInstance(final int style, final TimeZone timeZone, final Locale locale) {
@@ -177,6 +189,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	}
 
 	// -----------------------------------------------------------------------
+
 	/**
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
@@ -192,7 +205,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param style time style: FULL, LONG, MEDIUM, or SHORT
+	 * @param style  time style: FULL, LONG, MEDIUM, or SHORT
 	 * @param locale {@link Locale} 日期地理位置
 	 * @return 本地化 FastDateFormat
 	 */
@@ -204,7 +217,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param style time style: FULL, LONG, MEDIUM, or SHORT
+	 * @param style    time style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone optional time zone, overrides time zone of formatted time
 	 * @return 本地化 FastDateFormat
 	 */
@@ -216,9 +229,9 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
 	 *
-	 * @param style time style: FULL, LONG, MEDIUM, or SHORT
+	 * @param style    time style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone optional time zone, overrides time zone of formatted time
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param locale   {@link Locale} 日期地理位置
 	 * @return 本地化 FastDateFormat
 	 */
 	public static FastDateFormat getTimeInstance(final int style, final TimeZone timeZone, final Locale locale) {
@@ -226,6 +239,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	}
 
 	// -----------------------------------------------------------------------
+
 	/**
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
@@ -244,7 +258,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param locale    {@link Locale} 日期地理位置
 	 * @return 本地化 FastDateFormat
 	 */
 	public static FastDateFormat getDateTimeInstance(final int dateStyle, final int timeStyle, final Locale locale) {
@@ -257,7 +271,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
-	 * @param timeZone 时区{@link TimeZone}
+	 * @param timeZone  时区{@link TimeZone}
 	 * @return 本地化 FastDateFormat
 	 */
 	public static FastDateFormat getDateTimeInstance(final int dateStyle, final int timeStyle, final TimeZone timeZone) {
@@ -270,8 +284,8 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
-	 * @param timeZone 时区{@link TimeZone}
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param timeZone  时区{@link TimeZone}
+	 * @param locale    {@link Locale} 日期地理位置
 	 * @return 本地化 FastDateFormat
 	 */
 	public static FastDateFormat getDateTimeInstance(final int dateStyle, final int timeStyle, final TimeZone timeZone, final Locale locale) {
@@ -279,12 +293,13 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	}
 
 	// ----------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
 	 *
-	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
+	 * @param pattern  使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 非空时区 {@link TimeZone}
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param locale   {@link Locale} 日期地理位置
 	 * @throws NullPointerException if pattern, timeZone, or locale is null.
 	 */
 	protected FastDateFormat(final String pattern, final TimeZone timeZone, final Locale locale) {
@@ -294,9 +309,9 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	/**
 	 * 构造
 	 *
-	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
-	 * @param timeZone 非空时区 {@link TimeZone}
-	 * @param locale {@link Locale} 日期地理位置
+	 * @param pattern      使用{@link java.text.SimpleDateFormat} 相同的日期格式
+	 * @param timeZone     非空时区 {@link TimeZone}
+	 * @param locale       {@link Locale} 日期地理位置
 	 * @param centuryStart The start of the 100 year period to use as the "default century" for 2 digit year parsing. If centuryStart is null, defaults to now - 80 years
 	 * @throws NullPointerException if pattern, timeZone, or locale is null.
 	 */
@@ -380,7 +395,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	}
 
 	/**
-	 *估算生成的日期字符串长度<br>
+	 * 估算生成的日期字符串长度<br>
 	 * 实际生成的字符串长度小于或等于此值
 	 *
 	 * @return 日期字符串长度
@@ -395,6 +410,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	/**
 	 * 便捷获取 DateTimeFormatter
 	 * 由于 {@link DatePattern} 很大一部分的格式没有提供 {@link DateTimeFormatter},因此这里提供快捷获取方式
+	 *
 	 * @return DateTimeFormatter
 	 * @author dazer neusoft
 	 * @since 5.6.4
