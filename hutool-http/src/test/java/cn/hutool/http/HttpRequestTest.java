@@ -244,6 +244,13 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
+	public void issueIAAE88Test() {
+		final HttpRequest request = HttpRequest.of("http://127.0.0.1:8003/com.rnd.aiq:message/message/getName/15", null);
+		Console.log(request);
+	}
+
+	@Test
+	@Ignore
 	public void testHttpResource() {
 
 		HttpRequest httpRequest = HttpRequest.post("http://127.0.0.1:8080/testHttpResource");
