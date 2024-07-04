@@ -488,4 +488,10 @@ public class UrlBuilderTest {
 		final String build = httpUrl.build(CharsetUtil.CHARSET_UTF_8);
 		assertEquals("/a:1/b:1/c:1/d:1/", build);
 	}
+
+	@Test
+	public void issueIAAOC1Test() {
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://localhost:9999/getReportDataList?goodsName=工业硫酸98%&conReportTypeId=1");
+		assertEquals("http://localhost:9999/getReportDataList?goodsName=%E5%B7%A5%E4%B8%9A%E7%A1%AB%E9%85%B898%25&conReportTypeId=1", urlBuilder.build());
+	}
 }

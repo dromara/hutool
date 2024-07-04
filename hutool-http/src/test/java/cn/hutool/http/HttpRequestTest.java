@@ -261,6 +261,13 @@ public class HttpRequestTest {
 				.form("passport", "12456")
 				.execute();
 		Console.log(response.body());
+	}
 
+	@Test
+	@Ignore
+	public void issueIAAOC1Test() {
+		HttpGlobalConfig.setDecodeUrl(true);
+		HttpRequest request = HttpRequest.get("http://localhost:9999/qms/bus/qmsBusReportCenterData/getReportDataList?reportProcessNo=A00&goodsName=工业硫酸98%&conReportTypeId=1010100000000000007&measureDateStr=2024-07-01");
+		request.execute();
 	}
 }
