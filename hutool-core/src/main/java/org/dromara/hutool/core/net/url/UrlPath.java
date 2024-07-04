@@ -170,14 +170,9 @@ public class UrlPath {
 		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder builder = new StringBuilder();
 		for (final String segment : segments) {
-			if (builder.length() == 0) {
-				// 根据https://www.ietf.org/rfc/rfc3986.html#section-3.3定义
-				// path的第一部分不允许有":"，其余部分允许
-				// 在此处的Path部分特指host之后的部分，即不包含第一部分
-				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset, safeChars));
-			} else {
-				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset, safeChars));
-			}
+			// https://www.ietf.org/rfc/rfc3986.html#section-3.3
+			// 此处Path中是允许有`:`的，之前理解有误，应该是相对URI的第一个segment中不允许有`:`
+			builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset, safeChars));
 		}
 
 		if (withEngTag) {
