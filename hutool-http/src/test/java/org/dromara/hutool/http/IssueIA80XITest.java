@@ -18,7 +18,7 @@ public class IssueIA80XITest {
 		param.put("date", DateUtil.parse("2024-06-25 14:16:47"));
 
 		// 未经过自动编码的
-		final Request request = Request.of("http://api.hutool.cn/login?type=aaa").form(param);
+		final Request request = Request.ofWithoutEncode("http://api.hutool.cn/login?type=aaa").form(param);
 		final UrlBuilder urlBuilder = request.handledUrl();
 		Assertions.assertEquals("http://api.hutool.cn/login?type=aaa&date=2024-06-25 14:16:47", urlBuilder.toString());
 
@@ -26,5 +26,10 @@ public class IssueIA80XITest {
 		final Request request2 = Request.of("http://api.hutool.cn/login?type=aaa", CharsetUtil.UTF_8).form(param);
 		final UrlBuilder urlBuilder2 = request2.handledUrl();
 		Assertions.assertEquals("http://api.hutool.cn/login?type=aaa&date=2024-06-25%2014:16:47", urlBuilder2.toString());
+
+		// 经过自动编码的
+		final Request request3 = Request.of("http://api.hutool.cn/login?type=aaa").form(param);
+		final UrlBuilder urlBuilder3 = request3.handledUrl();
+		Assertions.assertEquals("http://api.hutool.cn/login?type=aaa&date=2024-06-25%2014:16:47", urlBuilder3.toString());
 	}
 }
