@@ -21,7 +21,6 @@ import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.net.url.UrlQuery;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpGlobalConfig;
 import org.dromara.hutool.http.client.body.*;
@@ -49,34 +48,50 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Request implements HeaderOperation<Request> {
 
 	/**
-	 * 构建一个HTTP请求<br>
-	 * 对于传入的URL，可以自定义是否解码已经编码的内容，设置见{@link HttpGlobalConfig#setDecodeUrl(boolean)}<br>
-	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果{@link HttpGlobalConfig#isDecodeUrl()}为{@code true}，则会统一解码编码后的参数，<br>
-	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
+	 * 构建一个HTTP请求，不解码和编码，此时要求用户传入的URL必须是已经编码过的。
 	 *
-	 * @param url URL链接，默认自动编码URL中的参数等信息
+	 * @param url URL链接
+	 * @return HttpRequest
+	 */
+	public static Request ofWithoutEncode(final String url) {
+		return of(url, null);
+	}
+
+	/**
+	 * 构建一个HTTP请求，默认编解码规则，规则为：
+	 * <ul>
+	 *     <li>如果传入的URL已编码，则先解码，再按照RFC3986规范重新编码。</li>
+	 *     <li>如果传入的URL未编码，则先解码（解码后不变），再按照RFC3986规范重新编码。</li>
+	 *     <li>如果传入的URL部分编码，则先解码编码过的部分，再按照RFC3986规范重新编码。</li>
+	 * </ul>
+	 * 如果服务端要求的URL编码规则不符合RFC3986，则需要先自行编码，再调用{@link #of(String, Charset)}指定decodeAndEncodeCharset为{@code null}
+	 *
+	 * @param url URL链接，默认自动解码并重新编码URL中的参数等信息
 	 * @return HttpRequest
 	 */
 	public static Request of(final String url) {
-		return of(url, HttpGlobalConfig.isDecodeUrl() ? DEFAULT_CHARSET : null);
+		return of(url, DEFAULT_CHARSET);
 	}
 
 	/**
 	 * 构建一个HTTP请求<br>
-	 * 对于传入的URL，可以自定义是否解码已经编码的内容。<br>
-	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果charset参数不为{@code null}，则会统一解码编码后的参数，<br>
-	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
+	 * 对于传入的URL，可以自定义是否解码已经编码的内容，规则如下：<br>
+	 * <ul>
+	 *     <li>如果url已编码，则decodeAndEncodeCharset设置为{@code null}，此时URL不会解码，发送也不编码。</li>
+	 *     <li>如果url未编码或部分编码，则需要设置decodeAndEncodeCharset，此时URL会解码编码后的参数，发送时按照RFC3986规范重新编码。</li>
+	 *     <li>如果url未编码，且存在歧义字符串，则需要设置decodeAndEncodeCharset为{@code null}，并调用{@link Request#setEncodeUrl(boolean)}为true编码URL。</li>
+	 * </ul>
 	 *
-	 * @param url     URL链接
-	 * @param charset 编码，如果为{@code null}不自动解码编码URL
+	 * @param url                    URL链接
+	 * @param decodeAndEncodeCharset 编码，如果为{@code null}不自动解码编码URL
 	 * @return HttpRequest
 	 */
-	public static Request of(final String url, final Charset charset) {
-		return of(UrlBuilder.ofHttp(url, charset));
+	public static Request of(final String url, final Charset decodeAndEncodeCharset) {
+		return of(UrlBuilder.ofHttp(url, decodeAndEncodeCharset));
 	}
 
 	/**
-	 * 构建一个HTTP请求<br>
+	 * 构建一个HTTP请求
 	 *
 	 * @param url {@link UrlBuilder}
 	 * @return HttpRequest
@@ -98,6 +113,10 @@ public class Request implements HeaderOperation<Request> {
 	 * 请求的URL
 	 */
 	private UrlBuilder url;
+	/**
+	 * 请求编码
+	 */
+	private Charset charset = DEFAULT_CHARSET;
 	/**
 	 * 存储头信息
 	 */
@@ -178,25 +197,43 @@ public class Request implements HeaderOperation<Request> {
 	}
 
 	/**
-	 * 设置编码
+	 * 设置自定义编码，一般用于：
+	 * <ul>
+	 *     <li>编码请求体</li>
+	 *     <li>服务端未返回编码时，使用此编码解码响应体</li>
+	 * </ul>
 	 *
 	 * @param charset 编码
 	 * @return this
 	 */
 	public Request charset(final Charset charset) {
-		Assert.notNull(this.url, "You must be set request url first.");
-		this.url.setCharset(charset);
+		this.charset = charset;
 		return this;
 	}
 
 	/**
-	 * 获取请求编码，如果用户未设置，返回{@link #DEFAULT_CHARSET}
+	 * 获取请求编码，默认{@link #DEFAULT_CHARSET}，一般用于：
+	 * <ul>
+	 *     <li>编码请求体</li>
+	 *     <li>服务端未返回编码时，使用此编码解码响应体</li>
+	 * </ul>
 	 *
 	 * @return 编码
 	 */
 	public Charset charset() {
-		Assert.notNull(this.url, "You must be set request url first.");
-		return ObjUtil.defaultIfNull(this.url.getCharset(), DEFAULT_CHARSET);
+		return this.charset;
+	}
+
+	/**
+	 * 设置是否编码URL
+	 *
+	 * @param isEncodeUrl 如果为{@code true}，则使用请求编码编码URL，{@code false}则不编码URL
+	 * @return this
+	 */
+	public Request setEncodeUrl(final boolean isEncodeUrl) {
+		Assert.notNull(this.url, "Request URL must be not null!");
+		this.url.setCharset(isEncodeUrl ? this.charset : null);
+		return this;
 	}
 
 	@Override
@@ -261,17 +298,17 @@ public class Request implements HeaderOperation<Request> {
 	 */
 	public Request form(final Map<String, Object> formMap) {
 		final AtomicBoolean isMultiPart = new AtomicBoolean(false);
-		formMap.forEach((key, value)->{
-			if(value instanceof File ||
+		formMap.forEach((key, value) -> {
+			if (value instanceof File ||
 				value instanceof Path ||
 				value instanceof Resource ||
 				value instanceof InputStream ||
-				value instanceof Reader){
+				value instanceof Reader) {
 				isMultiPart.set(true);
 			}
 		});
 
-		if(isMultiPart.get()){
+		if (isMultiPart.get()) {
 			return body(MultipartBody.of(formMap, charset()));
 		}
 		return body(new UrlEncodedFormBody(formMap, charset()));

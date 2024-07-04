@@ -40,7 +40,6 @@ public class HttpGlobalConfig implements Serializable {
 	private static String boundary = "--------------------Hutool_" + RandomUtil.randomStringLower(16);
 	private static int maxRedirectCount = 0;
 	private static boolean ignoreEOFError = true;
-	private static boolean decodeUrl = false;
 	/**
 	 * 是否从响应正文中的meta标签获取编码信息
 	 */
@@ -135,30 +134,6 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	synchronized public static void setIgnoreEOFError(final boolean customIgnoreEOFError) {
 		ignoreEOFError = customIgnoreEOFError;
-	}
-
-	/**
-	 * 获取是否忽略解码URL，包括URL中的Path部分和Param部分。<br>
-	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果此参数为{@code true}，则会统一解码编码后的参数，<br>
-	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
-	 *
-	 * @return 是否忽略解码URL
-	 * @since 5.7.22
-	 */
-	public static boolean isDecodeUrl() {
-		return decodeUrl;
-	}
-
-	/**
-	 * 设置是否忽略解码URL，包括URL中的Path部分和Param部分。<br>
-	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果此参数为{@code true}，则会统一解码编码后的参数，<br>
-	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
-	 *
-	 * @param customDecodeUrl 是否忽略解码URL
-	 * @since 5.7.22
-	 */
-	synchronized public static void setDecodeUrl(final boolean customDecodeUrl) {
-		decodeUrl = customDecodeUrl;
 	}
 
 	/**

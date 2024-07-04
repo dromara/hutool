@@ -143,36 +143,21 @@ public class UrlPath {
 	 *     path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
 	 * </pre>
 	 *
-	 * @param charset encode编码，null表示不做encode
-	 * @return 如果没有任何内容，则返回空字符串""
-	 */
-	public String build(final Charset charset) {
-		return build(charset, true);
-	}
-
-	/**
-	 * 构建path，前面带'/'<br>
-	 * <pre>
-	 *     path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
-	 * </pre>
-	 *
 	 * @param charset       encode编码，null表示不做encode
-	 * @param encodePercent 是否编码`%`
 	 * @return 如果没有任何内容，则返回空字符串""
 	 * @since 5.8.0
 	 */
-	public String build(final Charset charset, final boolean encodePercent) {
+	public String build(final Charset charset) {
 		if (CollUtil.isEmpty(this.segments)) {
 			// 没有节点的path取决于是否末尾追加/，如果不追加返回空串，否则返回/
 			return withEngTag ? StrUtil.SLASH : StrUtil.EMPTY;
 		}
 
-		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder builder = new StringBuilder();
 		for (final String segment : segments) {
 			// https://www.ietf.org/rfc/rfc3986.html#section-3.3
 			// 此处Path中是允许有`:`的，之前理解有误，应该是相对URI的第一个segment中不允许有`:`
-			builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset, safeChars));
+			builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset));
 		}
 
 		if (withEngTag) {

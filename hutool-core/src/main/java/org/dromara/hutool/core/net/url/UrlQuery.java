@@ -247,52 +247,18 @@ public class UrlQuery {
 	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
 	 * </ul>
 	 *
-	 * @param charset encode编码，null表示不做encode编码
+	 * @param charset       encode编码，null表示不做encode编码
 	 * @return URL查询字符串
 	 */
 	public String build(final Charset charset) {
-		return build(charset, null != charset);
-	}
-
-	/**
-	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
-	 * 对于{@code null}处理规则如下：
-	 * <ul>
-	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
-	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
-	 * </ul>
-	 *
-	 * @param charset       encode编码，null表示不做encode编码
-	 * @param encodePercent 是否编码`%`
-	 * @return URL查询字符串
-	 */
-	public String build(final Charset charset, final boolean encodePercent) {
 		switch (this.encodeMode) {
 			case FORM_URL_ENCODED:
-				return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset, encodePercent);
+				return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset);
 			case STRICT:
-				return build(RFC3986.QUERY_PARAM_NAME_STRICT, RFC3986.QUERY_PARAM_VALUE_STRICT, charset, encodePercent);
+				return build(RFC3986.QUERY_PARAM_NAME_STRICT, RFC3986.QUERY_PARAM_VALUE_STRICT, charset);
 			default:
-				return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset, encodePercent);
+				return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset);
 		}
-	}
-
-	/**
-	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
-	 * 对于{@code null}处理规则如下：
-	 * <ul>
-	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
-	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
-	 * </ul>
-	 *
-	 * @param keyCoder   键值对中键的编码器
-	 * @param valueCoder 键值对中值的编码器
-	 * @param charset    encode编码，null表示不做encode编码
-	 * @return URL查询字符串
-	 * @since 5.7.16
-	 */
-	public String build(final PercentCodec keyCoder, final PercentCodec valueCoder, final Charset charset) {
-		return build(keyCoder, valueCoder, charset, true);
 	}
 
 	/**
@@ -306,17 +272,15 @@ public class UrlQuery {
 	 * @param keyCoder      键值对中键的编码器
 	 * @param valueCoder    键值对中值的编码器
 	 * @param charset       encode编码，null表示不做encode编码
-	 * @param encodePercent 是否编码`%`
 	 * @return URL查询字符串
 	 * @since 5.8.0
 	 */
 	public String build(final PercentCodec keyCoder, final PercentCodec valueCoder,
-						final Charset charset, final boolean encodePercent) {
+						final Charset charset) {
 		if (MapUtil.isEmpty(this.query)) {
 			return StrUtil.EMPTY;
 		}
 
-		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder sb = new StringBuilder();
 		CharSequence name;
 		CharSequence value;
@@ -326,10 +290,10 @@ public class UrlQuery {
 				if (sb.length() > 0) {
 					sb.append("&");
 				}
-				sb.append(keyCoder.encode(name, charset, safeChars));
+				sb.append(keyCoder.encode(name, charset));
 				value = entry.getValue();
 				if (null != value) {
-					sb.append("=").append(valueCoder.encode(value, charset, safeChars));
+					sb.append("=").append(valueCoder.encode(value, charset));
 				}
 			}
 		}

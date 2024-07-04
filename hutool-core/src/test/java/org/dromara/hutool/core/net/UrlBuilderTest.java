@@ -449,7 +449,7 @@ public class UrlBuilderTest {
 		// https://github.com/dromara/hutool/issues/2243
 		// 如果用户已经做了%编码，不应该重复编码
 		final String url = "https://hutool.cn/v1.0?privateNum=%2B8616512884988";
-		final String s = UrlBuilder.of(url, null).setCharset(CharsetUtil.UTF_8).toString();
+		final String s = UrlBuilder.of(url, null).toString();
 		assertEquals(url, s);
 	}
 
@@ -528,5 +528,26 @@ public class UrlBuilderTest {
 		// 不指定编码，则保持原字符串
 		urlBuilder = UrlBuilder.ofHttp("http://localhost:9999/getReportDataList?goodsName=工业硫酸98%&conReportTypeId=1", null);
 		assertEquals("http://localhost:9999/getReportDataList?goodsName=工业硫酸98%&conReportTypeId=1", urlBuilder.build());
+
+		// URL已经编码，则先解码，再重新编码
+		// 此例子中98%的%未做编码，解析后编码为25%
+		urlBuilder = UrlBuilder.ofHttp("http://localhost:9999/getReportDataList?goodsName=%E5%B7%A5%E4%B8%9A%E7%A1%AB%E9%85%B898%&conReportTypeId=1", CharsetUtil.UTF_8);
+		assertEquals("http://localhost:9999/getReportDataList?goodsName=%E5%B7%A5%E4%B8%9A%E7%A1%AB%E9%85%B898%25&conReportTypeId=1", urlBuilder.build());
+	}
+
+	@Test
+	void percentTest() {
+		// 此处URL有歧义
+		// 如果用户需要传的a的值为`%`，则这个URL表示已经编码过了，此时需要解码后再重新编码，保持不变
+		UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://localhost:9999/a?a=%25");
+		assertEquals("http://localhost:9999/a?a=%25", urlBuilder.build());
+		// 不传charset，则保留原样，不做任何处理
+		urlBuilder = UrlBuilder.ofHttp("http://localhost:9999/a?a=%25", null);
+		assertEquals("http://localhost:9999/a?a=%25", urlBuilder.build());
+
+		// 如果用户需要传的a的值为`%25`，则这个URL表示未编码，不需要解码，需要对`%`再次编码
+		urlBuilder = UrlBuilder.ofHttp("http://localhost:9999/a?a=%25", null);
+		urlBuilder.setCharset(CharsetUtil.UTF_8);
+		assertEquals("http://localhost:9999/a?a=%2525", urlBuilder.build());
 	}
 }

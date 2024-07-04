@@ -31,13 +31,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link Request}单元测试
  *
  * @author Looly
  */
 @SuppressWarnings("resource")
-public class HttpRequestTest {
+public class RequestTest {
 	final String url = "http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2";
 
 	@Test
@@ -237,5 +239,22 @@ public class HttpRequestTest {
 	public void issueI5Y68WTest() {
 		final Response httpResponse = Request.of("http://82.157.17.173:8100/app/getAddress").send();
 		Console.log(httpResponse.body());
+	}
+
+	@Test
+	void percentTest() {
+		// 此处URL有歧义
+		// 如果用户需要传的a的值为`%`，则这个URL表示已经编码过了，此时需要解码后再重新编码，保持不变
+		Request request = Request.of("http://localhost:9999/a?a=%25", CharsetUtil.UTF_8);
+		assertEquals("http://localhost:9999/a?a=%25", request.handledUrl().toURL().toString());
+
+		// 不传charset，则保留原样，不做任何处理
+		request = Request.of("http://localhost:9999/a?a=%25", null);
+		assertEquals("http://localhost:9999/a?a=%25", request.handledUrl().toURL().toString());
+
+		// 如果用户需要传的a的值为`%25`，则这个URL表示未编码，不需要解码，需要对`%`再次编码
+		request = Request.of("http://localhost:9999/a?a=%25", null);
+		request.setEncodeUrl(true);
+		assertEquals("http://localhost:9999/a?a=%2525", request.handledUrl().toURL().toString());
 	}
 }

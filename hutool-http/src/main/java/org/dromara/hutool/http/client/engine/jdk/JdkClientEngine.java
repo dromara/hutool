@@ -211,6 +211,7 @@ public class JdkClientEngine implements ClientEngine {
 			redirectUrl = UrlBuilder.of(parentUrl.getScheme(), parentUrl.getHost(), parentUrl.getPort(),
 				location, query, null, parentUrl.getCharset());
 		} else {
+			// location已经是编码过的URL
 			redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
 		}
 
