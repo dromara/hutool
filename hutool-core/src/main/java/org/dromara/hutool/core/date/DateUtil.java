@@ -17,9 +17,8 @@ import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.date.format.DatePrinter;
 import org.dromara.hutool.core.date.format.FastDateFormat;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
-import org.dromara.hutool.core.date.format.parser.GlobalRegexDateParser;
 import org.dromara.hutool.core.date.format.parser.PositionDateParser;
-import org.dromara.hutool.core.date.format.parser.TimeParser;
+import org.dromara.hutool.core.date.format.parser.RegisterDateParser;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -802,11 +801,7 @@ public class DateUtil {
 	 * @return 日期
 	 */
 	public static DateTime parse(final CharSequence dateCharSequence) {
-		if (TimeParser.INSTANCE.test(dateCharSequence)) {
-			// 独立解析时间，则默认使用今天的日期
-			return TimeParser.INSTANCE.parse(dateCharSequence);
-		}
-		return GlobalRegexDateParser.parse(dateCharSequence);
+		return (DateTime) RegisterDateParser.INSTANCE.parse(dateCharSequence);
 	}
 	// endregion
 

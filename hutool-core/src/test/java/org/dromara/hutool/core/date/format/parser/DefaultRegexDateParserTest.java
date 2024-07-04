@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * https://gitee.com/dromara/hutool/issues/I8IUTB
  */
-public class GlobalRegexDateParserTest {
+public class DefaultRegexDateParserTest {
 
 	@Test
 	void parseYearMonthDaySplitByDashedTest() {
@@ -182,7 +182,7 @@ public class GlobalRegexDateParserTest {
 	}
 
 	private static void assertParse(final String dateStr, final String dateStrToParse) {
-		final Date date = GlobalRegexDateParser.parse(dateStrToParse);
+		final Date date = DefaultRegexDateParser.INSTANCE.parse(dateStrToParse);
 		assertEquals(dateStr, DateUtil.date(date).toString());
 	}
 }

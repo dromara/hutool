@@ -23,11 +23,45 @@ import java.util.regex.Pattern;
  * @author Looly
  * @since 6.0.0
  */
-public class GlobalRegexDateParser {
+public class DefaultRegexDateParser implements PredicateDateParser {
 
-	private static final RegexDateParser PARSER;
+	/**
+	 * 默认实例
+	 */
+	public static DefaultRegexDateParser INSTANCE = new DefaultRegexDateParser();
 
-	static {
+	private final RegexDateParser parser;
+
+	/**
+	 * 构造，初始化默认的解析规则
+	 */
+	public DefaultRegexDateParser() {
+		parser = createDefault();
+	}
+
+	@Override
+	public boolean test(final CharSequence charSequence) {
+		// 此类用于托底，当自定义规则无法匹配时，一律使用此规则
+		return true;
+	}
+
+	/**
+	 * 解析日期，此方法线程安全
+	 *
+	 * @param source 日期字符串
+	 * @return 日期
+	 */
+	@Override
+	public DateTime parse(final CharSequence source) {
+		return (DateTime) parser.parse(source);
+	}
+
+	/**
+	 * 创建默认的 正则日期解析器
+	 *
+	 * @return {@link RegexDateParser}
+	 */
+	private RegexDateParser createDefault() {
 		final String yearRegex = "(?<year>\\d{2,4})";
 		// 月的正则，匹配：Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec，
 		// 或 January, February, March, April, May, June, July, August, September, October, November, December
@@ -64,7 +98,7 @@ public class GlobalRegexDateParser {
 			+ ")";
 		final String maskRegex = "(\\smsk m=[+-]\\d[.]\\d+)?";
 
-		PARSER = RegexDateParser.of(
+		return RegexDateParser.of(
 			//【年月日时】类似：2009-Feb-08，时间部分可选，类似：5:57:51，05:57:51 +08:00
 			yearRegex + "\\W" + dateRegexMonthFirst + timeRegexWithPre + zoneRegex + maskRegex,
 			//【年月日时】类似：2009-02-08或2014年04月08日，时间部分可选，类似：5:57:51，05:57:51 +08:00
@@ -93,22 +127,12 @@ public class GlobalRegexDateParser {
 	}
 
 	/**
-	 * 解析日期，此方法线程安全
-	 *
-	 * @param source 日期字符串
-	 * @return 日期
-	 */
-	public static DateTime parse(final CharSequence source) {
-		return (DateTime) PARSER.parse(source);
-	}
-
-	/**
 	 * 当用户传入的月和日无法判定默认位置时，设置默认的日期格式为dd/mm还是mm/dd
 	 *
 	 * @param preferMonthFirst {@code true}默认为mm/dd，否则dd/mm
 	 */
-	synchronized public static void setPreferMonthFirst(final boolean preferMonthFirst) {
-		PARSER.setPreferMonthFirst(preferMonthFirst);
+	synchronized public void setPreferMonthFirst(final boolean preferMonthFirst) {
+		parser.setPreferMonthFirst(preferMonthFirst);
 	}
 
 	/**
@@ -116,8 +140,8 @@ public class GlobalRegexDateParser {
 	 *
 	 * @param regex 日期正则
 	 */
-	synchronized public static void registerRegex(final String regex) {
-		PARSER.addRegex(regex);
+	synchronized public void registerRegex(final String regex) {
+		parser.addRegex(regex);
 	}
 
 	/**
@@ -125,7 +149,7 @@ public class GlobalRegexDateParser {
 	 *
 	 * @param pattern 日期正则
 	 */
-	synchronized public static void registerPattern(final Pattern pattern) {
-		PARSER.addPattern(pattern);
+	synchronized public void registerPattern(final Pattern pattern) {
+		parser.addPattern(pattern);
 	}
 }

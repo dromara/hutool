@@ -29,19 +29,10 @@ public class RegisterDateParser implements DateParser, Serializable {
 	 */
 	public RegisterDateParser() {
 		parserList = ListUtil.of(
-			// 纯数字形式
-			PureDateParser.INSTANCE,
 			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
 			TimeParser.INSTANCE,
-			// JDK的Date对象toString默认格式，类似于：
-			// Tue Jun 4 16:25:15 +0800 2019
-			// Thu May 16 17:57:18 GMT+08:00 2019
-			// Wed Aug 01 00:00:00 CST 2012
-			RFC2822DateParser.INSTANCE,
-			// ISO8601标准时间
-			// yyyy-MM-dd'T'HH:mm:ss'Z'
-			// yyyy-MM-dd'T'HH:mm:ss+0800
-			ISO8601DateParser.INSTANCE
+			// 默认的正则解析器
+			DefaultRegexDateParser.INSTANCE
 		);
 	}
 
@@ -62,7 +53,8 @@ public class RegisterDateParser implements DateParser, Serializable {
 	 * @return this
 	 */
 	public RegisterDateParser register(final PredicateDateParser dateParser) {
-		this.parserList.add(dateParser);
+		// 用户定义的规则优先
+		this.parserList.add(0, dateParser);
 		return this;
 	}
 }
