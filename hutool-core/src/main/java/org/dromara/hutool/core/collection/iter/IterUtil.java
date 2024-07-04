@@ -460,7 +460,7 @@ public class IterUtil {
 	 * @since 5.3.6
 	 */
 	public static <K, V> Map<K, V> toMap(final Iterable<V> iterable, final Function<V, K> keyMapper) {
-		return toMap(iterable, keyMapper, v -> v);
+		return toMap(iterable, keyMapper, Function.identity());
 	}
 
 	/**
