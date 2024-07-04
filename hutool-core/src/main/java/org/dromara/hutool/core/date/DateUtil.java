@@ -1869,6 +1869,16 @@ public class DateUtil {
 	}
 
 	/**
+	 * 转换为Calendar对象
+	 *
+	 * @param date 日期对象
+	 * @return Calendar对象
+	 */
+	public static Calendar toCalendar(final Date date) {
+		return CalendarUtil.calendar(date);
+	}
+
+	/**
 	 * Date对象转换为{@link Instant}对象
 	 *
 	 * @param date Date对象
