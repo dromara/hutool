@@ -170,12 +170,12 @@ public class DateUtilTest {
 		final Date endOfWeek = DateUtil.endOfWeek(date);
 		Assertions.assertEquals("2017-03-05 23:59:59", endOfWeek.toString());
 
-		final Calendar calendar = DateUtil.calendar(date);
+		final Calendar calendar = CalendarUtil.calendar(date);
 		// 一周的开始
-		final Calendar begin = DateUtil.beginOfWeek(calendar);
+		final Calendar begin = CalendarUtil.beginOfWeek(calendar);
 		Assertions.assertEquals("2017-02-27 00:00:00", DateUtil.date(begin).toString());
 		// 一周的结束
-		final Calendar end = DateUtil.endOfWeek(calendar);
+		final Calendar end = CalendarUtil.endOfWeek(calendar);
 		Assertions.assertEquals("2017-03-05 23:59:59", DateUtil.date(end).toString());
 	}
 
@@ -184,11 +184,11 @@ public class DateUtilTest {
 		final String beginStr = "2020-03-11";
 		final DateTime date = DateUtil.parse(beginStr);
 		final Calendar calendar = Objects.requireNonNull(date).toCalendar();
-		final Calendar begin = DateUtil.beginOfWeek(calendar, false);
+		final Calendar begin = CalendarUtil.beginOfWeek(calendar, false);
 		Assertions.assertEquals("2020-03-08 00:00:00", DateUtil.date(begin).toString());
 
 		final Calendar calendar2 = date.toCalendar();
-		final Calendar end = DateUtil.endOfWeek(calendar2, false);
+		final Calendar end = CalendarUtil.endOfWeek(calendar2, false);
 		Assertions.assertEquals("2020-03-14 23:59:59", DateUtil.date(end).toString());
 	}
 

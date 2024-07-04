@@ -117,8 +117,8 @@ public class DateBetween implements Serializable {
 	 * @since 3.0.8
 	 */
 	public long betweenMonth(final boolean isReset) {
-		final Calendar beginCal = DateUtil.calendar(begin);
-		final Calendar endCal = DateUtil.calendar(end);
+		final Calendar beginCal = CalendarUtil.calendar(begin);
+		final Calendar endCal = CalendarUtil.calendar(end);
 
 		final int betweenYear = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
 		final int betweenMonthOfYear = endCal.get(Calendar.MONTH) - beginCal.get(Calendar.MONTH);
@@ -144,8 +144,8 @@ public class DateBetween implements Serializable {
 	 * @since 3.0.8
 	 */
 	public long betweenYear(final boolean isReset) {
-		final Calendar beginCal = DateUtil.calendar(begin);
-		final Calendar endCal = DateUtil.calendar(end);
+		final Calendar beginCal = CalendarUtil.calendar(begin);
+		final Calendar endCal = CalendarUtil.calendar(end);
 
 		final int result = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
 		if (false == isReset) {

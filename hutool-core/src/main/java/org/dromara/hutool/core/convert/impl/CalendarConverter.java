@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
+import org.dromara.hutool.core.date.CalendarUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -54,21 +55,21 @@ public class CalendarConverter extends AbstractConverter {
 	protected Calendar convertInternal(final Class<?> targetClass, final Object value) {
 		// Handle Date
 		if (value instanceof Date) {
-			return DateUtil.calendar((Date)value);
+			return CalendarUtil.calendar((Date)value);
 		}
 
 		// Handle Long
 		if (value instanceof Long) {
 			//此处使用自动拆装箱
-			return DateUtil.calendar((Long)value);
+			return CalendarUtil.calendar((Long)value);
 		}
 
 		if(value instanceof XMLGregorianCalendar){
-			return DateUtil.calendar((XMLGregorianCalendar) value);
+			return CalendarUtil.calendar((XMLGregorianCalendar) value);
 		}
 
 		final String valueStr = convertToStr(value);
-		return DateUtil.calendar(StrUtil.isBlank(format) ? DateUtil.parse(valueStr) : DateUtil.parse(valueStr, format));
+		return CalendarUtil.calendar(StrUtil.isBlank(format) ? DateUtil.parse(valueStr) : DateUtil.parse(valueStr, format));
 	}
 
 }

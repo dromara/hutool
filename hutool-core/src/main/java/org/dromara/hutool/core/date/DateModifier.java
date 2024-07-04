@@ -74,7 +74,7 @@ public class DateModifier {
 	public static Calendar modify(final Calendar calendar, final int dateField, final ModifyType modifyType, final boolean truncateMillisecond) {
 		// AM_PM上下午特殊处理
 		if (Calendar.AM_PM == dateField) {
-			final boolean isAM = DateUtil.isAM(calendar);
+			final boolean isAM = CalendarUtil.isAM(calendar);
 			switch (modifyType) {
 				case TRUNCATE:
 					calendar.set(Calendar.HOUR_OF_DAY, isAM ? 0 : 12);
@@ -141,14 +141,14 @@ public class DateModifier {
 
 		switch (modifyType) {
 			case TRUNCATE:
-				calendar.set(field, DateUtil.getBeginValue(calendar, field));
+				calendar.set(field, CalendarUtil.getBeginValue(calendar, field));
 				break;
 			case CEILING:
-				calendar.set(field, DateUtil.getEndValue(calendar, field));
+				calendar.set(field, CalendarUtil.getEndValue(calendar, field));
 				break;
 			case ROUND:
-				final int min = DateUtil.getBeginValue(calendar, field);
-				final int max = DateUtil.getEndValue(calendar, field);
+				final int min = CalendarUtil.getBeginValue(calendar, field);
+				final int max = CalendarUtil.getEndValue(calendar, field);
 				final int href;
 				if (Calendar.DAY_OF_WEEK == field) {
 					// 星期特殊处理，假设周一是第一天，中间的为周四

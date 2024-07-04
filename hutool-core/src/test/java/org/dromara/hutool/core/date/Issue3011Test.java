@@ -30,6 +30,6 @@ public class Issue3011Test {
 		calendar2.set(2021, Calendar.FEBRUARY, 12);
 
 
-		Assertions.assertFalse(DateUtil.isSameMonth(calendar1, calendar2));
+		Assertions.assertFalse(CalendarUtil.isSameMonth(calendar1, calendar2));
 	}
 }

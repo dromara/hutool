@@ -38,7 +38,7 @@ public class Zodiac {
 	 * @return 星座名
 	 */
 	public static String getZodiac(final Date date) {
-		return getZodiac(DateUtil.calendar(date));
+		return getZodiac(CalendarUtil.calendar(date));
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class Zodiac {
 	 * @return 星座名
 	 */
 	public static String getChineseZodiac(final Date date) {
-		return getChineseZodiac(DateUtil.calendar(date));
+		return getChineseZodiac(CalendarUtil.calendar(date));
 	}
 
 	/**

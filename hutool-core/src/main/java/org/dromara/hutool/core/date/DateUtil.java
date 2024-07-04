@@ -17,7 +17,9 @@ import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.date.format.DatePrinter;
 import org.dromara.hutool.core.date.format.FastDateFormat;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
-import org.dromara.hutool.core.date.format.parser.*;
+import org.dromara.hutool.core.date.format.parser.GlobalRegexDateParser;
+import org.dromara.hutool.core.date.format.parser.PositionDateParser;
+import org.dromara.hutool.core.date.format.parser.TimeParser;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -43,7 +45,7 @@ import java.util.stream.Collectors;
  * @see TimeUtil java8日志工具类
  * @see DatePattern 日期常用格式工具类
  */
-public class DateUtil extends CalendarUtil {
+public class DateUtil {
 
 	// region  ----- date
 
@@ -62,7 +64,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 当天开始的时间
 	 */
 	public static DateTime today() {
-		return new DateTime(beginOfDay(Calendar.getInstance()));
+		return new DateTime(CalendarUtil.beginOfDay(Calendar.getInstance()));
 	}
 
 	/**
@@ -501,7 +503,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return Quarter ，类似于 20132
 	 */
 	public static String yearAndQuarter(final Date date) {
-		return yearAndQuarter(calendar(date));
+		return CalendarUtil.yearAndQuarter(CalendarUtil.calendar(date));
 	}
 
 	// region ----- format
@@ -764,41 +766,8 @@ public class DateUtil extends CalendarUtil {
 	 * @throws DateException            if none of the date patterns were suitable
 	 * @since 5.3.11
 	 */
-	public static DateTime parse(final String str, final String... parsePatterns) throws DateException {
+	public static DateTime parseByPatterns(final String str, final String... parsePatterns) throws DateException {
 		return date(CalendarUtil.parseByPatterns(str, parsePatterns));
-	}
-
-	/**
-	 * 将日期字符串转换为{@link DateTime}对象，格式：<br>
-	 * <ol>
-	 * <li>yyyy-MM-dd HH:mm:ss</li>
-	 * <li>yyyy/MM/dd HH:mm:ss</li>
-	 * <li>yyyy.MM.dd HH:mm:ss</li>
-	 * <li>yyyy年MM月dd日 HH时mm分ss秒</li>
-	 * <li>yyyy-MM-dd</li>
-	 * <li>yyyy/MM/dd</li>
-	 * <li>yyyy.MM.dd</li>
-	 * <li>HH:mm:ss</li>
-	 * <li>HH时mm分ss秒</li>
-	 * <li>yyyy-MM-dd HH:mm</li>
-	 * <li>yyyy-MM-dd HH:mm:ss.SSS</li>
-	 * <li>yyyy-MM-dd HH:mm:ss.SSSSSS</li>
-	 * <li>yyyyMMddHHmmss</li>
-	 * <li>yyyyMMddHHmmssSSS</li>
-	 * <li>yyyyMMdd</li>
-	 * <li>EEE, dd MMM yyyy HH:mm:ss z</li>
-	 * <li>EEE MMM dd HH:mm:ss zzz yyyy</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
-	 * </ol>
-	 *
-	 * @param dateCharSequence 日期字符串
-	 * @return 日期
-	 */
-	public static DateTime parseDateTime(final CharSequence dateCharSequence) {
-		return date(parse(dateCharSequence));
 	}
 
 	/**
@@ -852,7 +821,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.7
 	 */
 	public static DateTime truncate(final Date date, final DateField dateField) {
-		return new DateTime(truncate(calendar(date), dateField));
+		return new DateTime(CalendarUtil.truncate(CalendarUtil.calendar(date), dateField));
 	}
 
 	/**
@@ -864,7 +833,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.7
 	 */
 	public static DateTime round(final Date date, final DateField dateField) {
-		return new DateTime(round(calendar(date), dateField));
+		return new DateTime(CalendarUtil.round(CalendarUtil.calendar(date), dateField));
 	}
 
 	/**
@@ -876,7 +845,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.7
 	 */
 	public static DateTime ceiling(final Date date, final DateField dateField) {
-		return new DateTime(ceiling(calendar(date), dateField));
+		return new DateTime(CalendarUtil.ceiling(CalendarUtil.calendar(date), dateField));
 	}
 
 	/**
@@ -894,7 +863,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.7
 	 */
 	public static DateTime ceiling(final Date date, final DateField dateField, final boolean truncateMillisecond) {
-		return new DateTime(ceiling(calendar(date), dateField, truncateMillisecond));
+		return new DateTime(CalendarUtil.ceiling(CalendarUtil.calendar(date), dateField, truncateMillisecond));
 	}
 
 	/**
@@ -905,7 +874,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.6.2
 	 */
 	public static DateTime beginOfSecond(final Date date) {
-		return new DateTime(beginOfSecond(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfSecond(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -916,7 +885,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.6.2
 	 */
 	public static DateTime endOfSecond(final Date date) {
-		return new DateTime(endOfSecond(calendar(date)));
+		return new DateTime(CalendarUtil.endOfSecond(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -926,7 +895,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfHour(final Date date) {
-		return new DateTime(beginOfHour(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfHour(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -936,7 +905,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfHour(final Date date) {
-		return new DateTime(endOfHour(calendar(date)));
+		return new DateTime(CalendarUtil.endOfHour(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -946,7 +915,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfMinute(final Date date) {
-		return new DateTime(beginOfMinute(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfMinute(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -956,7 +925,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfMinute(final Date date) {
-		return new DateTime(endOfMinute(calendar(date)));
+		return new DateTime(CalendarUtil.endOfMinute(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -966,7 +935,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfDay(final Date date) {
-		return new DateTime(beginOfDay(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfDay(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -976,7 +945,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfDay(final Date date) {
-		return new DateTime(endOfDay(calendar(date)));
+		return new DateTime(CalendarUtil.endOfDay(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -986,7 +955,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfWeek(final Date date) {
-		return new DateTime(beginOfWeek(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfWeek(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -998,7 +967,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.4.0
 	 */
 	public static DateTime beginOfWeek(final Date date, final boolean isMondayAsFirstDay) {
-		return new DateTime(beginOfWeek(calendar(date), isMondayAsFirstDay));
+		return new DateTime(CalendarUtil.beginOfWeek(CalendarUtil.calendar(date), isMondayAsFirstDay));
 	}
 
 	/**
@@ -1008,7 +977,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfWeek(final Date date) {
-		return new DateTime(endOfWeek(calendar(date)));
+		return new DateTime(CalendarUtil.endOfWeek(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -1020,7 +989,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.4.0
 	 */
 	public static DateTime endOfWeek(final Date date, final boolean isSundayAsLastDay) {
-		return new DateTime(endOfWeek(calendar(date), isSundayAsLastDay));
+		return new DateTime(CalendarUtil.endOfWeek(CalendarUtil.calendar(date), isSundayAsLastDay));
 	}
 
 	/**
@@ -1030,7 +999,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfMonth(final Date date) {
-		return new DateTime(beginOfMonth(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfMonth(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -1040,7 +1009,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfMonth(final Date date) {
-		return new DateTime(endOfMonth(calendar(date)));
+		return new DateTime(CalendarUtil.endOfMonth(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -1050,7 +1019,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfQuarter(final Date date) {
-		return new DateTime(beginOfQuarter(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfQuarter(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -1060,7 +1029,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfQuarter(final Date date) {
-		return new DateTime(endOfQuarter(calendar(date)));
+		return new DateTime(CalendarUtil.endOfQuarter(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -1070,7 +1039,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfYear(final Date date) {
-		return new DateTime(beginOfYear(calendar(date)));
+		return new DateTime(CalendarUtil.beginOfYear(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -1080,7 +1049,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfYear(final Date date) {
-		return new DateTime(endOfYear(calendar(date)));
+		return new DateTime(CalendarUtil.endOfYear(CalendarUtil.calendar(date)));
 	}
 
 	/**
@@ -1483,7 +1452,7 @@ public class DateUtil extends CalendarUtil {
 		if (date1 == null || date2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		return CalendarUtil.isSameDay(calendar(date1), calendar(date2));
+		return CalendarUtil.isSameDay(CalendarUtil.calendar(date1), CalendarUtil.calendar(date2));
 	}
 
 	/**
@@ -1498,7 +1467,7 @@ public class DateUtil extends CalendarUtil {
 		if (date1 == null || date2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		return CalendarUtil.isSameWeek(calendar(date1), calendar(date2), isMon);
+		return CalendarUtil.isSameWeek(CalendarUtil.calendar(date1), CalendarUtil.calendar(date2), isMon);
 	}
 
 	/**
@@ -1513,7 +1482,7 @@ public class DateUtil extends CalendarUtil {
 		if (date1 == null || date2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		return CalendarUtil.isSameMonth(calendar(date1), calendar(date2));
+		return CalendarUtil.isSameMonth(CalendarUtil.calendar(date1), CalendarUtil.calendar(date2));
 	}
 
 
@@ -1650,7 +1619,7 @@ public class DateUtil extends CalendarUtil {
 		if (null == dateToCompare) {
 			dateToCompare = now();
 		}
-		return age(birthday.getTime(), dateToCompare.getTime());
+		return CalendarUtil.age(birthday.getTime(), dateToCompare.getTime());
 	}
 
 	/**

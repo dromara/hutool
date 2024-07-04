@@ -33,8 +33,8 @@ public class RangeTest {
 
 	@Test
 	public void dateRangeTest() {
-		final DateTime start = DateUtil.parseDateTime("2017-01-01");
-		final DateTime end = DateUtil.parseDateTime("2017-01-02");
+		final DateTime start = DateUtil.parse("2017-01-01");
+		final DateTime end = DateUtil.parse("2017-01-02");
 
 		final Range<DateTime> range = new Range<>(start, end, (current, end1, index) -> {
 			if (current.isAfterOrEquals(end1)) {
