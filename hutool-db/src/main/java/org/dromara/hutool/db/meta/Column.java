@@ -75,7 +75,19 @@ public class Column implements Serializable, Cloneable {
 	 * 是否为主键
 	 */
 	private boolean isPk;
-	// ----------------------------------------------------- Fields end
+	/**
+	 * 列字段顺序
+	 */
+	private int order;
+
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
+// ----------------------------------------------------- Fields end
 
 	/**
 	 * 创建列对象
@@ -137,7 +149,7 @@ public class Column implements Serializable, Cloneable {
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
 		this.remarks = columnMetaRs.getString("REMARKS");
 		this.columnDef = columnMetaRs.getString("COLUMN_DEF");
-
+		this.order = columnMetaRs.getRow();
 		// 保留小数位数
 		try {
 			this.digit = columnMetaRs.getInt("DECIMAL_DIGITS");
@@ -395,7 +407,7 @@ public class Column implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return "Column [tableName=" + tableName + ", name=" + name + ", type=" + type + ", size=" + size + ", isNullable=" + isNullable + "]";
+		return "Column [tableName=" + tableName + ", name=" + name + ", type=" + type + ", size=" + size + ", isNullable=" + isNullable + ", order=" + order + "]";
 	}
 
 	@Override

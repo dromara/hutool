@@ -54,4 +54,14 @@ public class MetaUtilTest {
 		final Table table = MetaUtil.getTableMeta(ds, "user_1");
 		Assertions.assertEquals(table.getIndexInfoList().size(), 2);
 	}
+
+	/**
+	 * 增加 列顺序字段
+	 */
+	@Test
+	public void getTableColumnTest() {
+		final Table table = MetaUtil.getTableMeta(ds, "user");
+		System.out.println(table.getColumns());
+		Assertions.assertEquals(SetUtil.of("id"), table.getPkNames());
+	}
 }
