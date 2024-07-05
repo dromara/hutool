@@ -1011,4 +1011,18 @@ public class ArrayUtilTest {
 		final String[] a = {"  ", " ", ""};
 		Assertions.assertTrue(ArrayUtil.isAllBlank(a));
 	}
+
+	@Test
+	void firstMatchShouldReturnFirstMatch() {
+		final Integer[] array = {5, 10, 15, 20, 25};
+		final Integer result = ArrayUtil.firstMatch(value -> value > 15, array);
+		assertEquals(20, result);
+	}
+
+	@Test
+	void testMatchIndexWithMatchingFirstElement() {
+		final Integer[] array = {1, 2, 3, 4, 5};
+		final int index = ArrayUtil.matchIndex(value -> value == 3, array);
+		assertEquals(2, index);
+	}
 }

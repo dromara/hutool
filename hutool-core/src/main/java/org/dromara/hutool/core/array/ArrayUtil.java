@@ -1832,7 +1832,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 按照指定规则，将一种类型的数组转换为另一种类型
 	 *
 	 * @param array               被转换的数组
-	 * @param targetComponentType 目标的元素类型
+	 * @param targetComponentType 目标的元素类型，只能为包装类型
 	 * @param func                转换规则函数
 	 * @param <R>                 目标数组类型
 	 * @return 转换后的数组
