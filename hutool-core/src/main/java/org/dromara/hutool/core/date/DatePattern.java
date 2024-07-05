@@ -13,13 +13,11 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.date.format.FastDateFormat;
-import org.dromara.hutool.core.date.format.parser.RFC2822DateParser;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -60,11 +58,6 @@ import java.util.TimeZone;
  * {@link DateTimeFormatter#ISO_DATE}
  * {@link DateTimeFormatter#ISO_DATE_TIME}
  * 查看更多，请参阅上述官方文档
- * </p>
- *
- * <p>
- * 其中：CST格式，形如："Mon Aug 15 14:23:15 CST 2022",上面未包含
- * 参见：{@link RFC2822DateParser#parse(CharSequence)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
  * </p>
  *
  * <p>

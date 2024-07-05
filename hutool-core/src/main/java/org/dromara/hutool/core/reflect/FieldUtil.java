@@ -283,7 +283,7 @@ public class FieldUtil {
 		if (null != obj) {
 			final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass(), filter);
 			if (null != fields) {
-				return ArrayUtil.map(fields, Object.class, field -> getFieldValue(obj, field));
+				return ArrayUtil.mapToArray(fields, field -> getFieldValue(obj, field), Object[]::new);
 			}
 		}
 		return null;

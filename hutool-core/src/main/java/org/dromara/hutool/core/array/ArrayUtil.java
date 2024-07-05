@@ -1828,45 +1828,38 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// endregion
 
 	// region ----- map
-
 	/**
 	 * 按照指定规则，将一种类型的数组转换为另一种类型
 	 *
 	 * @param array               被转换的数组
 	 * @param targetComponentType 目标的元素类型
 	 * @param func                转换规则函数
-	 * @param <T>                 原数组类型
-	 * @param <R>                 目标数组类型
-	 * @return 转换后的数组
-	 * @since 5.4.2
-	 */
-	public static <T, R> R[] map(final T[] array, final Class<R> targetComponentType, final Function<? super T, ? extends R> func) {
-		final int length = length(array);
-		final R[] result = newArray(targetComponentType, length);
-		for (int i = 0; i < length; i++) {
-			result[i] = func.apply(array[i]);
-		}
-		return result;
-	}
-
-	/**
-	 * 按照指定规则，将一种类型的数组转换为另一种类型
-	 *
-	 * @param array               被转换的数组
-	 * @param targetComponentType 目标的元素类型
-	 * @param func                转换规则函数
-	 * @param <T>                 原数组类型
 	 * @param <R>                 目标数组类型
 	 * @return 转换后的数组
 	 * @since 5.5.8
 	 */
-	public static <T, R> R[] map(final Object array, final Class<R> targetComponentType, final Function<? super T, ? extends R> func) {
+	public static <R> R[] map(final Object array, final Class<R> targetComponentType, final Function<?, ? extends R> func) {
 		final int length = length(array);
 		final R[] result = newArray(targetComponentType, length);
 		for (int i = 0; i < length; i++) {
 			result[i] = func.apply(get(array, i));
 		}
 		return result;
+	}
+
+	/**
+	 * 按照指定规则，将一种类型的数组元素转换为另一种类型，并保存为数组
+	 *
+	 * @param array     被转换的数组
+	 * @param func      转换规则函数
+	 * @param generator 数组生成器，如返回String[]，则传入String[]::new
+	 * @param <T>       原数组类型
+	 * @param <R>       目标数组类型
+	 * @return 集合
+	 */
+	public static <T, R> R[] mapToArray(final T[] array, final Function<? super T, ? extends R> func,
+										final IntFunction<R[]> generator) {
+		return Arrays.stream(array).map(func).toArray(generator);
 	}
 
 	/**
@@ -1895,21 +1888,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <T, R> Set<R> mapToSet(final T[] array, final Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toSet());
-	}
-
-	/**
-	 * 按照指定规则，将一种类型的数组元素转换为另一种类型，并保存为数组
-	 *
-	 * @param array     被转换的数组
-	 * @param func      转换规则函数
-	 * @param generator 数组生成器，如返回String[]，则传入String[]::new
-	 * @param <T>       原数组类型
-	 * @param <R>       目标数组类型
-	 * @return 集合
-	 */
-	public static <T, R> R[] mapToArray(final T[] array, final Function<? super T, ? extends R> func,
-										final IntFunction<R[]> generator) {
-		return Arrays.stream(array).map(func).toArray(generator);
 	}
 	// endregion
 
