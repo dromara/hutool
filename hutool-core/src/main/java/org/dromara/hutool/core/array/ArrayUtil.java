@@ -1879,7 +1879,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 列表
 	 * @since 5.5.7
 	 */
-	public static <T, R> List<R> map(final T[] array, final Function<? super T, ? extends R> func) {
+	public static <T, R> List<R> mapToList(final T[] array, final Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toList());
 	}
 
@@ -1898,7 +1898,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 按照指定规则，将一种类型的数组元素转换为另一种类型，并保存为 {@link Set}
+	 * 按照指定规则，将一种类型的数组元素转换为另一种类型，并保存为数组
 	 *
 	 * @param array     被转换的数组
 	 * @param func      转换规则函数

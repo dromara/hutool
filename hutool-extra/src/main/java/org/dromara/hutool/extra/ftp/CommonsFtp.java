@@ -326,7 +326,7 @@ public class CommonsFtp extends AbstractFtp {
 
 	@Override
 	public List<String> ls(final String path) {
-		return ArrayUtil.map(lsFiles(path), FTPFile::getName);
+		return ArrayUtil.mapToList(lsFiles(path), FTPFile::getName);
 	}
 
 	/**
