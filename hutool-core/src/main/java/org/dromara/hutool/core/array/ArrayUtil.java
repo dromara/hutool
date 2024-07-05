@@ -42,18 +42,6 @@ import java.util.stream.Collectors;
 public class ArrayUtil extends PrimitiveArrayUtil {
 
 	// region ----- ofArray
-
-	/**
-	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组
-	 *
-	 * @param <A>    数组类型
-	 * @param values 元素值
-	 * @return 数组
-	 */
-	public static <A> A castOrWrapSingle(final Object values) {
-		return castOrWrapSingle(values, null);
-	}
-
 	/**
 	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组<br>
 	 * 注意：values的元素类型或其本身类型必须和提供的elementType完全一致
@@ -682,7 +670,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <T> T[] setOrAppend(final T[] array, final int index, final T value) {
 		if (isEmpty(array)) {
-			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
+			return wrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrAppend(index, value).getRaw();
 	}
@@ -699,7 +687,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <A> A setOrAppend(final A array, final int index, final Object value) {
 		if (isEmpty(array)) {
-			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
+			return wrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrAppend(index, value).getRaw();
 	}
@@ -716,7 +704,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <A> A setOrPadding(final A array, final int index, final Object value) {
 		if (index == 0 && isEmpty(array)) {
-			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
+			return wrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrPadding(index, value).getRaw();
 	}
@@ -735,7 +723,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <A, E> A setOrPadding(final A array, final int index, final E value, final E paddingValue) {
 		if (index == 0 && isEmpty(array)) {
-			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
+			return wrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrPadding(index, value, paddingValue).getRaw();
 	}
