@@ -21,7 +21,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class StreamUtilTest {
+
+	@Test
+	void toListTest() {
+		final Set<Object[]> a = SetUtil.of(new Object[]{1, 2}, new Object[]{3, 4});
+		final List<Object> objects = StreamUtil.of(a).collect(Collectors.toList());
+		assertEquals(2, objects.size());
+	}
 
 	@Test
 	void testIterateHierarchies() {

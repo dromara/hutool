@@ -12,11 +12,11 @@
 
 package org.dromara.hutool.db.sql;
 
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.stream.StreamUtil;
 import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.DbConfig;
 import org.dromara.hutool.db.handler.ResultSetUtil;
@@ -25,6 +25,7 @@ import org.dromara.hutool.db.handler.RsHandler;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Statement和PreparedStatement工具类
@@ -86,7 +87,7 @@ public class StatementUtil {
 			.setReturnGeneratedKey(false)
 			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).get())
 			.setSql(sql)
-			.setParams(ArrayUtil.ofArray(paramsBatch, Object.class))
+			.setParamList(StreamUtil.of(paramsBatch).collect(Collectors.toList()))
 			.buildForBatch();
 	}
 

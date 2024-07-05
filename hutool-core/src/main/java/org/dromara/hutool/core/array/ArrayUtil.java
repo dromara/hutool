@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
 import org.dromara.hutool.core.comparator.CompareUtil;
@@ -51,12 +50,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param values 元素值
 	 * @return 数组
 	 */
-	public static <A> A ofArray(final Object values) {
-		return ofArray(values, null);
+	public static <A> A castOrWrapSingle(final Object values) {
+		return castOrWrapSingle(values, null);
 	}
 
 	/**
-	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组
+	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组<br>
+	 * 注意：values的元素类型或其本身类型必须和提供的elementType完全一致
 	 *
 	 * @param <A>         数组类型
 	 * @param values      元素值
@@ -64,36 +64,33 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组
 	 */
 	@SuppressWarnings("unchecked")
-	public static <A> A ofArray(final Object values, final Class<?> elementType) {
+	public static <A> A castOrWrapSingle(final Object values, final Class<?> elementType) {
 		if (isArray(values)) {
 			return (A) values;
 		}
 
+		return wrapSingle(values, elementType);
+	}
+
+	/**
+	 * 包装单一元素为数组
+	 *
+	 * @param <A>         数组类型
+	 * @param value      元素值
+	 * @param elementType 数组元素类型，{@code null}表示使用value的类型
+	 * @return 数组
+	 */
+	@SuppressWarnings("unchecked")
+	public static <A> A wrapSingle(final Object value, final Class<?> elementType) {
 		// 插入单个元素
 		final Object newInstance = Array.newInstance(
-			null == elementType ? values.getClass() : elementType, 1);
-		Array.set(newInstance, 0, values);
+			null == elementType ? value.getClass() : elementType, 1);
+		Array.set(newInstance, 0, value);
 		return (A) newInstance;
 	}
 
 	/**
-	 * 将集合转为数组
-	 *
-	 * @param <T>           数组元素类型
-	 * @param iterator      {@link Iterator}
-	 * @param componentType 集合元素类型
-	 * @return 数组
-	 * @since 3.0.9
-	 */
-	public static <T> T[] ofArray(final Iterator<T> iterator, final Class<T> componentType) {
-		if (null == iterator) {
-			return newArray(componentType, 0);
-		}
-		return ListUtil.of(iterator).toArray(newArray(componentType, 0));
-	}
-
-	/**
-	 * 将集合转为数组
+	 * 将集合转为数组，如果集合为{@code null}，则返回空的数组（元素个数为0）
 	 *
 	 * @param <T>           数组元素类型
 	 * @param iterable      {@link Iterable}
@@ -102,7 +99,26 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T> T[] ofArray(final Iterable<T> iterable, final Class<T> componentType) {
-		return ofArray(IterUtil.getIter(iterable), componentType);
+		if (null == iterable) {
+			return newArray(componentType, 0);
+		}
+
+		if (iterable instanceof List) {
+			// List
+			return ((List<T>) iterable).toArray(newArray(componentType, 0));
+		} else if (iterable instanceof Collection) {
+			// 其它集合
+			final int size = ((Collection<T>) iterable).size();
+			final T[] result = newArray(componentType, size);
+			int i = 0;
+			for (final T element : iterable) {
+				result[i] = element;
+				i++;
+			}
+		}
+
+		// 自定义Iterable转为List处理
+		return ListUtil.of(iterable.iterator()).toArray(newArray(componentType, 0));
 	}
 	// endregion
 
@@ -666,7 +682,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <T> T[] setOrAppend(final T[] array, final int index, final T value) {
 		if (isEmpty(array)) {
-			return ofArray(value, null == array ? null : array.getClass().getComponentType());
+			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrAppend(index, value).getRaw();
 	}
@@ -683,7 +699,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <A> A setOrAppend(final A array, final int index, final Object value) {
 		if (isEmpty(array)) {
-			return ofArray(value, null == array ? null : array.getClass().getComponentType());
+			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrAppend(index, value).getRaw();
 	}
@@ -700,7 +716,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <A> A setOrPadding(final A array, final int index, final Object value) {
 		if (index == 0 && isEmpty(array)) {
-			return ofArray(value, null == array ? null : array.getClass().getComponentType());
+			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrPadding(index, value).getRaw();
 	}
@@ -719,7 +735,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <A, E> A setOrPadding(final A array, final int index, final E value, final E paddingValue) {
 		if (index == 0 && isEmpty(array)) {
-			return ofArray(value, null == array ? null : array.getClass().getComponentType());
+			return castOrWrapSingle(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrPadding(index, value, paddingValue).getRaw();
 	}
@@ -805,7 +821,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <A> A replace(final A array, final int index, final A values) {
 		if (isEmpty(array)) {
-			return ofArray(values, null == array ? null : array.getClass().getComponentType());
+			return castOrWrapSingle(values, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).replace(index, values).getRaw();
 	}
@@ -833,16 +849,17 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 如果插入位置为负数，从原数组从后向前计数，若大于原数组长度，则空白处用默认值填充<br>
 	 *
 	 * @param <A>         数组类型
-	 * @param <T>         数组元素类型
+	 * @param <E>         数组元素类型
 	 * @param array       已有数组，可以为原始类型数组
 	 * @param index       插入位置，此位置为对应此位置元素之前的空档
 	 * @param newElements 新元素
 	 * @return 新数组
 	 * @since 4.0.8
 	 */
+	@SuppressWarnings("unchecked")
 	@SafeVarargs
-	public static <A, T> A insert(final A array, final int index, final T... newElements) {
-		return ArrayWrapper.of(array).insert(index, newElements).getRaw();
+	public static <A, E> A insert(final A array, final int index, final E... newElements) {
+		return ArrayWrapper.of(array).insertArray(index, (A) newElements).getRaw();
 	}
 	// endregion
 
@@ -1828,6 +1845,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// endregion
 
 	// region ----- map
+
 	/**
 	 * 按照指定规则，将一种类型的数组转换为另一种类型
 	 *

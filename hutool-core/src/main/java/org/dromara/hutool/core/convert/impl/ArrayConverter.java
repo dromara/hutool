@@ -12,14 +12,15 @@
 
 package org.dromara.hutool.core.convert.impl;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 
 import java.io.Serializable;
@@ -73,7 +74,7 @@ public class ArrayConverter extends AbstractConverter {
 		}
 
 		return value.getClass().isArray() ? convertArrayToArray(targetComponentType, value)
-				: convertObjectToArray(targetComponentType, value);
+			: convertObjectToArray(targetComponentType, value);
 	}
 
 	/**
@@ -114,10 +115,10 @@ public class ArrayConverter extends AbstractConverter {
 	 * 非数组对数组转换
 	 *
 	 * @param targetComponentType 目标单个节点类型
-	 * @param value 被转换值
+	 * @param value               被转换值
 	 * @return 转换后的数组
 	 */
-	private Object convertObjectToArray(final Class<?> targetComponentType, final Object value) {
+	private Object convertObjectToArray(final Class<?> targetComponentType, Object value) {
 		if (value instanceof CharSequence) {
 			if (targetComponentType == char.class || targetComponentType == Character.class) {
 				return convertArrayToArray(targetComponentType, value.toString().toCharArray());
@@ -125,9 +126,9 @@ public class ArrayConverter extends AbstractConverter {
 
 			//issue#2365
 			// 字符串转bytes，首先判断是否为Base64，是则转换，否则按照默认getBytes方法。
-			if(targetComponentType == byte.class){
+			if (targetComponentType == byte.class) {
 				final String str = value.toString();
-				if(Base64.isTypeBase64(str)){
+				if (Base64.isTypeBase64(str)) {
 					return Base64.decode(value.toString());
 				}
 				return str.getBytes();
@@ -138,12 +139,42 @@ public class ArrayConverter extends AbstractConverter {
 			return convertArrayToArray(targetComponentType, strings);
 		}
 
+		if(value instanceof Iterator){
+			value = IterUtil.asIterable((Iterator<?>)value);
+		}
+
+		final Object result;
+		if (value instanceof Iterable) {
+			result = convertIterableToArray(targetComponentType, (Iterable<?>) value);
+		} else if (value instanceof Number && byte.class == targetComponentType) {
+			// 用户可能想序列化指定对象
+			result = ByteUtil.toBytes((Number) value);
+		} else if (value instanceof Serializable && byte.class == targetComponentType) {
+			// 用户可能想序列化指定对象
+			result = SerializeUtil.serialize(value);
+		} else {
+			// everything else:
+			result = convertToSingleElementArray(targetComponentType, value);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 迭代器转数组
+	 *
+	 * @param targetComponentType 目标单个节点类型
+	 * @param value               迭代器实现值
+	 * @return 数组
+	 */
+	private Object convertIterableToArray(final Class<?> targetComponentType, final Iterable<?> value) {
 		final Object result;
 		if (value instanceof List) {
 			// List转数组
 			final List<?> list = (List<?>) value;
-			result = Array.newInstance(targetComponentType, list.size());
-			for (int i = 0; i < list.size(); i++) {
+			final int size = list.size();
+			result = Array.newInstance(targetComponentType, size);
+			for (int i = 0; i < size; i++) {
 				Array.set(result, i, convertComponentType(targetComponentType, list.get(i)));
 			}
 		} else if (value instanceof Collection) {
@@ -156,31 +187,15 @@ public class ArrayConverter extends AbstractConverter {
 				Array.set(result, i, convertComponentType(targetComponentType, element));
 				i++;
 			}
-		} else if (value instanceof Iterable) {
-			// 可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
-			final List<?> list = ListUtil.of((Iterable<?>) value);
-			result = Array.newInstance(targetComponentType, list.size());
-			for (int i = 0; i < list.size(); i++) {
-				Array.set(result, i, convertComponentType(targetComponentType, list.get(i)));
-			}
-		} else if (value instanceof Iterator) {
-			// 可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
-			final List<?> list = ListUtil.of((Iterator<?>) value);
-			result = Array.newInstance(targetComponentType, list.size());
-			for (int i = 0; i < list.size(); i++) {
-				Array.set(result, i, convertComponentType(targetComponentType, list.get(i)));
-			}
-		}else if (value instanceof Number && byte.class == targetComponentType) {
-			// 用户可能想序列化指定对象
-			result = ByteUtil.toBytes((Number)value);
-		} else if (value instanceof Serializable && byte.class == targetComponentType) {
-			// 用户可能想序列化指定对象
-			result = SerializeUtil.serialize(value);
 		} else {
-			// everything else:
-			result = convertToSingleElementArray(targetComponentType, value);
+			// 可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
+			final List<?> list = ListUtil.of(value);
+			final int size = list.size();
+			result = Array.newInstance(targetComponentType, size);
+			for (int i = 0; i < size; i++) {
+				Array.set(result, i, convertComponentType(targetComponentType, list.get(i)));
+			}
 		}
-
 		return result;
 	}
 

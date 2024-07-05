@@ -98,6 +98,17 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 	}
 
 	/**
+	 * 设置SQL的"?"对应的参数
+	 *
+	 * @param params 参数列表
+	 * @return this
+	 */
+	public StatementBuilder setParamList(final List<Object> params) {
+		this.boundSql.setParams(params);
+		return this;
+	}
+
+	/**
 	 * 设置是否返回主键
 	 *
 	 * @param returnGeneratedKey 是否返回主键

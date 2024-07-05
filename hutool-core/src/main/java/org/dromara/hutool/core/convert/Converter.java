@@ -50,4 +50,12 @@ public interface Converter {
 	default <T> T convert(final Type targetType, final Object value, final T defaultValue) {
 		return (T) ObjUtil.defaultIfNull(convert(targetType, value), defaultValue);
 	}
+
+	/**
+	 * 返回原值的转换器，不做转换
+	 * @return Converter
+	 */
+	static Converter identity(){
+		return (targetType, value) -> value;
+	}
 }

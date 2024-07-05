@@ -1025,4 +1025,14 @@ public class ArrayUtilTest {
 		final int index = ArrayUtil.matchIndex(value -> value == 3, array);
 		assertEquals(2, index);
 	}
+
+	@Test
+	void testofArrayWithNonEmptyIterable() {
+		// Given
+		final List<String> list = Arrays.asList("a", "b", "c");
+		// When
+		final String[] result = ArrayUtil.ofArray(list, String.class);
+		// Then
+		assertArrayEquals(list.toArray(new String[0]), result, "The array should match the list contents.");
+	}
 }

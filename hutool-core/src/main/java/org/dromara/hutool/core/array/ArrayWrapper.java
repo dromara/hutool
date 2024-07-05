@@ -376,11 +376,11 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 	 * 如果插入位置为负数，从原数组从后向前计数，若大于原数组长度，则空白处用默认值填充<br>
 	 *
 	 * @param index   插入位置，支持负数。此位置为对应此位置元素之前的空档
-	 * @param element 元素
+	 * @param element 单个元素
 	 * @return 新数组
 	 */
 	public ArrayWrapper<A, E> insert(final int index, final E element) {
-		return insertArray(index, ArrayUtil.ofArray(element, this.componentType));
+		return insertArray(index, ArrayUtil.wrapSingle(element, this.componentType));
 	}
 
 	/**
