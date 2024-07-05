@@ -21,8 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * {@link ArrayUtil} 数组工具单元测试
@@ -555,7 +554,7 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void reverseTest2s() {
+	public void reverseTest2() {
 		final Object[] a = {"1", '2', "3", 4};
 		final Object[] reverse = ArrayUtil.reverse(a);
 		assertArrayEquals(new Object[]{4, "3", '2', "1"}, reverse);
@@ -1070,5 +1069,13 @@ public class ArrayUtilTest {
 		// Assert
 		assertEquals(5, resizedArray.length);
 		assertArrayEquals(new Integer[]{1, 2, 3, null, null}, resizedArray);
+	}
+
+	@Test
+	void testShuffleNotSameAsOriginal() {
+		final Integer[] initialArray = new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		final Integer[] shuffledArray = ArrayUtil.shuffle(initialArray.clone());
+
+		assertNotEquals(Arrays.toString(initialArray), Arrays.toString(shuffledArray));
 	}
 }
