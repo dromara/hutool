@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 public class ArrayUtil extends PrimitiveArrayUtil {
 
 	// region ----- ofArray
+
 	/**
 	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组<br>
 	 * 注意：values的元素类型或其本身类型必须和提供的elementType完全一致
@@ -64,7 +65,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 包装单一元素为数组
 	 *
 	 * @param <A>         数组类型
-	 * @param value      元素值
+	 * @param value       元素值
 	 * @param elementType 数组元素类型，{@code null}表示使用value的类型
 	 * @return 数组
 	 */
@@ -777,18 +778,18 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * </ul>
 	 *
 	 * @param <T>    数组元素类型
-	 * @param buffer 已有数组
+	 * @param array  已有数组
 	 * @param index  位置
 	 * @param values 新值
 	 * @return 新数组或原有数组
 	 * @since 5.7.23
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static <T> T[] replace(final T[] buffer, final int index, final T... values) {
-		if (isEmpty(buffer)) {
+	public static <T> T[] replace(final T[] array, final int index, final T... values) {
+		if (isEmpty(array)) {
 			return values;
 		}
-		return ArrayWrapper.of(buffer).replace(index, values).getRaw();
+		return ArrayWrapper.of(array).replace(index, values).getRaw();
 	}
 
 	/**

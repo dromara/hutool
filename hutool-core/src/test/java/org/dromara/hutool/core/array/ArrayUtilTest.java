@@ -562,6 +562,20 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	void testRemoveWithValidIndex() {
+		final String[] array = {"a", "b", "c", "d"};
+		final String[] result = ArrayUtil.remove(array, 1);
+		assertArrayEquals(new String[]{"a", "c", "d"}, result);
+	}
+
+	@Test
+	void testRemoveEleFromObjectArray() {
+		final Integer[] array = {1, 2, 3, 2, 4};
+		final Integer[] expected = {1, 3, 2, 4};
+		Assertions.assertArrayEquals(expected, ArrayUtil.removeEle(array, 2));
+	}
+
+	@Test
 	public void removeEmptyTest() {
 		final String[] a = {"a", "b", "", null, " ", "c"};
 		final String[] resultA = {"a", "b", " ", "c"};
@@ -643,7 +657,7 @@ public class ArrayUtilTest {
 		final String[] a = {"1", "2", "3", "4"};
 		final String[] b = {"a", "b", "c"};
 
-		// 在小于0的位置，-1的位置插入，返回b+a，新数组
+		// 在小于0的位置，相当于在a前插入b，返回b+a，新数组
 		String[] result = ArrayUtil.replace(a, -1, b);
 		assertArrayEquals(new String[]{"a", "b", "c", "1", "2", "3", "4"}, result);
 
@@ -1034,5 +1048,27 @@ public class ArrayUtilTest {
 		final String[] result = ArrayUtil.ofArray(list, String.class);
 		// Then
 		assertArrayEquals(list.toArray(new String[0]), result, "The array should match the list contents.");
+	}
+
+	@Test
+	public void testResizeWithSmallerSize() {
+		// Setup
+		final Integer[] originalArray = {1, 2, 3, 4, 5};
+		// Execute
+		final Integer[] resizedArray = ArrayUtil.resize(originalArray, 3);
+		// Assert
+		assertEquals(3, resizedArray.length);
+		assertArrayEquals(new Integer[]{1, 2, 3}, resizedArray);
+	}
+
+	@Test
+	public void testResizeWithLargerSize() {
+		// Setup
+		final Integer[] originalArray = {1, 2, 3};
+		// Execute
+		final Integer[] resizedArray = ArrayUtil.resize(originalArray, 5);
+		// Assert
+		assertEquals(5, resizedArray.length);
+		assertArrayEquals(new Integer[]{1, 2, 3, null, null}, resizedArray);
 	}
 }
