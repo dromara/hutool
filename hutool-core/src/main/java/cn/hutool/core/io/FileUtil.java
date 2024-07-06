@@ -874,8 +874,8 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 当前目录清除完毕，需要再次判断当前文件夹，空文件夹则删除之
-		files = directory.listFiles();
-		if (ArrayUtil.isEmpty(files)) {
+		String[] fileNames = directory.list();
+		if (ArrayUtil.isEmpty(fileNames)) {
 			return directory.delete();
 		}
 		return true;
