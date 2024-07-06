@@ -863,7 +863,7 @@ public class FileUtil extends PathUtil {
 			return true;
 		}
 
-		final File[] files = directory.listFiles();
+		File[] files = directory.listFiles();
 		if (ArrayUtil.isEmpty(files)) {
 			// 空文件夹则删除之
 			return directory.delete();
@@ -871,6 +871,12 @@ public class FileUtil extends PathUtil {
 
 		for (File childFile : files) {
 			cleanEmpty(childFile);
+		}
+
+		// 当前目录清除完毕，需要再次判断当前文件夹，空文件夹则删除之
+		files = directory.listFiles();
+		if (ArrayUtil.isEmpty(files)) {
+			return directory.delete();
 		}
 		return true;
 	}
