@@ -749,6 +749,39 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
+	 * 清理空文件夹<br>
+	 * 此方法用于递归删除空的文件夹，不删除文件<br>
+	 * 如果传入的文件夹本身就是空的，删除这个文件夹
+	 *
+	 * @param directory 文件夹
+	 * @return 成功与否
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.5
+	 */
+	public static boolean cleanEmpty(final File directory) throws IORuntimeException {
+		if (directory == null || false == directory.exists() || false == directory.isDirectory()) {
+			return true;
+		}
+
+		final File[] files = directory.listFiles();
+		if (ArrayUtil.isEmpty(files)) {
+			// 空文件夹则删除之
+			return directory.delete();
+		}
+
+		for (final File childFile : files) {
+			cleanEmpty(childFile);
+		}
+
+		// 当前目录清除完毕，需要再次判断当前文件夹，空文件夹则删除之
+		final String[] fileNames = directory.list();
+		if (ArrayUtil.isEmpty(fileNames)) {
+			return directory.delete();
+		}
+		return true;
+	}
+
+	/**
 	 * 创建文件夹，如果存在直接返回此文件夹<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 *
