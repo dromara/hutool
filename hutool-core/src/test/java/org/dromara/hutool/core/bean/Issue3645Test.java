@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.bean;
 
 import lombok.Data;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
