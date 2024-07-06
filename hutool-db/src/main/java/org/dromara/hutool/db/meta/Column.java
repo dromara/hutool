@@ -68,7 +68,7 @@ public class Column implements Serializable, Cloneable {
 	private boolean autoIncrement;
 	/**
 	 * 字段默认值<br>
-	 *  default value for the column, which should be interpreted as a string when the value is enclosed in single quotes (may be {@code null})
+	 * default value for the column, which should be interpreted as a string when the value is enclosed in single quotes (may be {@code null})
 	 */
 	private String columnDef;
 	/**
@@ -79,14 +79,6 @@ public class Column implements Serializable, Cloneable {
 	 * 列字段顺序
 	 */
 	private int order;
-
-	public int getOrder() {
-		return order;
-	}
-
-	public void setOrder(int order) {
-		this.order = order;
-	}
 // ----------------------------------------------------- Fields end
 
 	/**
@@ -363,6 +355,26 @@ public class Column implements Serializable, Cloneable {
 	}
 
 	/**
+	 * 获取默认值
+	 *
+	 * @return 默认值
+	 */
+	public String getColumnDef() {
+		return columnDef;
+	}
+
+	/**
+	 * 设置默认值
+	 *
+	 * @param columnDef 默认值
+	 * @return this
+	 */
+	public Column setColumnDef(final String columnDef) {
+		this.columnDef = columnDef;
+		return this;
+	}
+
+	/**
 	 * 是否主键
 	 *
 	 * @return 是否主键
@@ -383,23 +395,24 @@ public class Column implements Serializable, Cloneable {
 		this.isPk = isPk;
 		return this;
 	}
+
 	/**
-	 * 获取默认值
+	 * 获取顺序号
 	 *
-	 * @return 默认值
+	 * @return 顺序号
 	 */
-	public String getColumnDef() {
-		return columnDef;
+	public int getOrder() {
+		return order;
 	}
 
 	/**
-	 * 设置默认值
+	 * 设置顺序号
 	 *
-	 * @param columnDef 默认值
+	 * @param order 顺序号
 	 * @return this
 	 */
-	public Column setColumnDef(final String columnDef) {
-		this.columnDef = columnDef;
+	public Column setOrder(final int order) {
+		this.order = order;
 		return this;
 	}
 
