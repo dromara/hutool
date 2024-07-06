@@ -35,7 +35,7 @@ public class Issue2202Test {
 		headerMap.put("wechatpay-signature", "signature");
 		final ResponseSignVerifyParams case1 = BeanUtil.toBean(headerMap, ResponseSignVerifyParams.class,
 				CopyOptions.of().setFieldEditor(entry -> {
-					entry.setKey(NamingCase.toCamelCase(entry.getKey(), '-'));
+					entry.setKey(NamingCase.toCamelCase(entry.getKey().toString(), '-'));
 					return entry;
 				}));
 

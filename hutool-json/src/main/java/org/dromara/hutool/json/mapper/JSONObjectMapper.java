@@ -208,7 +208,9 @@ public class JSONObjectMapper {
 	private void mapFromBean(final Object bean, final JSONObject jsonObject) {
 		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.config());
 		if (null != this.predicate) {
-			copyOptions.setFieldEditor((entry -> this.predicate.test(entry) ? entry : null));
+			copyOptions.setFieldEditor((entry -> this.predicate.test(
+				MutableEntry.of(StrUtil.toStringOrNull(entry.getKey()), entry.getValue())) ?
+				entry : null));
 		}
 		BeanUtil.beanToMap(bean, jsonObject, copyOptions);
 	}

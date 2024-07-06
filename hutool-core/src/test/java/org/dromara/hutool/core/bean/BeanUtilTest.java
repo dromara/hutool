@@ -879,7 +879,7 @@ public class BeanUtilTest {
 				//setIgnoreNullValue(true).
 				//setIgnoreCase(false).
 						setFieldEditor(entry->{
-							entry.setKey(StrUtil.toCamelCase(entry.getKey()));
+							entry.setKey(StrUtil.toCamelCase(entry.getKey().toString()));
 							return entry;
 				});
 

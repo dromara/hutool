@@ -17,6 +17,7 @@ import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -72,11 +73,11 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 			// 获取目标字段真实类型
 			final Type fieldType = TypeUtil.getActualType(this.targetType ,tDesc.getFieldType());
 			// 编辑键值对
-			final MutableEntry<String, Object> entry = copyOptions.editField(tFieldName, null);
+			final MutableEntry<Object, Object> entry = copyOptions.editField(tFieldName, null);
 			if(null == entry){
 				return;
 			}
-			tFieldName = entry.getKey();
+			tFieldName = StrUtil.toStringOrNull(entry.getKey());
 			// 对key做转换，转换后为null的跳过
 			if (null == tFieldName) {
 				return;

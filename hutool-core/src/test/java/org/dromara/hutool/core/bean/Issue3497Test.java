@@ -14,7 +14,7 @@ public class Issue3497Test {
 	public void setFieldEditorTest() {
 		final Map<String, String> aB = MapUtil.builder("a_b", "1").build();
 		final Map<?, ?> bean = BeanUtil.toBean(aB, Map.class, CopyOptions.of().setFieldEditor((entry)->{
-			entry.setKey(StrUtil.toCamelCase(entry.getKey()));
+			entry.setKey(StrUtil.toCamelCase(entry.getKey().toString()));
 			return entry;
 		}));
 		Assertions.assertEquals(bean.toString(), "{aB=1}");

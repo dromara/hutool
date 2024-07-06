@@ -373,12 +373,12 @@ public class BeanUtil {
 	 */
 	public static Map<String, Object> beanToMap(final Object bean, final String... properties) {
 		int mapSize = 16;
-		UnaryOperator<MutableEntry<String, Object>> editor = null;
+		UnaryOperator<MutableEntry<Object, Object>> editor = null;
 		if (ArrayUtil.isNotEmpty(properties)) {
 			mapSize = properties.length;
 			final Set<String> propertiesSet = SetUtil.of(properties);
 			editor = entry -> {
-				final String key = entry.getKey();
+				final String key = StrUtil.toStringOrNull(entry.getKey());
 				entry.setKey(propertiesSet.contains(key) ? key : null);
 				return entry;
 			};
@@ -413,13 +413,14 @@ public class BeanUtil {
 	 * @return Map
 	 * @since 3.2.3
 	 */
-	public static Map<String, Object> beanToMap(final Object bean, final Map<String, Object> targetMap, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
+	public static Map<String, Object> beanToMap(final Object bean, final Map<String, Object> targetMap,
+												final boolean isToUnderlineCase, final boolean ignoreNullValue) {
 		if (null == bean) {
 			return null;
 		}
 
 		return beanToMap(bean, targetMap, ignoreNullValue, entry -> {
-			final String key = entry.getKey();
+			final String key = StrUtil.toStringOrNull(entry.getKey());
 			entry.setKey(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key);
 			return entry;
 		});
@@ -442,8 +443,10 @@ public class BeanUtil {
 	 * @return Map
 	 * @since 4.0.5
 	 */
-	public static Map<String, Object> beanToMap(final Object bean, final Map<String, Object> targetMap,
-												final boolean ignoreNullValue, final UnaryOperator<MutableEntry<String, Object>> keyEditor) {
+	public static Map<String, Object> beanToMap(final Object bean,
+												final Map<String, Object> targetMap,
+												final boolean ignoreNullValue,
+												final UnaryOperator<MutableEntry<Object, Object>> keyEditor) {
 		if (null == bean) {
 			return null;
 		}

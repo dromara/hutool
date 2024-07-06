@@ -52,7 +52,7 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 			}
 
 			// 编辑键值对
-			final MutableEntry<String, Object> entry = copyOptions.editField(sKey.toString(), sValue);
+			final MutableEntry<Object, Object> entry = copyOptions.editField(sKey, sValue);
 			if(null == entry){
 				return;
 			}

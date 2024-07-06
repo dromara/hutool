@@ -46,7 +46,7 @@ public class Issue1687Test {
 
 		// 补救别名错位
 		final CopyOptions copyOptions = CopyOptions.of().setFieldMapping(
-				MapUtil.builder("depart", "depId").build()
+				MapUtil.builder((Object)"depart", (Object)"depId").build()
 		);
 		final SysUser sysUser = BeanUtil.toBean(sysUserFb, SysUser.class, copyOptions);
 

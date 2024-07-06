@@ -67,7 +67,7 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 字段属性名和属性值编辑器，用于自定义属性转换规则（例如驼峰转下划线等），自定义属性值转换规则（例如null转""等）
 	 */
-	protected UnaryOperator<MutableEntry<String, Object>> fieldEditor;
+	protected UnaryOperator<MutableEntry<Object, Object>> fieldEditor;
 
 	/**
 	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
@@ -264,10 +264,11 @@ public class CopyOptions implements Serializable {
 	 * @param fieldMapping 拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用
 	 * @return CopyOptions
 	 */
-	public CopyOptions setFieldMapping(final Map<String, String> fieldMapping) {
+	public CopyOptions setFieldMapping(final Map<?, ?> fieldMapping) {
 		return setFieldEditor(entry -> {
-			final String key = entry.getKey();
-			entry.setKey(fieldMapping.getOrDefault(key, key));
+			final Object key = entry.getKey();
+			final Object keyMapped = fieldMapping.get(key);
+			entry.setKey(null == keyMapped ? key : keyMapped);
 			return entry;
 		});
 	}
@@ -282,7 +283,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 * @since 5.4.2
 	 */
-	public CopyOptions setFieldEditor(final UnaryOperator<MutableEntry<String, Object>> editor) {
+	public CopyOptions setFieldEditor(final UnaryOperator<MutableEntry<Object, Object>> editor) {
 		this.fieldEditor = editor;
 		return this;
 	}
@@ -290,13 +291,13 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 编辑字段值
 	 *
-	 * @param fieldName  字段名
-	 * @param fieldValue 字段值
+	 * @param key  字段名
+	 * @param value 字段值
 	 * @return 编辑后的字段值
 	 * @since 5.7.15
 	 */
-	protected MutableEntry<String, Object> editField(final String fieldName, final Object fieldValue) {
-		final MutableEntry<String, Object> entry = new MutableEntry<>(fieldName, fieldValue);
+	protected MutableEntry<Object, Object> editField(final Object key, final Object value) {
+		final MutableEntry<Object, Object> entry = new MutableEntry<>(key, value);
 		return (null != this.fieldEditor) ?
 			this.fieldEditor.apply(entry) : entry;
 	}

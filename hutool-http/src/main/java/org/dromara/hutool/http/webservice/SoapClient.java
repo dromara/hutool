@@ -648,7 +648,7 @@ public class SoapClient implements HeaderOperation<SoapClient> {
 				Entry entry;
 				for (final Object obj : ((Map) value).entrySet()) {
 					entry = (Entry) obj;
-					setParam(childEle, entry.getKey().toString(), entry.getValue(), prefix);
+					setParam(childEle, StrUtil.toStringOrNull(entry.getKey()), entry.getValue(), prefix);
 				}
 			} else {
 				// 单个值

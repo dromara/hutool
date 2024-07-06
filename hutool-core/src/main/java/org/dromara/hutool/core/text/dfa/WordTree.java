@@ -374,7 +374,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	private Iterable<String> innerFlatten(final Entry<Character, WordTree> entry) {
 		final List<String> list = EasyStream.of(entry.getValue().entrySet()).flat(this::innerFlatten).map(v -> entry.getKey() + v).toList();
 		if (list.isEmpty()) {
-			return EasyStream.of(entry.getKey().toString());
+			return EasyStream.of(StrUtil.toStringOrNull(entry.getKey()));
 		}
 		return list;
 	}
