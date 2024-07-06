@@ -42,18 +42,20 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 				return;
 			}
 
-			final String sKeyStr = copyOptions.editFieldName(sKey.toString());
-			// 对key做转换，转换后为null的跳过
-			if (null == sKeyStr) {
-				return;
+			if(sKey instanceof String){
+				sKey = copyOptions.editFieldName((String) sKey);
+				// 对key做转换，转换后为null的跳过
+				if (null == sKey) {
+					return;
+				}
 			}
 
 			// 忽略不需要拷贝的 key,
-			if (false == copyOptions.testKeyFilter(sKeyStr)) {
+			if (false == copyOptions.testKeyFilter(sKey)) {
 				return;
 			}
 
-			final Object targetValue = target.get(sKeyStr);
+			final Object targetValue = target.get(sKey);
 			// 非覆盖模式下，如果目标值存在，则跳过
 			if (false == copyOptions.override && null != targetValue) {
 				return;
@@ -64,11 +66,11 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 			if (null != typeArguments) {
 				//sValue = Convert.convertWithCheck(typeArguments[1], sValue, null, this.copyOptions.ignoreError);
 				sValue = this.copyOptions.convertField(typeArguments[1], sValue);
-				sValue = copyOptions.editFieldValue(sKeyStr, sValue);
+				sValue = copyOptions.editFieldValue(sKey.toString(), sValue);
 			}
 
 			// 目标赋值
-			target.put(sKeyStr, sValue);
+			target.put(sKey, sValue);
 		});
 		return this.target;
 	}
