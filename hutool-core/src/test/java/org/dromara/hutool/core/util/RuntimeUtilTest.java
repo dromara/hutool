@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.util.RuntimeUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -67,6 +66,13 @@ public class RuntimeUtilTest {
 	@Disabled
 	void pingTest() {
 		final String s = RuntimeUtil.execForStr("cmd /c ping " + "hutool.cn");
+		Console.log(s);
+	}
+
+	@Test
+	@Disabled
+	public void issueIAB5LWTest() {
+		final String s = RuntimeUtil.execForStr("cmd /c netstat -aon | findstr 8080");
 		Console.log(s);
 	}
 }
