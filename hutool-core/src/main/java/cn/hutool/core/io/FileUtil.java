@@ -1,47 +1,25 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.file.FileCopier;
-import cn.hutool.core.io.file.FileMode;
-import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.io.file.FileReader.ReaderHandler;
+import cn.hutool.core.io.file.*;
 import cn.hutool.core.io.file.FileWriter;
-import cn.hutool.core.io.file.LineSeparator;
-import cn.hutool.core.io.file.PathUtil;
-import cn.hutool.core.io.file.Tailer;
+import cn.hutool.core.io.file.FileReader.ReaderHandler;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.hutool.core.util.*;
 
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.nio.file.*;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.jar.JarFile;
@@ -85,7 +63,7 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 绝对路径判断正则
 	 */
-	private static final Pattern PATTERN_PATH_ABSOLUTE = Pattern.compile("^[a-zA-Z]:([/\\\\].*)?");
+	private static final Pattern PATTERN_PATH_ABSOLUTE = Pattern.compile("^[a-zA-Z]:([/\\\\].*)?", Pattern.DOTALL);
 
 
 	/**
@@ -1696,6 +1674,8 @@ public class FileUtil extends PathUtil {
 		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH);
 		// 去除开头空白符，末尾空白符合法，不去除
 		pathToUse = StrUtil.trimStart(pathToUse);
+		// issue#IAB65V 去除尾部的换行符
+		pathToUse = StrUtil.trim(pathToUse, 1, (c)->c == '\n' || c == '\r');
 
 		String prefix = StrUtil.EMPTY;
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
