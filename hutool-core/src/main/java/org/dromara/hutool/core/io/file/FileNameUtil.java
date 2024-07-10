@@ -15,9 +15,10 @@ package org.dromara.hutool.core.io.file;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.regex.ReUtil;
+import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrTrimer;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.SystemUtil;
 
 import java.io.File;
@@ -36,20 +37,20 @@ public class FileNameUtil {
 	/**
 	 * .java文件扩展名
 	 */
-	public static final String EXT_JAVA = ".java";
+	public static final String EXT_JAVA = ".java" ;
 	/**
 	 * .class文件扩展名
 	 */
-	public static final String EXT_CLASS = ".class";
+	public static final String EXT_CLASS = ".class" ;
 	/**
 	 * .jar文件扩展名
 	 */
-	public static final String EXT_JAR = ".jar";
+	public static final String EXT_JAR = ".jar" ;
 
 	/**
 	 * 在Jar中的路径jar的扩展名形式
 	 */
-	public static final String EXT_JAR_PATH = ".jar!";
+	public static final String EXT_JAR_PATH = ".jar!" ;
 
 	/**
 	 * 类Unix路径分隔符
@@ -150,12 +151,12 @@ public class FileNameUtil {
 	 * 增加临时扩展名
 	 *
 	 * @param fileName 文件名
-	 * @param suffix 临时扩展名，如果为空，使用`.temp`
+	 * @param suffix   临时扩展名，如果为空，使用`.temp`
 	 * @return 临时文件名
 	 */
-	public static String addTempSuffix(final String fileName, String suffix){
+	public static String addTempSuffix(final String fileName, String suffix) {
 		if (StrUtil.isBlank(suffix)) {
-			suffix = ".temp";
+			suffix = ".temp" ;
 		} else {
 			suffix = StrUtil.addPrefixIfNot(suffix, StrUtil.DOT);
 		}
@@ -217,7 +218,7 @@ public class FileNameUtil {
 
 		//issue#2642，多级扩展名的主文件名
 		for (final CharSequence specialSuffix : SPECIAL_SUFFIX) {
-			if(StrUtil.endWith(fileName, "." + specialSuffix)){
+			if (StrUtil.endWith(fileName, "." + specialSuffix)) {
 				return StrUtil.subPre(fileName, len - specialSuffix.length() - 1);
 			}
 		}
@@ -380,6 +381,8 @@ public class FileNameUtil {
 		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH);
 		// 去除开头空白符，末尾空白符合法，不去除
 		pathToUse = StrUtil.trimPrefix(pathToUse);
+		// issue#IAB65V 去除尾部的换行符
+		pathToUse = StrUtil.trim(pathToUse, StrTrimer.TrimMode.SUFFIX, (c)->c == '\n' || c == '\r');
 
 		String prefix = StrUtil.EMPTY;
 		final int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
@@ -402,8 +405,19 @@ public class FileNameUtil {
 			pathToUse = pathToUse.substring(1);
 		}
 
-		final List<String> pathList = SplitUtil.split(pathToUse, StrUtil.SLASH);
+		final List<String> pathElements = resolePathElements(SplitUtil.split(pathToUse, StrUtil.SLASH), prefix);
 
+		return prefix + CollUtil.join(pathElements, StrUtil.SLASH);
+	}
+
+	/**
+	 * 处理路径，将路径中的"."和".."转换为标准的路径元素
+	 *
+	 * @param pathList 路径列表，使用`/`隔开的路径元素列表
+	 * @param prefix   路径前缀，用于区别相对或绝对路径
+	 * @return 处理后的路径
+	 */
+	private static List<String> resolePathElements(final List<String> pathList, final String prefix) {
 		final List<String> pathElements = new LinkedList<>();
 		int tops = 0;
 		String element;
@@ -434,8 +448,7 @@ public class FileNameUtil {
 				pathElements.add(0, StrUtil.DOUBLE_DOT);
 			}
 		}
-
-		return prefix + CollUtil.join(pathElements, StrUtil.SLASH);
+		return pathElements;
 	}
 	// -------------------------------------------------------------------------------------------- name end
 }

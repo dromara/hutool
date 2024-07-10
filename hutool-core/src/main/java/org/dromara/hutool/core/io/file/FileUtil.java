@@ -70,7 +70,7 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 绝对路径判断正则
 	 */
-	private static final Pattern PATTERN_PATH_ABSOLUTE = Pattern.compile("^[a-zA-Z]:([/\\\\].*)?");
+	private static final Pattern PATTERN_PATH_ABSOLUTE = Pattern.compile("^[a-zA-Z]:([/\\\\].*)?", Pattern.DOTALL);
 
 
 	/**
