@@ -55,6 +55,13 @@ public class ImgUtilTest {
 
 	@Test
 	@Ignore
+	public void cutTest2() {
+		final Image cut = ImgUtil.cut(ImgUtil.read("d:/test/logo_small.jpg"), 0, 0, 50);
+		ImgUtil.write(cut, FileUtil.file("d:/test/target.jpg"));
+	}
+
+	@Test
+	@Ignore
 	public void rotateTest() throws IOException {
 		Image image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
 		ImgUtil.write(image, FileUtil.file("e:/pic/result.png"));
