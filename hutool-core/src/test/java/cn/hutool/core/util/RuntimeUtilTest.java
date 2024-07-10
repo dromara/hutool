@@ -50,4 +50,11 @@ public class RuntimeUtilTest {
 		Console.log("cpu个数：{}", cpu);
 		Assert.assertTrue(cpu > 0);
 	}
+
+	@Test
+	@Ignore
+	public void issueIAB5LWTest() {
+		final String s = RuntimeUtil.execForStr("cmd /c netstat -aon | findstr 8080");
+		Console.log(s);
+	}
 }
