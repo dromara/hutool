@@ -67,7 +67,7 @@ public class HttpClient5Engine implements ClientEngine {
 	 * 构造
 	 */
 	public HttpClient5Engine() {
-		initEngine();
+		//initEngine();
 	}
 
 	@Override

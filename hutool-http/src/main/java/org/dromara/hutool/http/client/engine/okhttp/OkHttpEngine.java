@@ -44,7 +44,7 @@ public class OkHttpEngine implements ClientEngine {
 	 * 构造
 	 */
 	public OkHttpEngine() {
-		initEngine();
+		//initEngine();
 	}
 
 	@Override
