@@ -6,6 +6,8 @@ import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * 身份证单元测试
  *
@@ -47,16 +49,16 @@ public class IdcardUtilTest {
 	@Test
 	public void convert15To18Test() {
 		String convert15To18 = IdcardUtil.convert15To18(ID_15);
-		Assert.assertEquals("150102198807303035", convert15To18);
+		assertEquals("150102198807303035", convert15To18);
 
 		String convert15To18Second = IdcardUtil.convert15To18("330102200403064");
-		Assert.assertEquals("33010219200403064X", convert15To18Second);
+		assertEquals("33010219200403064X", convert15To18Second);
 	}
 
 	@Test
 	public void convert18To15Test() {
 		String idcard15 = IdcardUtil.convert18To15("150102198807303035");
-		Assert.assertEquals(ID_15, idcard15);
+		assertEquals(ID_15, idcard15);
 	}
 
 	@Test
@@ -64,58 +66,58 @@ public class IdcardUtilTest {
 		DateTime date = DateUtil.parse("2017-04-10");
 
 		int age = IdcardUtil.getAgeByIdCard(ID_18, date);
-		Assert.assertEquals(age, 38);
-		Assert.assertEquals(IdcardUtil.getAgeByIdCard(FOREIGN_ID_18, date), 32);
+		assertEquals(age, 38);
+		assertEquals(IdcardUtil.getAgeByIdCard(FOREIGN_ID_18, date), 32);
 
 		int age2 = IdcardUtil.getAgeByIdCard(ID_15, date);
-		Assert.assertEquals(age2, 28);
+		assertEquals(age2, 28);
 	}
 
 	@Test
-	public void getAgeByIdCardTest2() {
+	public void issue3651Test() {
 		DateTime date = DateUtil.parse("2014-07-11");
 		int age = IdcardUtil.getAgeByIdCard("321083200807112119", date);
-		Console.log(age);
+		assertEquals(5, age);
 
 		date = DateUtil.parse("2014-07-31");
 		age = IdcardUtil.getAgeByIdCard("321083200807312119", date);
-		Console.log(age);
+		assertEquals(5, age);
 	}
 
 	@Test
 	public void getBirthByIdCardTest() {
 		String birth = IdcardUtil.getBirthByIdCard(ID_18);
-		Assert.assertEquals(birth, "19781216");
+		assertEquals(birth, "19781216");
 
 		String birth2 = IdcardUtil.getBirthByIdCard(ID_15);
-		Assert.assertEquals(birth2, "19880730");
+		assertEquals(birth2, "19880730");
 	}
 
 	@Test
 	public void getProvinceByIdCardTest() {
 		String province = IdcardUtil.getProvinceByIdCard(ID_18);
-		Assert.assertEquals(province, "江苏");
+		assertEquals(province, "江苏");
 
 		String province2 = IdcardUtil.getProvinceByIdCard(ID_15);
-		Assert.assertEquals(province2, "内蒙古");
+		assertEquals(province2, "内蒙古");
 	}
 
 	@Test
 	public void getCityCodeByIdCardTest() {
 		String codeByIdCard = IdcardUtil.getCityCodeByIdCard(ID_18);
-		Assert.assertEquals("3210", codeByIdCard);
+		assertEquals("3210", codeByIdCard);
 	}
 
 	@Test
 	public void getDistrictCodeByIdCardTest() {
 		String codeByIdCard = IdcardUtil.getDistrictCodeByIdCard(ID_18);
-		Assert.assertEquals("321083", codeByIdCard);
+		assertEquals("321083", codeByIdCard);
 	}
 
 	@Test
 	public void getGenderByIdCardTest() {
 		int gender = IdcardUtil.getGenderByIdCard(ID_18);
-		Assert.assertEquals(1, gender);
+		assertEquals(1, gender);
 	}
 
 	@Test
