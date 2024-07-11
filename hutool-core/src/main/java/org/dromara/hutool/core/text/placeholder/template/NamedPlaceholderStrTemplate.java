@@ -13,11 +13,10 @@
 package org.dromara.hutool.core.text.placeholder.template;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.bean.StrictBeanDesc;
+import org.dromara.hutool.core.bean.BeanDesc;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -26,7 +25,6 @@ import org.dromara.hutool.core.text.StrPool;
 import org.dromara.hutool.core.text.placeholder.StrTemplate;
 import org.dromara.hutool.core.text.placeholder.segment.*;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.*;
@@ -344,7 +342,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 		if (beanOrMap instanceof Map) {
 			return format((Map<String, ?>) beanOrMap);
 		} else if (BeanUtil.isReadableBean(beanOrMap.getClass())) {
-			final StrictBeanDesc beanDesc = BeanUtil.getBeanDesc(beanOrMap.getClass());
+			final BeanDesc beanDesc = BeanUtil.getBeanDesc(beanOrMap.getClass());
 			return format(fieldName -> {
 				final Method getterMethod = beanDesc.getGetter(fieldName);
 				if (getterMethod == null) {
@@ -353,7 +351,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 				return LambdaUtil.buildGetter(getterMethod).apply(beanOrMap);
 			});
 		}
-		return format(fieldName -> BeanUtil.getFieldValue(beanOrMap, fieldName));
+		return format(fieldName -> BeanUtil.getProperty(beanOrMap, fieldName));
 	}
 
 	/**
@@ -552,21 +550,11 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 		if (obj instanceof Map) {
 			@SuppressWarnings("unchecked") final Map<String, String> map = (Map<String, String>) obj;
 			matchesByKey(str, map::put);
-		} else if (BeanUtil.isReadableBean(obj.getClass())) {
-			final StrictBeanDesc beanDesc = BeanUtil.getBeanDesc(obj.getClass());
-			matchesByKey(str, (key, value) -> {
-				final Field field = beanDesc.getField(key);
-				final Method setterMethod = beanDesc.getSetter(key);
-				if (field == null || setterMethod == null) {
-					return;
-				}
-				final Object convert = Convert.convert(field.getType(), value);
-				LambdaUtil.buildSetter(setterMethod).accept(obj, convert);
-			});
+		} else if (BeanUtil.isWritableBean(obj.getClass())) {
+			matchesByKey(str, (key, value) -> BeanUtil.setProperty(obj, key, value));
 		}
 		return obj;
 	}
-	// endregion
 	// endregion
 
 	/**

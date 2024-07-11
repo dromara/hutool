@@ -24,15 +24,15 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 严格的Bean信息描述做为BeanInfo替代方案，此对象持有JavaBean中的setters和getters等相关信息描述<br>
- * 查找Getter和Setter方法时会：
+ * 严格的Bean信息描述做为BeanInfo替代方案，此对象持有JavaBean中的setters和getters等相关信息描述，<br>
+ * 在获取Bean属性的时候，要求字段必须存在并严格匹配。查找Getter和Setter方法时会：
  *
- * <pre>
- * 1. 忽略字段和方法名的大小写
- * 2. Getter查找getXXX、isXXX、getIsXXX
- * 3. Setter查找setXXX、setIsXXX
- * 4. Setter忽略参数值与字段值不匹配的情况，因此有多个参数类型的重载时，会调用首次匹配的
- * </pre>
+ * <ol>
+ *     <li>忽略字段和方法名的大小写</li>
+ *     <li>Getter查找getXXX、isXXX、getIsXXX</li>
+ *     <li>Setter查找setXXX、setIsXXX</li>
+ *     <li>Setter忽略参数值与字段值不匹配的情况，因此有多个参数类型的重载时，会调用首次匹配的</li>
+ * </ol>
  *
  * @author looly
  * @since 3.1.2
@@ -53,42 +53,10 @@ public class StrictBeanDesc extends AbstractBeanDesc {
 	// ------------------------------------------------------------------------------------------------------ Private method start
 
 	/**
-	 * 初始化<br>
+	 * 普通Bean初始化<br>
 	 * 只有与属性关联的相关Getter和Setter方法才会被读取，无关的getXXX和setXXX都被忽略
 	 */
 	private void init() {
-		if (RecordUtil.isRecord(getBeanClass())) {
-			initForRecord();
-		} else{
-			initForBean();
-		}
-	}
-
-	/**
-	 * 针对Record类的反射初始化
-	 */
-	private void initForRecord() {
-		final Class<?> beanClass = this.beanClass;
-		final Map<String, PropDesc> propMap = this.propMap;
-
-		final Method[] getters = MethodUtil.getPublicMethods(beanClass, method -> 0 == method.getParameterCount());
-		// 排除静态属性和对象子类
-		final Field[] fields = FieldUtil.getFields(beanClass, field -> !ModifierUtil.isStatic(field) && !FieldUtil.isOuterClassField(field));
-		for (final Field field : fields) {
-			for (final Method getter : getters) {
-				if (field.getName().equals(getter.getName())) {
-					//record对象，getter方法与字段同名
-					final PropDesc prop = new PropDesc(field, getter, null);
-					propMap.putIfAbsent(prop.getFieldName(), prop);
-				}
-			}
-		}
-	}
-
-	/**
-	 * 普通Bean初始化
-	 */
-	private void initForBean() {
 		final Class<?> beanClass = this.beanClass;
 		final Map<String, PropDesc> propMap = this.propMap;
 

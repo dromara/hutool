@@ -2045,7 +2045,7 @@ public class CollUtil {
 	 * @return 分组列表
 	 */
 	public static <T> List<List<T>> groupByField(final Collection<T> collection, final String fieldName) {
-		return groupByFunc(collection, t -> BeanUtil.getFieldValue(t, fieldName));
+		return groupByFunc(collection, t -> BeanUtil.getProperty(t, fieldName));
 	}
 
 	/**

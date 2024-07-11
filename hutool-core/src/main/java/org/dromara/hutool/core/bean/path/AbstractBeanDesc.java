@@ -18,8 +18,6 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -83,16 +81,6 @@ public abstract class AbstractBeanDesc implements BeanDesc {
 		return ignoreCase ? new CaseInsensitiveMap<>(1, this.propMap) : this.propMap;
 	}
 
-	@Override
-	public Collection<PropDesc> getProps() {
-		return this.propMap.values();
-	}
-
-	@Override
-	public PropDesc getProp(final String fieldName) {
-		return this.propMap.get(fieldName);
-	}
-
 	/**
 	 * 获得字段名对应的字段对象，如果不存在返回null
 	 *
@@ -102,27 +90,5 @@ public abstract class AbstractBeanDesc implements BeanDesc {
 	public Field getField(final String fieldName) {
 		final PropDesc desc = this.propMap.get(fieldName);
 		return null == desc ? null : desc.getField();
-	}
-
-	/**
-	 * 获取Getter方法，如果不存在返回null
-	 *
-	 * @param fieldName 字段名
-	 * @return Getter方法
-	 */
-	public Method getGetter(final String fieldName) {
-		final PropDesc desc = this.propMap.get(fieldName);
-		return null == desc ? null : desc.getGetter();
-	}
-
-	/**
-	 * 获取Setter方法，如果不存在返回null
-	 *
-	 * @param fieldName 字段名
-	 * @return Setter方法
-	 */
-	public Method getSetter(final String fieldName) {
-		final PropDesc desc = this.propMap.get(fieldName);
-		return null == desc ? null : desc.getSetter();
 	}
 }

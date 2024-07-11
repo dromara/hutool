@@ -17,8 +17,6 @@ import org.dromara.hutool.core.bean.copier.BeanCopier;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
 import org.dromara.hutool.core.bean.path.BeanPath;
-import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.convert.impl.RecordConverter;
@@ -77,14 +75,13 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 获取{@link StrictBeanDesc} Bean描述信息
+	 * 获取{@link BeanDesc} Bean描述信息
 	 *
 	 * @param clazz Bean类
-	 * @return {@link StrictBeanDesc}
-	 * @since 3.1.2
+	 * @return {@link BeanDesc}
 	 */
-	public static StrictBeanDesc getBeanDesc(final Class<?> clazz) {
-		return BeanDescCache.INSTANCE.getBeanDesc(clazz, () -> new StrictBeanDesc(clazz));
+	public static BeanDesc getBeanDesc(final Class<?> clazz) {
+		return BeanDescFactory.getBeanDesc(clazz);
 	}
 
 	/**
@@ -99,6 +96,7 @@ public class BeanUtil {
 	}
 
 	// region ----- getPropertyDescriptor
+
 	/**
 	 * 获得Bean字段描述数组
 	 *
@@ -178,76 +176,6 @@ public class BeanUtil {
 	// endregion
 
 	/**
-	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
-	 * 对象同样支持Map类型，fieldNameOrIndex即为key
-	 *
-	 * <ul>
-	 *     <li>Map: fieldNameOrIndex需为key，获取对应value</li>
-	 *     <li>Collection: fieldNameOrIndex当为数字，返回index对应值，非数字遍历集合返回子bean对应name值</li>
-	 *     <li>Array: fieldNameOrIndex当为数字，返回index对应值，非数字遍历数组返回子bean对应name值</li>
-	 * </ul>
-	 *
-	 * @param bean             Bean对象
-	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
-	 * @return 字段值
-	 */
-	public static Object getFieldValue(final Object bean, final String fieldNameOrIndex) {
-		if (null == bean || null == fieldNameOrIndex) {
-			return null;
-		}
-
-		if (bean instanceof Map) {
-			return ((Map<?, ?>) bean).get(fieldNameOrIndex);
-		} else if (bean instanceof Collection) {
-			try {
-				return CollUtil.get((Collection<?>) bean, Integer.parseInt(fieldNameOrIndex));
-			} catch (final NumberFormatException e) {
-				// 非数字，see pr#254@Gitee
-				return CollUtil.map((Collection<?>) bean, (beanEle) -> getFieldValue(beanEle, fieldNameOrIndex), false);
-			}
-		} else if (ArrayUtil.isArray(bean)) {
-			try {
-				return ArrayUtil.get(bean, Integer.parseInt(fieldNameOrIndex));
-			} catch (final NumberFormatException e) {
-				// 非数字，see pr#254@Gitee
-				return ArrayUtil.map(bean, Object.class, (beanEle) -> getFieldValue(beanEle, fieldNameOrIndex));
-			}
-		} else {// 普通Bean对象
-			return FieldUtil.getFieldValue(bean, fieldNameOrIndex);
-		}
-	}
-
-	/**
-	 * 设置字段值，通过反射设置字段值，并不调用setXXX方法<br>
-	 * 对象同样支持Map类型，fieldNameOrIndex即为key，支持：
-	 * <ul>
-	 *     <li>Map</li>
-	 *     <li>List</li>
-	 *     <li>Bean</li>
-	 * </ul>
-	 *
-	 * @param bean             Bean
-	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
-	 * @param value            值
-	 * @return bean，当为数组时，返回一个新的数组
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static Object setFieldValue(final Object bean, final String fieldNameOrIndex, final Object value) {
-		if (bean instanceof Map) {
-			((Map) bean).put(fieldNameOrIndex, value);
-		} else if (bean instanceof List) {
-			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldNameOrIndex), value);
-		} else if (ArrayUtil.isArray(bean)) {
-			// issue#3008，追加产生新数组，此处返回新数组
-			return ArrayUtil.setOrPadding(bean, Convert.toInt(fieldNameOrIndex), value);
-		} else {
-			// 普通Bean对象
-			FieldUtil.setFieldValue(bean, fieldNameOrIndex, value);
-		}
-		return bean;
-	}
-
-	/**
 	 * 获取Bean中的属性值
 	 *
 	 * @param <T>        属性值类型
@@ -279,6 +207,7 @@ public class BeanUtil {
 	}
 
 	// region ----- toBean
+
 	/**
 	 * 对象或Map转Bean
 	 *
@@ -327,6 +256,7 @@ public class BeanUtil {
 	// endregion
 
 	// region ----- fillBean
+
 	/**
 	 * 填充Bean的核心方法
 	 *
@@ -362,6 +292,7 @@ public class BeanUtil {
 	// endregion
 
 	// region ----- beanToMap
+
 	/**
 	 * 将bean的部分属性转换成map<br>
 	 * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
@@ -747,7 +678,7 @@ public class BeanUtil {
 			return false;
 		}
 		// issue#I9VTZG，排除定义setXXX的预定义类
-		if(Dict.class == clazz){
+		if (Dict.class == clazz) {
 			return false;
 		}
 
@@ -755,6 +686,7 @@ public class BeanUtil {
 	}
 
 	// region ----- hasXXX
+
 	/**
 	 * 判断是否有Setter方法<br>
 	 * 判定方法是否存在只有一个参数的setXXX方法
