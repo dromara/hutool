@@ -23,9 +23,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 配合SimpleServerTest测试
+ */
 public class IssueI85C9STest {
 
-	private final ClientEngine  engine = new HttpClient5Engine();
+	private final ClientEngine engine = new HttpClient5Engine();
 
 	@Test
 	@Disabled
@@ -33,7 +36,7 @@ public class IssueI85C9STest {
 
 		final Response send = Request.of("http://localhost:8888/formTest")
 			.method(Method.GET)
-			.form(MapBuilder.of("a", (Object)1).put("b", 2).build())
+			.form(MapBuilder.of("a", (Object) 1).put("b", 2).build())
 			.send(engine);
 
 		final String bodyStr = send.bodyStr();
@@ -47,7 +50,7 @@ public class IssueI85C9STest {
 
 		final Response send = Request.of("http://localhost:8888/formTest?c=3")
 			.method(Method.GET)
-			.form(MapBuilder.of("a", (Object)1).put("b", 2).build())
+			.form(MapBuilder.of("a", (Object) 1).put("b", 2).build())
 			.send(engine);
 
 		Assertions.assertEquals("{a=[1], b=[2], c=[3]}", send.bodyStr());
