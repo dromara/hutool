@@ -63,6 +63,7 @@ public class HttpClient4Engine implements ClientEngine {
 	 * 构造
 	 */
 	public HttpClient4Engine() {
+		initEngine();
 	}
 
 	@Override
