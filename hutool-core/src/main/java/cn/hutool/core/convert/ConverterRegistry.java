@@ -3,6 +3,7 @@ package cn.hutool.core.convert;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.impl.*;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
@@ -338,6 +339,12 @@ public class ConverterRegistry implements Serializable {
 		if("java.lang.Class".equals(rowType.getName())){
 			final ClassConverter converter = new ClassConverter();
 			return (T) converter.convert(value, (Class<?>) defaultValue);
+		}
+
+		// 空值转空Bean
+		if(ObjectUtil.isEmpty(value)){
+			// issue#3649 空值转空对象，则直接实例化
+			return (T) ReflectUtil.newInstanceIfPossible(rowType);
 		}
 
 		// 表示非需要特殊转换的对象

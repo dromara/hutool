@@ -33,7 +33,8 @@ public class Issue3136Test {
 		final SmsRes smsRes = XmlUtil.xmlToBean(XmlUtil.parseXml(xmlStr).getDocumentElement(), SmsRes.class);
 
 		Assert.assertEquals("02", smsRes.getCode());
-		Assert.assertNull(smsRes.getMessage());
+		Assert.assertNotNull(smsRes.getMessage());
+		Assert.assertEquals(new Message(), smsRes.getMessage());
 	}
 
 	@Data
