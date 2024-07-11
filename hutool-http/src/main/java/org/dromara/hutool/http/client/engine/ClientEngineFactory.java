@@ -76,23 +76,9 @@ public class ClientEngineFactory {
 	 * @return {@code ClientEngine}
 	 */
 	public static ClientEngine createEngine() {
-		final ClientEngine engine = doCreateEngine();
+		// JdkClientEngine托底，始终不空
+		final ClientEngine engine = SpiUtil.loadFirstAvailable(ClientEngine.class);
 		LogUtil.debug("Use [{}] Http Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
-	}
-
-	/**
-	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的HTTP客户端引擎对象<br>
-	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
-	 *
-	 * @return {@code EngineFactory}
-	 */
-	private static ClientEngine doCreateEngine() {
-		final ClientEngine engine = SpiUtil.loadFirstAvailable(ClientEngine.class);
-		if (null != engine) {
-			return engine;
-		}
-
-		throw new HttpException("No http jar found !Please add one of it to your project !");
 	}
 }
