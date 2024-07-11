@@ -76,11 +76,11 @@ public class IdcardUtilTest {
 	@Test
 	public void issue3651Test() {
 		DateTime date = DateUtil.parse("2014-07-11");
-		int age = IdcardUtil.getAgeByIdCard("321083200807112119", date);
+		int age = IdcardUtil.getAgeByIdCard("321083200807112111", date);
 		assertEquals(5, age);
 
 		date = DateUtil.parse("2014-07-31");
-		age = IdcardUtil.getAgeByIdCard("321083200807312119", date);
+		age = IdcardUtil.getAgeByIdCard("321083200807312113", date);
 		assertEquals(5, age);
 	}
 
