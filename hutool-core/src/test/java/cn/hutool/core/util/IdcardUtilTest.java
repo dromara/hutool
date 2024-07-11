@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,6 +69,17 @@ public class IdcardUtilTest {
 
 		int age2 = IdcardUtil.getAgeByIdCard(ID_15, date);
 		Assert.assertEquals(age2, 28);
+	}
+
+	@Test
+	public void getAgeByIdCardTest2() {
+		DateTime date = DateUtil.parse("2014-07-11");
+		int age = IdcardUtil.getAgeByIdCard("321083200807112119", date);
+		Console.log(age);
+
+		date = DateUtil.parse("2014-07-31");
+		age = IdcardUtil.getAgeByIdCard("321083200807312119", date);
+		Console.log(age);
 	}
 
 	@Test
