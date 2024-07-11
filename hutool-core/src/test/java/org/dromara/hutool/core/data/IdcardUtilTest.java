@@ -12,11 +12,14 @@
 
 package org.dromara.hutool.core.data;
 
+import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 身份证单元测试
@@ -53,16 +56,16 @@ public class IdcardUtilTest {
 	@Test
 	public void convert15To18Test() {
 		final String convert15To18 = IdcardUtil.convert15To18(ID_15);
-		Assertions.assertEquals("150102198807303035", convert15To18);
+		assertEquals("150102198807303035", convert15To18);
 
 		final String convert15To18Second = IdcardUtil.convert15To18("330102200403064");
-		Assertions.assertEquals("33010219200403064X", convert15To18Second);
+		assertEquals("33010219200403064X", convert15To18Second);
 	}
 
 	@Test
 	public void convert18To15Test() {
 		final String idcard15 = IdcardUtil.convert18To15("150102198807303035");
-		Assertions.assertEquals(ID_15, idcard15);
+		assertEquals(ID_15, idcard15);
 	}
 
 	@Test
@@ -70,46 +73,57 @@ public class IdcardUtilTest {
 		final Date date = DateUtil.parse("2017-04-10");
 
 		final int age = IdcardUtil.getAge(ID_18, date);
-		Assertions.assertEquals(age, 38);
+		assertEquals(age, 38);
 
 		final int age2 = IdcardUtil.getAge(ID_15, date);
-		Assertions.assertEquals(age2, 28);
+		assertEquals(age2, 28);
+	}
+
+	@Test
+	public void issue3651Test() {
+		DateTime date = DateUtil.parse("2014-07-11");
+		int age = IdcardUtil.getAge("321083200807112111", date);
+		assertEquals(5, age);
+
+		date = DateUtil.parse("2014-07-31");
+		age = IdcardUtil.getAge("321083200807312113", date);
+		assertEquals(5, age);
 	}
 
 	@Test
 	public void getBirthTest() {
 		final String birth = IdcardUtil.getBirth(ID_18);
-		Assertions.assertEquals(birth, "19781216");
+		assertEquals(birth, "19781216");
 
 		final String birth2 = IdcardUtil.getBirth(ID_15);
-		Assertions.assertEquals(birth2, "19880730");
+		assertEquals(birth2, "19880730");
 	}
 
 	@Test
 	public void getProvinceTest() {
 		final String province = IdcardUtil.getProvince(ID_18);
-		Assertions.assertEquals(province, "江苏");
+		assertEquals(province, "江苏");
 
 		final String province2 = IdcardUtil.getProvince(ID_15);
-		Assertions.assertEquals(province2, "内蒙古");
+		assertEquals(province2, "内蒙古");
 	}
 
 	@Test
 	public void getCityCodeTest() {
 		final String code = IdcardUtil.getCityCode(ID_18);
-		Assertions.assertEquals("3210", code);
+		assertEquals("3210", code);
 	}
 
 	@Test
 	public void getDistrictCodeTest() {
 		final String code = IdcardUtil.getDistrictCode(ID_18);
-		Assertions.assertEquals("321083", code);
+		assertEquals("321083", code);
 	}
 
 	@Test
 	public void getGenderTest() {
 		final int gender = IdcardUtil.getGender(ID_18);
-		Assertions.assertEquals(1, gender);
+		assertEquals(1, gender);
 	}
 
 	@Test
@@ -173,7 +187,7 @@ public class IdcardUtilTest {
 		Assertions.assertTrue(IdcardUtil.isValidCard(FOREIGN_ID_18));
 
 		final Date date = DateUtil.parse("2017-04-10");
-		Assertions.assertEquals(IdcardUtil.getAge(FOREIGN_ID_18, date), 32);
+		assertEquals(IdcardUtil.getAge(FOREIGN_ID_18, date), 32);
 
 		// 新版外国人永久居留身份证
 		Assertions.assertTrue(IdcardUtil.isValidCard18("932682198501010017"));
