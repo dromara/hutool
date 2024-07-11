@@ -16,6 +16,7 @@ import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
@@ -256,6 +257,12 @@ public class CompositeConverter extends RegisterConverter {
 		// issue#I7FQ29 Class
 		if ("java.lang.Class".equals(rowType.getName())) {
 			return (T) ClassConverter.INSTANCE.convert(type, value);
+		}
+
+		// 空值转空Bean
+		if(ObjUtil.isEmpty(value)){
+			// issue#3649 空值转空对象，则直接实例化
+			return ConstructorUtil.newInstanceIfPossible(rowType);
 		}
 
 		// 表示非需要特殊转换的对象

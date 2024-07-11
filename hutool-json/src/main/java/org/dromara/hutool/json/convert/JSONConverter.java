@@ -293,6 +293,12 @@ public class JSONConverter implements Converter, Serializable {
 			return (T) RecordConverter.INSTANCE.convert(type, value);
 		}
 
+		// 空值转空Bean
+		if(ObjUtil.isEmpty(value)){
+			// issue#3649 空值转空对象，则直接实例化
+			return ConstructorUtil.newInstanceIfPossible(rowType);
+		}
+
 		// 表示非需要特殊转换的对象
 		return null;
 	}
