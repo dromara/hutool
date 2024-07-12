@@ -9,21 +9,6 @@ import java.util.Base64;
 /**
  * <p>PlantUML 代码图表生成工具类，提供多种生成方式：Base64、OutputStream、本地文件。</p>
  * <p>通过传入PlantUML语法代码，生成相应的图标</p>
- * <p>Example：</p>
- * {@snippet :
- * 		DrawUtil.toFile(
- * 			"@startuml\n" +
- * 			"autonumber\n" +
- * 			"\n" +
- * 			"Alice -> Bob: Authentication Request\n" +
- * 			"Bob --> Alice: Authentication Response\n" +
- * 			"\n" +
- * 			"Alice -> Bob: Another authentication Request\n" +
- * 			"Alice <-- Bob: another authentication Response\n" +
- * 			"@enduml\n",
- * 			new File("demo.png")
- * 		);
- *}
  * @author LGXTvT
  */
 public class DrawUtil {
