@@ -14,8 +14,6 @@ package org.dromara.hutool.core.bean;
 
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 
-import java.util.function.Supplier;
-
 /**
  * Bean描述信息工厂类<br>
  * 通过不同的类和策略，生成对应的{@link BeanDesc}，策略包括：
@@ -38,7 +36,7 @@ public class BeanDescFactory {
 	 * @return {@link BeanDesc}
 	 */
 	public static BeanDesc getBeanDesc(final Class<?> clazz) {
-		return getBeanDesc(clazz, () -> getBeanDescWithoutCache(clazz));
+		return bdCache.computeIfAbsent(clazz, (key) -> getBeanDescWithoutCache(clazz));
 	}
 
 	/**
@@ -62,19 +60,5 @@ public class BeanDescFactory {
 	 */
 	public static void clearCache() {
 		bdCache.clear();
-	}
-
-	/**
-	 * 获得属性名和{@link BeanDesc}Map映射
-	 *
-	 * @param beanClass Bean的类
-	 * @param supplier  对象不存在时创建对象的函数
-	 * @param <T>       BeanDesc子类
-	 * @return 属性名和 {@link BeanDesc}映射
-	 * @since 5.4.2
-	 */
-	@SuppressWarnings("unchecked")
-	private static <T extends BeanDesc> T getBeanDesc(final Class<?> beanClass, final Supplier<T> supplier) {
-		return (T) bdCache.computeIfAbsent(beanClass, (key) -> supplier.get());
 	}
 }
