@@ -468,5 +468,11 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- plantuml -->
+		<dependency>
+			<groupId>net.sourceforge.plantuml</groupId>
+			<artifactId>plantuml</artifactId>
+			<version>1.2024.6</version>
+		</dependency>
 	</dependencies>
 </project>
