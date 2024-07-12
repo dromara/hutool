@@ -13,6 +13,7 @@
 package org.dromara.hutool.crypto.provider;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.dromara.hutool.core.lang.Assert;
 
 import java.security.Provider;
 import java.security.Security;
@@ -24,6 +25,14 @@ import java.security.Security;
  * @since 6.0.0
  */
 public class BouncyCastleProviderFactory implements ProviderFactory {
+
+	/**
+	 * 构造
+	 */
+	public BouncyCastleProviderFactory(){
+		// SPI方式加载时检查BC库是否引入
+		Assert.notNull(BouncyCastleProvider.class);
+	}
 
 	@Override
 	public Provider create() {

@@ -14,6 +14,7 @@ package org.dromara.hutool.extra.template.engine.pebble;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
@@ -35,6 +36,8 @@ public class PebbleTemplateEngine implements TemplateEngine {
 	 * 构造，不初始化
 	 */
 	public PebbleTemplateEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(PebbleEngine.class);
 	}
 
 	/**

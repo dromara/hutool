@@ -14,6 +14,7 @@ package org.dromara.hutool.extra.template.engine.enjoy;
 
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.data.id.IdUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
@@ -39,7 +40,10 @@ public class EnjoyEngine implements TemplateEngine {
 	/**
 	 * 默认构造
 	 */
-	public EnjoyEngine() {}
+	public EnjoyEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(com.jfinal.template.Engine.class);
+	}
 
 	/**
 	 * 构造

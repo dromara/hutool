@@ -16,6 +16,7 @@ import gg.jte.CodeResolver;
 import gg.jte.ContentType;
 import gg.jte.resolve.DirectoryCodeResolver;
 import gg.jte.resolve.ResourceCodeResolver;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.template.Template;
@@ -42,6 +43,8 @@ public class JteEngine implements TemplateEngine {
 	 * 默认构造
 	 */
 	public JteEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(gg.jte.TemplateEngine.class);
 	}
 
 	/**

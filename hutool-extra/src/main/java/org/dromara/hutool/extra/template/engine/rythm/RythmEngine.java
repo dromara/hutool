@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.template.engine.rythm;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.engine.TemplateEngine;
@@ -27,13 +28,16 @@ import java.util.Properties;
  */
 public class RythmEngine implements TemplateEngine {
 
-	org.rythmengine.RythmEngine engine;
+	private org.rythmengine.RythmEngine engine;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 默认构造
 	 */
-	public RythmEngine() {}
+	public RythmEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(org.rythmengine.RythmEngine.class);
+	}
 
 	/**
 	 * 构造

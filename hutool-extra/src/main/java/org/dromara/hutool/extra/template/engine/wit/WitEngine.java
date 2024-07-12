@@ -13,6 +13,7 @@
 package org.dromara.hutool.extra.template.engine.wit;
 
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
@@ -37,7 +38,10 @@ public class WitEngine implements TemplateEngine {
 	/**
 	 * 默认构造
 	 */
-	public WitEngine() {}
+	public WitEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(Engine.class);
+	}
 
 	/**
 	 * 构造

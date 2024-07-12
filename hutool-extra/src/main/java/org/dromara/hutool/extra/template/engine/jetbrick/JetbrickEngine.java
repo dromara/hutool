@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.template.engine.jetbrick;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.engine.TemplateEngine;
@@ -34,7 +35,10 @@ public class JetbrickEngine implements TemplateEngine {
 	/**
 	 * 默认构造
 	 */
-	public JetbrickEngine() {}
+	public JetbrickEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(JetbrickEngine.class);
+	}
 
 	/**
 	 * 构造

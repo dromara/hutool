@@ -13,6 +13,7 @@
 package org.dromara.hutool.extra.template.engine.beetl;
 
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.engine.TemplateEngine;
@@ -40,7 +41,10 @@ public class BeetlEngine implements TemplateEngine {
 	/**
 	 * 默认构造
 	 */
-	public BeetlEngine() {}
+	public BeetlEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(GroupTemplate.class);
+	}
 
 	/**
 	 * 构造

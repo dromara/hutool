@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.template.engine.thymeleaf;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.DefaultTemplateResolver;
@@ -42,6 +43,8 @@ public class ThymeleafEngine implements TemplateEngine {
 	 * 默认构造
 	 */
 	public ThymeleafEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(org.thymeleaf.TemplateEngine.class);
 	}
 
 	/**

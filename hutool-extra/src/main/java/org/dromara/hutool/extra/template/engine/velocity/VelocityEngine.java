@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.template.engine.velocity;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.extra.template.Template;
@@ -36,6 +37,8 @@ public class VelocityEngine implements TemplateEngine {
 	 * 默认构造
 	 */
 	public VelocityEngine() {
+		// SPI方式加载时检查库是否引入
+		Assert.notNull(org.apache.velocity.app.VelocityEngine.class);
 	}
 
 	/**

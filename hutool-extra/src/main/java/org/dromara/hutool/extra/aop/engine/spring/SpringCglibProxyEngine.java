@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.aop.engine.spring;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.extra.aop.Aspect;
@@ -26,6 +27,14 @@ import java.lang.reflect.Constructor;
  * @author looly
  */
 public class SpringCglibProxyEngine implements ProxyEngine {
+
+	/**
+	 * 构造
+	 */
+	public SpringCglibProxyEngine(){
+		// SPI方式加载时检查BC库是否引入
+		Assert.notNull(Enhancer.class);
+	}
 
 	@Override
 	public <T> T proxy(final T target, final Aspect aspect) {
