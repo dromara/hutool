@@ -63,7 +63,9 @@ public class HttpClient4Engine implements ClientEngine {
 	 * 构造
 	 */
 	public HttpClient4Engine() {
-		//initEngine();
+		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
+		// 此处构造时调用下这个类，以便触发类是否存在的检查
+		Assert.notNull(CloseableHttpClient.class);
 	}
 
 	@Override
