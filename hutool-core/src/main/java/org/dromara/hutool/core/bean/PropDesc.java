@@ -34,7 +34,11 @@ public class PropDesc {
 	/**
 	 * 字段
 	 */
-	final Field field;
+	private Field field;
+	/**
+	 * 字段名
+	 */
+	private final String fieldName;
 	/**
 	 * Getter方法
 	 */
@@ -53,7 +57,20 @@ public class PropDesc {
 	 * @param setter set方法
 	 */
 	public PropDesc(final Field field, final Method getter, final Method setter) {
+		this(FieldUtil.getFieldName(field), getter, setter);
 		this.field = field;
+	}
+
+	/**
+	 * 构造<br>
+	 * Getter和Setter方法设置为默认可访问
+	 *
+	 * @param fieldName  字段名
+	 * @param getter get方法
+	 * @param setter set方法
+	 */
+	public PropDesc(final String fieldName, final Method getter, final Method setter) {
+		this.fieldName = fieldName;
 		this.getter = ReflectUtil.setAccessible(getter);
 		this.setter = ReflectUtil.setAccessible(setter);
 	}
@@ -64,7 +81,7 @@ public class PropDesc {
 	 * @return 字段名
 	 */
 	public String getFieldName() {
-		return FieldUtil.getFieldName(this.field);
+		return this.fieldName;
 	}
 
 	/**
