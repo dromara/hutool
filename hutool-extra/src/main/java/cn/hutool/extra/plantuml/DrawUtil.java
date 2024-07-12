@@ -8,7 +8,7 @@ import java.util.Base64;
 
 /**
  * <p>PlantUML 代码图表生成工具类，提供多种生成方式：Base64、OutputStream、本地文件。</p>
- * <p>通过传入PlantUML语法代码，生成相应的图标</p>
+ * <p>通过传入PlantUML语法代码，生成相应的图表</p>
  * @author LGXTvT
  */
 public class DrawUtil {
