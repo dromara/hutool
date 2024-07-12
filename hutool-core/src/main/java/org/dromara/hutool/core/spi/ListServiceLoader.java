@@ -282,7 +282,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	 * @param msg      消息
 	 */
 	private void fail(final Resource resource, final int lineNo, final String msg) {
-		throw new SPIException(this.serviceClass + ":" + resource.getUrl() + ":" + lineNo + ": " + msg);
+		throw new SpiException(this.serviceClass + ":" + resource.getUrl() + ":" + lineNo + ": " + msg);
 	}
 
 	/**
