@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -3145,11 +3146,11 @@ public class CharSequenceUtil extends StrValidator {
 	 *
 	 * @param str         字符串
 	 * @param index       位置，-1表示最后一个字符
-	 * @param replaceFunc 替换逻辑，给定原字符，返回新字符
+	 * @param operator 替换逻辑，给定原字符，返回新字符
 	 * @return 替换后的字符串
 	 * @since 6.0.0
 	 */
-	public static String replaceAt(final CharSequence str, int index, final Function<Character, Character> replaceFunc) {
+	public static String replaceAt(final CharSequence str, int index, final UnaryOperator<Character> operator) {
 		if (str == null) {
 			return null;
 		}
@@ -3167,16 +3168,16 @@ public class CharSequenceUtil extends StrValidator {
 
 		// 检查转换前后是否有编码，无变化则不转换，返回原字符串
 		final char c = string.charAt(index);
-		final Character newC = replaceFunc.apply(c);
+		final Character newC = operator.apply(c);
 		if (c == newC) {
 			// 无变化，返回原字符串
 			return string;
 		}
 
 		// 此处不复用传入的CharSequence，防止修改原对象
-		final StringBuilder builder = new StringBuilder(str);
-		builder.setCharAt(index, replaceFunc.apply(c));
-		return builder.toString();
+		final char[] chars = string.toCharArray();
+		chars[index] = newC;
+		return new String(chars);
 	}
 	// endregion
 
@@ -3369,80 +3370,6 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
-	 * 大写对应下标字母
-	 *
-	 * <pre>例如: str = name,index = 1, return nAme</pre>
-	 *
-	 * @param str   字符串
-	 * @param index 下标，支持负数，-1表示最后一个字符
-	 * @return 字符串
-	 */
-	public static String upperAt(final CharSequence str, int index) {
-		if (null == str) {
-			return null;
-		}
-
-		// 支持负数
-		final int length = str.length();
-		if (index < 0) {
-			index += length;
-		}
-
-		final String string = str.toString();
-		if (index < 0 || index >= length) {
-			return string;
-		}
-
-		final char c = str.charAt(index);
-		if (!Character.isLowerCase(c)) {
-			// 非小写不转换，某些字符非小写也非大写，一并略过
-			return string;
-		}
-
-		// 此处不复用传入的CharSequence，防止修改原对象
-		final StringBuilder builder = new StringBuilder(str);
-		builder.setCharAt(index, Character.toUpperCase(c));
-
-		return builder.toString();
-	}
-
-	/**
-	 * 小写对应下标字母<br>
-	 * 例如: str = NAME,index = 1, return NaME
-	 *
-	 * @param str   字符串
-	 * @param index 下标，支持负数，-1表示最后一个字符
-	 * @return 字符串
-	 */
-	public static String lowerAt(final CharSequence str, int index) {
-		if (str == null) {
-			return null;
-		}
-
-		// 支持负数
-		final int length = str.length();
-		if (index < 0) {
-			index += length;
-		}
-
-		final String string = str.toString();
-		if (index < 0 || index >= length) {
-			return string;
-		}
-
-		final char c = str.charAt(index);
-		if (!Character.isUpperCase(c)) {
-			// 非大写不转换，某些字符非小写也非大写，一并略过
-			return string;
-		}
-
-		// 此处不复用传入的CharSequence，防止修改原对象
-		final char[] chars = string.toCharArray();
-		chars[0] = Character.toLowerCase(chars[0]);
-		return new String(chars);
-	}
-
-	/**
 	 * 大写首字母<br>
 	 * 例如：str = name, return Name
 	 *
@@ -3451,6 +3378,19 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String upperFirst(final CharSequence str) {
 		return upperAt(str, 0);
+	}
+
+	/**
+	 * 大写对应下标字母
+	 *
+	 * <pre>例如: str = name,index = 1, return nAme</pre>
+	 *
+	 * @param str   字符串
+	 * @param index 下标，支持负数，-1表示最后一个字符
+	 * @return 字符串
+	 */
+	public static String upperAt(final CharSequence str, final int index) {
+		return replaceAt(str, index, Character::toUpperCase);
 	}
 
 	/**
@@ -3463,6 +3403,19 @@ public class CharSequenceUtil extends StrValidator {
 	public static String lowerFirst(final CharSequence str) {
 		return lowerAt(str, 0);
 	}
+
+	/**
+	 * 小写对应下标字母<br>
+	 * 例如: str = NAME,index = 1, return NaME
+	 *
+	 * @param str   字符串
+	 * @param index 下标，支持负数，-1表示最后一个字符
+	 * @return 字符串
+	 */
+	public static String lowerAt(final CharSequence str, final int index) {
+		return replaceAt(str, index, Character::toLowerCase);
+	}
+
 	// endregion
 
 	// region ----- filter
