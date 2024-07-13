@@ -278,11 +278,11 @@ public class ObjUtil {
 	/**
 	 * <p>如果给定对象为{@code null}返回默认值
 	 * <pre>{@code
-	 * ObjectUtil.defaultIfNull(null, null);      // = null
-	 * ObjectUtil.defaultIfNull(null, "");        // = ""
-	 * ObjectUtil.defaultIfNull(null, "zz");      // = "zz"
-	 * ObjectUtil.defaultIfNull("abc", *);        // = "abc"
-	 * ObjectUtil.defaultIfNull(Boolean.TRUE, *); // = Boolean.TRUE
+	 * ObjUtil.defaultIfNull(null, null);      // = null
+	 * ObjUtil.defaultIfNull(null, "");        // = ""
+	 * ObjUtil.defaultIfNull(null, "zz");      // = "zz"
+	 * ObjUtil.defaultIfNull("abc", *);        // = "abc"
+	 * ObjUtil.defaultIfNull(Boolean.TRUE, *); // = Boolean.TRUE
 	 * }</pre>
 	 *
 	 * @param <T>          对象类型
@@ -299,16 +299,29 @@ public class ObjUtil {
 	 * 如果给定对象不为{@code null} 返回原值, 否则返回 {@link Supplier#get()} 提供的默认值
 	 *
 	 * @param <T>             被检查对象类型
-	 * @param source          被检查对象，可能为{@code null}
+	 * @param object          被检查对象，可能为{@code null}
 	 * @param defaultSupplier 为空时的默认值提供者
 	 * @return 被检查对象不为 {@code null} 返回原值，否则返回 {@link Supplier#get()} 提供的默认值
 	 * @since 5.4.6
 	 */
-	public static <T> T defaultIfNull(final T source, final Supplier<? extends T> defaultSupplier) {
-		if (isNotNull(source)) {
-			return source;
-		}
-		return defaultSupplier.get();
+	public static <T> T defaultIfNull(final T object, final Supplier<? extends T> defaultSupplier) {
+		return isNull(object) ? defaultSupplier.get() : object;
+	}
+
+	/**
+	 * 如果给定对象不为{@code null} 返回自定义handler处理后的结果，否则返回默认值
+	 *
+	 * @param <R>          返回值类型
+	 * @param <T>          被检查对象类型
+	 * @param object       被检查对象，可能为{@code null}
+	 * @param handler      非空时自定义的处理方法
+	 * @param defaultValue 为空时的默认返回值
+	 * @return 被检查对象不为 {@code null} 返回处理后的结果，否则返回默认值
+	 * @since 6.0.0
+	 */
+	public static <T, R> R defaultIfNull(final T object,
+										 final Function<? super T, ? extends R> handler, final R defaultValue) {
+		return isNull(object) ? defaultValue : handler.apply(object);
 	}
 
 	/**
@@ -316,17 +329,15 @@ public class ObjUtil {
 	 *
 	 * @param <R>             返回值类型
 	 * @param <T>             被检查对象类型
-	 * @param source          被检查对象，可能为{@code null}
+	 * @param object          被检查对象，可能为{@code null}
 	 * @param handler         非空时自定义的处理方法
 	 * @param defaultSupplier 为空时的默认值提供者
 	 * @return 被检查对象不为 {@code null} 返回处理后的结果，否则返回 {@link Supplier#get()} 提供的默认值
 	 * @since 6.0.0
 	 */
-	public static <T, R> R defaultIfNull(final T source, final Function<? super T, ? extends R> handler, final Supplier<? extends R> defaultSupplier) {
-		if (isNotNull(source)) {
-			return handler.apply(source);
-		}
-		return defaultSupplier.get();
+	public static <T, R> R defaultIfNull(final T object,
+										 final Function<? super T, ? extends R> handler, final Supplier<? extends R> defaultSupplier) {
+		return isNull(object) ? defaultSupplier.get() : handler.apply(object);
 	}
 
 	/**
@@ -353,22 +364,6 @@ public class ObjUtil {
 		if (null != source) {
 			consumer.accept(source);
 		}
-	}
-
-	/**
-	 * 如果给定对象不为{@code null} 返回自定义handler处理后的结果，否则返回默认值
-	 *
-	 * @param <R>          返回值类型
-	 * @param <T>          被检查对象类型
-	 * @param source       被检查对象，可能为{@code null}
-	 * @param handler      非空时自定义的处理方法
-	 * @param defaultValue 为空时的默认返回值
-	 * @return 被检查对象不为 {@code null} 返回处理后的结果，否则返回默认值
-	 * @since 6.0.0
-	 */
-	public static <T, R> R defaultIfNull(
-		final T source, final Function<? super T, ? extends R> handler, final R defaultValue) {
-		return isNull(source) ? defaultValue : handler.apply(source);
 	}
 	// endregion
 

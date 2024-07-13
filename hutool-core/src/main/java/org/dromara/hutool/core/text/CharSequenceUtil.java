@@ -30,6 +30,7 @@ import org.dromara.hutool.core.text.replacer.SearchReplacer;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -100,8 +101,8 @@ public class CharSequenceUtil extends StrValidator {
 	 *
 	 * @param obj 对象
 	 * @return 字符串
-	 * @since 4.1.3
 	 * @see String#valueOf(Object)
+	 * @since 4.1.3
 	 */
 	public static String toString(final Object obj) {
 		return String.valueOf(obj);
@@ -133,6 +134,19 @@ public class CharSequenceUtil extends StrValidator {
 	// endregion
 
 	// region ----- defaultIf
+
+	/**
+	 * 当给定字符串为空字符串时，转换为""<br>
+	 * 此方法与{@link #toStringOrEmpty(Object)}不同的是，如果提供的{@link CharSequence}非String，则保持原状
+	 *
+	 * @param str 被转换的字符串
+	 * @return 转换后的字符串
+	 * @see #toStringOrEmpty(Object)
+	 */
+	public static CharSequence emptyIfNull(final CharSequence str) {
+		return null == str ? EMPTY : str;
+	}
+
 	/**
 	 * 当给定字符串为空字符串时，转换为{@code null}
 	 *
@@ -142,6 +156,54 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static <T extends CharSequence> T nullIfEmpty(final T str) {
 		return isEmpty(str) ? null : str;
+	}
+
+	/**
+	 * <p>如果给定字符串为{@code null}返回默认值
+	 * <pre>{@code
+	 *   defaultIfNull(null, null);      // = null
+	 *   defaultIfNull(null, "");        // = ""
+	 *   defaultIfNull(null, "zz");      // = "zz"
+	 *   defaultIfNull("abc", *);        // = "abc"
+	 * }</pre>
+	 *
+	 * @param <T>          字符串类型
+	 * @param str          被检查字符串，可能为{@code null}
+	 * @param defaultValue 被检查字符串为{@code null}返回的默认值，可以为{@code null}
+	 * @return 被检查字符串不为 {@code null} 返回原值，否则返回默认值
+	 * @see ObjUtil#defaultIfNull(Object, Object)
+	 */
+	public static <T extends CharSequence> T defaultIfNull(final T str, final T defaultValue) {
+		return ObjUtil.defaultIfNull(str, defaultValue);
+	}
+
+	/**
+	 * 如果给定字符串不为{@code null} 返回原值, 否则返回 {@link Supplier#get()} 提供的默认值
+	 *
+	 * @param <T>             被检查字符串类型
+	 * @param source          被检查字符串，可能为{@code null}
+	 * @param defaultSupplier 为空时的默认值提供者
+	 * @return 被检查字符串不为 {@code null} 返回原值，否则返回 {@link Supplier#get()} 提供的默认值
+	 * @see ObjUtil#defaultIfNull(Object, Supplier)
+	 */
+	public static <T extends CharSequence> T defaultIfNull(final T source, final Supplier<? extends T> defaultSupplier) {
+		return ObjUtil.defaultIfNull(source, defaultSupplier);
+	}
+
+	/**
+	 * 如果给定字符串不为{@code null} 返回自定义handler处理后的结果，否则返回 {@link Supplier#get()} 提供的默认值
+	 *
+	 * @param <R>             返回值类型
+	 * @param <T>             被检查对象类型
+	 * @param source          被检查对象，可能为{@code null}
+	 * @param handler         非空时自定义的处理方法
+	 * @param defaultSupplier 为空时的默认值提供者
+	 * @return 被检查对象不为 {@code null} 返回处理后的结果，否则返回 {@link Supplier#get()} 提供的默认值
+	 * @since 6.0.0
+	 * @see ObjUtil#defaultIfNull(Object, Function, Supplier)
+	 */
+	public static <T extends CharSequence, R> R defaultIfNull(final T source, final Function<? super T, ? extends R> handler, final Supplier<? extends R> defaultSupplier) {
+		return ObjUtil.defaultIfNull(source, handler, defaultSupplier);
 	}
 
 	/**
@@ -166,6 +228,18 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
+	 * 如果给定对象为{@code null}或者{@code ""}返回原值, 否则返回自定义handler处理后的返回值
+	 *
+	 * @param <T>             被检查对象类型
+	 * @param str             String 类型
+	 * @param defaultSupplier empty时的处理方法
+	 * @return 处理后的返回值
+	 */
+	public static <T extends CharSequence> T defaultIfEmpty(final T str, final Supplier<? extends T> defaultSupplier) {
+		return isEmpty(str) ? defaultSupplier.get() : str;
+	}
+
+	/**
 	 * 如果给定对象为{@code null}或者{@code ""}返回defaultHandler处理的结果, 否则返回自定义handler处理后的返回值
 	 *
 	 * @param <T>             被检查对象类型
@@ -176,10 +250,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 处理后的返回值
 	 */
 	public static <T extends CharSequence, V> V defaultIfEmpty(final T str, final Function<T, V> handler, final Supplier<? extends V> defaultSupplier) {
-		if (isNotEmpty(str)) {
-			return handler.apply(str);
-		}
-		return defaultSupplier.get();
+		return isEmpty(str) ? defaultSupplier.get() : handler.apply(str);
 	}
 
 	/**
@@ -204,6 +275,18 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
+	 * 如果给定对象为{@code null}或者{@code ""}返回原值, 否则返回自定义handler处理后的返回值
+	 *
+	 * @param <T>             被检查对象类型
+	 * @param str             String 类型
+	 * @param defaultSupplier empty时的处理方法
+	 * @return 处理后的返回值
+	 */
+	public static <T extends CharSequence> T defaultIfBlank(final T str, final Supplier<? extends T> defaultSupplier) {
+		return isBlank(str) ? defaultSupplier.get() : str;
+	}
+
+	/**
 	 * 如果被检查对象为 {@code null} 或 "" 或 空白字符串时，返回默认值（由 defaultValueSupplier 提供）；否则直接返回
 	 *
 	 * @param str             被检查对象
@@ -216,10 +299,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @since 5.7.20
 	 */
 	public static <T extends CharSequence, V> V defaultIfBlank(final T str, final Function<T, V> handler, final Supplier<? extends V> defaultSupplier) {
-		if (isBlank(str)) {
-			return defaultSupplier.get();
-		}
-		return handler.apply(str);
+		return isBlank(str) ? defaultSupplier.get() : handler.apply(str);
 	}
 	// endregion
 
