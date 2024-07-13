@@ -51,7 +51,7 @@ public class MynlpEngine implements TokenizerEngine {
 
 	@Override
 	public Result parse(final CharSequence text) {
-		final Sentence sentence = this.lexer.scan(StrUtil.str(text));
+		final Sentence sentence = this.lexer.scan(StrUtil.toStringOrEmpty(text));
 		return new MynlpResult(sentence);
 	}
 

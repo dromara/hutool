@@ -35,7 +35,7 @@ public class EscapeStrCellSetter extends CharSequenceCellSetter {
 	 * @param value 值
 	 */
 	public EscapeStrCellSetter(final CharSequence value) {
-		super(escape(StrUtil.str(value)));
+		super(escape(StrUtil.toStringOrNull(value)));
 	}
 
 	/**

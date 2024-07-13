@@ -799,11 +799,13 @@ public class CalendarUtil {
 	 * @since 5.7.14
 	 */
 	public static Calendar parse(final CharSequence str, final boolean lenient, final PositionDateParser parser) {
+		Assert.notBlank(str, "Date str must be not blank!");
+		Assert.notNull(parser, "Parser must be not null!");
 		final Calendar calendar = Calendar.getInstance(parser.getTimeZone(), parser.getLocale());
 		calendar.clear();
 		calendar.setLenient(lenient);
 
-		return parser.parse(StrUtil.str(str), new ParsePosition(0), calendar) ? calendar : null;
+		return parser.parse(str.toString(), new ParsePosition(0), calendar) ? calendar : null;
 	}
 	// endregion
 

@@ -247,7 +247,8 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 
 	@Override
 	public Object getObj(final CharSequence key, final Object defaultValue) {
-		return ObjUtil.defaultIfNull(getProperty(StrUtil.str(key)), defaultValue);
+		Assert.notNull(key, "Key must be not null!");
+		return ObjUtil.defaultIfNull(getProperty(key.toString()), defaultValue);
 	}
 
 	/**
@@ -408,7 +409,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 	 * @since 4.6.3
 	 */
 	public <T> T toBean(final T bean, String prefix) {
-		prefix = StrUtil.emptyIfNull(StrUtil.addSuffixIfNot(prefix, StrUtil.DOT));
+		prefix = StrUtil.toStringOrEmpty(StrUtil.addSuffixIfNot(prefix, StrUtil.DOT));
 
 		String key;
 		for (final java.util.Map.Entry<Object, Object> entry : this.entrySet()) {

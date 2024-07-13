@@ -56,7 +56,7 @@ public class StrTrimer implements UnaryOperator<CharSequence>, Serializable {
 	@Override
 	public String apply(final CharSequence str) {
 		if (StrUtil.isEmpty(str)) {
-			return StrUtil.str(str);
+			return StrUtil.toStringOrNull(str);
 		}
 
 		final int length = str.length();

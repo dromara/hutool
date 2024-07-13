@@ -46,11 +46,11 @@ public class RangeReplacerByChar extends StrReplacer {
 	@Override
 	public String apply(final CharSequence str) {
 		if (StrUtil.isEmpty(str)) {
-			return StrUtil.str(str);
+			return StrUtil.toStringOrNull(str);
 		}
 
-		final String originalStr = StrUtil.str(str);
-		final int[] chars = (isCodePoint ? originalStr.codePoints() : originalStr.chars()).toArray();
+		final String originalStr = str.toString();
+		final int[] chars = StrUtil.toChars(originalStr, this.isCodePoint);
 		final int strLength = chars.length;
 
 		final int beginInclude = this.beginInclude;

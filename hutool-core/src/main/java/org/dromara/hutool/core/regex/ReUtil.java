@@ -381,8 +381,8 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delFirst(final String regex, final CharSequence content) {
-		if (ArrayUtil.hasBlank(regex, content)) {
-			return StrUtil.str(content);
+		if (StrUtil.hasEmpty(regex, content)) {
+			return StrUtil.toStringOrNull(content);
 		}
 
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
@@ -411,7 +411,7 @@ public class ReUtil {
 	 */
 	public static String replaceFirst(final Pattern pattern, final CharSequence content, final String replacement) {
 		if (null == pattern || StrUtil.isEmpty(content)) {
-			return StrUtil.str(content);
+			return StrUtil.toStringOrNull(content);
 		}
 
 		return pattern.matcher(content).replaceFirst(replacement);
@@ -426,8 +426,8 @@ public class ReUtil {
 	 * @since 5.6.5
 	 */
 	public static String delLast(final String regex, final CharSequence str) {
-		if (ArrayUtil.hasBlank(regex, str)) {
-			return StrUtil.str(str);
+		if (StrUtil.isEmpty(regex) || StrUtil.isEmpty(str)) {
+			return StrUtil.toStringOrNull(str);
 		}
 
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
@@ -450,7 +450,7 @@ public class ReUtil {
 			}
 		}
 
-		return StrUtil.str(str);
+		return StrUtil.toStringOrNull(str);
 	}
 
 	/**
@@ -462,7 +462,7 @@ public class ReUtil {
 	 */
 	public static String delAll(final String regex, final CharSequence content) {
 		if (StrUtil.hasEmpty(regex, content)) {
-			return StrUtil.str(content);
+			return StrUtil.toStringOrNull(content);
 		}
 
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
@@ -478,7 +478,7 @@ public class ReUtil {
 	 */
 	public static String delAll(final Pattern pattern, final CharSequence content) {
 		if (null == pattern || StrUtil.isEmpty(content)) {
-			return StrUtil.str(content);
+			return StrUtil.toStringOrNull(content);
 		}
 
 		return pattern.matcher(content).replaceAll(StrUtil.EMPTY);
@@ -493,7 +493,7 @@ public class ReUtil {
 	 */
 	public static String delPre(final String regex, final CharSequence content) {
 		if (null == content || null == regex) {
-			return StrUtil.str(content);
+			return StrUtil.toStringOrNull(content);
 		}
 
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
@@ -508,15 +508,14 @@ public class ReUtil {
 	 * @return 删除前缀后的新内容
 	 */
 	public static String delPre(final Pattern pattern, final CharSequence content) {
-		if (null == content || null == pattern) {
-			return StrUtil.str(content);
+		if (null != pattern && StrUtil.isNotEmpty(content)) {
+			final Matcher matcher = pattern.matcher(content);
+			if (matcher.find()) {
+				return StrUtil.sub(content, matcher.end(), content.length());
+			}
 		}
 
-		final Matcher matcher = pattern.matcher(content);
-		if (matcher.find()) {
-			return StrUtil.sub(content, matcher.end(), content.length());
-		}
-		return StrUtil.str(content);
+		return StrUtil.toStringOrNull(content);
 	}
 
 	/**
@@ -873,32 +872,28 @@ public class ReUtil {
 	 * @since 3.0.4
 	 */
 	public static String replaceAll(final CharSequence content, final Pattern pattern, final String replacementTemplate) {
-		if (StrUtil.isEmpty(content)) {
-			return StrUtil.str(content);
+		if(null != pattern && StrUtil.isNotEmpty(content) && StrUtil.isNotEmpty(replacementTemplate)){
+			final Matcher matcher = pattern.matcher(content);
+			boolean result = matcher.find();
+			if (result) {
+				final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1,
+					new TreeSet<>(StrLengthComparator.INSTANCE.reversed()));
+				final StringBuffer sb = new StringBuffer();
+				do {
+					String replacement = replacementTemplate;
+					for (final String var : varNums) {
+						final int group = Integer.parseInt(var);
+						replacement = replacement.replace("$" + var, matcher.group(group));
+					}
+					matcher.appendReplacement(sb, escape(replacement));
+					result = matcher.find();
+				} while (result);
+				matcher.appendTail(sb);
+				return sb.toString();
+			}
 		}
 
-		// replacementTemplate字段不能为null，否则无法抉择如何处理结果
-		Assert.notNull(replacementTemplate, "ReplacementTemplate must be not null !");
-
-		final Matcher matcher = pattern.matcher(content);
-		boolean result = matcher.find();
-		if (result) {
-			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1,
-				new TreeSet<>(StrLengthComparator.INSTANCE.reversed()));
-			final StringBuffer sb = new StringBuffer();
-			do {
-				String replacement = replacementTemplate;
-				for (final String var : varNums) {
-					final int group = Integer.parseInt(var);
-					replacement = replacement.replace("$" + var, matcher.group(group));
-				}
-				matcher.appendReplacement(sb, escape(replacement));
-				result = matcher.find();
-			} while (result);
-			matcher.appendTail(sb);
-			return sb.toString();
-		}
-		return StrUtil.str(content);
+		return StrUtil.toStringOrNull(replacementTemplate);
 	}
 
 	/**
@@ -933,9 +928,13 @@ public class ReUtil {
 	 * @return 替换后的字符串
 	 * @since 4.2.2
 	 */
-	public static String replaceAll(final CharSequence str, final Pattern pattern, final SerFunction<Matcher, String> replaceFun) {
-		if (StrUtil.isEmpty(str)) {
-			return StrUtil.str(str);
+	public static String replaceAll(final CharSequence str, final Pattern pattern, SerFunction<Matcher, String> replaceFun) {
+		if (null == pattern || StrUtil.isEmpty(str)) {
+			return StrUtil.toStringOrNull(str);
+		}
+
+		if(null == replaceFun){
+			replaceFun = Matcher::group;
 		}
 
 		final Matcher matcher = pattern.matcher(str);
@@ -970,7 +969,7 @@ public class ReUtil {
 	 */
 	public static String escape(final CharSequence content) {
 		if (StrUtil.isBlank(content)) {
-			return StrUtil.str(content);
+			return StrUtil.toStringOrNull(content);
 		}
 
 		final StringBuilder builder = new StringBuilder();

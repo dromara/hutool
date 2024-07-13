@@ -124,7 +124,7 @@ public class EscapeUtil {
 	 */
 	public static String escape(final CharSequence content, final Predicate<Character> filter) {
 		if (StrUtil.isEmpty(content)) {
-			return StrUtil.str(content);
+			return StrUtil.toStringOrNull(content);
 		}
 
 		final StringBuilder tmp = new StringBuilder(content.length() * 6);

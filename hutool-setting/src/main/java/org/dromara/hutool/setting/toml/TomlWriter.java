@@ -200,7 +200,7 @@ public class TomlWriter {
 					indent();
 					writeKey(name);
 					write(" = ");
-					writeString(StrUtil.emptyIfNull(ArrayUtil.toString(array)));
+					writeString(StrUtil.toStringOrEmpty(ArrayUtil.toString(array)));
 				}
 			} else if (value instanceof Map) {// table
 				if (simpleValues) {

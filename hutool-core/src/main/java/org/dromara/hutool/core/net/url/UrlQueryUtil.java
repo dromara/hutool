@@ -213,9 +213,11 @@ public class UrlQueryUtil {
 
 		final Map<String, List<String>> params = new LinkedHashMap<>();
 		queryMap.forEach((key, value) -> {
-			final List<String> values = params.computeIfAbsent(StrUtil.str(key), k -> new ArrayList<>(1));
-			// 一般是一个参数
-			values.add(StrUtil.str(value));
+			if(null != key && null != value){
+				final List<String> values = params.computeIfAbsent(key.toString(), k -> new ArrayList<>(1));
+				// 一般是一个参数
+				values.add(key.toString());
+			}
 		});
 		return params;
 	}

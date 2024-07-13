@@ -126,7 +126,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 			for (final Map.Entry<String, ? extends Collection<String>> entry : headerMap.entrySet()) {
 				name = entry.getKey();
 				for (final String value : entry.getValue()) {
-					this.header(name, StrUtil.emptyIfNull(value), isOverride);
+					this.header(name, StrUtil.toStringOrEmpty(value), isOverride);
 				}
 			}
 		}

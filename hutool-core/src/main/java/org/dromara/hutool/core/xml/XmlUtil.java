@@ -972,12 +972,12 @@ public class XmlUtil extends XmlConstants {
 	 *
 	 * @param doc  {@link Document}
 	 * @param node 节点
-	 * @param text 文本内容
+	 * @param text 文本内容，{@code null}表示空节点
 	 * @return 增加的子节点，即Text节点
 	 * @since 5.3.0
 	 */
 	private static Node appendText(final Document doc, final Node node, final CharSequence text) {
-		return node.appendChild(doc.createTextNode(StrUtil.str(text)));
+		return node.appendChild(doc.createTextNode(StrUtil.toStringOrEmpty(text)));
 	}
 	// ---------------------------------------------------------------------------------------- Private method end
 

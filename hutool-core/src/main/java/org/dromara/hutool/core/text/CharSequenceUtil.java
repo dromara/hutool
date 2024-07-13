@@ -30,7 +30,6 @@ import org.dromara.hutool.core.text.replacer.SearchReplacer;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -94,28 +93,46 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static final String SPACE = " ";
 
+	// region toString
+
 	/**
-	 * {@link CharSequence} 转为字符串，null安全
+	 * 调用对象的toString方法，null会返回“null”
 	 *
-	 * @param cs {@link CharSequence}
+	 * @param obj 对象
 	 * @return 字符串
+	 * @since 4.1.3
+	 * @see String#valueOf(Object)
 	 */
-	public static String str(final CharSequence cs) {
-		return null == cs ? null : cs.toString();
+	public static String toString(final Object obj) {
+		return String.valueOf(obj);
 	}
+
+	/**
+	 * 调用对象的toString方法，{@code null}会返回{@code null}
+	 *
+	 * @param obj 对象
+	 * @return 字符串 or {@code null}
+	 * @since 5.7.17
+	 */
+	public static String toStringOrNull(final Object obj) {
+		return null == obj ? null : obj.toString();
+	}
+
+	/**
+	 * 调用对象的toString方法，{@code null}会返回空字符串 ""
+	 *
+	 * @param obj 对象
+	 * @return {@link String }
+	 * @author Junwei Xu
+	 */
+	public static String toStringOrEmpty(final Object obj) {
+		// obj为空时, 返回 null 或 "null" 都不适用部分场景, 此处返回 "" 空字符串
+		return null == obj ? EMPTY : obj.toString();
+	}
+
+	// endregion
 
 	// region ----- defaultIf
-
-	/**
-	 * 当给定字符串为null时，转换为Empty
-	 *
-	 * @param str 被转换的字符串
-	 * @return 转换后的字符串
-	 */
-	public static String emptyIfNull(final CharSequence str) {
-		return ObjUtil.defaultIfNull(str, EMPTY).toString();
-	}
-
 	/**
 	 * 当给定字符串为空字符串时，转换为{@code null}
 	 *
@@ -215,9 +232,9 @@ public class CharSequenceUtil extends StrValidator {
 	 * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 * <ul>
 	 *     <li>去除字符串空格罗列相关如下：</li>
-	 *     <li>{@link StrUtil#trimPrefix(CharSequence)}去除头部空格</li>
-	 *     <li>{@link StrUtil#trimSuffix(CharSequence)}去除尾部空格</li>
-	 *     <li>{@link StrUtil#cleanBlank(CharSequence)}去除头部、尾部、中间空格</li>
+	 *     <li>{@link #trimPrefix(CharSequence)}去除头部空格</li>
+	 *     <li>{@link #trimSuffix(CharSequence)}去除尾部空格</li>
+	 *     <li>{@link #cleanBlank(CharSequence)}去除头部、尾部、中间空格</li>
 	 * </ul>
 	 *
 	 * <pre>
@@ -653,7 +670,7 @@ public class CharSequenceUtil extends StrValidator {
 	 *     <li>str 不是 null，testChars 是 null，直接返回 false</li>
 	 * </ul>
 	 * <pre>{@code
-	 *   StrUtil.containsOnly("asdas", 'a', 'd', 's','l');   --> true
+	 *   CharSequenceUtil.containsOnly("asdas", 'a', 'd', 's','l');   --> true
 	 * }</pre>
 	 *
 	 * @param str       字符串
@@ -1035,7 +1052,7 @@ public class CharSequenceUtil extends StrValidator {
 	public static String removeAll(final CharSequence str, final CharSequence strToRemove) {
 		// strToRemove如果为空， 也不用继续后面的逻辑
 		if (isEmpty(str) || isEmpty(strToRemove)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		return str.toString().replace(strToRemove, EMPTY);
 	}
@@ -1050,7 +1067,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @since 5.3.8
 	 */
 	public static String removeAny(final CharSequence str, final CharSequence... strsToRemove) {
-		String result = str(str);
+		String result = toStringOrNull(str);
 		if (isNotEmpty(str)) {
 			for (final CharSequence strToRemove : strsToRemove) {
 				result = removeAll(result, strToRemove);
@@ -1068,8 +1085,8 @@ public class CharSequenceUtil extends StrValidator {
 	 * @since 4.2.2
 	 */
 	public static String removeAll(final CharSequence str, final char... chars) {
-		if (null == str || ArrayUtil.isEmpty(chars)) {
-			return str(str);
+		if (StrUtil.isEmpty(str) || ArrayUtil.isEmpty(chars)) {
+			return toStringOrNull(str);
 		}
 		return filter(str, (c) -> !ArrayUtil.contains(chars, c));
 	}
@@ -1157,7 +1174,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String removePrefix(final CharSequence str, final CharSequence prefix, final boolean ignoreCase) {
 		if (isEmpty(str) || isEmpty(prefix)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		final String str2 = str.toString();
@@ -1176,7 +1193,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String removeSuffix(final CharSequence str, final CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		final String str2 = str.toString();
@@ -1206,7 +1223,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String removeSuffixIgnoreCase(final CharSequence str, final CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		final String str2 = str.toString();
@@ -1257,7 +1274,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String strip(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		int from = 0;
@@ -1297,7 +1314,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String stripIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		int from = 0;
 		int to = str.length();
@@ -1384,7 +1401,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String sub(final CharSequence str, int fromIndexInclude, int toIndexExclude) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		final int len = str.length();
 
@@ -1429,7 +1446,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String subByCodePoint(final CharSequence str, final int fromIndex, final int toIndex) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		if (fromIndex < 0 || fromIndex > toIndex) {
@@ -1471,7 +1488,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String subPreGbk(final CharSequence str, int len, final boolean halfUp) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		int counterOfDoubleByte = 0;
@@ -2214,7 +2231,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 包装后的字符串
 	 */
 	public static String wrap(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
-		return emptyIfNull(prefix).concat(emptyIfNull(str)).concat(emptyIfNull(suffix));
+		return toStringOrEmpty(prefix).concat(toStringOrEmpty(str)).concat(toStringOrEmpty(suffix));
 	}
 
 	/**
@@ -2226,7 +2243,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 包装后的字符串
 	 */
 	public static String wrap(final CharSequence str, final char prefix, final char suffix) {
-		return prefix + emptyIfNull(str) + suffix;
+		return prefix + toStringOrEmpty(str) + suffix;
 	}
 
 	/**
@@ -2347,7 +2364,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String unWrap(final CharSequence str, final char prefix, final char suffix) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
 			return sub(str, 1, str.length() - 1);
@@ -2595,7 +2612,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String center(CharSequence str, final int size, final char padChar) {
 		if (str == null || size <= 0) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		final int strLen = str.length();
 		final int pads = size - strLen;
@@ -2629,7 +2646,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String center(CharSequence str, final int size, CharSequence padStr) {
 		if (str == null || size <= 0) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		if (isEmpty(padStr)) {
 			padStr = SPACE;
@@ -2796,7 +2813,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @since 4.0.2
 	 */
 	public static int compareVersion(final CharSequence version1, final CharSequence version2) {
-		return VersionComparator.INSTANCE.compare(str(version1), str(version2));
+		return VersionComparator.INSTANCE.compare(toStringOrNull(version1), toStringOrNull(version2));
 	}
 	// endregion
 
@@ -2842,7 +2859,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final CharSequence... testSuffixes) {
 		if (str == null || isEmpty(suffix) || endWith(str, suffix, ignoreCase)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		if (ArrayUtil.isNotEmpty(testSuffixes)) {
 			for (final CharSequence testSuffix : testSuffixes) {
@@ -2894,7 +2911,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final CharSequence... prefixes) {
 		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		if (ArrayUtil.isNotEmpty(prefixes)) {
 			for (final CharSequence s : prefixes) {
@@ -2920,11 +2937,11 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String replaceFirst(final CharSequence str, final CharSequence searchStr, final CharSequence replacedStr, final boolean ignoreCase) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		final int startInclude = indexOf(str, searchStr, 0, ignoreCase);
 		if (INDEX_NOT_FOUND == startInclude) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		return replaceByCodePoint(str, startInclude, startInclude + searchStr.length(), replacedStr);
 	}
@@ -2940,11 +2957,11 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String replaceLast(final CharSequence str, final CharSequence searchStr, final CharSequence replacedStr, final boolean ignoreCase) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		final int lastIndex = lastIndexOf(str, searchStr, str.length(), ignoreCase);
 		if (INDEX_NOT_FOUND == lastIndex) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		return replace(str, lastIndex, searchStr, replacedStr, ignoreCase);
 	}
@@ -3003,7 +3020,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String replace(final CharSequence str, final int fromIndex, final CharSequence searchStr, final CharSequence replacement, final boolean ignoreCase) {
 		if (isEmpty(str) || isEmpty(searchStr)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		return new SearchReplacer(fromIndex, searchStr, replacement, ignoreCase).apply(str);
 	}
@@ -3108,7 +3125,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String replaceChars(final CharSequence str, final String chars, final CharSequence replacedStr) {
 		if (isEmpty(str) || isEmpty(chars)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		return replaceChars(str, chars.toCharArray(), replacedStr);
 	}
@@ -3124,7 +3141,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String replaceChars(final CharSequence str, final char[] chars, final CharSequence replacedStr) {
 		if (isEmpty(str) || ArrayUtil.isEmpty(chars)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		final Set<Character> set = new HashSet<>(chars.length);
@@ -3144,8 +3161,8 @@ public class CharSequenceUtil extends StrValidator {
 	/**
 	 * 按照给定逻辑替换指定位置的字符，如字符大小写转换等
 	 *
-	 * @param str         字符串
-	 * @param index       位置，-1表示最后一个字符
+	 * @param str      字符串
+	 * @param index    位置，-1表示最后一个字符
 	 * @param operator 替换逻辑，给定原字符，返回新字符
 	 * @return 替换后的字符串
 	 * @since 6.0.0
@@ -3281,11 +3298,11 @@ public class CharSequenceUtil extends StrValidator {
 										 final int factor, final boolean appendDots) {
 		//字符数*速算因子<=最大字节数
 		if (str == null || str.length() * factor <= maxBytesLength) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		final byte[] sba = ByteUtil.toBytes(str, charset);
 		if (sba.length <= maxBytesLength) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		//限制字节数
 		final int limitBytes;
@@ -3430,7 +3447,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String filter(final CharSequence str, final Predicate<Character> predicate) {
 		if (str == null || predicate == null) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 
 		final int len = str.length();
@@ -3638,7 +3655,7 @@ public class CharSequenceUtil extends StrValidator {
 	public static String concat(final boolean isNullToEmpty, final CharSequence... strs) {
 		final StringBuilder sb = new StringBuilder();
 		for (final CharSequence str : strs) {
-			sb.append(isNullToEmpty ? emptyIfNull(str) : str);
+			sb.append(isNullToEmpty ? toStringOrEmpty(str) : str);
 		}
 		return sb.toString();
 	}
@@ -3694,6 +3711,7 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	// region ----- join
+
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 *
@@ -3747,7 +3765,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String move(final CharSequence str, final int startInclude, final int endExclude, int moveLength) {
 		if (isEmpty(str)) {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		final int len = str.length();
 		if (Math.abs(moveLength) > len) {
@@ -3768,7 +3786,7 @@ public class CharSequenceUtil extends StrValidator {
 				.append(str.subSequence(startAfterMove, startInclude))//
 				.append(str.subSequence(endExclude, str.length()));
 		} else {
-			return str(str);
+			return toStringOrNull(str);
 		}
 		return strBuilder.toString();
 	}
@@ -3864,5 +3882,20 @@ public class CharSequenceUtil extends StrValidator {
 
 		}
 		return str1.subSequence(str1Index + 1, str1.length());
+	}
+
+	/**
+	 * 将字符串转换为字符数组
+	 *
+	 * @param str         字符串
+	 * @param isCodePoint 是否为Unicode码点（即支持emoji等多char字符）
+	 * @return 字符数组
+	 * @since 6.0.0
+	 */
+	public static int[] toChars(final CharSequence str, final boolean isCodePoint) {
+		if (null == str) {
+			return null;
+		}
+		return (isCodePoint ? str.codePoints() : str.chars()).toArray();
 	}
 }

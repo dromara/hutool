@@ -231,7 +231,7 @@ public class ClassScanner implements Serializable {
 	 * @param charset        编码
 	 */
 	public ClassScanner(String packageName, final Predicate<Class<?>> classPredicate, final Charset charset) {
-		packageName = StrUtil.emptyIfNull(packageName);
+		packageName = StrUtil.toStringOrEmpty(packageName);
 		this.packageName = packageName;
 		this.packageNameWithDot = StrUtil.addSuffixIfNot(packageName, StrUtil.DOT);
 		this.packageDirName = packageName.replace(CharUtil.DOT, File.separatorChar);

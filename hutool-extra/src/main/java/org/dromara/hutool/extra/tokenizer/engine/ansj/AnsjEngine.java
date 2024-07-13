@@ -48,7 +48,7 @@ public class AnsjEngine implements TokenizerEngine {
 
 	@Override
 	public Result parse(final CharSequence text) {
-		return new AnsjResult(analysis.parseStr(StrUtil.str(text)));
+		return new AnsjResult(analysis.parseStr(StrUtil.toStringOrEmpty(text)));
 	}
 
 }

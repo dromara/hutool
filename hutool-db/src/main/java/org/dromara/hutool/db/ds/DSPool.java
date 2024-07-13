@@ -167,7 +167,7 @@ public class DSPool implements Closeable {
 	 * @return {@link DSWrapper} 数据源包装
 	 */
 	private DSWrapper createDSWrapper(final String group) {
-		final DbConfig dbConfig = this.configParser.parse(StrUtil.emptyIfNull(group));
+		final DbConfig dbConfig = this.configParser.parse(StrUtil.toStringOrEmpty(group));
 		return DSWrapper.wrap(factory.createDataSource(dbConfig), dbConfig);
 	}
 }

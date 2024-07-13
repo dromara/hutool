@@ -57,7 +57,7 @@ public class Convert {
 	 * 如果给定的值为null，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -78,6 +78,18 @@ public class Convert {
 	}
 
 	/**
+	 * 转换为字符串<br>
+	 * 如果给定的值为{@code null}，或者转换失败，返回默认值"null"（即null这个字符串）<br>
+	 * 转换失败不会报错
+	 *
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static String toStrOrNullStr(final Object value) {
+		return toStr(value, StrUtil.NULL);
+	}
+
+	/**
 	 * 转换为String数组
 	 *
 	 * @param value 被转换的值
@@ -93,7 +105,7 @@ public class Convert {
 	 * 如果给定的值为null，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -129,7 +141,7 @@ public class Convert {
 	 * 如果给定的值为{@code null}，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -176,7 +188,7 @@ public class Convert {
 	 * 如果给定的值为{@code null}，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -212,7 +224,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -248,7 +260,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -283,7 +295,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -318,7 +330,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -353,7 +365,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -388,7 +400,7 @@ public class Convert {
 	 * String支持的值为：true、false、yes、ok、no，1,0 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -423,7 +435,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -448,7 +460,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
@@ -473,7 +485,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 * @since 4.1.6
@@ -487,7 +499,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 * @since 5.0.7
@@ -513,7 +525,7 @@ public class Convert {
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 *
-	 * @param value 被转换的值
+	 * @param value        被转换的值
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 * @since 5.0.7
@@ -539,17 +551,17 @@ public class Convert {
 	 * 转换为Enum对象<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 *
-	 * @param <E> 枚举类型
-	 * @param clazz Enum的Class
-	 * @param value 值
+	 * @param <E>          枚举类型
+	 * @param clazz        Enum的Class
+	 * @param value        值
 	 * @param defaultValue 默认值
 	 * @return Enum
 	 */
 	@SuppressWarnings("unchecked")
 	public static <E extends Enum<E>> E toEnum(final Class<E> clazz, final Object value, final E defaultValue) {
-		try{
+		try {
 			return (E) EnumConverter.INSTANCE.convert(clazz, value);
-		} catch (final Exception ignore){
+		} catch (final Exception ignore) {
 			return defaultValue;
 		}
 	}
@@ -558,7 +570,7 @@ public class Convert {
 	 * 转换为Enum对象<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值{@code null}<br>
 	 *
-	 * @param <E> 枚举类型
+	 * @param <E>   枚举类型
 	 * @param clazz Enum的Class
 	 * @param value 值
 	 * @return Enum
@@ -571,8 +583,8 @@ public class Convert {
 	 * 转换为集合类
 	 *
 	 * @param collectionType 集合类型
-	 * @param elementType 集合中元素类型
-	 * @param value 被转换的值
+	 * @param elementType    集合中元素类型
+	 * @param value          被转换的值
 	 * @return {@link Collection}
 	 * @since 3.0.8
 	 */
@@ -594,9 +606,9 @@ public class Convert {
 	/**
 	 * 转换为ArrayList
 	 *
-	 * @param <T> 元素类型
+	 * @param <T>         元素类型
 	 * @param elementType 集合中元素类型
-	 * @param value 被转换的值
+	 * @param value       被转换的值
 	 * @return {@link ArrayList}
 	 * @since 4.1.20
 	 */
@@ -608,9 +620,9 @@ public class Convert {
 	/**
 	 * 转换为HashSet
 	 *
-	 * @param <T> 元素类型
+	 * @param <T>         元素类型
 	 * @param elementType 集合中元素类型
-	 * @param value 被转换的值
+	 * @param value       被转换的值
 	 * @return {@link HashSet}
 	 * @since 5.7.3
 	 */
@@ -657,78 +669,78 @@ public class Convert {
 	/**
 	 * 转换值为指定类型，类型采用字符串表示
 	 *
-	 * @param <T> 目标类型
+	 * @param <T>       目标类型
 	 * @param className 类的字符串表示
-	 * @param value 值
+	 * @param value     值
 	 * @return 转换后的值
-	 * @since 4.0.7
 	 * @throws ConvertException 转换器不存在
+	 * @since 4.0.7
 	 */
-	public static <T> T convertByClassName(final String className, final Object value) throws ConvertException{
+	public static <T> T convertByClassName(final String className, final Object value) throws ConvertException {
 		return convert(ClassLoaderUtil.loadClass(className), value);
 	}
 
 	/**
 	 * 转换值为指定类型
 	 *
-	 * @param <T> 目标类型
-	 * @param type 类型
+	 * @param <T>   目标类型
+	 * @param type  类型
 	 * @param value 值
 	 * @return 转换后的值
-	 * @since 4.0.0
 	 * @throws ConvertException 转换器不存在
+	 * @since 4.0.0
 	 */
-	public static <T> T convert(final Class<T> type, final Object value) throws ConvertException{
-		return convert((Type)type, value);
+	public static <T> T convert(final Class<T> type, final Object value) throws ConvertException {
+		return convert((Type) type, value);
 	}
 
 	/**
 	 * 转换值为指定类型
 	 *
-	 * @param <T> 目标类型
+	 * @param <T>       目标类型
 	 * @param reference 类型参考，用于持有转换后的泛型类型
-	 * @param value 值
+	 * @param value     值
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(final TypeReference<T> reference, final Object value) throws ConvertException{
+	public static <T> T convert(final TypeReference<T> reference, final Object value) throws ConvertException {
 		return convert(reference.getType(), value, null);
 	}
 
 	/**
 	 * 转换值为指定类型
 	 *
-	 * @param <T> 目标类型
-	 * @param type 类型
+	 * @param <T>   目标类型
+	 * @param type  类型
 	 * @param value 值
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(final Type type, final Object value) throws ConvertException{
+	public static <T> T convert(final Type type, final Object value) throws ConvertException {
 		return convert(type, value, null);
 	}
 
 	/**
 	 * 转换值为指定类型
 	 *
-	 * @param <T> 目标类型
-	 * @param type 类型
-	 * @param value 值
+	 * @param <T>          目标类型
+	 * @param type         类型
+	 * @param value        值
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 * @since 4.0.0
 	 */
 	public static <T> T convert(final Class<T> type, final Object value, final T defaultValue) throws ConvertException {
-		return convert((Type)type, value, defaultValue);
+		return convert((Type) type, value, defaultValue);
 	}
 
 	/**
 	 * 转换值为指定类型
 	 *
-	 * @param <T> 目标类型
-	 * @param type 类型
-	 * @param value 值
+	 * @param <T>          目标类型
+	 * @param type         类型
+	 * @param value        值
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
@@ -741,8 +753,8 @@ public class Convert {
 	 * 转换值为指定类型，不抛异常转换<br>
 	 * 当转换失败时返回{@code null}
 	 *
-	 * @param <T> 目标类型
-	 * @param type 目标类型
+	 * @param <T>   目标类型
+	 * @param type  目标类型
 	 * @param value 值
 	 * @return 转换后的值，转换失败返回null
 	 * @since 4.5.10
@@ -755,9 +767,9 @@ public class Convert {
 	 * 转换值为指定类型，不抛异常转换<br>
 	 * 当转换失败时返回默认值
 	 *
-	 * @param <T> 目标类型
-	 * @param type 目标类型
-	 * @param value 值
+	 * @param <T>          目标类型
+	 * @param type         目标类型
+	 * @param value        值
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
 	 * @since 4.5.10
@@ -770,11 +782,11 @@ public class Convert {
 	 * 转换值为指定类型，可选是否不抛异常转换<br>
 	 * 当转换失败时返回默认值
 	 *
-	 * @param <T> 目标类型
-	 * @param type 目标类型
-	 * @param value 值
+	 * @param <T>          目标类型
+	 * @param type         目标类型
+	 * @param value        值
 	 * @param defaultValue 默认值
-	 * @param quietly 是否静默转换，true不抛异常
+	 * @param quietly      是否静默转换，true不抛异常
 	 * @return 转换后的值
 	 * @since 5.3.2
 	 */
@@ -783,7 +795,7 @@ public class Convert {
 		try {
 			return compositeConverter.convert(type, value, defaultValue);
 		} catch (final Exception e) {
-			if(quietly){
+			if (quietly) {
 				return defaultValue;
 			}
 			throw e;
@@ -791,6 +803,7 @@ public class Convert {
 	}
 
 	// ----------------------------------------------------------------------- 全角半角转换
+
 	/**
 	 * 半角转全角
 	 *
@@ -804,12 +817,12 @@ public class Convert {
 	/**
 	 * 半角转全角，{@code null}返回{@code null}
 	 *
-	 * @param input String
+	 * @param input         String
 	 * @param notConvertSet 不替换的字符集合
 	 * @return 全角字符串，{@code null}返回{@code null}
 	 */
 	public static String toSBC(final String input, final Set<Character> notConvertSet) {
-		if(StrUtil.isEmpty(input)){
+		if (StrUtil.isEmpty(input)) {
 			return input;
 		}
 		final char[] c = input.toCharArray();
@@ -841,13 +854,13 @@ public class Convert {
 	/**
 	 * 替换全角为半角
 	 *
-	 * @param text 文本
+	 * @param text          文本
 	 * @param notConvertSet 不替换的字符集合
 	 * @return 替换后的字符
 	 */
 	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	public static String toDBC(final String text, final Set<Character> notConvertSet) {
-		if(StrUtil.isBlank(text)) {
+		if (StrUtil.isBlank(text)) {
 			return text;
 		}
 		final char[] c = text.toCharArray();
@@ -869,10 +882,11 @@ public class Convert {
 	}
 
 	// --------------------------------------------------------------------- hex
+
 	/**
 	 * 字符串转换成十六进制字符串，结果为小写
 	 *
-	 * @param str 待转换的ASCII字符串
+	 * @param str     待转换的ASCII字符串
 	 * @param charset 编码
 	 * @return 16进制字符串
 	 * @see HexUtil#encodeStr(String, Charset)
@@ -906,7 +920,7 @@ public class Convert {
 	/**
 	 * 十六进制转换字符串
 	 *
-	 * @param hexStr Byte字符串(Byte之间无分隔符 如:[616C6B])
+	 * @param hexStr  Byte字符串(Byte之间无分隔符 如:[616C6B])
 	 * @param charset 编码 {@link Charset}
 	 * @return 对应的字符串
 	 * @see HexUtil#decodeStr(String, Charset)
@@ -942,9 +956,9 @@ public class Convert {
 	 * 给定字符串转换字符编码<br>
 	 * 如果参数为空，则返回原字符串，不报错。
 	 *
-	 * @param str 被转码的字符串
+	 * @param str           被转码的字符串
 	 * @param sourceCharset 原字符集
-	 * @param destCharset 目标字符集
+	 * @param destCharset   目标字符集
 	 * @return 转换后的字符串
 	 * @see CharsetUtil#convert(String, String, String)
 	 */
@@ -960,8 +974,8 @@ public class Convert {
 	 * 转换时间单位
 	 *
 	 * @param sourceDuration 时长
-	 * @param sourceUnit 源单位
-	 * @param destUnit 目标单位
+	 * @param sourceUnit     源单位
+	 * @param destUnit       目标单位
 	 * @return 目标单位的时长
 	 */
 	public static long convertTime(final long sourceDuration, final TimeUnit sourceUnit, final TimeUnit destUnit) {
@@ -971,12 +985,13 @@ public class Convert {
 	}
 
 	// --------------------------------------------------------------- 原始包装类型转换
+
 	/**
 	 * 原始类转为包装类，非原始类返回原类
 	 *
-	 * @see BasicType#wrap(Class)
 	 * @param clazz 原始类
 	 * @return 包装类
+	 * @see BasicType#wrap(Class)
 	 * @see BasicType#wrap(Class)
 	 */
 	public static Class<?> wrap(final Class<?> clazz) {
@@ -986,9 +1001,9 @@ public class Convert {
 	/**
 	 * 包装类转为原始类，非包装类返回原类
 	 *
-	 * @see BasicType#unWrap(Class)
 	 * @param clazz 包装类
 	 * @return 原始类
+	 * @see BasicType#unWrap(Class)
 	 * @see BasicType#unWrap(Class)
 	 */
 	public static Class<?> unWrap(final Class<?> clazz) {
@@ -996,6 +1011,7 @@ public class Convert {
 	}
 
 	// -------------------------------------------------------------------------- 数字和英文转换
+
 	/**
 	 * 将阿拉伯数字转为英文表达方式
 	 *
@@ -1025,7 +1041,7 @@ public class Convert {
 	/**
 	 * 将阿拉伯数字转为中文表达方式
 	 *
-	 * @param number 数字
+	 * @param number           数字
 	 * @param isUseTraditional 是否使用繁体字（金额形式）
 	 * @return 中文
 	 * @since 3.2.3
@@ -1047,7 +1063,7 @@ public class Convert {
 	 * @return 数字
 	 * @since 5.6.0
 	 */
-	public static BigDecimal chineseToNumber(final String number){
+	public static BigDecimal chineseToNumber(final String number) {
 		return ChineseNumberParser.parseFromChineseNumber(number);
 	}
 
@@ -1059,7 +1075,7 @@ public class Convert {
 	 * @since 3.2.3
 	 */
 	public static String digitToChinese(final Number n) {
-		if(null == n) {
+		if (null == n) {
 			return "零";
 		}
 		return ChineseNumberFormatter.of()
@@ -1071,18 +1087,19 @@ public class Convert {
 	/**
 	 * 中文大写数字金额转换为数字，返回结果以元为单位的BigDecimal类型数字
 	 * 如：
-	 * 	“陆万柒仟伍佰伍拾陆元叁角贰分”返回“67556.32”
-	 * 	“叁角贰分”返回“0.32”
+	 * “陆万柒仟伍佰伍拾陆元叁角贰分”返回“67556.32”
+	 * “叁角贰分”返回“0.32”
 	 *
 	 * @param chineseMoneyAmount 中文大写数字金额
 	 * @return 返回结果以元为单位的BigDecimal类型数字
 	 * @since 5.8.5
 	 */
-	public static BigDecimal chineseMoneyToNumber(final String chineseMoneyAmount){
+	public static BigDecimal chineseMoneyToNumber(final String chineseMoneyAmount) {
 		return ChineseNumberParser.parseFromChineseMoney(chineseMoneyAmount);
 	}
 
 	// -------------------------------------------------------------------------- 数字转换
+
 	/**
 	 * int转byte
 	 *

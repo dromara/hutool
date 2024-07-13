@@ -75,7 +75,7 @@ public class SettingConfigParser implements ConfigParser {
 	@Override
 	public DbConfig parse(final String group) {
 		final Setting setting = this.setting;
-		final Setting subSetting = setting.getSetting(StrUtil.emptyIfNull(group));
+		final Setting subSetting = setting.getSetting(StrUtil.toStringOrEmpty(group));
 		if (MapUtil.isEmpty(subSetting)) {
 			throw new DbException("No config for group: [{}]", group);
 		}

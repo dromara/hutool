@@ -14,6 +14,7 @@ package org.dromara.hutool.core.text;
 
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.collection.iter.IterUtil;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -234,7 +235,7 @@ public class StrJoiner implements Appendable, Serializable {
 			final Map.Entry<?, ?> entry = (Map.Entry<?, ?>) obj;
 			append(entry.getKey()).append(entry.getValue());
 		} else {
-			append(ObjUtil.toString(obj));
+			append(Convert.toStr(obj));
 		}
 		return this;
 	}

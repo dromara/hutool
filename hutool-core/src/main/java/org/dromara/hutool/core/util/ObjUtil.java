@@ -15,7 +15,6 @@ package org.dromara.hutool.core.util;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
-import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.map.MapUtil;
@@ -499,28 +498,5 @@ public class ObjUtil {
 	 */
 	public static Class<?> getTypeArgument(final Object obj, final int index) {
 		return ClassUtil.getTypeArgument(obj.getClass(), index);
-	}
-
-	/**
-	 * <p>将对象转为字符串
-	 * <ul>
-	 *     <li>若对象为{@code null}，则返回“null”；</li>
-	 *     <li>若对象为{@link Map}，则返回{@code Map.toString()}；</li>
-	 *     <li>若对象为其他类型，则调用{@link Convert#toStr(Object)}进行转换；</li>
-	 * </ul>
-	 *
-	 * @param obj Bean对象
-	 * @return 转换后的字符串
-	 * @see Convert#toStr(Object)
-	 * @since 3.2.0
-	 */
-	public static String toString(final Object obj) {
-		if (null == obj) {
-			return StrUtil.NULL;
-		}
-		if (obj instanceof Map) {
-			return obj.toString();
-		}
-		return Convert.toStr(obj);
 	}
 }

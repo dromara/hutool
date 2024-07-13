@@ -225,7 +225,7 @@ public class ResourceUtil {
 	 * @return {@link URL}
 	 */
 	public static URL getResourceUrl(String resource, final Class<?> baseClass) {
-		resource = StrUtil.emptyIfNull(resource);
+		resource = StrUtil.toStringOrEmpty(resource);
 		return (null != baseClass) ? baseClass.getResource(resource) : ClassLoaderUtil.getClassLoader().getResource(resource);
 	}
 

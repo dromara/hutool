@@ -531,7 +531,7 @@ public class UrlUtil {
 		if (isEncodePath) {
 			path = RFC3986.PATH.encode(path, CharsetUtil.UTF_8);
 		}
-		return protocol + domain + StrUtil.emptyIfNull(path) + StrUtil.emptyIfNull(params);
+		return protocol + domain + StrUtil.toStringOrEmpty(path) + StrUtil.toStringOrEmpty(params);
 	}
 	// endregion
 

@@ -242,41 +242,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	// endregion
 
 	/**
-	 * 调用对象的toString方法，null会返回“null”
-	 *
-	 * @param obj 对象
-	 * @return 字符串
-	 * @since 4.1.3
-	 * @see String#valueOf(Object)
-	 */
-	public static String toString(final Object obj) {
-		return String.valueOf(obj);
-	}
-
-	/**
-	 * 调用对象的toString方法，{@code null}会返回{@code null}
-	 *
-	 * @param obj 对象
-	 * @return 字符串 or {@code null}
-	 * @since 5.7.17
-	 */
-	public static String toStringOrNull(final Object obj) {
-		return null == obj ? null : obj.toString();
-	}
-
-	/**
-	 * 调用对象的toString方法，{@code null}会返回空字符串 ""
-	 *
-	 * @param obj 对象
-	 * @return {@link String }
-	 * @author Junwei Xu
-	 */
-	public static String toStringOrEmpty(final Object obj) {
-		// obj为空时, 返回 null 或 "null" 都不适用部分场景, 此处返回 "" 空字符串
-		return null == obj ? EMPTY : obj.toString();
-	}
-
-	/**
 	 * 创建StringBuilder对象
 	 *
 	 * @return StringBuilder对象

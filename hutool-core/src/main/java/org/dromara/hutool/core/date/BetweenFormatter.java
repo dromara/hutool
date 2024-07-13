@@ -228,7 +228,7 @@ public class BetweenFormatter implements Serializable {
 	 * @return this
 	 */
 	public BetweenFormatter setSeparator(final String separator) {
-		this.separator = StrUtil.emptyIfNull(separator);
+		this.separator = StrUtil.toStringOrEmpty(separator);
 		return this;
 	}
 

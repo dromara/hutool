@@ -48,7 +48,7 @@ public class HanLPEngine implements TokenizerEngine {
 
 	@Override
 	public Result parse(final CharSequence text) {
-		return new HanLPResult(this.seg.seg(StrUtil.str(text)));
+		return new HanLPResult(this.seg.seg(StrUtil.toStringOrEmpty(text)));
 	}
 
 }

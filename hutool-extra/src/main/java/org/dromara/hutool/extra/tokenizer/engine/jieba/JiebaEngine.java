@@ -51,7 +51,7 @@ public class JiebaEngine implements TokenizerEngine {
 
 	@Override
 	public Result parse(final CharSequence text) {
-		return new JiebaResult(jiebaSegmenter.process(StrUtil.str(text), mode));
+		return new JiebaResult(jiebaSegmenter.process(StrUtil.toStringOrEmpty(text), mode));
 	}
 
 }

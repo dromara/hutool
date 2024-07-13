@@ -392,7 +392,7 @@ public class UrlQuery {
 		final boolean isFormUrlEncoded = EncodeMode.FORM_URL_ENCODED == this.encodeMode;
 		if (null != key) {
 			final String actualKey = UrlDecoder.decode(key, charset, isFormUrlEncoded);
-			this.query.put(actualKey, StrUtil.emptyIfNull(UrlDecoder.decode(value, charset, isFormUrlEncoded)));
+			this.query.put(actualKey, StrUtil.toStringOrEmpty(UrlDecoder.decode(value, charset, isFormUrlEncoded)));
 		} else if (null != value) {
 			// name为空，value作为name，value赋值null
 			this.query.put(UrlDecoder.decode(value, charset, isFormUrlEncoded), null);

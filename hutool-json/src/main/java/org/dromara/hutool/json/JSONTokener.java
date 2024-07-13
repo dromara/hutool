@@ -14,6 +14,7 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.ReaderWrapper;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.mapper.JSONValueMapper;
 
@@ -76,7 +77,7 @@ public class JSONTokener extends ReaderWrapper {
 	 * @param config JSON配置
 	 */
 	public JSONTokener(final CharSequence s, final JSONConfig config) {
-		this(new StringReader(StrUtil.str(s)), config);
+		this(new StringReader(Assert.notBlank(s).toString()), config);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class JSONTokener extends ReaderWrapper {
 	 * @param config JSON配置
 	 */
 	public JSONTokener(final Reader reader, final JSONConfig config) {
-		super(IoUtil.toMarkSupport(reader));
+		super(IoUtil.toMarkSupport(Assert.notNull(reader)));
 		this.eof = false;
 		this.usePrevious = false;
 		this.previous = 0;

@@ -60,7 +60,7 @@ public class JcsegEngine implements TokenizerEngine {
 		// 依据给定的ADictionary和SegmenterConfig来创建ISegment
 		final ISegment segment = ISegment.COMPLEX.factory.create(config, dic);
 		try {
-			segment.reset(new StringReader(StrUtil.str(text)));
+			segment.reset(new StringReader(StrUtil.toStringOrEmpty(text)));
 		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}

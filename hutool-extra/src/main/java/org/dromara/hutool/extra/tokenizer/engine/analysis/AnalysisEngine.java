@@ -46,7 +46,7 @@ public class AnalysisEngine implements TokenizerEngine {
 	public Result parse(final CharSequence text) {
 		final TokenStream stream;
 		try {
-			stream = analyzer.tokenStream("text", StrUtil.str(text));
+			stream = analyzer.tokenStream("text", StrUtil.toStringOrEmpty(text));
 			stream.reset();
 		} catch (final IOException e) {
 			throw new TokenizerException(e);

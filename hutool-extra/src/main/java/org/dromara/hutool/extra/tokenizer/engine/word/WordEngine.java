@@ -59,7 +59,7 @@ public class WordEngine implements TokenizerEngine {
 
 	@Override
 	public Result parse(final CharSequence text) {
-		return new WordResult(this.segmentation.seg(StrUtil.str(text)));
+		return new WordResult(this.segmentation.seg(StrUtil.toStringOrEmpty(text)));
 	}
 
 }
