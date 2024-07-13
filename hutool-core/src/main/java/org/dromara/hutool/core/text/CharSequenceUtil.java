@@ -120,11 +120,13 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
-	 * 调用对象的toString方法，{@code null}会返回空字符串 ""
+	 * 调用对象的toString方法，{@code null}会返回空字符串 ""<br>
+	 * 如果仅仅是对{@link CharSequence}处理，请使用{@link #emptyIfNull(CharSequence)}
 	 *
 	 * @param obj 对象
 	 * @return {@link String }
 	 * @author Junwei Xu
+	 * @see #emptyIfNull(CharSequence)
 	 */
 	public static String toStringOrEmpty(final Object obj) {
 		// obj为空时, 返回 null 或 "null" 都不适用部分场景, 此处返回 "" 空字符串
