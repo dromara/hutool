@@ -3437,10 +3437,9 @@ public class CharSequenceUtil extends StrValidator {
 		}
 
 		// 此处不复用传入的CharSequence，防止修改原对象
-		final StringBuilder builder = new StringBuilder(str);
-		builder.setCharAt(index, Character.toLowerCase(c));
-
-		return builder.toString();
+		final char[] chars = string.toCharArray();
+		chars[0] = Character.toLowerCase(chars[0]);
+		return new String(chars);
 	}
 
 	/**
