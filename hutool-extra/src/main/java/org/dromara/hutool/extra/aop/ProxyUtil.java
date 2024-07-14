@@ -24,7 +24,7 @@ import java.lang.reflect.Proxy;
  *
  * @author Looly
  */
-public final class ProxyUtil {
+public class ProxyUtil {
 
 	private static final String CGLIB_CLASS_SEPARATOR = "$$";
 
