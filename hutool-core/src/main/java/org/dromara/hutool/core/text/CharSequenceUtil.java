@@ -3678,52 +3678,6 @@ public class CharSequenceUtil extends StrValidator {
 		return sb;
 	}
 
-	// ------------------------------------------------------------------------ getter and setter
-
-	/**
-	 * 获得set或get或is方法对应的标准属性名<br>
-	 * 例如：setName 返回 name
-	 *
-	 * <pre>
-	 * getName =》name
-	 * setName =》name
-	 * isName  =》name
-	 * </pre>
-	 *
-	 * @param getOrSetMethodName Get或Set方法名
-	 * @return 如果是set或get方法名，返回field， 否则null
-	 */
-	public static String getGeneralField(final CharSequence getOrSetMethodName) {
-		final String getOrSetMethodNameStr = getOrSetMethodName.toString();
-		if (getOrSetMethodNameStr.startsWith("get") || getOrSetMethodNameStr.startsWith("set")) {
-			return removePreAndLowerFirst(getOrSetMethodName, 3);
-		} else if (getOrSetMethodNameStr.startsWith("is")) {
-			return removePreAndLowerFirst(getOrSetMethodName, 2);
-		}
-		return null;
-	}
-
-	/**
-	 * 生成set方法名<br>
-	 * 例如：name 返回 setName
-	 *
-	 * @param fieldName 属性名
-	 * @return setXxx
-	 */
-	public static String genSetter(final CharSequence fieldName) {
-		return upperFirstAndAddPre(fieldName, "set");
-	}
-
-	/**
-	 * 生成get方法名
-	 *
-	 * @param fieldName 属性名
-	 * @return getXxx
-	 */
-	public static String genGetter(final CharSequence fieldName) {
-		return upperFirstAndAddPre(fieldName, "get");
-	}
-
 	// ------------------------------------------------------------------------ other
 
 	/**

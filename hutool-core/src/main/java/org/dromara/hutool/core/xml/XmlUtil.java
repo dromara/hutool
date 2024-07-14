@@ -135,8 +135,9 @@ public class XmlUtil extends XmlConstants {
 	 */
 	public static Document parseXml(final String xmlStr) {
 		if (StrUtil.isBlank(xmlStr)) {
-			throw new IllegalArgumentException("XML content string is empty !");
+			throw new IllegalArgumentException("XML content string is blank !");
 		}
+
 		return readXml(StrUtil.getReader(cleanInvalid(xmlStr)));
 	}
 	// endregion

@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.net.url;
 
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -211,12 +212,14 @@ public class UrlQueryUtil {
 			return MapUtil.empty();
 		}
 
+		Console.log(queryMap);
+
 		final Map<String, List<String>> params = new LinkedHashMap<>();
 		queryMap.forEach((key, value) -> {
-			if(null != key && null != value){
+			if(null != key){
 				final List<String> values = params.computeIfAbsent(key.toString(), k -> new ArrayList<>(1));
 				// 一般是一个参数
-				values.add(key.toString());
+				values.add(StrUtil.toStringOrNull(value));
 			}
 		});
 		return params;

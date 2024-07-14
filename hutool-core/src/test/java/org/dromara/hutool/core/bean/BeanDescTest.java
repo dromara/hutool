@@ -89,6 +89,22 @@ public class BeanDescTest {
 		Assertions.assertEquals("张三", value);
 	}
 
+	@Test
+	void simpleBeanDescTest() {
+		final SimpleBeanDesc desc = new SimpleBeanDesc(User.class);
+
+		final User user = new User();
+		desc.getProp("name").setValue(user, "张三");
+		Assertions.assertEquals("张三", user.getName());
+		Object value = desc.getProp("name").getValue(user);
+		Assertions.assertEquals("张三", value);
+
+		desc.getProp("admin").setValue(user, true);
+		Assertions.assertTrue(user.isAdmin());
+		value = desc.getProp("admin").getValue(user);
+		Assertions.assertEquals(true, value);
+	}
+
 	public static class User {
 		private String name;
 		private int age;

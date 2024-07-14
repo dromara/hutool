@@ -15,6 +15,7 @@ package org.dromara.hutool.core.bean;
 import org.dromara.hutool.core.bean.path.AbstractBeanDesc;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
+import org.dromara.hutool.core.reflect.method.MethodNameUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
@@ -158,12 +159,12 @@ public class StrictBeanDesc extends AbstractBeanDesc {
 			methodName = method.getName();
 			if (0 == method.getParameterCount()) {
 				// 无参数，可能为Getter方法
-				if (StrUtil.equals(methodName, StrUtil.genGetter(fieldName), ignoreCase) &&
+				if (StrUtil.equals(methodName, MethodNameUtil.genGetter(fieldName), ignoreCase) &&
 					method.getReturnType().isAssignableFrom(fieldType)) {
 					// getter的返回类型必须为字段类型或字段的父类
 					getter = method;
 				}
-			} else if (StrUtil.equals(methodName, StrUtil.genSetter(fieldName), ignoreCase) &&
+			} else if (StrUtil.equals(methodName, MethodNameUtil.genSetter(fieldName), ignoreCase) &&
 				fieldType.isAssignableFrom(method.getParameterTypes()[0])) {
 				// setter方法的参数必须为字段类型或字段的子类
 				setter = method;
@@ -198,7 +199,7 @@ public class StrictBeanDesc extends AbstractBeanDesc {
 				return false;
 			}
 
-			if (StrUtil.startWith(fieldName, "is", ignoreCase)) {
+			if (StrUtil.startWith(fieldName, MethodNameUtil.IS_PREFIX, ignoreCase)) {
 				// isName -》 isName
 				if (StrUtil.equals(fieldName, m.getName(), ignoreCase)) {
 					return true;
@@ -207,7 +208,7 @@ public class StrictBeanDesc extends AbstractBeanDesc {
 
 			// name   -》 isName
 			// isName -》 isIsName
-			return StrUtil.equals(StrUtil.upperFirstAndAddPre(fieldName, "is"), m.getName(), ignoreCase);
+			return StrUtil.equals(StrUtil.upperFirstAndAddPre(fieldName, MethodNameUtil.IS_PREFIX), m.getName(), ignoreCase);
 		});
 	}
 
@@ -231,10 +232,10 @@ public class StrictBeanDesc extends AbstractBeanDesc {
 				return false;
 			}
 
-			if (StrUtil.startWith(fieldName, "is", ignoreCase)) {
+			if (StrUtil.startWith(fieldName, MethodNameUtil.IS_PREFIX, ignoreCase)) {
 				// isName -》 setName
 				return StrUtil.equals(
-					"set" + StrUtil.removePrefix(fieldName, "is", ignoreCase),
+					MethodNameUtil.SET_PREFIX + StrUtil.removePrefix(fieldName, MethodNameUtil.IS_PREFIX, ignoreCase),
 					m.getName(), ignoreCase);
 			}
 

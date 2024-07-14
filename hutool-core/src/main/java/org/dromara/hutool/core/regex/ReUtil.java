@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.regex;
 
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.comparator.StrLengthComparator;
@@ -867,33 +866,42 @@ public class ReUtil {
 	 *
 	 * @param content             文本
 	 * @param pattern             {@link Pattern}
-	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
+	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容，null表示去除匹配
 	 * @return 处理后的文本
 	 * @since 3.0.4
 	 */
-	public static String replaceAll(final CharSequence content, final Pattern pattern, final String replacementTemplate) {
-		if(null != pattern && StrUtil.isNotEmpty(content) && StrUtil.isNotEmpty(replacementTemplate)){
-			final Matcher matcher = pattern.matcher(content);
-			boolean result = matcher.find();
-			if (result) {
-				final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1,
-					new TreeSet<>(StrLengthComparator.INSTANCE.reversed()));
-				final StringBuffer sb = new StringBuffer();
-				do {
-					String replacement = replacementTemplate;
-					for (final String var : varNums) {
-						final int group = Integer.parseInt(var);
-						replacement = replacement.replace("$" + var, matcher.group(group));
-					}
-					matcher.appendReplacement(sb, escape(replacement));
-					result = matcher.find();
-				} while (result);
-				matcher.appendTail(sb);
-				return sb.toString();
-			}
+	public static String replaceAll(final CharSequence content, final Pattern pattern, String replacementTemplate) {
+		if (StrUtil.isEmpty(content)) {
+			return StrUtil.toStringOrNull(content);
 		}
 
-		return StrUtil.toStringOrNull(replacementTemplate);
+		// replacementTemplate字段为null时按照去除匹配对待
+		if(null == replacementTemplate){
+			replacementTemplate = StrUtil.EMPTY;
+		}
+		Assert.notNull(replacementTemplate, "ReplacementTemplate must be not null !");
+
+		final Matcher matcher = pattern.matcher(content);
+		boolean result = matcher.find();
+		if (result) {
+			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1,
+				new TreeSet<>(StrLengthComparator.INSTANCE.reversed()));
+			final StringBuffer sb = new StringBuffer();
+			do {
+				String replacement = replacementTemplate;
+				for (final String var : varNums) {
+					final int group = Integer.parseInt(var);
+					replacement = replacement.replace("$" + var, matcher.group(group));
+				}
+				matcher.appendReplacement(sb, escape(replacement));
+				result = matcher.find();
+			} while (result);
+			matcher.appendTail(sb);
+			return sb.toString();
+		}
+
+		// 无匹配结果，返回原字符串
+		return StrUtil.toStringOrNull(content);
 	}
 
 	/**

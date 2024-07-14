@@ -326,6 +326,7 @@ public class PropDesc {
 	public String toString() {
 		return "PropDesc{" +
 			"field=" + field +
+			", fieldName=" + fieldName +
 			", getter=" + getter +
 			", setter=" + setter +
 			'}';

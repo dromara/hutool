@@ -197,12 +197,12 @@ public class MethodMatcherUtil {
 		Objects.requireNonNull(fieldName);
 		Objects.requireNonNull(fieldType);
 		// 匹配方法名为 get + 首字母大写的属性名的无参数方法
-		Predicate<Method> nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, "get"));
+		Predicate<Method> nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, MethodNameUtil.GET_PREFIX));
 		// 查找方法名为属性名的无参数方法
 		nameMatcher = nameMatcher.or(forName(fieldName));
 		if (Objects.equals(boolean.class, fieldType) || Objects.equals(Boolean.class, fieldType)) {
-			// 匹配方法名为 get + 首字母大写的属性名的无参数方法
-			nameMatcher = nameMatcher.or(forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, "is")));
+			// 匹配方法名为 is + 首字母大写的属性名的无参数方法
+			nameMatcher = nameMatcher.or(forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, MethodNameUtil.IS_PREFIX)));
 		}
 		return allMatch(nameMatcher, forReturnType(fieldType), forNoneParameter());
 	}
@@ -237,7 +237,7 @@ public class MethodMatcherUtil {
 	public static Predicate<Method> forSetterMethod(final String fieldName, final Class<?> fieldType) {
 		Objects.requireNonNull(fieldName);
 		Objects.requireNonNull(fieldType);
-		final Predicate<Method> nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, "set"))
+		final Predicate<Method> nameMatcher = forName(CharSequenceUtil.upperFirstAndAddPre(fieldName, MethodNameUtil.SET_PREFIX))
 			.or(forName(fieldName));
 		return allMatch(nameMatcher, forParameterTypes(fieldType));
 	}

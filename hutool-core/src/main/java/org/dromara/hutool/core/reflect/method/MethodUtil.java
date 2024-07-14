@@ -482,14 +482,14 @@ public class MethodUtil {
 
 		String name = method.getName();
 		// 跳过set这类特殊方法
-		if ("set".equals(name)) {
+		if (name.length() < 4) {
 			return false;
 		}
 
 		if (ignoreCase) {
 			name = name.toLowerCase();
 		}
-		return name.startsWith("set");
+		return name.startsWith(MethodNameUtil.SET_PREFIX);
 	}
 
 	/**
@@ -511,14 +511,18 @@ public class MethodUtil {
 		}
 
 		// 参数个数必须为0或1
-		final int parameterCount = method.getParameterCount();
-		if (0 != parameterCount) {
+		if (0 != method.getParameterCount()) {
+			return false;
+		}
+
+		// 必须有返回值
+		if(Void.class == method.getReturnType()){
 			return false;
 		}
 
 		String name = method.getName();
 		// 跳过getClass、get、is这类特殊方法
-		if ("getClass".equals(name) || "get".equals(name) || "is".equals(name)) {
+		if (name.length() < 3 || "getClass".equals(name) || MethodNameUtil.GET_PREFIX.equals(name)) {
 			return false;
 		}
 
@@ -526,11 +530,11 @@ public class MethodUtil {
 			name = name.toLowerCase();
 		}
 
-		if (name.startsWith("is")) {
+		if (name.startsWith(MethodNameUtil.IS_PREFIX)) {
 			// 判断返回值是否为Boolean
 			return BooleanUtil.isBoolean(method.getReturnType());
 		}
-		return name.startsWith("get");
+		return name.startsWith(MethodNameUtil.GET_PREFIX);
 	}
 
 	// region ----- invoke

@@ -146,8 +146,11 @@ public class ReUtilTest {
 		final String replaceAll = ReUtil.replaceAll(content, pattern, parameters -> "->" + parameters.group(1) + "<-");
 		assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 
-		// 修改后：判断ReUtil.replaceAll()方法，当replacementTemplate为null对象时，提示为非法的参数异常：ReplacementTemplate must be not null !
-		Assertions.assertThrows(IllegalArgumentException.class, () -> ReUtil.replaceAll(content, pattern, str));
+		// 修改后：判断ReUtil.replaceAll()方法，当replacementTemplate为null对象时按照""处理，表示去除匹配
+		String s = ReUtil.replaceAll(content, pattern, str);
+		assertEquals("ZZZaaabbbccc中文", s);
+		s = ReUtil.replaceAll(content, pattern, "");
+		assertEquals("ZZZaaabbbccc中文", s);
 	}
 
 	@Test

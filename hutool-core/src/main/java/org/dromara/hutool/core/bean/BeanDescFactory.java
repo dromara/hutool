@@ -12,7 +12,11 @@
 
 package org.dromara.hutool.core.bean;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
+import org.dromara.hutool.core.reflect.FieldUtil;
+
+import java.lang.reflect.Proxy;
 
 /**
  * Bean描述信息工厂类<br>
@@ -48,6 +52,9 @@ public class BeanDescFactory {
 	public static BeanDesc getBeanDescWithoutCache(final Class<?> clazz) {
 		if (RecordUtil.isRecord(clazz)) {
 			return new RecordBeanDesc(clazz);
+		}else if(Proxy.isProxyClass(clazz) || ArrayUtil.isEmpty(FieldUtil.getFields(clazz))){
+			// 代理类和空字段的Bean不支持属性获取，直接使用方法方式
+			return new SimpleBeanDesc(clazz);
 		} else {
 			return new StrictBeanDesc(clazz);
 		}

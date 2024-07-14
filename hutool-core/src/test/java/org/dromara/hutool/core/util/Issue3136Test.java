@@ -16,6 +16,7 @@ import lombok.Data;
 import org.dromara.hutool.core.xml.XmlUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,8 @@ public class Issue3136Test {
 	@Test
 	void xmlToBeanTest() {
 		final String xmlStr = "<?xml version=\"1.0\" encoding=\"gbk\" ?><response><code>02</code><message></message></response>";
-		final SmsRes smsRes = XmlUtil.xmlToBean(XmlUtil.parseXml(xmlStr).getDocumentElement(), SmsRes.class);
+		final Document doc = XmlUtil.parseXml(xmlStr);
+		final SmsRes smsRes = XmlUtil.xmlToBean(doc.getDocumentElement(), SmsRes.class);
 
 		Assertions.assertEquals("02", smsRes.getCode());
 		Assertions.assertEquals(new Message(), smsRes.getMessage());
