@@ -15,12 +15,18 @@ package org.dromara.hutool.core.bean;
 import org.dromara.hutool.core.bean.path.AbstractBeanDesc;
 import org.dromara.hutool.core.reflect.method.MethodNameUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
+import org.dromara.hutool.core.util.BooleanUtil;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 简单的Bean描述，只查找getter和setter方法
+ * 简单的Bean描述，只查找getter和setter方法，规则如下：
+ * <ul>
+ *     <li>不匹配字段，只查找getXXX、isXXX、setXXX方法。</li>
+ *     <li>如果同时存在getXXX和isXXX，返回值为Boolean或boolean，isXXX优先。</li>
+ *     <li>如果同时存在setXXX的多个重载方法，最小子类优先，如setXXX(List)优先于setXXX(Collection)</li>
+ * </ul>
  *
  * @author Looly
  * @since 6.0.0
@@ -75,9 +81,19 @@ public class SimpleBeanDesc extends AbstractBeanDesc {
 				propMap.put(fieldName, propDesc);
 			} else{
 				if(isSetter){
-					propDesc.setter = method;
+					if(null == propDesc.setter ||
+						propDesc.setter.getParameterTypes()[0].isAssignableFrom(method.getParameterTypes()[0])){
+						// 如果存在多个重载的setter方法，选择参数类型最匹配的
+						propDesc.setter = method;
+					}
 				}else{
-					propDesc.getter = method;
+					if(null == propDesc.getter ||
+						(BooleanUtil.isBoolean(propDesc.getter.getReturnType()) &&
+							BooleanUtil.isBoolean(method.getReturnType()) &&
+							methodName.startsWith(MethodNameUtil.IS_PREFIX))){
+						// 如果返回值为Boolean或boolean，isXXX优先于getXXX
+						propDesc.getter = method;
+					}
 				}
 			}
 		}
