@@ -29,7 +29,7 @@ public class XmlUnescape extends ReplacerChain {
 	 */
 	protected static final String[][] BASIC_UNESCAPE  = InternalEscapeUtil.invert(XmlEscape.BASIC_ESCAPE);
 	/**
-	 * issue#1118，新增&apos;反转义
+	 * issue#1118，新增{@code &apos;}反转义
 	 */
 	protected static final String[][] OTHER_UNESCAPE  = new String[][]{new String[]{"&apos;", "'"}};
 
