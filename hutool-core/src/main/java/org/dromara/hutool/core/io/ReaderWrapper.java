@@ -26,6 +26,9 @@ import java.nio.CharBuffer;
  */
 public class ReaderWrapper extends Reader implements Wrapper<Reader> {
 
+	/**
+	 * 原始Reader
+	 */
 	protected final Reader raw;
 
 	/**

@@ -53,10 +53,14 @@ public class Snowflake implements Generator<Long>, Serializable {
 	 */
 	public static final long DEFAULT_TWEPOCH = 1288834974657L;
 	private static final long WORKER_ID_BITS = 5L;
-	// 最大支持机器节点数0~31，一共32个
+	/**
+	 * 最大支持机器节点数0~31，一共32个
+	 */
 	protected static final long MAX_WORKER_ID = ~(-1L << WORKER_ID_BITS);
 	private static final long DATA_CENTER_ID_BITS = 5L;
-	// 最大支持数据中心节点数0~31，一共32个
+	/**
+	 * 最大支持数据中心节点数0~31，一共32个
+	 */
 	protected static final long MAX_DATA_CENTER_ID = ~(-1L << DATA_CENTER_ID_BITS);
 	// 序列号12位（表示只允许序号的范围为：0-4095）
 	private static final long SEQUENCE_BITS = 12L;

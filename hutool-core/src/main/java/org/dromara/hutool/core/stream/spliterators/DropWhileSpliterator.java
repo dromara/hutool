@@ -21,12 +21,21 @@ import java.util.function.Predicate;
  * dropWhile 的 Spliterator
  * <p>借鉴自StreamEx</p>
  *
+ * @param <T> 元素类型
  * @author emptypoint
  * @since 6.0.0
  */
 public class DropWhileSpliterator<T> implements Spliterator<T> {
 
-	public static <T> DropWhileSpliterator<T> create(final Spliterator<T> source, final Predicate<? super T> predicate) {
+	/**
+	 * 创建
+	 *
+	 * @param source    {@link Spliterator}
+	 * @param predicate 断言
+	 * @param <T>       元素类型
+	 * @return DropWhileSpliterator
+	 */
+	public static <T> DropWhileSpliterator<T> of(final Spliterator<T> source, final Predicate<? super T> predicate) {
 		return new DropWhileSpliterator<>(source, predicate);
 	}
 
@@ -34,7 +43,13 @@ public class DropWhileSpliterator<T> implements Spliterator<T> {
 	private final Predicate<? super T> predicate;
 	private boolean isFound = false;
 
-	private DropWhileSpliterator(final Spliterator<T> source, final Predicate<? super T> predicate) {
+	/**
+	 * 构造
+	 *
+	 * @param source    {@link Spliterator}
+	 * @param predicate 断言
+	 */
+	public DropWhileSpliterator(final Spliterator<T> source, final Predicate<? super T> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}

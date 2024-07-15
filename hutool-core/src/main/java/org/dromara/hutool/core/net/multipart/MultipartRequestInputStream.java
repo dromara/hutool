@@ -104,6 +104,9 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	// ---------------------------------------------------------------- data header
 
+	/**
+	 * 最后的头部信息
+	 */
 	protected UploadFileHeader lastHeader;
 
 	/**

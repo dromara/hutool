@@ -24,6 +24,9 @@ import org.dromara.hutool.core.text.replacer.LookupReplacer;
 public class Html4Escape extends XmlEscape {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * ISO8859_1 转义字符
+	 */
 	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	protected static final String[][] ISO8859_1_ESCAPE = { //
 			{ "\u00A0", "&nbsp;" }, // non-breaking space
@@ -124,6 +127,9 @@ public class Html4Escape extends XmlEscape {
 			{ "\u00FF", "&yuml;" }, // � - lowercase y, umlaut
 	};
 
+	/**
+	 * HTML 4.01 extended entities.
+	 */
 	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	protected static final String[][] HTML40_EXTENDED_ESCAPE = {
 			// <!-- Latin Extended-B -->

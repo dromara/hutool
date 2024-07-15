@@ -21,11 +21,15 @@ package org.dromara.hutool.core.text.placeholder.segment;
  */
 public abstract class AbstractPlaceholderSegment implements StrTemplateSegment {
 	/**
-	 * 占位符变量
-	 * <p>例如：{@literal "???"->"???", "{}"->"{}", "{name}"->"name"}</p>
+	 * 占位符变量，例如：{@literal "???"->"???", "{}"->"{}", "{name}"->"name"}
 	 */
 	private final String placeholder;
 
+	/**
+	 * 构造
+	 *
+	 * @param placeholder 占位符变量，例如：{@literal "???"->"???", "{}"->"{}", "{name}"->"name"}
+	 */
 	protected AbstractPlaceholderSegment(final String placeholder) {
 		this.placeholder = placeholder;
 	}

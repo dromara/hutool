@@ -33,6 +33,9 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
 	 */
 	protected int wCRCin;
 
+	/**
+	 * 构造
+	 */
 	public CRC16Checksum(){
 		reset();
 	}

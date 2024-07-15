@@ -22,10 +22,23 @@ import java.util.function.UnaryOperator;
 /**
  * 无限有序流 的Spliterator
  *
+ * @param <T> 流元素类型
  * @author VampireAchao
  * @since 6.0.0
  */
 public class IterateSpliterator<T> extends Spliterators.AbstractSpliterator<T> {
+
+	/**
+	 * @param seed    初始值
+	 * @param hasNext 是否有下一个断言
+	 * @param next    下一个值生产者
+	 * @param <T>     流元素类型
+	 * @return IterateSpliterator
+	 */
+	public static <T> IterateSpliterator<T> of(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
+		return new IterateSpliterator<>(seed, hasNext, next);
+	}
+
 	private final T seed;
 	private final Predicate<? super T> hasNext;
 	private final UnaryOperator<T> next;
@@ -34,18 +47,17 @@ public class IterateSpliterator<T> extends Spliterators.AbstractSpliterator<T> {
 	private boolean finished;
 
 	/**
-	 * Creates a spliterator reporting the given estimated size and
-	 * additionalCharacteristics.
+	 * 构造
+	 *
+	 * @param seed    初始值
+	 * @param hasNext 是否有下一个断言
+	 * @param next    下一个值生产者
 	 */
-	IterateSpliterator(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
+	public IterateSpliterator(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
 		super(Long.MAX_VALUE, Spliterator.ORDERED | Spliterator.IMMUTABLE);
 		this.seed = seed;
 		this.hasNext = hasNext;
 		this.next = next;
-	}
-
-	public static <T> IterateSpliterator<T> create(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
-		return new IterateSpliterator<>(seed, hasNext, next);
 	}
 
 	@Override

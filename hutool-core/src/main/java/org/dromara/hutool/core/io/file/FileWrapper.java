@@ -30,7 +30,13 @@ import java.nio.charset.StandardCharsets;
 public class FileWrapper implements Wrapper<File>, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 被包装的文件
+	 */
 	protected File file;
+	/**
+	 * 编码
+	 */
 	protected Charset charset;
 
 	/**

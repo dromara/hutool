@@ -582,6 +582,10 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 		 */
 		protected String suffix;
 
+		/**
+		 * 构造
+		 * @param template 模板
+		 */
 		protected Builder(final String template) {
 			super(template);
 		}

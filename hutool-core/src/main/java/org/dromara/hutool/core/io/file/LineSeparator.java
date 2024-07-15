@@ -21,26 +21,43 @@ package org.dromara.hutool.core.io.file;
  * Windows系统换行符："\r\n"
  * </pre>
  *
+ * @author Looly
  * @see #MAC
  * @see #LINUX
  * @see #WINDOWS
- * @author Looly
  * @since 3.1.0
  */
 public enum LineSeparator {
-	/** Mac系统换行符："\r" */
+
+	/**
+	 * Mac系统换行符："\r"
+	 */
 	MAC("\r"),
-	/** Linux系统换行符："\n" */
+	/**
+	 * Linux系统换行符："\n"
+	 */
 	LINUX("\n"),
-	/** Windows系统换行符："\r\n" */
+	/**
+	 * Windows系统换行符："\r\n"
+	 */
 	WINDOWS("\r\n");
 
 	private final String value;
 
+	/**
+	 * 构造
+	 *
+	 * @param lineSeparator 换行符
+	 */
 	LineSeparator(final String lineSeparator) {
 		this.value = lineSeparator;
 	}
 
+	/**
+	 * 获取换行符值
+	 *
+	 * @return 值
+	 */
 	public String getValue() {
 		return this.value;
 	}

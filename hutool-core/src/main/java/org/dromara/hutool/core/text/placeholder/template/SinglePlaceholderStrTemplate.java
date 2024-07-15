@@ -66,7 +66,7 @@ public class SinglePlaceholderStrTemplate extends StrTemplate {
 		// 上一个解析的segment是否是固定文本，如果是，则需要和当前新的文本部分合并
 		boolean lastIsLiteralSegment = false;
 		// 复用的占位符变量
-		final SinglePlaceholderSegment singlePlaceholderSegment = SinglePlaceholderSegment.newInstance(placeholder);
+		final SinglePlaceholderSegment singlePlaceholderSegment = SinglePlaceholderSegment.of(placeholder);
 		List<StrTemplateSegment> segments = null;
 		while (true) {
 			delimIndex = template.indexOf(placeholder, handledPosition);
@@ -200,6 +200,11 @@ public class SinglePlaceholderStrTemplate extends StrTemplate {
 		 */
 		protected String placeholder;
 
+		/**
+		 * 构造
+		 *
+		 * @param template 字符串模板
+		 */
 		protected Builder(final String template) {
 			super(template);
 		}

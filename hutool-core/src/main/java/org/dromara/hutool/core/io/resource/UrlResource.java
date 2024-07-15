@@ -32,9 +32,15 @@ import java.net.URL;
 public class UrlResource implements Resource, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * URL
+	 */
 	protected URL url;
-	private long lastModified = 0;
+	/**
+	 * 资源名称
+	 */
 	protected String name;
+	private long lastModified = 0;
 
 	//-------------------------------------------------------------------------------------- Constructor start
 

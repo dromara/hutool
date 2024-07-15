@@ -22,7 +22,9 @@ import org.dromara.hutool.core.lang.Assert;
  */
 public class Caesar {
 
-	// 26个字母表
+	/**
+	 * 26个字母表
+	 */
 	public static final String TABLE = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
 
 	/**

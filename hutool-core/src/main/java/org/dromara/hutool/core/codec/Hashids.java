@@ -47,6 +47,17 @@ import java.util.stream.LongStream;
  */
 public class Hashids implements Encoder<long[], String>, Decoder<String, long[]> {
 
+	/**
+	 * 默认编解码字符串
+	 */
+	public static final char[] DEFAULT_ALPHABET = {
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+		'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'
+	};
+
 	private static final int LOTTERY_MOD = 100;
 	private static final double GUARD_THRESHOLD = 12;
 	private static final double SEPARATOR_THRESHOLD = 3.5;
@@ -54,14 +65,6 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 	private static final int MIN_ALPHABET_LENGTH = 16;
 	private static final Pattern HEX_VALUES_PATTERN = Pattern.compile("[\\w\\W]{1,12}");
 
-	// 默认编解码字符串
-	public static final char[] DEFAULT_ALPHABET = {
-			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'
-	};
 	// 默认分隔符
 	private static final char[] DEFAULT_SEPARATORS = {
 			'c', 'f', 'h', 'i', 's', 't', 'u', 'C', 'F', 'H', 'I', 'S', 'T', 'U'

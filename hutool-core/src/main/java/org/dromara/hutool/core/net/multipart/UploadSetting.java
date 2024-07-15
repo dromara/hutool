@@ -31,9 +31,6 @@ public class UploadSetting {
 	/** 扩展名是允许列表还是禁止列表 */
 	protected boolean isAllowFileExts = true;
 
-	public UploadSetting() {
-	}
-
 	// ---------------------------------------------------------------------- Setters and Getters start
 	/**
 	 * @return 获得最大文件大小，-1表示无限制

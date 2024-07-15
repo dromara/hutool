@@ -34,6 +34,9 @@ import org.dromara.hutool.core.text.replacer.ReplacerChain;
 public class XmlEscape extends ReplacerChain {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * XML转义字符
+	 */
 	protected static final String[][] BASIC_ESCAPE = { //
 //			{"'", "&apos;"}, // " - single-quote
 			{"\"", "&quot;"}, // " - double-quote

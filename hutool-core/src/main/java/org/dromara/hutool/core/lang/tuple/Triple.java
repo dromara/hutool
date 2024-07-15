@@ -42,6 +42,9 @@ public class Triple<L, M, R> extends Pair<L, R> {
 		return new Triple<>(left, middle, right);
 	}
 
+	/**
+	 * 中值
+	 */
 	protected M middle;
 
 	/**
@@ -57,6 +60,7 @@ public class Triple<L, M, R> extends Pair<L, R> {
 	}
 
 	// region ----- getXXX
+
 	/**
 	 * 获取中值
 	 *

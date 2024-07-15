@@ -29,6 +29,9 @@ public class CRC16 implements Checksum, Serializable {
 
 	private final CRC16Checksum crc16;
 
+	/**
+	 * 构造
+	 */
 	public CRC16() {
 		this(new CRC16IBM());
 	}

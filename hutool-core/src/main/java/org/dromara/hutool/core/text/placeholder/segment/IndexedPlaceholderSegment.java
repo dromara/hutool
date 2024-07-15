@@ -20,17 +20,23 @@ package org.dromara.hutool.core.text.placeholder.segment;
  * @since 6.0.0
  */
 public class IndexedPlaceholderSegment extends NamedPlaceholderSegment {
-    /**
-     * 下标值
-     */
-    private final int index;
+	/**
+	 * 下标值
+	 */
+	private final int index;
 
-    public IndexedPlaceholderSegment(final String idxStr, final String wholePlaceholder) {
-        super(idxStr, wholePlaceholder);
-        this.index = Integer.parseInt(idxStr);
-    }
+	/**
+	 * 构造
+	 *
+	 * @param idxStr           索引字符串变量
+	 * @param wholePlaceholder 占位符完整文本
+	 */
+	public IndexedPlaceholderSegment(final String idxStr, final String wholePlaceholder) {
+		super(idxStr, wholePlaceholder);
+		this.index = Integer.parseInt(idxStr);
+	}
 
-    public int getIndex() {
-        return index;
-    }
+	public int getIndex() {
+		return index;
+	}
 }

@@ -26,6 +26,9 @@ import java.util.*;
  */
 public class IterChain<T> implements Iterator<T>, Chain<Iterator<T>, IterChain<T>> {
 
+	/**
+	 * 所有的Iterator
+	 */
 	protected final List<Iterator<T>> allIterators = new ArrayList<>();
 
 	/**
@@ -68,6 +71,9 @@ public class IterChain<T> implements Iterator<T>, Chain<Iterator<T>, IterChain<T
 
 	// ---------------------------------------------------------------- interface
 
+	/**
+	 * 当前位置
+	 */
 	protected int currentIter = -1;
 
 	@Override

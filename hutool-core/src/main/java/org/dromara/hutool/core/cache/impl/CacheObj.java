@@ -28,7 +28,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CacheObj<K, V> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 键
+	 */
 	protected final K key;
+	/**
+	 * 值对象
+	 */
 	protected final V obj;
 
 	/**

@@ -25,12 +25,14 @@ import java.util.concurrent.locks.StampedLock;
  * @author looly
  * @since 5.7.15
  */
-public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
+public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 	private static final long serialVersionUID = 1L;
 
-	// 乐观锁，此处使用乐观锁解决读多写少的场景
-	// get时乐观读，再检查是否修改，修改则转入悲观读重新读一遍，可以有效解决在写时阻塞大量读操作的情况。
-	// see: https://www.cnblogs.com/jiagoushijuzi/p/13721319.html
+	/**
+	 * 乐观锁，此处使用乐观锁解决读多写少的场景<br>
+	 * get时乐观读，再检查是否修改，修改则转入悲观读重新读一遍，可以有效解决在写时阻塞大量读操作的情况。<br>
+	 * see: https://www.cnblogs.com/jiagoushijuzi/p/13721319.html
+	 */
 	protected final StampedLock lock = new StampedLock();
 
 	@Override
@@ -163,7 +165,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 
 			// 无效移除
 			co = removeWithoutLock(key);
-			if(isUpdateCount){
+			if (isUpdateCount) {
 				missCount.increment();
 			}
 		} finally {

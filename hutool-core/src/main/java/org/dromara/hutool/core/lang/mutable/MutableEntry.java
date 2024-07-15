@@ -40,7 +40,13 @@ public class MutableEntry<K, V> extends AbsEntry<K, V> implements Mutable<Map.En
 		return new MutableEntry<>(key, value);
 	}
 
+	/**
+	 * 键
+	 */
 	protected K key;
+	/**
+	 * 值
+	 */
 	protected V value;
 
 	/**

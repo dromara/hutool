@@ -19,18 +19,23 @@ package org.dromara.hutool.core.text.placeholder.segment;
  * @since 6.0.0
  */
 public class LiteralSegment implements StrTemplateSegment {
-    /**
-     * 模板中固定的一段文本
-     */
-    private final String text;
+	/**
+	 * 模板中固定的一段文本
+	 */
+	private final String text;
 
-    public LiteralSegment(final String text) {
-        this.text = text;
-    }
+	/**
+	 * 构造
+	 *
+	 * @param text 文本
+	 */
+	public LiteralSegment(final String text) {
+		this.text = text;
+	}
 
-    @Override
-    public String getText() {
-        return text;
-    }
+	@Override
+	public String getText() {
+		return text;
+	}
 
 }

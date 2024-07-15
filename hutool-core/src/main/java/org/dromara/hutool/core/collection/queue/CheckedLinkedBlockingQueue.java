@@ -21,12 +21,16 @@ import java.util.function.Predicate;
  * 自定义加入前检查的{@link LinkedBlockingQueue}，给定一个检查函数，在加入元素前检查此函数<br>
  * 原理是通过Runtime#freeMemory()获取剩余内存，当剩余内存低于指定的阈值时，不再加入。
  *
+ * @param <E> 元素类型
  * @author looly
  * @since 6.0.0
  */
 public class CheckedLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 检查函数
+	 */
 	protected final Predicate<E> checker;
 
 	/**
@@ -42,7 +46,7 @@ public class CheckedLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
 	/**
 	 * 构造
 	 *
-	 * @param c             初始集合
+	 * @param c       初始集合
 	 * @param checker 检查函数
 	 */
 	public CheckedLinkedBlockingQueue(final Collection<? extends E> c, final Predicate<E> checker) {

@@ -471,17 +471,17 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	public interface Builder<T> extends Consumer<T>, org.dromara.hutool.core.lang.builder.Builder<EasyStream<T>> {
 
 		/**
-		 * Adds an element to the unwrap being built.
+		 * Adds an element to the unwrap being built.<br>
+		 * The default implementation behaves as if:
+		 * <pre>{@code
+		 *   accept(t)
+		 *   return this;
+		 * }</pre>
 		 *
-		 * @param t the element to add
+		 * @param t 需要添加的元素
 		 * @return {@code this} builder
 		 * @throws IllegalStateException if the builder has already transitioned to
 		 *                               the built state
-		 * @implSpec The default implementation behaves as if:
-		 * <pre>{@code
-		 * 										    accept(t)
-		 * 										    return this;
-		 *                                    }</pre>
 		 */
 		default Builder<T> add(final T t) {
 			accept(t);

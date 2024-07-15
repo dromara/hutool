@@ -28,7 +28,13 @@ import org.dromara.hutool.core.util.ObjUtil;
  */
 public abstract class AbsCopier<S, T> implements Copier<T> {
 
+	/**
+	 * 来源对象
+	 */
 	protected final S source;
+	/**
+	 * 目标对象
+	 */
 	protected final T target;
 	/**
 	 * 拷贝选项

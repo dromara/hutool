@@ -437,7 +437,7 @@ public class AntPathMatcher {
 	 */
 	protected String[] tokenizePath(final String path) {
 		return SplitUtil.split(path, this.pathSeparator, this.trimTokens, true)
-				.toArray(new String[0]);
+			.toArray(new String[0]);
 	}
 
 	/**
@@ -530,7 +530,7 @@ public class AntPathMatcher {
 	 * 提取参数
 	 *
 	 * @param pattern 模式
-	 * @param path 路径
+	 * @param path    路径
 	 * @return 参数
 	 */
 	public Map<String, String> extractUriTemplateVariables(final String pattern, final String path) {
@@ -548,22 +548,22 @@ public class AntPathMatcher {
 	 * the first pattern contains a file extension match (e.g., {@code *.html}).
 	 * In that case, the second pattern will be merged into the first. Otherwise,
 	 * an {@code IllegalArgumentException} will be thrown.
-	 * <p>Examples</p>
-	 * <table border="1" summary="">
-	 * <tr><th>Pattern 1</th><th>Pattern 2</th><th>Result</th></tr>
-	 * <tr><td>{@code null}</td><td>{@code null}</td><td>&nbsp;</td></tr>
-	 * <tr><td>/hotels</td><td>{@code null}</td><td>/hotels</td></tr>
-	 * <tr><td>{@code null}</td><td>/hotels</td><td>/hotels</td></tr>
-	 * <tr><td>/hotels</td><td>/bookings</td><td>/hotels/bookings</td></tr>
-	 * <tr><td>/hotels</td><td>bookings</td><td>/hotels/bookings</td></tr>
-	 * <tr><td>/hotels/*</td><td>/bookings</td><td>/hotels/bookings</td></tr>
-	 * <tr><td>/hotels/&#42;&#42;</td><td>/bookings</td><td>/hotels/&#42;&#42;/bookings</td></tr>
-	 * <tr><td>/hotels</td><td>{hotel}</td><td>/hotels/{hotel}</td></tr>
-	 * <tr><td>/hotels/*</td><td>{hotel}</td><td>/hotels/{hotel}</td></tr>
-	 * <tr><td>/hotels/&#42;&#42;</td><td>{hotel}</td><td>/hotels/&#42;&#42;/{hotel}</td></tr>
-	 * <tr><td>/*.html</td><td>/hotels.html</td><td>/hotels.html</td></tr>
-	 * <tr><td>/*.html</td><td>/hotels</td><td>/hotels.html</td></tr>
-	 * <tr><td>/*.html</td><td>/*.txt</td><td>{@code IllegalArgumentException}</td></tr>
+	 * <table border="1">
+	 *   <caption>Examples</caption>
+	 *   <tr><th>Pattern 1</th><th>Pattern 2</th><th>Result</th></tr>
+	 *   <tr><td>{@code null}</td><td>{@code null}</td><td>&nbsp;</td></tr>
+	 *   <tr><td>/hotels</td><td>{@code null}</td><td>/hotels</td></tr>
+	 *   <tr><td>{@code null}</td><td>/hotels</td><td>/hotels</td></tr>
+	 *   <tr><td>/hotels</td><td>/bookings</td><td>/hotels/bookings</td></tr>
+	 *   <tr><td>/hotels</td><td>bookings</td><td>/hotels/bookings</td></tr>
+	 *   <tr><td>/hotels/*</td><td>/bookings</td><td>/hotels/bookings</td></tr>
+	 *   <tr><td>/hotels/&#42;&#42;</td><td>/bookings</td><td>/hotels/&#42;&#42;/bookings</td></tr>
+	 *   <tr><td>/hotels</td><td>{hotel}</td><td>/hotels/{hotel}</td></tr>
+	 *   <tr><td>/hotels/*</td><td>{hotel}</td><td>/hotels/{hotel}</td></tr>
+	 *   <tr><td>/hotels/&#42;&#42;</td><td>{hotel}</td><td>/hotels/&#42;&#42;/{hotel}</td></tr>
+	 *   <tr><td>/*.html</td><td>/hotels.html</td><td>/hotels.html</td></tr>
+	 *   <tr><td>/*.html</td><td>/hotels</td><td>/hotels.html</td></tr>
+	 *   <tr><td>/*.html</td><td>/*.txt</td><td>{@code IllegalArgumentException}</td></tr>
 	 * </table>
 	 *
 	 * @param pattern1 the first pattern
@@ -677,6 +677,12 @@ public class AntPathMatcher {
 
 		private final List<String> variableNames = new ArrayList<>();
 
+		/**
+		 * Create a new {@code AntPathStringMatcher} that will match the supplied {@code pattern}
+		 *
+		 * @param pattern       the pattern to match against
+		 * @param caseSensitive 是否大小写不敏感
+		 */
 		public AntPathStringMatcher(final String pattern, final boolean caseSensitive) {
 			this.rawPattern = pattern;
 			this.caseSensitive = caseSensitive;
@@ -714,7 +720,7 @@ public class AntPathMatcher {
 				this.exactMatch = false;
 				patternBuilder.append(quote(pattern, end, pattern.length()));
 				this.pattern = (this.caseSensitive ? Pattern.compile(patternBuilder.toString()) :
-						Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE));
+					Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE));
 			}
 		}
 
@@ -741,15 +747,15 @@ public class AntPathMatcher {
 					if (uriTemplateVariables != null) {
 						if (this.variableNames.size() != matcher.groupCount()) {
 							throw new IllegalArgumentException("The number of capturing groups in the pattern segment " +
-									this.pattern + " does not match the number of URI template variables it defines, " +
-									"which can occur if capturing groups are used in a URI template regex. " +
-									"Use non-capturing groups instead.");
+								this.pattern + " does not match the number of URI template variables it defines, " +
+								"which can occur if capturing groups are used in a URI template regex. " +
+								"Use non-capturing groups instead.");
 						}
 						for (int i = 1; i <= matcher.groupCount(); i++) {
 							final String name = this.variableNames.get(i - 1);
 							if (name.startsWith("*")) {
 								throw new IllegalArgumentException("Capturing patterns (" + name + ") are not " +
-										"supported by the AntPathMatcher. Use the PathPatternParser instead.");
+									"supported by the AntPathMatcher. Use the PathPatternParser instead.");
 							}
 							final String value = matcher.group(i);
 							uriTemplateVariables.put(name, value);
@@ -769,18 +775,23 @@ public class AntPathMatcher {
 	 * {@link #getPatternComparator(String)}.
 	 * <p>In order, the most "generic" pattern is determined by the following:
 	 * <ul>
-	 * <li>if it's null or a capture all pattern (i.e. it is equal to "/**")</li>
-	 * <li>if the other pattern is an actual match</li>
-	 * <li>if it's a catch-all pattern (i.e. it ends with "**"</li>
-	 * <li>if it's got more "*" than the other pattern</li>
-	 * <li>if it's got more "{foo}" than the other pattern</li>
-	 * <li>if it's shorter than the other pattern</li>
+	 *   <li>if it's null or a capture all pattern (i.e. it is equal to "/**")</li>
+	 *   <li>if the other pattern is an actual match</li>
+	 *   <li>if it's a catch-all pattern (i.e. it ends with "**"</li>
+	 *   <li>if it's got more "*" than the other pattern</li>
+	 *   <li>if it's got more "{foo}" than the other pattern</li>
+	 *   <li>if it's shorter than the other pattern</li>
 	 * </ul>
 	 */
 	protected static class AntPatternComparator implements Comparator<String> {
 
 		private final String path;
 
+		/**
+		 * 构造
+		 *
+		 * @param path 路径
+		 */
 		public AntPatternComparator(final String path) {
 			this.path = path;
 		}
@@ -931,7 +942,7 @@ public class AntPathMatcher {
 			public int getLength() {
 				if (this.length == null) {
 					this.length = (this.pattern != null ?
-							VARIABLE_PATTERN.matcher(this.pattern).replaceAll("#").length() : 0);
+						VARIABLE_PATTERN.matcher(this.pattern).replaceAll("#").length() : 0);
 				}
 				return this.length;
 			}

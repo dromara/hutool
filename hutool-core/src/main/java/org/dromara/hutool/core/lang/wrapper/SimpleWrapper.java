@@ -22,6 +22,9 @@ package org.dromara.hutool.core.lang.wrapper;
  */
 public class SimpleWrapper<T> implements Wrapper<T> {
 
+	/**
+	 * 原始对象
+	 */
 	protected final T raw;
 
 	/**

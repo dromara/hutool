@@ -25,8 +25,17 @@ import java.io.Serializable;
 public abstract class TextFinder implements Finder, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 文本
+	 */
 	protected CharSequence text;
+	/**
+	 * 结束位置
+	 */
 	protected int endIndex = -1;
+	/**
+	 * 是否反向查找
+	 */
 	protected boolean negative;
 
 	/**

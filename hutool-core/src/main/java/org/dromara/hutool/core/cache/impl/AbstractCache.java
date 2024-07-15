@@ -42,6 +42,9 @@ import java.util.stream.Collectors;
 public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 缓存Map
+	 */
 	protected Map<Mutable<K>, CacheObj<K, V>> cacheMap;
 
 	/**

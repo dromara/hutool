@@ -20,20 +20,25 @@ package org.dromara.hutool.core.text.placeholder.segment;
  * @since 6.0.0
  */
 public class NamedPlaceholderSegment extends AbstractPlaceholderSegment {
-    /**
-     * 占位符完整文本
-     * <p>例如：{@literal "{name}"->"{name}"}</p>
-     */
-    private final String wholePlaceholder;
+	/**
+	 * 占位符完整文本
+	 * <p>例如：{@literal "{name}"->"{name}"}</p>
+	 */
+	private final String wholePlaceholder;
 
-    public NamedPlaceholderSegment(final String name, final String wholePlaceholder) {
-        super(name);
-        this.wholePlaceholder = wholePlaceholder;
-    }
+	/**
+	 * 构造
+	 * @param name 占位符变量
+	 * @param wholePlaceholder 占位符完整文本
+	 */
+	public NamedPlaceholderSegment(final String name, final String wholePlaceholder) {
+		super(name);
+		this.wholePlaceholder = wholePlaceholder;
+	}
 
-    @Override
-    public String getText() {
-        return wholePlaceholder;
-    }
+	@Override
+	public String getText() {
+		return wholePlaceholder;
+	}
 
 }

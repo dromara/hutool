@@ -37,7 +37,13 @@ import java.util.Map;
 public class DynaBean implements Cloneable, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * bean类
+	 */
 	private final Class<?> beanClass;
+	/**
+	 * bean对象
+	 */
 	private Object bean;
 
 	/**

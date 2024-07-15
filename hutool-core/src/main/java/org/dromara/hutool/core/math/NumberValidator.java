@@ -158,8 +158,8 @@ public class NumberValidator {
 	 *
 	 * @param s 校验的字符串, 只能含有 正负号、数字字符 和 {@literal X/x}
 	 * @return 是否为 {@link Integer}类型
-	 * @apiNote 6.0.0 支持8进制和16进制
 	 * @see Integer#decode(String)
+	 * @since 6.0.0
 	 */
 	public static boolean isInteger(final String s) {
 		if (!isNumber(s)) {
@@ -185,7 +185,7 @@ public class NumberValidator {
 	 *
 	 * @param s 校验的字符串, 只能含有 正负号、数字字符、{@literal X/x} 和 后缀{@literal L/l}
 	 * @return 是否为 {@link Long}类型
-	 * @apiNote 6.0.0 支持8进制和16进制数字
+	 * @since 6.0.0
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(final String s) {

@@ -21,11 +21,17 @@ package org.dromara.hutool.core.text.placeholder.segment;
  */
 public class SinglePlaceholderSegment extends AbstractPlaceholderSegment {
 
-    private SinglePlaceholderSegment(final String placeholder) {
-        super(placeholder);
-    }
+	private SinglePlaceholderSegment(final String placeholder) {
+		super(placeholder);
+	}
 
-    public static SinglePlaceholderSegment newInstance(final String placeholder) {
-        return new SinglePlaceholderSegment(placeholder);
-    }
+	/**
+	 * 创建SinglePlaceholderSegment
+	 *
+	 * @param placeholder 占位符
+	 * @return SinglePlaceholderSegment
+	 */
+	public static SinglePlaceholderSegment of(final String placeholder) {
+		return new SinglePlaceholderSegment(placeholder);
+	}
 }

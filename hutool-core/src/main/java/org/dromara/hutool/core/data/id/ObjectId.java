@@ -29,18 +29,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 4. INC 自增计数器。确保同一秒内产生objectId的唯一性。
  * </pre>
  *
- * <table summary="" border="1">
- *     <tr>
- *         <td>时间戳</td>
- *         <td>随机数</td>
- *         <td>自增计数器</td>
- *     </tr>
- *     <tr>
- *         <td>4</td>
- *         <td>4</td>
- *         <td>4</td>
- *     </tr>
- * </table>
+ * <pre>
+ *     | 时间戳 | 随机数 | 自增计数器 |
+ *     |   4   |   4   |    4     |
+ * </pre>
  * <p>
  * 参考：<a href="https://github.com/mongodb/mongo-java-driver/blob/master/bson/src/main/org/bson/types/ObjectId.java">...</a>
  *

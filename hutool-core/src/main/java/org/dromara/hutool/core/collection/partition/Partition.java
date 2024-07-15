@@ -29,7 +29,13 @@ import java.util.List;
  */
 public class Partition<T> extends AbstractList<List<T>> {
 
+	/**
+	 * 被分区的列表
+	 */
 	protected final List<T> list;
+	/**
+	 * 每个分区的长度
+	 */
 	protected final int size;
 
 	/**
@@ -54,7 +60,7 @@ public class Partition<T> extends AbstractList<List<T>> {
 	public int size() {
 		// 此处采用动态计算，以应对list变
 		final int size = this.size;
-		if(0 == size){
+		if (0 == size) {
 			return 0;
 		}
 

@@ -24,8 +24,13 @@ import org.dromara.hutool.core.text.replacer.ReplacerChain;
 public class XmlUnescape extends ReplacerChain {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 基础反转义符
+	 */
 	protected static final String[][] BASIC_UNESCAPE  = InternalEscapeUtil.invert(XmlEscape.BASIC_ESCAPE);
-	// issue#1118
+	/**
+	 * issue#1118，新增&apos;反转义
+	 */
 	protected static final String[][] OTHER_UNESCAPE  = new String[][]{new String[]{"&apos;", "'"}};
 
 	/**

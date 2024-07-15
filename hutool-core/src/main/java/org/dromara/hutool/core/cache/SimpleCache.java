@@ -46,7 +46,9 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * 池
 	 */
 	private final Map<Mutable<K>, V> rawMap;
-	// 乐观读写锁
+	/**
+	 * 乐观读写锁
+	 */
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	/**
 	 * 写的时候每个key一把锁，降低锁的粒度

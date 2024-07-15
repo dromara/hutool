@@ -46,7 +46,9 @@ public class SeataSnowflake implements Generator<Long>, Serializable {
 
 	// 节点ID长度
 	private static final int NODE_ID_BITS = 10;
-	// 节点ID的最大值，1023
+	/**
+	 * 节点ID的最大值，1023
+	 */
 	protected static final int MAX_NODE_ID = ~(-1 << NODE_ID_BITS);
 	// 时间戳长度
 	private static final int TIMESTAMP_BITS = 41;

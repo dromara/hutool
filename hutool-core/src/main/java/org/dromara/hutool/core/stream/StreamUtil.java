@@ -214,7 +214,7 @@ public class StreamUtil {
 	public static <T> Stream<T> iterate(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
 		Objects.requireNonNull(next);
 		Objects.requireNonNull(hasNext);
-		return StreamSupport.stream(IterateSpliterator.create(seed, hasNext, next), false);
+		return StreamSupport.stream(IterateSpliterator.of(seed, hasNext, next), false);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class StreamUtil {
 			return Stream.empty();
 		}
 		Objects.requireNonNull(predicate);
-		return createStatefulNewStream(source, DropWhileSpliterator.create(source.spliterator(), predicate));
+		return createStatefulNewStream(source, DropWhileSpliterator.of(source.spliterator(), predicate));
 	}
 
 	// region ----- 私有方法
