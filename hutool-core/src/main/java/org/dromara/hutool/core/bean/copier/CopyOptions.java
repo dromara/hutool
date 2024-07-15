@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.bean.copier;
 
+import org.dromara.hutool.core.bean.BeanDesc;
 import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.convert.Converter;
@@ -89,6 +90,12 @@ public class CopyOptions implements Serializable {
 	 * 但是bean转Map和map转map时，没有使用这个参数，是因为没有匹配的必要，转map不存在无法匹配到的问题，因此此参数无效。
 	 */
 	protected boolean autoTransCamelCase = true;
+
+	/**
+	 * 自定义的Bean解析类<br>
+	 * 默认规则下普通Bean使用严格的Bean解析，需要同时解析Bean中的字段和方法，然后匹配，自定义后可以只解析getter和setter方法
+	 */
+	protected Class<BeanDesc> beanDescClass;
 
 	/**
 	 * 自定义类型转换器，默认使用全局万能转换器转换

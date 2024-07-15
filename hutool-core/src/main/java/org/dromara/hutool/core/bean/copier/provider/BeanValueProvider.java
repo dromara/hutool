@@ -36,8 +36,21 @@ public class BeanValueProvider implements ValueProvider<String> {
 	 * @param bean Bean
 	 */
 	public BeanValueProvider(final Object bean) {
+		this(bean, BeanUtil.getBeanDesc(bean.getClass()));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param bean Bean
+	 * @param beanDesc 自定义的{@link BeanDesc}，默认为{@link BeanUtil#getBeanDesc(Class)}
+	 */
+	public BeanValueProvider(final Object bean, BeanDesc beanDesc) {
 		this.bean = bean;
-		this.beanDesc = BeanUtil.getBeanDesc(bean.getClass());
+		if(null == beanDesc){
+			beanDesc = BeanUtil.getBeanDesc(bean.getClass());
+		}
+		this.beanDesc = beanDesc;
 	}
 
 	@Override

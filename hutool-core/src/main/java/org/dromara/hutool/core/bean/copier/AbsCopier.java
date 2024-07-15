@@ -12,7 +12,10 @@
 
 package org.dromara.hutool.core.bean.copier;
 
+import org.dromara.hutool.core.bean.BeanDesc;
+import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.lang.copier.Copier;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 /**
@@ -35,13 +38,30 @@ public abstract class AbsCopier<S, T> implements Copier<T> {
 	/**
 	 * 构造
 	 *
-	 * @param source 源对象
-	 * @param target 目标对象
+	 * @param source      源对象
+	 * @param target      目标对象
 	 * @param copyOptions 拷贝选项
 	 */
 	public AbsCopier(final S source, final T target, final CopyOptions copyOptions) {
 		this.source = source;
 		this.target = target;
 		this.copyOptions = ObjUtil.defaultIfNull(copyOptions, CopyOptions::of);
+	}
+
+	/**
+	 * 获取Bean描述信息<br>
+	 * 如果用户自定义了{@link BeanDesc}实现，则使用，否则使用默认的规则
+	 *
+	 * @param actualEditable 需要解析的类
+	 * @return {@link BeanDesc}
+	 */
+	protected BeanDesc getBeanDesc(final Class<?> actualEditable) {
+		if (null != this.copyOptions) {
+			final Class<BeanDesc> beanDescClass = copyOptions.beanDescClass;
+			if (null != beanDescClass) {
+				return ConstructorUtil.newInstance(beanDescClass, actualEditable);
+			}
+		}
+		return BeanUtil.getBeanDesc(actualEditable);
 	}
 }

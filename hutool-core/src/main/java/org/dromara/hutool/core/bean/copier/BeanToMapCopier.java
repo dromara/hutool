@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.bean.copier;
 
-import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
@@ -59,7 +58,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 			actualEditable = copyOptions.editable;
 		}
 
-		final Map<String, PropDesc> sourcePropDescMap = BeanUtil.getBeanDesc(actualEditable).getPropMap(copyOptions.ignoreCase);
+		final Map<String, PropDesc> sourcePropDescMap = getBeanDesc(actualEditable).getPropMap(copyOptions.ignoreCase);
 		sourcePropDescMap.forEach((sFieldName, sDesc) -> {
 			if (null == sFieldName || !sDesc.isReadable(copyOptions.transientSupport)) {
 				// 字段空或不可读，跳过

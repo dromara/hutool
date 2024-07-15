@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.bean.copier;
 
-import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
@@ -67,7 +66,7 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 					"Target class [{}] not assignable to Editable class [{}]", actualEditable.getName(), copyOptions.editable.getName());
 			actualEditable = copyOptions.editable;
 		}
-		final Map<String, PropDesc> targetPropDescMap = BeanUtil.getBeanDesc(actualEditable).getPropMap(copyOptions.ignoreCase);
+		final Map<String, PropDesc> targetPropDescMap = getBeanDesc(actualEditable).getPropMap(copyOptions.ignoreCase);
 
 		this.source.forEach((sKey, sValue) -> {
 			if (null == sKey) {
