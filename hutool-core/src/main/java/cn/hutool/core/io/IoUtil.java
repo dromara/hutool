@@ -529,7 +529,7 @@ public class IoUtil extends NioUtil {
 	public static String readHex8192Upper(InputStream in) throws IORuntimeException {
 		try {
 			int i = in.available();
-			return readHex(in, Math.min(8192, in.available()), false);
+			return readHex(in, Math.min(8192, i), false);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

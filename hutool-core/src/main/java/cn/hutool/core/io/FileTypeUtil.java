@@ -53,6 +53,9 @@ public class FileTypeUtil {
 	 * @return 文件类型，未找到为{@code null}
 	 */
 	public static String getType(String fileStreamHexHead) {
+		if(StrUtil.isBlank(fileStreamHexHead)){
+			return null;
+		}
 		if (MapUtil.isNotEmpty(FILE_TYPE_MAP)) {
 			for (final Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
 				if (StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())) {
@@ -60,7 +63,7 @@ public class FileTypeUtil {
 				}
 			}
 		}
-		byte[] bytes = (HexUtil.decodeHex(fileStreamHexHead));
+		byte[] bytes = HexUtil.decodeHex(fileStreamHexHead);
 		return FileMagicNumber.getMagicNumber(bytes).getExtension();
 	}
 
@@ -70,6 +73,7 @@ public class FileTypeUtil {
 	 * @param in           文件流
 	 * @param fileHeadSize 自定义读取文件头部的大小
 	 * @return 文件类型，未找到为{@code null}
+	 * @throws IORuntimeException IO异常
 	 */
 	public static String getType(InputStream in, int fileHeadSize) throws IORuntimeException {
 		return getType((IoUtil.readHex(in, fileHeadSize, false)));
