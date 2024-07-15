@@ -66,6 +66,9 @@ public class FileTypeUtil {
 	 * @return 文件类型，未找到为{@code null}
 	 */
 	public static String getType(final String fileStreamHexHead) {
+		if(StrUtil.isBlank(fileStreamHexHead)){
+			return null;
+		}
 		for (final Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
 			if (StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())) {
 				return fileTypeEntry.getValue();

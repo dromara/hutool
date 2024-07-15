@@ -198,7 +198,6 @@
 							<Build-Jdk>${java.version}</Build-Jdk>
 							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
 							<Automatic-Module-Name>${Automatic-Module-Name}</Automatic-Module-Name>
-							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -238,29 +237,6 @@
 					</formats>
 					<check/>
 				</configuration>
-			</plugin>
-			<!-- 用于生成模块化系统中的module-info.class，见：https://github.com/moditect/moditect -->
-			<plugin>
-				<groupId>org.moditect</groupId>
-				<artifactId>moditect-maven-plugin</artifactId>
-				<version>1.2.2.Final</version>
-				<executions>
-					<execution>
-						<id>add-module-infos</id>
-						<phase>package</phase>
-						<goals>
-							<goal>add-module-info</goal>
-						</goals>
-						<configuration>
-							<jvmVersion>9</jvmVersion>
-							<module>
-								<moduleInfo>
-									<name>${Automatic-Module-Name}</name>
-								</moduleInfo>
-							</module>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
