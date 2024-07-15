@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.cache;
 
-import org.dromara.hutool.core.cache.SimpleCache;
 import org.dromara.hutool.core.thread.ConcurrencyTester;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.junit.jupiter.api.Assertions;

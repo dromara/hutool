@@ -53,7 +53,7 @@
 		<compile.version>8</compile.version>
 		<junit.version>5.10.3</junit.version>
 		<lombok.version>1.18.34</lombok.version>
-		<kotlin-version>1.9.23</kotlin-version>
+		<kotlin-version>1.9.24</kotlin-version>
 	</properties>
 
 	<dependencies>
@@ -167,7 +167,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
+				<version>3.13.0</version>
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
@@ -178,12 +178,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.1.2</version>
+				<version>3.3.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.4.2</version>
 				<configuration>
 					<archive>
 						<index>true</index>
@@ -192,10 +192,11 @@
 						</manifest>
 						<manifestEntries>
 							<Build-OS>${os.name}</Build-OS>
-							<Built-By>${user.name}</Built-By>
+							<Built-By>Looly</Built-By>
 							<Build-Jdk>${java.version}</Build-Jdk>
 							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
 							<Automatic-Module-Name>${Automatic-Module-Name}</Automatic-Module-Name>
+							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -204,7 +205,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.6.3</version>
+				<version>3.7.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>

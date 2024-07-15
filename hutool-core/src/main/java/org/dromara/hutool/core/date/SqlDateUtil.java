@@ -16,7 +16,6 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * {@code java.sql.*}日期时间相关封装<br>
@@ -80,12 +79,6 @@ public class SqlDateUtil {
 	@SuppressWarnings("unchecked")
 	public static <T extends java.util.Date> T wrap(final Class<?> targetClass, final long mills) {
 		// 返回指定类型
-		if (java.util.Date.class == targetClass) {
-			return (T) new Date(mills);
-		}
-		if (DateTime.class == targetClass) {
-			return (T) DateUtil.date(mills);
-		}
 		if (java.sql.Date.class == targetClass) {
 			return (T) new java.sql.Date(mills);
 		}

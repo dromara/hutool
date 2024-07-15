@@ -136,6 +136,13 @@ public class DateConverter extends AbstractConverter {
 			return DateUtil.date(mills);
 		}
 
-		return SqlDateUtil.wrap(targetClass, mills);
+		final String dateClassName = targetClass.getName();
+		if(dateClassName.startsWith("java.sql.")){
+			// 为了解决在JDK9+模块化项目中用户没有引入java.sql模块导致的问题，此处增加判断
+			// 如果targetClass是java.sql的类，说明引入了此模块
+			return SqlDateUtil.wrap(targetClass, mills);
+		}
+
+		throw new ConvertException("Unsupported target Date type: {}", targetClass.getName());
 	}
 }
