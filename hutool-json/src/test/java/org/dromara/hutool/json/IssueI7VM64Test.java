@@ -36,32 +36,4 @@ public class IssueI7VM64Test {
 		//Console.log("Hutool JSON: " + jsonObject);
 		Assertions.assertEquals("{\"c\":{\"a\":\"1\"}}", jsonObject.toString());
 	}
-
-	@Test
-	void fastJSONTest() {
-		final HashMap<String, Object> map = new HashMap<>();
-		map.put("a", "1");
-
-		final com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-		jsonObject.put("c", map);
-
-		map.put("b", 2);
-
-		//Console.log("FastJSON: " + jsonObject);
-		Assertions.assertEquals("{\"c\":{\"a\":\"1\",\"b\":2}}", jsonObject.toString());
-	}
-
-	@Test
-	void fastJSON2Test() {
-		final HashMap<String, Object> map = new HashMap<>();
-		map.put("a", "1");
-
-		final com.alibaba.fastjson2.JSONObject jsonObject = new com.alibaba.fastjson2.JSONObject();
-		jsonObject.put("c", map);
-
-		map.put("b", 2);
-
-		//Console.log("FastJSON2 " + jsonObject);
-		Assertions.assertEquals("{\"c\":{\"a\":\"1\",\"b\":2}}", jsonObject.toString());
-	}
 }

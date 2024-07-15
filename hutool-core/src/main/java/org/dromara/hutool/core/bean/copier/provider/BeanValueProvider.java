@@ -36,7 +36,7 @@ public class BeanValueProvider implements ValueProvider<String> {
 	 * @param bean Bean
 	 */
 	public BeanValueProvider(final Object bean) {
-		this(bean, BeanUtil.getBeanDesc(bean.getClass()));
+		this(bean, null);
 	}
 
 	/**
