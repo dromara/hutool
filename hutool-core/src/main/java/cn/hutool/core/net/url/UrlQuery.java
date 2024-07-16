@@ -142,6 +142,7 @@ public class UrlQuery {
 
 	/**
 	 * 设置是否严格模式
+	 *
 	 * @param strict 是否严格模式
 	 * @return this
 	 * @since 5.8.20
@@ -173,6 +174,18 @@ public class UrlQuery {
 		if (MapUtil.isNotEmpty(queryMap)) {
 			queryMap.forEach(this::add);
 		}
+		return this;
+	}
+
+	/**
+	 * 移除键及对应所有的值
+	 *
+	 * @param key 键
+	 * @return this
+	 * @since 5.8.30
+	 */
+	public UrlQuery remove(CharSequence key) {
+		this.query.remove(key);
 		return this;
 	}
 
@@ -283,9 +296,9 @@ public class UrlQuery {
 	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
 	 * </ul>
 	 *
-	 * @param keyCoder      键值对中键的编码器
-	 * @param valueCoder    键值对中值的编码器
-	 * @param charset       encode编码，null表示不做encode编码
+	 * @param keyCoder   键值对中键的编码器
+	 * @param valueCoder 键值对中值的编码器
+	 * @param charset    encode编码，null表示不做encode编码
 	 * @return URL查询字符串
 	 * @since 5.7.16
 	 */
