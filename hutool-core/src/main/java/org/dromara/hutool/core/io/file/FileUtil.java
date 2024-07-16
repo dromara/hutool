@@ -2543,15 +2543,54 @@ public class FileUtil extends PathUtil {
 	 * 写入数据到文件
 	 *
 	 * @param data     数据
-	 * @param dest     目标文件
+	 * @param target     目标文件
 	 * @param off      数据开始位置
 	 * @param len      数据长度
 	 * @param isAppend 是否追加模式
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File writeBytes(final byte[] data, final File dest, final int off, final int len, final boolean isAppend) throws IORuntimeException {
-		return FileWriter.of(dest).write(data, off, len, isAppend);
+	public static File writeBytes(final byte[] data, final File target, final int off, final int len, final boolean isAppend) throws IORuntimeException {
+		return FileWriter.of(target).write(data, off, len, isAppend);
+	}
+
+	/**
+	 * 将流的内容写入文件<br>
+	 * 此方法会自动关闭输入流
+	 *
+	 * @param target 目标文件
+	 * @param in   输入流
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File writeFromStream(final InputStream in, final File target) throws IORuntimeException {
+		return writeFromStream(in, target, true);
+	}
+
+	/**
+	 * 将流的内容写入文件
+	 *
+	 * @param target      目标文件
+	 * @param in        输入流
+	 * @param isCloseIn 是否关闭输入流
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.6
+	 */
+	public static File writeFromStream(final InputStream in, final File target, final boolean isCloseIn) throws IORuntimeException {
+		return FileWriter.of(target).writeFromStream(in, isCloseIn);
+	}
+
+	/**
+	 * 将文件写入流中，此方法不会关闭输出流
+	 *
+	 * @param file 文件
+	 * @param out  流
+	 * @return 写出的流byte数
+	 * @throws IORuntimeException IO异常
+	 */
+	public static long writeToStream(final File file, final OutputStream out) throws IORuntimeException {
+		return FileReader.of(file).writeToStream(out);
 	}
 	// endregion
 
