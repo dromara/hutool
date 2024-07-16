@@ -7,6 +7,7 @@
 ### 🐣新特性
 * 【core   】      Converter转换规则变更，空对象、空值转为Bean时，创建默认对象，而非null（issue#3649@Github）
 * 【core   】      UrlQuery增加remove方法
+* 【extra  】      增加JakartaMailUtil，支持新包名的mail
 
 ### 🐞Bug修复
 * 【core   】      修复因RFC3986理解有误导致的UrlPath处理冒号转义问题（issue#IAAE88@Gitee）
