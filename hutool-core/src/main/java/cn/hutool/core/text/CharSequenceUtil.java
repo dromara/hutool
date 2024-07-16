@@ -1464,6 +1464,25 @@ public class CharSequenceUtil {
 		}
 		return str2;
 	}
+	
+	/**
+	 * 去掉指定所有前缀
+	 *
+	 * @param str    字符串
+	 * @param prefix 前缀
+	 * @return 切掉所有前缀的字符串，若前缀不是 preffix， 返回原字符串
+	 */
+	public static String removeAllPrefix(CharSequence str, CharSequence prefix) {
+		if (isEmpty(str) || isEmpty(prefix)) {
+			return str(str);
+		}
+
+		String str2 = str.toString();
+		while (str2.startsWith(prefix.toString())) {
+			str2 = removePrefix(str2, prefix);
+		}
+		return str2;
+	}
 
 	/**
 	 * 忽略大小写去掉指定前缀
@@ -1502,6 +1521,26 @@ public class CharSequenceUtil {
 		}
 		return str2;
 	}
+	
+	/**
+	 * 去掉指定所有后缀
+	 *
+	 * @param str    字符串
+	 * @param suffix 后缀
+	 * @return 切掉所有后缀的字符串，若后缀不是 suffix， 返回原字符串
+	 */
+	public static String removeAllSuffix(CharSequence str, CharSequence suffix) {
+		if (isEmpty(str) || isEmpty(suffix)) {
+			return str(str);
+		}
+
+		String str2 = str.toString();
+		while (str2.endsWith(suffix.toString())) {
+			str2 = removeSuffix(str2, suffix);
+		}
+		return str2;
+	}
+	
 
 	/**
 	 * 去掉指定后缀，并小写首字母
