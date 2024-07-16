@@ -201,8 +201,8 @@ public class CharSequenceUtil extends StrValidator {
 	 * @param handler         非空时自定义的处理方法
 	 * @param defaultSupplier 为空时的默认值提供者
 	 * @return 被检查对象不为 {@code null} 返回处理后的结果，否则返回 {@link Supplier#get()} 提供的默认值
-	 * @since 6.0.0
 	 * @see ObjUtil#defaultIfNull(Object, Function, Supplier)
+	 * @since 6.0.0
 	 */
 	public static <T extends CharSequence, R> R defaultIfNull(final T source, final Function<? super T, ? extends R> handler, final Supplier<? extends R> defaultSupplier) {
 		return ObjUtil.defaultIfNull(source, handler, defaultSupplier);
@@ -1225,10 +1225,40 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
+	 * 去掉指定所有前缀，如：
+	 * <pre>{@code
+	 *     str=abcdef, prefix=ab => return cdef
+	 *     str=ababcdef, prefix=ab => return cdef
+	 *     str=ababcdef, prefix="" => return ababcdef
+	 *     str=ababcdef, prefix=null => return ababcdef
+	 * }</pre>
+	 *
+	 * @param str    字符串，空返回原字符串
+	 * @param prefix 前缀，空返回原字符串
+	 * @return 去掉所有前缀的字符串，若前缀不是 preffix， 返回原字符串
+	 * @since 5.8.30
+	 */
+	public static String removeAllPrefix(final CharSequence str, final CharSequence prefix) {
+		if (isEmpty(str) || isEmpty(prefix)) {
+			return toStringOrNull(str);
+		}
+
+		final String prefixStr = prefix.toString();
+		final int prefixLength = prefixStr.length();
+
+		final String str2 = str.toString();
+		int toIndex = 0;
+		while (str2.startsWith(prefixStr, toIndex)) {
+			toIndex += prefixLength;
+		}
+		return subSuf(str2, toIndex);
+	}
+
+	/**
 	 * 去掉指定前缀
 	 *
-	 * @param str    字符串
-	 * @param prefix 前缀
+	 * @param str    字符串，空返回原字符串
+	 * @param prefix 前缀，空返回原字符串
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
 	public static String removePrefix(final CharSequence str, final CharSequence prefix) {
@@ -1238,8 +1268,8 @@ public class CharSequenceUtil extends StrValidator {
 	/**
 	 * 忽略大小写去掉指定前缀
 	 *
-	 * @param str    字符串
-	 * @param prefix 前缀
+	 * @param str    字符串，空返回原字符串
+	 * @param prefix 前缀，空返回原字符串
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
 	public static String removePrefixIgnoreCase(final CharSequence str, final CharSequence prefix) {
@@ -1249,8 +1279,8 @@ public class CharSequenceUtil extends StrValidator {
 	/**
 	 * 去掉指定前缀
 	 *
-	 * @param str        字符串
-	 * @param prefix     前缀
+	 * @param str        字符串，空返回原字符串
+	 * @param prefix     前缀，空返回原字符串
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
@@ -1264,6 +1294,47 @@ public class CharSequenceUtil extends StrValidator {
 			return subSuf(str2, prefix.length());// 截取后半段
 		}
 		return str2;
+	}
+
+	/**
+	 * 去掉指定后缀，并小写首字母
+	 *
+	 * @param str    字符串
+	 * @param suffix 后缀
+	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
+	 */
+	public static String removeSufAndLowerFirst(final CharSequence str, final CharSequence suffix) {
+		return lowerFirst(removeSuffix(str, suffix));
+	}
+
+	/**
+	 * 去掉指定所有后缀，如：
+	 * <pre>{@code
+	 *     str=11abab, suffix=ab => return 11
+	 *     str=11ab, suffix=ab => return 11
+	 *     str=11ab, suffix="" => return 11ab
+	 *     str=11ab, suffix=null => return 11ab
+	 * }</pre>
+	 *
+	 * @param str    字符串，空返回原字符串
+	 * @param suffix 后缀字符串，空返回原字符串
+	 * @return 去掉所有后缀的字符串，若后缀不是 suffix， 返回原字符串
+	 * @since 5.8.30
+	 */
+	public static String removeAllSuffix(final CharSequence str, final CharSequence suffix) {
+		if (isEmpty(str) || isEmpty(suffix)) {
+			return toStringOrNull(str);
+		}
+
+		final String suffixStr = suffix.toString();
+		final int suffixLength = suffixStr.length();
+
+		final String str2 = str.toString();
+		int toIndex = str2.length();
+		while (str2.startsWith(suffixStr, toIndex - suffixLength)){
+			toIndex -= suffixLength;
+		}
+		return subPre(str2, toIndex);
 	}
 
 	/**
@@ -1283,17 +1354,6 @@ public class CharSequenceUtil extends StrValidator {
 			return subPre(str2, str2.length() - suffix.length());// 截取前半段
 		}
 		return str2;
-	}
-
-	/**
-	 * 去掉指定后缀，并小写首字母
-	 *
-	 * @param str    字符串
-	 * @param suffix 后缀
-	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
-	 */
-	public static String removeSufAndLowerFirst(final CharSequence str, final CharSequence suffix) {
-		return lowerFirst(removeSuffix(str, suffix));
 	}
 
 	/**
@@ -1468,13 +1528,13 @@ public class CharSequenceUtil extends StrValidator {
 	// region ----- sub
 
 	/**
-	 * 改进JDK subString<br>
-	 * index从0开始计算，最后一个字符为-1<br>
-	 * 如果from和to位置一样，返回 "" <br>
-	 * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
-	 * 如果经过修正的index中from大于to，则互换from和to example: <br>
-	 * abcdefgh 2 3 =》 c <br>
-	 * abcdefgh 2 -3 =》 cde <br>
+	 * 改进JDK subString，规则如下：
+	 * <ul>
+	 *     <li>index从0开始计算，最后一个字符为-1，即sub("hutool", 0, -1)得到"hutoo"</li>
+	 *     <li>如果from和to位置一样，返回 ""</li>
+	 *     <li>如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length</li>
+	 *     <li>如果经过修正的index中from大于to，则互换from和to，如abcdefgh 2 3 =》 c，abcdefgh 2 -3 =》 cde </li>
+	 * </ul>
 	 *
 	 * @param str              String
 	 * @param fromIndexInclude 开始的index（包括）
@@ -1598,12 +1658,12 @@ public class CharSequenceUtil extends StrValidator {
 	 * 切割指定位置之前部分的字符串
 	 * <p>安全的subString,允许：string为null，允许string长度小于toIndexExclude长度</p>
 	 * <pre>{@code
-	 *      Assert.assertEquals(subPre(null, 3), null);
-	 * 		Assert.assertEquals(subPre("ab", 3), "ab");
-	 * 		Assert.assertEquals(subPre("abc", 3), "abc");
-	 * 		Assert.assertEquals(subPre("abcd", 3), "abc");
-	 * 		Assert.assertEquals(subPre("abcd", -3), "a");
-	 * 		Assert.assertEquals(subPre("ab", 3), "ab");
+	 * 		assertEquals(subPre(null, 3), null);
+	 * 		assertEquals(subPre("ab", 3), "ab");
+	 * 		assertEquals(subPre("abc", 3), "abc");
+	 * 		assertEquals(subPre("abcd", 3), "abc");
+	 * 		assertEquals(subPre("abcd", -3), "a");
+	 * 		assertEquals(subPre("ab", 3), "ab");
 	 * }</pre>
 	 *
 	 * @param string         字符串
@@ -1611,19 +1671,27 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 切割后的剩余的前半部分字符串
 	 */
 	public static String subPre(final CharSequence string, final int toIndexExclude) {
+		if (isEmpty(string) || string.length() == toIndexExclude) {
+			return toStringOrNull(string);
+		}
 		return sub(string, 0, toIndexExclude);
 	}
 
 	/**
-	 * 切割指定位置之后部分的字符串
+	 * 切割指定位置之后部分的字符串，规则如下：
+	 * <ul>
+	 *     <li>fromIndex为0或字符串为空，返回原字符串</li>
+	 *     <li>fromIndex大于字符串本身的长度，返回""</li>
+	 *     <li>fromIndex支持负数，-1表示length-1</li>
+	 * </ul>
 	 *
 	 * @param string    字符串
 	 * @param fromIndex 切割开始的位置（包括）
 	 * @return 切割后后剩余的后半部分字符串
 	 */
 	public static String subSuf(final CharSequence string, final int fromIndex) {
-		if (isEmpty(string)) {
-			return null;
+		if (0 == fromIndex || isEmpty(string)) {
+			return toStringOrNull(string);
 		}
 		return sub(string, fromIndex, string.length());
 	}
