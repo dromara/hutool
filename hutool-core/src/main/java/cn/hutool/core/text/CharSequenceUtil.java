@@ -1464,24 +1464,35 @@ public class CharSequenceUtil {
 		}
 		return str2;
 	}
-	
+
 	/**
-	 * 去掉指定所有前缀
+	 * 去掉指定所有前缀，如：
+	 * <pre>{@code
+	 *     str=abcdef, prefix=ab => return cdef
+	 *     str=ababcdef, prefix=ab => return cdef
+	 *     str=ababcdef, prefix="" => return ababcdef
+	 *     str=ababcdef, prefix=null => return ababcdef
+	 * }</pre>
 	 *
-	 * @param str    字符串
-	 * @param prefix 前缀
-	 * @return 切掉所有前缀的字符串，若前缀不是 preffix， 返回原字符串
+	 * @param str    字符串，空返回原字符串
+	 * @param prefix 前缀，空返回原字符串
+	 * @return 去掉所有前缀的字符串，若前缀不是 preffix， 返回原字符串
+	 * @since 5.8.30
 	 */
 	public static String removeAllPrefix(CharSequence str, CharSequence prefix) {
 		if (isEmpty(str) || isEmpty(prefix)) {
 			return str(str);
 		}
 
-		String str2 = str.toString();
-		while (str2.startsWith(prefix.toString())) {
-			str2 = removePrefix(str2, prefix);
+		final String prefixStr = prefix.toString();
+		final int prefixLength = prefixStr.length();
+
+		final String str2 = str.toString();
+		int toIndex = 0;
+		while (str2.startsWith(prefixStr, toIndex)) {
+			toIndex += prefixLength;
 		}
-		return str2;
+		return subSuf(str2, toIndex);
 	}
 
 	/**
@@ -1521,26 +1532,37 @@ public class CharSequenceUtil {
 		}
 		return str2;
 	}
-	
+
 	/**
-	 * 去掉指定所有后缀
+	 * 去掉指定所有后缀，如：
+	 * <pre>{@code
+	 *     str=11abab, suffix=ab => return 11
+	 *     str=11ab, suffix=ab => return 11
+	 *     str=11ab, suffix="" => return 11ab
+	 *     str=11ab, suffix=null => return 11ab
+	 * }</pre>
 	 *
-	 * @param str    字符串
-	 * @param suffix 后缀
-	 * @return 切掉所有后缀的字符串，若后缀不是 suffix， 返回原字符串
+	 * @param str    字符串，空返回原字符串
+	 * @param suffix 后缀字符串，空返回原字符串
+	 * @return 去掉所有后缀的字符串，若后缀不是 suffix， 返回原字符串
+	 * @since 5.8.30
 	 */
 	public static String removeAllSuffix(CharSequence str, CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
 			return str(str);
 		}
 
-		String str2 = str.toString();
-		while (str2.endsWith(suffix.toString())) {
-			str2 = removeSuffix(str2, suffix);
+		final String suffixStr = suffix.toString();
+		final int suffixLength = suffixStr.length();
+
+		final String str2 = str.toString();
+		int toIndex = str2.length();
+		while (str2.startsWith(suffixStr, toIndex - suffixLength)){
+			toIndex -= suffixLength;
 		}
-		return str2;
+		return subPre(str2, toIndex);
 	}
-	
+
 
 	/**
 	 * 去掉指定后缀，并小写首字母
