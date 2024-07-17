@@ -707,7 +707,7 @@ public class CharSequenceUtil {
 		}
 
 		boolean isStartWith = str.toString()
-				.regionMatches(ignoreCase, 0, prefix.toString(), 0, prefix.length());
+			.regionMatches(ignoreCase, 0, prefix.toString(), 0, prefix.length());
 
 		if (isStartWith) {
 			return (false == ignoreEquals) || (false == equals(str, prefix, ignoreCase));
@@ -842,7 +842,7 @@ public class CharSequenceUtil {
 
 		final int strOffset = str.length() - suffix.length();
 		boolean isEndWith = str.toString()
-				.regionMatches(ignoreCase, strOffset, suffix.toString(), 0, suffix.length());
+			.regionMatches(ignoreCase, strOffset, suffix.toString(), 0, suffix.length());
 
 		if (isEndWith) {
 			return (false == ignoreEquals) || (false == equals(str, suffix, ignoreCase));
@@ -1280,7 +1280,7 @@ public class CharSequenceUtil {
 			}
 		}
 		return new StrFinder(searchStr, ignoreCase)
-				.setText(text).setNegative(true).start(from);
+			.setText(text).setNegative(true).start(from);
 	}
 
 	/**
@@ -1548,6 +1548,12 @@ public class CharSequenceUtil {
 	/**
 	 * 去除两边的指定字符串
 	 *
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a"  -> "aa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", ""  -> "aaa_STRIPPED_bbb"
+	 * }
+	 * </pre>
+	 *
 	 * @param str            被处理的字符串
 	 * @param prefixOrSuffix 前缀或后缀
 	 * @return 处理后的字符串
@@ -1563,6 +1569,19 @@ public class CharSequenceUtil {
 
 	/**
 	 * 去除两边的指定字符串
+	 *
+	 * <pre>{@code
+	 * "aa_STRIPPED_bb", "a", "b"  -> "aa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", "a", ""  -> "aa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "a", null  -> "aa_STRIPPED_bbb"
+	 *
+	 * "a", "a", "a"  -> ""
+	 * }
+	 * </pre>
 	 *
 	 * @param str    被处理的字符串
 	 * @param prefix 前缀
@@ -1586,7 +1605,76 @@ public class CharSequenceUtil {
 			to -= suffix.length();
 		}
 
-		return str2.substring(Math.min(from, to), Math.max(from, to));
+		if (from <= to) {
+			return str2.substring(from, to);
+		} else {
+			return EMPTY;
+		}
+	}
+
+
+	/**
+	 * 去除两边<u><b>所有</b></u>的指定字符串
+	 *
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a"  -> "_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", ""  -> "aaa_STRIPPED_bbb"
+	 * }
+	 * </pre>
+	 *
+	 * @param str            被处理的字符串
+	 * @param prefixOrSuffix 前缀或后缀
+	 * @return 处理后的字符串
+	 * @since 5.8.29+ 不包含 5.8.29
+	 */
+	public static String stripAll(CharSequence str, CharSequence prefixOrSuffix) {
+		if (equals(str, prefixOrSuffix)) {
+			return EMPTY;
+		}
+		return stripAll(str, prefixOrSuffix, prefixOrSuffix);
+	}
+
+	/**
+	 * 去除两边<u><b>所有</b></u>的指定字符串
+	 *
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", "a", ""  -> "_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "a", null  -> "_STRIPPED_bbb"
+	 *
+	 * // special test
+	 * "aaaaaabbb", "aaa", null  -> "bbb"
+	 * "aaaaaaabbb", "aa", null  -> "abbb"
+	 *
+	 * "aaaaaaaaa", "aaa", "aa"  -> ""
+	 * "a", "a", "a"  -> ""
+	 * }
+	 * </pre>
+	 *
+	 * @param str    被处理的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 处理后的字符串
+	 * @since 5.8.29+ 不包含 5.8.29
+	 */
+	public static String stripAll(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+
+		String result = str.toString();
+		while ((isNotEmpty(prefix) && startWith(result, prefix)) ||
+			(isNotEmpty(suffix) && endWith(result, suffix))
+		) {
+			result = strip(result, prefix, suffix);
+		}
+
+		return result;
 	}
 
 	/**
@@ -2387,8 +2475,8 @@ public class CharSequenceUtil {
 	 */
 	public static String[] subBetweenAll(CharSequence str, CharSequence prefix, CharSequence suffix) {
 		if (hasEmpty(str, prefix, suffix) ||
-				// 不包含起始字符串，则肯定没有子串
-				false == contains(str, prefix)) {
+			// 不包含起始字符串，则肯定没有子串
+			false == contains(str, prefix)) {
 			return new String[0];
 		}
 
@@ -4450,8 +4538,8 @@ public class CharSequenceUtil {
 		final int preLength = suffixLength + (maxLength - 3) % 2; // suffixLength 或 suffixLength + 1
 		final String str2 = str.toString();
 		return format("{}...{}",
-				str2.substring(0, preLength),
-				str2.substring(strLength - suffixLength));
+			str2.substring(0, preLength),
+			str2.substring(strLength - suffixLength));
 	}
 
 	/**
@@ -4535,16 +4623,16 @@ public class CharSequenceUtil {
 		final StringBuilder strBuilder = new StringBuilder(len);
 		if (moveLength > 0) {
 			int endAfterMove = Math.min(endExclude + moveLength, str.length());
-			strBuilder.append(str.subSequence(0, startInclude))//
-					.append(str.subSequence(endExclude, endAfterMove))//
-					.append(str.subSequence(startInclude, endExclude))//
-					.append(str.subSequence(endAfterMove, str.length()));
+			strBuilder.append(str.subSequence(0, startInclude))
+				.append(str.subSequence(endExclude, endAfterMove))
+				.append(str.subSequence(startInclude, endExclude))
+				.append(str.subSequence(endAfterMove, str.length()));
 		} else if (moveLength < 0) {
 			int startAfterMove = Math.max(startInclude + moveLength, 0);
-			strBuilder.append(str.subSequence(0, startAfterMove))//
-					.append(str.subSequence(startInclude, endExclude))//
-					.append(str.subSequence(startAfterMove, startInclude))//
-					.append(str.subSequence(endExclude, str.length()));
+			strBuilder.append(str.subSequence(0, startAfterMove))
+				.append(str.subSequence(startInclude, endExclude))
+				.append(str.subSequence(startAfterMove, startInclude))
+				.append(str.subSequence(endExclude, str.length()));
 		} else {
 			return str(str);
 		}

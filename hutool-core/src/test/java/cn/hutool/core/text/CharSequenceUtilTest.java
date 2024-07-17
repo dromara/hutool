@@ -126,7 +126,7 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
-	public void removePrefixIgnoreCaseTest(){
+	public void removePrefixIgnoreCaseTest() {
 		Assert.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "abc"));
 		Assert.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "ABC"));
 		Assert.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "Abc"));
@@ -138,7 +138,7 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
-	public void removeSuffixIgnoreCaseTest(){
+	public void removeSuffixIgnoreCaseTest() {
 		Assert.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "cde"));
 		Assert.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "CDE"));
 		Assert.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "Cde"));
@@ -149,8 +149,60 @@ public class CharSequenceUtilTest {
 		Assert.assertNull(CharSequenceUtil.removeSuffixIgnoreCase(null, "ABCdef"));
 	}
 
+	/**
+	 * 由于被测试类的方法众多，建议单元测试里面的顺序，也按照被测试类来写。这样方便查找和阅读。
+	 */
 	@Test
-	public void trimToNullTest(){
+	public void stripTest() {
+
+		final String SOURCE_STRING = "aaa_STRIPPED_bbb";
+
+		// ---------------------------- test strip ----------------------------
+
+		// Normal test
+		Assert.assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.strip(SOURCE_STRING, "a"));
+		Assert.assertEquals(SOURCE_STRING, CharSequenceUtil.strip(SOURCE_STRING, ""));
+		Assert.assertEquals("aa_STRIPPED_bb", CharSequenceUtil.strip(SOURCE_STRING, "a", "b"));
+
+		// test null param
+		Assert.assertEquals(SOURCE_STRING, CharSequenceUtil.strip(SOURCE_STRING, null, null));
+		Assert.assertEquals(SOURCE_STRING, CharSequenceUtil.strip(SOURCE_STRING, "", ""));
+		Assert.assertEquals("aaa_STRIPPED_bb", CharSequenceUtil.strip(SOURCE_STRING, "", "b"));
+		Assert.assertEquals("aaa_STRIPPED_bb", CharSequenceUtil.strip(SOURCE_STRING, null, "b"));
+		Assert.assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.strip(SOURCE_STRING, "a", ""));
+		Assert.assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.strip(SOURCE_STRING, "a", null));
+		// 本次提交前无法通过的 case
+		Assert.assertEquals("", CharSequenceUtil.strip("a", "a", "a"));
+
+		// ---------------------------- test stripAll ----------------------------
+
+		// Normal test
+		Assert.assertEquals("_STRIPPED_bbb", CharSequenceUtil.stripAll(SOURCE_STRING, "a"));
+		Assert.assertEquals(SOURCE_STRING, CharSequenceUtil.stripAll(SOURCE_STRING, ""));
+
+		// test null param
+		Assert.assertEquals("_STRIPPED_", CharSequenceUtil.stripAll(SOURCE_STRING, "a", "b"));
+		Assert.assertEquals(SOURCE_STRING, CharSequenceUtil.stripAll(SOURCE_STRING, null, null));
+		Assert.assertEquals(SOURCE_STRING, CharSequenceUtil.stripAll(SOURCE_STRING, "", ""));
+		Assert.assertEquals("aaa_STRIPPED_", CharSequenceUtil.stripAll(SOURCE_STRING, "", "b"));
+		Assert.assertEquals("aaa_STRIPPED_", CharSequenceUtil.stripAll(SOURCE_STRING, null, "b"));
+		Assert.assertEquals("_STRIPPED_bbb", CharSequenceUtil.stripAll(SOURCE_STRING, "a", ""));
+		Assert.assertEquals("_STRIPPED_bbb", CharSequenceUtil.stripAll(SOURCE_STRING, "a", null));
+
+		// special test
+		Assert.assertEquals("bbb", CharSequenceUtil.stripAll("aaaaaabbb", "aaa", null));
+		Assert.assertEquals("abbb", CharSequenceUtil.stripAll("aaaaaaabbb", "aa", null));
+
+		// aaaaaaaaa (9个a) 可以被看为 aaa_aaaa_aa
+		Assert.assertEquals("", CharSequenceUtil.stripAll("aaaaaaaaa", "aaa", "aa"));
+		// 第二次迭代后会出现 from 比 to 大的情况，原本代码是强行交换，但是回导致无法去除前后缀
+		Assert.assertEquals("", CharSequenceUtil.stripAll("a", "a", "a"));
+
+	}
+
+
+	@Test
+	public void trimToNullTest() {
 		String a = "  ";
 		Assert.assertNull(CharSequenceUtil.trimToNull(a));
 
@@ -162,7 +214,7 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
-	public void commonPrefixTest() throws Exception{
+	public void commonPrefixTest() throws Exception {
 
 		// -------------------------- None match -----------------------
 
@@ -194,7 +246,7 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
-	public void commonSuffixTest() throws Exception{
+	public void commonSuffixTest() throws Exception {
 
 		// -------------------------- None match -----------------------
 
