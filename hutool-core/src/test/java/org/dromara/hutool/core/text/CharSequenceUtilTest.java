@@ -450,4 +450,63 @@ public class CharSequenceUtilTest {
 		result = CharSequenceUtil.removeAllSuffix(str, prefix);
 		assertNull(result);
 	}
+
+	@Test
+	public void stripTest() {
+
+		final String SOURCE_STRING = "aaa_STRIPPED_bbb";
+
+		// ---------------------------- test strip ----------------------------
+
+		// Normal test
+		assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.strip(SOURCE_STRING, "a"));
+		assertEquals(SOURCE_STRING, CharSequenceUtil.strip(SOURCE_STRING, ""));
+		assertEquals("aa_STRIPPED_bb", CharSequenceUtil.strip(SOURCE_STRING, "a", "b"));
+
+		// test null param
+		assertEquals(SOURCE_STRING, CharSequenceUtil.strip(SOURCE_STRING, null, null));
+		assertEquals(SOURCE_STRING, CharSequenceUtil.strip(SOURCE_STRING, "", ""));
+		assertEquals("aaa_STRIPPED_bb", CharSequenceUtil.strip(SOURCE_STRING, "", "b"));
+		assertEquals("aaa_STRIPPED_bb", CharSequenceUtil.strip(SOURCE_STRING, null, "b"));
+		assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.strip(SOURCE_STRING, "a", ""));
+		assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.strip(SOURCE_STRING, "a", null));
+		// 本次提交前无法通过的 case
+		assertEquals("", CharSequenceUtil.strip("a", "a", "a"));
+
+		// 前缀后缀有重叠，优先去掉前缀
+		assertEquals("a", CharSequenceUtil.strip("aba", "ab", "ba"));
+	}
+
+	@Test
+	void stripAllTest() {
+		final String SOURCE_STRING = "aaa_STRIPPED_bbb";
+
+		// ---------------------------- test stripAll ----------------------------
+
+		// Normal test
+		assertEquals("_STRIPPED_bbb", CharSequenceUtil.stripAll(SOURCE_STRING, "a"));
+		assertEquals(SOURCE_STRING, CharSequenceUtil.stripAll(SOURCE_STRING, ""));
+
+		// test null param
+		assertEquals("_STRIPPED_", CharSequenceUtil.stripAll(SOURCE_STRING, "a", "b"));
+		assertEquals(SOURCE_STRING, CharSequenceUtil.stripAll(SOURCE_STRING, null, null));
+		assertEquals(SOURCE_STRING, CharSequenceUtil.stripAll(SOURCE_STRING, "", ""));
+		assertEquals("aaa_STRIPPED_", CharSequenceUtil.stripAll(SOURCE_STRING, "", "b"));
+		assertEquals("aaa_STRIPPED_", CharSequenceUtil.stripAll(SOURCE_STRING, null, "b"));
+		assertEquals("_STRIPPED_bbb", CharSequenceUtil.stripAll(SOURCE_STRING, "a", ""));
+		assertEquals("_STRIPPED_bbb", CharSequenceUtil.stripAll(SOURCE_STRING, "a", null));
+
+		// special test
+		assertEquals("bbb", CharSequenceUtil.stripAll("aaaaaabbb", "aaa", null));
+		assertEquals("abbb", CharSequenceUtil.stripAll("aaaaaaabbb", "aa", null));
+
+		// aaaaaaaaa (9个a) 可以被看为 aaa_aaaa_aa
+		assertEquals("", CharSequenceUtil.stripAll("aaaaaaaaa", "aaa", "aa"));
+		// 第二次迭代后会出现 from 比 to 大的情况，原本代码是强行交换，但是回导致无法去除前后缀
+		assertEquals("", CharSequenceUtil.stripAll("a", "a", "a"));
+
+		// 前缀后缀有重叠，优先去掉前缀
+		assertEquals("a", CharSequenceUtil.stripAll("aba", "ab", "ba"));
+		assertEquals("a", CharSequenceUtil.stripAll("abababa", "ab", "ba"));
+	}
 }

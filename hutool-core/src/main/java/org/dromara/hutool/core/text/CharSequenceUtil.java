@@ -1331,7 +1331,7 @@ public class CharSequenceUtil extends StrValidator {
 
 		final String str2 = str.toString();
 		int toIndex = str2.length();
-		while (str2.startsWith(suffixStr, toIndex - suffixLength)){
+		while (str2.startsWith(suffixStr, toIndex - suffixLength)) {
 			toIndex -= suffixLength;
 		}
 		return subPre(str2, toIndex);
@@ -1390,6 +1390,11 @@ public class CharSequenceUtil extends StrValidator {
 
 	/**
 	 * 去除两边的指定字符串
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a"  -> "aa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", ""  -> "aaa_STRIPPED_bbb"
+	 * }
+	 * </pre>
 	 *
 	 * @param str            被处理的字符串
 	 * @param prefixOrSuffix 前缀或后缀
@@ -1407,6 +1412,18 @@ public class CharSequenceUtil extends StrValidator {
 	/**
 	 * 去除两边的指定字符串<br>
 	 * 两边字符如果存在，则去除，不存在不做处理
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a", "b"  -> "aa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", "a", ""  -> "aa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "a", null  -> "aa_STRIPPED_bbb"
+	 *
+	 * "a", "a", "a"  -> ""
+	 * }
+	 * </pre>
 	 *
 	 * @param str    被处理的字符串
 	 * @param prefix 前缀
@@ -1419,18 +1436,116 @@ public class CharSequenceUtil extends StrValidator {
 			return toStringOrNull(str);
 		}
 
-		int from = 0;
-		int to = str.length();
-
 		final String str2 = str.toString();
+		int from = 0;
+		int to = str2.length();
+
 		if (startWith(str2, prefix)) {
 			from = prefix.length();
+			if(from == to){
+				// "a", "a", "a"  -> ""
+				return EMPTY;
+			}
 		}
 		if (endWith(str2, suffix)) {
 			to -= suffix.length();
+			if(from == to){
+				// "a", "a", "a"  -> ""
+				return EMPTY;
+			} else if(to < from){
+				// pre去除后和suffix有重叠，如 ("aba", "ab", "ba") -> "a"
+				to += suffix.length();
+			}
 		}
 
-		return str2.substring(Math.min(from, to), Math.max(from, to));
+		return str2.substring(from, to);
+	}
+
+	/**
+	 * 去除两边<u><b>所有</b></u>的指定字符串
+	 *
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a"  -> "_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", ""  -> "aaa_STRIPPED_bbb"
+	 * }
+	 * </pre>
+	 *
+	 * @param str            被处理的字符串
+	 * @param prefixOrSuffix 前缀或后缀
+	 * @return 处理后的字符串
+	 * @since 5.8.30
+	 */
+	public static String stripAll(final CharSequence str, final CharSequence prefixOrSuffix) {
+		if (equals(str, prefixOrSuffix)) {
+			return EMPTY;
+		}
+		return stripAll(str, prefixOrSuffix, prefixOrSuffix);
+	}
+
+	/**
+	 * 去除两边<u><b>所有</b></u>的指定字符串
+	 *
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_"
+	 * "aaa_STRIPPED_bbb", "a", ""  -> "_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "a", null  -> "_STRIPPED_bbb"
+	 *
+	 * // special test
+	 * "aaaaaabbb", "aaa", null  -> "bbb"
+	 * "aaaaaaabbb", "aa", null  -> "abbb"
+	 *
+	 * "aaaaaaaaa", "aaa", "aa"  -> ""
+	 * "a", "a", "a"  -> ""
+	 * }
+	 * </pre>
+	 *
+	 * @param str    被处理的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 处理后的字符串
+	 * @since 5.8.30
+	 */
+	public static String stripAll(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+		if (isEmpty(str)) {
+			return toStringOrNull(str);
+		}
+
+		final String prefixStr = toStringOrEmpty(prefix);
+		final String suffixStr = toStringOrEmpty(suffix);
+
+		final String str2 = str.toString();
+		int from = 0;
+		int to = str2.length();
+
+		if(!prefixStr.isEmpty()){
+			while (str2.startsWith(prefixStr, from)) {
+				from += prefix.length();
+				if(from == to){
+					// "a", "a", "a"  -> ""
+					return EMPTY;
+				}
+			}
+		}
+		if(!suffixStr.isEmpty()){
+			while (str2.startsWith(suffixStr, to - suffixStr.length())) {
+				to -= suffixStr.length();
+				if(from == to){
+					// "a", "a", "a"  -> ""
+					return EMPTY;
+				}else if(to < from){
+					// pre去除后和suffix有重叠，如 ("aba", "ab", "ba") -> "a"
+					to += suffixStr.length();
+					break;
+				}
+			}
+		}
+
+		return str2.substring(from, to);
 	}
 
 	/**
