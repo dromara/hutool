@@ -84,6 +84,12 @@ public class MultipartBody extends FormBody<MultipartBody> {
 		return CONTENT_TYPE_MULTIPART_PREFIX + boundary;
 	}
 
+	@Override
+	public String getContentType(final Charset charset) {
+		// multipart的Content-Type头指定"Content-Type; boundary=XXXX"，编码无效
+		return getContentType();
+	}
+
 	/**
 	 * 写出Multiparty数据，不关闭流
 	 *
