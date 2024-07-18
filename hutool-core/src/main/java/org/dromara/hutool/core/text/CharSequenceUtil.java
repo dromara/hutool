@@ -1389,6 +1389,31 @@ public class CharSequenceUtil extends StrValidator {
 	// region ----- strip
 
 	/**
+	 * 去除两边的指定字符串，忽略大小写
+	 *
+	 * @param str            被处理的字符串
+	 * @param prefixOrSuffix 前缀或后缀
+	 * @return 处理后的字符串
+	 * @since 3.1.2
+	 */
+	public static String stripIgnoreCase(final CharSequence str, final CharSequence prefixOrSuffix) {
+		return stripIgnoreCase(str, prefixOrSuffix, prefixOrSuffix);
+	}
+
+	/**
+	 * 去除两边的指定字符串，忽略大小写
+	 *
+	 * @param str    被处理的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 处理后的字符串
+	 * @since 3.1.2
+	 */
+	public static String stripIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+		return strip(str, prefix, suffix, true);
+	}
+
+	/**
 	 * 去除两边的指定字符串
 	 * <pre>{@code
 	 * "aaa_STRIPPED_bbb", "a"  -> "aa_STRIPPED_bbb"
@@ -1432,6 +1457,33 @@ public class CharSequenceUtil extends StrValidator {
 	 * @since 3.1.2
 	 */
 	public static String strip(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+		return strip(str, prefix, suffix, false);
+	}
+
+	/**
+	 * 去除两边的指定字符串<br>
+	 * 两边字符如果存在，则去除，不存在不做处理
+	 * <pre>{@code
+	 * "aaa_STRIPPED_bbb", "a", "b"  -> "aa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_bb"
+	 * "aaa_STRIPPED_bbb", "a", ""  -> "aa_STRIPPED_bbb"
+	 * "aaa_STRIPPED_bbb", "a", null  -> "aa_STRIPPED_bbb"
+	 *
+	 * "a", "a", "a"  -> ""
+	 * }
+	 * </pre>
+	 *
+	 * @param str    被处理的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 处理后的字符串
+	 * @since 3.1.2
+	 */
+	public static String strip(final CharSequence str, final CharSequence prefix, final CharSequence suffix, final boolean ignoreCase) {
 		if (isEmpty(str)) {
 			return toStringOrNull(str);
 		}
@@ -1440,14 +1492,14 @@ public class CharSequenceUtil extends StrValidator {
 		int from = 0;
 		int to = str2.length();
 
-		if (startWith(str2, prefix)) {
+		if (startWith(str2, prefix, ignoreCase)) {
 			from = prefix.length();
 			if(from == to){
 				// "a", "a", "a"  -> ""
 				return EMPTY;
 			}
 		}
-		if (endWith(str2, suffix)) {
+		if (endWith(str2, suffix, ignoreCase)) {
 			to -= suffix.length();
 			if(from == to){
 				// "a", "a", "a"  -> ""
@@ -1545,44 +1597,6 @@ public class CharSequenceUtil extends StrValidator {
 			}
 		}
 
-		return str2.substring(from, to);
-	}
-
-	/**
-	 * 去除两边的指定字符串，忽略大小写
-	 *
-	 * @param str            被处理的字符串
-	 * @param prefixOrSuffix 前缀或后缀
-	 * @return 处理后的字符串
-	 * @since 3.1.2
-	 */
-	public static String stripIgnoreCase(final CharSequence str, final CharSequence prefixOrSuffix) {
-		return stripIgnoreCase(str, prefixOrSuffix, prefixOrSuffix);
-	}
-
-	/**
-	 * 去除两边的指定字符串，忽略大小写
-	 *
-	 * @param str    被处理的字符串
-	 * @param prefix 前缀
-	 * @param suffix 后缀
-	 * @return 处理后的字符串
-	 * @since 3.1.2
-	 */
-	public static String stripIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
-		if (isEmpty(str)) {
-			return toStringOrNull(str);
-		}
-		int from = 0;
-		int to = str.length();
-
-		final String str2 = str.toString();
-		if (startWithIgnoreCase(str2, prefix)) {
-			from = prefix.length();
-		}
-		if (endWithIgnoreCase(str2, suffix)) {
-			to -= suffix.length();
-		}
 		return str2.substring(from, to);
 	}
 	// endregion

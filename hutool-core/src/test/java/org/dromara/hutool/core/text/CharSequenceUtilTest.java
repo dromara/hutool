@@ -452,6 +452,32 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
+	public void stripIgnoreCaseTest() {
+
+		final String SOURCE_STRING = "aaa_STRIPPED_bbb";
+
+		// ---------------------------- test strip ----------------------------
+
+		// Normal test
+		assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, "a"));
+		assertEquals(SOURCE_STRING, CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, ""));
+		assertEquals("aa_STRIPPED_bb", CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, "A", "b"));
+
+		// test null param
+		assertEquals(SOURCE_STRING, CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, null, null));
+		assertEquals(SOURCE_STRING, CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, "", ""));
+		assertEquals("aaa_STRIPPED_bb", CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, "", "B"));
+		assertEquals("aaa_STRIPPED_bb", CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, null, "b"));
+		assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, "a", ""));
+		assertEquals("aa_STRIPPED_bbb", CharSequenceUtil.stripIgnoreCase(SOURCE_STRING, "a", null));
+		// 本次提交前无法通过的 case
+		assertEquals("", CharSequenceUtil.stripIgnoreCase("a", "a", "a"));
+
+		// 前缀后缀有重叠，优先去掉前缀
+		assertEquals("a", CharSequenceUtil.stripIgnoreCase("aba", "aB", "bB"));
+	}
+
+	@Test
 	public void stripTest() {
 
 		final String SOURCE_STRING = "aaa_STRIPPED_bbb";
