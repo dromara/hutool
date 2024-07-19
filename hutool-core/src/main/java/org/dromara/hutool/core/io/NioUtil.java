@@ -131,7 +131,7 @@ public class NioUtil {
 	 * @since 4.5.0
 	 */
 	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize) throws IORuntimeException {
-		return copy(in, out, bufferSize, null);
+		return copy(in, out, bufferSize, -1, null);
 	}
 
 	/**
@@ -140,30 +140,16 @@ public class NioUtil {
 	 * @param in             {@link ReadableByteChannel}
 	 * @param out            {@link WritableByteChannel}
 	 * @param bufferSize     缓冲大小，如果小于等于0，使用默认
-	 * @param streamProgress {@link StreamProgress}进度处理器
-	 * @return 拷贝的字节数
-	 * @throws IORuntimeException IO异常
-	 */
-	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize, final StreamProgress streamProgress) throws IORuntimeException {
-		return copy(in, out, bufferSize, -1, streamProgress);
-	}
-
-	/**
-	 * 拷贝流，使用NIO，不会关闭channel
-	 *
-	 * @param in             {@link ReadableByteChannel}
-	 * @param out            {@link WritableByteChannel}
-	 * @param bufferSize     缓冲大小，如果小于等于0，使用默认
-	 * @param count          读取总长度
+	 * @param totalCount          读取总长度
 	 * @param streamProgress {@link StreamProgress}进度处理器
 	 * @return 拷贝的字节数
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
-	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
+	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize, final long totalCount, final StreamProgress streamProgress) throws IORuntimeException {
 		Assert.notNull(in, "In channel is null!");
 		Assert.notNull(out, "Out channel is null!");
-		return new ChannelCopier(bufferSize, count, streamProgress).copy(in, out);
+		return new ChannelCopier(bufferSize, totalCount, streamProgress).copy(in, out);
 	}
 
 	/**
