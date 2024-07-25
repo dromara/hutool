@@ -171,6 +171,11 @@ public class CompressUtil {
 			return new SevenZExtractor(file);
 		}
 		try {
+			if (StrUtil.isBlank(archiverName) && file.getName().toLowerCase().endsWith(".tgz")) {
+				archiverName = "tgz";
+			} else if (StrUtil.isBlank(archiverName) && file.getName().toLowerCase().endsWith(".tar.gz")) {
+				archiverName = "tar.gz";
+			}
 			return new StreamExtractor(charset, archiverName, file);
 		} catch (CompressException e) {
 			final Throwable cause = e.getCause();
