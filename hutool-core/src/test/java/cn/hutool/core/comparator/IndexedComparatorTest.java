@@ -2,9 +2,11 @@ package cn.hutool.core.comparator;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.StopWatch;
+import cn.hutool.core.lang.Console;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -41,7 +43,8 @@ public class IndexedComparatorTest {
 	}
 
 	@Test
-	public void benchMarkSortTest() {
+	@Ignore
+	public void benchmarkSortTest() {
 		final Object[] arr ={"a", "b", new User("9", null), "1",3,null,"2"};
 		final Collection<Object> set = new HashSet<>(Arrays.asList(arr));
 
@@ -52,7 +55,6 @@ public class IndexedComparatorTest {
 			final List<Object> sortSet = CollectionUtil.sort(set, new IndexedComparator<>(arr));
 		}
 		stopWatch.stop();
-		System.out.println(stopWatch.prettyPrint());
 
 
 		stopWatch.start();
@@ -60,7 +62,7 @@ public class IndexedComparatorTest {
 			final List<Object> sortSet = CollectionUtil.sort(set, new ArrayIndexedComparator<>(arr));
 		}
 		stopWatch.stop();
-		System.out.println(stopWatch.prettyPrint());
+		Console.log(stopWatch.prettyPrint());
 	}
 
 	@Data
