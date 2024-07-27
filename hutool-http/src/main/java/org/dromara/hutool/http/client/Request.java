@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.http.client;
 
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.resource.Resource;
@@ -25,6 +24,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpGlobalConfig;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.body.*;
 import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.engine.ClientEngineFactory;
@@ -458,22 +458,6 @@ public class Request implements HeaderOperation<Request> {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = StrUtil.builder();
-		sb.append("Request Url: ").append(this.url).append(StrUtil.CRLF);
-
-		// header
-		sb.append("Request Headers: ").append(StrUtil.CRLF);
-		for (Map.Entry<String, ? extends Collection<String>> entry : this.headers.entrySet()) {
-			sb.append("    ")
-				.append(entry.getKey())
-				.append(": ")
-				.append(CollUtil.join(entry.getValue(), ","))
-				.append(StrUtil.CRLF);
-		}
-
-		// body
-		sb.append("Request Body: ").append(StrUtil.CRLF);
-		sb.append("    ").append(this.bodyStr()).append(StrUtil.CRLF);
-		return sb.toString();
+		return HttpUtil.toString(this);
 	}
 }
