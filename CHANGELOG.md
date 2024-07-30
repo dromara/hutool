@@ -12,6 +12,7 @@
 * 【core   】      CharSequenceUtil增加stripAll方法（pr#3659@Github）
 * 【crypto 】      支持"RSA/ECB/OAEPWithSHA-1AndMGF1Padding"的RSA加解密（pr#3675@Github）
 * 【core   】      Opt增加ifFail（pr#1239@Gitee）
+* 【poi    】      增加GlobalPoiConfig（issue#IAEHJH@Gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复因RFC3986理解有误导致的UrlPath处理冒号转义问题（issue#IAAE88@Gitee）
