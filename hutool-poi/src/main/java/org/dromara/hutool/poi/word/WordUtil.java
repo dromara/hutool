@@ -22,8 +22,6 @@ import java.io.File;
  */
 public class WordUtil {
 
-
-
 	/**
 	 * 创建Word 07格式的生成器
 	 *
