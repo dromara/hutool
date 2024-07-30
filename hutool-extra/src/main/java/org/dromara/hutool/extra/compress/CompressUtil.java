@@ -12,6 +12,12 @@
 
 package org.dromara.hutool.extra.compress;
 
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.StreamingNotSupportedException;
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorOutputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.compress.archiver.Archiver;
@@ -20,12 +26,6 @@ import org.dromara.hutool.extra.compress.archiver.StreamArchiver;
 import org.dromara.hutool.extra.compress.extractor.Extractor;
 import org.dromara.hutool.extra.compress.extractor.SevenZExtractor;
 import org.dromara.hutool.extra.compress.extractor.StreamExtractor;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.apache.commons.compress.archivers.StreamingNotSupportedException;
-import org.apache.commons.compress.compressors.CompressorException;
-import org.apache.commons.compress.compressors.CompressorInputStream;
-import org.apache.commons.compress.compressors.CompressorOutputStream;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 import java.io.File;
 import java.io.InputStream;
@@ -178,16 +178,20 @@ public class CompressUtil {
 	 * @param file         归档文件
 	 * @return {@link Extractor}
 	 */
-	public static Extractor createExtractor(final Charset charset, final String archiverName, final File file) {
+	public static Extractor createExtractor(final Charset charset, String archiverName, final File file) {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZExtractor(file);
 		}
-		try {
-			if (StrUtil.isBlank(archiverName) && file.getName().toLowerCase().endsWith(".tgz")) {
+
+		if(StrUtil.isBlank(archiverName)){
+			final String name = file.getName().toLowerCase();
+			if(name.endsWith(".tgz")){
 				archiverName = "tgz";
-			} else if (StrUtil.isBlank(archiverName) && file.getName().toLowerCase().endsWith(".tar.gz")) {
+			} else if(name.endsWith(".tar.gz")){
 				archiverName = "tar.gz";
 			}
+		}
+		try {
 			return new StreamExtractor(charset, archiverName, file);
 		} catch (final CompressException e) {
 			final Throwable cause = e.getCause();
