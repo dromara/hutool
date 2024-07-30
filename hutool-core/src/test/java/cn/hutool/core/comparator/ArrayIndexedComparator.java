@@ -11,7 +11,7 @@ import java.util.Comparator;
  *
  * @param <T> 被排序元素类型
  * @author looly
- * @since 4.1.5
+ * @since 5.8.30
  */
 public class ArrayIndexedComparator<T> implements Comparator<T> {
 

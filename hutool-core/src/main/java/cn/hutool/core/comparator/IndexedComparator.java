@@ -55,7 +55,7 @@ public class IndexedComparator<T> implements Comparator<T> {
 	public IndexedComparator(boolean atEndIfMiss, T... objs) {
 		Assert.notNull(objs, "'objs' array must not be null");
 		this.atEndIfMiss = atEndIfMiss;
-		map = new HashMap<>(1 + (int) (objs.length / 0.75));
+		map = new HashMap<>(objs.length, 1);
 		for (int i = 0; i < objs.length; i++) {
 			map.put(objs[i], i);
 		}
