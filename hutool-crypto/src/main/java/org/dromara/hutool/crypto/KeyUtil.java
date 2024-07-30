@@ -703,6 +703,8 @@ public class KeyUtil {
 			return "EC";
 		}
 
+		// pr#3675 对于类似于RSA/ECB/OAEPWithSHA-1AndMGF1Padding只获取主方法
+		algorithm = getMainAlgorithm(algorithm);
 		final int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
 		if (indexOfWith > 0) {
 			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
