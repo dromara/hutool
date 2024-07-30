@@ -1074,9 +1074,9 @@ public class Convert {
 	 * @return 中文大写数字
 	 * @since 3.2.3
 	 */
-	public static String digitToChinese(final Number n) {
+	public static String digitToChinese(Number n) {
 		if (null == n) {
-			return "零";
+			n = 0;
 		}
 		return ChineseNumberFormatter.of()
 			.setUseTraditional(true)
