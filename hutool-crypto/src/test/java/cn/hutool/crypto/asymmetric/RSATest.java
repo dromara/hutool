@@ -1,11 +1,7 @@
 package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import org.junit.Assert;
@@ -93,6 +89,28 @@ public class RSATest {
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
 	}
 
+	@Test
+	public void rsaOAEPTest() {
+		final RSA rsa = new RSA("RSA/ECB/OAEPWithSHA-1AndMGF1Padding");
+
+		// 获取私钥和公钥
+		Assert.assertNotNull(rsa.getPrivateKey());
+		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+		Assert.assertNotNull(rsa.getPublicKey());
+		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+
+		// 公钥加密，私钥解密
+		final byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
+
+		final byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
+		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+
+		// 私钥加密，公钥解密
+		final byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
+		final byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
+		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+	}
+	
 	@Test
 	public void rsaNoneTest() {
 		final RSA rsa = new RSA(AsymmetricAlgorithm.RSA_None.getValue());
