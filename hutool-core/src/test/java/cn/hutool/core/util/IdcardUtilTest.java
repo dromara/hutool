@@ -178,4 +178,12 @@ public class IdcardUtilTest {
 	public void issueI88YKMTest() {
 		Assert.assertTrue(IdcardUtil.isValidCard("111111111111111"));
 	}
+
+	@Test
+	public void issueIAFOLITest() {
+		String idcard = "H01487002";
+		Assert.assertFalse(IdcardUtil.isValidHKCard(idcard));
+		Assert.assertNull(IdcardUtil.isValidCard10(idcard));
+		Assert.assertFalse(IdcardUtil.isValidCard(idcard));
+	}
 }

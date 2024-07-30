@@ -413,6 +413,10 @@ public class IdcardUtil {
 	 * @return 验证码是否符合
 	 */
 	public static boolean isValidHKCard(String idcard) {
+		if(false == idcard.matches("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$")){
+			return false;
+		}
+
 		String card = idcard.replaceAll("[()]", "");
 		int sum;
 		if (card.length() == 9) {

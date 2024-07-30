@@ -21,6 +21,7 @@
 * 【core   】      修复BeanUtil.copyProperties中mapToMap时key被转为String问题（issue#3645@Github）
 * 【core   】      修复FileUtil.file末尾换行符导致路径判断错误的问题（issue#IAB65V@Gitee）
 * 【core   】      修复FileTypeUtil.getType空指针问题（issue#IAD5JM@Gitee）
+* 【core   】      修复IdcardUtil.isValidHKCard校验问题（issue#IAFOLI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.29(2024-07-03)
