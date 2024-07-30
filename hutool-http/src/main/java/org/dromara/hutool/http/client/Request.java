@@ -13,7 +13,6 @@
 package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
@@ -271,6 +270,7 @@ public class Request implements HeaderOperation<Request> {
 		return this;
 	}
 
+	// region body get
 	/**
 	 * 获取请求体
 	 *
@@ -286,11 +286,7 @@ public class Request implements HeaderOperation<Request> {
 	 * @return 请求体字符串
 	 */
 	public String bodyStr() {
-		InputStream bodyStream = this.bodyStream();
-		if (bodyStream == null) {
-			return null;
-		}
-		return IoUtil.read(bodyStream, this.charset);
+		return StrUtil.str(bodyBytes(), this.charset);
 	}
 
 	/**
@@ -299,11 +295,7 @@ public class Request implements HeaderOperation<Request> {
 	 * @return 请求体字节码
 	 */
 	public byte[] bodyBytes() {
-		InputStream bodyStream = this.bodyStream();
-		if (bodyStream == null) {
-			return null;
-		}
-		return IoUtil.readBytes(bodyStream);
+		return this.body == null ? null : this.body.getBytes();
 	}
 
 	/**
@@ -312,10 +304,7 @@ public class Request implements HeaderOperation<Request> {
 	 * @return 请求体资源流
 	 */
 	public InputStream bodyStream() {
-		if (this.body == null) {
-			return null;
-		}
-		return this.body.getStream();
+		return this.body == null ? null : this.body.getStream();
 	}
 
 	/**
@@ -329,7 +318,9 @@ public class Request implements HeaderOperation<Request> {
 		}
 		return body();
 	}
+	// endregion
 
+	// region body set
 	/**
 	 * 添加请求表单内容
 	 *
@@ -380,6 +371,7 @@ public class Request implements HeaderOperation<Request> {
 
 		return this;
 	}
+	// endregion
 
 	/**
 	 * 获取最大重定向请求次数

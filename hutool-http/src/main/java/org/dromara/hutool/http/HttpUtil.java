@@ -27,7 +27,6 @@ import org.dromara.hutool.http.server.SimpleServer;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -304,11 +303,12 @@ public class HttpUtil {
 	public static String toString(final Response response) {
 		final StringBuilder sb = StrUtil.builder();
 		sb.append("Response Status: ").append(response.getStatus()).append(StrUtil.CRLF);
-		sb.append("Response Headers: ").append(StrUtil.CRLF);
-		for (final Map.Entry<String, List<String>> entry : response.headers().entrySet()) {
-			sb.append("    ").append(entry).append(StrUtil.CRLF);
-		}
 
+		// header
+		sb.append("Response Headers: ").append(StrUtil.CRLF);
+		response.headers().forEach((key, value) -> sb.append("    ").append(key).append(": ").append(CollUtil.join(value, ",")).append(StrUtil.CRLF));
+
+		// body
 		sb.append("Response Body: ").append(StrUtil.CRLF);
 		sb.append("    ").append(response.bodyStr()).append(StrUtil.CRLF);
 
@@ -327,13 +327,7 @@ public class HttpUtil {
 
 		// header
 		sb.append("Request Headers: ").append(StrUtil.CRLF);
-		for (Map.Entry<String, ? extends Collection<String>> entry : request.headers().entrySet()) {
-			sb.append("    ")
-				.append(entry.getKey())
-				.append(": ")
-				.append(CollUtil.join(entry.getValue(), ","))
-				.append(StrUtil.CRLF);
-		}
+		request.headers().forEach((key, value) -> sb.append("    ").append(key).append(": ").append(CollUtil.join(value, ",")).append(StrUtil.CRLF));
 
 		// body
 		sb.append("Request Body: ").append(StrUtil.CRLF);

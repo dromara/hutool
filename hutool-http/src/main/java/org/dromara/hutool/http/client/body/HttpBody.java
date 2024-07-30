@@ -93,4 +93,17 @@ public interface HttpBody {
 		writeClose(out);
 		return IoUtil.toStream(out);
 	}
+
+	/**
+	 * 获取请求（响应）体字节码
+	 *
+	 * @return 请求体字节码
+	 */
+	default byte[] getBytes() {
+		final InputStream bodyStream = getStream();
+		if (bodyStream == null) {
+			return null;
+		}
+		return IoUtil.readBytes(bodyStream);
+	}
 }

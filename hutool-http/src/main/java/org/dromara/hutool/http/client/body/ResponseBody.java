@@ -83,6 +83,7 @@ public class ResponseBody implements HttpBody, Closeable {
 	 *
 	 * @return 响应内容bytes
 	 */
+	@Override
 	public byte[] getBytes() {
 		return this.bodyStream.readBytes();
 	}
