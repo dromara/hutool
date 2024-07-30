@@ -12,8 +12,8 @@
 
 package org.dromara.hutool.core.io.resource;
 
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -44,5 +44,17 @@ public class ResourceUtilTest {
 		final FileResource resource = new FileResource(FileUtil.file("test.xml"));
 		Assertions.assertEquals("test.xml", resource.getName());
 		Assertions.assertTrue(StrUtil.isNotEmpty(resource.readUtf8Str()));
+	}
+
+	@Test
+	void getResourceTest() {
+		final Resource resource = ResourceUtil.getResource("file:test.xml");
+		Assertions.assertNotNull(resource);
+	}
+
+	@Test
+	void getResourceTest2() {
+		// project:开头表示基于项目的相对路径，此处无文件报错
+		Assertions.assertThrows(NoResourceException.class, () -> ResourceUtil.getResource("project:test.xml"));
 	}
 }

@@ -279,18 +279,27 @@ public class FileUtil extends PathUtil {
 	// region ----- file and newFile
 
 	/**
-	 * 创建File对象，相当于调用new File()，不做任何处理
+	 * 创建File对象，相当于调用new File()，不做任何处理<br>
+	 * 相对于项目路径，如`project:./test`且项目路径为`/workspace/hutool/`，则读取`/workspace/hutool/test`
 	 *
 	 * @param path 文件路径，相对路径表示相对项目路径
 	 * @return File
-	 * @since 4.1.4
 	 */
 	public static File newFile(final String path) {
 		return new File(path);
 	}
 
 	/**
-	 * 创建File对象，自动识别相对或绝对路径，相对路径将自动从ClassPath下寻找
+	 * 创建File对象，自动识别相对或绝对路径，规则如下：
+	 * <ul>
+	 *     <li>如果为绝对路径，如Linux下以`/`开头，Win下以如`d:\`开头，则直接使用。</li>
+	 *     <li>如果以`classpath:`开头或`file:`开头，直接去掉。</li>
+	 *     <li>如果为相对路径，如`./xxx`或`xx/xx`则理解为相对路径，相对路径全部相对于classpath。</li>
+	 *     <li>如果以`project:`开头，且为相对路径，则使用JDK默认规则，相对于项目路径，如`project:./test`且项目路径为`/workspace/hutool/`，则读取`/workspace/hutool/test`</li>
+	 * </ul>
+	 * <p>
+	 * ，相对路径将自动从ClassPath下寻找<br>
+	 * 如果用户需要相对项目路径，则使用project:前缀
 	 *
 	 * @param path 相对ClassPath的目录或者绝对路径目录
 	 * @return File
@@ -299,6 +308,12 @@ public class FileUtil extends PathUtil {
 		if (null == path) {
 			return null;
 		}
+
+		// 如果用户需要相对项目路径，则使用project:前缀
+		if (path.startsWith("project:")) {
+			return new File(path);
+		}
+
 		return new File(getAbsolutePath(path));
 	}
 
@@ -2543,7 +2558,7 @@ public class FileUtil extends PathUtil {
 	 * 写入数据到文件
 	 *
 	 * @param data     数据
-	 * @param target     目标文件
+	 * @param target   目标文件
 	 * @param off      数据开始位置
 	 * @param len      数据长度
 	 * @param isAppend 是否追加模式
@@ -2559,7 +2574,7 @@ public class FileUtil extends PathUtil {
 	 * 此方法会自动关闭输入流
 	 *
 	 * @param target 目标文件
-	 * @param in   输入流
+	 * @param in     输入流
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
@@ -2570,7 +2585,7 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 将流的内容写入文件
 	 *
-	 * @param target      目标文件
+	 * @param target    目标文件
 	 * @param in        输入流
 	 * @param isCloseIn 是否关闭输入流
 	 * @return 目标文件
