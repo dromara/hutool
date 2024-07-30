@@ -2645,7 +2645,7 @@ public class CharSequenceUtil extends StrValidator {
 		if (isEmpty(str)) {
 			return toStringOrNull(str);
 		}
-		if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
+		if (isWrap(str, prefix, suffix)) {
 			return sub(str, 1, str.length() - 1);
 		}
 		return str.toString();

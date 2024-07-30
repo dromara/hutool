@@ -92,8 +92,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	/**
 	 * CSV解析器
 	 *
-	 * @param reader Reader
-	 * @param config 配置，null则为默认配置
+	 * @param reader     Reader
+	 * @param config     配置，null则为默认配置
 	 * @param bufferSize 默认缓存大小
 	 */
 	public CsvParser(final Reader reader, final CsvReadConfig config, final int bufferSize) {
@@ -109,7 +109,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @throws IllegalStateException 如果不解析头部或者没有调用nextRow()方法
 	 */
 	public List<String> getHeader() {
-		if (config.headerLineNo  < 0) {
+		if (config.headerLineNo < 0) {
 			throw new IllegalStateException("No header available - header parsing is disabled");
 		}
 		if (lineNo < config.beginLineNo) {
@@ -141,11 +141,11 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			}
 
 			// 读取范围校验
-			if(lineNo < config.beginLineNo){
+			if (lineNo < config.beginLineNo) {
 				// 未达到读取起始行，继续
 				continue;
 			}
-			if(lineNo > config.endLineNo){
+			if (lineNo > config.endLineNo) {
 				// 超出结束行，读取结束
 				break;
 			}
@@ -209,7 +209,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * 空行是size为1的List，唯一元素是""
 	 *
 	 * <p>
-	 *     行号要考虑注释行和引号包装的内容中的换行
+	 * 行号要考虑注释行和引号包装的内容中的换行
 	 * </p>
 	 *
 	 * @return 一行数据
@@ -218,7 +218,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	private List<String> readLine() throws IORuntimeException {
 		// 矫正行号
 		// 当一行内容包含多行数据时，记录首行行号，但是读取下一行时，需要把多行内容的行数加上
-		if(inQuotesLineCount > 0){
+		if (inQuotesLineCount > 0) {
 			this.lineNo += this.inQuotesLineCount;
 			this.inQuotesLineCount = 0;
 		}
@@ -257,16 +257,16 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			final char c = buf.get();
 
 			// 注释行标记
-			if(preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF){
+			if (preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF) {
 				// 判断行首字符为指定注释字符的注释开始，直到遇到换行符
 				// 行首分两种，1是preChar < 0表示文本开始，2是换行符后紧跟就是下一行的开始
 				// issue#IA8WE0 如果注释符出现在包装符内，被认为是普通字符
-				if(!inQuotes && null != this.config.commentCharacter && c == this.config.commentCharacter){
+				if (!inQuotes && null != this.config.commentCharacter && c == this.config.commentCharacter) {
 					inComment = true;
 				}
 			}
 			// 注释行处理
-			if(inComment){
+			if (inComment) {
 				if (c == CharUtil.CR || c == CharUtil.LF) {
 					// 注释行以换行符为结尾
 					lineNo++;
@@ -302,8 +302,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 					buf.mark();
 					addField(currentFields, currentField.toString());
 					currentField.setLength(0);
-				} else if (c == config.textDelimiter) {
-					// 引号开始
+				} else if (c == config.textDelimiter && isFieldBegin(preChar)) {
+					// 引号开始且出现在字段开头
 					inQuotes = true;
 					copyLen++;
 				} else if (c == CharUtil.CR) {
@@ -361,11 +361,15 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		final char textDelimiter = this.config.textDelimiter;
 
 		// 忽略多余引号后的换行符
-		field = StrUtil.trim(field, StrTrimer.TrimMode.SUFFIX, (c-> c == CharUtil.LF || c == CharUtil.CR));
+		field = StrUtil.trim(field, StrTrimer.TrimMode.SUFFIX, (c -> c == CharUtil.LF || c == CharUtil.CR));
 
-		field = StrUtil.unWrap(field, textDelimiter);
-		field = StrUtil.replace(field, String.valueOf(textDelimiter) + textDelimiter, String.valueOf(textDelimiter));
-		if(this.config.trimField){
+		if(StrUtil.isWrap(field, textDelimiter)){
+			field = StrUtil.sub(field, 1, field.length() - 1);
+			// https://datatracker.ietf.org/doc/html/rfc4180#section-2
+			// 第七条规则，只有包装内的包装符需要转义
+			field = StrUtil.replace(field, String.valueOf(textDelimiter) + textDelimiter, String.valueOf(textDelimiter));
+		}
+		if (this.config.trimField) {
 			// issue#I49M0C@Gitee
 			field = StrUtil.trim(field);
 		}
@@ -385,11 +389,29 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	}
 
 	/**
+	 * 通过前一个字符，判断是否字段开始，几种情况：
+	 * <ul>
+	 *     <li>正文开头，无前字符</li>
+	 *     <li>字段分隔符，即上个字段结束</li>
+	 *     <li>换行符，即新行开始</li>
+	 * </ul>
+	 *
+	 * @param preChar 前字符
+	 * @return 是否字段开始
+	 */
+	private boolean isFieldBegin(final int preChar) {
+		return preChar == -1
+			|| preChar == config.fieldSeparator
+			|| preChar == CharUtil.LF
+			|| preChar == CharUtil.CR;
+	}
+
+	/**
 	 * 内部Buffer
 	 *
 	 * @author looly
 	 */
-	private static class Buffer implements Serializable{
+	private static class Buffer implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		final char[] buf;

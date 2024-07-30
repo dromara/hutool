@@ -8,12 +8,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 按照 https://datatracker.ietf.org/doc/html/rfc4180#section-2<br>
- * 如果字段正文中出现双引号，需要使用两个双引号表示转义
+ * 如果字段正文中出现双引号，需要使用两个双引号表示转义，并整段使用引号包裹
  */
 public class Pr1244Test {
+
+	/**
+	 * 此测试中没有引号包裹，则所有引号都被当作内容
+	 */
 	@Test
 	void csvReadTest() {
 		final String csv = "a,q\"\"e,d,f";
+		final CsvReader reader = CsvUtil.getReader(new StringReader(csv));
+		final CsvData read = reader.read();
+		assertEquals(4, read.getRow(0).size());
+		assertEquals("a", read.getRow(0).get(0));
+		assertEquals("q\"\"e", read.getRow(0).get(1));
+		assertEquals("d", read.getRow(0).get(2));
+		assertEquals("f", read.getRow(0).get(3));
+	}
+
+	/**
+	 * 此测试中没有引号包裹，则所有引号都被当作内容
+	 */
+	@Test
+	void csvReadTest2() {
+		final String csv = "a,q\"e,d,f";
 		final CsvReader reader = CsvUtil.getReader(new StringReader(csv));
 		final CsvData read = reader.read();
 		assertEquals(4, read.getRow(0).size());
