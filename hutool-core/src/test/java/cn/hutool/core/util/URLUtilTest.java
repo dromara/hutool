@@ -99,4 +99,12 @@ public class URLUtilTest {
 		String path = URLUtil.getPath(url);
 		Assert.assertEquals("/search", path);
 	}
+
+	@Test
+	public void issue3676Test() {
+		String fileFullName = "/Uploads/20240601/aaaa.txt";
+		final URI uri = URLUtil.toURI(fileFullName);
+		final URI resolve = uri.resolve(".");
+		Assert.assertEquals("/Uploads/20240601/", resolve.toString());
+	}
 }
