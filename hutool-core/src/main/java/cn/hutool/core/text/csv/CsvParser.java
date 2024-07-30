@@ -281,8 +281,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 					}
 					buf.mark();
 					addField(currentFields, currentField.toStringAndReset());
-				} else if (c == config.textDelimiter) {
-					// 引号开始
+				} else if (c == config.textDelimiter && isFieldBegin(preChar)) {
+					// 引号开始且出现在字段开头
 					inQuotes = true;
 					copyLen++;
 				} else if (c == CharUtil.CR) {
@@ -340,8 +340,13 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		// 忽略多余引号后的换行符
 		field = StrUtil.trim(field, 1, (c-> c == CharUtil.LF || c == CharUtil.CR));
 
-		field = StrUtil.unWrap(field, textDelimiter);
-		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
+		if(StrUtil.isWrap(field, textDelimiter)){
+			field = StrUtil.sub(field, 1, field.length() - 1);
+			// https://datatracker.ietf.org/doc/html/rfc4180#section-2
+			// 第七条规则，只有包装内的包装符需要转义
+			field = StrUtil.replace(field, String.valueOf(textDelimiter) + textDelimiter, String.valueOf(textDelimiter));
+		}
+
 		if(this.config.trimField){
 			// issue#I49M0C@Gitee
 			field = StrUtil.trim(field);
@@ -359,6 +364,24 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 */
 	private boolean isLineEnd(char c, int preChar) {
 		return (c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR;
+	}
+
+	/**
+	 * 通过前一个字符，判断是否字段开始，几种情况：
+	 * <ul>
+	 *     <li>正文开头，无前字符</li>
+	 *     <li>字段分隔符，即上个字段结束</li>
+	 *     <li>换行符，即新行开始</li>
+	 * </ul>
+	 *
+	 * @param preChar 前字符
+	 * @return 是否字段开始
+	 */
+	private boolean isFieldBegin(final int preChar) {
+		return preChar == -1
+			|| preChar == config.fieldSeparator
+			|| preChar == CharUtil.LF
+			|| preChar == CharUtil.CR;
 	}
 
 	/**

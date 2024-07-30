@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class Pr1244Test {
 	@Test
 	public void csvReadTest() {
-		final String csv = "a,q\"\"e,d,f";
+		final String csv = "a,q\"e,d,f";
 		final CsvReader reader = CsvUtil.getReader(new StringReader(csv));
 		final CsvData read = reader.read();
 		assertEquals(4, read.getRow(0).size());

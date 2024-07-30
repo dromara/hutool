@@ -3236,7 +3236,7 @@ public class CharSequenceUtil {
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(CharSequence str, char prefixChar, char suffixChar) {
-		if (null == str) {
+		if (null == str || str.length() < 2) {
 			return false;
 		}
 

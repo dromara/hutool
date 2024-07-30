@@ -25,6 +25,7 @@
 * 【core   】      修复FileTypeUtil.getType空指针问题（issue#IAD5JM@Gitee）
 * 【core   】      修复IdcardUtil.isValidHKCard校验问题（issue#IAFOLI@Gitee）
 * 【core   】      修复Convert.digitToChinese(0)输出金额无`元整问题`（issue#3662@Github）
+* 【core   】      修复CsvParser中对正文中双引号处理逻辑问题（pr#1244@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.29(2024-07-03)
