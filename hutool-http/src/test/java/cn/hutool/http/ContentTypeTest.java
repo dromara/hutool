@@ -16,4 +16,13 @@ public class ContentTypeTest {
 		String result = ContentType.build(ContentType.JSON, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("application/json;charset=UTF-8", result);
 	}
+
+	@Test
+	public void testGetWithLeadingSpace() {
+		String json = " {\n" +
+			"     \"name\": \"hutool\"\n" +
+			" }";
+		ContentType contentType = ContentType.get(json);
+		Assert.assertEquals(ContentType.JSON, contentType);
+	}
 }
