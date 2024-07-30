@@ -132,7 +132,7 @@ public enum ContentType {
 	public static ContentType get(final String body) {
 		ContentType contentType = null;
 		if (StrUtil.isNotBlank(body)) {
-			final char firstChar = body.charAt(0);
+			final char firstChar = StrUtil.trimPrefix(body).charAt(0);
 			switch (firstChar) {
 				case '{':
 				case '[':
