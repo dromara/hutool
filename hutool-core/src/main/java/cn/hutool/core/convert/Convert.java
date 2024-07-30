@@ -1030,7 +1030,7 @@ public class Convert {
 	 */
 	public static String digitToChinese(Number n) {
 		if (null == n) {
-			return "零";
+			n = 0;
 		}
 		return NumberChineseFormatter.format(n.doubleValue(), true, true);
 	}

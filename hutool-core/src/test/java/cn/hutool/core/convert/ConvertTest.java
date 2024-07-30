@@ -435,4 +435,12 @@ public class ConvertTest {
 		Assert.assertEquals(12, s);
 	}
 
+	@Test
+	public void issue3662Test() {
+		String s = Convert.digitToChinese(0);
+		Assert.assertEquals("零元整", s);
+
+		s = Convert.digitToChinese(null);
+		Assert.assertEquals("零元整", s);
+	}
 }
