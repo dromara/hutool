@@ -170,12 +170,16 @@ public class CompressUtil {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZExtractor(file);
 		}
-		try {
-			if (StrUtil.isBlank(archiverName) && file.getName().toLowerCase().endsWith(".tgz")) {
+
+		if(StrUtil.isBlank(archiverName)){
+			final String name = file.getName().toLowerCase();
+			if(name.endsWith(".tgz")){
 				archiverName = "tgz";
-			} else if (StrUtil.isBlank(archiverName) && file.getName().toLowerCase().endsWith(".tar.gz")) {
+			} else if(name.endsWith(".tar.gz")){
 				archiverName = "tar.gz";
 			}
+		}
+		try {
 			return new StreamExtractor(charset, archiverName, file);
 		} catch (CompressException e) {
 			final Throwable cause = e.getCause();
