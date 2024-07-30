@@ -166,6 +166,28 @@ public class Opt<T> {
 	}
 
 	/**
+	 * 如果包裹内容失败了，则执行传入的操作({@link Consumer#accept})
+	 *
+	 * <p> 例如执行有异常就打印结果
+	 * <pre>{@code
+	 *     Opt.ofTry(() -> 1 / 0).ifFail(Console::log);
+	 * }</pre>
+	 *
+	 * @param action 你想要执行的操作
+	 * @return this
+	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
+	 */
+	public Opt<T> ifFail(final Consumer<? super Throwable> action) throws NullPointerException {
+		Objects.requireNonNull(action, "action is null");
+
+		if (isFail()) {
+			action.accept(this.exception);
+		}
+
+		return this;
+	}
+
+	/**
 	 * 判断包裹里元素的值是否存在，存在为 {@code true}，否则为{@code false}
 	 *
 	 * @return 包裹里元素的值存在为 {@code true}，否则为{@code false}
