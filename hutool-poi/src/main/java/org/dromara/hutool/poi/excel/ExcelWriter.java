@@ -22,7 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.comparator.ArrayIndexedComparator;
+import org.dromara.hutool.core.comparator.IndexedComparator;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -1440,7 +1440,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		Comparator<String> aliasComparator = this.aliasComparator;
 		if (null == aliasComparator) {
 			final Set<String> keySet = this.headerAlias.keySet();
-			aliasComparator = new ArrayIndexedComparator<>(keySet.toArray(new String[0]));
+			aliasComparator = new IndexedComparator<>(keySet.toArray(new String[0]));
 			this.aliasComparator = aliasComparator;
 		}
 		return aliasComparator;

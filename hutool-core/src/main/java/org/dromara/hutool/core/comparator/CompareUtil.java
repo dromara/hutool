@@ -335,7 +335,7 @@ public class CompareUtil {
 	@SuppressWarnings("unchecked")
 	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final boolean atEndIfMiss, final U... objs) {
 		Objects.requireNonNull(keyExtractor);
-		final ArrayIndexedComparator<U> indexedComparator = new ArrayIndexedComparator<>(atEndIfMiss, objs);
+		final IndexedComparator<U> indexedComparator = new IndexedComparator<>(atEndIfMiss, objs);
 		return (o1, o2) -> indexedComparator.compare(keyExtractor.apply(o1), keyExtractor.apply(o2));
 	}
 
