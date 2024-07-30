@@ -14,6 +14,7 @@
 * 【core   】      Opt增加ifFail（pr#1239@Gitee）
 * 【poi    】      增加GlobalPoiConfig（issue#IAEHJH@Gitee）
 * 【core   】      优化IndexedComparator性能（pr#1240@Gitee）
+* 【http   】      改进ContentType.get忽略空格（pr#3664@Github）
 
 ### 🐞Bug修复
 * 【core   】      修复因RFC3986理解有误导致的UrlPath处理冒号转义问题（issue#IAAE88@Gitee）
