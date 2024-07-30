@@ -328,124 +328,6 @@ public class NumberUtil extends NumberValidator {
 	// region ----- round
 
 	/**
-	 * 保留固定位数小数<br>
-	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
-	 * 例如保留2位小数：123.456789 =》 123.46
-	 *
-	 * @param v     值
-	 * @param scale 保留小数位数
-	 * @return 新值
-	 */
-	public static BigDecimal round(final double v, final int scale) {
-		return round(v, scale, RoundingMode.HALF_UP);
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
-	 * 例如保留2位小数：123.456789 =》 123.46
-	 *
-	 * @param v     值
-	 * @param scale 保留小数位数
-	 * @return 新值
-	 */
-	public static String roundStr(final double v, final int scale) {
-		return round(v, scale).toPlainString();
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
-	 * 例如保留2位小数：123.456789 =》 123.46
-	 *
-	 * @param number 数字值
-	 * @param scale  保留小数位数
-	 * @return 新值
-	 * @since 4.1.0
-	 */
-	public static BigDecimal round(final BigDecimal number, final int scale) {
-		return round(number, scale, RoundingMode.HALF_UP);
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
-	 * 例如保留2位小数：123.456789 =》 123.46
-	 *
-	 * @param numberStr 数字值的字符串表现形式
-	 * @param scale     保留小数位数
-	 * @return 新值
-	 * @since 3.2.2
-	 */
-	public static String roundStr(final String numberStr, final int scale) {
-		return roundStr(numberStr, scale, RoundingMode.HALF_UP);
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 例如保留四位小数：123.456789 =》 123.4567
-	 *
-	 * @param v            值
-	 * @param scale        保留小数位数
-	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
-	 * @return 新值
-	 */
-	public static BigDecimal round(final double v, final int scale, final RoundingMode roundingMode) {
-		return round(toBigDecimal(v), scale, roundingMode);
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 例如保留四位小数：123.456789 =》 123.4567
-	 *
-	 * @param v            值
-	 * @param scale        保留小数位数
-	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
-	 * @return 新值
-	 * @since 3.2.2
-	 */
-	public static String roundStr(final double v, final int scale, final RoundingMode roundingMode) {
-		return round(v, scale, roundingMode).toPlainString();
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 例如保留四位小数：123.456789 =》 123.4567
-	 *
-	 * @param number       数字值
-	 * @param scale        保留小数位数，如果传入小于0，则默认0
-	 * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
-	 * @return 新值
-	 */
-	public static BigDecimal round(BigDecimal number, int scale, RoundingMode roundingMode) {
-		if (null == number) {
-			number = BigDecimal.ZERO;
-		}
-		if (scale < 0) {
-			scale = 0;
-		}
-		if (null == roundingMode) {
-			roundingMode = RoundingMode.HALF_UP;
-		}
-
-		return number.setScale(scale, roundingMode);
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 例如保留四位小数：123.456789 =》 123.4567
-	 *
-	 * @param numberStr    数字值的字符串表现形式
-	 * @param scale        保留小数位数
-	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
-	 * @return 新值
-	 * @since 3.2.2
-	 */
-	public static String roundStr(final String numberStr, final int scale, final RoundingMode roundingMode) {
-		return round(toBigDecimal(numberStr), scale, roundingMode).toPlainString();
-	}
-
-	/**
 	 * 四舍六入五成双计算法
 	 * <p>
 	 * 四舍六入五成双是一种比较精确比较科学的计数保留法，是一种数字修约规则。
@@ -479,6 +361,97 @@ public class NumberUtil extends NumberValidator {
 	 */
 	public static BigDecimal roundDown(final Number number, final int scale) {
 		return round(toBigDecimal(number), scale, RoundingMode.DOWN);
+	}
+
+	/**
+	 * 保留固定位数小数<br>
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
+	 * 例如保留2位小数：123.456789 =》 123.46
+	 *
+	 * @param number 数字值
+	 * @param scale  保留小数位数
+	 * @return 新值
+	 * @since 4.1.0
+	 */
+	public static BigDecimal round(final Number number, final int scale) {
+		return round(number, scale, RoundingMode.HALF_UP);
+	}
+
+	/**
+	 * 保留固定位数小数<br>
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
+	 * 例如保留2位小数：123.456789 =》 123.46
+	 *
+	 * @param numberStr 数字值的字符串表现形式
+	 * @param scale     保留小数位数
+	 * @return 新值
+	 * @since 3.2.2
+	 */
+	public static String roundStr(final String numberStr, final int scale) {
+		return roundStr(numberStr, scale, RoundingMode.HALF_UP);
+	}
+
+	/**
+	 * 保留固定位数小数<br>
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
+	 * 例如保留2位小数：123.456789 =》 123.46
+	 *
+	 * @param number 数字值
+	 * @param scale  保留小数位数
+	 * @return 新值
+	 * @since 3.2.2
+	 */
+	public static String roundStr(final Number number, final int scale) {
+		return roundStr(number, scale, RoundingMode.HALF_UP);
+	}
+
+	/**
+	 * 保留固定位数小数<br>
+	 * 例如保留四位小数：123.456789 =》 123.4567
+	 *
+	 * @param numberStr    数字值的字符串表现形式
+	 * @param scale        保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 新值
+	 * @since 3.2.2
+	 */
+	public static String roundStr(final String numberStr, final int scale, final RoundingMode roundingMode) {
+		return roundStr(toBigDecimal(numberStr), scale, roundingMode);
+	}
+
+	/**
+	 * 保留固定位数小数<br>
+	 * 例如保留四位小数：123.456789 =》 123.4567
+	 *
+	 * @param number       数字值
+	 * @param scale        保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 新值
+	 * @since 3.2.2
+	 */
+	public static String roundStr(final Number number, final int scale, final RoundingMode roundingMode) {
+		return round(number, scale, roundingMode).toPlainString();
+	}
+
+	/**
+	 * 保留固定位数小数<br>
+	 * 例如保留四位小数：123.456789 =》 123.4567
+	 *
+	 * @param number       数字值
+	 * @param scale        保留小数位数，如果传入小于0，则默认0
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
+	 * @return 新值
+	 */
+	public static BigDecimal round(final Number number, int scale, RoundingMode roundingMode) {
+		final BigDecimal bigDecimal = toBigDecimal(number);
+		if (scale < 0) {
+			scale = 0;
+		}
+		if (null == roundingMode) {
+			roundingMode = RoundingMode.HALF_UP;
+		}
+
+		return bigDecimal.setScale(scale, roundingMode);
 	}
 	// endregion
 
