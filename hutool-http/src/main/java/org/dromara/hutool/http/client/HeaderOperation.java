@@ -19,9 +19,11 @@ import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.auth.HttpAuthUtil;
 import org.dromara.hutool.http.meta.HeaderName;
 
 import java.net.HttpCookie;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -215,6 +217,21 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	// endregion -----------------------------------------------------------  headers
 
 	// region -----------------------------------------------------------  auth
+
+	/**
+	 * 简单验证，生成的头信息类似于：
+	 * <pre>
+	 * Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
+	 *
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param charset 编码
+	 * @return this
+	 */
+	default T basicAuth(final String username, final String password, final Charset charset) {
+		return auth(HttpAuthUtil.buildBasicAuth(username, password, charset));
+	}
 
 	/**
 	 * 令牌验证，生成的头类似于："Authorization: Bearer XXXXX"，一般用于JWT

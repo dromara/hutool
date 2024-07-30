@@ -237,6 +237,8 @@ public class Request implements HeaderOperation<Request> {
 		return this;
 	}
 
+	// region header
+
 	@Override
 	public Map<String, ? extends Collection<String>> headers() {
 		return MapUtil.view(this.headers);
@@ -269,6 +271,22 @@ public class Request implements HeaderOperation<Request> {
 		}
 		return this;
 	}
+
+	/**
+	 * 简单验证，生成的头信息类似于：
+	 * <pre>
+	 * Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
+	 *
+	 * @param username 用户名
+	 * @param password 密码
+	 * @return this
+	 */
+	public Request basicAuth(final String username, final String password) {
+		return basicAuth(username, password, charset);
+	}
+
+	// endregion
 
 	// region body get
 	/**
