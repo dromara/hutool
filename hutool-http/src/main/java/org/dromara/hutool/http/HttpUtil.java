@@ -316,6 +316,32 @@ public class HttpUtil {
 	}
 
 	/**
+	 * 打印 {@link Request} 为可读形式
+	 *
+	 * @param request {@link Request}
+	 * @return 字符串
+	 */
+	public static String toString(final Request request) {
+		final StringBuilder sb = StrUtil.builder();
+		sb.append("Request Url: ").append(request.url()).append(StrUtil.CRLF);
+
+		// header
+		sb.append("Request Headers: ").append(StrUtil.CRLF);
+		for (Map.Entry<String, ? extends Collection<String>> entry : request.headers().entrySet()) {
+			sb.append("    ")
+				.append(entry.getKey())
+				.append(": ")
+				.append(CollUtil.join(entry.getValue(), ","))
+				.append(StrUtil.CRLF);
+		}
+
+		// body
+		sb.append("Request Body: ").append(StrUtil.CRLF);
+		sb.append("    ").append(request.bodyStr()).append(StrUtil.CRLF);
+		return sb.toString();
+	}
+
+	/**
 	 * 获取指定的Header值，如果不存在返回{@code null}<br>
 	 * 根据RFC2616规范，header的name不区分大小写，因此首先get值，不存在则遍历匹配不区分大小写的key。
 	 *
