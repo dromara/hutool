@@ -832,18 +832,6 @@ public class DateUtil {
 	}
 
 	/**
-	 * 修改日期为某个时间字段结束时间
-	 *
-	 * @param date      {@link Date}
-	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部取最大值
-	 * @return {@link DateTime}
-	 * @since 4.5.7
-	 */
-	public static DateTime ceiling(final Date date, final DateField dateField) {
-		return new DateTime(CalendarUtil.ceiling(CalendarUtil.calendar(date), dateField));
-	}
-
-	/**
 	 * 修改日期为某个时间字段结束时间<br>
 	 * 可选是否归零毫秒。
 	 *
@@ -876,11 +864,12 @@ public class DateUtil {
 	 * 获取秒级别的结束时间，即毫秒设置为999
 	 *
 	 * @param date 日期
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 * @since 4.6.2
 	 */
-	public static DateTime endOfSecond(final Date date) {
-		return new DateTime(CalendarUtil.endOfSecond(CalendarUtil.calendar(date)));
+	public static DateTime endOfSecond(final Date date, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfSecond(CalendarUtil.calendar(date), truncateMillisecond));
 	}
 
 	/**
@@ -897,10 +886,11 @@ public class DateUtil {
 	 * 获取某小时的结束时间
 	 *
 	 * @param date 日期
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 */
-	public static DateTime endOfHour(final Date date) {
-		return new DateTime(CalendarUtil.endOfHour(CalendarUtil.calendar(date)));
+	public static DateTime endOfHour(final Date date, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfHour(CalendarUtil.calendar(date), truncateMillisecond));
 	}
 
 	/**
@@ -917,10 +907,11 @@ public class DateUtil {
 	 * 获取某分钟的结束时间
 	 *
 	 * @param date 日期
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 */
-	public static DateTime endOfMinute(final Date date) {
-		return new DateTime(CalendarUtil.endOfMinute(CalendarUtil.calendar(date)));
+	public static DateTime endOfMinute(final Date date, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfMinute(CalendarUtil.calendar(date), truncateMillisecond));
 	}
 
 	/**
@@ -937,10 +928,11 @@ public class DateUtil {
 	 * 获取某天的结束时间
 	 *
 	 * @param date 日期
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 */
-	public static DateTime endOfDay(final Date date) {
-		return new DateTime(CalendarUtil.endOfDay(CalendarUtil.calendar(date)));
+	public static DateTime endOfDay(final Date date, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfDay(CalendarUtil.calendar(date), truncateMillisecond));
 	}
 
 	/**
@@ -966,25 +958,16 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某周的结束时间，周日定为一周的结束
-	 *
-	 * @param date 日期
-	 * @return {@link DateTime}
-	 */
-	public static DateTime endOfWeek(final Date date) {
-		return new DateTime(CalendarUtil.endOfWeek(CalendarUtil.calendar(date)));
-	}
-
-	/**
 	 * 获取某周的结束时间
 	 *
 	 * @param date              日期
 	 * @param isSundayAsLastDay 是否周日做为一周的最后一天（false表示周六做为最后一天）
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 * @since 5.4.0
 	 */
-	public static DateTime endOfWeek(final Date date, final boolean isSundayAsLastDay) {
-		return new DateTime(CalendarUtil.endOfWeek(CalendarUtil.calendar(date), isSundayAsLastDay));
+	public static DateTime endOfWeek(final Date date, final boolean isSundayAsLastDay, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfWeek(CalendarUtil.calendar(date), isSundayAsLastDay, truncateMillisecond));
 	}
 
 	/**
@@ -1001,10 +984,11 @@ public class DateUtil {
 	 * 获取某月的结束时间
 	 *
 	 * @param date 日期
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 */
-	public static DateTime endOfMonth(final Date date) {
-		return new DateTime(CalendarUtil.endOfMonth(CalendarUtil.calendar(date)));
+	public static DateTime endOfMonth(final Date date, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfMonth(CalendarUtil.calendar(date), truncateMillisecond));
 	}
 
 	/**
@@ -1021,10 +1005,11 @@ public class DateUtil {
 	 * 获取某季度的结束时间
 	 *
 	 * @param date 日期
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 */
-	public static DateTime endOfQuarter(final Date date) {
-		return new DateTime(CalendarUtil.endOfQuarter(CalendarUtil.calendar(date)));
+	public static DateTime endOfQuarter(final Date date, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfQuarter(CalendarUtil.calendar(date), truncateMillisecond));
 	}
 
 	/**
@@ -1041,10 +1026,11 @@ public class DateUtil {
 	 * 获取某年的结束时间
 	 *
 	 * @param date 日期
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link DateTime}
 	 */
-	public static DateTime endOfYear(final Date date) {
-		return new DateTime(CalendarUtil.endOfYear(CalendarUtil.calendar(date)));
+	public static DateTime endOfYear(final Date date, final boolean truncateMillisecond) {
+		return new DateTime(CalendarUtil.endOfYear(CalendarUtil.calendar(date), truncateMillisecond));
 	}
 
 	/**

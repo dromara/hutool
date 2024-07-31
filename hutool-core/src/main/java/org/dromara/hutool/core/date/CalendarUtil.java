@@ -159,17 +159,6 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 修改日期为某个时间字段结束时间
-	 *
-	 * @param calendar  {@link Calendar}
-	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部取最大值
-	 * @return 原{@link Calendar}
-	 */
-	public static Calendar ceiling(final Calendar calendar, final DateField dateField) {
-		return DateModifier.modify(calendar, dateField.getValue(), DateModifier.ModifyType.CEILING);
-	}
-
-	/**
 	 * 修改日期为某个时间字段结束时间<br>
 	 * 可选是否归零毫秒。
 	 *
@@ -200,12 +189,13 @@ public class CalendarUtil {
 	/**
 	 * 修改秒级别的结束时间，即毫秒设置为999
 	 *
-	 * @param calendar 日期 {@link Calendar}
+	 * @param calendar            日期 {@link Calendar}
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 * @since 4.6.2
 	 */
-	public static Calendar endOfSecond(final Calendar calendar) {
-		return ceiling(calendar, DateField.SECOND);
+	public static Calendar endOfSecond(final Calendar calendar, final boolean truncateMillisecond) {
+		return ceiling(calendar, DateField.SECOND, truncateMillisecond);
 	}
 
 	/**
@@ -221,11 +211,12 @@ public class CalendarUtil {
 	/**
 	 * 修改某小时的结束时间
 	 *
-	 * @param calendar 日期 {@link Calendar}
+	 * @param calendar            日期 {@link Calendar}
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 */
-	public static Calendar endOfHour(final Calendar calendar) {
-		return ceiling(calendar, DateField.HOUR_OF_DAY);
+	public static Calendar endOfHour(final Calendar calendar, final boolean truncateMillisecond) {
+		return ceiling(calendar, DateField.HOUR_OF_DAY, truncateMillisecond);
 	}
 
 	/**
@@ -241,11 +232,12 @@ public class CalendarUtil {
 	/**
 	 * 修改某分钟的结束时间
 	 *
-	 * @param calendar 日期 {@link Calendar}
+	 * @param calendar            日期 {@link Calendar}
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 */
-	public static Calendar endOfMinute(final Calendar calendar) {
-		return ceiling(calendar, DateField.MINUTE);
+	public static Calendar endOfMinute(final Calendar calendar, final boolean truncateMillisecond) {
+		return ceiling(calendar, DateField.MINUTE, truncateMillisecond);
 	}
 
 	/**
@@ -261,11 +253,12 @@ public class CalendarUtil {
 	/**
 	 * 修改某天的结束时间
 	 *
-	 * @param calendar 日期 {@link Calendar}
+	 * @param calendar            日期 {@link Calendar}
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 */
-	public static Calendar endOfDay(final Calendar calendar) {
-		return ceiling(calendar, DateField.DAY_OF_MONTH);
+	public static Calendar endOfDay(final Calendar calendar, final boolean truncateMillisecond) {
+		return ceiling(calendar, DateField.DAY_OF_MONTH, truncateMillisecond);
 	}
 
 	/**
@@ -293,26 +286,17 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 修改某周的结束时间，周日定为一周的结束
-	 *
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar endOfWeek(final Calendar calendar) {
-		return endOfWeek(calendar, true);
-	}
-
-	/**
 	 * 修改某周的结束时间
 	 *
-	 * @param calendar          日期 {@link Calendar}
-	 * @param isSundayAsLastDay 是否周日做为一周的最后一天（false表示周六做为最后一天）
+	 * @param calendar            日期 {@link Calendar}
+	 * @param isSundayAsLastDay   是否周日做为一周的最后一天（false表示周六做为最后一天）
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 */
-	public static Calendar endOfWeek(final Calendar calendar, final boolean isSundayAsLastDay) {
+	public static Calendar endOfWeek(final Calendar calendar, final boolean isSundayAsLastDay, final boolean truncateMillisecond) {
 		calendar.setFirstDayOfWeek(isSundayAsLastDay ? Calendar.MONDAY : Calendar.SUNDAY);
 		// WEEK_OF_MONTH为上限的字段（不包括），实际调整的为DAY_OF_MONTH
-		return ceiling(calendar, DateField.WEEK_OF_MONTH);
+		return ceiling(calendar, DateField.WEEK_OF_MONTH, truncateMillisecond);
 	}
 
 	/**
@@ -328,11 +312,12 @@ public class CalendarUtil {
 	/**
 	 * 修改某月的结束时间
 	 *
-	 * @param calendar 日期 {@link Calendar}
+	 * @param calendar            日期 {@link Calendar}
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 */
-	public static Calendar endOfMonth(final Calendar calendar) {
-		return ceiling(calendar, DateField.MONTH);
+	public static Calendar endOfMonth(final Calendar calendar, final boolean truncateMillisecond) {
+		return ceiling(calendar, DateField.MONTH, truncateMillisecond);
 	}
 
 	/**
@@ -352,19 +337,20 @@ public class CalendarUtil {
 	/**
 	 * 获取某季度的结束时间
 	 *
-	 * @param calendar 日期 {@link Calendar}
+	 * @param calendar            日期 {@link Calendar}
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 * @since 4.1.0
 	 */
 	@SuppressWarnings({"MagicConstant", "ConstantConditions"})
-	public static Calendar endOfQuarter(final Calendar calendar) {
+	public static Calendar endOfQuarter(final Calendar calendar, final boolean truncateMillisecond) {
 		final int year = calendar.get(Calendar.YEAR);
 		final int month = calendar.get(DateField.MONTH.getValue()) / 3 * 3 + 2;
 
 		final Calendar resultCal = Calendar.getInstance(calendar.getTimeZone());
 		resultCal.set(year, month, Month.of(month).getLastDay(DateUtil.isLeapYear(year)));
 
-		return endOfDay(resultCal);
+		return endOfDay(resultCal, truncateMillisecond);
 	}
 
 	/**
@@ -380,11 +366,12 @@ public class CalendarUtil {
 	/**
 	 * 修改某年的结束时间
 	 *
-	 * @param calendar 日期 {@link Calendar}
+	 * @param calendar            日期 {@link Calendar}
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return {@link Calendar}
 	 */
-	public static Calendar endOfYear(final Calendar calendar) {
-		return ceiling(calendar, DateField.YEAR);
+	public static Calendar endOfYear(final Calendar calendar, final boolean truncateMillisecond) {
+		return ceiling(calendar, DateField.YEAR, truncateMillisecond);
 	}
 	// endregion
 
@@ -611,7 +598,7 @@ public class CalendarUtil {
 	 * @since 5.0.5
 	 */
 	public static LocalDateTime toLocalDateTime(final Calendar calendar) {
-		if(null == calendar){
+		if (null == calendar) {
 			return null;
 		}
 		return LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());

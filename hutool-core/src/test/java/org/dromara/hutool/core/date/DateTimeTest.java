@@ -92,7 +92,7 @@ public class DateTimeTest {
 
 		// 精确到毫秒
 		final DateTime endTime = new DateTime("2017-12-31 23:59:59.999", DatePattern.NORM_DATETIME_MS_FORMAT);
-		dateTime = DateUtil.endOfQuarter(dateTime);
+		dateTime = DateUtil.endOfQuarter(dateTime, false);
 		Assertions.assertEquals(endTime, dateTime);
 	}
 

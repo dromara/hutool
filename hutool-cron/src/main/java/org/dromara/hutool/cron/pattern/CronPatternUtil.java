@@ -50,7 +50,7 @@ public class CronPatternUtil {
 	 * @return 日期列表
 	 */
 	public static List<Date> matchedDates(final String patternStr, final Date start, final int count) {
-		return matchedDates(patternStr, start, DateUtil.endOfYear(start), count);
+		return matchedDates(patternStr, start, DateUtil.endOfYear(start, false), count);
 	}
 
 	/**

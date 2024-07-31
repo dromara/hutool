@@ -85,52 +85,52 @@ public class DateModifierTest {
 		final Date date = DateUtil.parse(dateStr);
 
 		// 毫秒
-		DateTime begin = DateUtil.ceiling(date, DateField.MILLISECOND);
+		DateTime begin = DateUtil.ceiling(date, DateField.MILLISECOND, false);
 		Assertions.assertEquals(dateStr, begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 秒
-		begin = DateUtil.ceiling(date, DateField.SECOND);
+		begin = DateUtil.ceiling(date, DateField.SECOND, false);
 		Assertions.assertEquals("2017-03-01 22:33:23.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 分
-		begin = DateUtil.ceiling(date, DateField.MINUTE);
+		begin = DateUtil.ceiling(date, DateField.MINUTE, false);
 		Assertions.assertEquals("2017-03-01 22:33:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 小时
-		begin = DateUtil.ceiling(date, DateField.HOUR);
+		begin = DateUtil.ceiling(date, DateField.HOUR, false);
 		Assertions.assertEquals("2017-03-01 22:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
-		begin = DateUtil.ceiling(date, DateField.HOUR_OF_DAY);
+		begin = DateUtil.ceiling(date, DateField.HOUR_OF_DAY, false);
 		Assertions.assertEquals("2017-03-01 22:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 上下午，原始日期是22点，上下午的结束就是23点
-		begin = DateUtil.ceiling(date, DateField.AM_PM);
+		begin = DateUtil.ceiling(date, DateField.AM_PM, false);
 		Assertions.assertEquals("2017-03-01 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 天，day of xxx按照day处理
-		begin = DateUtil.ceiling(date, DateField.DAY_OF_WEEK_IN_MONTH);
+		begin = DateUtil.ceiling(date, DateField.DAY_OF_WEEK_IN_MONTH, false);
 		Assertions.assertEquals("2017-03-01 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
-		begin = DateUtil.ceiling(date, DateField.DAY_OF_WEEK);
+		begin = DateUtil.ceiling(date, DateField.DAY_OF_WEEK, false);
 		Assertions.assertEquals("2017-03-01 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
-		begin = DateUtil.ceiling(date, DateField.DAY_OF_MONTH);
+		begin = DateUtil.ceiling(date, DateField.DAY_OF_MONTH, false);
 		Assertions.assertEquals("2017-03-01 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 星期
-		begin = DateUtil.ceiling(date, DateField.WEEK_OF_MONTH);
+		begin = DateUtil.ceiling(date, DateField.WEEK_OF_MONTH, false);
 		Assertions.assertEquals("2017-03-05 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
-		begin = DateUtil.ceiling(date, DateField.WEEK_OF_YEAR);
+		begin = DateUtil.ceiling(date, DateField.WEEK_OF_YEAR, false);
 		Assertions.assertEquals("2017-03-05 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 月
-		begin = DateUtil.ceiling(date, DateField.MONTH);
+		begin = DateUtil.ceiling(date, DateField.MONTH, false);
 		Assertions.assertEquals("2017-03-31 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		// 年
-		begin = DateUtil.ceiling(date, DateField.YEAR);
+		begin = DateUtil.ceiling(date, DateField.YEAR, false);
 		Assertions.assertEquals("2017-12-31 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 	}
 
 	@Test
-	public void roundTest(){
+	public void roundTest() {
 		// issues#I5M2I0
 		final String dateStr = "2022-08-12 14:59:21.500";
 		final Date date = DateUtil.parse(dateStr);

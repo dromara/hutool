@@ -113,14 +113,14 @@ public class DateUtilTest {
 		final Date beginOfDay = DateUtil.beginOfDay(date);
 		Assertions.assertEquals("2017-03-01 00:00:00", beginOfDay.toString());
 		// 一天的结束
-		final Date endOfDay = DateUtil.endOfDay(date);
+		final Date endOfDay = DateUtil.endOfDay(date, false);
 		Assertions.assertEquals("2017-03-01 23:59:59", endOfDay.toString());
 	}
 
 	@Test
 	public void endOfDayTest() {
 		final Date parse = DateUtil.parse("2020-05-31 00:00:00");
-		Assertions.assertEquals("2020-05-31 23:59:59", DateUtil.endOfDay(parse).toString());
+		Assertions.assertEquals("2020-05-31 23:59:59", DateUtil.endOfDay(parse, false).toString());
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class DateUtilTest {
 		final Date date2 = DateUtil.parse(dateStr2);
 
 
-		DateTime dateTime = DateUtil.ceiling(date2, DateField.MINUTE);
+		DateTime dateTime = DateUtil.ceiling(date2, DateField.MINUTE, false);
 		Assertions.assertEquals("2020-02-29 12:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		dateTime = DateUtil.ceiling(date2, DateField.MINUTE, true);
@@ -150,7 +150,7 @@ public class DateUtilTest {
 		final Date date2 = DateUtil.parse(dateStr2);
 
 
-		DateTime dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH);
+		DateTime dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH, false);
 		Assertions.assertEquals("2020-02-29 23:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 
 		dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH, true);
@@ -167,7 +167,7 @@ public class DateUtilTest {
 		final Date beginOfWeek = DateUtil.beginOfWeek(date);
 		Assertions.assertEquals("2017-02-27 00:00:00", beginOfWeek.toString());
 		// 一周的结束
-		final Date endOfWeek = DateUtil.endOfWeek(date);
+		final Date endOfWeek = DateUtil.endOfWeek(date, true, false);
 		Assertions.assertEquals("2017-03-05 23:59:59", endOfWeek.toString());
 
 		final Calendar calendar = CalendarUtil.calendar(date);
@@ -175,7 +175,7 @@ public class DateUtilTest {
 		final Calendar begin = CalendarUtil.beginOfWeek(calendar);
 		Assertions.assertEquals("2017-02-27 00:00:00", DateUtil.date(begin).toString());
 		// 一周的结束
-		final Calendar end = CalendarUtil.endOfWeek(calendar);
+		final Calendar end = CalendarUtil.endOfWeek(calendar, true, false);
 		Assertions.assertEquals("2017-03-05 23:59:59", DateUtil.date(end).toString());
 	}
 
@@ -188,7 +188,7 @@ public class DateUtilTest {
 		Assertions.assertEquals("2020-03-08 00:00:00", DateUtil.date(begin).toString());
 
 		final Calendar calendar2 = date.toCalendar();
-		final Calendar end = CalendarUtil.endOfWeek(calendar2, false);
+		final Calendar end = CalendarUtil.endOfWeek(calendar2, false, false);
 		Assertions.assertEquals("2020-03-14 23:59:59", DateUtil.date(end).toString());
 	}
 
@@ -743,14 +743,14 @@ public class DateUtilTest {
 	public void endOfYearTest() {
 		final DateTime date = DateUtil.now();
 		date.setField(DateField.YEAR, 2019);
-		final DateTime endOfYear = DateUtil.endOfYear(date);
+		final DateTime endOfYear = DateUtil.endOfYear(date, false);
 		Assertions.assertEquals("2019-12-31 23:59:59", endOfYear.toString());
 	}
 
 	@Test
 	public void endOfQuarterTest() {
 		final Date date = DateUtil.endOfQuarter(
-				DateUtil.parse("2020-05-31 00:00:00"));
+				DateUtil.parse("2020-05-31 00:00:00"), false);
 
 		Assertions.assertEquals("2020-06-30 23:59:59", DateUtil.format(date, "yyyy-MM-dd HH:mm:ss"));
 	}
@@ -762,7 +762,7 @@ public class DateUtilTest {
 
 		final DateTime startOfWeek = DateUtil.beginOfWeek(now);
 		Assertions.assertEquals("2019-09-09 00:00:00", startOfWeek.toString());
-		final DateTime endOfWeek = DateUtil.endOfWeek(now);
+		final DateTime endOfWeek = DateUtil.endOfWeek(now, true, false);
 		Assertions.assertEquals("2019-09-15 23:59:59", endOfWeek.toString());
 
 		final long between = DateUtil.between(endOfWeek, startOfWeek, DateUnit.DAY);

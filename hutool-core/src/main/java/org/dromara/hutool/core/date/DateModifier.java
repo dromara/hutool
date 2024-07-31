@@ -91,7 +91,7 @@ public class DateModifier {
 					break;
 			}
 			// 处理下一级别字段
-			return modify(calendar, dateField + 1, modifyType);
+			return modify(calendar, dateField + 1, modifyType, truncateMillisecond);
 		}
 
 		final int endField = truncateMillisecond ? Calendar.SECOND : Calendar.MILLISECOND;
