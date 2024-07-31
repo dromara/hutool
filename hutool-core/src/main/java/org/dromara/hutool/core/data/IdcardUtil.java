@@ -17,8 +17,6 @@ import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 身份证相关工具类，参考标准：GB 11643-1999<br>
@@ -33,39 +31,6 @@ import java.util.Map;
  * @since 3.0.4
  */
 public class IdcardUtil {
-
-	/**
-	 * 台湾身份首字母对应数字
-	 */
-	private static final Map<Character, Integer> TW_FIRST_CODE = new HashMap<>();
-	static {
-		TW_FIRST_CODE.put('A', 10);
-		TW_FIRST_CODE.put('B', 11);
-		TW_FIRST_CODE.put('C', 12);
-		TW_FIRST_CODE.put('D', 13);
-		TW_FIRST_CODE.put('E', 14);
-		TW_FIRST_CODE.put('F', 15);
-		TW_FIRST_CODE.put('G', 16);
-		TW_FIRST_CODE.put('H', 17);
-		TW_FIRST_CODE.put('J', 18);
-		TW_FIRST_CODE.put('K', 19);
-		TW_FIRST_CODE.put('L', 20);
-		TW_FIRST_CODE.put('M', 21);
-		TW_FIRST_CODE.put('N', 22);
-		TW_FIRST_CODE.put('P', 23);
-		TW_FIRST_CODE.put('Q', 24);
-		TW_FIRST_CODE.put('R', 25);
-		TW_FIRST_CODE.put('S', 26);
-		TW_FIRST_CODE.put('T', 27);
-		TW_FIRST_CODE.put('U', 28);
-		TW_FIRST_CODE.put('V', 29);
-		TW_FIRST_CODE.put('X', 30);
-		TW_FIRST_CODE.put('Y', 31);
-		TW_FIRST_CODE.put('W', 32);
-		TW_FIRST_CODE.put('Z', 33);
-		TW_FIRST_CODE.put('I', 34);
-		TW_FIRST_CODE.put('O', 35);
-	}
 
 	/**
 	 * 将15位身份证号码转换为18位<br>
@@ -112,8 +77,7 @@ public class IdcardUtil {
 					return false;
 				}
 			case 10: {// 10位身份证，港澳台地区
-				final String[] cardVal = isValidCard10(idCard);
-				return null != cardVal && "true".equals(cardVal[2]);
+				return isValidCard10(idCard);
 			}
 			default:
 				return false;
@@ -208,122 +172,16 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 验证10位身份编码是否合法
-	 *
-	 * @param idcard 身份编码
-	 * @return 身份证信息数组
-	 * <p>
-	 * [0] - 台湾、澳门、香港 [1] - 性别(男M,女F,未知N) [2] - 是否合法(合法true,不合法false) 若不是身份证件号码则返回null
-	 * </p>
+	 * 是否有效的10位身份证号码，一般用于判断和验证台湾、澳门、香港身份证
+	 * @param idcard 台湾、澳门、香港身份证号码
+	 * @return 是否有效的10位身份证号码
 	 */
-	public static String[] isValidCard10(final String idcard) {
-		if (StrUtil.isBlank(idcard)) {
-			return null;
-		}
-		final String[] info = new String[3];
-		final String card = idcard.replaceAll("[()]", "");
-		if (card.length() != 8 && card.length() != 9 && idcard.length() != 10) {
-			return null;
-		}
-		if (idcard.matches("^[a-zA-Z][0-9]{9}$")) { // 台湾
-			info[0] = "台湾";
-			final char char2 = idcard.charAt(1);
-			if ('1' == char2) {
-				info[1] = "M";
-			} else if ('2' == char2) {
-				info[1] = "F";
-			} else {
-				info[1] = "N";
-				info[2] = "false";
-				return info;
-			}
-			info[2] = isValidTWCard(idcard) ? "true" : "false";
-		} else if (idcard.matches("^[157][0-9]{6}\\(?[0-9A-Z]\\)?$")) { // 澳门
-			info[0] = "澳门";
-			info[1] = "N";
-			info[2] = "true";
-		} else if (idcard.matches("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$")) { // 香港
-			info[0] = "香港";
-			info[1] = "N";
-			info[2] = isValidHKCard(idcard) ? "true" : "false";
-		} else {
-			return null;
-		}
-		return info;
-	}
-
-	/**
-	 * 验证台湾身份证号码
-	 *
-	 * @param idcard 身份证号码
-	 * @return 验证码是否符合
-	 */
-	public static boolean isValidTWCard(final String idcard) {
-		if (null == idcard || idcard.length() != 10) {
+	public static boolean isValidCard10(final String idcard){
+		try{
+			return CIN10.of(idcard).isVerified();
+		}catch (final IllegalArgumentException e){
 			return false;
 		}
-		final Integer iStart = TW_FIRST_CODE.get(idcard.charAt(0));
-		if (null == iStart) {
-			return false;
-		}
-		int sum = iStart / 10 + (iStart % 10) * 9;
-
-		final String mid = idcard.substring(1, 9);
-		final char[] chars = mid.toCharArray();
-		int iflag = 8;
-		for (final char c : chars) {
-			sum += Integer.parseInt(String.valueOf(c)) * iflag;
-			iflag--;
-		}
-
-		final String end = idcard.substring(9, 10);
-		return (sum % 10 == 0 ? 0 : (10 - sum % 10)) == Integer.parseInt(end);
-	}
-
-	/**
-	 * 验证香港身份证号码(存在Bug，部份特殊身份证无法检查)
-	 * <p>
-	 * 身份证前2位为英文字符，如果只出现一个英文字符则表示第一位是空格，对应数字58 前2位英文字符A-Z分别对应数字10-35 最后一位校验码为0-9的数字加上字符"A"，"A"代表10
-	 * </p>
-	 * <p>
-	 * 将身份证号码全部转换为数字，分别对应乘9-1相加的总和，整除11则证件号码有效
-	 * </p>
-	 *
-	 * @param idcard 身份证号码
-	 * @return 验证码是否符合
-	 */
-	public static boolean isValidHKCard(final String idcard) {
-		if (StrUtil.isBlank(idcard)) {
-			return false;
-		}
-		if(false == idcard.matches("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$")){
-			return false;
-		}
-
-		String card = idcard.replaceAll("[()]", "");
-		int sum;
-		if (card.length() == 9) {
-			sum = (Character.toUpperCase(card.charAt(0)) - 55) * 9 + (Character.toUpperCase(card.charAt(1)) - 55) * 8;
-			card = card.substring(1, 9);
-		} else {
-			sum = 522 + (Character.toUpperCase(card.charAt(0)) - 55) * 8;
-		}
-
-		// 首字母A-Z，A表示1，以此类推
-		final String mid = card.substring(1, 7);
-		final String end = card.substring(7, 8);
-		final char[] chars = mid.toCharArray();
-		int iflag = 7;
-		for (final char c : chars) {
-			sum = sum + Integer.parseInt(String.valueOf(c)) * iflag;
-			iflag--;
-		}
-		if ("A".equalsIgnoreCase(end)) {
-			sum += 10;
-		} else {
-			sum += Integer.parseInt(end);
-		}
-		return sum % 11 == 0;
 	}
 
 	/**

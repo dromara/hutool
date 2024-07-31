@@ -163,20 +163,20 @@ public class IdcardUtilTest {
 	@Test
 	public void isValidHKCardIdTest(){
 		final String hkCard="P174468(6)";
-		final boolean flag=IdcardUtil.isValidHKCard(hkCard);
+		final boolean flag=IdcardUtil.isValidCard10(hkCard);
 		assertTrue(flag);
 	}
 
 	@Test
 	public void isValidTWCardIdTest() {
 		final String twCard = "B221690311";
-		boolean flag = IdcardUtil.isValidTWCard(twCard);
+		boolean flag = IdcardUtil.isValidCard10(twCard);
 		assertTrue(flag);
 		final String errTwCard1 = "M517086311";
-		flag = IdcardUtil.isValidTWCard(errTwCard1);
+		flag = IdcardUtil.isValidCard10(errTwCard1);
 		assertFalse(flag);
 		final String errTwCard2 = "B2216903112";
-		flag = IdcardUtil.isValidTWCard(errTwCard2);
+		flag = IdcardUtil.isValidCard10(errTwCard2);
 		assertFalse(flag);
 	}
 
@@ -196,8 +196,7 @@ public class IdcardUtilTest {
 	@Test
 	public void issueIAFOLITest() {
 		final String idcard = "H01487002";
-		assertFalse(IdcardUtil.isValidHKCard(idcard));
-		assertNull(IdcardUtil.isValidCard10(idcard));
+		assertFalse(IdcardUtil.isValidCard10(idcard));
 		assertFalse(IdcardUtil.isValidCard(idcard));
 	}
 }
