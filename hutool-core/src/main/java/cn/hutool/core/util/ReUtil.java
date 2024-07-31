@@ -879,7 +879,14 @@ public class ReUtil {
 		final Matcher matcher = pattern.matcher(content);
 		boolean result = matcher.find();
 		if (result) {
-			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1, new TreeSet<>(LengthComparator.INSTANCE.reversed()));
+			Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1, new TreeSet<>(LengthComparator.INSTANCE.reversed()));
+			
+			varNums = varNums.stream()
+                  		.map(Integer::parseInt)
+                	    	.sorted(Comparator.comparingInt(Integer::intValue).reversed())
+                    		.map(String::valueOf)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
+			
 			final StringBuffer sb = new StringBuffer();
 			do {
 				String replacement = replacementTemplate;
