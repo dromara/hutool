@@ -59,6 +59,7 @@ public class ZipWriter implements Closeable {
 		return new ZipWriter(out, charset);
 	}
 
+	private File zipFile;
 	private final ZipOutputStream out;
 
 	/**
@@ -75,6 +76,7 @@ public class ZipWriter implements Closeable {
 	 */
 	public ZipWriter(final File zipFile, final Charset charset) {
 		this(getZipOutputStream(zipFile, charset));
+		this.zipFile = zipFile;
 	}
 
 	/**
@@ -296,6 +298,11 @@ public class ZipWriter implements Closeable {
 				}
 			}
 		} else {
+			// issue#IAGYDG 检查加入的文件是否为压缩结果文件本身，避免死循环
+			if (FileUtil.equals(file, zipFile)) {
+				return;
+			}
+
 			// 如果是文件或其它符号，则直接压缩该文件
 			putEntry(subPath, FileUtil.getInputStream(file));
 		}
