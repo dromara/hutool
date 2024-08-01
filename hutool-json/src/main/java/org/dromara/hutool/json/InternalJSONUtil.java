@@ -181,7 +181,7 @@ public final class InternalJSONUtil {
 	 * @param string 字符串
 	 * @return 适合在JSON中显示的字符串
 	 */
-	public static String quote(final String string) {
+	public static String quote(final CharSequence string) {
 		return quote(string, true);
 	}
 
@@ -195,7 +195,7 @@ public final class InternalJSONUtil {
 	 * @return 适合在JSON中显示的字符串
 	 * @since 3.3.1
 	 */
-	public static String quote(final String string, final boolean isWrap) {
+	public static String quote(final CharSequence string, final boolean isWrap) {
 		return quote(string, new StringWriter(), isWrap).toString();
 	}
 
@@ -208,7 +208,7 @@ public final class InternalJSONUtil {
 	 * @param writer Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void quote(final String str, final Writer writer) throws IORuntimeException {
+	public static void quote(final CharSequence str, final Writer writer) throws IORuntimeException {
 		quote(str, writer, true);
 	}
 
@@ -224,7 +224,7 @@ public final class InternalJSONUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.3.1
 	 */
-	public static Writer quote(final String str, final Writer writer, final boolean isWrap) throws IORuntimeException {
+	public static Writer quote(final CharSequence str, final Writer writer, final boolean isWrap) throws IORuntimeException {
 		try {
 			return _quote(str, writer, isWrap);
 		} catch (final IOException e) {
@@ -332,7 +332,7 @@ public final class InternalJSONUtil {
 	 * @throws IOException IO异常
 	 * @since 3.3.1
 	 */
-	private static Writer _quote(final String str, final Writer writer, final boolean isWrap) throws IOException {
+	private static Writer _quote(final CharSequence str, final Writer writer, final boolean isWrap) throws IOException {
 		if (StrUtil.isEmpty(str)) {
 			if (isWrap) {
 				writer.write("\"\"");

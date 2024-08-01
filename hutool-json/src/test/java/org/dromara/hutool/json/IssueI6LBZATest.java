@@ -32,11 +32,10 @@ public class IssueI6LBZATest {
 
 	@Test
 	public void parseJSONErrorTest() {
-		Assertions.assertThrows(JSONException.class, ()->{
-			final String a = "a";
-			final Object parse = JSONUtil.parse(a);
-			Assertions.assertEquals(String.class, parse.getClass());
-		});
+		final String a = "a";
+		final Object parse = JSONUtil.parse(a);
+		Assertions.assertEquals(String.class, parse.getClass());
+		Assertions.assertEquals("\"a\"", parse);
 	}
 
 	@Test

@@ -32,13 +32,6 @@ public class JSONUtilTest {
 	@Test
 	public void parseInvalid() {
 		Assertions.assertThrows(JSONException.class, ()->{
-			JSONUtil.parse("abc");
-		});
-	}
-
-	@Test
-	public void parseInvalid2() {
-		Assertions.assertThrows(JSONException.class, ()->{
 			JSONUtil.parse("'abc");
 		});
 	}
@@ -312,13 +305,10 @@ public class JSONUtilTest {
 
 	@Test
 	public void toJsonStrOfStringTest(){
-		Assertions.assertThrows(JSONException.class, ()->{
-			final String a = "a";
+		final String a = "a";
 
-			// 普通字符串不能解析为JSON字符串，必须由双引号或者单引号包裹
-			final String s = JSONUtil.toJsonStr(a);
-			Assertions.assertEquals(a, s);
-		});
+		final String s = JSONUtil.toJsonStr(a);
+		Assertions.assertEquals("\"a\"", s);
 	}
 
 	@Test

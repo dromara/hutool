@@ -21,6 +21,7 @@ import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.convert.RegisterConverter;
 import org.dromara.hutool.core.convert.impl.*;
+import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
@@ -35,10 +36,7 @@ import org.dromara.hutool.json.serialize.JSONStringer;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.temporal.TemporalAccessor;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * JSON转换器，实现Object对象转换为{@link JSON}，支持的对象：
@@ -136,10 +134,17 @@ public class JSONConverter implements Converter, Serializable {
 	 * @throws JSONException 转换异常
 	 */
 	@SuppressWarnings("resource")
-	public Object toJSON(final Object obj) throws JSONException {
+	public Object toJSON(Object obj) throws JSONException {
 		if(null == obj){
 			return null;
 		}
+
+		if(obj instanceof Optional){
+			obj = ((Optional<?>) obj).orElse(null);
+		} else if(obj instanceof Opt){
+			obj = ((Opt<?>) obj).get();
+		}
+
 		final JSON json;
 		if (obj instanceof JSON || obj instanceof Number || obj instanceof Boolean) {
 			return obj;
@@ -159,8 +164,8 @@ public class JSONConverter implements Converter, Serializable {
 					// RFC8259，JSON字符串值、number, boolean, or null
 					final Object value = new JSONTokener(jsonStr, config).nextValue(false);
 					if(ObjUtil.equals(value, jsonStr)){
-						// 原值返回，意味着非正常数字、Boolean或null
-						throw new JSONException("Unsupported JSON String: {}", jsonStr);
+						// 非可解析的字符串，原样返回
+						return InternalJSONUtil.quote((CharSequence) value);
 					}
 					return value;
 			}
