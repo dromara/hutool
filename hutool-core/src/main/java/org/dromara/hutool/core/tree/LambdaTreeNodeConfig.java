@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
+ * Hutool is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          https://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+
 package org.dromara.hutool.core.tree;
 
 import org.dromara.hutool.core.func.LambdaUtil;
@@ -11,61 +23,111 @@ import java.util.Objects;
  * 避免对字段名称硬编码
  *
  * @author Earlman
+ * @param <T> 方法对象类型
+ * @param <R> 返回值类型
  */
-public class LambdaTreeNodeConfig<R, T> extends TreeNodeConfig {
-	private SerFunction<R, T> idKeyFun;
+public class LambdaTreeNodeConfig<T, R> extends TreeNodeConfig {
+	private static final long serialVersionUID = 1L;
 
-	private SerFunction<R, T> parentIdKeyFun;
+	private SerFunction<T, R> idKeyFun;
+	private SerFunction<T, R> parentIdKeyFun;
+	private SerFunction<T, Comparable<?>> weightKeyFun;
+	private SerFunction<T, CharSequence> nameKeyFun;
+	private SerFunction<T, List<T>> childrenKeyFun;
 
-	private SerFunction<R, Comparable<?>> weightKeyFun;
-
-	private SerFunction<R, CharSequence> nameKeyFun;
-
-	private SerFunction<R, List<R>> childrenKeyFun;
-
-	public SerFunction<R, T> getIdKeyFun() {
+	/**
+	 * 获取ID方法
+	 * @return ID方法
+	 */
+	public SerFunction<T, R> getIdKeyFun() {
 		return idKeyFun;
 	}
 
-	public void setIdKeyFun(SerFunction<R, T> idKeyFun) {
+	/**
+	 * 设置ID方法
+	 * @param idKeyFun ID方法
+	 * @return this
+	 */
+	public LambdaTreeNodeConfig<T, R> setIdKeyFun(final SerFunction<T, R> idKeyFun) {
 		this.idKeyFun = idKeyFun;
+		return this;
 	}
 
-	public SerFunction<R, T> getParentIdKeyFun() {
+	/**
+	 * 获取父ID方法
+	 * @return 父ID方法
+	 */
+	public SerFunction<T, R> getParentIdKeyFun() {
 		return parentIdKeyFun;
 	}
 
-	public void setParentIdKeyFun(SerFunction<R, T> parentIdKeyFun) {
+	/**
+	 * 设置父ID方法
+	 * @param parentIdKeyFun 父ID方法
+	 * @return this
+	 */
+	public LambdaTreeNodeConfig<T, R> setParentIdKeyFun(final SerFunction<T, R> parentIdKeyFun) {
 		this.parentIdKeyFun = parentIdKeyFun;
+		return this;
 	}
 
-	public SerFunction<R, Comparable<?>> getWeightKeyFun() {
+	/**
+	 * 设置权重方法
+	 * @return 权重方法
+	 */
+	public SerFunction<T, Comparable<?>> getWeightKeyFun() {
 		return weightKeyFun;
 	}
 
-	public void setWeightKeyFun(SerFunction<R, Comparable<?>> weightKeyFun) {
+	/**
+	 * 设置权重方法
+	 * @param weightKeyFun 权重方法
+	 * @return this
+	 */
+	public LambdaTreeNodeConfig<T, R> setWeightKeyFun(final SerFunction<T, Comparable<?>> weightKeyFun) {
 		this.weightKeyFun = weightKeyFun;
+		return this;
 	}
 
-	public SerFunction<R, CharSequence> getNameKeyFun() {
+	/**
+	 * 获取节点名称方法
+	 * @return 节点名称方法
+	 */
+	public SerFunction<T, CharSequence> getNameKeyFun() {
 		return nameKeyFun;
 	}
 
-	public void setNameKeyFun(SerFunction<R, CharSequence> nameKeyFun) {
+	/**
+	 * 设置节点名称方法
+	 * @param nameKeyFun 节点名称方法
+	 * @return this
+	 */
+	public LambdaTreeNodeConfig<T, R> setNameKeyFun(final SerFunction<T, CharSequence> nameKeyFun) {
 		this.nameKeyFun = nameKeyFun;
+		return this;
 	}
 
-	public SerFunction<R, List<R>> getChildrenKeyFun() {
+	/**
+	 * 获取子节点名称方法
+	 * @return 子节点名称方法
+	 */
+	public SerFunction<T, List<T>> getChildrenKeyFun() {
 		return childrenKeyFun;
 	}
 
-	public void setChildrenKeyFun(SerFunction<R, List<R>> childrenKeyFun) {
+	/**
+	 * 设置子节点名称方法
+	 * @param childrenKeyFun 子节点名称方法
+	 * @return this
+	 */
+	public LambdaTreeNodeConfig<T, R> setChildrenKeyFun(final SerFunction<T, List<T>> childrenKeyFun) {
 		this.childrenKeyFun = childrenKeyFun;
+		return this;
 	}
 
 	@Override
 	public String getIdKey() {
-		SerFunction<?, ?> serFunction = getIdKeyFun();
+		final SerFunction<?, ?> serFunction = getIdKeyFun();
 		if (Objects.isNull(serFunction)) {
 			return super.getIdKey();
 		}
@@ -74,7 +136,7 @@ public class LambdaTreeNodeConfig<R, T> extends TreeNodeConfig {
 
 	@Override
 	public String getParentIdKey() {
-		SerFunction<?, ?> serFunction = getParentIdKeyFun();
+		final SerFunction<?, ?> serFunction = getParentIdKeyFun();
 		if (Objects.isNull(serFunction)) {
 			return super.getParentIdKey();
 		}
@@ -83,7 +145,7 @@ public class LambdaTreeNodeConfig<R, T> extends TreeNodeConfig {
 
 	@Override
 	public String getWeightKey() {
-		SerFunction<?, ?> serFunction = getWeightKeyFun();
+		final SerFunction<?, ?> serFunction = getWeightKeyFun();
 		if (Objects.isNull(serFunction)) {
 			return super.getWeightKey();
 		}
@@ -92,7 +154,7 @@ public class LambdaTreeNodeConfig<R, T> extends TreeNodeConfig {
 
 	@Override
 	public String getNameKey() {
-		SerFunction<?, ?> serFunction = getNameKeyFun();
+		final SerFunction<?, ?> serFunction = getNameKeyFun();
 		if (Objects.isNull(serFunction)) {
 			return super.getNameKey();
 		}
@@ -101,7 +163,7 @@ public class LambdaTreeNodeConfig<R, T> extends TreeNodeConfig {
 
 	@Override
 	public String getChildrenKey() {
-		SerFunction<?, ?> serFunction = getChildrenKeyFun();
+		final SerFunction<?, ?> serFunction = getChildrenKeyFun();
 		if (Objects.isNull(serFunction)) {
 			return super.getChildrenKey();
 		}

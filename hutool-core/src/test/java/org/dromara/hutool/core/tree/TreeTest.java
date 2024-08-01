@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.tree;
 
+import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.tree.parser.DefaultNodeParser;
@@ -145,10 +146,13 @@ public class TreeTest {
 		Assertions.assertEquals(7, ids2.size());
 	}
 
+	/**
+	 * https://gitee.com/dromara/hutool/pulls/1248/
+	 */
 	@Test
 	public void lambdaConfigTest() {
 		// 配置自定义属性名 为null则取默认值
-		LambdaTreeNodeConfig<CustomTreeNode, String> treeNodeConfig = new LambdaTreeNodeConfig<>();
+		final LambdaTreeNodeConfig<CustomTreeNode, String> treeNodeConfig = new LambdaTreeNodeConfig<>();
 		treeNodeConfig.setChildrenKeyFun(CustomTreeNode::getChildrenNodes);
 		treeNodeConfig.setIdKeyFun(CustomTreeNode::getNodeId);
 		treeNodeConfig.setNameKeyFun(CustomTreeNode::getLabel);
@@ -157,9 +161,9 @@ public class TreeTest {
 		// 最大递归深度
 		treeNodeConfig.setDeep(3);
 
-		List<MapTree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig, new DefaultNodeParser<>());
+		final List<MapTree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig, new DefaultNodeParser<>());
 		Assertions.assertEquals(treeNodes.size(), 2);
-		MapTree<String> treeNode1 = treeNodes.get(1);
+		final MapTree<String> treeNode1 = treeNodes.get(1);
 		Assertions.assertNotNull(treeNode1);
 		Assertions.assertNotNull(treeNode1.getConfig());
 		Assertions.assertEquals(treeNode1.getChildren().size(), 1);
@@ -170,7 +174,8 @@ public class TreeTest {
 	 *
 	 * @author Earlman
 	 */
-	private class CustomTreeNode {
+	@Data
+	static class CustomTreeNode {
 		// 主键ID
 		private String nodeId;
 		// 节点名称
@@ -181,45 +186,5 @@ public class TreeTest {
 		private Integer sortNo;
 		// 子节点
 		private List<CustomTreeNode> childrenNodes;
-
-		public String getNodeId() {
-			return nodeId;
-		}
-
-		public void setNodeId(String nodeId) {
-			this.nodeId = nodeId;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public void setLabel(String label) {
-			this.label = label;
-		}
-
-		public String getParentNodeId() {
-			return parentNodeId;
-		}
-
-		public void setParentNodeId(String parentNodeId) {
-			this.parentNodeId = parentNodeId;
-		}
-
-		public Integer getSortNo() {
-			return sortNo;
-		}
-
-		public void setSortNo(Integer sortNo) {
-			this.sortNo = sortNo;
-		}
-
-		public List<CustomTreeNode> getChildrenNodes() {
-			return childrenNodes;
-		}
-
-		public void setChildrenNodes(List<CustomTreeNode> childrenNodes) {
-			this.childrenNodes = childrenNodes;
-		}
 	}
 }
