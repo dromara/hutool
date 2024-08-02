@@ -26,7 +26,6 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONStringer;
@@ -48,25 +47,6 @@ import java.util.function.Predicate;
 public final class InternalJSONUtil {
 
 	private InternalJSONUtil() {
-	}
-
-	/**
-	 * 在需要的时候包装对象<br>
-	 * 包装包括：
-	 * <ul>
-	 * <li>array or collection =》 JSONArray</li>
-	 * <li>map =》 JSONObject</li>
-	 * <li>standard property (Double, String, et al) =》 原对象</li>
-	 * <li>来自于java包 =》 字符串</li>
-	 * <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
-	 * </ul>
-	 *
-	 * @param object     被包装的对象
-	 * @param jsonConfig JSON选项
-	 * @return 包装后的值，null表示此值需被忽略
-	 */
-	static Object wrap(final Object object, final JSONConfig jsonConfig) {
-		return JSONValueMapper.of(jsonConfig).map(object);
 	}
 
 	/**

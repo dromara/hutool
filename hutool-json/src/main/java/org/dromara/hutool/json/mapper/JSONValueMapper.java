@@ -128,6 +128,7 @@ public class JSONValueMapper {
 	public Object map(final Object object) {
 		// null、JSON、字符串和自定义对象原样存储
 		if (null == object
+			// 当用户自定义了对象的字符串表示形式，则保留这个对象
 			|| null != InternalJSONUtil.getValueWriter(object)
 			|| object instanceof JSON //
 			|| object instanceof JSONStringer //

@@ -22,6 +22,7 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.mapper.JSONObjectMapper;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
@@ -55,6 +56,10 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * 配置项
 	 */
 	private JSONConfig config;
+	/**
+	 * 对象转换和包装，用于将Java对象和值转换为JSON值
+	 */
+	private JSONValueMapper valueMapper;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 
@@ -85,6 +90,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	public JSONObject(final int capacity, final JSONConfig config) {
 		super(InternalJSONUtil.createRawMap(capacity, ObjUtil.defaultIfNull(config, JSONConfig.of())));
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig.of());
+		this.valueMapper = JSONValueMapper.of(this.config);
 	}
 
 	/**
@@ -440,6 +446,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	public JSONObject clone() throws CloneNotSupportedException {
 		final JSONObject clone = (JSONObject) super.clone();
 		clone.config = this.config;
+		clone.valueMapper = this.valueMapper;
 		return clone;
 	}
 
@@ -479,6 +486,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		} else if (checkDuplicate && containsKey(key)) {
 			throw new JSONException("Duplicate key \"{}\"", key);
 		}
-		return super.put(key, InternalJSONUtil.wrap(value, this.config));
+		return super.put(key, this.valueMapper.map(value));
 	}
 }

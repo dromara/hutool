@@ -22,6 +22,7 @@ import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.text.StrJoiner;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.mapper.JSONArrayMapper;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
@@ -55,7 +56,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	/**
 	 * 配置项
 	 */
-	private final JSONConfig config;
+	private JSONConfig config;
+	/**
+	 * 对象转换和包装，用于将Java对象和值转换为JSON值
+	 */
+	private JSONValueMapper valueMapper;
 
 	// region Constructors
 
@@ -100,6 +105,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	public JSONArray(final int initialCapacity, final JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
+		this.valueMapper = JSONValueMapper.of(this.config);
 	}
 
 	/**
@@ -337,7 +343,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return 是否加入成功
 	 */
 	public boolean add(final Object e, final Predicate<Mutable<Object>> predicate) {
-		return addRaw(InternalJSONUtil.wrap(e, this.config), predicate);
+		return addRaw(valueMapper.map(e), predicate);
 	}
 
 	@Override
@@ -378,7 +384,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 				continue;
 			}
 			this.add(index);
-			list.add(InternalJSONUtil.wrap(object, this.config));
+			list.add(valueMapper.map(object));
 		}
 		return rawList.addAll(index, list);
 	}
@@ -438,7 +444,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		if (null == element && config.isIgnoreNullValue()) {
 			return null;
 		}
-		return this.rawList.set(index, InternalJSONUtil.wrap(element, this.config));
+		return this.rawList.set(index, valueMapper.map(element));
 	}
 
 	@Override
@@ -450,7 +456,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			if (index < 0) {
 				index = 0;
 			}
-			this.rawList.add(index, InternalJSONUtil.wrap(element, this.config));
+			this.rawList.add(index, valueMapper.map(element));
 		} else {
 			// issue#3286, 如果用户指定的index太大，容易造成Java heap space错误。
 			if (!config.isIgnoreNullValue()) {
@@ -552,6 +558,8 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		final JSONArray clone = (JSONArray) super.clone();
+		clone.config = this.config;
+		clone.valueMapper = this.valueMapper;
 		clone.rawList = ObjUtil.clone(this.rawList);
 		return clone;
 	}
