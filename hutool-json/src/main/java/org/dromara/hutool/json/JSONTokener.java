@@ -15,7 +15,6 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.ReaderWrapper;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.mapper.JSONValueMapper;
 
 import java.io.IOException;
