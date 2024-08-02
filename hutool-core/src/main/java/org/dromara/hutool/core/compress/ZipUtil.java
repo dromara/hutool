@@ -137,6 +137,7 @@ public class ZipUtil {
 		}
 	}
 
+	// region ----- zip
 	/**
 	 * 打包到当前目录，使用默认编码UTF-8
 	 *
@@ -428,7 +429,9 @@ public class ZipUtil {
 		return zipFile;
 	}
 
-	// ---------------------------------------------------------------------------------------------- Unzip
+	// endregion
+
+	// region ----- unzip
 
 	/**
 	 * 解压到文件名相同的目录中，默认编码UTF-8
@@ -580,6 +583,47 @@ public class ZipUtil {
 	}
 
 	/**
+	 * 解压<br>
+	 * ZIP条目不使用高速缓冲。
+	 *
+	 * @param in      zip文件流，使用完毕自动关闭
+	 * @param outFile 解压到的目录
+	 * @param charset 编码
+	 * @return 解压的目录
+	 * @throws HutoolException IO异常
+	 * @since 4.5.8
+	 */
+	public static File unzip(final InputStream in, final File outFile, Charset charset) throws HutoolException {
+		if (null == charset) {
+			charset = DEFAULT_CHARSET;
+		}
+
+		return unzip(new ZipInputStream(in, charset), outFile);
+	}
+
+	/**
+	 * 解压<br>
+	 * ZIP条目不使用高速缓冲。
+	 *
+	 * @param zipStream zip文件流，包含编码信息
+	 * @param outFile   解压到的目录
+	 * @return 解压的目录
+	 * @throws HutoolException IO异常
+	 * @since 4.5.8
+	 */
+	public static File unzip(final ZipInputStream zipStream, final File outFile) throws HutoolException {
+		try (final ZipReader reader = new ZipReader(zipStream)) {
+			reader.readTo(outFile);
+		}
+		return outFile;
+	}
+
+
+	// endregion
+
+	// region ----- get and read
+
+	/**
 	 * 获取压缩包中的指定文件流
 	 *
 	 * @param zipFile 压缩文件
@@ -622,41 +666,6 @@ public class ZipUtil {
 	}
 
 	/**
-	 * 解压<br>
-	 * ZIP条目不使用高速缓冲。
-	 *
-	 * @param in      zip文件流，使用完毕自动关闭
-	 * @param outFile 解压到的目录
-	 * @param charset 编码
-	 * @return 解压的目录
-	 * @throws HutoolException IO异常
-	 * @since 4.5.8
-	 */
-	public static File unzip(final InputStream in, final File outFile, Charset charset) throws HutoolException {
-		if (null == charset) {
-			charset = DEFAULT_CHARSET;
-		}
-		return unzip(new ZipInputStream(in, charset), outFile);
-	}
-
-	/**
-	 * 解压<br>
-	 * ZIP条目不使用高速缓冲。
-	 *
-	 * @param zipStream zip文件流，包含编码信息
-	 * @param outFile   解压到的目录
-	 * @return 解压的目录
-	 * @throws HutoolException IO异常
-	 * @since 4.5.8
-	 */
-	public static File unzip(final ZipInputStream zipStream, final File outFile) throws HutoolException {
-		try (final ZipReader reader = new ZipReader(zipStream)) {
-			reader.readTo(outFile);
-		}
-		return outFile;
-	}
-
-	/**
 	 * 读取并处理Zip流中的每一个{@link ZipEntry}
 	 *
 	 * @param zipStream zip文件流，包含编码信息
@@ -668,6 +677,10 @@ public class ZipUtil {
 			reader.read(consumer);
 		}
 	}
+
+	// endregion
+
+	// region ----- unzipFileBytes
 
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
@@ -721,7 +734,9 @@ public class ZipUtil {
 		}
 	}
 
-	// ----------------------------------------------------------------------------- Gzip
+	// endregion
+
+	// region ----- gzip
 
 	/**
 	 * Gzip压缩处理
@@ -790,6 +805,10 @@ public class ZipUtil {
 		return bos.toByteArray();
 	}
 
+	// endregion
+
+	// region ----- unGzip
+
 	/**
 	 * Gzip解压缩处理
 	 *
@@ -839,7 +858,9 @@ public class ZipUtil {
 		return bos.toByteArray();
 	}
 
-	// ----------------------------------------------------------------------------- Zlib
+	// endregion
+
+	// region ----- zlib
 
 	/**
 	 * Zlib压缩处理
@@ -911,6 +932,10 @@ public class ZipUtil {
 		return out.toByteArray();
 	}
 
+	// endregion
+
+	// region ----- unZlib
+
 	/**
 	 * Zlib解压缩处理
 	 *
@@ -958,6 +983,8 @@ public class ZipUtil {
 		Deflate.of(in, out, false).inflater();
 		return out.toByteArray();
 	}
+
+	// endregion
 
 	/**
 	 * 获取Zip文件中指定目录下的所有文件，只显示文件，不显示目录<br>

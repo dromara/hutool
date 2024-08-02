@@ -15,7 +15,6 @@ package org.dromara.hutool.core.bean;
 import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.reflect.*;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 
@@ -180,12 +179,9 @@ public class PropDesc {
 	 */
 	public Object getValue(final Object bean) {
 		if (null != this.getter) {
-			try{
-				return LambdaUtil.buildGetter(this.getter).apply(bean);
-			} catch (final Exception ignore){
-				// issue#I96JIP，在jdk14+多模块项目中，存在权限问题，使用传统反射
-				return MethodUtil.invoke(bean, this.getter);
-			}
+			// issue#3671 JDK15+ 修改了lambda的策略，动态生成后在metaspace不会释放，导致资源占用高
+			//return LambdaUtil.buildGetter(this.getter).apply(bean);
+			return MethodUtil.invoke(bean, this.getter);
 		} else if (ModifierUtil.isPublic(this.field)) {
 			return FieldUtil.getFieldValue(bean, this.field);
 		}
