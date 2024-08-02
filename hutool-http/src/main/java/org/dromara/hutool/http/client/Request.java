@@ -348,11 +348,7 @@ public class Request implements HeaderOperation<Request> {
 	public Request form(final Map<String, Object> formMap) {
 		final AtomicBoolean isMultiPart = new AtomicBoolean(false);
 		formMap.forEach((key, value) -> {
-			if (value instanceof File ||
-				value instanceof Path ||
-				value instanceof Resource ||
-				value instanceof InputStream ||
-				value instanceof Reader) {
+			if (hasMultipartValue(value)) {
 				isMultiPart.set(true);
 			}
 		});
@@ -469,5 +465,26 @@ public class Request implements HeaderOperation<Request> {
 	@Override
 	public String toString() {
 		return HttpUtil.toString(this);
+	}
+
+	/**
+	 * 检查form表单中的对象是否为Multipart对象
+	 * @param value 对象
+	 * @return 是否为Multipart对象
+	 */
+	private static boolean hasMultipartValue(final Object value){
+		if(value instanceof Iterable){
+			for (final Object subValue : (Iterable<?>) value) {
+				if(hasMultipartValue(subValue)){
+					return true;
+				}
+			}
+		}
+
+		return value instanceof File ||
+			value instanceof Path ||
+			value instanceof Resource ||
+			value instanceof InputStream ||
+			value instanceof Reader;
 	}
 }
