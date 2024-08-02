@@ -118,8 +118,8 @@ public class MultiStrFinder {
 	 * @return
 	 */
 	public Map<String,List<Integer>> findMatch(String text){
-		HashMap<String, List<Integer>> resultMap = new HashMap<>();
 		/* 节点经过次数 放在方法内部声明变量 希望可以一个构建对象 进行多次匹配 */
+		HashMap<String, List<Integer>> resultMap = new HashMap<>();
 
 		char[] chars = text.toCharArray();
 		Node currentNode = root;
