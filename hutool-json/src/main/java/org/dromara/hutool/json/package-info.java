@@ -20,7 +20,7 @@
  *
  * <pre>{@code
  *               <--JSONConverter--              <---JSONParser----
- *     Java对象  <----------------->   JSON对象   <----------------->    JSON字符串
+ *     Java对象  <=================>   JSON对象   <=================>    JSON字符串
  *               ------mapper----->              ---JSONWriter---->
  * }</pre>
  *
