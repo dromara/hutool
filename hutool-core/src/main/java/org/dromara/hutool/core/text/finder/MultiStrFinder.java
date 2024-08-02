@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  * 多字符串查询器 底层思路 使用 AC 自动机实现
- * @author cmm
+ * @author newshiJ
  * @date 2024/8/2 上午10:07
  */
 public class MultiStrFinder {
@@ -27,7 +27,7 @@ public class MultiStrFinder {
 	 * 构建多字符串查询器
 	 * @param source
 	 */
-	protected MultiStrFinder(Collection<String> source){
+	public MultiStrFinder(Collection<String> source){
 		/** 待匹配的字符串 **/
 		final Set<String> stringSst = new HashSet<>();
 
@@ -131,7 +131,7 @@ public class MultiStrFinder {
 				currentNode = root;
 				continue;
 			}
-			/* 进入下一跳 可能是正常吓一跳 也可能是fail加上后的 下一跳 */
+			/* 进入下一跳 可能是正常下一跳 也可能是fail加上后的 下一跳 */
 			currentNode = currentNode.directRouter[index];
 			/* 判断是否尾部节点 是尾节点 说明已经匹配到了完整的字符串 将匹配结果写入返回对象 */
 			if(currentNode.isEnd){
