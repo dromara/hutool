@@ -15,7 +15,6 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.ReaderWrapper;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.json.mapper.JSONValueMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -393,7 +392,7 @@ public class JSONTokener extends ReaderWrapper {
 		if (valueString.isEmpty()) {
 			throw this.syntaxError("Missing value");
 		}
-		return getOnlyStringValue ? valueString : JSONValueMapper.toJsonValue(valueString);
+		return getOnlyStringValue ? valueString : InternalJSONUtil.parseValueFromString(valueString);
 	}
 
 	/**

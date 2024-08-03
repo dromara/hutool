@@ -13,7 +13,6 @@
 package org.dromara.hutool.json.mapper;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONArray;
@@ -21,8 +20,6 @@ import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.serialize.JSONStringer;
 import org.dromara.hutool.json.writer.GlobalValueWriters;
-
-import java.math.BigDecimal;
 
 /**
  * 对象和JSON值映射器，用于转换对象为JSON对象中的值<br>
@@ -49,52 +46,6 @@ public class JSONValueMapper {
 	 */
 	public static JSONValueMapper of(final JSONConfig jsonConfig) {
 		return new JSONValueMapper(jsonConfig);
-	}
-
-	/**
-	 * 尝试转换字符串为number, boolean, or null，无法转换返回String<br>
-	 * 此方法用于解析JSON字符串时，将字符串中的值转换为JSON值对象
-	 *
-	 * @param string A String.
-	 * @return A simple JSON value.
-	 */
-	public static Object toJsonValue(final String string) {
-		// null处理
-		if (StrUtil.isEmpty(string) || StrUtil.NULL.equalsIgnoreCase(string)) {
-			return null;
-		}
-
-		// boolean处理
-		if ("true".equalsIgnoreCase(string)) {
-			return Boolean.TRUE;
-		}
-		if ("false".equalsIgnoreCase(string)) {
-			return Boolean.FALSE;
-		}
-
-		// Number处理
-		final char b = string.charAt(0);
-		if ((b >= '0' && b <= '9') || b == '-') {
-			try {
-				if (StrUtil.containsAnyIgnoreCase(string, ".", "e")) {
-					// pr#192@Gitee，Double会出现小数精度丢失问题，此处使用BigDecimal
-					return new BigDecimal(string);
-				} else {
-					final long myLong = Long.parseLong(string);
-					if (string.equals(Long.toString(myLong))) {
-						if (myLong == (int) myLong) {
-							return (int) myLong;
-						} else {
-							return myLong;
-						}
-					}
-				}
-			} catch (final Exception ignore) {
-			}
-		}
-
-		// 其它情况返回原String值下
-		return string;
 	}
 
 	private final JSONConfig jsonConfig;

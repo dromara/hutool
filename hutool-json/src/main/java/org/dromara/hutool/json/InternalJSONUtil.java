@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -44,7 +45,50 @@ import java.util.function.Predicate;
  */
 public final class InternalJSONUtil {
 
-	private InternalJSONUtil() {
+	/**
+	 * 尝试转换字符串为number, boolean, or null，无法转换返回String<br>
+	 * 此方法用于解析JSON字符串时，将字符串中的值转换为JSON值对象
+	 *
+	 * @param string A String.
+	 * @return A simple JSON value.
+	 */
+	public static Object parseValueFromString(final String string) {
+		// null处理
+		if (StrUtil.isEmpty(string) || StrUtil.NULL.equalsIgnoreCase(string)) {
+			return null;
+		}
+
+		// boolean处理
+		if ("true".equalsIgnoreCase(string)) {
+			return Boolean.TRUE;
+		}
+		if ("false".equalsIgnoreCase(string)) {
+			return Boolean.FALSE;
+		}
+
+		// Number处理
+		final char b = string.charAt(0);
+		if ((b >= '0' && b <= '9') || b == '-') {
+			try {
+				if (StrUtil.containsAnyIgnoreCase(string, ".", "e")) {
+					// pr#192@Gitee，Double会出现小数精度丢失问题，此处使用BigDecimal
+					return new BigDecimal(string);
+				} else {
+					final long myLong = Long.parseLong(string);
+					if (string.equals(Long.toString(myLong))) {
+						if (myLong == (int) myLong) {
+							return (int) myLong;
+						} else {
+							return myLong;
+						}
+					}
+				}
+			} catch (final Exception ignore) {
+			}
+		}
+
+		// 其它情况返回原String值下
+		return string;
 	}
 
 	/**

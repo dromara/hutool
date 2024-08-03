@@ -16,9 +16,9 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.xml.XmlConstants;
+import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.mapper.JSONValueMapper;
 
 import java.util.function.Predicate;
 
@@ -168,7 +168,7 @@ public class JSONXMLParser {
 						if (!(token instanceof String)) {
 							throw x.syntaxError("Missing value");
 						}
-						jsonobject.append(string, keepStrings ? token : JSONValueMapper.toJsonValue((String) token));
+						jsonobject.append(string, keepStrings ? token : InternalJSONUtil.parseValueFromString((String) token));
 						token = null;
 					} else {
 						jsonobject.append(string, "");
@@ -198,7 +198,7 @@ public class JSONXMLParser {
 						} else if (token instanceof String) {
 							string = (String) token;
 							if (!string.isEmpty()) {
-								jsonobject.append("content", keepStrings ? token : JSONValueMapper.toJsonValue(string));
+								jsonobject.append("content", keepStrings ? token : InternalJSONUtil.parseValueFromString(string));
 							}
 
 						} else if (token == XmlConstants.C_LT) {
