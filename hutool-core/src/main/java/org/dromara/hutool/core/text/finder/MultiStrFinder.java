@@ -9,18 +9,16 @@ import java.util.*;
  */
 public class MultiStrFinder {
 
-	/** 字符索引 **/
+	// 字符索引
 	protected final Map<Character,Integer> charIndex = new HashMap<>();
 
-	/** 全部字符数量 **/
+	// 全部字符数量
 	protected final int allCharSize;
 
-	/** 根节点 **/
+	// 根节点
 	protected final Node root;
 
-	/**
-	 * 全部节点数量
-	 */
+	// 全部节点数量
 	int nodeSize;
 
 	/**
@@ -28,13 +26,13 @@ public class MultiStrFinder {
 	 * @param source
 	 */
 	public MultiStrFinder(Collection<String> source){
-		/** 待匹配的字符串 **/
-		final Set<String> stringSst = new HashSet<>();
+		// 待匹配的字符串
+		final Set<String> stringSet = new HashSet<>();
 
-		/** 所有字符 **/
+		// 所有字符
 		final Set<Character> charSet = new HashSet<>();
 		for (String string : source) {
-			stringSst.add(string);
+			stringSet.add(string);
 			char[] charArray = string.toCharArray();
 			for (char c : charArray) {
 				charSet.add(c);
@@ -49,7 +47,7 @@ public class MultiStrFinder {
 
 		root = Node.createRoot(allCharSize);
 
-		buildPrefixTree(stringSst);
+		buildPrefixTree(stringSet);
 		buildFail();
 	}
 
@@ -58,7 +56,7 @@ public class MultiStrFinder {
 	 * @param stringSst 待匹配的字符串
 	 */
 	protected void buildPrefixTree(Collection<String> stringSst){
-		/** 节点编号 根节点已经是0了 所以从 1开始编号 **/
+		// 节点编号 根节点已经是0了 所以从 1开始编号
 		int nodeIndex = 1;
 		for (String string : stringSst) {
 			Node node = root;
@@ -92,15 +90,13 @@ public class MultiStrFinder {
 			nodeQueue.addLast(nextNode);
 		}
 
-		/* 进行广度优先遍历 **/
+		// 进行广度优先遍历
 		while (!nodeQueue.isEmpty()){
 			Node parent = nodeQueue.removeFirst();
-			/**
-			 * 因为 使用了 charIndex 进行字符到下标的映射 i 可以直接认为就是对应字符 char
-			 */
+			// 因为 使用了 charIndex 进行字符到下标的映射 i 可以直接认为就是对应字符 char
 			for (int i = 0; i < parent.directRouter.length; i++) {
 				Node child = parent.directRouter[i];
-				/* child 为 null 表示没有子节点 **/
+				// child 为 null 表示没有子节点
 				if(child == null){
 					parent.directRouter[i] = parent.fail.directRouter[i];
 					continue;
@@ -118,7 +114,7 @@ public class MultiStrFinder {
 	 * @return
 	 */
 	public Map<String,List<Integer>> findMatch(String text){
-		/* 节点经过次数 放在方法内部声明变量 希望可以一个构建对象 进行多次匹配 */
+		// 节点经过次数 放在方法内部声明变量 希望可以一个构建对象 进行多次匹配
 		HashMap<String, List<Integer>> resultMap = new HashMap<>();
 
 		char[] chars = text.toCharArray();
@@ -126,14 +122,14 @@ public class MultiStrFinder {
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
 			Integer index = charIndex.get(c);
-			/* 找不到字符索引 认为一定不在匹配字符中存在 直接从根节点开始重新计算 */
+			// 找不到字符索引 认为一定不在匹配字符中存在 直接从根节点开始重新计算
 			if(index == null){
 				currentNode = root;
 				continue;
 			}
-			/* 进入下一跳 可能是正常下一跳 也可能是fail加上后的 下一跳 */
+			// 进入下一跳 可能是正常下一跳 也可能是fail加上后的 下一跳
 			currentNode = currentNode.directRouter[index];
-			/* 判断是否尾部节点 是尾节点 说明已经匹配到了完整的字符串 将匹配结果写入返回对象 */
+			// 判断是否尾部节点 是尾节点 说明已经匹配到了完整的字符串 将匹配结果写入返回对象
 			if(currentNode.isEnd){
 				resultMap.computeIfAbsent(currentNode.tagetString, k -> new ArrayList<>())
 					.add(i - currentNode.tagetString.length() + 1);
@@ -167,15 +163,13 @@ public class MultiStrFinder {
 	 * AC 自动机节点
 	 */
 	protected static class Node {
-		/** 是否是字符串 尾节点 **/
+		// 是否是字符串 尾节点
 		public boolean isEnd = false;
 
-		/** 如果当前节点是尾节点 那么表示 匹配到的字符串 	其他情况下 null **/
+		// 如果当前节点是尾节点 那么表示 匹配到的字符串 	其他情况下 null
 		public String tagetString;
 
-		/**
-		 * 失效节点
-		 */
+		//失效节点
 		public Node fail;
 
 		/**
@@ -186,13 +180,13 @@ public class MultiStrFinder {
 		 */
 		public Node[] directRouter;
 
-		/** 节点编号 root 为 0 **/
+		// 节点编号 root 为 0
 		public int nodeIndex;
 
-		/** 值 **/
+		// 值
 		public char value;
 
-		/** fail指针来源 **/
+		// fail指针来源
 		public List<Node> failPre = new ArrayList<>();
 
 		public Node(){}
@@ -229,8 +223,8 @@ public class MultiStrFinder {
 
 		/**
 		 * 获取下一跳
-		 * @param c
-		 * @param charIndex
+		 * @param c 字符
+		 * @param charIndex 字符索引
 		 * @return
 		 */
 		public Node getNext(char c,Map<Character,Integer> charIndex){
@@ -243,7 +237,7 @@ public class MultiStrFinder {
 
 		/**
 		 * 构建根节点
-		 * @param allCharSize
+		 * @param allCharSize 全部字符数量
 		 * @return
 		 */
 		public static Node createRoot(int allCharSize){
