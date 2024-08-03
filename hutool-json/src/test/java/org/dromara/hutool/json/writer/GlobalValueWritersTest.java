@@ -20,12 +20,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GlobalValueWriterMappingTest {
+public class GlobalValueWritersTest {
 
 	@BeforeEach
 	public void init(){
-		GlobalValueWriterMapping.put(CustomSubBean.class,
-				(JSONValueWriter<CustomSubBean>) (writer, value) -> writer.writeRaw(String.valueOf(value.getId())));
+		GlobalValueWriters.add(new JSONValueWriter() {
+			@Override
+			public void write(final JSONWriter writer, final Object value) {
+				writer.writeRaw(String.valueOf(((CustomSubBean)value).getId()));
+			}
+
+			@Override
+			public boolean test(final Object value) {
+				return value instanceof CustomSubBean;
+			}
+		});
 	}
 
 	@Test

@@ -14,19 +14,15 @@ package org.dromara.hutool.json.writer;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
-import org.dromara.hutool.json.serialize.JSONStringer;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.function.Predicate;
 
 /**
@@ -311,30 +307,22 @@ public class JSONWriter extends Writer {
 	 * @param predicate 过滤修改器
 	 * @return this
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings("resource")
 	private JSONWriter writeObjValue(final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
 		final int indent = indentFactor + this.indent;
 
 		// 自定义规则
-		final JSONValueWriter valueWriter = InternalJSONUtil.getValueWriter(value);
+		final JSONValueWriter valueWriter = GlobalValueWriters.get(value);
 		if(null != valueWriter){
 			valueWriter.write(this, value);
 			return this;
 		}
 
+		// 默认规则
 		if (value == null) {
-			//noinspection resource
 			writeRaw(StrUtil.NULL);
 		}else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent, predicate);
-		} else if (value instanceof Number) {
-			NumberValueWriter.INSTANCE.write(this, (Number) value);
-		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
-			DateValueWriter.INSTANCE.write(this, value);
-		} else if (value instanceof Boolean) {
-			BooleanValueWriter.INSTANCE.write(this, (Boolean) value);
-		} else if (value instanceof JSONStringer) {
-			JSONStringValueWriter.INSTANCE.write(this, (JSONStringer) value);
 		} else {
 			writeQuoteStrValue(value.toString());
 		}

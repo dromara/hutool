@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.lang.Console;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,6 @@ public class Issue2090Test {
 		test.setLocalDate(LocalDate.now());
 
 		final JSONObject json = JSONUtil.parseObj(test);
-		Console.log(json);
 		final TestBean test1 = json.toBean(TestBean.class);
 		Assertions.assertEquals(test, test1);
 	}

@@ -25,7 +25,7 @@ public enum NumberWriteMode {
 	 */
 	NORMAL,
 	/**
-	 * 浏览器中Javascript兼容模式，此模式下，如果Long输出长度大于
+	 * 浏览器中Javascript兼容模式，此模式下，如果Long输出长度大于JS中最大长度，则转为字符串形式
 	 */
 	JS,
 	/**

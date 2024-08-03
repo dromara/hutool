@@ -337,8 +337,8 @@ public class JSONObjectTest {
 		bean.setTestEnum(TestEnum.TYPE_B);
 
 		final JSONObject json = JSONUtil.parseObj(bean, false);
-		// 枚举转换检查
-		Assertions.assertEquals("TYPE_B", json.get("testEnum"));
+		// 枚举转换检查，更新：枚举原样保存，在writer时调用toString。
+		Assertions.assertEquals(TestEnum.TYPE_B, json.get("testEnum"));
 
 		final TestBean bean2 = json.toBean(TestBean.class);
 		Assertions.assertEquals(bean.toString(), bean2.toString());

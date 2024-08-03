@@ -18,14 +18,19 @@ package org.dromara.hutool.json.writer;
  * @author looly
  * @since 6.0.0
  */
-public class BooleanValueWriter implements JSONValueWriter<Boolean> {
+public class BooleanValueWriter implements JSONValueWriter {
 	/**
 	 * 单例对象
 	 */
 	public static final BooleanValueWriter INSTANCE = new BooleanValueWriter();
 
 	@Override
-	public void write(final JSONWriter writer, final Boolean bool) {
+	public boolean test(final Object bool) {
+		return bool instanceof Boolean;
+	}
+
+	@Override
+	public void write(final JSONWriter writer, final Object bool) {
 		writer.writeRaw(bool.toString());
 	}
 }

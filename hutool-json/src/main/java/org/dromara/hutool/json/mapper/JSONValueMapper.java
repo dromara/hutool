@@ -13,19 +13,16 @@
 package org.dromara.hutool.json.mapper;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONArray;
+import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.serialize.JSONStringer;
+import org.dromara.hutool.json.writer.GlobalValueWriters;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * 对象和JSON值映射器，用于转换对象为JSON对象中的值<br>
@@ -129,7 +126,7 @@ public class JSONValueMapper {
 		// null、JSON、字符串和自定义对象原样存储
 		if (null == object
 			// 当用户自定义了对象的字符串表示形式，则保留这个对象
-			|| null != InternalJSONUtil.getValueWriter(object)
+			|| null != GlobalValueWriters.get(object)
 			|| object instanceof JSON //
 			|| object instanceof JSONStringer //
 			|| object instanceof CharSequence //
@@ -138,52 +135,11 @@ public class JSONValueMapper {
 			return object;
 		}
 
-		// 合法数字原样存储
-		if(object instanceof Number){
-			if(!NumberUtil.isValidNumber((Number) object)){
-				throw new JSONException("JSON does not allow non-finite numbers.");
-			}
-			return object;
-		}
-
-		// 日期类型做包装，以便自定义输出格式
-		if (object instanceof Date
-			|| object instanceof Calendar
-			|| object instanceof TemporalAccessor
-		) {
-			// 日期类型保存原始类型，用于在writer时自定义转字符串
-			return object;
-		}
-
 		// 特定对象转换
 		try {
-			// fix issue#1399@Github
-			if (object instanceof SQLException
-			) {
-				return object.toString();
-			}
-
 			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
 				return new JSONArray(object, jsonConfig);
-			}
-			// JSONObject
-			if (object instanceof Map || object instanceof Map.Entry) {
-				return new JSONObject(object, jsonConfig);
-			}
-
-			// pr#3507
-			// Class类型保存类名
-			if (object instanceof Class) {
-				return ((Class<?>) object).getName();
-			}
-
-			// 枚举类保存其字符串形式（4.0.2新增）
-			if (object instanceof Enum
-				// Java内部类不做转换
-				|| ClassUtil.isJdkClass(object.getClass())
-			) {
-				return object.toString();
 			}
 
 			// 默认按照JSONObject对待

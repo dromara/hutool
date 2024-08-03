@@ -15,22 +15,22 @@ package org.dromara.hutool.json.writer;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.serialize.JSONStringer;
 
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-
 /**
- * 日期类型的值写出器<br>
- * 支持包括：{@link Date}、{@link Calendar}、{@link TemporalAccessor}
+ * {@link JSONStringer}的值写出器
  *
  * @author looly
  * @since 6.0.0
  */
-public class JSONStringValueWriter implements JSONValueWriter<JSONStringer> {
+public class JSONStringValueWriter implements JSONValueWriter {
 	/**
 	 * 单例对象
 	 */
 	public static final JSONStringValueWriter INSTANCE = new JSONStringValueWriter();
+
+	@Override
+	public boolean test(final Object value) {
+		return value instanceof JSONStringer;
+	}
 
 	/**
 	 * 输出实现了{@link JSONStringer}接口的对象，通过调用{@link JSONStringer#toJSONString()}获取JSON字符串<br>
@@ -41,10 +41,10 @@ public class JSONStringValueWriter implements JSONValueWriter<JSONStringer> {
 	 * @param jsonStringer {@link JSONStringer}
 	 */
 	@Override
-	public void write(final JSONWriter writer, final JSONStringer jsonStringer) {
+	public void write(final JSONWriter writer, final Object jsonStringer) {
 		final String valueStr;
 		try {
-			valueStr = jsonStringer.toJSONString();
+			valueStr = ((JSONStringer)jsonStringer).toJSONString();
 		} catch (final Exception e) {
 			throw new JSONException(e);
 		}

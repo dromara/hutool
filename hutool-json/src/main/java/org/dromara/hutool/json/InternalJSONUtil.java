@@ -29,8 +29,6 @@ import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONStringer;
-import org.dromara.hutool.json.writer.GlobalValueWriterMapping;
-import org.dromara.hutool.json.writer.JSONValueWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -260,23 +258,6 @@ public final class InternalJSONUtil {
 			}
 		}
 		return rawHashMap;
-	}
-
-	/**
-	 * 根据值类型获取{@link JSONValueWriter}，首先判断对象是否实现了{@link JSONValueWriter}接口<br>
-	 * 如果未实现从{@link GlobalValueWriterMapping}中查找全局的writer，否则返回null。
-	 *
-	 * @param value 值
-	 * @param <T>   值类型
-	 * @return {@link JSONValueWriter}
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> JSONValueWriter<T> getValueWriter(final T value) {
-		if (value instanceof JSONValueWriter) {
-			return (JSONValueWriter<T>) value;
-		}
-		// 全局自定义序列化，支持null的自定义写出
-		return (JSONValueWriter<T>) GlobalValueWriterMapping.get(null == value ? null : value.getClass());
 	}
 
 	/**

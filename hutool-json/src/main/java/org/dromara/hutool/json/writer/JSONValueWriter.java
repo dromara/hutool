@@ -12,14 +12,32 @@
 
 package org.dromara.hutool.json.writer;
 
+import java.util.function.Predicate;
+
 /**
- * JSON的值自定义写出
+ * JSON的值自定义写出，通过自定义实现此接口，实现对象自定义写出字符串形式<br>
+ * 如自定义的一个CustomBean，我只希望输出id的值，此时自定义此接口:
+ * <pre>{@code
+ *   GlobalValueWriters.add(new JSONValueWriter() {
+ *     @Override
+ *     public boolean test(final Object value) {
+ *       return value instanceof CustomBean;
+ *     }
  *
- * @param <T> 写出的对象类型
+ *     @Override
+ *     public void write(final JSONWriter writer, final Object value) {
+ *       writer.writeRaw(String.valueOf(((CustomBean)value).getId()));
+ *     }
+ *   });
+ * }</pre>
+ *
+ * 其中{@link JSONValueWriter#test(Object)}负责判断何种对象使用此规则，{@link JSONValueWriter#write(JSONWriter, Object)}负责写出规则。<br>
+ * 注意：使用{@link GlobalValueWriters#add(JSONValueWriter)}加入全局转换规则后，在JSON对象中，自定义对象不会被转换，而是原始对象存在。
+ *
  * @author looly
  * @since 6.0.0
  */
-public interface JSONValueWriter<T> {
+public interface JSONValueWriter extends Predicate<Object> {
 
 	/**
 	 * 使用{@link JSONWriter} 写出对象
@@ -27,5 +45,5 @@ public interface JSONValueWriter<T> {
 	 * @param writer {@link JSONWriter}
 	 * @param value  被写出的值
 	 */
-	void write(JSONWriter writer, T value);
+	void write(JSONWriter writer, Object value);
 }

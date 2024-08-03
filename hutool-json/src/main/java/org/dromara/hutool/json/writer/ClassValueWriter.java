@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023-2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -12,32 +12,25 @@
 
 package org.dromara.hutool.json.writer;
 
-import org.dromara.hutool.json.serialize.DateJSONString;
-
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-
 /**
- * 日期类型的值写出器<br>
- * 支持包括：{@link Date}、{@link Calendar}、{@link TemporalAccessor}
+ * {@link Class}类型的值写出器
  *
  * @author looly
  * @since 6.0.0
  */
-public class DateValueWriter implements JSONValueWriter {
+public class ClassValueWriter implements JSONValueWriter {
 	/**
 	 * 单例对象
 	 */
-	public static final DateValueWriter INSTANCE = new DateValueWriter();
+	public static final ClassValueWriter INSTANCE = new ClassValueWriter();
 
 	@Override
 	public boolean test(final Object value) {
-		return value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor;
+		return value instanceof Class;
 	}
 
 	@Override
 	public void write(final JSONWriter writer, final Object value) {
-		writer.writeRaw(new DateJSONString(value, writer.getConfig()).toJSONString());
+		writer.writeQuoteStrValue(((Class<?>) value).getName());
 	}
 }

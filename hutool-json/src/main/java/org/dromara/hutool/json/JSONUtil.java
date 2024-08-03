@@ -24,6 +24,7 @@ import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONArraySerializer;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONObjectSerializer;
+import org.dromara.hutool.json.writer.GlobalValueWriters;
 import org.dromara.hutool.json.writer.JSONValueWriter;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
@@ -264,10 +265,9 @@ public class JSONUtil {
 	 * @return JSON字符串
 	 * @since 5.7.12
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static String toJsonStr(final Object obj, final JSONConfig jsonConfig) {
 		// 自定义规则，优先级高于全局规则
-		final JSONValueWriter valueWriter = InternalJSONUtil.getValueWriter(obj);
+		final JSONValueWriter valueWriter = GlobalValueWriters.get(obj);
 		if (null != valueWriter) {
 			final StringWriter stringWriter = new StringWriter();
 			final JSONWriter jsonWriter = JSONWriter.of(stringWriter, 0, 0, null);
