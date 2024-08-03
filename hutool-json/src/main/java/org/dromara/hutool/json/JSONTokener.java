@@ -15,6 +15,7 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.ReaderWrapper;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.math.NumberUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -171,27 +172,21 @@ public class JSONTokener extends ReaderWrapper {
 	}
 
 	/**
-	 * Get the last character read from the input or '\0' if nothing has been read yet.
+	 * 获取上一个读取的字符，如果没有读取过则返回'\0'
 	 *
-	 * @return the last character read from the input.
+	 * @return 上一个读取的字符
 	 */
 	protected char getPrevious() {
 		return this.previous;
 	}
 
 	/**
-	 * 读取下一个字符，并比对是否和指定字符匹配
-	 *
-	 * @param c 被匹配的字符
-	 * @return The character 匹配到的字符
-	 * @throws JSONException 如果不匹配抛出此异常
+	 * 获取16进制unicode转义符对应的字符值，如：
+	 * <pre>{@code '4f60' -> '你'}</pre>
+	 * @return 字符
 	 */
-	public char next(final char c) throws JSONException {
-		final char n = this.next();
-		if (n != c) {
-			throw this.syntaxError("Expected '" + c + "' and instead saw '" + n + "'");
-		}
-		return n;
+	public char nextUnicode(){
+		return (char) NumberUtil.parseInt(next(4), 16);
 	}
 
 	/**
@@ -201,12 +196,9 @@ public class JSONTokener extends ReaderWrapper {
 	 * @return 获得的n个字符组成的字符串
 	 * @throws JSONException 如果源中余下的字符数不足以提供所需的字符数，抛出此异常
 	 */
-	public String next(final int n) throws JSONException {
-		if (n == 0) {
-			return "";
-		}
-
+	public char[] next(final int n) throws JSONException {
 		final char[] chars = new char[n];
+
 		int pos = 0;
 		while (pos < n) {
 			chars[pos] = this.next();
@@ -215,7 +207,7 @@ public class JSONTokener extends ReaderWrapper {
 			}
 			pos += 1;
 		}
-		return new String(chars);
+		return chars;
 	}
 
 	/**
@@ -276,7 +268,7 @@ public class JSONTokener extends ReaderWrapper {
 							sb.append('\r');
 							break;
 						case 'u':// Unicode符
-							sb.append((char) Integer.parseInt(this.next(4), 16));
+							sb.append(nextUnicode());
 							break;
 						case '"':
 						case '\'':

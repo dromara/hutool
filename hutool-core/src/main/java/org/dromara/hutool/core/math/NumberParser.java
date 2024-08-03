@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.core.math;
 
+import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -121,6 +123,73 @@ public class NumberParser {
 		} catch (final NumberFormatException e) {
 			return doParse(numberStr).intValue();
 		}
+	}
+
+	/**
+	 * 转换char数组为一个int值，此方法拷贝自{@link Integer#parseInt(String, int)}<br>
+	 * 拷贝的原因是直接转换char[]避免创建String对象造成的多余拷贝<br>
+	 * 此方法自动跳过首尾空白符
+	 *
+	 * @param chars char数组
+	 * @param radix 进制数
+	 * @return int值
+	 * @see Integer#parseInt(String, int)
+	 */
+	public int parseInt(final char[] chars, final int radix) {
+		if (ArrayUtil.isEmpty(chars)) {
+			throw new IllegalArgumentException("Empty chars!");
+		}
+
+		int result = 0;
+		boolean negative = false;
+		int i = 0;
+		int limit = -Integer.MAX_VALUE;
+		int digit;
+
+		// 跳过空白符
+		while (CharUtil.isBlankChar(chars[i])) {
+			i++;
+		}
+
+		final char firstChar = chars[i];
+		if (firstChar < '0') { // Possible leading "+" or "-"
+			if (firstChar == '-') {
+				negative = true;
+				limit = Integer.MIN_VALUE;
+			} else if (firstChar != '+') {
+				throw new NumberFormatException("Invalid first char: " + firstChar);
+			}
+
+			if (chars.length == 1) {
+				// Cannot have lone "+" or "-"
+				throw new NumberFormatException("Invalid chars has lone: " + firstChar);
+			}
+			i++;
+		}
+
+		final int multmin = limit / radix;
+		while (i < chars.length) {
+			// 跳过空白符
+			if (CharUtil.isBlankChar(chars[i])) {
+				i++;
+				continue;
+			}
+
+			// Accumulating negatively avoids surprises near MAX_VALUE
+			digit = Character.digit(chars[i++], radix);
+			if (digit < 0) {
+				throw new NumberFormatException(StrUtil.format("Invalid chars: {} at {}", chars, i - 1));
+			}
+			if (result < multmin) {
+				throw new NumberFormatException(StrUtil.format("Invalid chars: {}", new Object[]{chars}));
+			}
+			result *= radix;
+			if (result < limit + digit) {
+				throw new NumberFormatException(StrUtil.format("Invalid chars: {}", new Object[]{chars}));
+			}
+			result -= digit;
+		}
+		return negative ? result : -result;
 	}
 
 	/**
@@ -293,7 +362,7 @@ public class NumberParser {
 		if (null == locale) {
 			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
-		if(StrUtil.startWith(numberStr, CharUtil.PLUS)){
+		if (StrUtil.startWith(numberStr, CharUtil.PLUS)) {
 			// issue#I79VS7
 			numberStr = StrUtil.subSuf(numberStr, 1);
 		}

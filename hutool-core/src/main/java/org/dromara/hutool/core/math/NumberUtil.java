@@ -1231,6 +1231,22 @@ public class NumberUtil extends NumberValidator {
 	}
 
 	/**
+	 * 转换char数组为一个int值，此方法拷贝自{@link Integer#parseInt(String, int)}<br>
+	 * 拷贝的原因是直接转换char[]避免创建String对象造成的多余拷贝。<br>
+	 * 此方法自动跳过首尾空白符
+	 *
+	 * @param chars char数组
+	 * @param radix 进制数
+	 * @return int值
+	 * @throws NumberFormatException 数字格式异常
+	 * @see Integer#parseInt(String, int)
+	 * @since 6.0.0
+	 */
+	public static int parseInt(final char[] chars, final int radix) throws NumberFormatException {
+		return NumberParser.INSTANCE.parseInt(chars, radix);
+	}
+
+	/**
 	 * 解析转换数字字符串为 {@link java.lang.Long } 规则如下：
 	 *
 	 * <pre>

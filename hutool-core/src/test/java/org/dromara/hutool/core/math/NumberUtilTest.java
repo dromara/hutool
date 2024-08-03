@@ -26,6 +26,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link NumberUtil} 单元测试类
@@ -320,7 +321,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void decimalFormatNaNTest() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+		assertThrows(IllegalArgumentException.class, ()->{
 			final Double a = 0D;
 			final Double b = 0D;
 
@@ -331,7 +332,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void decimalFormatNaNTest2() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+		assertThrows(IllegalArgumentException.class, ()->{
 			final Double a = 0D;
 			final Double b = 0D;
 
@@ -383,7 +384,7 @@ public class NumberUtilTest {
 
 	@Test
 	void emptyToBigDecimalTest(){
-		Assertions.assertThrows(IllegalArgumentException.class,()->{
+		assertThrows(IllegalArgumentException.class,()->{
 			NumberUtil.toBigDecimal("");
 		});
 	}
@@ -445,7 +446,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void parseIntTest3() {
-		Assertions.assertThrows(NumberFormatException.class, ()->{
+		assertThrows(NumberFormatException.class, ()->{
 			final int v1 = NumberUtil.parseInt("d");
 			assertEquals(0, v1);
 		});
@@ -453,7 +454,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void parseIntTest4() {
-		Assertions.assertThrows(NumberFormatException.class, ()->{
+		assertThrows(NumberFormatException.class, ()->{
 			// issue#I5M55F
 			// 科学计数法忽略支持，科学计数法一般用于表示非常小和非常大的数字，这类数字转换为int后精度丢失，没有意义。
 			final String numberStr = "429900013E20220812163344551";
@@ -692,7 +693,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void rangeMinTest() {
-		Assertions.assertThrows(NegativeArraySizeException.class, ()->{
+		assertThrows(NegativeArraySizeException.class, ()->{
 			NumberUtil.range(0, Integer.MIN_VALUE);
 		});
 	}
@@ -757,7 +758,7 @@ public class NumberUtilTest {
 	@EnabledForJreRange(max = JRE.JAVA_8)
 	void numberFormatTest() {
 		// JDK8下，NaN解析报错，JDK9+中返回0
-		Assertions.assertThrows(ParseException.class, ()->{
+		assertThrows(ParseException.class, ()->{
 			NumberFormat.getInstance().parse("NaN");
 		});
 	}
