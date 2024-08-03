@@ -29,7 +29,7 @@ public class MultiStrFinder {
 	 */
 	public MultiStrFinder(Collection<String> source){
 		/** 待匹配的字符串 **/
-		final Set<String> stringSst = new HashSet<>();
+		final Set<String> stringSet = new HashSet<>();
 
 		/** 所有字符 **/
 		final Set<Character> charSet = new HashSet<>();
