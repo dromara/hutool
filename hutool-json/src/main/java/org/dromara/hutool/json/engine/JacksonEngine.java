@@ -12,10 +12,12 @@
 
 package org.dromara.hutool.json.engine;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.json.JSONException;
 
 import java.io.IOException;
@@ -27,21 +29,21 @@ import java.io.Writer;
  *
  * @author Looly
  */
-public class JacksonEngine implements JSONEngine{
-
-	private final ObjectMapper mapper;
+public class JacksonEngine extends SimpleWrapper<ObjectMapper> implements JSONEngine{
 
 	/**
 	 * 构造
 	 */
 	public JacksonEngine() {
-		this.mapper = new ObjectMapper();
+		super(new ObjectMapper());
+		// 允许出现单引号
+		raw.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 	}
 
 	@Override
 	public void serialize(final Object bean, final Writer writer) {
 		try {
-			mapper.writeValue(writer, bean);
+			raw.writeValue(writer, bean);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -52,11 +54,11 @@ public class JacksonEngine implements JSONEngine{
 	public <T> T deserialize(final Reader reader, final Object type) {
 		try {
 			if(type instanceof Class){
-				return mapper.readValue(reader, (Class<T>)type);
+				return raw.readValue(reader, (Class<T>)type);
 			} else if(type instanceof TypeReference){
-				return mapper.readValue(reader, (TypeReference<T>)type);
+				return raw.readValue(reader, (TypeReference<T>)type);
 			} else if(type instanceof JavaType){
-				return mapper.readValue(reader, (JavaType)type);
+				return raw.readValue(reader, (JavaType)type);
 			}
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);

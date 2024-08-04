@@ -12,8 +12,10 @@
 
 package org.dromara.hutool.json.engine;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONFactory;
+import com.alibaba.fastjson2.JSONReader;
 import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.reader.ObjectReader;
 import com.alibaba.fastjson2.writer.ObjectWriter;
 
 import java.io.Reader;
@@ -27,16 +29,27 @@ import java.lang.reflect.Type;
  * @since 6.0.0
  */
 public class FastJSON2Engine implements JSONEngine {
+
+	private final JSONWriter.Context writerContext;
+	private final JSONReader.Context readerContext;
+
+	/**
+	 * 构造
+	 */
+	public FastJSON2Engine() {
+		this.writerContext = JSONFactory.createWriteContext();
+		this.readerContext = JSONFactory.createReadContext();
+	}
+
 	@Override
 	public void serialize(final Object bean, final Writer writer) {
-		final JSONWriter.Context context = new JSONWriter.Context();
-		try (final JSONWriter jsonWriter = JSONWriter.ofUTF8(context)) {
+		try (final JSONWriter jsonWriter = JSONWriter.of(this.writerContext)) {
 			if (bean == null) {
 				jsonWriter.writeNull();
 			} else {
 				jsonWriter.setRootObject(bean);
 				final Class<?> valueClass = bean.getClass();
-				final ObjectWriter<?> objectWriter = context.getObjectWriter(valueClass, valueClass);
+				final ObjectWriter<?> objectWriter = this.writerContext.getObjectWriter(valueClass, valueClass);
 				objectWriter.write(jsonWriter, bean, null, null, 0);
 			}
 
@@ -44,8 +57,19 @@ public class FastJSON2Engine implements JSONEngine {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T deserialize(final Reader reader, final Object type) {
-		return JSON.parseObject(reader, (Type) type);
+		final ObjectReader<T> objectReader = this.readerContext.getObjectReader((Type) type);
+
+		try (final JSONReader jsonReader = JSONReader.of(reader, this.readerContext)) {
+			if (jsonReader.isEnd()) {
+				return null;
+			}
+
+			final T object = objectReader.readObject(jsonReader, (Type) type, null, 0);
+			jsonReader.handleResolveTasks(object);
+			return object;
+		}
 	}
 }

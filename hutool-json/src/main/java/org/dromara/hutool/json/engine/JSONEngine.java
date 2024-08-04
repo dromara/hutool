@@ -13,6 +13,8 @@
 package org.dromara.hutool.json.engine;
 
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 
 /**
@@ -40,4 +42,29 @@ public interface JSONEngine {
 	 * @return Java Bean（POJO）对象
 	 */
 	<T> T deserialize(Reader reader, Object type);
+
+	/**
+	 * 将Java Bean（POJO）对象转换为JSON字符串
+	 *
+	 * @param bean Java Bean（POJO）对象
+	 * @return JSON字符串
+	 */
+	default String toJsonString(final Object bean) {
+		final StringWriter stringWriter = new StringWriter();
+		serialize(bean, stringWriter);
+		return stringWriter.toString();
+	}
+
+	/**
+	 * 将JSON字符串转换为Java Bean（POJO）对象
+	 *
+	 * @param <T>    Java Bean对象类型
+	 * @param jsonStr JSON字符串
+	 * @param type    Java Bean（POJO）对象类型，可以为{@code Class<T>}或者TypeReference
+	 * @return Java Bean（POJO）对象
+	 */
+	default <T> T fromJsonString(final String jsonStr, final Object type) {
+		final StringReader stringReader = new StringReader(jsonStr);
+		return deserialize(stringReader, type);
+	}
 }
