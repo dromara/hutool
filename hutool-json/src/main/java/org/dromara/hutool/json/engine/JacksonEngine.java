@@ -38,6 +38,8 @@ public class JacksonEngine extends SimpleWrapper<ObjectMapper> implements JSONEn
 		super(new ObjectMapper());
 		// 允许出现单引号
 		raw.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		// 允许没有引号的字段名(非标准)
+		raw.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 	}
 
 	@Override
