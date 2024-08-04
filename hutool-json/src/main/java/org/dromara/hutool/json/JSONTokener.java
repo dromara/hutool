@@ -16,6 +16,8 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.ReaderWrapper;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,11 +25,17 @@ import java.io.Reader;
 import java.io.StringReader;
 
 /**
- * JSON解析器，用于将JSON字符串解析为JSONObject或者JSONArray
+ * JSON解析器<br>
+ * 用于解析JSON字符串，支持流式解析，即逐个字符解析，而不是一次性解析整个字符串。
  *
  * @author from JSON.org
  */
 public class JSONTokener extends ReaderWrapper {
+
+	/**
+	 * JSON的分界符
+	 */
+	private static final String TOKENS = ",:]}/\\\"[{;=#";
 
 	/**
 	 * 定义结束（End of stream）为：0
@@ -208,6 +216,20 @@ public class JSONTokener extends ReaderWrapper {
 	}
 
 	/**
+	 * 获取下一个token字符
+	 *
+	 * @return token字符
+	 * @throws JSONException 非Token字符
+	 */
+	public char nextTokenChar() throws JSONException {
+		final char c = this.nextClean();
+		if (isNotTokenChar(c)) {
+			throw this.syntaxError("Invalid token char: " + c);
+		}
+		return c;
+	}
+
+	/**
 	 * 获得下一个字符，跳过空白符
 	 *
 	 * @return 获得的字符，0表示没有更多的字符
@@ -224,6 +246,59 @@ public class JSONTokener extends ReaderWrapper {
 	}
 
 	/**
+	 * 读取一个字符串，包括：
+	 * <ul>
+	 *     <li>使用引号包裹的字符串，自动反转义。</li>
+	 *     <li>无包装的字符串，不转义</li>
+	 * </ul>
+	 *
+	 * @return 截止到引号前的字符串
+	 * @throws JSONException 出现无结束的字符串时抛出此异常
+	 */
+	public String nextString() throws JSONException {
+		final char c = nextClean();
+		switch (c) {
+			case CharUtil.DOUBLE_QUOTES:
+			case CharUtil.SINGLE_QUOTE:
+				return nextString(c);
+		}
+
+		// 兼容不严格的JSON，如key不被双引号包围的情况
+		return nextUnwrapString(c);
+	}
+
+	/**
+	 * 获得下一个字符串，此字符串不以引号包围，不会处理转义符，主要解析：
+	 * <ul>
+	 *     <li>非严格的key（无引号包围的key）</li>
+	 *     <li>boolean值的字符串表示</li>
+	 *     <li>Number值的字符串表示</li>
+	 *     <li>null的字符串表示</li>
+	 * </ul>
+	 *
+	 * @param c 首个字符
+	 * @return 字符串
+	 * @throws JSONException 读取空串时抛出此异常
+	 */
+	public String nextUnwrapString(char c) throws JSONException {
+		// 兼容不严格的JSON，如key不被双引号包围的情况
+		final StringBuilder sb = new StringBuilder();
+		while (isNotTokenChar(c)) {
+			sb.append(c);
+			c = next();
+		}
+		if (c != EOF) {
+			back();
+		}
+
+		final String valueString = StrUtil.trim(sb);
+		if (valueString.isEmpty()) {
+			throw syntaxError("Missing value, maybe a token");
+		}
+		return valueString;
+	}
+
+	/**
 	 * 返回当前位置到指定引号前的所有字符，反斜杠的转义符也会被处理。<br>
 	 * 标准的JSON是不允许使用单引号包含字符串的，但是此实现允许。
 	 *
@@ -237,127 +312,27 @@ public class JSONTokener extends ReaderWrapper {
 		while (true) {
 			c = this.next();
 			switch (c) {
-				case 0:
+				case EOF:
 					throw this.syntaxError("Unterminated string");
-				case '\n':
-				case '\r':
+				case CharUtil.LF:
+				case CharUtil.CR:
 					//throw this.syntaxError("Unterminated string");
 					// https://gitee.com/dromara/hutool/issues/I76CSU
 					// 兼容非转义符
 					sb.append(c);
 					break;
-				case '\\':// 转义符
+				case CharUtil.BACKSLASH:// 转义符
 					c = this.next();
-					switch (c) {
-						case 'b':
-							sb.append('\b');
-							break;
-						case 't':
-							sb.append('\t');
-							break;
-						case 'n':
-							sb.append('\n');
-							break;
-						case 'f':
-							sb.append('\f');
-							break;
-						case 'r':
-							sb.append('\r');
-							break;
-						case 'u':// Unicode符
-							sb.append(nextUnicode());
-							break;
-						case '"':
-						case '\'':
-						case '\\':
-						case '/':
-							sb.append(c);
-							break;
-						default:
-							throw this.syntaxError("Illegal escape.");
-					}
+					sb.append(getUnescapeChar(c));
 					break;
 				default:
+					// 字符串结束
 					if (c == quote) {
 						return sb.toString();
 					}
 					sb.append(c);
 			}
 		}
-	}
-
-	/**
-	 * 获得从当前位置直到分隔符（不包括分隔符）或行尾的的所有字符。
-	 *
-	 * @param delimiter 分隔符
-	 * @return 字符串
-	 * @throws JSONException JSON异常，包装IO异常
-	 */
-	public String nextTo(final char delimiter) throws JSONException {
-		final StringBuilder sb = new StringBuilder();
-		for (; ; ) {
-			final char c = this.next();
-			if (c == delimiter || c == 0 || c == '\n' || c == '\r') {
-				if (c != 0) {
-					this.back();
-				}
-				return sb.toString().trim();
-			}
-			sb.append(c);
-		}
-	}
-
-	/**
-	 * Get the text up but not including one of the specified delimiter characters or the end of line, whichever comes first.
-	 *
-	 * @param delimiters A set of delimiter characters.
-	 * @return A string, trimmed.
-	 * @throws JSONException JSON异常，包装IO异常
-	 */
-	public String nextTo(final String delimiters) throws JSONException {
-		char c;
-		final StringBuilder sb = new StringBuilder();
-		for (; ; ) {
-			c = this.next();
-			if (delimiters.indexOf(c) >= 0 || c == 0 || c == '\n' || c == '\r') {
-				if (c != 0) {
-					this.back();
-				}
-				return sb.toString().trim();
-			}
-			sb.append(c);
-		}
-	}
-
-	/**
-	 * Skip characters until the next character is the requested character. If the requested character is not found, no characters are skipped. 在遇到指定字符前，跳过其它字符。如果字符未找到，则不跳过任何字符。
-	 *
-	 * @param to 需要定位的字符
-	 * @return 定位的字符，如果字符未找到返回0
-	 * @throws JSONException IO异常
-	 */
-	public char skipTo(final char to) throws JSONException {
-		char c;
-		try {
-			final long startIndex = this.index;
-			final long startCharacter = this.character;
-			final long startLine = this.line;
-			mark(1000000);
-			do {
-				c = this.next();
-				if (c == 0) {
-					reset();
-					this.index = startIndex;
-					this.character = startCharacter;
-					this.line = startLine;
-					return c;
-				}
-			} while (c != to);
-		} catch (final IOException e) {
-			throw new JSONException(e);
-		}
-		this.back();
-		return c;
 	}
 
 	/**
@@ -379,5 +354,45 @@ public class JSONTokener extends ReaderWrapper {
 	@Override
 	public String toString() {
 		return " at " + this.index + " [character " + this.character + " line " + this.line + "]";
+	}
+
+	/**
+	 * 获取反转义的字符
+	 *
+	 * @param c 转义的字符，即`\`后的字符
+	 * @return 反转义字符
+	 */
+	private char getUnescapeChar(final char c) {
+		switch (c) {
+			case 'b':
+				return '\b';
+			case 't':
+				return '\t';
+			case 'n':
+				return '\n';
+			case 'f':
+				return '\f';
+			case 'r':
+				return '\r';
+			case 'u':// Unicode符
+				return nextUnicode();
+			case CharUtil.DOUBLE_QUOTES:
+			case CharUtil.SINGLE_QUOTE:
+			case CharUtil.BACKSLASH:
+			case CharUtil.SLASH:
+				return c;
+			default:
+				throw this.syntaxError("Illegal escape.");
+		}
+	}
+
+	/**
+	 * 是否为可见的非Token字符，这些字符存在于JSON的非字符串value中。
+	 *
+	 * @param c char
+	 * @return 是否为可见的非Token字符
+	 */
+	private static boolean isNotTokenChar(final char c) {
+		return c >= ' ' && TOKENS.indexOf(c) < 0;
 	}
 }

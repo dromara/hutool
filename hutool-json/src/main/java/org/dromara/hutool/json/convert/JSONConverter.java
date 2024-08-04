@@ -183,7 +183,7 @@ public class JSONConverter implements Converter, Serializable {
 		final char firstC = jsonStr.charAt(0);
 		// RFC8259，JSON字符串值、number, boolean, or null
 		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), config);
-		final Object value = jsonParser.nextValue(false);
+		final Object value = jsonParser.nextValue();
 		if(jsonParser.getTokener().nextClean() != JSONTokener.EOF){
 			// 对于用户提供的未转义字符串导致解析未结束，报错
 			throw new JSONException("JSON format error: {}", jsonStr);

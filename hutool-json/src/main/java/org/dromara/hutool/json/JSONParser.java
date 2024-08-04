@@ -110,7 +110,7 @@ public class JSONParser {
 					}
 				default:
 					tokener.back();
-					key = nextValue(true).toString();
+					key = tokener.nextString();
 			}
 
 			// The key is followed by ':'.
@@ -120,7 +120,7 @@ public class JSONParser {
 				throw tokener.syntaxError("Expected a ':' after a key");
 			}
 
-			jsonObject.set(key, nextValue(false), predicate);
+			jsonObject.set(key, nextValue(), predicate);
 
 			// Pairs are separated by ','.
 
@@ -162,7 +162,7 @@ public class JSONParser {
 					jsonArray.addRaw(null, predicate);
 				} else {
 					x.back();
-					jsonArray.addRaw(nextValue(false), predicate);
+					jsonArray.addRaw(nextValue(), predicate);
 				}
 				switch (x.nextClean()) {
 					case CharUtil.COMMA:
@@ -184,20 +184,19 @@ public class JSONParser {
 	/**
 	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 *
-	 * @param getOnlyStringValue 是否只获取String值
 	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 * @throws JSONException 语法错误
 	 */
-	public Object nextValue(final boolean getOnlyStringValue) throws JSONException {
-		return nextValue(getOnlyStringValue, (token, tokener, config) -> {
+	public Object nextValue() throws JSONException {
+		return nextValue((token, tokener, config) -> {
 			switch (token) {
-				case '{':
+				case CharUtil.DELIM_START:
 					try {
 						return new JSONObject(this, config);
 					} catch (final StackOverflowError e) {
 						throw new JSONException("JSONObject depth too large to process.", e);
 					}
-				case '[':
+				case CharUtil.BRACKET_START:
 					try {
 						return new JSONArray(this, config);
 					} catch (final StackOverflowError e) {
@@ -211,45 +210,29 @@ public class JSONParser {
 	/**
 	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 *
-	 * @param getOnlyStringValue 是否只获取String值
 	 * @param objectBuilder JSON对象构建器
 	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 * @throws JSONException 语法错误
 	 */
-	public Object nextValue(final boolean getOnlyStringValue, final ObjectBuilder objectBuilder) throws JSONException {
+	public Object nextValue(final ObjectBuilder objectBuilder) throws JSONException {
 		final JSONTokener tokener = this.tokener;
-		char c = tokener.nextClean();
+		final char c = tokener.nextClean();
 		switch (c) {
-			case '"':
-			case '\'':
+			case CharUtil.DOUBLE_QUOTES:
+			case CharUtil.SINGLE_QUOTE:
 				return tokener.nextString(c);
-			case '{':
-			case '[':
-				if (getOnlyStringValue) {
-					throw tokener.syntaxError("String value must not begin with '{'");
-				}
+			case CharUtil.DELIM_START:
+			case CharUtil.BRACKET_START:
 				tokener.back();
 				return objectBuilder.build(c, tokener, this.config);
 		}
 
 		/*
-		 * Handle unquoted text. This could be the values true, false, or null, or it can be a number.
-		 * An implementation (such as this one) is allowed to also accept non-standard forms. Accumulate
-		 * characters until we reach the end of the text or a formatting character.
+		 * 处理无引号包装的字符串，如： true, false, 或 null, 或 number.
+		 * 同样兼容非标准的字符串，如key无引号包装。
+		 * 此方法会不断读取并积累字符直到遇到token符
 		 */
-
-		final StringBuilder sb = new StringBuilder();
-		while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
-			sb.append(c);
-			c = tokener.next();
-		}
-		tokener.back();
-
-		final String valueString = sb.toString().trim();
-		if (valueString.isEmpty()) {
-			throw tokener.syntaxError("Missing value");
-		}
-		return getOnlyStringValue ? valueString : InternalJSONUtil.parseValueFromString(valueString);
+		return InternalJSONUtil.parseValueFromString(tokener.nextUnwrapString(c));
 	}
 
 	/**
