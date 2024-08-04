@@ -44,10 +44,9 @@ public class XMLTokener extends JSONTokener {
 	 * Construct an XMLTokener from a string.
 	 *
 	 * @param s      A source string.
-	 * @param config JSON配置
 	 */
-	public XMLTokener(final CharSequence s, final JSONConfig config) {
-		super(s, config);
+	public XMLTokener(final CharSequence s) {
+		super(s);
 	}
 
 	/**

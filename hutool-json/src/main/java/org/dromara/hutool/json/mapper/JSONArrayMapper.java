@@ -17,10 +17,7 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.json.JSONArray;
-import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.JSONParser;
-import org.dromara.hutool.json.JSONTokener;
+import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONSerializer;
 
@@ -91,18 +88,20 @@ public class JSONArrayMapper {
 		}
 
 		if (source instanceof JSONTokener) {
-			mapFromTokener((JSONTokener) source, jsonArray);
-		}else if (source instanceof CharSequence) {
+			mapFromTokener((JSONTokener) source, JSONConfig.of(), jsonArray);
+		}if (source instanceof JSONParser) {
+			((JSONParser)source).parseTo(jsonArray, this.predicate);
+		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray);
 		} else if (source instanceof Reader) {
-			mapFromTokener(new JSONTokener((Reader) source, jsonArray.config()), jsonArray);
+			mapFromTokener(new JSONTokener((Reader) source), jsonArray.config(), jsonArray);
 		} else if (source instanceof InputStream) {
-			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.config()), jsonArray);
+			mapFromTokener(new JSONTokener((InputStream) source), jsonArray.config(), jsonArray);
 		} else if (source instanceof byte[]) {
 			final byte[] bytesSource = (byte[]) source;
 			if ('[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]) {
-				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.config()), jsonArray);
+				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource)), jsonArray.config(), jsonArray);
 			} else {
 				// https://github.com/dromara/hutool/issues/2369
 				// 非标准的二进制流，则按照普通数组对待
@@ -119,8 +118,8 @@ public class JSONArrayMapper {
 			} else if (source instanceof Iterable<?>) {// Iterable
 				iter = ((Iterable<?>) source).iterator();
 			} else {
-				if(!jsonArray.config().isIgnoreError()){
-					throw new JSONException("JSONArray initial value should be a string or collection or array.");
+				if (!jsonArray.config().isIgnoreError()) {
+					throw new JSONException("Unsupported [{}] to JSONArray", source.getClass());
 				}
 				// 如果用户选择跳过异常，则跳过此值转换
 				return;
@@ -145,7 +144,7 @@ public class JSONArrayMapper {
 	 */
 	private void mapFromStr(final CharSequence source, final JSONArray jsonArray) {
 		if (null != source) {
-			mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonArray.config()), jsonArray);
+			mapFromTokener(new JSONTokener(StrUtil.trim(source)), jsonArray.config(), jsonArray);
 		}
 	}
 
@@ -155,7 +154,7 @@ public class JSONArrayMapper {
 	 * @param x         {@link JSONTokener}
 	 * @param jsonArray {@link JSONArray}
 	 */
-	private void mapFromTokener(final JSONTokener x, final JSONArray jsonArray) {
-		JSONParser.of(x).parseTo(jsonArray, this.predicate);
+	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONArray jsonArray) {
+		JSONParser.of(x, config).parseTo(jsonArray, this.predicate);
 	}
 }

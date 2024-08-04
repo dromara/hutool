@@ -64,7 +64,7 @@ public class JSONXMLParser {
 	 * @throws JSONException 解析异常
 	 */
 	public void parseJSONObject(final String xmlStr, final JSONObject jo) throws JSONException {
-		final XMLTokener x = new XMLTokener(xmlStr, jo.config());
+		final XMLTokener x = new XMLTokener(xmlStr);
 		while (x.more() && x.skipPast("<")) {
 			parse(x, jo, null, 0);
 		}

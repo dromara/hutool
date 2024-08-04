@@ -103,14 +103,14 @@ public class JSONConverter implements Converter, Serializable {
 
 		// 对象转JSON
 		final Class<?> targetClass = TypeUtil.getClass(targetType);
-		if(null != targetClass){
+		if (null != targetClass) {
 			if (JSON.class.isAssignableFrom(targetClass)) {
 				return toJSON(value);
 			}
 			// 自定义日期格式
-			if(Date.class.isAssignableFrom(targetClass) || TemporalAccessor.class.isAssignableFrom(targetClass)){
+			if (Date.class.isAssignableFrom(targetClass) || TemporalAccessor.class.isAssignableFrom(targetClass)) {
 				final Object date = toDateWithFormat(targetClass, value);
-				if(null != date){
+				if (null != date) {
 					return date;
 				}
 			}
@@ -120,7 +120,7 @@ public class JSONConverter implements Converter, Serializable {
 	}
 
 	/**
-	 * 实现Object对象转换为{@link JSON}，支持的对象：
+	 * 实现Object对象转换为JSON对象，根据RFC8259规范，支持的对象：
 	 * <ul>
 	 *     <li>String: 转换为相应的对象，"和'包围的字符串返回原字符串，""返回{@code null}</li>
 	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
@@ -133,15 +133,14 @@ public class JSONConverter implements Converter, Serializable {
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
-	@SuppressWarnings("resource")
 	public Object toJSON(Object obj) throws JSONException {
-		if(null == obj){
+		if (null == obj) {
 			return null;
 		}
 
-		if(obj instanceof Optional){
+		if (obj instanceof Optional) {
 			obj = ((Optional<?>) obj).orElse(null);
-		} else if(obj instanceof Opt){
+		} else if (obj instanceof Opt) {
 			obj = ((Opt<?>) obj).get();
 		}
 
@@ -149,26 +148,7 @@ public class JSONConverter implements Converter, Serializable {
 		if (obj instanceof JSON || obj instanceof Number || obj instanceof Boolean) {
 			return obj;
 		} else if (obj instanceof CharSequence) {
-			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			if(jsonStr.isEmpty()){
-				// 空按照null值处理
-				return null;
-			}
-			final char firstC = jsonStr.charAt(0);
-			switch (firstC){
-				case '[':
-					return new JSONArray(jsonStr, config);
-				case '{':
-					return new JSONObject(jsonStr, config);
-				default:
-					// RFC8259，JSON字符串值、number, boolean, or null
-					final Object value = new JSONTokener(jsonStr, config).nextValue(false);
-					if(ObjUtil.equals(value, jsonStr)){
-						// 非可解析的字符串，原样返回
-						return InternalJSONUtil.quote((CharSequence) value);
-					}
-					return value;
-			}
+			return toJSON((CharSequence) obj);
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
 			json = new JSONObject(obj, config);
@@ -179,6 +159,46 @@ public class JSONConverter implements Converter, Serializable {
 		}
 
 		return json;
+	}
+
+	/**
+	 * 实现{@link CharSequence}转换为JSON对象，根据RFC8259规范<br>
+	 * 转换为相应的对象，"和'包围的字符串返回原字符串，""返回{@code null}
+	 *
+	 * @param str 被转换的字符串
+	 * @return 转换后的对象
+	 * @throws JSONException 转换异常
+	 */
+	public Object toJSON(final CharSequence str) throws JSONException {
+		if (null == str) {
+			return null;
+		}
+
+		final String jsonStr = StrUtil.trim(str);
+		if (jsonStr.isEmpty()) {
+			// https://www.rfc-editor.org/rfc/rfc8259#section-7
+			// 未被包装的空串理解为null
+			return null;
+		}
+		final char firstC = jsonStr.charAt(0);
+		// RFC8259，JSON字符串值、number, boolean, or null
+		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), config);
+		final Object value = jsonParser.nextValue(false);
+		if(jsonParser.getTokener().nextClean() != JSONTokener.EOF){
+			// 对于用户提供的未转义字符串导致解析未结束，报错
+			throw new JSONException("JSON format error: {}", jsonStr);
+		}
+		switch (firstC) {
+			case '"':
+			case '\'':
+				return InternalJSONUtil.quote((CharSequence) value);
+			default:
+				if(ObjUtil.equals(jsonStr, value)){
+					// 对于直接的字符串，如abc，按照字符串处理
+					return InternalJSONUtil.quote((CharSequence) value);
+				}
+				return value;
+		}
 	}
 
 	// ----------------------------------------------------------- Private method start
@@ -221,13 +241,13 @@ public class JSONConverter implements Converter, Serializable {
 		// 尝试转Bean
 		if (BeanUtil.isWritableBean(rawType)) {
 			// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
-			if(KClassUtil.isKotlinClass(rawType) && json instanceof JSONGetter){
-				return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>)json));
+			if (KClassUtil.isKotlinClass(rawType) && json instanceof JSONGetter) {
+				return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>) json));
 			}
 
 			return BeanCopier.of(json,
-					ConstructorUtil.newInstanceIfPossible(rawType), targetType,
-					InternalJSONUtil.toCopyOptions(json.config())).copy();
+				ConstructorUtil.newInstanceIfPossible(rawType), targetType,
+				InternalJSONUtil.toCopyOptions(json.config())).copy();
 		}
 
 		// 跳过异常时返回null
@@ -237,7 +257,7 @@ public class JSONConverter implements Converter, Serializable {
 
 		// 无法转换
 		throw new JSONException("Can not convert from '{}': {} to '{}'",
-				json.getClass().getName(), json, targetType.getTypeName());
+			json.getClass().getName(), json, targetType.getTypeName());
 	}
 
 	/**
@@ -264,7 +284,7 @@ public class JSONConverter implements Converter, Serializable {
 		}
 
 		// 日期、java.sql中的日期以及自定义日期统一处理
-		if(Date.class.isAssignableFrom(rowType)){
+		if (Date.class.isAssignableFrom(rowType)) {
 			return (T) DateConverter.INSTANCE.convert(type, value);
 		}
 
@@ -279,7 +299,7 @@ public class JSONConverter implements Converter, Serializable {
 		}
 
 		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
-		if(Map.Entry.class.isAssignableFrom(rowType)){
+		if (Map.Entry.class.isAssignableFrom(rowType)) {
 			return (T) EntryConverter.INSTANCE.convert(type, value);
 		}
 
@@ -294,12 +314,12 @@ public class JSONConverter implements Converter, Serializable {
 		}
 
 		// Record
-		if(RecordUtil.isRecord(rowType)){
+		if (RecordUtil.isRecord(rowType)) {
 			return (T) RecordConverter.INSTANCE.convert(type, value);
 		}
 
 		// 空值转空Bean
-		if(ObjUtil.isEmpty(value)){
+		if (ObjUtil.isEmpty(value)) {
 			// issue#3649 空值转空对象，则直接实例化
 			return ConstructorUtil.newInstanceIfPossible(rowType);
 		}
@@ -308,7 +328,7 @@ public class JSONConverter implements Converter, Serializable {
 		return null;
 	}
 
-	private Object toDateWithFormat(final Class<?> targetClass, final Object value){
+	private Object toDateWithFormat(final Class<?> targetClass, final Object value) {
 		// 日期转换，支持自定义日期格式
 		final String format = config.getDateFormat();
 		if (StrUtil.isNotBlank(format)) {

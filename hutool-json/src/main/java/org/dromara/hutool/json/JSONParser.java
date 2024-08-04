@@ -31,13 +31,19 @@ import java.util.function.Predicate;
 public class JSONParser {
 
 	/**
+	 * JSON配置
+	 */
+	private final JSONConfig config;
+
+	/**
 	 * 创建JSONParser
 	 *
 	 * @param tokener {@link JSONTokener}
+	 * @param config  JSON配置
 	 * @return JSONParser
 	 */
-	public static JSONParser of(final JSONTokener tokener) {
-		return new JSONParser(tokener);
+	public static JSONParser of(final JSONTokener tokener, final JSONConfig config) {
+		return new JSONParser(tokener, config);
 	}
 
 	private final JSONTokener tokener;
@@ -46,9 +52,29 @@ public class JSONParser {
 	 * 构造
 	 *
 	 * @param tokener {@link JSONTokener}
+	 * @param config  JSON配置
 	 */
-	public JSONParser(final JSONTokener tokener) {
+	public JSONParser(final JSONTokener tokener, final JSONConfig config) {
 		this.tokener = tokener;
+		this.config = config;
+	}
+
+	/**
+	 * 获取{@link JSONTokener}
+	 *
+	 * @return {@link JSONTokener}
+	 */
+	public JSONTokener getTokener() {
+		return this.tokener;
+	}
+
+	/**
+	 * 是否结束
+	 *
+	 * @return 是否结束
+	 */
+	public boolean end() {
+		return this.tokener.end();
 	}
 
 	// region parseTo
@@ -79,12 +105,12 @@ public class JSONParser {
 					return;
 				case '{':
 				case '[':
-					if(prev=='{') {
+					if (prev == '{') {
 						throw tokener.syntaxError("A JSONObject can not directly nest another JSONObject or JSONArray.");
 					}
 				default:
 					tokener.back();
-					key = tokener.nextValue(true).toString();
+					key = nextValue(true).toString();
 			}
 
 			// The key is followed by ':'.
@@ -94,7 +120,7 @@ public class JSONParser {
 				throw tokener.syntaxError("Expected a ':' after a key");
 			}
 
-			jsonObject.set(key, tokener.nextValue(false), predicate);
+			jsonObject.set(key, nextValue(false), predicate);
 
 			// Pairs are separated by ','.
 
@@ -136,7 +162,7 @@ public class JSONParser {
 					jsonArray.addRaw(null, predicate);
 				} else {
 					x.back();
-					jsonArray.addRaw(x.nextValue(false), predicate);
+					jsonArray.addRaw(nextValue(false), predicate);
 				}
 				switch (x.nextClean()) {
 					case CharUtil.COMMA:
@@ -154,4 +180,91 @@ public class JSONParser {
 		}
 	}
 	// endregion
+
+	/**
+	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
+	 *
+	 * @param getOnlyStringValue 是否只获取String值
+	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
+	 * @throws JSONException 语法错误
+	 */
+	public Object nextValue(final boolean getOnlyStringValue) throws JSONException {
+		return nextValue(getOnlyStringValue, (token, tokener, config) -> {
+			switch (token) {
+				case '{':
+					try {
+						return new JSONObject(this, config);
+					} catch (final StackOverflowError e) {
+						throw new JSONException("JSONObject depth too large to process.", e);
+					}
+				case '[':
+					try {
+						return new JSONArray(this, config);
+					} catch (final StackOverflowError e) {
+						throw new JSONException("JSONObject depth too large to process.", e);
+					}
+			}
+			throw new JSONException("Unsupported object build for token {}", token);
+		});
+	}
+
+	/**
+	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
+	 *
+	 * @param getOnlyStringValue 是否只获取String值
+	 * @param objectBuilder JSON对象构建器
+	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
+	 * @throws JSONException 语法错误
+	 */
+	public Object nextValue(final boolean getOnlyStringValue, final ObjectBuilder objectBuilder) throws JSONException {
+		final JSONTokener tokener = this.tokener;
+		char c = tokener.nextClean();
+		switch (c) {
+			case '"':
+			case '\'':
+				return tokener.nextString(c);
+			case '{':
+			case '[':
+				if (getOnlyStringValue) {
+					throw tokener.syntaxError("String value must not begin with '{'");
+				}
+				tokener.back();
+				return objectBuilder.build(c, tokener, this.config);
+		}
+
+		/*
+		 * Handle unquoted text. This could be the values true, false, or null, or it can be a number.
+		 * An implementation (such as this one) is allowed to also accept non-standard forms. Accumulate
+		 * characters until we reach the end of the text or a formatting character.
+		 */
+
+		final StringBuilder sb = new StringBuilder();
+		while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
+			sb.append(c);
+			c = tokener.next();
+		}
+		tokener.back();
+
+		final String valueString = sb.toString().trim();
+		if (valueString.isEmpty()) {
+			throw tokener.syntaxError("Missing value");
+		}
+		return getOnlyStringValue ? valueString : InternalJSONUtil.parseValueFromString(valueString);
+	}
+
+	/**
+	 * 对象构建抽象，通过实现此接口，从{@link JSONTokener}解析值并构建指定对象
+	 */
+	@FunctionalInterface
+	public interface ObjectBuilder {
+		/**
+		 * 构建
+		 *
+		 * @param token   符号表示，用于区分对象类型
+		 * @param tokener {@link JSONTokener}
+		 * @param config  {@link JSONConfig}
+		 * @return 构建的对象
+		 */
+		Object build(char token, JSONTokener tokener, JSONConfig config);
+	}
 }

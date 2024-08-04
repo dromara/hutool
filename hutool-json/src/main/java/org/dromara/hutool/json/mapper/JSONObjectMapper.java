@@ -103,7 +103,10 @@ public class JSONObjectMapper {
 
 		if (source instanceof JSONTokener) {
 			// JSONTokener
-			mapFromTokener((JSONTokener) source, jsonObject);
+			mapFromTokener((JSONTokener) source, jsonObject.config(), jsonObject);
+		}if (source instanceof JSONParser) {
+			// JSONParser
+			((JSONParser) source).parseTo(jsonObject, this.predicate);
 		} else if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
@@ -116,11 +119,11 @@ public class JSONObjectMapper {
 			// 可能为JSON字符串
 			mapFromStr((CharSequence) source, jsonObject);
 		} else if (source instanceof Reader) {
-			mapFromTokener(new JSONTokener((Reader) source, jsonObject.config()), jsonObject);
+			mapFromTokener(new JSONTokener((Reader) source), jsonObject.config(), jsonObject);
 		} else if (source instanceof InputStream) {
-			mapFromTokener(new JSONTokener((InputStream) source, jsonObject.config()), jsonObject);
+			mapFromTokener(new JSONTokener((InputStream) source), jsonObject.config(), jsonObject);
 		} else if (source instanceof byte[]) {
-			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonObject.config()), jsonObject);
+			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source)), jsonObject.config(), jsonObject);
 		} else if (source instanceof ResourceBundle) {
 			// ResourceBundle
 			mapFromResourceBundle((ResourceBundle) source, jsonObject);
@@ -170,17 +173,18 @@ public class JSONObjectMapper {
 			JSONXMLParser.of(ParseConfig.of(), this.predicate).parseJSONObject(jsonStr, jsonObject);
 			return;
 		}
-		mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonObject.config()), jsonObject);
+		mapFromTokener(new JSONTokener(StrUtil.trim(source)), jsonObject.config(), jsonObject);
 	}
 
 	/**
 	 * 从{@link JSONTokener}转换
 	 *
 	 * @param x          JSONTokener
+	 * @param config     JSON配置
 	 * @param jsonObject {@link JSONObject}
 	 */
-	private void mapFromTokener(final JSONTokener x, final JSONObject jsonObject) {
-		JSONParser.of(x).parseTo(jsonObject, this.predicate);
+	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONObject jsonObject) {
+		JSONParser.of(x, config).parseTo(jsonObject, this.predicate);
 	}
 
 	/**

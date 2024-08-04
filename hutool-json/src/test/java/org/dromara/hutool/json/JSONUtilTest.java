@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.json;
 
+import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.map.MapUtil;
@@ -20,48 +21,68 @@ import org.dromara.hutool.json.serialize.JSONStringer;
 import org.dromara.hutool.json.test.bean.Price;
 import org.dromara.hutool.json.test.bean.UserA;
 import org.dromara.hutool.json.test.bean.UserC;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class JSONUtilTest {
 
 	@Test
 	public void parseInvalid() {
-		Assertions.assertThrows(JSONException.class, ()->{
+		assertThrows(JSONException.class, () -> {
 			JSONUtil.parse("'abc");
 		});
 	}
 
 	@Test
 	public void parseInvalid3() {
-		Assertions.assertThrows(JSONException.class, ()->{
+		assertThrows(JSONException.class, () -> {
 			JSONUtil.parse("\"abc");
 		});
 	}
 
 	@Test
+	void parseEmptyValue() {
+		// https://www.rfc-editor.org/rfc/rfc8259#section-7
+		// 未被包装的空串理解为null
+		Object parse = JSONUtil.parse("");
+		assertNull(parse);
+
+		parse = JSONUtil.parse("\"\"");
+		assertEquals("\"\"", parse);
+	}
+
+	@Test
 	public void parseValueTest() {
 		Object parse = JSONUtil.parse(123);
-		Assertions.assertEquals(123, parse);
+		assertEquals(123, parse);
 
 		parse = JSONUtil.parse("\"abc\"");
-		Assertions.assertEquals("abc", parse);
+		assertEquals("\"abc\"", parse);
+
+		parse = JSONUtil.parse("\"\\\"bc\"");
+		assertEquals("\"\\\"bc\"", parse);
 
 		parse = JSONUtil.parse("true");
-		Assertions.assertEquals(true, parse);
+		assertEquals(true, parse);
 
 		parse = JSONUtil.parse("False");
-		Assertions.assertEquals(false, parse);
+		assertEquals(false, parse);
 
 		parse = JSONUtil.parse("null");
-		Assertions.assertNull(parse);
+		assertNull(parse);
+	}
 
-		parse = JSONUtil.parse("");
-		Assertions.assertNull(parse);
+	@Test
+	void parseInvalidTest() {
+		assertThrows(JSONException.class, () -> {
+			// 包装符需要转义，此处未转义报错
+			JSONUtil.parse("\"a\"bc\"");
+		});
 	}
 
 	/**
@@ -69,7 +90,7 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseTest() {
-		Assertions.assertThrows(JSONException.class, ()->{
+		assertThrows(JSONException.class, () -> {
 			JSONUtil.parseArray("[{\"a\":\"a\\x]");
 		});
 	}
@@ -79,7 +100,7 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberToJSONArrayTest() {
-		Assertions.assertThrows(JSONException.class, ()->{
+		assertThrows(JSONException.class, () -> {
 			final JSONArray json = JSONUtil.parseArray(123L);
 			Assertions.assertNotNull(json);
 		});
@@ -91,7 +112,7 @@ public class JSONUtilTest {
 	@Test
 	public void parseNumberToJSONArrayTest2() {
 		final JSONArray json = JSONUtil.parseArray(123L,
-				JSONConfig.of().setIgnoreError(true));
+			JSONConfig.of().setIgnoreError(true));
 		Assertions.assertNotNull(json);
 	}
 
@@ -100,7 +121,7 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberToJSONObjectTest() {
-		Assertions.assertThrows(JSONException.class, ()->{
+		assertThrows(JSONException.class, () -> {
 			final JSONObject json = JSONUtil.parseObj(123L);
 			Assertions.assertNotNull(json);
 		});
@@ -112,7 +133,7 @@ public class JSONUtilTest {
 	@Test
 	public void parseNumberToJSONObjectTest2() {
 		final JSONObject json = JSONUtil.parseObj(123L, JSONConfig.of().setIgnoreError(true));
-		Assertions.assertEquals(new JSONObject(), json);
+		assertEquals(new JSONObject(), json);
 	}
 
 	@Test
@@ -149,8 +170,8 @@ public class JSONUtilTest {
 		final JSONObject jsonObject = JSONUtil.parseObj(data);
 
 		Assertions.assertTrue(jsonObject.containsKey("model"));
-		Assertions.assertEquals(1, jsonObject.getJSONObject("model").getInt("type").intValue());
-		Assertions.assertEquals("17610836523", jsonObject.getJSONObject("model").getStr("mobile"));
+		assertEquals(1, jsonObject.getJSONObject("model").getInt("type").intValue());
+		assertEquals("17610836523", jsonObject.getJSONObject("model").getStr("mobile"));
 		// Assertions.assertEquals("{\"model\":{\"type\":1,\"mobile\":\"17610836523\"}}", jsonObject.toString());
 	}
 
@@ -166,11 +187,11 @@ public class JSONUtilTest {
 		map.put("user", object.toString());
 
 		final JSONObject json = JSONUtil.parseObj(map);
-		Assertions.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json.get("user"));
-		Assertions.assertEquals("{\"user\":\"{\\\"name\\\":\\\"123123\\\",\\\"value\\\":\\\"\\\\\\\\\\\",\\\"value2\\\":\\\"</\\\"}\"}", json.toString());
+		assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json.get("user"));
+		assertEquals("{\"user\":\"{\\\"name\\\":\\\"123123\\\",\\\"value\\\":\\\"\\\\\\\\\\\",\\\"value2\\\":\\\"</\\\"}\"}", json.toString());
 
 		final JSONObject json2 = JSONUtil.parseObj(json.toString());
-		Assertions.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json2.get("user"));
+		assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json2.get("user"));
 	}
 
 	@Test
@@ -180,12 +201,13 @@ public class JSONUtilTest {
 			private static final long serialVersionUID = 1L;
 
 			{
-			put("attributes", "a");
-			put("b", "b");
-			put("c", "c");
-		}};
+				put("attributes", "a");
+				put("b", "b");
+				put("c", "c");
+			}
+		};
 
-		Assertions.assertEquals("{\"attributes\":\"a\",\"b\":\"b\",\"c\":\"c\"}", JSONUtil.toJsonStr(sortedMap));
+		assertEquals("{\"attributes\":\"a\",\"b\":\"b\",\"c\":\"c\"}", JSONUtil.toJsonStr(sortedMap));
 	}
 
 	/**
@@ -196,7 +218,7 @@ public class JSONUtilTest {
 		final String json = "{\"ADT\":[[{\"BookingCode\":[\"N\",\"N\"]}]]}";
 
 		final Price price = JSONUtil.toBean(json, Price.class);
-		Assertions.assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
+		assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
 	}
 
 	@Test
@@ -207,8 +229,8 @@ public class JSONUtilTest {
 		Assertions.assertNotNull(user.getProp());
 		final String prop = user.getProp();
 		final JSONObject propJson = JSONUtil.parseObj(prop);
-		Assertions.assertEquals("男", propJson.getStr("gender"));
-		Assertions.assertEquals(18, propJson.getInt("age").intValue());
+		assertEquals("男", propJson.getStr("gender"));
+		assertEquals(18, propJson.getInt("age").intValue());
 		// Assertions.assertEquals("{\"age\":18,\"gender\":\"男\"}", user.getProp());
 	}
 
@@ -216,24 +238,24 @@ public class JSONUtilTest {
 	public void getStrTest() {
 		final String html = "{\"name\":\"Something must have been changed since you leave\"}";
 		final JSONObject jsonObject = JSONUtil.parseObj(html);
-		Assertions.assertEquals("Something must have been changed since you leave", jsonObject.getStr("name"));
+		assertEquals("Something must have been changed since you leave", jsonObject.getStr("name"));
 	}
 
 	@Test
 	public void getStrTest2() {
 		final String html = "{\"name\":\"Something\\u00a0must have been changed since you leave\"}";
 		final JSONObject jsonObject = JSONUtil.parseObj(html);
-		Assertions.assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStrEscaped("name"));
+		assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStrEscaped("name"));
 	}
 
 	@Test
 	public void parseFromXmlTest() {
 		final String s = "<sfzh>640102197312070614</sfzh><sfz>640102197312070614X</sfz><name>aa</name><gender>1</gender>";
 		final JSONObject json = JSONUtil.parseFromXml(s);
-		Assertions.assertEquals(640102197312070614L, json.get("sfzh"));
-		Assertions.assertEquals("640102197312070614X", json.get("sfz"));
-		Assertions.assertEquals("aa", json.get("name"));
-		Assertions.assertEquals(1, json.get("gender"));
+		assertEquals(640102197312070614L, json.get("sfzh"));
+		assertEquals("640102197312070614X", json.get("sfz"));
+		assertEquals("aa", json.get("name"));
+		assertEquals(1, json.get("gender"));
 	}
 
 	@Test
@@ -241,81 +263,81 @@ public class JSONUtilTest {
 		final String json = "{\"test\": 12.00}";
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
 		//noinspection BigDecimalMethodWithoutRoundingCalled
-		Assertions.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
+		assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
 	}
 
 	@Test
 	public void customValueTest() {
 		final JSONObject jsonObject = JSONUtil.ofObj()
-		.set("test2", (JSONStringer) () -> NumberUtil.format("#.0", 12.00D));
+			.set("test2", (JSONStringer) () -> NumberUtil.format("#.0", 12.00D));
 
-		Assertions.assertEquals("{\"test2\":12.0}", jsonObject.toString());
+		assertEquals("{\"test2\":12.0}", jsonObject.toString());
 	}
 
 	@Test
 	public void setStripTrailingZerosTest() {
 		// 默认去除多余的0
 		final JSONObject jsonObjectDefault = JSONUtil.ofObj()
-				.set("test2", 12.00D);
-		Assertions.assertEquals("{\"test2\":12}", jsonObjectDefault.toString());
+			.set("test2", 12.00D);
+		assertEquals("{\"test2\":12}", jsonObjectDefault.toString());
 
 		// 不去除多余的0
 		final JSONObject jsonObject = JSONUtil.ofObj(JSONConfig.of().setStripTrailingZeros(false))
-				.set("test2", 12.00D);
-		Assertions.assertEquals("{\"test2\":12.0}", jsonObject.toString());
+			.set("test2", 12.00D);
+		assertEquals("{\"test2\":12.0}", jsonObject.toString());
 
 		// 去除多余的0
 		jsonObject.config().setStripTrailingZeros(true);
-		Assertions.assertEquals("{\"test2\":12}", jsonObject.toString());
+		assertEquals("{\"test2\":12}", jsonObject.toString());
 	}
 
 	@Test
 	public void parseObjTest() {
 		// 测试转义
 		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
-				"    \"test\": \"\\\\地库地库\",\n" +
-				"}");
+			"    \"test\": \"\\\\地库地库\",\n" +
+			"}");
 
-		Assertions.assertEquals("\\地库地库", jsonObject.getObj("test"));
+		assertEquals("\\地库地库", jsonObject.getObj("test"));
 	}
 
 	@Test
-	public void sqlExceptionTest(){
+	public void sqlExceptionTest() {
 		//https://github.com/dromara/hutool/issues/1399
 		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
 		final JSONObject set = JSONUtil.ofObj().set("test", new SQLException("test"));
-		Assertions.assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
+		assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
 	}
 
 	@Test
-	public void parseBigNumberTest(){
+	public void parseBigNumberTest() {
 		// 科学计数法使用BigDecimal处理，默认输出非科学计数形式
 		final String str = "{\"test\":100000054128897953e4}";
-		Assertions.assertEquals("{\"test\":1000000541288979530000}", JSONUtil.parseObj(str).toString());
+		assertEquals("{\"test\":1000000541288979530000}", JSONUtil.parseObj(str).toString());
 	}
 
 	@Test
-	public void toXmlTest(){
+	public void toXmlTest() {
 		final JSONObject obj = JSONUtil.ofObj();
 		obj.set("key1", "v1")
-				.set("key2", ListUtil.view("a", "b", "c"));
+			.set("key2", ListUtil.view("a", "b", "c"));
 		final String xmlStr = JSONUtil.toXmlStr(obj);
-		Assertions.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
+		assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
 
 	@Test
-	public void toJsonStrOfStringTest(){
+	public void toJsonStrOfStringTest() {
 		final String a = "a";
 
 		final String s = JSONUtil.toJsonStr(a);
-		Assertions.assertEquals("\"a\"", s);
+		assertEquals("\"a\"", s);
 	}
 
 	@Test
-	public void toJsonStrOfNumberTest(){
+	public void toJsonStrOfNumberTest() {
 		final int a = 1;
 		final String s = JSONUtil.toJsonStr(a);
-		Assertions.assertEquals("1", s);
+		assertEquals("1", s);
 	}
 
 	/**
@@ -325,7 +347,7 @@ public class JSONUtilTest {
 	public void testArrayEntity() {
 		final String jsonStr = JSONUtil.toJsonStr(new ArrayEntity());
 		// a为空的bytes数组，按照空的流对待
-		Assertions.assertEquals("{\"b\":[0],\"c\":[],\"d\":[],\"e\":[]}", jsonStr);
+		assertEquals("{\"b\":[0],\"c\":[],\"d\":[],\"e\":[]}", jsonStr);
 	}
 
 	@Data
@@ -340,13 +362,13 @@ public class JSONUtilTest {
 	@Test
 	void toJsonStrOfBooleanTest() {
 		final String jsonStr = JSONUtil.toJsonStr(true);
-		Assertions.assertEquals("true", jsonStr);
+		assertEquals("true", jsonStr);
 	}
 
 	@Test
 	public void issue3540Test() {
-		final Long userId=10101010L;
+		final Long userId = 10101010L;
 		final String jsonStr = JSONUtil.toJsonStr(userId);
-		Assertions.assertEquals("10101010", jsonStr);
+		assertEquals("10101010", jsonStr);
 	}
 }

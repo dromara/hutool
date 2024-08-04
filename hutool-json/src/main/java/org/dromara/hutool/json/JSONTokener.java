@@ -29,6 +29,11 @@ import java.io.StringReader;
  */
 public class JSONTokener extends ReaderWrapper {
 
+	/**
+	 * 定义结束（End of stream）为：0
+	 */
+	public static final int EOF = 0;
+
 	private long character;
 	/**
 	 * 是否结尾 End of stream
@@ -51,41 +56,33 @@ public class JSONTokener extends ReaderWrapper {
 	 */
 	private boolean usePrevious;
 
-	/**
-	 * JSON配置
-	 */
-	private final JSONConfig config;
-
 	// ------------------------------------------------------------------------------------ Constructor start
 
 	/**
 	 * 从InputStream中构建，使用UTF-8编码
 	 *
 	 * @param inputStream InputStream
-	 * @param config      JSON配置
 	 * @throws JSONException JSON异常，包装IO异常
 	 */
-	public JSONTokener(final InputStream inputStream, final JSONConfig config) throws JSONException {
-		this(IoUtil.toUtf8Reader(inputStream), config);
+	public JSONTokener(final InputStream inputStream) throws JSONException {
+		this(IoUtil.toUtf8Reader(inputStream));
 	}
 
 	/**
 	 * 从字符串中构建
 	 *
-	 * @param s      JSON字符串
-	 * @param config JSON配置
+	 * @param s JSON字符串
 	 */
-	public JSONTokener(final CharSequence s, final JSONConfig config) {
-		this(new StringReader(Assert.notBlank(s).toString()), config);
+	public JSONTokener(final CharSequence s) {
+		this(new StringReader(Assert.notBlank(s).toString()));
 	}
 
 	/**
 	 * 从Reader中构建
 	 *
 	 * @param reader Reader
-	 * @param config JSON配置
 	 */
-	public JSONTokener(final Reader reader, final JSONConfig config) {
+	public JSONTokener(final Reader reader) {
 		super(IoUtil.toMarkSupport(Assert.notNull(reader)));
 		this.eof = false;
 		this.usePrevious = false;
@@ -93,7 +90,6 @@ public class JSONTokener extends ReaderWrapper {
 		this.index = 0;
 		this.character = 1;
 		this.line = 1;
-		this.config = config;
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
 
@@ -152,9 +148,9 @@ public class JSONTokener extends ReaderWrapper {
 				throw new JSONException(exception);
 			}
 
-			if (c <= 0) { // End of stream
+			if (c <= EOF) { // End of stream
 				this.eof = true;
-				c = 0;
+				c = EOF;
 			}
 		}
 		this.index += 1;
@@ -183,9 +179,10 @@ public class JSONTokener extends ReaderWrapper {
 	/**
 	 * 获取16进制unicode转义符对应的字符值，如：
 	 * <pre>{@code '4f60' -> '你'}</pre>
+	 *
 	 * @return 字符
 	 */
-	public char nextUnicode(){
+	public char nextUnicode() {
 		return (char) NumberUtil.parseInt(next(4), 16);
 	}
 
@@ -330,61 +327,6 @@ public class JSONTokener extends ReaderWrapper {
 			}
 			sb.append(c);
 		}
-	}
-
-	/**
-	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
-	 *
-	 * @param getOnlyStringValue 是否只获取String值
-	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
-	 * @throws JSONException 语法错误
-	 */
-	public Object nextValue(final boolean getOnlyStringValue) throws JSONException {
-		char c = this.nextClean();
-		switch (c) {
-			case '"':
-			case '\'':
-				return this.nextString(c);
-			case '{':
-				if (getOnlyStringValue) {
-					throw this.syntaxError("String value must not begin with '{'");
-				}
-				this.back();
-				try {
-					return new JSONObject(this, this.config);
-				} catch (final StackOverflowError e) {
-					throw new JSONException("JSONObject depth too large to process.", e);
-				}
-			case '[':
-				if (getOnlyStringValue) {
-					throw this.syntaxError("String value must not begin with '['");
-				}
-				this.back();
-				try {
-					return new JSONArray(this, this.config);
-				} catch (final StackOverflowError e) {
-					throw new JSONException("JSONArray depth too large to process.", e);
-				}
-		}
-
-		/*
-		 * Handle unquoted text. This could be the values true, false, or null, or it can be a number.
-		 * An implementation (such as this one) is allowed to also accept non-standard forms. Accumulate
-		 * characters until we reach the end of the text or a formatting character.
-		 */
-
-		final StringBuilder sb = new StringBuilder();
-		while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
-			sb.append(c);
-			c = this.next();
-		}
-		this.back();
-
-		final String valueString = sb.toString().trim();
-		if (valueString.isEmpty()) {
-			throw this.syntaxError("Missing value");
-		}
-		return getOnlyStringValue ? valueString : InternalJSONUtil.parseValueFromString(valueString);
 	}
 
 	/**
