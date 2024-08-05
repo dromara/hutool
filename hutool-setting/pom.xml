@@ -50,5 +50,12 @@
 			<version>2.2</version>
 			<optional>true</optional>
 		</dependency>
+		<!-- Markdown -->
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark</artifactId>
+			<version>0.22.0</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>
