@@ -887,9 +887,21 @@ public class ExcelWriteTest {
 		Map<String, Object> map = new LinkedHashMap<>(MAP_DATA_1);
 		map.put("中文长度测试（符号）", "abc");
 
-		try (ExcelWriter writer = new ExcelWriter("d:/autoSizeColumnTest.xlsx")) {
+		String file1 = "d:/autoSizeColumnTest.xlsx";
+		String file2 = "d:/autoSizeColumnTest2.xlsx";
+
+		FileUtil.del(file1);
+		FileUtil.del(file2);
+
+		try (ExcelWriter writer = new ExcelWriter(file1)) {
+			writer.writeRow(map, true);
+			writer.autoSizeColumnAll(2f);
+		}
+
+		try (BigExcelWriter writer = new BigExcelWriter(file2)) {
 			writer.writeRow(map, true);
 			writer.autoSizeColumnAll(2f);
 		}
 	}
+
 }
