@@ -47,6 +47,21 @@ public class JSONEngineFactoryTest {
 	}
 
 	@Test
+	void jacksonTest2() {
+		final JSONEngine engine = JSONEngineFactory.createEngine("jackson");
+		assertEquals(JacksonEngine.class, engine.getClass());
+
+		final TestBean testBean = new TestBean("张三", 18, true);
+		final String serialize = engine.toJsonString(testBean);
+
+		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
+		assertEquals(jsonStr, serialize);
+
+		final TestBean testBean1 = engine.fromJsonString(jsonStr, TestBean.class);
+		assertEquals(testBean, testBean1);
+	}
+
+	@Test
 	void GsonTest() {
 		final JSONEngine engine = JSONEngineFactory.createEngine("gson");
 		assertEquals(GsonEngine.class, engine.getClass());
