@@ -12,15 +12,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
 import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.BuiltinFormats;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.junit.Assert;
@@ -28,15 +20,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * 写出Excel单元测试
@@ -45,8 +29,25 @@ import java.util.TreeMap;
  */
 public class ExcelWriteTest {
 
+	public static Map<String, Object> MAP_DATA_1 = new LinkedHashMap<>();
+	public static Map<String, Object> MAP_DATA_2 = new LinkedHashMap<>();
+
+	static {
+		MAP_DATA_1.put("姓名", "张三");
+		MAP_DATA_1.put("年龄", 23);
+		MAP_DATA_1.put("成绩", 88.32);
+		MAP_DATA_1.put("是否合格", true);
+		MAP_DATA_1.put("考试日期", DateUtil.date());
+
+		MAP_DATA_2.put("姓名", "张三");
+		MAP_DATA_2.put("年龄", 23);
+		MAP_DATA_2.put("成绩", 88.32);
+		MAP_DATA_2.put("是否合格", true);
+		MAP_DATA_2.put("考试日期", DateUtil.date());
+	}
+
 	@Test
-	public void writeNoFlushTest(){
+	public void writeNoFlushTest() {
 		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
 		List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
@@ -200,26 +201,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void mergeTest2() {
-		Map<String, Object> row1 = new LinkedHashMap<>();
-		row1.put("姓名", "张三");
-		row1.put("年龄", 23);
-		row1.put("成绩", 88.32);
-		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
 
-		Map<String, Object> row2 = new LinkedHashMap<>();
-		row2.put("姓名", "李四");
-		row2.put("年龄", 33);
-		row2.put("成绩", 59.50);
-		row2.put("是否合格", false);
-		row2.put("考试日期", DateUtil.date());
-
-		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(MAP_DATA_1, MAP_DATA_2);
 
 		// 通过工具类创建writer
 		ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeMapTest.xlsx");
 		// 合并单元格后的标题行，使用默认标题样式
-		writer.merge(row1.size() - 1, "一班成绩单");
+		writer.merge(MAP_DATA_1.size() - 1, "一班成绩单");
 
 		// 一次性写出内容，使用默认样式，强制输出标题
 		writer.write(rows, true);
@@ -230,21 +218,8 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeMapTest() {
-		Map<String, Object> row1 = new LinkedHashMap<>();
-		row1.put("姓名", "张三");
-		row1.put("年龄", 23);
-		row1.put("成绩", 88.32);
-		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
 
-		Map<String, Object> row2 = new LinkedHashMap<>();
-		row2.put("姓名", "李四");
-		row2.put("年龄", 33);
-		row2.put("成绩", 59.50);
-		row2.put("是否合格", false);
-		row2.put("考试日期", DateUtil.date());
-
-		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(MAP_DATA_1, MAP_DATA_2);
 
 		// 通过工具类创建writer
 		ExcelWriter writer = ExcelUtil.getWriter("e:/excel/writeMapTest.xlsx");
@@ -257,7 +232,7 @@ public class ExcelWriteTest {
 		writer.getStyleSet().setFont(font, true);
 
 		// 合并单元格后的标题行，使用默认标题样式
-		writer.merge(row1.size() - 1, "一班成绩单");
+		writer.merge(MAP_DATA_1.size() - 1, "一班成绩单");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows, true);
 		// 关闭writer，释放内存
@@ -267,18 +242,12 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeMapTest2() {
-		Map<String, Object> row1 = MapUtil.newHashMap(true);
-		row1.put("姓名", "张三");
-		row1.put("年龄", 23);
-		row1.put("成绩", 88.32);
-		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest2.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("d:/writeMapTest2.xlsx");
 
 		// 一次性写出内容，使用默认样式
-		writer.writeRow(row1, true);
+		writer.writeRow(MAP_DATA_1, true);
 		// 关闭writer，释放内存
 		writer.close();
 	}
@@ -286,12 +255,6 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeMapWithStyleTest() {
-		Map<String, Object> row1 = MapUtil.newHashMap(true);
-		row1.put("姓名", "张三");
-		row1.put("年龄", 23);
-		row1.put("成绩", 88.32);
-		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
 
 		// 通过工具类创建writer
 		String path = "f:/test/writeMapWithStyleTest.xlsx";
@@ -300,7 +263,7 @@ public class ExcelWriteTest {
 		writer.setStyleSet(null);
 
 		// 一次性写出内容，使用默认样式
-		writer.writeRow(row1, true);
+		writer.writeRow(MAP_DATA_1, true);
 
 		// 设置某个单元格样式
 		CellStyle orCreateRowStyle = writer.getOrCreateCellStyle(0, 1);
@@ -335,8 +298,8 @@ public class ExcelWriteTest {
 		writer.addHeaderAlias("name", "姓名");
 		writer.addHeaderAlias("age", "年龄");
 		writer.addHeaderAlias("score", "分数");
-		writer.addHeaderAlias("isPass", "是否通过");
-		writer.addHeaderAlias("examDate", "考试时间");
+		writer.addHeaderAlias("isPass", "是否合格");
+		writer.addHeaderAlias("examDate", "考试日期");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -445,21 +408,21 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeBeanTest() {
-		cn.hutool.poi.excel.TestBean bean1 = new cn.hutool.poi.excel.TestBean();
+		TestBean bean1 = new TestBean();
 		bean1.setName("张三");
 		bean1.setAge(22);
 		bean1.setPass(true);
 		bean1.setScore(66.30);
 		bean1.setExamDate(DateUtil.date());
 
-		cn.hutool.poi.excel.TestBean bean2 = new cn.hutool.poi.excel.TestBean();
+		TestBean bean2 = new TestBean();
 		bean2.setName("李四");
 		bean2.setAge(28);
 		bean2.setPass(false);
 		bean2.setScore(38.50);
 		bean2.setExamDate(DateUtil.date());
 
-		List<cn.hutool.poi.excel.TestBean> rows = CollUtil.newArrayList(bean1, bean2);
+		List<TestBean> rows = CollUtil.newArrayList(bean1, bean2);
 		// 通过工具类创建writer
 		String file = "e:/writeBeanTest.xlsx";
 		FileUtil.del(file);
@@ -481,17 +444,17 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeBeanTest2() {
-		cn.hutool.poi.excel.OrderExcel order1 = new cn.hutool.poi.excel.OrderExcel();
+		OrderExcel order1 = new OrderExcel();
 		order1.setId("1");
 		order1.setNum("123");
 		order1.setBody("body1");
 
-		cn.hutool.poi.excel.OrderExcel order2 = new cn.hutool.poi.excel.OrderExcel();
+		OrderExcel order2 = new OrderExcel();
 		order1.setId("2");
 		order1.setNum("456");
 		order1.setBody("body2");
 
-		List<cn.hutool.poi.excel.OrderExcel> rows = CollUtil.newArrayList(order1, order2);
+		List<OrderExcel> rows = CollUtil.newArrayList(order1, order2);
 		// 通过工具类创建writer
 		String file = "f:/test/writeBeanTest2.xlsx";
 		FileUtil.del(file);
@@ -618,7 +581,7 @@ public class ExcelWriteTest {
 
 		Font headFont = writer.createFont();
 		headFont.setBold(true);
-		headFont.setFontHeightInPoints((short)50);
+		headFont.setFontHeightInPoints((short) 50);
 		headFont.setFontName("Microsoft YaHei");
 		writer.getStyleSet().getHeadCellStyle().setFont(headFont);
 
@@ -756,20 +719,20 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void mergeTest3(){
+	public void mergeTest3() {
 		// https://github.com/dromara/hutool/issues/1696
 
-		List<Map<String,Object>> list = new ArrayList<>();
-		Map<String,Object> map = new HashMap<>();
-		map.put("xmnf","2021");
+		List<Map<String, Object>> list = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		map.put("xmnf", "2021");
 		list.add(map);
 
-		Map<String,Object> map1 = new HashMap<>();
-		map1.put("xmnf",new XSSFRichTextString("9999"));
+		Map<String, Object> map1 = new HashMap<>();
+		map1.put("xmnf", new XSSFRichTextString("9999"));
 		list.add(map1);
 
-		Map<String,Object> map2 = new HashMap<>();
-		map2.put("xmnf","2019");
+		Map<String, Object> map2 = new HashMap<>();
+		map2.put("xmnf", "2019");
 		list.add(map2);
 
 		//通过工具类创建writer
@@ -786,7 +749,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void mergeForDateTest(){
+	public void mergeForDateTest() {
 		// https://github.com/dromara/hutool/issues/1911
 
 		//通过工具类创建writer
@@ -799,7 +762,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void changeHeaderStyleTest(){
+	public void changeHeaderStyleTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
 		writer.writeHeadRow(ListUtil.of("姓名", "性别", "年龄"));
 		final CellStyle headCellStyle = writer.getStyleSet().getHeadCellStyle();
@@ -811,7 +774,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeFloatTest(){
+	public void writeFloatTest() {
 		//issue https://gitee.com/dromara/hutool/issues/I43U9G
 		String path = "d:/test/floatTest.xlsx";
 		FileUtil.del(path);
@@ -823,7 +786,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void issueI466ZZTest(){
+	public void issueI466ZZTest() {
 		// https://gitee.com/dromara/hutool/issues/I466ZZ
 		// 需要输出S_20000314_x5116_0004
 		// 此处加入一个转义前缀：_x005F
@@ -836,7 +799,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeLongTest(){
+	public void writeLongTest() {
 		//https://gitee.com/dromara/hutool/issues/I49R6U
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/long.xlsx");
 		writer.write(ListUtil.of(1427545395336093698L));
@@ -845,8 +808,8 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeHyperlinkTest(){
-			final ExcelWriter writer = ExcelUtil.getWriter("d:/test/hyperlink.xlsx");
+	public void writeHyperlinkTest() {
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/hyperlink.xlsx");
 
 		final Hyperlink hyperlink = writer.createHyperlink(HyperlinkType.URL, "https://hutool.cn");
 
@@ -856,12 +819,12 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void mergeNumberTest(){
-		File tempFile=new File("d:/test/mergeNumber.xlsx");
+	public void mergeNumberTest() {
+		File tempFile = new File("d:/test/mergeNumber.xlsx");
 		FileUtil.del(tempFile);
 
-		BigExcelWriter writer= new BigExcelWriter(tempFile);
-		writer.merge(0,1,2,2,3.99,false);
+		BigExcelWriter writer = new BigExcelWriter(tempFile);
+		writer.merge(0, 1, 2, 2, 3.99, false);
 		writer.close();
 	}
 
@@ -880,7 +843,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	public void getDispositionTest(){
+	public void getDispositionTest() {
 		ExcelWriter writer = ExcelUtil.getWriter(true);
 		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
@@ -888,32 +851,45 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeColTest(){
+	public void writeColTest() {
 		ExcelWriter writer = ExcelUtil.getWriter("G:\\test.xlsx");
-		List<Integer> list= new ArrayList<>();
+		List<Integer> list = new ArrayList<>();
 		for (int i = 0; i < 20; i++) {
 			list.add(i);
 		}
-		writer.writeCol("header1",0,list,true);
-		writer.writeCol("header2",1,list,false);
-		writer.writeCol("header3",0,list,true);
-		writer.writeCol("header4",1,list,false);
+		writer.writeCol("header1", 0, list, true);
+		writer.writeCol("header2", 1, list, false);
+		writer.writeCol("header3", 0, list, true);
+		writer.writeCol("header4", 1, list, false);
 
-		Map<String,List<Integer>> map1 = new LinkedHashMap<>();
-		map1.put("map1_header1",list);
-		map1.put("map1_header2",list);
-		map1.put("map1_header3",list);
-		map1.put("map1_header4",list);
+		Map<String, List<Integer>> map1 = new LinkedHashMap<>();
+		map1.put("map1_header1", list);
+		map1.put("map1_header2", list);
+		map1.put("map1_header3", list);
+		map1.put("map1_header4", list);
 
-		Map<String,List<Integer>> map2 = new LinkedHashMap<>();
-		map2.put("map2_header1",list);
-		map2.put("map2_header2",list);
-		map2.put("map2_header3",list);
-		map2.put("map2_header4",list);
+		Map<String, List<Integer>> map2 = new LinkedHashMap<>();
+		map2.put("map2_header1", list);
+		map2.put("map2_header2", list);
+		map2.put("map2_header3", list);
+		map2.put("map2_header4", list);
 
-		writer.writeCol(map1,true);
-		writer.writeCol(map2,false);
+		writer.writeCol(map1, true);
+		writer.writeCol(map2, false);
 
 		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void autoSizeColumnTest() {
+
+		Map<String, Object> map = new LinkedHashMap<>(MAP_DATA_1);
+		map.put("中文长度测试（符号）", "abc");
+
+		try (ExcelWriter writer = new ExcelWriter("d:/autoSizeColumnTest.xlsx")) {
+			writer.writeRow(map, true);
+			writer.autoSizeColumnAll(2f);
+		}
 	}
 }
