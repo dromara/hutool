@@ -43,7 +43,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 缓存Map
+	 * 缓存Map。子类中初始化
 	 */
 	protected Map<Mutable<K>, CacheObj<K, V>> cacheMap;
 
@@ -145,12 +145,13 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 			keyLock.lock();
 			try {
 				// 双重检查锁，防止在竞争锁的过程中已经有其它线程写入
-				final CacheObj<K, V> co = getWithoutLock(key);
-				if (null == co || co.isExpired()) {
+				// issue#3686 由于这个方法内的加锁是get独立锁，不和put锁互斥，而put和pruneCache会修改cacheMap，导致在pruneCache过程中get会有并发问题
+				// 因此此处需要使用带全局锁的get获取值
+				v = get(key, isUpdateLastAccess);
+				if (null == v) {
+					// supplier的创建是一个耗时过程，此处创建与全局锁无关，而与key锁相关，这样就保证每个key只创建一个value，且互斥
 					v = supplier.get();
 					put(key, v, timeout);
-				} else {
-					v = co.get(isUpdateLastAccess);
 				}
 			} finally {
 				keyLock.unlock();
