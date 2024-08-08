@@ -16,6 +16,7 @@ import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.cron.pattern.Part;
 
 import java.time.Year;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -168,6 +169,13 @@ public class PatternMatcher {
 		}
 
 		return calendar;
+	}
+
+	@Override
+	public String toString() {
+		return "PatternMatcher{" +
+			"matchers=" + Arrays.toString(matchers) +
+			'}';
 	}
 
 	/**
