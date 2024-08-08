@@ -31,6 +31,7 @@
 * 【core   】      修复CsvParser中对正文中双引号处理逻辑问题（pr#1244@Gitee）
 * 【core   】      修复ZipUtil.zip压缩到本目录时可能造成的死循环问题（issue#IAGYDG@Gitee）
 * 【cache  】      修复AbstractCache.get中锁不一致导致的并发问题（issue#3686@Github）
+* 【cron   】      修复CronPatternUtil.nextDateAfter栈溢出问题（issue#3685@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.29(2024-07-03)

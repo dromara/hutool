@@ -22,10 +22,24 @@ public class CronPatternUtil {
 	 *
 	 * @param pattern 表达式
 	 * @param start 起始时间
+	 * @return 日期
+	 * @since 5.8.30
+	 */
+	public static Date nextDateAfter(CronPattern pattern, Date start) {
+		return DateUtil.date(pattern.nextMatchAfter(CalendarUtil.calendar(start)));
+	}
+
+	/**
+	 * 列举指定日期之后内第一个匹配表达式的日期
+	 *
+	 * @param pattern 表达式
+	 * @param start 起始时间
 	 * @param isMatchSecond 是否匹配秒（无效）
 	 * @return 日期
 	 * @since 4.5.8
+	 * @deprecated isMatchSecond无效，使用 {@link #nextDateAfter(CronPattern, Date)}
 	 */
+	@Deprecated
 	public static Date nextDateAfter(CronPattern pattern, Date start, boolean isMatchSecond) {
 		return DateUtil.date(pattern.nextMatchAfter(CalendarUtil.calendar(start)));
 	}

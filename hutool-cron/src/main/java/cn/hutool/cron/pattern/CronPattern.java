@@ -156,13 +156,25 @@ public class CronPattern {
 			calendar = newCalendar;
 		}
 
+		return nextMatch(calendar);
+	}
+
+	/**
+	 * 返回匹配到的下一个时间，如果给定时间匹配，直接返回
+	 *
+	 * @param calendar 时间
+	 * @return 匹配到的下一个时间
+	 * @since 5.8.30
+	 */
+	public Calendar nextMatch(final Calendar calendar) {
 		Calendar next = nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
-		if (false == match(next, true)) {
-			next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);
-			next = CalendarUtil.beginOfDay(next);
-			return nextMatchAfter(next);
+		if (match(next, true)) {
+			return next;
 		}
-		return next;
+
+		next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);
+		next = CalendarUtil.beginOfDay(next);
+		return nextMatch(next);
 	}
 
 	@Override
