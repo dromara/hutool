@@ -2,7 +2,7 @@ package org.dromara.hutool.poi.excel.reader;
 
 import org.dromara.hutool.poi.excel.ExcelReader;
 import org.dromara.hutool.poi.excel.ExcelUtil;
-import org.dromara.hutool.poi.excel.ExcelWriter;
+import org.dromara.hutool.poi.excel.writer.ExcelWriter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

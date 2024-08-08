@@ -14,6 +14,7 @@ package org.dromara.hutool.poi.excel;
 
 import org.apache.poi.ss.util.CellReference;
 import org.dromara.hutool.poi.excel.cell.CellReferenceUtil;
+import org.dromara.hutool.poi.excel.writer.ExcelWriter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

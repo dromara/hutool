@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,13 +10,14 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.writer;
 
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.dromara.hutool.poi.excel.WorkbookUtil;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -154,19 +155,19 @@ public class BigExcelWriter extends ExcelWriter {
 	// -------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public BigExcelWriter autoSizeColumn(final int columnIndex) {
+	public BigExcelWriter autoSizeColumn(final int columnIndex, final boolean useMergedCells, final float widthRatio) {
 		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
 		sheet.trackColumnForAutoSizing(columnIndex);
-		super.autoSizeColumn(columnIndex);
+		super.autoSizeColumn(columnIndex, useMergedCells, widthRatio);
 		sheet.untrackColumnForAutoSizing(columnIndex);
 		return this;
 	}
 
 	@Override
-	public BigExcelWriter autoSizeColumnAll() {
+	public BigExcelWriter autoSizeColumnAll(final boolean useMergedCells, final float widthRatio) {
 		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
 		sheet.trackAllColumnsForAutoSizing();
-		super.autoSizeColumnAll();
+		super.autoSizeColumnAll(useMergedCells, widthRatio);
 		sheet.untrackAllColumnsForAutoSizing();
 		return this;
 	}

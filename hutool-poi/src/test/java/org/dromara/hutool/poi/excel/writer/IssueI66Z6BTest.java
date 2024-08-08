@@ -15,7 +15,6 @@ package org.dromara.hutool.poi.excel.writer;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.poi.excel.ExcelUtil;
-import org.dromara.hutool.poi.excel.ExcelWriter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

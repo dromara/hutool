@@ -22,9 +22,7 @@ import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.BigExcelWriter;
 import org.dromara.hutool.poi.excel.ExcelUtil;
-import org.dromara.hutool.poi.excel.ExcelWriter;
 import org.dromara.hutool.poi.excel.TestBean;
 import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
@@ -256,7 +254,7 @@ public class BigExcelWriteTest {
 			put("userName", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 		}});
 		writer.write(list, true);
-		writer.autoSizeColumnAll();
+		writer.autoSizeColumnAll(false, 0);
 		writer.close();
 	}
 }

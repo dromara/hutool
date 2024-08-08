@@ -19,7 +19,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.poi.excel.ExcelUtil;
-import org.dromara.hutool.poi.excel.ExcelWriter;
 import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
 import org.junit.jupiter.api.Disabled;
@@ -107,7 +106,7 @@ public class Issue2221Test {
 		);
 
 		// 自动尺寸
-		writer.autoSizeColumnAll();
+		writer.autoSizeColumnAll(false, 0);
 
 		writer.write(data, true);
 		writer.close();

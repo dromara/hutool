@@ -14,7 +14,6 @@ package org.dromara.hutool.poi.excel.writer;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.poi.excel.ExcelUtil;
-import org.dromara.hutool.poi.excel.ExcelWriter;
 import org.dromara.hutool.poi.excel.WorkbookUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.apache.poi.ss.usermodel.Cell;

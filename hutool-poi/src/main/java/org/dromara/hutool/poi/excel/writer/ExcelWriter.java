@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.writer;
 
 import org.apache.poi.common.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.*;
@@ -34,6 +34,9 @@ import org.dromara.hutool.core.map.multi.RowKeyTable;
 import org.dromara.hutool.core.map.multi.Table;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.poi.excel.ExcelBase;
+import org.dromara.hutool.poi.excel.RowUtil;
+import org.dromara.hutool.poi.excel.WorkbookUtil;
 import org.dromara.hutool.poi.excel.cell.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellRangeUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
@@ -262,41 +265,35 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 此方法必须在指定列数据完全写出后调用才有效。<br>
 	 * 列数计算是通过第一行计算的
 	 *
+	 * @param useMergedCells 是否适用于合并单元格
+	 * @param widthRatio     列宽的倍数。如果所有内容都是英文，可以设为1，如果有中文，建议设置为 1.6-2.0之间。
 	 * @return this
 	 * @since 4.0.12
 	 */
-	public ExcelWriter autoSizeColumnAll() {
+	public ExcelWriter autoSizeColumnAll(final boolean useMergedCells, final float widthRatio) {
 		final int columnCount = this.getColumnCount();
 		for (int i = 0; i < columnCount; i++) {
-			autoSizeColumn(i);
+			autoSizeColumn(i, useMergedCells, widthRatio);
 		}
 		return this;
 	}
 
 	/**
-	 * 设置某列为自动宽度，不考虑合并单元格<br>
-	 * 此方法必须在指定列数据完全写出后调用才有效。
-	 *
-	 * @param columnIndex 第几列，从0计数
-	 * @return this
-	 * @since 4.0.12
-	 */
-	public ExcelWriter autoSizeColumn(final int columnIndex) {
-		this.sheet.autoSizeColumn(columnIndex);
-		return this;
-	}
-
-	/**
-	 * 设置某列为自动宽度<br>
+	 * 设置某列为自动宽度。注意有中文的情况下，需要根据需求调整宽度扩大比例。<br>
 	 * 此方法必须在指定列数据完全写出后调用才有效。
 	 *
 	 * @param columnIndex    第几列，从0计数
 	 * @param useMergedCells 是否适用于合并单元格
+	 * @param widthRatio     列宽的倍数。如果所有内容都是英文，可以设为1，如果有中文，建议设置为 1.6-2.0之间。
 	 * @return this
-	 * @since 3.3.0
+	 * @since 5.8.30
 	 */
-	public ExcelWriter autoSizeColumn(final int columnIndex, final boolean useMergedCells) {
-		this.sheet.autoSizeColumn(columnIndex, useMergedCells);
+	public ExcelWriter autoSizeColumn(final int columnIndex, final boolean useMergedCells, final float widthRatio) {
+		if (widthRatio > 0) {
+			sheet.setColumnWidth(columnIndex, (int) (sheet.getColumnWidth(columnIndex) * widthRatio));
+		} else {
+			sheet.autoSizeColumn(columnIndex, useMergedCells);
+		}
 		return this;
 	}
 
@@ -562,10 +559,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (sheet instanceof XSSFSheet) {
 			((XSSFSheet) sheet).addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
 			return this;
-		} else if(sheet instanceof SXSSFSheet){
+		} else if (sheet instanceof SXSSFSheet) {
 			// SXSSFSheet并未提供忽略错误方法，获得其内部_sh字段设置
 			final XSSFSheet xssfSheet = (XSSFSheet) FieldUtil.getFieldValue(sheet, "_sh");
-			if(null != xssfSheet){
+			if (null != xssfSheet) {
 				xssfSheet.addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
 			}
 		}
@@ -694,8 +691,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 指定样式传入null，则不使用任何样式
 	 *
 	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
-	 * @param content     合并单元格后的内容
-	 * @param cellStyle   合并后单元格使用的样式，可以为null
+	 * @param content          合并单元格后的内容
+	 * @param cellStyle        合并后单元格使用的样式，可以为null
 	 * @return this
 	 * @since 5.6.5
 	 */
