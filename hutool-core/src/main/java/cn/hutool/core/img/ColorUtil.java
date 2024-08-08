@@ -180,6 +180,39 @@ public class ColorUtil {
 	}
 
 	/**
+	 * 生成随机颜色，与指定颜色有一定的区分度
+	 *
+	 * @param compareColor 比较颜色
+	 * @param minDistance 最小色差，按三维坐标计算的距离值
+	 * @return 随机颜色
+	 * @since 5.8.30
+	 */
+	public static Color randomColor(Color compareColor,int minDistance) {
+		Color color = randomColor(null);
+		while (computeColorDistance(compareColor,color) < minDistance) {
+			color = randomColor(null);
+		}
+		return color;
+	}
+
+	/**
+	 * 计算两个颜色之间的色差，按三维坐标距离计算
+	 *
+	 * @param color1 颜色1
+	 * @param color2 颜色2
+	 * @return 色差，按三维坐标距离值
+	 * @since 5.8.30
+	 */
+	public static int computeColorDistance(Color color1, Color color2) {
+		if (null == color1 || null == color2) {
+			return 0;
+		}
+		return (int) Math.sqrt(Math.pow(color1.getRed() - color2.getRed(), 2)
+				+ Math.pow(color1.getGreen() - color2.getGreen(), 2)
+				+ Math.pow(color1.getBlue() - color2.getBlue(), 2));
+	}
+
+	/**
 	 * 生成随机颜色
 	 *
 	 * @param random 随机对象 {@link Random}

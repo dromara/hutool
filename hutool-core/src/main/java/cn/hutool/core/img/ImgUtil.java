@@ -2226,6 +2226,18 @@ public class ImgUtil {
 	}
 
 	/**
+	 * 生成随机颜色，与指定颜色有一定的区分度
+	 *
+	 * @param compareColor 比较颜色
+	 * @param minDistance 最小色差，按三维坐标计算的距离值
+	 * @return 与指定颜色有一定的区分度的随机颜色
+	 * @since 5.8.30
+	 */
+	public static Color randomColor(Color compareColor,int minDistance) {
+		return ColorUtil.randomColor(compareColor,minDistance);
+	}
+
+	/**
 	 * 生成随机颜色
 	 *
 	 * @param random 随机对象 {@link Random}
