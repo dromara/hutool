@@ -126,11 +126,12 @@ public class GraphicsUtil {
 	 * @param str    字符串
 	 * @param font   字体
 	 * @param color  字体颜色，{@code null} 表示使用随机颜色（每个字符单独随机）
+	 * @param width  字符串总宽度
 	 * @param height 字符串背景的高度
 	 * @return 画笔对象
 	 * @since 6.0.0
 	 */
-	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final int height) {
+	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final int width, final int height) {
 		// 抗锯齿
 		enableAntialias(g);
 		// 创建字体
@@ -138,10 +139,14 @@ public class GraphicsUtil {
 
 		// 文字高度（必须在设置字体后调用）
 		final int midY = getCenterY(g, height);
+		final int len = str.length();
+		final int charWidth = width / len;
 		if (null != color) {
 			g.setColor(color);
 		}
-		g.drawString(str, 0, midY);
+		for (int i = 0; i < len; i++) {
+			g.drawString(String.valueOf(str.charAt(i)), i * charWidth, midY);
+		}
 		return g;
 	}
 

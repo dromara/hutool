@@ -132,7 +132,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	}
 
 	/**
-	 * 设置验证码字符颜色
+	 * 设置验证码字符最大取色范围
 	 *
 	 * @param maxColor 颜色
 	 * @return this
@@ -143,7 +143,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	}
 
 	/**
-	 * 设置验证码字符颜色
+	 * 设置验证码字符最小取色范围
 	 *
 	 * @param minColor 颜色
 	 * @return this
