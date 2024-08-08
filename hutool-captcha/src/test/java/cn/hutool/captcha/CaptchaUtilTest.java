@@ -1,7 +1,5 @@
 package cn.hutool.captcha;
 
-import cn.hutool.captcha.generator.CodeGenerator;
-import cn.hutool.captcha.generator.MathGenerator;
 import cn.hutool.core.img.GraphicsUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -9,7 +7,10 @@ import cn.hutool.core.util.RandomUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,6 +34,7 @@ public class CaptchaUtilTest {
 	}
 
 	static class TestLineCaptcha extends AbstractCaptcha{
+		private static final long serialVersionUID = -558846929114465692L;
 
 		public TestLineCaptcha(int width, int height, int codeCount, int interfereCount) {
 			super(width, height, codeCount, interfereCount);

@@ -18,6 +18,7 @@
 * 【http   】      CompressUtil.createExtractor支持tgz自动识别（pr#3674@Github）
 * 【poi    】      ExcelWriter.autoSizeColumn增加可选widthRatio参数，可配置中文字符宽度倍数（pr#3689@Github）
 * 【mail   】      MailAccount增加自定义参数支持（issue#3687@Github）
+* 【mail   】      增加文字颜色与背景颜色色差设置（pr#1252@gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复因RFC3986理解有误导致的UrlPath处理冒号转义问题（issue#IAAE88@Gitee）

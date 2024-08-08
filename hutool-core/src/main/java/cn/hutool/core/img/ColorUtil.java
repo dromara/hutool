@@ -170,16 +170,6 @@ public class ColorUtil {
 	}
 
 	/**
-	 * 生成随机颜色
-	 *
-	 * @return 随机颜色
-	 * @since 3.1.2
-	 */
-	public static Color randomColor() {
-		return randomColor(null);
-	}
-
-	/**
 	 * 生成随机颜色，与指定颜色有一定的区分度
 	 *
 	 * @param compareColor 比较颜色
@@ -188,11 +178,21 @@ public class ColorUtil {
 	 * @since 5.8.30
 	 */
 	public static Color randomColor(Color compareColor,int minDistance) {
-		Color color = randomColor(null);
+		Color color = randomColor();
 		while (computeColorDistance(compareColor,color) < minDistance) {
-			color = randomColor(null);
+			color = randomColor();
 		}
 		return color;
+	}
+
+	/**
+	 * 生成随机颜色
+	 *
+	 * @return 随机颜色
+	 * @since 3.1.2
+	 */
+	public static Color randomColor() {
+		return randomColor(null);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class ColorUtil {
 	 * @return 是否匹配
 	 */
 	private static boolean matchFilters(int r, int g, int b, int[]... rgbFilters) {
-		if (rgbFilters != null && rgbFilters.length > 0) {
+		if (ArrayUtil.isNotEmpty(rgbFilters)) {
 			for (int[] rgbFilter : rgbFilters) {
 				if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
 					return true;
