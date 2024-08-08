@@ -81,7 +81,24 @@ public class GraphicsUtil {
 	 * @since 4.5.10
 	 */
 	public static Graphics drawStringColourful(Graphics g, String str, Font font, int width, int height) {
-		return drawString(g, str, font, null, width, height);
+		return drawString(g, str, font, null, width, height, null, 0);
+	}
+
+	/**
+	 * 绘制字符串，使用随机颜色，默认抗锯齿
+	 *
+	 * @param g      {@link Graphics}画笔
+	 * @param str    字符串
+	 * @param font   字体
+	 * @param width  字符串总宽度
+	 * @param height 字符串背景高度
+	 * @param compareColor 用于比对的颜色
+	 * @param minColorDistance 随机生成的颜色与对比颜色的最小色差，小于此值则重新生成颜色
+	 * @return 画笔对象
+	 * @since 4.5.10
+	 */
+	public static Graphics drawStringColourful(Graphics g, String str, Font font, int width, int height, Color compareColor, int minColorDistance) {
+		return drawString(g, str, font, null, width, height, compareColor, minColorDistance);
 	}
 
 	/**
@@ -93,10 +110,12 @@ public class GraphicsUtil {
 	 * @param color  字体颜色，{@code null} 表示使用随机颜色（每个字符单独随机）
 	 * @param width  字符串背景的宽度
 	 * @param height 字符串背景的高度
+	 * @param compareColor 用于比对的颜色
+	 * @param minColorDistance 随机生成的颜色与对比颜色的最小色差，小于此值则重新生成颜色
 	 * @return 画笔对象
 	 * @since 4.5.10
 	 */
-	public static Graphics drawString(Graphics g, String str, Font font, Color color, int width, int height) {
+	public static Graphics drawString(Graphics g, String str, Font font, Color color, int width, int height, Color compareColor, int minColorDistance) {
 		// 抗锯齿
 		if (g instanceof Graphics2D) {
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -115,7 +134,11 @@ public class GraphicsUtil {
 		for (int i = 0; i < len; i++) {
 			if (null == color) {
 				// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
-				g.setColor(ImgUtil.randomColor());
+				if (null != compareColor && minColorDistance > 0) {
+					g.setColor(ImgUtil.randomColor(compareColor,minColorDistance));
+				}else {
+					g.setColor(ImgUtil.randomColor());
+				}
 			}
 			g.drawString(String.valueOf(str.charAt(i)), i * charWidth, midY);
 		}
@@ -181,8 +204,8 @@ public class GraphicsUtil {
 	/**
 	 * 绘制图片
 	 *
-	 * @param g         画笔
-	 * @param img       要绘制的图片
+	 * @param g     画笔
+	 * @param img   要绘制的图片
 	 * @param point 绘制的位置，基于左上角
 	 * @return 画笔对象
 	 */
@@ -207,11 +230,11 @@ public class GraphicsUtil {
 	/**
 	 * 设置画笔透明度
 	 *
-	 * @param g 画笔
+	 * @param g     画笔
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 画笔
 	 */
-	public static Graphics2D setAlpha(Graphics2D g, float alpha){
+	public static Graphics2D setAlpha(Graphics2D g, float alpha) {
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
 		return g;
 	}
