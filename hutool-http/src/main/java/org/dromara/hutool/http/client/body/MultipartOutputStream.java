@@ -107,19 +107,19 @@ public class MultipartOutputStream extends OutputStream {
 
 		if (value instanceof Resource) {
 			appendResource(formFieldName, (Resource) value);
-		}else if(value instanceof File) {
+		} else if (value instanceof File) {
 			appendResource(formFieldName, new FileResource((File) value));
-		}else if(value instanceof Path) {
+		} else if (value instanceof Path) {
 			appendResource(formFieldName, new FileResource((Path) value));
-		} else if(value instanceof byte[]) {
+		} else if (value instanceof byte[]) {
 			appendResource(formFieldName, new BytesResource((byte[]) value));
-		} else if(value instanceof InputStream) {
+		} else if (value instanceof InputStream) {
 			appendResource(formFieldName, new InputStreamResource((InputStream) value));
-		} else if(value instanceof Reader) {
+		} else if (value instanceof Reader) {
 			appendResource(formFieldName, new InputStreamResource((Reader) value, this.charset));
 		} else {
 			appendResource(formFieldName,
-					new StringResource(Convert.toStr(value), null, this.charset));
+				new StringResource(Convert.toStr(value), null, this.charset));
 		}
 
 		write(StrUtil.CRLF);
@@ -178,11 +178,11 @@ public class MultipartOutputStream extends OutputStream {
 		} else if (StrUtil.isNotEmpty(fileName)) {
 			// 根据name的扩展名指定互联网媒体类型，默认二进制流数据
 			write(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE,
-					FileUtil.getMimeType(fileName, ContentType.OCTET_STREAM.getValue())));
+				FileUtil.getMimeType(fileName, ContentType.OCTET_STREAM.getValue())));
 		}
 
 		// 内容
-		write("\r\n");
+		write(StrUtil.CRLF);
 		resource.writeTo(this);
 	}
 
@@ -200,9 +200,9 @@ public class MultipartOutputStream extends OutputStream {
 	/**
 	 * 写出对象
 	 *
-	 * @param objs 写出的对象（转换为字符串）
+	 * @param contents 写出的字符串
 	 */
-	private void write(final Object... objs) {
-		IoUtil.write(this, this.charset, false, objs);
+	private void write(final CharSequence... contents) {
+		IoUtil.writeStrs(this, this.charset, false, contents);
 	}
 }

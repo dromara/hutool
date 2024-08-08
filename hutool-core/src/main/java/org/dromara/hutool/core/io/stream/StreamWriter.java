@@ -12,10 +12,8 @@
 
 package org.dromara.hutool.core.io.stream;
 
-import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -80,7 +78,7 @@ public class StreamWriter {
 	 * @param contents 写入的内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public void writeObj(final Object... contents) throws IORuntimeException {
+	public void writeObjs(final Object... contents) throws IORuntimeException {
 		ObjectOutputStream osw = null;
 		try {
 			osw = out instanceof ObjectOutputStream ? (ObjectOutputStream) out : new ObjectOutputStream(out);
@@ -106,13 +104,13 @@ public class StreamWriter {
 	 * @param contents 写入的内容，调用toString()方法，不包括不会自动换行
 	 * @throws IORuntimeException IO异常
 	 */
-	public void writeStr(final Charset charset, final Object... contents) throws IORuntimeException {
+	public void writeStrs(final Charset charset, final CharSequence... contents) throws IORuntimeException {
 		OutputStreamWriter osw = null;
 		try {
 			osw = IoUtil.toWriter(out, charset);
-			for (final Object content : contents) {
+			for (final CharSequence content : contents) {
 				if (content != null) {
-					osw.write(Convert.toStr(content, StrUtil.EMPTY));
+					osw.write(content.toString());
 				}
 			}
 			osw.flush();

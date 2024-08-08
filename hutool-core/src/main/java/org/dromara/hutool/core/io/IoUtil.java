@@ -849,8 +849,8 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.1
 	 */
-	public static void writeUtf8(final OutputStream out, final boolean isCloseOut, final Object... contents) throws IORuntimeException {
-		write(out, CharsetUtil.UTF_8, isCloseOut, contents);
+	public static void writeUtf8(final OutputStream out, final boolean isCloseOut, final CharSequence... contents) throws IORuntimeException {
+		writeStrs(out, CharsetUtil.UTF_8, isCloseOut, contents);
 	}
 
 	/**
@@ -863,8 +863,8 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.0.9
 	 */
-	public static void write(final OutputStream out, final Charset charset, final boolean isCloseOut, final Object... contents) throws IORuntimeException {
-		StreamWriter.of(out, isCloseOut).writeStr(charset, contents);
+	public static void writeStrs(final OutputStream out, final Charset charset, final boolean isCloseOut, final CharSequence... contents) throws IORuntimeException {
+		StreamWriter.of(out, isCloseOut).writeStrs(charset, contents);
 	}
 
 	/**
@@ -876,7 +876,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void writeObjects(final OutputStream out, final boolean isCloseOut, final Object... contents) throws IORuntimeException {
-		StreamWriter.of(out, isCloseOut).writeObj(contents);
+		StreamWriter.of(out, isCloseOut).writeObjs(contents);
 	}
 	// endregion ----------------------------------------------------------------------------------------------- write
 
