@@ -54,8 +54,13 @@ public class ResponseBody implements HttpBody, Closeable {
 	}
 
 	@Override
-	public String getContentType() {
+	public String contentType() {
 		return response.header(HeaderName.CONTENT_TYPE);
+	}
+
+	@Override
+	public long contentLength() {
+		return response.contentLength();
 	}
 
 	@Override

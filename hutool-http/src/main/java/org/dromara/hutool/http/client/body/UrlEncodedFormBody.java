@@ -29,6 +29,8 @@ import java.util.Map;
  */
 public class UrlEncodedFormBody extends FormBody<UrlEncodedFormBody> {
 
+	private byte[] content;
+
 	/**
 	 * 创建 Http request body
 	 *
@@ -51,13 +53,38 @@ public class UrlEncodedFormBody extends FormBody<UrlEncodedFormBody> {
 	}
 
 	@Override
-	public void write(final OutputStream out) {
-		final byte[] bytes = ByteUtil.toBytes(UrlQuery.of(form, UrlQuery.EncodeMode.FORM_URL_ENCODED).build(charset), charset);
-		IoUtil.write(out, false, bytes);
+	public UrlEncodedFormBody form(final String name, final Object value) {
+		// 有新键值对加入时，清空生成的字节
+		if(null != this.content){
+			this.content = null;
+		}
+		return super.form(name, value);
 	}
 
 	@Override
-	public String getContentType() {
+	public void write(final OutputStream out) {
+		IoUtil.write(out, getGeneratedBytes());
+	}
+
+	@Override
+	public String contentType() {
 		return ContentType.FORM_URLENCODED.toString(charset);
+	}
+
+	@Override
+	public long contentLength() {
+		return getGeneratedBytes().length;
+	}
+
+	/**
+	 * 获取生成的字节数组
+	 *
+	 * @return 生成的字节数组
+	 */
+	private byte[] getGeneratedBytes() {
+		if (null == this.content) {
+			this.content = ByteUtil.toBytes(UrlQuery.of(form, UrlQuery.EncodeMode.FORM_URL_ENCODED).build(charset), charset);
+		}
+		return this.content;
 	}
 }

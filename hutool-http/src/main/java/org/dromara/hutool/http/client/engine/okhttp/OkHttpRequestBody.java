@@ -16,6 +16,8 @@ import org.dromara.hutool.http.client.body.HttpBody;
 import okhttp3.MediaType;
 import okio.BufferedSink;
 
+import java.io.IOException;
+
 /**
  * OkHttp的请求体实现，通过{@link HttpBody}转换实现
  *
@@ -37,6 +39,11 @@ public class OkHttpRequestBody extends okhttp3.RequestBody {
 	@Override
 	public MediaType contentType() {
 		return null;
+	}
+
+	@Override
+	public long contentLength() throws IOException {
+		return this.body.contentLength();
 	}
 
 	@Override

@@ -67,7 +67,12 @@ public class ResourceBody implements HttpBody {
 	}
 
 	@Override
-	public String getContentType() {
+	public String contentType() {
 		return this.resource.getContentType();
+	}
+
+	@Override
+	public long contentLength() {
+		return resource.size();
 	}
 }

@@ -66,6 +66,6 @@ public class HttpClient5BodyEntity extends AbstractHttpEntity {
 
 	@Override
 	public long getContentLength() {
-		return -1;
+		return body.contentLength();
 	}
 }

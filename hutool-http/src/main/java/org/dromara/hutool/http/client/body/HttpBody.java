@@ -38,18 +38,27 @@ public interface HttpBody {
 	 *
 	 * @return Content-Type值
 	 */
-	String getContentType();
+	String contentType();
+
+	/**
+	 * 获取写出字节长度，未知为-1
+	 *
+	 * @return 长度
+	 */
+	default long contentLength() {
+		return -1;
+	}
 
 	/**
 	 * 获取指定编码的Content-Type，类似于：application/json;charset=UTF-8<br>
-	 * 如果{@link #getContentType()} 已经包含编码信息，则编码信息一致直接返回，否则替换为指定编码。
+	 * 如果{@link #contentType()} 已经包含编码信息，则编码信息一致直接返回，否则替换为指定编码。
 	 *
 	 * @param charset 编码
 	 * @return Content-Type
-	 * @see #getContentType()
+	 * @see #contentType()
 	 */
-	default String getContentType(final Charset charset) {
-		String contentType = getContentType();
+	default String contentType(final Charset charset) {
+		String contentType = contentType();
 		if (null == contentType) {
 			return null;
 		}

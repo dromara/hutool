@@ -80,14 +80,14 @@ public class MultipartBody extends FormBody<MultipartBody> {
 	 * @return Multipart的Content-Type类型
 	 */
 	@Override
-	public String getContentType() {
+	public String contentType() {
 		return CONTENT_TYPE_MULTIPART_PREFIX + boundary;
 	}
 
 	@Override
-	public String getContentType(final Charset charset) {
+	public String contentType(final Charset charset) {
 		// multipart的Content-Type头指定"Content-Type; boundary=XXXX"，编码无效
-		return getContentType();
+		return contentType();
 	}
 
 	/**

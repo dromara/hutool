@@ -380,7 +380,7 @@ public class Request implements HeaderOperation<Request> {
 
 		// 根据内容赋值默认Content-Type
 		if (StrUtil.isBlank(header(HeaderName.CONTENT_TYPE))) {
-			header(HeaderName.CONTENT_TYPE, body.getContentType(charset()), true);
+			header(HeaderName.CONTENT_TYPE, body.contentType(charset()), true);
 		}
 
 		return this;
