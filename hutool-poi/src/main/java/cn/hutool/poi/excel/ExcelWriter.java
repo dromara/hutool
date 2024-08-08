@@ -305,9 +305,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 5.8.30
 	 */
 	public ExcelWriter autoSizeColumn(int columnIndex, boolean useMergedCells, float widthRatio) {
-		sheet.autoSizeColumn(columnIndex, useMergedCells);
 		if (widthRatio > 0) {
 			sheet.setColumnWidth(columnIndex, (int) (sheet.getColumnWidth(columnIndex) * widthRatio));
+		} else {
+			sheet.autoSizeColumn(columnIndex, useMergedCells);
 		}
 		return this;
 	}

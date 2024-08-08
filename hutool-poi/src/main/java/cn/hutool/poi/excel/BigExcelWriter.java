@@ -152,11 +152,7 @@ public class BigExcelWriter extends ExcelWriter {
 
 	@Override
 	public BigExcelWriter autoSizeColumnAll() {
-		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
-		sheet.trackAllColumnsForAutoSizing();
-		super.autoSizeColumnAll();
-		sheet.untrackAllColumnsForAutoSizing();
-		return this;
+		return autoSizeColumnAll(0);
 	}
 
 	@Override
