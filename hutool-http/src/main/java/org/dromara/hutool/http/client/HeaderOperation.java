@@ -206,9 +206,9 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	}
 
 	/**
-	 * 获取内容编码
+	 * 获取压缩媒体类型
 	 *
-	 * @return String
+	 * @return 压缩媒体类型
 	 */
 	default String contentEncoding() {
 		return header(HeaderName.CONTENT_ENCODING);

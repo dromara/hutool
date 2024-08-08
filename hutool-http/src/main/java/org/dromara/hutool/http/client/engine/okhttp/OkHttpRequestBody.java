@@ -34,6 +34,7 @@ public class OkHttpRequestBody extends okhttp3.RequestBody {
 		this.body = body;
 	}
 
+	@Override
 	public MediaType contentType() {
 		return null;
 	}

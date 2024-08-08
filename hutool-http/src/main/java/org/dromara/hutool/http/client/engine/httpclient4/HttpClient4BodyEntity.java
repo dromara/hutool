@@ -12,13 +12,12 @@
 
 package org.dromara.hutool.http.client.engine.httpclient4;
 
+import org.apache.http.entity.AbstractHttpEntity;
 import org.dromara.hutool.http.client.body.BytesBody;
 import org.dromara.hutool.http.client.body.HttpBody;
-import org.apache.http.entity.AbstractHttpEntity;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 
 /**
  * {@link HttpBody}转换为{@link org.apache.hc.core5.http.HttpEntity}对象
@@ -34,14 +33,14 @@ public class HttpClient4BodyEntity extends AbstractHttpEntity {
 	 * 构造
 	 *
 	 * @param contentType Content-Type类型
-	 * @param charset     自定义请求编码
+	 * @param contentEncoding 压缩媒体类型，如gzip、deflate等
 	 * @param chunked     是否块模式传输
 	 * @param body        {@link HttpBody}
 	 */
-	public HttpClient4BodyEntity(final String contentType, final Charset charset, final boolean chunked, final HttpBody body) {
+	public HttpClient4BodyEntity(final String contentType, final String contentEncoding, final boolean chunked, final HttpBody body) {
 		super();
 		setContentType(contentType);
-		setContentEncoding(null == charset ? null : charset.name());
+		setContentEncoding(contentEncoding);
 		setChunked(chunked);
 		this.body = body;
 	}

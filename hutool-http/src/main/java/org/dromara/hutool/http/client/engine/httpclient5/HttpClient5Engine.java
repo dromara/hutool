@@ -157,8 +157,7 @@ public class HttpClient5Engine implements ClientEngine {
 			request.setEntity(new HttpClient5BodyEntity(
 				// 用户自定义的内容类型
 				message.header(HeaderName.CONTENT_TYPE),
-				// 用户自定义编码
-				message.charset(),
+				message.contentEncoding(),
 				message.isChunked(),
 				body));
 		}

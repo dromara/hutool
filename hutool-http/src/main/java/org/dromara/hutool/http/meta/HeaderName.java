@@ -129,11 +129,11 @@ public enum HeaderName {
 	 */
 	WWW_AUTHENTICATE("WWW-Authenticate"),
 	/**
-	 * Cookie
+	 * Set-Cookie
 	 */
 	SET_COOKIE("Set-Cookie"),
 	/**
-	 * Content-Encoding
+	 * 压缩媒体类型：Content-Encoding
 	 */
 	CONTENT_ENCODING("Content-Encoding"),
 	/**
