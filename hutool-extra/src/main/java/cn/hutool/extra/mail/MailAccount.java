@@ -156,6 +156,13 @@ public class MailAccount implements Serializable {
 	 */
 	public MailAccount(Setting setting) {
 		setting.toBean(this);
+
+		// since 5.8.30, custom property
+		setting.forEach((key, value) -> {
+			if (StrUtil.startWith(key, "mail.")) {
+				this.setCustomProperty(key, value);
+			}
+		});
 	}
 
 	// -------------------------------------------------------------- Constructor end
