@@ -83,7 +83,40 @@ public class GraphicsUtil {
 	 * @since 4.5.10
 	 */
 	public static Graphics drawStringColourful(final Graphics g, final String str, final Font font, final int width, final int height) {
-		return drawString(g, str, font, null, width, height);
+		return drawStringColourful(g, str, font, width, height, null, 0);
+	}
+
+	/**
+	 * 绘制字符串，使用随机颜色，默认抗锯齿
+	 *
+	 * @param g                {@link Graphics}画笔
+	 * @param str              字符串
+	 * @param font             字体
+	 * @param width            字符串总宽度
+	 * @param height           字符串背景高度
+	 * @param compareColor     对比颜色，用于计算颜色与对比颜色的色差，色差小于minColorDistance则重新生成颜色
+	 * @param minColorDistance 随机生成的颜色与对比颜色的最小色差，小于此值则重新生成颜色
+	 * @return 画笔对象
+	 * @since 6.0.0
+	 */
+	public static Graphics drawStringColourful(final Graphics g, final String str, final Font font,
+											   final int width, final int height, final Color compareColor, final int minColorDistance) {
+		// 抗锯齿
+		enableAntialias(g);
+		// 创建字体
+		g.setFont(font);
+
+		// 文字高度（必须在设置字体后调用）
+		final int midY = getCenterY(g, height);
+
+		final int len = str.length();
+		final int charWidth = width / len;
+		for (int i = 0; i < len; i++) {
+			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
+			g.setColor(ColorUtil.randomColor(compareColor, minColorDistance));
+			g.drawString(String.valueOf(str.charAt(i)), i * charWidth, midY);
+		}
+		return g;
 	}
 
 	/**
@@ -93,12 +126,11 @@ public class GraphicsUtil {
 	 * @param str    字符串
 	 * @param font   字体
 	 * @param color  字体颜色，{@code null} 表示使用随机颜色（每个字符单独随机）
-	 * @param width  字符串背景的宽度
 	 * @param height 字符串背景的高度
 	 * @return 画笔对象
-	 * @since 4.5.10
+	 * @since 6.0.0
 	 */
-	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final int width, final int height) {
+	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final int height) {
 		// 抗锯齿
 		enableAntialias(g);
 		// 创建字体
@@ -109,16 +141,7 @@ public class GraphicsUtil {
 		if (null != color) {
 			g.setColor(color);
 		}
-
-		final int len = str.length();
-		final int charWidth = width / len;
-		for (int i = 0; i < len; i++) {
-			if (null == color) {
-				// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
-				g.setColor(ColorUtil.randomColor());
-			}
-			g.drawString(String.valueOf(str.charAt(i)), i * charWidth, midY);
-		}
+		g.drawString(str, 0, midY);
 		return g;
 	}
 
@@ -222,9 +245,9 @@ public class GraphicsUtil {
 	private static void enableAntialias(final Graphics g) {
 		if (g instanceof Graphics2D) {
 			((Graphics2D) g).setRenderingHints(
-					RenderingHintsBuilder.of()
-							.setAntialiasing(RenderingHintsBuilder.Antialias.ON)
-							.setTextAntialias(RenderingHintsBuilder.TextAntialias.ON).build()
+				RenderingHintsBuilder.of()
+					.setAntialiasing(RenderingHintsBuilder.Antialias.ON)
+					.setTextAntialias(RenderingHintsBuilder.TextAntialias.ON).build()
 			);
 		}
 	}

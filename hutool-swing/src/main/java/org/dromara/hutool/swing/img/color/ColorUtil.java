@@ -40,28 +40,28 @@ public class ColorUtil {
 
 	static {
 		final Map<String, Color> colorMap = MapUtil
-				.builder("BLACK", Color.BLACK)
-				.put("WHITE", Color.WHITE)
-				.put("LIGHTGRAY", Color.LIGHT_GRAY)
-				.put("LIGHT_GRAY", Color.LIGHT_GRAY)
-				.put("GRAY", Color.GRAY)
-				.put("DARKGRAY", Color.DARK_GRAY)
-				.put("DARK_GRAY", Color.DARK_GRAY)
-				.put("RED", Color.RED)
-				.put("PINK", Color.PINK)
-				.put("ORANGE", Color.ORANGE)
-				.put("YELLOW", Color.YELLOW)
-				.put("GREEN", Color.GREEN)
-				.put("MAGENTA", Color.MAGENTA)
-				.put("CYAN", Color.CYAN)
-				.put("BLUE", Color.BLUE)
-				// 暗金色
-				.put("DARKGOLD", hexToColor("#9e7e67"))
-				.put("DARK_GOLD", hexToColor("#9e7e67"))
-				// 亮金色
-				.put("LIGHTGOLD", hexToColor("#ac9c85"))
-				.put("LIGHT_GOLD", hexToColor("#ac9c85"))
-				.build();
+			.builder("BLACK", Color.BLACK)
+			.put("WHITE", Color.WHITE)
+			.put("LIGHTGRAY", Color.LIGHT_GRAY)
+			.put("LIGHT_GRAY", Color.LIGHT_GRAY)
+			.put("GRAY", Color.GRAY)
+			.put("DARKGRAY", Color.DARK_GRAY)
+			.put("DARK_GRAY", Color.DARK_GRAY)
+			.put("RED", Color.RED)
+			.put("PINK", Color.PINK)
+			.put("ORANGE", Color.ORANGE)
+			.put("YELLOW", Color.YELLOW)
+			.put("GREEN", Color.GREEN)
+			.put("MAGENTA", Color.MAGENTA)
+			.put("CYAN", Color.CYAN)
+			.put("BLUE", Color.BLUE)
+			// 暗金色
+			.put("DARKGOLD", hexToColor("#9e7e67"))
+			.put("DARK_GOLD", hexToColor("#9e7e67"))
+			// 亮金色
+			.put("LIGHTGOLD", hexToColor("#ac9c85"))
+			.put("LIGHT_GOLD", hexToColor("#ac9c85"))
+			.build();
 		COLOR_MAPPING = MapUtil.view(colorMap);
 	}
 
@@ -78,11 +78,11 @@ public class ColorUtil {
 	 */
 	public static String toCssRgb(final Color color) {
 		return StrUtil.builder()
-				.append("rgb(")
-				.append(color.getRed()).append(",")
-				.append(color.getGreen()).append(",")
-				.append(color.getBlue()).append(")")
-				.toString();
+			.append("rgb(")
+			.append(color.getRed()).append(",")
+			.append(color.getGreen()).append(",")
+			.append(color.getBlue()).append(")")
+			.toString();
 	}
 
 	/**
@@ -93,12 +93,12 @@ public class ColorUtil {
 	 */
 	public static String toCssRgba(final Color color) {
 		return StrUtil.builder()
-				.append("rgba(")
-				.append(color.getRed()).append(",")
-				.append(color.getGreen()).append(",")
-				.append(color.getBlue()).append(",")
-				.append(color.getAlpha() / 255D).append(")")
-				.toString();
+			.append("rgba(")
+			.append(color.getRed()).append(",")
+			.append(color.getGreen()).append(",")
+			.append(color.getBlue()).append(",")
+			.append(color.getAlpha() / 255D).append(")")
+			.toString();
 	}
 
 	/**
@@ -233,6 +233,8 @@ public class ColorUtil {
 		return new Color(r, g, b);
 	}
 
+	// region randomColor
+
 	/**
 	 * 生成随机颜色
 	 *
@@ -255,6 +257,42 @@ public class ColorUtil {
 			random = RandomUtil.getRandom();
 		}
 		return new Color(random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND));
+	}
+
+	/**
+	 * 生成随机颜色，与指定颜色有一定的区分度
+	 *
+	 * @param compareColor 比较颜色，{@code null}表示无区分要求
+	 * @param minDistance  最小色差，按三维坐标计算的距离值。小于等于0表示无区分要求
+	 * @return 随机颜色
+	 * @since 5.8.30
+	 */
+	public static Color randomColor(final Color compareColor, final int minDistance) {
+		Color color = randomColor();
+		if(null == compareColor || minDistance <= 0){
+			while (computeColorDistance(compareColor, color) < minDistance) {
+				color = randomColor();
+			}
+		}
+		return color;
+	}
+	// endregion
+
+	/**
+	 * 计算两个颜色之间的色差，按三维坐标距离计算
+	 *
+	 * @param color1 颜色1
+	 * @param color2 颜色2
+	 * @return 色差，按三维坐标距离值
+	 * @since 5.8.30
+	 */
+	public static int computeColorDistance(final Color color1, final Color color2) {
+		if (null == color1 || null == color2) {
+			return 0;
+		}
+		return (int) Math.sqrt(Math.pow(color1.getRed() - color2.getRed(), 2)
+			+ Math.pow(color1.getGreen() - color2.getGreen(), 2)
+			+ Math.pow(color1.getBlue() - color2.getBlue(), 2));
 	}
 
 	/**
