@@ -12,14 +12,15 @@
 
 package org.dromara.hutool.swing.img.color;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.ansi.Ansi4BitColor;
 import org.dromara.hutool.core.lang.ansi.Ansi8BitColor;
 import org.dromara.hutool.core.lang.ansi.AnsiElement;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 
 import java.awt.Color;
@@ -268,6 +269,10 @@ public class ColorUtil {
 	 * @since 5.8.30
 	 */
 	public static Color randomColor(final Color compareColor, final int minDistance) {
+		// 注意minDistance太大会增加循环次数，保证至少1/3的概率生成成功
+		Assert.isTrue(minDistance < maxDistance(compareColor) / 3 * 2,
+			"minDistance is too large, there are too few remaining colors!");
+
 		Color color = randomColor();
 		if(null == compareColor || minDistance <= 0){
 			while (computeColorDistance(compareColor, color) < minDistance) {
@@ -293,6 +298,20 @@ public class ColorUtil {
 		return (int) Math.sqrt(Math.pow(color1.getRed() - color2.getRed(), 2)
 			+ Math.pow(color1.getGreen() - color2.getGreen(), 2)
 			+ Math.pow(color1.getBlue() - color2.getBlue(), 2));
+	}
+
+	/**
+	 * 计算给定点与其他点之间的最大可能距离。
+	 *
+	 * @param color 指定颜色
+	 * @return 其余颜色与color的最大距离
+	 * @since 6.0.0-M16
+	 */
+	public static int maxDistance(final Color color) {
+		final int maxX = RGB_COLOR_BOUND - 2 * color.getRed();
+		final int maxY = RGB_COLOR_BOUND - 2 * color.getGreen();
+		final int maxZ = RGB_COLOR_BOUND - 2 * color.getBlue();
+		return (int)Math.sqrt(maxX * maxX + maxY * maxY + maxZ * maxZ);
 	}
 
 	/**
