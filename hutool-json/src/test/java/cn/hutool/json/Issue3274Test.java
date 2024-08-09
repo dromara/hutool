@@ -14,8 +14,8 @@ package cn.hutool.json;
 
 import lombok.Data;
 import lombok.Getter;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class Issue3274Test {
 	@Test
@@ -27,7 +27,7 @@ public class Issue3274Test {
 			"    \"id\": \"123123123\"\n" +
 			"}", JSONConfig.create().setIgnoreError(true));
 		final LarkCoreHrPersonal larkCoreHrPersonal = entries.toBean(LarkCoreHrPersonal.class);
-		Assert.assertNotNull(larkCoreHrPersonal);
+		assertNotNull(larkCoreHrPersonal);
 	}
 
 	@Data

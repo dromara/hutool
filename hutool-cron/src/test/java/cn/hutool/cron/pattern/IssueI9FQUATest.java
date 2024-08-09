@@ -1,8 +1,8 @@
 package cn.hutool.cron.pattern;
 
 import cn.hutool.core.date.DateUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -14,6 +14,6 @@ public class IssueI9FQUATest {
 			DateUtil.parse("2024-01-01 00:00:00").toCalendar());
 
 		//Console.log(DateUtil.date(calendar));
-		Assert.assertEquals("2024-01-01 00:00:05", DateUtil.date(calendar).toString());
+		assertEquals("2024-01-01 00:00:05", DateUtil.date(calendar).toString());
 	}
 }

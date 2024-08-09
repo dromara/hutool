@@ -11,13 +11,14 @@ import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Excel sax方式读取
@@ -65,15 +66,17 @@ public class ExcelSaxReadTest {
 		reader.read("aaa.xls", "sheetName:校园入学");
 	}
 
-	@Test(expected = POIException.class)
+	@Test
 	public void excel03ByNameErrorTest() {
-		// sheet名称不存在则报错
-		final Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
-		reader.read("aaa.xls", "校园入学1");
+		assertThrows(POIException.class, () -> {
+			// sheet名称不存在则报错
+			final Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
+			reader.read("aaa.xls", "校园入学1");
+		});
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readBlankLineTest() {
 		ExcelUtil.readBySax("e:/ExcelBlankLine.xlsx", 0, (sheetIndex, rowIndex, rowList) -> {
 			if (StrUtil.isAllEmpty(Convert.toStrArray(rowList))) {
@@ -99,7 +102,7 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readBySaxTest2() {
 		ExcelUtil.readBySax("d:/test/456789.xlsx", "0", (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 	}
@@ -109,13 +112,13 @@ public class ExcelSaxReadTest {
 //			Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
 			if (5 != rowIndex && 6 != rowIndex) {
 				// 测试样例中除第五行、第六行都为非空行
-				Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
+				assertTrue(CollUtil.isNotEmpty(rowlist));
 			}
 		};
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void handle07CellTest() {
 		ExcelUtil.readBySax("d:/test/test.xlsx", -1, new RowHandler() {
 
@@ -158,7 +161,7 @@ public class ExcelSaxReadTest {
 				rows.add("");
 			}
 		});
-		Assert.assertEquals(50L, rows.get(3));
+		assertEquals(50L, rows.get(3));
 	}
 
 	@Test
@@ -168,7 +171,7 @@ public class ExcelSaxReadTest {
 				rows.add(list.get(1)));
 
 		final FormulaCellValue value = (FormulaCellValue) rows.get(3);
-		Assert.assertEquals(50L, value.getResult());
+		assertEquals(50L, value.getResult());
 	}
 
 	@Test
@@ -178,11 +181,11 @@ public class ExcelSaxReadTest {
 				(i, i1, list) -> rows.add(StrUtil.toString(list.get(0)))
 		);
 
-		Assert.assertEquals("2020-10-09 00:00:00", rows.get(1));
+		assertEquals("2020-10-09 00:00:00", rows.get(1));
 		// 非日期格式不做转换
-		Assert.assertEquals("112233", rows.get(2));
-		Assert.assertEquals("1000.0", rows.get(3));
-		Assert.assertEquals("2012-12-21 00:00:00", rows.get(4));
+		assertEquals("112233", rows.get(2));
+		assertEquals("1000.0", rows.get(3));
+		assertEquals("2012-12-21 00:00:00", rows.get(4));
 	}
 
 	@Test
@@ -192,15 +195,15 @@ public class ExcelSaxReadTest {
 				(i, i1, list) -> rows.add(StrUtil.toString(list.get(0)))
 		);
 
-		Assert.assertEquals("2020-10-09 00:00:00", rows.get(1));
+		assertEquals("2020-10-09 00:00:00", rows.get(1));
 		// 非日期格式不做转换
-		Assert.assertEquals("112233", rows.get(2));
-		Assert.assertEquals("1000.0", rows.get(3));
-		Assert.assertEquals("2012-12-21 00:00:00", rows.get(4));
+		assertEquals("112233", rows.get(2));
+		assertEquals("1000.0", rows.get(3));
+		assertEquals("2012-12-21 00:00:00", rows.get(4));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void dateReadXlsxTest2() {
 		ExcelUtil.readBySax("d:/test/custom_date_format2.xlsx", 0,
 				(i, i1, list) -> Console.log(list)
@@ -208,7 +211,7 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readBlankTest() {
 		final File file = new File("D:/test/b.xlsx");
 
@@ -218,7 +221,7 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readXlsmTest() {
 		ExcelUtil.readBySax("d:/test/WhiteListTemplate.xlsm", -1,
 				(sheetIndex, rowIndex, rowlist) -> Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist));

@@ -14,13 +14,13 @@ package cn.hutool.poi.excel;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class IssueI6URF3Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void setCellStyleTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/issueI6URF3.xlsx");
 		writer.writeCellValue(0, 0, 1);

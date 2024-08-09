@@ -13,8 +13,8 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.lang.Opt;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ public class IssueI7WJHHTest {
 		final Optional<Integer> optional = Optional.of(1);
 		final Integer integer = Convert.toInt(optional);
 
-		Assert.assertEquals(Integer.valueOf(1), integer);
+		assertEquals(Integer.valueOf(1), integer);
 	}
 
 	@Test
@@ -33,6 +33,6 @@ public class IssueI7WJHHTest {
 		final Opt<Integer> optional = Opt.of(1);
 		final Integer integer = Convert.toInt(optional);
 
-		Assert.assertEquals(Integer.valueOf(1), integer);
+		assertEquals(Integer.valueOf(1), integer);
 	}
 }

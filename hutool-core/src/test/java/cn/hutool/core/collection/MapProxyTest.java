@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.map.MapProxy;
 
@@ -20,13 +20,13 @@ public class MapProxyTest {
 
 		MapProxy mapProxy = new MapProxy(map);
 		Integer b = mapProxy.getInt("b");
-		Assert.assertEquals(new Integer(2), b);
+		assertEquals(new Integer(2), b);
 
 		Set<Object> keys = mapProxy.keySet();
-		Assert.assertFalse(keys.isEmpty());
+		assertFalse(keys.isEmpty());
 
 		Set<Entry<Object,Object>> entrys = mapProxy.entrySet();
-		Assert.assertFalse(entrys.isEmpty());
+		assertFalse(entrys.isEmpty());
 	}
 
 	private interface Student {
@@ -41,7 +41,7 @@ public class MapProxyTest {
 	public void classProxyTest() {
 		Student student = MapProxy.create(new HashMap<>()).toProxyBean(Student.class);
 		student.setName("小明").setAge(18);
-		Assert.assertEquals(student.getAge(), 18);
-		Assert.assertEquals(student.getName(), "小明");
+		assertEquals(student.getAge(), 18);
+		assertEquals(student.getName(), "小明");
 	}
 }

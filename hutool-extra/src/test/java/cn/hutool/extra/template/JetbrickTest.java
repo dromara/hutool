@@ -3,8 +3,8 @@ package cn.hutool.extra.template;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.engine.jetbrick.JetbrickEngine;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class JetbrickTest {
 
@@ -16,7 +16,7 @@ public class JetbrickTest {
 		TemplateEngine engine = TemplateUtil.createEngine(config);
 		Template template = engine.getTemplate("jetbrick_test.jetx");
 		String result = template.render(Dict.create().set("name", "hutool"));
-		Assert.assertEquals("你好,hutool", StrUtil.trim(result));
+		assertEquals("你好,hutool", StrUtil.trim(result));
 	}
 
 	@Test
@@ -27,6 +27,6 @@ public class JetbrickTest {
 		TemplateEngine engine = TemplateUtil.createEngine(config);
 		Template template = engine.getTemplate("hello,${name}");
 		String result = template.render(Dict.create().set("name", "hutool"));
-		Assert.assertEquals("hello,hutool", StrUtil.trim(result));
+		assertEquals("hello,hutool", StrUtil.trim(result));
 	}
 }

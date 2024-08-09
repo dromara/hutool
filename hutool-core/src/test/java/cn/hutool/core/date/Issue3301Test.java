@@ -1,7 +1,7 @@
 package cn.hutool.core.date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -17,6 +17,6 @@ public class Issue3301Test {
 		TemporalAccessor temporal = DateTimeFormatter.ISO_INSTANT.parse(text);
 
 		LocalDateTime actual = LocalDateTimeUtil.of(temporal);
-		Assert.assertEquals(now.toLocalDateTime().toString(), actual.toString());
+		assertEquals(now.toLocalDateTime().toString(), actual.toString());
 	}
 }

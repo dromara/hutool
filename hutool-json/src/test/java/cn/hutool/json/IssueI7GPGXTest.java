@@ -14,8 +14,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class IssueI7GPGXTest {
 
@@ -24,6 +24,6 @@ public class IssueI7GPGXTest {
 		final Pair<String, Boolean> hutoolPair = new Pair<>("test1", true);
 		final String a = JSONUtil.toJsonStr(hutoolPair);
 		final Pair<String, Boolean> pair = JSONUtil.toBean(a, new TypeReference<Pair<String, Boolean>>() {}, false);
-		Assert.assertEquals(hutoolPair, pair);
+		assertEquals(hutoolPair, pair);
 	}
 }

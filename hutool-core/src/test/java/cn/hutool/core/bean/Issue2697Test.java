@@ -1,8 +1,8 @@
 package cn.hutool.core.bean;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class Issue2697Test {
 		final Map<String, String> mapB = new HashMap<>(16);
 		BeanUtil.copyProperties(mapA, mapB, "12");
 
-		Assert.assertEquals(2, mapB.size());
-		Assert.assertFalse(mapB.containsKey("12"));
+		assertEquals(2, mapB.size());
+		assertFalse(mapB.containsKey("12"));
 	}
 }

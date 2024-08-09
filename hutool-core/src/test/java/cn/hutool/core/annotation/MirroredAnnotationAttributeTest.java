@@ -1,8 +1,8 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.util.ReflectUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -20,12 +20,12 @@ public class MirroredAnnotationAttributeTest {
 		final MirroredAnnotationAttribute nameAnnotationAttribute = new MirroredAnnotationAttribute(nameAttribute, valueAttribute);
 
 		// 注解属性
-		Assert.assertEquals(annotation, nameAnnotationAttribute.getAnnotation());
-		Assert.assertEquals(annotation.annotationType(), nameAnnotationAttribute.getAnnotationType());
+		assertEquals(annotation, nameAnnotationAttribute.getAnnotation());
+		assertEquals(annotation.annotationType(), nameAnnotationAttribute.getAnnotationType());
 
 		// 方法属性
-		Assert.assertEquals(nameMethod.getName(), nameAnnotationAttribute.getAttributeName());
-		Assert.assertEquals(nameMethod.getReturnType(), nameAnnotationAttribute.getAttributeType());
+		assertEquals(nameMethod.getName(), nameAnnotationAttribute.getAttributeName());
+		assertEquals(nameMethod.getReturnType(), nameAnnotationAttribute.getAttributeType());
 	}
 
 	@Test
@@ -39,9 +39,9 @@ public class MirroredAnnotationAttributeTest {
 		final MirroredAnnotationAttribute nameAnnotationAttribute = new MirroredAnnotationAttribute(nameAttribute, valueAttribute);
 
 		// 值处理
-		Assert.assertEquals("", nameAnnotationAttribute.getValue());
-		Assert.assertTrue(nameAnnotationAttribute.isValueEquivalentToDefaultValue());
-		Assert.assertTrue(nameAnnotationAttribute.isWrapped());
+		assertEquals("", nameAnnotationAttribute.getValue());
+		assertTrue(nameAnnotationAttribute.isValueEquivalentToDefaultValue());
+		assertTrue(nameAnnotationAttribute.isWrapped());
 	}
 
 	@Test
@@ -55,9 +55,9 @@ public class MirroredAnnotationAttributeTest {
 		final MirroredAnnotationAttribute nameAnnotationAttribute = new MirroredAnnotationAttribute(nameAttribute, valueAttribute);
 
 		// 值处理
-		Assert.assertEquals("name", nameAnnotationAttribute.getValue());
-		Assert.assertFalse(nameAnnotationAttribute.isValueEquivalentToDefaultValue());
-		Assert.assertTrue(nameAnnotationAttribute.isWrapped());
+		assertEquals("name", nameAnnotationAttribute.getValue());
+		assertFalse(nameAnnotationAttribute.isValueEquivalentToDefaultValue());
+		assertTrue(nameAnnotationAttribute.isWrapped());
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

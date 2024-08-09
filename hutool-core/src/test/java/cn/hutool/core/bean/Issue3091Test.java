@@ -12,8 +12,8 @@
 
 package cn.hutool.core.bean;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +24,6 @@ public class Issue3091Test {
 	public void copyToListTest() {
 		final List<Long> list = Arrays.asList(1L,2L);
 		final List<Integer> result = BeanUtil.copyToList(list, Integer.class);
-		Assert.assertEquals("[1, 2]", result.toString());
+		assertEquals("[1, 2]", result.toString());
 	}
 }

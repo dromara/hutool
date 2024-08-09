@@ -3,8 +3,8 @@ package cn.hutool.core.bean;
 import cn.hutool.core.annotation.Alias;
 import lombok.Data;
 import lombok.Setter;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class IssueI8JASOTest {
 
@@ -14,7 +14,7 @@ public class IssueI8JASOTest {
 		userOne.setEmail("123@qq.com");
 		final UserTwo userTwo = new UserTwo();
 		BeanUtil.copyProperties(userOne, userTwo);
-		Assert.assertEquals(userOne.getEmail(), userTwo.getEmail());
+		assertEquals(userOne.getEmail(), userTwo.getEmail());
 	}
 
 	@Data

@@ -12,11 +12,15 @@
 
 package cn.hutool.core.date;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class Issue3036Test {
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void getZodiacTest() {
-		DateUtil.getZodiac(Month.UNDECIMBER.getValue(), 10);
+		assertThrows(IllegalArgumentException.class, () -> {
+			DateUtil.getZodiac(Month.UNDECIMBER.getValue(), 10);
+		});
 	}
 }

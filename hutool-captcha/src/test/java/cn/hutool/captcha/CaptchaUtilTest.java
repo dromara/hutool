@@ -4,8 +4,8 @@ import cn.hutool.core.img.GraphicsUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CaptchaUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void createTest() {
 		for(int i = 0; i < 1; i++) {
 			CaptchaUtil.createShearCaptcha(320, 240);
@@ -25,7 +25,7 @@ public class CaptchaUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void drawStringColourfulColorDistanceTest() {
 		for(int i = 0; i < 10; i++) {
 			AbstractCaptcha lineCaptcha = new TestLineCaptchaColorDistance(200, 100, 5, 10);
@@ -34,7 +34,7 @@ public class CaptchaUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void drawStringColourfulDefaultColorDistanceTest() {
 		for(int i = 0; i < 10; i++) {
 			AbstractCaptcha lineCaptcha = new TestLineCaptchaColorDistanceDefaultColorDistance(200, 100, 5, 10);

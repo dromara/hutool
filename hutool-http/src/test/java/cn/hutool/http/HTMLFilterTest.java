@@ -1,7 +1,7 @@
 package cn.hutool.http;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class HTMLFilterTest {
 	@Test
@@ -11,9 +11,9 @@ public class HTMLFilterTest {
 
 		final HTMLFilter htmlFilter = new HTMLFilter();
 		String filter = htmlFilter.filter(p1);
-		Assert.assertEquals("<p>a</p>", filter);
+		assertEquals("<p>a</p>", filter);
 
 		filter = htmlFilter.filter(p2);
-		Assert.assertEquals("<p>a</p>", filter);
+		assertEquals("<p>a</p>", filter);
 	}
 }

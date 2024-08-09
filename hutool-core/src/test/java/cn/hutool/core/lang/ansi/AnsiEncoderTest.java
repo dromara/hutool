@@ -1,9 +1,9 @@
 package cn.hutool.core.lang.ansi;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 
@@ -12,11 +12,11 @@ public class AnsiEncoderTest {
 	@Test
 	public void encodeTest(){
 		final String encode = AnsiEncoder.encode(AnsiColor.GREEN, "Hutool test");
-		Assert.assertEquals("\u001B[32mHutool test\u001B[0;39m", encode);
+		assertEquals("\u001B[32mHutool test\u001B[0;39m", encode);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void colorfulEncodeTest(){
 		String text = "Hutool▀████▀";
 		final AnsiColors ansiColors = new AnsiColors(AnsiColors.BitDepth.EIGHT);

@@ -1,7 +1,7 @@
 package cn.hutool.core.lang;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.thread.ThreadUtil;
 
@@ -59,7 +59,7 @@ public class ConsoleTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void inputTest() {
 		Console.log("Please input something: ");
 		String input = Console.input();
@@ -67,7 +67,7 @@ public class ConsoleTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printProgressTest() {
 		for(int i = 0; i < 100; i++) {
 			Console.printProgress('#', 100, i / 100D);

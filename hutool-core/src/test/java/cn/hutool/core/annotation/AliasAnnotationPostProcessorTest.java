@@ -2,8 +2,8 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -26,16 +26,16 @@ public class AliasAnnotationPostProcessorTest {
 
 		processor.process(synthesizedAnnotation, synthesizedAnnotationAggregator);
 		AnnotationAttribute valueAttribute = synthesizedAnnotation.getAttributes().get("value");
-		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "value"), valueAttribute.getAttribute());
-		Assert.assertTrue(valueAttribute.isWrapped());
-		Assert.assertEquals(ForceAliasedAnnotationAttribute.class, valueAttribute.getClass());
+		assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "value"), valueAttribute.getAttribute());
+		assertTrue(valueAttribute.isWrapped());
+		assertEquals(ForceAliasedAnnotationAttribute.class, valueAttribute.getClass());
 
 		AnnotationAttribute nameAttribute = synthesizedAnnotation.getAttributes().get("name");
-		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "name"), nameAttribute.getAttribute());
-		Assert.assertFalse(nameAttribute.isWrapped());
-		Assert.assertEquals(CacheableAnnotationAttribute.class, nameAttribute.getClass());
+		assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "name"), nameAttribute.getAttribute());
+		assertFalse(nameAttribute.isWrapped());
+		assertEquals(CacheableAnnotationAttribute.class, nameAttribute.getClass());
 
-		Assert.assertEquals(nameAttribute, ((WrappedAnnotationAttribute)valueAttribute).getLinked());
+		assertEquals(nameAttribute, ((WrappedAnnotationAttribute)valueAttribute).getLinked());
 	}
 
 	@AnnotationForTest

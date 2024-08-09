@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class Issue3619Test {
 	@Test
@@ -21,6 +21,6 @@ public class Issue3619Test {
 			}
 		});
 
-		Assert.assertEquals("{\"int_arr\":[-4]}", jsonStr);
+		assertEquals("{\"int_arr\":[-4]}", jsonStr);
 	}
 }

@@ -5,9 +5,9 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://gitee.com/dromara/hutool/pulls/532
@@ -16,29 +16,29 @@ public class MetroHashTest {
 
 	@Test
 	public void testEmpty() {
-		Assert.assertEquals("31290877cceaea29", HexUtil.toHex(MetroHash.hash64(StrUtil.utf8Bytes(""), 0)));
+		assertEquals("31290877cceaea29", HexUtil.toHex(MetroHash.hash64(StrUtil.utf8Bytes(""), 0)));
 	}
 
 	@Test
 	public void metroHash64Test() {
 		byte[] str = "我是一段测试123".getBytes(CharsetUtil.CHARSET_UTF_8);
 		final long hash64 = MetroHash.hash64(str);
-		Assert.assertEquals(62920234463891865L, hash64);
+		assertEquals(62920234463891865L, hash64);
 	}
 
 	@Test
 	public void metroHash128Test() {
 		byte[] str = "我是一段测试123".getBytes(CharsetUtil.CHARSET_UTF_8);
 		final long[] hash128 = MetroHash.hash128(str).getLongArray();
-		Assert.assertEquals(4956592424592439349L, hash128[0]);
-		Assert.assertEquals(6301214698325086246L, hash128[1]);
+		assertEquals(4956592424592439349L, hash128[0]);
+		assertEquals(6301214698325086246L, hash128[1]);
 	}
 
 	/**
 	 * 数据量越大 MetroHash 优势越明显，
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void bulkHashing64Test() {
 		String[] strArray = getRandomStringArray();
 		long startCity = System.currentTimeMillis();
@@ -62,7 +62,7 @@ public class MetroHashTest {
 	 * 数据量越大 MetroHash 优势越明显，
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void bulkHashing128Test() {
 		String[] strArray = getRandomStringArray();
 		long startCity = System.currentTimeMillis();

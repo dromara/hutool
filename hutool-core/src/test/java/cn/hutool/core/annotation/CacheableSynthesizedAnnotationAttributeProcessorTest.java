@@ -3,8 +3,8 @@ package cn.hutool.core.annotation;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.util.ClassUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -22,8 +22,8 @@ public class CacheableSynthesizedAnnotationAttributeProcessorTest {
 		Map<String, Object> values2 = MapBuilder.<String, Object> create().put("name", "name2").put("value", "value2").build();
 		SynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0, values2);
 
-		Assert.assertEquals("name2", processor.getAttributeValue("name", String.class, Arrays.asList(annotation1, annotation2)));
-		Assert.assertEquals(Integer.valueOf(111), processor.getAttributeValue("value", Integer.class, Arrays.asList(annotation1, annotation2)));
+		assertEquals("name2", processor.getAttributeValue("name", String.class, Arrays.asList(annotation1, annotation2)));
+		assertEquals(Integer.valueOf(111), processor.getAttributeValue("value", Integer.class, Arrays.asList(annotation1, annotation2)));
 	}
 
 	static class TestSynthesizedAnnotation implements SynthesizedAnnotation {

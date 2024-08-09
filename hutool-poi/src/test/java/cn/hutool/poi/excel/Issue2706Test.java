@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import java.util.Set;
 public class Issue2706Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		String path = "d:/test/issue2706.xlsx";
 		BigExcelWriter writer = ExcelUtil.getBigWriter(path, "表格名称");

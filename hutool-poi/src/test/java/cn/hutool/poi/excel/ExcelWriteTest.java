@@ -15,9 +15,9 @@ import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.*;
@@ -61,7 +61,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testRowOrColumnCellStyle() {
 		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
@@ -105,7 +105,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest2() {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/excel/single_line.xlsx");
@@ -114,7 +114,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeWithSheetTest() {
 		ExcelWriter writer = ExcelUtil.getWriterWithSheet("表格1");
 
@@ -134,7 +134,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
@@ -169,7 +169,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void mergeTest() {
 		List<?> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
@@ -199,7 +199,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void mergeTest2() {
 
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(MAP_DATA_1, MAP_DATA_2);
@@ -216,7 +216,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapTest() {
 
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(MAP_DATA_1, MAP_DATA_2);
@@ -240,7 +240,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapTest2() {
 
 		// 通过工具类创建writer
@@ -253,7 +253,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapWithStyleTest() {
 
 		// 通过工具类创建writer
@@ -274,7 +274,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapAliasTest() {
 		Map<Object, Object> row1 = new LinkedHashMap<>();
 		row1.put("name", "张三");
@@ -309,7 +309,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapOnlyAliasTest() {
 		Map<Object, Object> row1 = new LinkedHashMap<>();
 		row1.put("name", "张三");
@@ -342,7 +342,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapOnlyAliasTest2() {
 		Map<Object, Object> row1 = new LinkedHashMap<>();
 		row1.put("name", "张三");
@@ -372,7 +372,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapOnlyAliasTest3() {
 		Map<Object, Object> row1 = new LinkedHashMap<>();
 		row1.put("name", "张三");
@@ -406,7 +406,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeBeanTest() {
 		TestBean bean1 = new TestBean();
 		bean1.setName("张三");
@@ -442,7 +442,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeBeanTest2() {
 		OrderExcel order1 = new OrderExcel();
 		order1.setId("1");
@@ -470,7 +470,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeCellValueTest() {
 		ExcelWriter writer = new ExcelWriter("d:/cellValueTest.xls");
 		writer.writeCellValue(3, 5, "aaa");
@@ -479,7 +479,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void addSelectTest() {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		ExcelWriter overtimeWriter = ExcelUtil.getWriter("d:/test/single_line.xlsx");
@@ -489,7 +489,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void addSelectTest2() {
 		ExcelWriter writer = ExcelUtil.getWriter("d:/test/select.xls");
 		writer.writeCellValue(0, 0, "请选择科目");
@@ -507,7 +507,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMultiSheetTest() {
 		List<Map<String, Object>> rows = new LinkedList<>();
 		for (int i = 0; i < 10; i++) {
@@ -542,7 +542,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMultiSheetTest2() {
 		List<Map<String, Object>> rows = new LinkedList<>();
 		final HashMap<String, Object> map = MapUtil.newHashMap();
@@ -566,7 +566,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMultiSheetWithStyleTest() {
 		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheetWithStyle.xlsx", "表格1");
 
@@ -597,7 +597,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapsTest() {
 		List<Map<String, Object>> rows = new ArrayList<>();
 
@@ -625,7 +625,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void formatTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/formatTest.xlsx");
 		final CellStyle cellStyle = writer.createCellStyle(0, 0);
@@ -634,7 +634,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeNumberFormatTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/formatTest.xlsx");
 		writer.disableDefaultStyle();
@@ -645,7 +645,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeSecHeadRowTest() {
 		List<?> row1 = CollUtil.newArrayList(1, "aa", "bb", "cc", "dd", "ee");
 		List<?> row2 = CollUtil.newArrayList(2, "aa1", "bb1", "cc1", "dd1", "ee1");
@@ -695,7 +695,7 @@ public class ExcelWriteTest {
 	 * 测试使用BigWriter写出，ExcelWriter修改失败
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void editTest() {
 		// 生成文件
 		File file = new File("d:/test/100_.xlsx");
@@ -718,7 +718,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void mergeTest3() {
 		// https://github.com/dromara/hutool/issues/1696
 
@@ -748,7 +748,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void mergeForDateTest() {
 		// https://github.com/dromara/hutool/issues/1911
 
@@ -761,7 +761,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void changeHeaderStyleTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
 		writer.writeHeadRow(ListUtil.of("姓名", "性别", "年龄"));
@@ -773,7 +773,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeFloatTest() {
 		//issue https://gitee.com/dromara/hutool/issues/I43U9G
 		String path = "d:/test/floatTest.xlsx";
@@ -785,7 +785,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void issueI466ZZTest() {
 		// https://gitee.com/dromara/hutool/issues/I466ZZ
 		// 需要输出S_20000314_x5116_0004
@@ -798,7 +798,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeLongTest() {
 		//https://gitee.com/dromara/hutool/issues/I49R6U
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/long.xlsx");
@@ -807,7 +807,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeHyperlinkTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/hyperlink.xlsx");
 
@@ -818,7 +818,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void mergeNumberTest() {
 		File tempFile = new File("d:/test/mergeNumber.xlsx");
 		FileUtil.del(tempFile);
@@ -829,7 +829,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeImgTest() {
 		ExcelWriter writer = ExcelUtil.getWriter(true);
 
@@ -846,11 +846,11 @@ public class ExcelWriteTest {
 	public void getDispositionTest() {
 		ExcelWriter writer = ExcelUtil.getWriter(true);
 		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
+		assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeColTest() {
 		ExcelWriter writer = ExcelUtil.getWriter("G:\\test.xlsx");
 		List<Integer> list = new ArrayList<>();
@@ -881,7 +881,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void autoSizeColumnTest() {
 
 		Map<String, Object> map = new LinkedHashMap<>(MAP_DATA_1);

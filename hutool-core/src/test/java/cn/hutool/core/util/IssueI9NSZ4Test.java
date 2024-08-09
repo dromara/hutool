@@ -3,8 +3,8 @@ package cn.hutool.core.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class IssueI9NSZ4Test {
 
@@ -12,13 +12,13 @@ public class IssueI9NSZ4Test {
 	public void getByTest() {
 		// AnimalKindInZoo所有枚举结果的getMappedValue结果值中都无AnimalKind.DOG，返回null
 		final AnimalKindInZoo by = EnumUtil.getBy(AnimalKindInZoo::getMappedValue, AnimalKind.DOG);
-		Assert.assertNull(by);
+		assertNull(by);
 	}
 
 	@Test
 	public void getByTest2() {
 		final AnimalKindInZoo by = EnumUtil.getBy(AnimalKindInZoo::getMappedValue, AnimalKind.BIRD);
-		Assert.assertEquals(AnimalKindInZoo.BIRD, by);
+		assertEquals(AnimalKindInZoo.BIRD, by);
 	}
 
 	/**

@@ -1,12 +1,12 @@
 package cn.hutool.core.img;
 
 import cn.hutool.core.io.FileUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class IssueI8L8UATest {
 	@Test
-	@Ignore
+	@Disabled
 	public void convertTest() {
 		ImgUtil.convert(
 			FileUtil.file("d:/test/1.png"),

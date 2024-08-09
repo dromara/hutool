@@ -4,8 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.multi.ListValueMap;
 import cn.hutool.core.map.multi.SetValueMap;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 
@@ -26,10 +26,10 @@ public class CollValueMapTest {
 
 		entries.removeValue("one","22");
 
-		Assert.assertEquals(ListUtil.of("11","33","22"), entries.get("one"));
+		assertEquals(ListUtil.of("11","33","22"), entries.get("one"));
 
 		entries.removeValues("two",ListUtil.of("44","55"));
-		Assert.assertEquals(ListUtil.empty(),entries.get("two"));
+		assertEquals(ListUtil.empty(),entries.get("two"));
 	}
 
 	@Test
@@ -46,10 +46,10 @@ public class CollValueMapTest {
 		entries.putValue("three","11");
 
 		entries.removeValue("one","22");
-		Assert.assertEquals(CollUtil.newHashSet("11","33"), entries.get("one"));
+		assertEquals(CollUtil.newHashSet("11","33"), entries.get("one"));
 
 		entries.removeValues("two",ListUtil.of("44","55"));
-		Assert.assertEquals(CollUtil.empty(HashSet.class),entries.get("two"));
+		assertEquals(CollUtil.empty(HashSet.class),entries.get("two"));
 	}
 
 }

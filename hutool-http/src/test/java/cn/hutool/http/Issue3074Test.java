@@ -12,13 +12,13 @@
 
 package cn.hutool.http;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Issue3074Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bodyTest() {
 		HttpUtil.createPost("http://localhost:8888/body")
 			.contentType(ContentType.JSON.getValue())

@@ -3,15 +3,15 @@ package cn.hutool.extra.compress;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.compress.extractor.Extractor;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 public class ExtractorTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipTest() {
 		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
@@ -21,7 +21,7 @@ public class ExtractorTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sevenZTest() {
 		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
@@ -31,7 +31,7 @@ public class ExtractorTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void tgzTest() {
 		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
@@ -42,7 +42,7 @@ public class ExtractorTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sevenZTest2() {
 		final File targetDir = FileUtil.file("d:/test/sevenZ2/");
 		FileUtil.clean(targetDir);
@@ -55,7 +55,7 @@ public class ExtractorTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipTest2() {
 		final File targetDir = FileUtil.file("d:/test/zip2/");
 		FileUtil.clean(targetDir);

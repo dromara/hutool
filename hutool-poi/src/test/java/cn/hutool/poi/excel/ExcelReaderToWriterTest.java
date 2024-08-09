@@ -13,13 +13,13 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.io.FileUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ExcelReaderToWriterTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getWriterTest() {
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/issue3120.xlsx");
 		final ExcelWriter writer = reader.getWriter();

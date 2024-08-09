@@ -14,8 +14,8 @@ package cn.hutool.cron.pattern;
 
 import cn.hutool.cron.pattern.matcher.PatternMatcher;
 import cn.hutool.cron.pattern.parser.PatternParser;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -23,6 +23,6 @@ public class IssueI7SMP7Test {
 	@Test
 	public void parseTest() {
 		final List<PatternMatcher> parse = PatternParser.parse("0 0 3 1 1 ? */1");
-		Assert.assertNotNull(parse);
+		assertNotNull(parse);
 	}
 }

@@ -2,9 +2,9 @@ package cn.hutool.db.nosql;
 
 import cn.hutool.db.nosql.mongo.MongoFactory;
 import com.mongodb.client.MongoDatabase;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author VampireAchao
@@ -12,9 +12,9 @@ import org.junit.Test;
 public class MongoDBTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void mongoDSTest() {
 		MongoDatabase db = MongoFactory.getDS("master").getDb("test");
-		Assert.assertEquals("test", db.getName());
+		assertEquals("test", db.getName());
 	}
 }

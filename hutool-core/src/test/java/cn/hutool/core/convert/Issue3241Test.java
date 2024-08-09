@@ -12,14 +12,14 @@
 
 package cn.hutool.core.convert;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
 public class Issue3241Test {
 	@Test
 	public void toBigDecimalTest() {
-		Assert.assertEquals(new BigDecimal("9.0E+7"), Convert.toBigDecimal("9.0E+7"));
+		assertEquals(new BigDecimal("9.0E+7"), Convert.toBigDecimal("9.0E+7"));
 	}
 }

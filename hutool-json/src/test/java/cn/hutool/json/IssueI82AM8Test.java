@@ -3,8 +3,8 @@ package cn.hutool.json;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.TypeReference;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +20,7 @@ public class IssueI82AM8Test {
 			JSONUtil.toBean(json, new TypeReference<Map<String, MedicalCenter.MedicalCenterLocalized>>() {
 			}, false);
 
-		bean1.forEach((k, v) -> Assert.assertNotNull(v.getTestimonials()));
+		bean1.forEach((k, v) -> assertNotNull(v.getTestimonials()));
 	}
 
 	// 对象

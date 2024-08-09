@@ -2,8 +2,8 @@ package cn.hutool.http.webservice;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -17,7 +17,7 @@ import javax.xml.soap.SOAPMessage;
 public class SoapClientTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void requestTest() {
 		SoapClient client = SoapClient.create("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 		.setMethod("web:getCountryCityByIp", "http://WebXml.com.cn/")
@@ -30,7 +30,7 @@ public class SoapClientTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void requestForMessageTest() throws SOAPException {
 		SoapClient client = SoapClient.create("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 				.setMethod("web:getCountryCityByIp", "http://WebXml.com.cn/")

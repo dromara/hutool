@@ -1,25 +1,28 @@
 package cn.hutool.core.lang.tree;
 
 import lombok.Data;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class Issues2538Test {
 
-	@org.junit.Test
+	@Test
 	public void issues2538Test() {
-		Test test1 = new Test();
+		TestBean test1 = new TestBean();
 		test1.setId(1);
 		test1.setParentId(0);
 		test1.setName("1");
-		Test test2 = new Test();
+		TestBean test2 = new TestBean();
 		test2.setId(2);
 		test2.setParentId(1);
 		test2.setName("1");
 
-		List<Test> list = new ArrayList<>();
+		List<TestBean> list = new ArrayList<>();
 
 		list.add(test1);
 		list.add(test2);
@@ -40,7 +43,7 @@ public class Issues2538Test {
 					tree.setWeight(null);
 				});
 
-		Assert.assertNotNull(treeNodes);
+		assertNotNull(treeNodes);
 
 		try {
 			// 转换器
@@ -53,12 +56,12 @@ public class Issues2538Test {
 						tree.setWeight(null);
 					});
 		}catch (Exception e) {
-			Assert.assertEquals(e.getClass(), IllegalArgumentException.class);
+			assertEquals(e.getClass(), IllegalArgumentException.class);
 		}
 	}
 
 	@Data
-	public static class Test {
+	public static class TestBean {
 		private long id;
 		private long parentId;
 		private String name;

@@ -2,8 +2,8 @@ package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.util.StrUtil;
 import org.bouncycastle.jce.spec.IESParameterSpec;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class ECIESTest {
 
@@ -47,6 +47,6 @@ public class ECIESTest {
 		String encryptStr = cryptoForEncrypt.encryptBase64(text.toString(), KeyType.PublicKey);
 
 		String decryptStr = StrUtil.utf8Str(cryptoForDecrypt.decrypt(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text.toString(), decryptStr);
+		assertEquals(text.toString(), decryptStr);
 	}
 }

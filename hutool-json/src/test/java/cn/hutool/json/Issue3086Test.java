@@ -15,8 +15,8 @@ package cn.hutool.json;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public class Issue3086Test {
 		final TestBean testBean = new TestBean();
 		testBean.setAuthorities(strings);
 
-		Assert.assertEquals("{\"authorities\":[\"ROLE_admin\",\"ROLE_normal\"]}",
+		assertEquals("{\"authorities\":[\"ROLE_admin\",\"ROLE_normal\"]}",
 			JSONUtil.toJsonStr(testBean));
 	}
 

@@ -3,8 +3,8 @@ package cn.hutool.json;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class Issue2555Test {
 
@@ -19,12 +19,12 @@ public class Issue2555Test {
 		simpleObj.setMyType(child);
 
 		final String json = JSONUtil.toJsonStr(simpleObj);
-		Assert.assertEquals("{\"myType\":{\"addr\":\"addrValue1\"}}", json);
+		assertEquals("{\"myType\":{\"addr\":\"addrValue1\"}}", json);
 
 		//MyDeserializer不会被调用
 		final JSONObject jsonObject = JSONUtil.parseObj(json, JSONConfig.create().setIgnoreError(false));
 		final SimpleObj simpleObj2 = jsonObject.toBean(SimpleObj.class);
-		Assert.assertEquals("addrValue1", simpleObj2.getMyType().getAddress());
+		assertEquals("addrValue1", simpleObj2.getMyType().getAddress());
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class Issue2555Test {
 		//MyDeserializer不会被调用
 		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr, JSONConfig.create().setIgnoreError(false));
 		final SimpleObj simpleObj2 = jsonObject.toBean(SimpleObj.class);
-		Assert.assertEquals("addrValue1", simpleObj2.getMyType().getAddress());
+		assertEquals("addrValue1", simpleObj2.getMyType().getAddress());
 	}
 
 	@Data

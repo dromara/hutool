@@ -13,8 +13,8 @@
 package cn.hutool.core.util;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +32,9 @@ public class Issue3136Test {
 		final String xmlStr = "<?xml version=\"1.0\" encoding=\"gbk\" ?><response><code>02</code><message></message></response>";
 		final SmsRes smsRes = XmlUtil.xmlToBean(XmlUtil.parseXml(xmlStr).getDocumentElement(), SmsRes.class);
 
-		Assert.assertEquals("02", smsRes.getCode());
-		Assert.assertNotNull(smsRes.getMessage());
-		Assert.assertEquals(new Message(), smsRes.getMessage());
+		assertEquals("02", smsRes.getCode());
+		assertNotNull(smsRes.getMessage());
+		assertEquals(new Message(), smsRes.getMessage());
 	}
 
 	@Data

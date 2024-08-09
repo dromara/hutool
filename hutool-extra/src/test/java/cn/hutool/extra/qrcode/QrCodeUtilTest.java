@@ -7,8 +7,8 @@ import cn.hutool.core.lang.Assert;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -31,7 +31,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateCustomTest() {
 		final QrConfig config = new QrConfig();
 		config.setMargin(0);
@@ -43,7 +43,7 @@ public class QrCodeUtilTest {
 		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.touch(path));
 	}
 	@Test
-	@Ignore
+	@Disabled
 	public void generateNoCustomColorTest() {
 		final QrConfig config = new QrConfig();
 		config.setMargin(0);
@@ -56,7 +56,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateWithLogoTest() {
 		final String icon = FileUtil.isWindows() ? "d:/test/pic/face.jpg" : "~/Desktop/hutool/pic/face.jpg";
 		final String targetPath = FileUtil.isWindows() ? "d:/test/qrcodeWithLogo.jpg" : "~/Desktop/hutool/qrcodeWithLogo.jpg";
@@ -67,14 +67,14 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void decodeTest() {
 		final String decode = QrCodeUtil.decode(FileUtil.file("d:/test/pic/qr.png"));
 		//Console.log(decode);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void decodeTest2() {
 		// 条形码
 		final String decode = QrCodeUtil.decode(FileUtil.file("d:/test/90.png"));
@@ -88,7 +88,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateAsBase64Test2() {
 		final byte[] bytes = FileUtil.readBytes(
 				new File("d:/test/qr.png"));
@@ -105,7 +105,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void decodeTest3() {
 		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), false, true);
 		//Console.log(decode);
@@ -130,7 +130,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateSvgTest() {
 		final QrConfig qrConfig = QrConfig.create()
 				.setImg("d:/test/logo.png")
@@ -170,7 +170,7 @@ public class QrCodeUtilTest {
 
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateToFileTest() {
 		final QrConfig qrConfig = QrConfig.create()
 				.setForeColor(Color.BLUE)
@@ -183,7 +183,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateToStreamTest() {
 		final QrConfig qrConfig = QrConfig.create()
 				.setForeColor(Color.BLUE)
@@ -201,7 +201,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void comparePngAndSvgAndAsciiArtTest() {
 		final QrConfig qrConfig = QrConfig.create()
 				.setForeColor(null)

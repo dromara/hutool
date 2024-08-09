@@ -2,8 +2,8 @@ package cn.hutool.core.text;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.CharUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class NamingCaseTest {
 
@@ -13,14 +13,14 @@ public class NamingCaseTest {
 				.set("Table_Test_Of_day","tableTestOfDay")
 				.set("TableTestOfDay","TableTestOfDay")
 				.set("abc_1d","abc1d")
-				.forEach((key, value) -> Assert.assertEquals(value, NamingCase.toCamelCase(key)));
+				.forEach((key, value) -> assertEquals(value, NamingCase.toCamelCase(key)));
 	}
 
 	@Test
 	public void toCamelCaseFromDashedTest() {
 		Dict.create()
 				.set("Table-Test-Of-day","tableTestOfDay")
-				.forEach((key, value) -> Assert.assertEquals(value, NamingCase.toCamelCase(key, CharUtil.DASHED)));
+				.forEach((key, value) -> assertEquals(value, NamingCase.toCamelCase(key, CharUtil.DASHED)));
 	}
 
 	@Test
@@ -39,15 +39,15 @@ public class NamingCaseTest {
 				.set("customerNickV2", "customer_nick_v2")
 				// https://gitee.com/dromara/hutool/issues/I4X9TT
 				.set("DEPT_NAME","DEPT_NAME")
-				.forEach((key, value) -> Assert.assertEquals(value, NamingCase.toUnderlineCase(key)));
+				.forEach((key, value) -> assertEquals(value, NamingCase.toUnderlineCase(key)));
 	}
 
 	@Test
 	public void issue3031Test() {
 		String camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY");
-		Assert.assertEquals("userName,birthday", camelCase);
+		assertEquals("userName,birthday", camelCase);
 
 		camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY", '_', false);
-		Assert.assertEquals("userName,BIRTHDAY", camelCase);
+		assertEquals("userName,BIRTHDAY", camelCase);
 	}
 }

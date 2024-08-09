@@ -2,8 +2,8 @@ package cn.hutool.crypto.symmetric.fpe;
 
 import cn.hutool.core.util.RandomUtil;
 import org.bouncycastle.crypto.util.BasicAlphabetMapper;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class FPETest {
 
@@ -20,10 +20,10 @@ public class FPETest {
 		String phone = RandomUtil.randomString("A0123456789", 13);
 		final String encrypt = fpe.encrypt(phone);
 		// 加密后与原密文长度一致
-		Assert.assertEquals(phone.length(), encrypt.length());
+		assertEquals(phone.length(), encrypt.length());
 
 		final String decrypt = fpe.decrypt(encrypt);
-		Assert.assertEquals(phone, decrypt);
+		assertEquals(phone, decrypt);
 	}
 
 	@Test
@@ -39,9 +39,9 @@ public class FPETest {
 		String phone = RandomUtil.randomString("A0123456789", 13);
 		final String encrypt = fpe.encrypt(phone);
 		// 加密后与原密文长度一致
-		Assert.assertEquals(phone.length(), encrypt.length());
+		assertEquals(phone.length(), encrypt.length());
 
 		final String decrypt = fpe.decrypt(encrypt);
-		Assert.assertEquals(phone, decrypt);
+		assertEquals(phone, decrypt);
 	}
 }

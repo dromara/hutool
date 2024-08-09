@@ -2,8 +2,8 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -19,19 +19,19 @@ public class AbstractWrappedAnnotationAttributeTest {
 		CacheableAnnotationAttribute nameAttribute = new CacheableAnnotationAttribute(annotation, nameMethod);
 		AbstractWrappedAnnotationAttribute nameWrapper = new TestWrappedAnnotationAttribute(nameAttribute, valueAttribute);
 
-		Assert.assertEquals(nameWrapper.getAnnotation(), annotation);
+		assertEquals(nameWrapper.getAnnotation(), annotation);
 
 		// 注解属性
-		Assert.assertEquals(annotation, nameWrapper.getAnnotation());
-		Assert.assertEquals(annotation.annotationType(), nameWrapper.getAnnotationType());
-		Assert.assertEquals(nameAttribute, nameWrapper.getOriginal());
-		Assert.assertEquals(valueAttribute, nameWrapper.getLinked());
+		assertEquals(annotation, nameWrapper.getAnnotation());
+		assertEquals(annotation.annotationType(), nameWrapper.getAnnotationType());
+		assertEquals(nameAttribute, nameWrapper.getOriginal());
+		assertEquals(valueAttribute, nameWrapper.getLinked());
 
 		// 方法属性
-		Assert.assertEquals(nameMethod.getName(), nameWrapper.getAttributeName());
-		Assert.assertEquals(nameMethod.getReturnType(), nameWrapper.getAttributeType());
-		Assert.assertTrue(nameWrapper.isWrapped());
-		Assert.assertEquals("value1", nameWrapper.getValue());
+		assertEquals(nameMethod.getName(), nameWrapper.getAttributeName());
+		assertEquals(nameMethod.getReturnType(), nameWrapper.getAttributeType());
+		assertTrue(nameWrapper.isWrapped());
+		assertEquals("value1", nameWrapper.getValue());
 	}
 
 	@Test
@@ -43,24 +43,24 @@ public class AbstractWrappedAnnotationAttributeTest {
 		Method name1Method = ReflectUtil.getMethod(AnnotationForTest1.class, "name1");
 		CacheableAnnotationAttribute name1Attribute = new CacheableAnnotationAttribute(annotation1, name1Method);
 		AbstractWrappedAnnotationAttribute wrapper1 = new TestWrappedAnnotationAttribute(name1Attribute, value1Attribute);
-		Assert.assertEquals(name1Attribute, wrapper1.getNonWrappedOriginal());
-		Assert.assertEquals(CollUtil.newArrayList(name1Attribute, value1Attribute), wrapper1.getAllLinkedNonWrappedAttributes());
+		assertEquals(name1Attribute, wrapper1.getNonWrappedOriginal());
+		assertEquals(CollUtil.newArrayList(name1Attribute, value1Attribute), wrapper1.getAllLinkedNonWrappedAttributes());
 
 		// 包装第二层：( name1 + value1 ) + value2
 		Annotation annotation2 = ClassForTest1.class.getAnnotation(AnnotationForTest2.class);
 		Method value2Method = ReflectUtil.getMethod(AnnotationForTest2.class, "value2");
 		CacheableAnnotationAttribute value2Attribute = new CacheableAnnotationAttribute(annotation2, value2Method);
 		AbstractWrappedAnnotationAttribute wrapper2 = new TestWrappedAnnotationAttribute(wrapper1, value2Attribute);
-		Assert.assertEquals(name1Attribute, wrapper2.getNonWrappedOriginal());
-		Assert.assertEquals(CollUtil.newArrayList(name1Attribute, value1Attribute, value2Attribute), wrapper2.getAllLinkedNonWrappedAttributes());
+		assertEquals(name1Attribute, wrapper2.getNonWrappedOriginal());
+		assertEquals(CollUtil.newArrayList(name1Attribute, value1Attribute, value2Attribute), wrapper2.getAllLinkedNonWrappedAttributes());
 
 		// 包装第二层：value3 + ( ( name1 + value1 ) + value2 )
 		Annotation annotation3 = ClassForTest1.class.getAnnotation(AnnotationForTest3.class);
 		Method value3Method = ReflectUtil.getMethod(AnnotationForTest3.class, "value3");
 		CacheableAnnotationAttribute value3Attribute = new CacheableAnnotationAttribute(annotation3, value3Method);
 		AbstractWrappedAnnotationAttribute wrapper3 = new TestWrappedAnnotationAttribute(value3Attribute, wrapper2);
-		Assert.assertEquals(value3Attribute, wrapper3.getNonWrappedOriginal());
-		Assert.assertEquals(CollUtil.newArrayList(value3Attribute, name1Attribute, value1Attribute, value2Attribute), wrapper3.getAllLinkedNonWrappedAttributes());
+		assertEquals(value3Attribute, wrapper3.getNonWrappedOriginal());
+		assertEquals(CollUtil.newArrayList(value3Attribute, name1Attribute, value1Attribute, value2Attribute), wrapper3.getAllLinkedNonWrappedAttributes());
 
 	}
 

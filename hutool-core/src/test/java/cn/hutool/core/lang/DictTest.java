@@ -2,8 +2,8 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.builder.GenericBuilder;
 import cn.hutool.core.date.DateTime;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class DictTest {
 				.set("key3", DateTime.now());//Date
 
 		Long v2 = dict.getLong("key2");
-		Assert.assertEquals(Long.valueOf(1000L), v2);
+		assertEquals(Long.valueOf(1000L), v2);
 	}
 
 	@Test
@@ -30,8 +30,8 @@ public class DictTest {
 
 		dict.putAll(map);
 
-		Assert.assertEquals(1, dict.get("A"));
-		Assert.assertEquals(1, dict.get("a"));
+		assertEquals(1, dict.get("A"));
+		assertEquals(1, dict.get("a"));
 	}
 
 	@Test
@@ -42,9 +42,9 @@ public class DictTest {
 				"BLUE", "#0000FF"
 		);
 
-		Assert.assertEquals("#FF0000", dict.get("RED"));
-		Assert.assertEquals("#00FF00", dict.get("GREEN"));
-		Assert.assertEquals("#0000FF", dict.get("BLUE"));
+		assertEquals("#FF0000", dict.get("RED"));
+		assertEquals("#00FF00", dict.get("GREEN"));
+		assertEquals("#0000FF", dict.get("BLUE"));
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public class DictTest {
 
 		dict.removeEqual(dict2);
 
-		Assert.assertTrue(dict.isEmpty());
+		assertTrue(dict.isEmpty());
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class DictTest {
 		User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
 		Dict dict = Dict.create();
 		dict.setFields(user::getNickname, user::getUsername);
-		Assert.assertEquals("hutool", dict.get("username"));
-		Assert.assertNull(dict.get("nickname"));
+		assertEquals("hutool", dict.get("username"));
+		assertNull(dict.get("nickname"));
 	}
 }

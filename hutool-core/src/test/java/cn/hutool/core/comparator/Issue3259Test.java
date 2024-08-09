@@ -17,9 +17,9 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.RandomUtil;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +31,11 @@ public class Issue3259Test {
 		Model x = new Model(1, 1);
 		Model y = new Model(1, RandomUtil.randomInt(2, 100));
 
-		Assert.assertTrue(new FieldsComparator<>(Model.class, "a", "b").compare(x, y) < 0);
+		assertTrue(new FieldsComparator<>(Model.class, "a", "b").compare(x, y) < 0);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sortTest() {
 		for(int i = 2; i < 5; i++) {
 			Model x = new Model(1, 1);

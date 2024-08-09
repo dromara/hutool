@@ -1,8 +1,8 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.util.ReflectUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -15,11 +15,11 @@ public class CacheableAnnotationAttributeTest {
 		final Method attribute = ReflectUtil.getMethod(AnnotationForTest.class, "value");
 		final CacheableAnnotationAttribute annotationAttribute = new CacheableAnnotationAttribute(annotation, attribute);
 		// 注解属性
-		Assert.assertEquals(annotation, annotationAttribute.getAnnotation());
-		Assert.assertEquals(annotation.annotationType(), annotationAttribute.getAnnotationType());
+		assertEquals(annotation, annotationAttribute.getAnnotation());
+		assertEquals(annotation.annotationType(), annotationAttribute.getAnnotationType());
 		// 方法属性
-		Assert.assertEquals(attribute.getName(), annotationAttribute.getAttributeName());
-		Assert.assertEquals(attribute.getReturnType(), annotationAttribute.getAttributeType());
+		assertEquals(attribute.getName(), annotationAttribute.getAttributeName());
+		assertEquals(attribute.getReturnType(), annotationAttribute.getAttributeType());
 	}
 
 	@Test
@@ -29,9 +29,9 @@ public class CacheableAnnotationAttributeTest {
 		final CacheableAnnotationAttribute annotationAttribute = new CacheableAnnotationAttribute(annotation, attribute);
 
 		// 值处理
-		Assert.assertEquals("", annotationAttribute.getValue());
-		Assert.assertTrue(annotationAttribute.isValueEquivalentToDefaultValue());
-		Assert.assertFalse(annotationAttribute.isWrapped());
+		assertEquals("", annotationAttribute.getValue());
+		assertTrue(annotationAttribute.isValueEquivalentToDefaultValue());
+		assertFalse(annotationAttribute.isWrapped());
 	}
 
 	@Test
@@ -41,9 +41,9 @@ public class CacheableAnnotationAttributeTest {
 		final CacheableAnnotationAttribute annotationAttribute = new CacheableAnnotationAttribute(annotation, attribute);
 
 		// 值处理
-		Assert.assertEquals("test", annotationAttribute.getValue());
-		Assert.assertFalse(annotationAttribute.isValueEquivalentToDefaultValue());
-		Assert.assertFalse(annotationAttribute.isWrapped());
+		assertEquals("test", annotationAttribute.getValue());
+		assertFalse(annotationAttribute.isValueEquivalentToDefaultValue());
+		assertFalse(annotationAttribute.isWrapped());
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

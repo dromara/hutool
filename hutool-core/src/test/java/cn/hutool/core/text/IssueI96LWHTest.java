@@ -2,7 +2,7 @@ package cn.hutool.core.text;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class IssueI96LWHTest {
 	@Test

@@ -3,41 +3,41 @@ package cn.hutool.json.xml;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.json.XML;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class XMLTest {
 
 	@Test
-	public void toXmlTest(){
+	public void toXmlTest() {
 		final JSONObject put = JSONUtil.createObj()
-				.set("aaa", "你好")
-				.set("键2", "test");
+			.set("aaa", "你好")
+			.set("键2", "test");
 		final String s = JSONUtil.toXmlStr(put);
-		MatcherAssert.assertThat(s, CoreMatchers.anyOf(CoreMatchers.is("<aaa>你好</aaa><键2>test</键2>"), CoreMatchers.is("<键2>test</键2><aaa>你好</aaa>")));
+		Assertions.assertEquals("<aaa>你好</aaa><键2>test</键2>", s);
 	}
 
 	@Test
-	public void escapeTest(){
+	public void escapeTest() {
 		String xml = "<a>•</a>";
 		JSONObject jsonObject = XML.toJSONObject(xml);
 
-		Assert.assertEquals("{\"a\":\"•\"}", jsonObject.toString());
+		assertEquals("{\"a\":\"•\"}", jsonObject.toString());
 
 		String xml2 = XML.toXml(JSONUtil.parseObj(jsonObject));
-		Assert.assertEquals(xml, xml2);
+		assertEquals(xml, xml2);
 	}
 
 	@Test
-	public void xmlContentTest(){
-		JSONObject jsonObject = JSONUtil.createObj().set("content","123456");
+	public void xmlContentTest() {
+		JSONObject jsonObject = JSONUtil.createObj().set("content", "123456");
 
 		String xml = XML.toXml(jsonObject);
-		Assert.assertEquals("123456", xml);
+		assertEquals("123456", xml);
 
 		xml = XML.toXml(jsonObject, null, new String[0]);
-		Assert.assertEquals("<content>123456</content>", xml);
+		assertEquals("<content>123456</content>", xml);
 	}
 }

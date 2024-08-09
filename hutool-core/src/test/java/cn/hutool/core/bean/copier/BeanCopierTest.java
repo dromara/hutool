@@ -1,8 +1,8 @@
 package cn.hutool.core.bean.copier;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
@@ -13,14 +13,14 @@ public class BeanCopierTest {
 		final A a = new A();
 
 		HashMap<Object, Object> map = BeanCopier.create(a, new HashMap<>(), CopyOptions.create()).copy();
-		Assert.assertEquals(1, map.size());
-		Assert.assertTrue(map.containsKey("value"));
-		Assert.assertNull(map.get("value"));
+		assertEquals(1, map.size());
+		assertTrue(map.containsKey("value"));
+		assertNull(map.get("value"));
 
 		// 忽略null的情况下，空字段不写入map
 		map = BeanCopier.create(a, new HashMap<>(), CopyOptions.create().ignoreNullValue()).copy();
-		Assert.assertFalse(map.containsKey("value"));
-		Assert.assertEquals(0, map.size());
+		assertFalse(map.containsKey("value"));
+		assertEquals(0, map.size());
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class BeanCopierTest {
 		final BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.create().setOverride(false));
 		copier.copy();
 
-		Assert.assertEquals("abc", b.getValue());
+		assertEquals("abc", b.getValue());
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class BeanCopierTest {
 		final BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.create());
 		copier.copy();
 
-		Assert.assertEquals("123", b.getValue());
+		assertEquals("123", b.getValue());
 	}
 
 	/**
@@ -67,12 +67,12 @@ public class BeanCopierTest {
 
 		BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.create().setOverride(false));
 		copier.copy();
-		Assert.assertEquals("123", b.getValue());
+		assertEquals("123", b.getValue());
 
 		b.setValue(null);
 		copier = BeanCopier.create(a, b, CopyOptions.create().setOverride(false));
 		copier.copy();
-		Assert.assertEquals("abc", b.getValue());
+		assertEquals("abc", b.getValue());
 	}
 
 	@Data

@@ -1,8 +1,8 @@
 package cn.hutool.db.ds;
 
 import cn.hutool.db.ds.simple.SimpleDataSource;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class DataSourceWrapperTest {
 
@@ -12,7 +12,7 @@ public class DataSourceWrapperTest {
 		final DataSourceWrapper wrapper = new DataSourceWrapper(simpleDataSource, "test.driver");
 
 		final DataSourceWrapper clone = wrapper.clone();
-		Assert.assertEquals("test.driver", clone.getDriver());
-		Assert.assertEquals(simpleDataSource, clone.getRaw());
+		assertEquals("test.driver", clone.getDriver());
+		assertEquals(simpleDataSource, clone.getRaw());
 	}
 }

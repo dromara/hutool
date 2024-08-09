@@ -1,12 +1,10 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlPath;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UrlBuilderTest {
 
@@ -23,7 +21,7 @@ public class UrlBuilderTest {
 		UrlBuilder builder = UrlBuilder.of();
 		final String buildUrl = builder.setHost("www.hutool.cn").build();
 		assertEquals("http://www.hutool.cn/", buildUrl);
-		assertEquals(buildUrl, 80, builder.getPortWithDefault());
+		assertEquals(80, builder.getPortWithDefault());
 	}
 
 	@Test
@@ -36,7 +34,7 @@ public class UrlBuilderTest {
 		buildUrl = urlBuilder.setScheme("http").setHost("192.168.1.1").setPort(8080).addQuery("url", "http://192.168.1.1/test/1")
 				.setWithEndTag(false).build();
 		assertEquals("http://192.168.1.1:8080?url=http://192.168.1.1/test/1", buildUrl);
-		assertEquals(buildUrl, 8080, urlBuilder.getPortWithDefault());
+		assertEquals(8080, urlBuilder.getPortWithDefault());
 	}
 
 	@Test
@@ -161,8 +159,8 @@ public class UrlBuilderTest {
 	@Test
 	public void ofNullQueryTest() {
 		final UrlBuilder builder = UrlBuilder.of("http://www.hutool.cn/aaa/bbb", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertNotNull(builder.getQuery());
-		Assert.assertNull(builder.getQuery().get("a"));
+		assertNotNull(builder.getQuery());
+		assertNull(builder.getQuery().get("a"));
 	}
 
 	@Test

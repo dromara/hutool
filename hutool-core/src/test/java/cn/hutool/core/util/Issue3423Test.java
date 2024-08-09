@@ -1,22 +1,26 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class Issue3423Test {
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void toBigDecimalOfNaNTest() {
-		NumberUtil.toBigDecimal("NaN");
+		assertThrows(IllegalArgumentException.class, () -> {
+			NumberUtil.toBigDecimal("NaN");
+		});
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void toBigDecimalOfNaNTest2() throws ParseException {
 		final NumberFormat format = NumberFormat.getInstance();
 		((DecimalFormat) format).setParseBigDecimal(true);

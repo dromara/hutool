@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -20,51 +20,51 @@ public class URLUtilTest {
 		// issue#I25MZL，多个/被允许
 		String url = "http://www.hutool.cn//aaa/bbb";
 		String normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn//aaa/bbb", normalize);
+		assertEquals("http://www.hutool.cn//aaa/bbb", normalize);
 
 		url = "www.hutool.cn//aaa/bbb";
 		normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn//aaa/bbb", normalize);
+		assertEquals("http://www.hutool.cn//aaa/bbb", normalize);
 	}
 
 	@Test
 	public void normalizeTest2() {
 		String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
+		assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
 
 		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
+		assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
 	}
 
 	@Test
 	public void normalizeTest3() {
 		String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url, true);
-		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
+		assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
 
 		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url, true);
-		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
+		assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
 
 		url = "\\/www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url, true);
-		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
+		assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
 	}
 
 	@Test
 	public void normalizeIpv6Test() {
 		String url = "http://[fe80::8f8:2022:a603:d180]:9439";
 		String normalize = URLUtil.normalize("http://[fe80::8f8:2022:a603:d180]:9439", true);
-		Assert.assertEquals(url, normalize);
+		assertEquals(url, normalize);
 	}
 
 	@Test
 	public void formatTest() {
 		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
+		assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
 	}
 
 	@Test
@@ -72,32 +72,32 @@ public class URLUtilTest {
 		String url = "https://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);
 		URI host = URLUtil.getHost(new URL(normalize));
-		Assert.assertEquals("https://www.hutool.cn", host.toString());
+		assertEquals("https://www.hutool.cn", host.toString());
 	}
 
 	@Test
 	public void encodeTest() {
 		String body = "366466 - 副本.jpg";
 		String encode = URLUtil.encode(body);
-		Assert.assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode);
-		Assert.assertEquals(body, URLUtil.decode(encode));
+		assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode);
+		assertEquals(body, URLUtil.decode(encode));
 
 		String encode2 = URLUtil.encodeQuery(body);
-		Assert.assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode2);
+		assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode2);
 	}
 
 	@Test
 	public void encodeQueryPlusTest() {
 		String body = "+";
 		String encode2 = URLUtil.encodeQuery(body);
-		Assert.assertEquals("+", encode2);
+		assertEquals("+", encode2);
 	}
 
 	@Test
 	public void getPathTest(){
 		String url = " http://www.aaa.bbb/search?scope=ccc&q=ddd";
 		String path = URLUtil.getPath(url);
-		Assert.assertEquals("/search", path);
+		assertEquals("/search", path);
 	}
 
 	@Test
@@ -105,6 +105,6 @@ public class URLUtilTest {
 		String fileFullName = "/Uploads/20240601/aaaa.txt";
 		final URI uri = URLUtil.toURI(fileFullName);
 		final URI resolve = uri.resolve(".");
-		Assert.assertEquals("/Uploads/20240601/", resolve.toString());
+		assertEquals("/Uploads/20240601/", resolve.toString());
 	}
 }

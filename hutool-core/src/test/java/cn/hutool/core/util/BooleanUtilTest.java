@@ -1,76 +1,76 @@
 package cn.hutool.core.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class BooleanUtilTest {
 
 	@Test
 	public void toBooleanTest() {
-		Assert.assertTrue(BooleanUtil.toBoolean("true"));
-		Assert.assertTrue(BooleanUtil.toBoolean("yes"));
-		Assert.assertTrue(BooleanUtil.toBoolean("t"));
-		Assert.assertTrue(BooleanUtil.toBoolean("OK"));
-		Assert.assertTrue(BooleanUtil.toBoolean("1"));
-		Assert.assertTrue(BooleanUtil.toBoolean("On"));
-		Assert.assertTrue(BooleanUtil.toBoolean("是"));
-		Assert.assertTrue(BooleanUtil.toBoolean("对"));
-		Assert.assertTrue(BooleanUtil.toBoolean("真"));
+		assertTrue(BooleanUtil.toBoolean("true"));
+		assertTrue(BooleanUtil.toBoolean("yes"));
+		assertTrue(BooleanUtil.toBoolean("t"));
+		assertTrue(BooleanUtil.toBoolean("OK"));
+		assertTrue(BooleanUtil.toBoolean("1"));
+		assertTrue(BooleanUtil.toBoolean("On"));
+		assertTrue(BooleanUtil.toBoolean("是"));
+		assertTrue(BooleanUtil.toBoolean("对"));
+		assertTrue(BooleanUtil.toBoolean("真"));
 
-		Assert.assertFalse(BooleanUtil.toBoolean("false"));
-		Assert.assertFalse(BooleanUtil.toBoolean("6455434"));
-		Assert.assertFalse(BooleanUtil.toBoolean(""));
+		assertFalse(BooleanUtil.toBoolean("false"));
+		assertFalse(BooleanUtil.toBoolean("6455434"));
+		assertFalse(BooleanUtil.toBoolean(""));
 	}
 
 	@Test
 	public void andTest(){
-		Assert.assertFalse(BooleanUtil.and(true,false));
-		Assert.assertFalse(BooleanUtil.andOfWrap(true,false));
+		assertFalse(BooleanUtil.and(true,false));
+		assertFalse(BooleanUtil.andOfWrap(true,false));
 	}
 
 	@Test
 	public void orTest(){
-		Assert.assertTrue(BooleanUtil.or(true,false));
-		Assert.assertTrue(BooleanUtil.orOfWrap(true,false));
+		assertTrue(BooleanUtil.or(true,false));
+		assertTrue(BooleanUtil.orOfWrap(true,false));
 	}
 
 	@Test
 	public void xorTest(){
-		Assert.assertTrue(BooleanUtil.xor(true,false));
-		Assert.assertTrue(BooleanUtil.xorOfWrap(true,false));
+		assertTrue(BooleanUtil.xor(true,false));
+		assertTrue(BooleanUtil.xorOfWrap(true,false));
 	}
 
 	public void orOfWrapTest() {
-		Assert.assertFalse(BooleanUtil.orOfWrap(Boolean.FALSE, null));
-		Assert.assertTrue(BooleanUtil.orOfWrap(Boolean.TRUE, null));
+		assertFalse(BooleanUtil.orOfWrap(Boolean.FALSE, null));
+		assertTrue(BooleanUtil.orOfWrap(Boolean.TRUE, null));
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void isTrueIsFalseTest() {
-		Assert.assertFalse(BooleanUtil.isTrue(null));
-		Assert.assertFalse(BooleanUtil.isFalse(null));
+		assertFalse(BooleanUtil.isTrue(null));
+		assertFalse(BooleanUtil.isFalse(null));
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	public void negateTest() {
-		Assert.assertFalse(BooleanUtil.negate(Boolean.TRUE));
-		Assert.assertTrue(BooleanUtil.negate(Boolean.FALSE));
+		assertFalse(BooleanUtil.negate(Boolean.TRUE));
+		assertTrue(BooleanUtil.negate(Boolean.FALSE));
 
-		Assert.assertFalse(BooleanUtil.negate(Boolean.TRUE.booleanValue()));
-		Assert.assertTrue(BooleanUtil.negate(Boolean.FALSE.booleanValue()));
+		assertFalse(BooleanUtil.negate(Boolean.TRUE.booleanValue()));
+		assertTrue(BooleanUtil.negate(Boolean.FALSE.booleanValue()));
 	}
 
 	@Test
 	public void toStringTest() {
-		Assert.assertEquals("true", BooleanUtil.toStringTrueFalse(true));
-		Assert.assertEquals("false", BooleanUtil.toStringTrueFalse(false));
+		assertEquals("true", BooleanUtil.toStringTrueFalse(true));
+		assertEquals("false", BooleanUtil.toStringTrueFalse(false));
 
-		Assert.assertEquals("yes", BooleanUtil.toStringYesNo(true));
-		Assert.assertEquals("no", BooleanUtil.toStringYesNo(false));
+		assertEquals("yes", BooleanUtil.toStringYesNo(true));
+		assertEquals("no", BooleanUtil.toStringYesNo(false));
 
-		Assert.assertEquals("on", BooleanUtil.toStringOnOff(true));
-		Assert.assertEquals("off", BooleanUtil.toStringOnOff(false));
+		assertEquals("on", BooleanUtil.toStringOnOff(true));
+		assertEquals("off", BooleanUtil.toStringOnOff(false));
 	}
 
 	@Test
@@ -78,6 +78,6 @@ public class BooleanUtilTest {
 		Boolean boolean1 = true;
 		Boolean boolean2 = null;
 		Boolean result = BooleanUtil.andOfWrap(boolean1, boolean2);
-		Assert.assertFalse(result);
+		assertFalse(result);
 	}
 }

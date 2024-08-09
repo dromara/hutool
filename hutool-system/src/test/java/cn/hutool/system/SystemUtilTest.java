@@ -1,16 +1,16 @@
 package cn.hutool.system;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 public class SystemUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void dumpTest() {
 		SystemUtil.dumpSystemInfo();
 	}
@@ -18,25 +18,25 @@ public class SystemUtilTest {
 	@Test
 	public void getCurrentPidTest() {
 		final long pid = SystemUtil.getCurrentPID();
-		Assert.assertTrue(pid > 0);
+		assertTrue(pid > 0);
 	}
 
 	@Test
 	public void getJavaInfoTest() {
 		final JavaInfo javaInfo = SystemUtil.getJavaInfo();
-		Assert.assertNotNull(javaInfo);
+		assertNotNull(javaInfo);
 	}
 
 	@Test
 	public void getJavaRuntimeInfoTest() {
 		final JavaRuntimeInfo info = SystemUtil.getJavaRuntimeInfo();
-		Assert.assertNotNull(info);
+		assertNotNull(info);
 	}
 
 	@Test
 	public void getOsInfoTest() {
 		final OsInfo osInfo = SystemUtil.getOsInfo();
-		Assert.assertNotNull(osInfo);
+		assertNotNull(osInfo);
 
 		Console.log(osInfo.getName());
 	}
@@ -44,13 +44,13 @@ public class SystemUtilTest {
 	@Test
 	public void getHostInfo() {
 		final HostInfo hostInfo = SystemUtil.getHostInfo();
-		Assert.assertNotNull(hostInfo);
+		assertNotNull(hostInfo);
 	}
 
 	@Test
 	public void getUserInfoTest(){
 		// https://gitee.com/dromara/hutool/issues/I3NM39
 		final UserInfo userInfo = SystemUtil.getUserInfo();
-		Assert.assertTrue(userInfo.getTempDir().endsWith(File.separator));
+		assertTrue(userInfo.getTempDir().endsWith(File.separator));
 	}
 }

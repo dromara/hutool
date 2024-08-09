@@ -1,9 +1,9 @@
 package cn.hutool.db;
 
 import cn.hutool.db.sql.Wrapper;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author bwcx_jzy
@@ -12,32 +12,32 @@ import org.junit.Test;
 public class WrapperTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void test() {
 		Wrapper wrapper = new Wrapper('`');
 		String originalName = "name";
 		String wrapName = wrapper.wrap(originalName);
 		String unWrapName = wrapper.unWrap(wrapName);
-		Assert.assertEquals(unWrapName, originalName);
+		assertEquals(unWrapName, originalName);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testDotWrap() {
 		Wrapper wrapper = new Wrapper('`');
 		String originalName = "name.age";
 		String wrapName = wrapper.wrap(originalName);
 		String unWrapName = wrapper.unWrap(wrapName);
-		Assert.assertEquals(unWrapName, originalName);
+		assertEquals(unWrapName, originalName);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testError() {
 		Wrapper wrapper = new Wrapper('`');
 		String originalName = "name.age*";
 		String wrapName = wrapper.wrap(originalName);
 		String unWrapName = wrapper.unWrap(wrapName);
-		Assert.assertEquals(unWrapName, originalName);
+		assertEquals(unWrapName, originalName);
 	}
 }

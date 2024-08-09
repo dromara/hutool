@@ -1,7 +1,7 @@
 package cn.hutool.captcha;
 
 import cn.hutool.captcha.generator.MathGenerator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GeneratorTest {
 

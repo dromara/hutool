@@ -13,12 +13,12 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class IssueI7EHSETest {
 	@Test
-	@Ignore
+	@Disabled
 	public void encodePathTest() {
 		String body = HttpUtil
 			.createGet("http://hq.sinajs.cn/list=s_sh600090")

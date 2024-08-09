@@ -3,9 +3,9 @@ package cn.hutool.extra.ssh;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import com.jcraft.jsch.Session;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 
@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class JschUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bindPortTest() {
 		//新建会话，此会话用于ssh连接到跳板机（堡垒机），此处为10.1.1.1:22
 		Session session = JschUtil.getSession("looly.centos", 22, "test", "123456");
@@ -28,13 +28,13 @@ public class JschUtilTest {
 
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bindRemotePort() throws InterruptedException {
 		// 建立会话
 		Session session = JschUtil.getSession("looly.centos", 22, "test", "123456");
 		// 绑定ssh服务端8089端口到本机的8000端口上
 		boolean b = JschUtil.bindRemotePort(session, 8089, "localhost", 8000);
-		Assert.assertTrue(b);
+		assertTrue(b);
 		// 保证一直运行
 //		while (true){
 //			Thread.sleep(3000);
@@ -42,7 +42,7 @@ public class JschUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sftpTest() {
 		Session session = JschUtil.getSession("looly.centos", 22, "root", "123456");
 		Sftp sftp = JschUtil.createSftp(session);
@@ -51,7 +51,7 @@ public class JschUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void reconnectIfTimeoutTest() throws InterruptedException {
 		Session session = JschUtil.getSession("sunnyserver", 22,"mysftp","liuyang1234");
 		Sftp sftp = JschUtil.createSftp(session);
@@ -79,12 +79,12 @@ public class JschUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getSessionTest(){
 		JschUtil.getSession("192.168.1.134", 22, "root", "aaa", null);
 	}
 	@Test
-	@Ignore
+	@Disabled
 	public void sftpPrivateKeyTest(){
 		Session session = JschUtil.getSession("192.168.1.109", 22, "root", ("-----BEGIN RSA PRIVATE KEY-----\n" +
 			"MIIEpAIBAAKCAQEA5SJ1bjhSA0uQJjbbF/LCFiQvs+nMKgkSnSE+JEll7azv7jnh\n" +

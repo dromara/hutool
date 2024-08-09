@@ -5,8 +5,8 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.db.handler.EntityListHandler;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author looly
  *
  */
-@Ignore
+@Disabled
 public class ConcurentTest {
 
 	private Db db;

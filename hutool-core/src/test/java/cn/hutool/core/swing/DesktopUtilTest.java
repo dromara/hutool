@@ -1,12 +1,12 @@
 package cn.hutool.core.swing;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class DesktopUtilTest {
-	
+
 	@Test
-	@Ignore
+	@Disabled
 	public void browseTest() {
 		DesktopUtil.browse("https://www.hutool.club");
 	}

@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://github.com/dromara/hutool/issues/3506
@@ -15,8 +15,8 @@ public class Issue3506Test {
 		languages.setLanguageType(Java.class);
 		String hutoolJSONString = JSONUtil.toJsonStr(languages);
 		final Languages bean = JSONUtil.toBean(hutoolJSONString, Languages.class);
-		Assert.assertNotNull(bean);
-		Assert.assertEquals(bean.getLanguageType(), Java.class);
+		assertNotNull(bean);
+		assertEquals(bean.getLanguageType(), Java.class);
 	}
 
 	@Data

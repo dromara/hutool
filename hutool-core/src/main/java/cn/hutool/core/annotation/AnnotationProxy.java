@@ -29,9 +29,9 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 	 *
 	 * @param annotation 注解
 	 */
+	@SuppressWarnings("unchecked")
 	public AnnotationProxy(T annotation) {
 		this.annotation = annotation;
-		//noinspection unchecked
 		this.type = (Class<T>) annotation.annotationType();
 		this.attributes = initAttributes();
 	}

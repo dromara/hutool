@@ -12,8 +12,8 @@
 
 package cn.hutool.http;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class IssueI6RE7JTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTest() {
 		HttpGlobalConfig.setDecodeUrl(true);
 		final String baseUrl = "http://192.168.98.73/PIAPI/ArcValue";

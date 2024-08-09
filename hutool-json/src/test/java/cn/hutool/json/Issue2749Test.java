@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 public class Issue2749Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void jsonObjectTest() {
 		final Map<String, Object> map = new HashMap<>(1, 1f);
 		Map<String, Object> node = map;
@@ -23,7 +23,7 @@ public class Issue2749Test {
 
 		@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 		final JSONObject jsonObject = new JSONObject(jsonStr);
-		Assert.assertNotNull(jsonObject);
+		assertNotNull(jsonObject);
 
 		// 栈溢出
 		//noinspection ResultOfMethodCallIgnored

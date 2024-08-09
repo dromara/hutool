@@ -3,8 +3,8 @@ package cn.hutool.crypto;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.SM2;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -48,7 +48,7 @@ public class OpensslKeyUtilTest {
 				final String content = "我是Hanley.";
 				final byte[] sign = genSm2.sign(StrUtil.utf8Bytes(content));
 				final boolean verify = genSm2.verify(StrUtil.utf8Bytes(content), sign);
-				Assert.assertTrue(verify);
+				assertTrue(verify);
 			}
 		}
 	}

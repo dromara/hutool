@@ -2,8 +2,8 @@ package cn.hutool.core.annotation.scanner;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -16,42 +16,42 @@ public class TypeAnnotationScannerTest {
 	@Test
 	public void supportTest() {
 		AnnotationScanner scanner = new TypeAnnotationScanner();
-		Assert.assertTrue(scanner.support(Example.class));
-		Assert.assertFalse(scanner.support(ReflectUtil.getField(Example.class, "id")));
-		Assert.assertFalse(scanner.support(ReflectUtil.getMethod(Example.class, "getId")));
-		Assert.assertFalse(scanner.support(null));
+		assertTrue(scanner.support(Example.class));
+		assertFalse(scanner.support(ReflectUtil.getField(Example.class, "id")));
+		assertFalse(scanner.support(ReflectUtil.getMethod(Example.class, "getId")));
+		assertFalse(scanner.support(null));
 	}
 
 	@Test
 	public void getAnnotationsTest() {
 		AnnotationScanner scanner = new TypeAnnotationScanner();
 		List<Annotation> annotations = scanner.getAnnotations(Example.class);
-		Assert.assertEquals(3, annotations.size());
-		annotations.forEach(a -> Assert.assertEquals(a.annotationType(), AnnotationForScannerTest.class));
+		assertEquals(3, annotations.size());
+		annotations.forEach(a -> assertEquals(a.annotationType(), AnnotationForScannerTest.class));
 
 		// 不查找父接口
 		scanner = new TypeAnnotationScanner().setIncludeInterfaces(false);
 		annotations = scanner.getAnnotations(Example.class);
-		Assert.assertEquals(2, annotations.size());
-		annotations.forEach(a -> Assert.assertEquals(a.annotationType(), AnnotationForScannerTest.class));
+		assertEquals(2, annotations.size());
+		annotations.forEach(a -> assertEquals(a.annotationType(), AnnotationForScannerTest.class));
 
 		// 不查找父类
 		scanner = new TypeAnnotationScanner().setIncludeSuperClass(false);
 		annotations = scanner.getAnnotations(Example.class);
-		Assert.assertEquals(1, annotations.size());
-		annotations.forEach(a -> Assert.assertEquals(a.annotationType(), AnnotationForScannerTest.class));
+		assertEquals(1, annotations.size());
+		annotations.forEach(a -> assertEquals(a.annotationType(), AnnotationForScannerTest.class));
 
 		// 不查找ExampleSupplerClass.class
 		scanner = new TypeAnnotationScanner().addExcludeTypes(ExampleSupplerClass.class);
 		annotations = scanner.getAnnotations(Example.class);
-		Assert.assertEquals(1, annotations.size());
-		annotations.forEach(a -> Assert.assertEquals(a.annotationType(), AnnotationForScannerTest.class));
+		assertEquals(1, annotations.size());
+		annotations.forEach(a -> assertEquals(a.annotationType(), AnnotationForScannerTest.class));
 
 		// 只查找ExampleSupplerClass.class
 		scanner = new TypeAnnotationScanner().setFilter(t -> ClassUtil.isAssignable(ExampleSupplerClass.class, t));
 		annotations = scanner.getAnnotations(Example.class);
-		Assert.assertEquals(2, annotations.size());
-		annotations.forEach(a -> Assert.assertEquals(a.annotationType(), AnnotationForScannerTest.class));
+		assertEquals(2, annotations.size());
+		annotations.forEach(a -> assertEquals(a.annotationType(), AnnotationForScannerTest.class));
 	}
 
 	@Test
@@ -63,13 +63,13 @@ public class TypeAnnotationScannerTest {
 			(index, annotation) -> map.computeIfAbsent(index, i -> new ArrayList<>()).add(annotation),
 			Example.class, null
 		);
-		Assert.assertEquals(3, map.size());
-		Assert.assertEquals(1, map.get(0).size());
-		Assert.assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
-		Assert.assertEquals(1, map.get(1).size());
-		Assert.assertEquals("ExampleSupplerClass", ((AnnotationForScannerTest) map.get(1).get(0)).value());
-		Assert.assertEquals(1, map.get(2).size());
-		Assert.assertEquals("ExampleInterface", ((AnnotationForScannerTest) map.get(2).get(0)).value());
+		assertEquals(3, map.size());
+		assertEquals(1, map.get(0).size());
+		assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
+		assertEquals(1, map.get(1).size());
+		assertEquals("ExampleSupplerClass", ((AnnotationForScannerTest) map.get(1).get(0)).value());
+		assertEquals(1, map.get(2).size());
+		assertEquals("ExampleInterface", ((AnnotationForScannerTest) map.get(2).get(0)).value());
 
 		// 不查找父接口
 		map.clear();
@@ -79,11 +79,11 @@ public class TypeAnnotationScannerTest {
 				(index, annotation) -> map.computeIfAbsent(index, i -> new ArrayList<>()).add(annotation),
 				Example.class, null
 			);
-		Assert.assertEquals(2, map.size());
-		Assert.assertEquals(1, map.get(0).size());
-		Assert.assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
-		Assert.assertEquals(1, map.get(1).size());
-		Assert.assertEquals("ExampleSupplerClass", ((AnnotationForScannerTest) map.get(1).get(0)).value());
+		assertEquals(2, map.size());
+		assertEquals(1, map.get(0).size());
+		assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
+		assertEquals(1, map.get(1).size());
+		assertEquals("ExampleSupplerClass", ((AnnotationForScannerTest) map.get(1).get(0)).value());
 
 		// 不查找父类
 		map.clear();
@@ -93,9 +93,9 @@ public class TypeAnnotationScannerTest {
 				(index, annotation) -> map.computeIfAbsent(index, i -> new ArrayList<>()).add(annotation),
 				Example.class, null
 			);
-		Assert.assertEquals(1, map.size());
-		Assert.assertEquals(1, map.get(0).size());
-		Assert.assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
+		assertEquals(1, map.size());
+		assertEquals(1, map.get(0).size());
+		assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
 
 		// 不查找ExampleSupplerClass.class
 		map.clear();
@@ -105,9 +105,9 @@ public class TypeAnnotationScannerTest {
 				(index, annotation) -> map.computeIfAbsent(index, i -> new ArrayList<>()).add(annotation),
 				Example.class, null
 			);
-		Assert.assertEquals(1, map.size());
-		Assert.assertEquals(1, map.get(0).size());
-		Assert.assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
+		assertEquals(1, map.size());
+		assertEquals(1, map.get(0).size());
+		assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
 
 		// 只查找ExampleSupplerClass.class
 		map.clear();
@@ -117,11 +117,11 @@ public class TypeAnnotationScannerTest {
 				(index, annotation) -> map.computeIfAbsent(index, i -> new ArrayList<>()).add(annotation),
 				Example.class, null
 			);
-		Assert.assertEquals(2, map.size());
-		Assert.assertEquals(1, map.get(0).size());
-		Assert.assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
-		Assert.assertEquals(1, map.get(1).size());
-		Assert.assertEquals("ExampleSupplerClass", ((AnnotationForScannerTest) map.get(1).get(0)).value());
+		assertEquals(2, map.size());
+		assertEquals(1, map.get(0).size());
+		assertEquals("Example", ((AnnotationForScannerTest) map.get(0).get(0)).value());
+		assertEquals(1, map.get(1).size());
+		assertEquals("ExampleSupplerClass", ((AnnotationForScannerTest) map.get(1).get(0)).value());
 	}
 
 	@AnnotationForScannerTest("ExampleSupplerClass")

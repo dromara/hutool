@@ -12,8 +12,8 @@
 
 package cn.hutool.setting;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class IssueI7G34ETest {
 
@@ -22,6 +22,6 @@ public class IssueI7G34ETest {
 		final Setting setting = new Setting("test_with_bom.setting");
 		final String s = setting.get("line1", "key1");
 
-		Assert.assertEquals("value1", s);
+		assertEquals("value1", s);
 	}
 }

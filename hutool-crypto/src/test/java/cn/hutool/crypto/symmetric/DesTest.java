@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * DES加密解密单元测试
@@ -20,7 +20,7 @@ public class DesTest {
 		final String encryptHex = des.encryptHex(content);
 		final String result = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, result);
+		assertEquals(content, result);
 	}
 
 	@Test
@@ -36,6 +36,6 @@ public class DesTest {
 		final String encryptHex = des.encryptHex(content);
 		final String result = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, result);
+		assertEquals(content, result);
 	}
 }

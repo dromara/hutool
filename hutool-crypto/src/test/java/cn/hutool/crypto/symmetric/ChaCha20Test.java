@@ -2,8 +2,8 @@ package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * 见：https://stackoverflow.com/questions/32672241/using-bouncycastles-chacha-for-file-encryption
@@ -25,6 +25,6 @@ public class ChaCha20Test {
 		// 解密为字符串
 		String decryptStr = chacha.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
 
-		Assert.assertEquals(content, decryptStr);
+		assertEquals(content, decryptStr);
 	}
 }

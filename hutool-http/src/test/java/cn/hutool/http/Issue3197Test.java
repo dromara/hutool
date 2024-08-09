@@ -13,12 +13,12 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Issue3197Test {
 	@Test
-	@Ignore
+	@Disabled
 	public void getTest() {
 		final String s = HttpUtil.get("http://localhost:8080/index");
 		Console.log(s);

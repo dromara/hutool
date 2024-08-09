@@ -1,11 +1,11 @@
 package cn.hutool.core.io.file;
 
 import cn.hutool.core.io.FileUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * https://gitee.com/dromara/hutool/issues/IAB65V

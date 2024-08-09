@@ -4,8 +4,8 @@ import cn.hutool.core.collection.ListUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.beans.Transient;
 import java.util.List;
@@ -29,7 +29,7 @@ public class Issue2131Test {
 		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
 
 		GoodsResponse result = jsonObject.toBean(GoodsResponse.class);
-		Assert.assertEquals(0, result.getCollections().size());
+		assertEquals(0, result.getCollections().size());
 	}
 
 	@Data

@@ -3,7 +3,7 @@ package cn.hutool.poi.excel;
 import cn.hutool.poi.excel.cell.values.NumericCellValue;
 import java.util.Date;
 import org.apache.poi.ss.usermodel.Cell;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NumericCellValueTest {
 

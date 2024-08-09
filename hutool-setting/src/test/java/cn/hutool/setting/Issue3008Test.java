@@ -4,8 +4,8 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.hutool.setting.dialect.PropsUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class Issue3008Test {
 
@@ -17,7 +17,7 @@ public class Issue3008Test {
 	public void toBeanTest() {
 		final Props props = PropsUtil.get("issue3008");
 		final MyUser user = props.toBean(MyUser.class, "person");
-		Assert.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(user.getHobby()));
+		assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(user.getHobby()));
 	}
 
 	@Data

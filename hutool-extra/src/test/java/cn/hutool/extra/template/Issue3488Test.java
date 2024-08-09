@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
 import lombok.Data;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Issue3488Test {
 	@Test
@@ -23,7 +23,7 @@ public class Issue3488Test {
 
 		String result = template.render(Dict.create().set("paymentInfo", paymentInfo));
 		//Console.log(result);
-		//Assert.assertEquals("你好,hutool", result);
+		//assertEquals("你好,hutool", result);
 	}
 
 	@Data

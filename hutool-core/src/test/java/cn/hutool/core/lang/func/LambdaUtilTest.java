@@ -3,8 +3,8 @@ package cn.hutool.core.lang.func;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandleInfo;
 
@@ -13,31 +13,31 @@ public class LambdaUtilTest {
 	@Test
 	public void getMethodNameTest() {
 		final String methodName = LambdaUtil.getMethodName(MyTeacher::getAge);
-		Assert.assertEquals("getAge", methodName);
+		assertEquals("getAge", methodName);
 	}
 
 	@Test
 	public void getFieldNameTest() {
 		final String fieldName = LambdaUtil.getFieldName(MyTeacher::getAge);
-		Assert.assertEquals("age", fieldName);
+		assertEquals("age", fieldName);
 	}
 
 	@Test
 	public void resolveTest() {
 		// 引用构造函数
-		Assert.assertEquals(MethodHandleInfo.REF_newInvokeSpecial,
+		assertEquals(MethodHandleInfo.REF_newInvokeSpecial,
 				LambdaUtil.resolve(MyTeacher::new).getImplMethodKind());
 		// 数组构造函数引用
-		Assert.assertEquals(MethodHandleInfo.REF_invokeStatic,
+		assertEquals(MethodHandleInfo.REF_invokeStatic,
 				LambdaUtil.resolve(MyTeacher[]::new).getImplMethodKind());
 		// 引用静态方法
-		Assert.assertEquals(MethodHandleInfo.REF_invokeStatic,
+		assertEquals(MethodHandleInfo.REF_invokeStatic,
 				LambdaUtil.resolve(MyTeacher::takeAge).getImplMethodKind());
 		// 引用特定对象的实例方法
-		Assert.assertEquals(MethodHandleInfo.REF_invokeVirtual,
+		assertEquals(MethodHandleInfo.REF_invokeVirtual,
 				LambdaUtil.resolve(new MyTeacher()::getAge).getImplMethodKind());
 		// 引用特定类型的任意对象的实例方法
-		Assert.assertEquals(MethodHandleInfo.REF_invokeVirtual,
+		assertEquals(MethodHandleInfo.REF_invokeVirtual,
 				LambdaUtil.resolve(MyTeacher::getAge).getImplMethodKind());
 	}
 
@@ -46,38 +46,38 @@ public class LambdaUtilTest {
 	public void getRealClassTest() {
 		// 引用特定类型的任意对象的实例方法
 		final Class<MyTeacher> functionClass = LambdaUtil.getRealClass(MyTeacher::getAge);
-		Assert.assertEquals(MyTeacher.class, functionClass);
+		assertEquals(MyTeacher.class, functionClass);
 		// 枚举测试，不会导致类型擦除
 		final Class<LambdaKindEnum> enumFunctionClass = LambdaUtil.getRealClass(LambdaKindEnum::ordinal);
-		Assert.assertEquals(LambdaKindEnum.class, enumFunctionClass);
+		assertEquals(LambdaKindEnum.class, enumFunctionClass);
 		// 调用父类方法，能获取到正确的子类类型
 		final Class<MyTeacher> superFunctionClass = LambdaUtil.getRealClass(MyTeacher::getId);
-		Assert.assertEquals(MyTeacher.class, superFunctionClass);
+		assertEquals(MyTeacher.class, superFunctionClass);
 
 		final MyTeacher myTeacher = new MyTeacher();
 		// 引用特定对象的实例方法
 		final Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
-		Assert.assertEquals(MyTeacher.class, supplierClass);
+		assertEquals(MyTeacher.class, supplierClass);
 		// 枚举测试，只能获取到枚举类型
 		final Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaKindEnum.REF_NONE::ordinal);
-		Assert.assertEquals(Enum.class, enumSupplierClass);
+		assertEquals(Enum.class, enumSupplierClass);
 		// 调用父类方法，只能获取到父类类型
 		final Class<Entity<?>> superSupplierClass = LambdaUtil.getRealClass(myTeacher::getId);
-		Assert.assertEquals(Entity.class, superSupplierClass);
+		assertEquals(Entity.class, superSupplierClass);
 
 		// 引用静态带参方法，能够获取到正确的参数类型
 		final Class<MyTeacher> staticFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeAgeBy);
-		Assert.assertEquals(MyTeacher.class, staticFunctionClass);
+		assertEquals(MyTeacher.class, staticFunctionClass);
 		// 引用父类静态带参方法，只能获取到父类类型
 		final Class<Entity<?>> staticSuperFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeId);
-		Assert.assertEquals(Entity.class, staticSuperFunctionClass);
+		assertEquals(Entity.class, staticSuperFunctionClass);
 
 		// 引用静态无参方法，能够获取到正确的类型
 		final Class<MyTeacher> staticSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeAge);
-		Assert.assertEquals(MyTeacher.class, staticSupplierClass);
+		assertEquals(MyTeacher.class, staticSupplierClass);
 		// 引用父类静态无参方法，能够获取到正确的参数类型
 		final Class<MyTeacher> staticSuperSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeIdBy);
-		Assert.assertEquals(MyTeacher.class, staticSuperSupplierClass);
+		assertEquals(MyTeacher.class, staticSuperSupplierClass);
 	}
 
 	@Data
@@ -137,7 +137,7 @@ public class LambdaUtilTest {
 	public void lambdaClassNameTest() {
 		final String lambdaClassName1 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
 		final String lambdaClassName2 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
-		Assert.assertNotEquals(lambdaClassName1, lambdaClassName2);
+		assertNotEquals(lambdaClassName1, lambdaClassName2);
 	}
 
 	static class LambdaUtilTestHelper {

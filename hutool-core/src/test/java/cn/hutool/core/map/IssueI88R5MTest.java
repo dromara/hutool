@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 
@@ -12,6 +12,6 @@ public class IssueI88R5MTest {
 		biMap.put("aaa", 111);
 		biMap.getKey(111);
 		biMap.put("aaa", 222);
-		Assert.assertNull(biMap.getKey(111));
+		assertNull(biMap.getKey(111));
 	}
 }

@@ -2,8 +2,8 @@ package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class ZucTest {
 
@@ -16,7 +16,7 @@ public class ZucTest {
 		String msg = RandomUtil.randomString(500);
 		byte[] crypt2 = zuc.encrypt(msg);
 		String msg2 = zuc.decryptStr(crypt2, CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals(msg, msg2);
+		assertEquals(msg, msg2);
 	}
 
 	@Test
@@ -28,6 +28,6 @@ public class ZucTest {
 		String msg = RandomUtil.randomString(500);
 		byte[] crypt2 = zuc.encrypt(msg);
 		String msg2 = zuc.decryptStr(crypt2, CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals(msg, msg2);
+		assertEquals(msg, msg2);
 	}
 }

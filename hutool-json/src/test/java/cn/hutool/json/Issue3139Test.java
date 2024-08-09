@@ -14,8 +14,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.util.XmlUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -33,9 +33,9 @@ public class Issue3139Test {
 		final JSONObject jsonObject = XmlUtil.xmlToBean(XmlUtil.parseXml(xml).getDocumentElement(), JSONObject.class);
 		final R bean = jsonObject.toBean(R.class);
 		final List<C> c = bean.getC();
-		Assert.assertEquals(1, c.size());
-		Assert.assertEquals("1", c.get(0).getS());
-		Assert.assertEquals("str", c.get(0).getP());
+		assertEquals(1, c.size());
+		assertEquals("1", c.get(0).getS());
+		assertEquals("str", c.get(0).getP());
 	}
 
 	@Data

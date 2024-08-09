@@ -1,13 +1,13 @@
 package cn.hutool.poi.excel;
 
 import lombok.Getter;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ExcelWriteBeanTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeRowTest() {
 		MyBean bean = new MyBean("value1", "value2");
 

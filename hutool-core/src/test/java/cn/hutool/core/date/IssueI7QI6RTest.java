@@ -12,16 +12,22 @@
 
 package cn.hutool.core.date;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IssueI7QI6RTest {
-	@Test(expected = DateException.class)
+	@Test
 	public void parseTest() {
-		DateUtil.parse("2023-08-04 1");
+		assertThrows(DateException.class, () -> {
+			DateUtil.parse("2023-08-04 1");
+		});
 	}
 
-	@Test(expected = DateException.class)
+	@Test
 	public void parseTest2() {
-		DateUtil.parse("2023-08-04-1");
+		assertThrows(DateException.class, () -> {
+			DateUtil.parse("2023-08-04-1");
+		});
 	}
 }

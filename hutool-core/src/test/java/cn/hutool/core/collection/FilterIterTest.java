@@ -1,7 +1,7 @@
 package cn.hutool.core.collection;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
@@ -23,7 +23,7 @@ public class FilterIterTest {
 				count++;
 			}
 		}
-		Assert.assertEquals(2, count);
+		assertEquals(2, count);
 
 		it = ListUtil.of("1", "2").iterator();
 		// filter 不为空
@@ -34,7 +34,7 @@ public class FilterIterTest {
 				count++;
 			}
 		}
-		Assert.assertEquals(1, count);
+		assertEquals(1, count);
 	}
 
 }

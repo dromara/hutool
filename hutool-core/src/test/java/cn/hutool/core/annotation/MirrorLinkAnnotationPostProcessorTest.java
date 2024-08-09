@@ -2,8 +2,8 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -26,17 +26,17 @@ public class MirrorLinkAnnotationPostProcessorTest {
 
 		processor.process(synthesizedAnnotation, synthesizedAnnotationAggregator);
 		AnnotationAttribute valueAttribute = synthesizedAnnotation.getAttributes().get("value");
-		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "value"), valueAttribute.getAttribute());
-		Assert.assertTrue(valueAttribute.isWrapped());
-		Assert.assertEquals(MirroredAnnotationAttribute.class, valueAttribute.getClass());
+		assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "value"), valueAttribute.getAttribute());
+		assertTrue(valueAttribute.isWrapped());
+		assertEquals(MirroredAnnotationAttribute.class, valueAttribute.getClass());
 
 		AnnotationAttribute nameAttribute = synthesizedAnnotation.getAttributes().get("name");
-		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "name"), nameAttribute.getAttribute());
-		Assert.assertTrue(nameAttribute.isWrapped());
-		Assert.assertEquals(MirroredAnnotationAttribute.class, nameAttribute.getClass());
+		assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "name"), nameAttribute.getAttribute());
+		assertTrue(nameAttribute.isWrapped());
+		assertEquals(MirroredAnnotationAttribute.class, nameAttribute.getClass());
 
-		Assert.assertEquals(((WrappedAnnotationAttribute)nameAttribute).getLinked(), ((WrappedAnnotationAttribute)valueAttribute).getOriginal());
-		Assert.assertEquals(((WrappedAnnotationAttribute)nameAttribute).getOriginal(), ((WrappedAnnotationAttribute)valueAttribute).getLinked());
+		assertEquals(((WrappedAnnotationAttribute)nameAttribute).getLinked(), ((WrappedAnnotationAttribute)valueAttribute).getOriginal());
+		assertEquals(((WrappedAnnotationAttribute)nameAttribute).getOriginal(), ((WrappedAnnotationAttribute)valueAttribute).getLinked());
 	}
 
 	@AnnotationForTest

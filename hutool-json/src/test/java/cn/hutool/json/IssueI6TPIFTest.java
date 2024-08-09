@@ -13,15 +13,15 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
 public class IssueI6TPIFTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void toStringTest() {
 		TestVo test = new TestVo();
 		test.setBigValue(new BigDecimal("1234567899876543210.000000000000000000000000001"));

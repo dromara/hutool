@@ -1,7 +1,7 @@
 package cn.hutool.core.annotation;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -20,9 +20,9 @@ public class TestIssueI8CLBJ {
 	@Test
 	public void test() throws NoSuchFieldException {
 		Field field = Foo.class.getDeclaredField("name");
-		Assert.assertNotNull(field);
+		assertNotNull(field);
 		Annotation[] annotations = field.getDeclaredAnnotations();
-		Assert.assertTrue(annotations.length > 0);
+		assertTrue(annotations.length > 0);
 
 		TestAnnotation annotation = AnnotationUtil.getSynthesizedAnnotation(TestAnnotation.class, annotations);
 		List<Thread> threadList = new ArrayList<>();

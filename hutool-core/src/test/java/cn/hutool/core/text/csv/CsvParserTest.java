@@ -2,8 +2,8 @@ package cn.hutool.core.text.csv;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 
@@ -15,7 +15,7 @@ public class CsvParserTest {
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("b\"bba\"", row.getRawList().get(1));
+		assertEquals("b\"bba\"", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}
 
@@ -25,7 +25,7 @@ public class CsvParserTest {
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("\"bba\"bbb", row.getRawList().get(1));
+		assertEquals("\"bba\"bbb", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}
 
@@ -35,7 +35,7 @@ public class CsvParserTest {
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("bba", row.getRawList().get(1));
+		assertEquals("bba", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}
 
@@ -45,7 +45,7 @@ public class CsvParserTest {
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("", row.getRawList().get(1));
+		assertEquals("", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}
 
@@ -56,8 +56,8 @@ public class CsvParserTest {
 		StringReader reader = StrUtil.getReader("\"b\"\"bb\"");
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
-		Assert.assertNotNull(row);
-		Assert.assertEquals(1, row.size());
-		Assert.assertEquals("b\"bb", row.get(0));
+		assertNotNull(row);
+		assertEquals(1, row.size());
+		assertEquals("b\"bb", row.get(0));
 	}
 }

@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class JSONBeanParserTest {
 
@@ -10,9 +10,9 @@ public class JSONBeanParserTest {
 	public void parseTest(){
 		String jsonStr = "{\"customName\": \"customValue\", \"customAddress\": \"customAddressValue\"}";
 		final TestBean testBean = JSONUtil.toBean(jsonStr, TestBean.class);
-		Assert.assertNotNull(testBean);
-		Assert.assertEquals("customValue", testBean.getName());
-		Assert.assertEquals("customAddressValue", testBean.getAddress());
+		assertNotNull(testBean);
+		assertEquals("customValue", testBean.getName());
+		assertEquals("customAddressValue", testBean.getAddress());
 	}
 
 	@Data

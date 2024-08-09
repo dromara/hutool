@@ -2,8 +2,8 @@ package cn.hutool.core.convert;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,7 +14,7 @@ public class ConvertToNumberTest {
 		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
 		final Long dateLong = Convert.toLong(date);
 		assert date != null;
-		Assert.assertEquals(date.getTime(), dateLong.longValue());
+		assertEquals(date.getTime(), dateLong.longValue());
 	}
 
 	@Test
@@ -22,7 +22,7 @@ public class ConvertToNumberTest {
 		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
 		final Integer dateInt = Convert.toInt(date);
 		assert date != null;
-		Assert.assertEquals((int)date.getTime(), dateInt.intValue());
+		assertEquals((int)date.getTime(), dateInt.intValue());
 	}
 
 	@Test
@@ -30,15 +30,15 @@ public class ConvertToNumberTest {
 		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
 		final AtomicLong dateLong = Convert.convert(AtomicLong.class, date);
 		assert date != null;
-		Assert.assertEquals(date.getTime(), dateLong.longValue());
+		assertEquals(date.getTime(), dateLong.longValue());
 	}
 
 	@Test
 	public void toBigDecimalTest(){
 		BigDecimal bigDecimal = Convert.toBigDecimal("1.1f");
-		Assert.assertEquals(1.1f, bigDecimal.floatValue(), 0);
+		assertEquals(1.1f, bigDecimal.floatValue(), 0);
 
 		bigDecimal = Convert.toBigDecimal("1L");
-		Assert.assertEquals(1L, bigDecimal.longValue());
+		assertEquals(1L, bigDecimal.longValue());
 	}
 }

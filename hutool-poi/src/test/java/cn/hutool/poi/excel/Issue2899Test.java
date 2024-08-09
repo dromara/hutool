@@ -4,13 +4,13 @@ import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import lombok.Data;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Issue2899Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void aliasWriteTest() {
 		// Bean中设置@Alias时，setOnlyAlias是无效的，这个参数只和addHeaderAlias配合使用，原因是注解是Bean内部的操作，而addHeaderAlias是Writer的操作，不互通。
 		final TestBean testBean1 = new TestBean();

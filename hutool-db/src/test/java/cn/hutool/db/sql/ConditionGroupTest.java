@@ -1,8 +1,8 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.ListUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class ConditionGroupTest {
 	@Test
@@ -22,7 +22,7 @@ public class ConditionGroupTest {
 
 		final ConditionBuilder conditionBuilder = ConditionBuilder.of(cg2, condition4);
 
-		Assert.assertEquals("((a = ? OR b = ?) AND c = ?) AND d = ?", conditionBuilder.build());
-		Assert.assertEquals(ListUtil.of("A", "B", "C", "D"), conditionBuilder.getParamValues());
+		assertEquals("((a = ? OR b = ?) AND c = ?) AND d = ?", conditionBuilder.build());
+		assertEquals(ListUtil.of("A", "B", "C", "D"), conditionBuilder.getParamValues());
 	}
 }

@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://github.com/dromara/hutool/issues/3504
@@ -16,8 +16,8 @@ public class Issue3504Test {
 		jsonBean.setClasses(new Class[]{String.class});
 		String huToolJsonStr = JSONUtil.toJsonStr(jsonBean);
 		final JsonBean bean = JSONUtil.toBean(huToolJsonStr, JsonBean.class);
-		Assert.assertNotNull(bean);
-		Assert.assertEquals("test", bean.getName());
+		assertNotNull(bean);
+		assertEquals("test", bean.getName());
 	}
 
 	@Data

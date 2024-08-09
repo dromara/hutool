@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
 import cn.hutool.db.sql.Order;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class PageTest {
 
@@ -10,8 +10,8 @@ public class PageTest {
 	public void addOrderTest() {
 		Page page = new Page();
 		page.addOrder(new Order("aaa"));
-		Assert.assertEquals(page.getOrders().length, 1);
+		assertEquals(page.getOrders().length, 1);
 		page.addOrder(new Order("aaa"));
-		Assert.assertEquals(page.getOrders().length, 2);
+		assertEquals(page.getOrders().length, 2);
 	}
 }

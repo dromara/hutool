@@ -3,13 +3,13 @@ package cn.hutool.cache;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class IssueI8MEIXTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getRemoveTest() {
 		final TimedCache<String, String> cache = new TimedCache<>(200);
 		cache.put("a", "123");

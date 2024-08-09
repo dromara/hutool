@@ -1,8 +1,8 @@
 package cn.hutool.core.bean;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://github.com/dromara/hutool/issues/2082<br>
@@ -14,7 +14,7 @@ public class Issue2082Test {
 	public void toBeanTest() {
 		TestBean2 testBean2 = new TestBean2();
 		TestBean test = BeanUtil.toBean(testBean2, TestBean.class);
-		Assert.assertNull(test.getId());
+		assertNull(test.getId());
 	}
 
 	@Data

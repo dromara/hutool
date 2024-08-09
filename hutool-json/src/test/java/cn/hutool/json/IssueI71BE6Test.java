@@ -12,8 +12,8 @@
 
 package cn.hutool.json;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class IssueI71BE6Test {
 
@@ -23,6 +23,6 @@ public class IssueI71BE6Test {
 		final String jsonStr = "[50.0,50.0,50.0,50.0]";
 
 		final Double[] doubles = (Double[]) JSONUtil.parseArray(jsonStr).toArray(Double[].class);
-		Assert.assertArrayEquals(new Double[]{50.0,50.0,50.0,50.0}, doubles);
+		assertArrayEquals(new Double[]{50.0,50.0,50.0,50.0}, doubles);
 	}
 }

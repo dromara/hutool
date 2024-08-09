@@ -4,11 +4,13 @@ import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.LengthFinder;
 import cn.hutool.core.text.finder.PatternFinder;
 import cn.hutool.core.text.finder.StrFinder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SplitIterTest {
 
@@ -22,7 +24,7 @@ public class SplitIterTest {
 				Integer.MAX_VALUE,
 				false
 		);
-		Assert.assertEquals(6, splitIter.toList(false).size());
+		assertEquals(6, splitIter.toList(false).size());
 	}
 
 	@Test
@@ -35,7 +37,7 @@ public class SplitIterTest {
 				Integer.MAX_VALUE,
 				false
 		);
-		Assert.assertEquals(4, splitIter.toList(false).size());
+		assertEquals(4, splitIter.toList(false).size());
 	}
 
 	@Test
@@ -49,7 +51,7 @@ public class SplitIterTest {
 		);
 
 		final List<String> strings = splitIter.toList(false);
-		Assert.assertEquals(4, strings.size());
+		assertEquals(4, strings.size());
 	}
 
 	@Test
@@ -63,10 +65,10 @@ public class SplitIterTest {
 		);
 
 		final List<String> strings = splitIter.toList(true);
-		Assert.assertEquals(3, strings.size());
-		Assert.assertEquals("a", strings.get(0));
-		Assert.assertEquals("efedsfs", strings.get(1));
-		Assert.assertEquals("ddf", strings.get(2));
+		assertEquals(3, strings.size());
+		assertEquals("a", strings.get(0));
+		assertEquals("efedsfs", strings.get(1));
+		assertEquals("ddf", strings.get(2));
 	}
 
 	@Test
@@ -80,7 +82,7 @@ public class SplitIterTest {
 		);
 
 		final List<String> strings = splitIter.toList(false);
-		Assert.assertEquals(3, strings.size());
+		assertEquals(3, strings.size());
 	}
 
 	@Test
@@ -94,7 +96,7 @@ public class SplitIterTest {
 		);
 
 		final List<String> strings = splitIter.toList(false);
-		Assert.assertEquals(3, strings.size());
+		assertEquals(3, strings.size());
 	}
 
 	@Test
@@ -107,7 +109,7 @@ public class SplitIterTest {
 		);
 
 		final List<String> strings = splitIter.toList(false);
-		Assert.assertEquals(4, strings.size());
+		assertEquals(4, strings.size());
 	}
 
 	@Test
@@ -120,7 +122,7 @@ public class SplitIterTest {
 		);
 
 		final List<String> strings = splitIter.toList(false);
-		Assert.assertEquals(3, strings.size());
+		assertEquals(3, strings.size());
 	}
 
 	@Test
@@ -133,20 +135,22 @@ public class SplitIterTest {
 		);
 
 		final List<String> strings = splitIter.toList(false);
-		Assert.assertEquals(1, strings.size());
+		assertEquals(1, strings.size());
 	}
 
 	// 切割字符串是空字符串时报错
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void splitByEmptyTest(){
-		String text = "aa,bb,cc";
-		SplitIter splitIter = new SplitIter(text,
+		assertThrows(IllegalArgumentException.class, () -> {
+			String text = "aa,bb,cc";
+			SplitIter splitIter = new SplitIter(text,
 				new StrFinder("", false),
 				3,
 				false
-		);
+			);
 
-		final List<String> strings = splitIter.toList(false);
-		Assert.assertEquals(1, strings.size());
+			final List<String> strings = splitIter.toList(false);
+			assertEquals(1, strings.size());
+		});
 	}
 }

@@ -13,7 +13,7 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class IssueI70UPUTest {
 	@Test

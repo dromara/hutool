@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import lombok.Data;
 import lombok.ToString;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ public class IssueI8NMP7Test {
 	public void toBeanTest() {
 		final String jsonString = "{\"enableTime\":\"1702262524444\"}";
 		final DemoModel bean = JSONUtil.toBean(jsonString, JSONConfig.create(), DemoModel.class);
-		Assert.assertNotNull(bean.getEnableTime());
+		assertNotNull(bean.getEnableTime());
 	}
 
 	@Data

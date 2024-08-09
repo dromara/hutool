@@ -2,11 +2,9 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 身份证单元测试
@@ -26,24 +24,24 @@ public class IdcardUtilTest {
 	@Test
 	public void isValidCardTest() {
 		boolean valid = IdcardUtil.isValidCard(ID_18);
-		Assert.assertTrue(valid);
+		assertTrue(valid);
 
 		boolean valid15 = IdcardUtil.isValidCard(ID_15);
-		Assert.assertTrue(valid15);
+		assertTrue(valid15);
 
-		Assert.assertTrue(IdcardUtil.isValidCard(FOREIGN_ID_18));
+		assertTrue(IdcardUtil.isValidCard(FOREIGN_ID_18));
 
 		// 无效
 		String idCard = "360198910283844";
-		Assert.assertFalse(IdcardUtil.isValidCard(idCard));
+		assertFalse(IdcardUtil.isValidCard(idCard));
 
 		// 生日无效
 		idCard = "201511221897205960";
-		Assert.assertFalse(IdcardUtil.isValidCard(idCard));
+		assertFalse(IdcardUtil.isValidCard(idCard));
 
 		// 生日无效
 		idCard = "815727834224151";
-		Assert.assertFalse(IdcardUtil.isValidCard(idCard));
+		assertFalse(IdcardUtil.isValidCard(idCard));
 	}
 
 	@Test
@@ -123,67 +121,67 @@ public class IdcardUtilTest {
 	@Test
 	public void isValidCard18Test(){
 		boolean isValidCard18 = IdcardUtil.isValidCard18("3301022011022000D6");
-		Assert.assertFalse(isValidCard18);
+		assertFalse(isValidCard18);
 
 		// 不忽略大小写情况下，X严格校验必须大写
 		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064x", false);
-		Assert.assertFalse(isValidCard18);
+		assertFalse(isValidCard18);
 		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064X", false);
-		Assert.assertTrue(isValidCard18);
+		assertTrue(isValidCard18);
 
 		// 非严格校验下大小写皆可
 		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064x");
-		Assert.assertTrue(isValidCard18);
+		assertTrue(isValidCard18);
 		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064X");
-		Assert.assertTrue(isValidCard18);
+		assertTrue(isValidCard18);
 
 		// 香港人在大陆身份证
 		isValidCard18 = IdcardUtil.isValidCard18("81000019980902013X");
-		Assert.assertTrue(isValidCard18);
+		assertTrue(isValidCard18);
 
 		// 澳门人在大陆身份证
 		isValidCard18 = IdcardUtil.isValidCard18("820000200009100032");
-		Assert.assertTrue(isValidCard18);
+		assertTrue(isValidCard18);
 
 		// 台湾人在大陆身份证
 		isValidCard18 = IdcardUtil.isValidCard18("830000200209060065");
-		Assert.assertTrue(isValidCard18);
+		assertTrue(isValidCard18);
 
 		// 新版外国人永久居留身份证
 		isValidCard18 = IdcardUtil.isValidCard18("932682198501010017");
-		Assert.assertTrue(isValidCard18);
+		assertTrue(isValidCard18);
 	}
 
 	@Test
 	public void isValidHKCardIdTest(){
 		String hkCard="P174468(6)";
 		boolean flag=IdcardUtil.isValidHKCard(hkCard);
-		Assert.assertTrue(flag);
+		assertTrue(flag);
 	}
 
 	@Test
 	public void isValidTWCardIdTest() {
 		String twCard = "B221690311";
 		boolean flag = IdcardUtil.isValidTWCard(twCard);
-		Assert.assertTrue(flag);
+		assertTrue(flag);
 		String errTwCard1 = "M517086311";
 		flag = IdcardUtil.isValidTWCard(errTwCard1);
-		Assert.assertFalse(flag);
+		assertFalse(flag);
 		String errTwCard2 = "B2216903112";
 		flag = IdcardUtil.isValidTWCard(errTwCard2);
-		Assert.assertFalse(flag);
+		assertFalse(flag);
 	}
 
 	@Test
 	public void issueI88YKMTest() {
-		Assert.assertTrue(IdcardUtil.isValidCard("111111111111111"));
+		assertTrue(IdcardUtil.isValidCard("111111111111111"));
 	}
 
 	@Test
 	public void issueIAFOLITest() {
 		String idcard = "H01487002";
-		Assert.assertFalse(IdcardUtil.isValidHKCard(idcard));
-		Assert.assertNull(IdcardUtil.isValidCard10(idcard));
-		Assert.assertFalse(IdcardUtil.isValidCard(idcard));
+		assertFalse(IdcardUtil.isValidHKCard(idcard));
+		assertNull(IdcardUtil.isValidCard10(idcard));
+		assertFalse(IdcardUtil.isValidCard(idcard));
 	}
 }

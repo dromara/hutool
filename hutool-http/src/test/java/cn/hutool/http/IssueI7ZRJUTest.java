@@ -13,15 +13,15 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLSocketFactory;
 
 public class IssueI7ZRJUTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTest() {
 		final HttpRequest httpRequest = HttpRequest.get("https://expired.badssl.com/");
 		httpRequest.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());

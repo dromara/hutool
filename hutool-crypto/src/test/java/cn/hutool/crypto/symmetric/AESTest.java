@@ -6,8 +6,8 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
@@ -21,7 +21,7 @@ public class AESTest {
 		AES aes = new AES(Mode.CBC, Padding.PKCS5Padding,
 				"1234567890123456".getBytes(), "1234567890123456".getBytes());
 		String encryptHex = aes.encryptHex("123456");
-		Assert.assertEquals("d637735ae9e21ba50cb686b74fab8d2c", encryptHex);
+		assertEquals("d637735ae9e21ba50cb686b74fab8d2c", encryptHex);
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class AESTest {
 		AES aes = new AES(Mode.CTS, Padding.PKCS5Padding,
 				"0CoJUm6Qyw8W8jue".getBytes(), "0102030405060708".getBytes());
 		final String encryptHex = aes.encryptHex(content);
-		Assert.assertEquals("8dc9de7f050e86ca2c8261dde56dfec9", encryptHex);
+		assertEquals("8dc9de7f050e86ca2c8261dde56dfec9", encryptHex);
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class AESTest {
 		AES aes = new AES(Mode.CBC.name(), "pkcs7padding",
 				"1234567890123456".getBytes(), "1234567890123456".getBytes());
 		String encryptHex = aes.encryptHex("123456");
-		Assert.assertEquals("d637735ae9e21ba50cb686b74fab8d2c", encryptHex);
+		assertEquals("d637735ae9e21ba50cb686b74fab8d2c", encryptHex);
 	}
 
 	/**
@@ -71,32 +71,32 @@ public class AESTest {
 		// 加密数据为16进制字符串
 		String encryptHex = aes.encryptHex(HexUtil.decodeHex("16c5"));
 		// 加密后的Hex
-		Assert.assertEquals("25869eb3ff227d9e34b3512d3c3c92ed", encryptHex);
+		assertEquals("25869eb3ff227d9e34b3512d3c3c92ed", encryptHex);
 
 		// 加密数据为16进制字符串
 		String encryptHex2 = aes.encryptBase64(HexUtil.decodeHex("16c5"));
 		// 加密后的Base64
-		Assert.assertEquals("JYaes/8ifZ40s1EtPDyS7Q==", encryptHex2);
+		assertEquals("JYaes/8ifZ40s1EtPDyS7Q==", encryptHex2);
 
 		// 解密
-		Assert.assertEquals("16c5", HexUtil.encodeHexStr(aes.decrypt("25869eb3ff227d9e34b3512d3c3c92ed")));
-		Assert.assertEquals("16c5", HexUtil.encodeHexStr(aes.decrypt(HexUtil.encodeHexStr(Base64.decode("JYaes/8ifZ40s1EtPDyS7Q==")))));
+		assertEquals("16c5", HexUtil.encodeHexStr(aes.decrypt("25869eb3ff227d9e34b3512d3c3c92ed")));
+		assertEquals("16c5", HexUtil.encodeHexStr(aes.decrypt(HexUtil.encodeHexStr(Base64.decode("JYaes/8ifZ40s1EtPDyS7Q==")))));
 		// ------------------------------------------------------------------------
 
 		// ------------------------------------------------------------------------
 		// 加密数据为字符串(UTF-8)
 		String encryptStr = aes.encryptHex("16c5");
 		// 加密后的Hex
-		Assert.assertEquals("79c210d3e304932cf9ea6a9c887c6d7c", encryptStr);
+		assertEquals("79c210d3e304932cf9ea6a9c887c6d7c", encryptStr);
 
 		// 加密数据为字符串(UTF-8)
 		String encryptStr2 = aes.encryptBase64("16c5");
 		// 加密后的Base64
-		Assert.assertEquals("ecIQ0+MEkyz56mqciHxtfA==", encryptStr2);
+		assertEquals("ecIQ0+MEkyz56mqciHxtfA==", encryptStr2);
 
 		// 解密
-		Assert.assertEquals("16c5", aes.decryptStr("79c210d3e304932cf9ea6a9c887c6d7c"));
-		Assert.assertEquals("16c5", aes.decryptStr(Base64.decode("ecIQ0+MEkyz56mqciHxtfA==")));
+		assertEquals("16c5", aes.decryptStr("79c210d3e304932cf9ea6a9c887c6d7c"));
+		assertEquals("16c5", aes.decryptStr(Base64.decode("ecIQ0+MEkyz56mqciHxtfA==")));
 		// ------------------------------------------------------------------------
 	}
 
@@ -110,7 +110,7 @@ public class AESTest {
 		final String result1 = aes.encryptBase64(content);
 
 		final String decryptStr = aes.decryptStr(result1);
-		Assert.assertEquals(content, decryptStr);
+		assertEquals(content, decryptStr);
 	}
 
 	/**
@@ -130,6 +130,6 @@ public class AESTest {
 		// 加密
 		byte[] encrypt = aes.encrypt(phone);
 		final String decryptStr = aes.decryptStr(encrypt);
-		Assert.assertEquals(phone, decryptStr);
+		assertEquals(phone, decryptStr);
 	}
 }

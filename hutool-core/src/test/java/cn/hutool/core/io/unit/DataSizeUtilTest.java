@@ -1,49 +1,49 @@
 package cn.hutool.core.io.unit;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class DataSizeUtilTest {
 
 	@Test
 	public void parseTest(){
 		long parse = DataSizeUtil.parse("3M");
-		Assert.assertEquals(3145728, parse);
+		assertEquals(3145728, parse);
 
 		parse = DataSizeUtil.parse("3m");
-		Assert.assertEquals(3145728, parse);
+		assertEquals(3145728, parse);
 
 		parse = DataSizeUtil.parse("3MB");
-		Assert.assertEquals(3145728, parse);
+		assertEquals(3145728, parse);
 
 		parse = DataSizeUtil.parse("3mb");
-		Assert.assertEquals(3145728, parse);
+		assertEquals(3145728, parse);
 
 		parse = DataSizeUtil.parse("3.1M");
-		Assert.assertEquals(3250585, parse);
+		assertEquals(3250585, parse);
 
 		parse = DataSizeUtil.parse("3.1m");
-		Assert.assertEquals(3250585, parse);
+		assertEquals(3250585, parse);
 
 		parse = DataSizeUtil.parse("3.1MB");
-		Assert.assertEquals(3250585, parse);
+		assertEquals(3250585, parse);
 
 		parse = DataSizeUtil.parse("-3.1MB");
-		Assert.assertEquals(-3250585, parse);
+		assertEquals(-3250585, parse);
 
 		parse = DataSizeUtil.parse("+3.1MB");
-		Assert.assertEquals(3250585, parse);
+		assertEquals(3250585, parse);
 
 		parse = DataSizeUtil.parse("3.1mb");
-		Assert.assertEquals(3250585, parse);
+		assertEquals(3250585, parse);
 
 		parse = DataSizeUtil.parse("3.1");
-		Assert.assertEquals(3, parse);
+		assertEquals(3, parse);
 
 		try {
 			DataSizeUtil.parse("3.1.3");
 		} catch (IllegalArgumentException ie) {
-			Assert.assertEquals("'3.1.3' is not a valid data size", ie.getMessage());
+			assertEquals("'3.1.3' is not a valid data size", ie.getMessage());
 		}
 
 
@@ -52,19 +52,19 @@ public class DataSizeUtilTest {
 	@Test
 	public void formatTest(){
 		String format = DataSizeUtil.format(Long.MAX_VALUE);
-		Assert.assertEquals("8 EB", format);
+		assertEquals("8 EB", format);
 
 		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024 * 1024);
-		Assert.assertEquals("1 PB", format);
+		assertEquals("1 PB", format);
 
 		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024);
-		Assert.assertEquals("1 TB", format);
+		assertEquals("1 TB", format);
 	}
 
 	@Test
 	public void issueI88Z4ZTest() {
 		final String size = DataSizeUtil.format(10240000);
 		final long bytes = DataSize.parse(size).toBytes();
-		Assert.assertEquals(10244587, bytes);
+		assertEquals(10244587, bytes);
 	}
 }

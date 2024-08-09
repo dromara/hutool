@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class BeanToJsonTest {
 	@Test
@@ -15,7 +15,7 @@ public class BeanToJsonTest {
 		readParam.setProjectId(123);
 
 		//Console.log(JSONUtil.toJsonStr(readParam));
-		Assert.assertEquals("{\"initSpikeMac\":\"a\",\"mac\":\"b\",\"spikeMac\":\"c\",\"bag\":\"d\",\"projectId\":123}", JSONUtil.toJsonStr(readParam));
+		assertEquals("{\"initSpikeMac\":\"a\",\"mac\":\"b\",\"spikeMac\":\"c\",\"bag\":\"d\",\"projectId\":123}", JSONUtil.toJsonStr(readParam));
 	}
 
 	@Data

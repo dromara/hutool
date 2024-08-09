@@ -1,8 +1,8 @@
 package cn.hutool.core.compress;
 
 import cn.hutool.core.util.ZipUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -11,7 +11,7 @@ import java.io.File;
  */
 public class IssueIAGYDGTest {
 	@Test
-	@Ignore
+	@Disabled
 	public void zipTest() {
 		// 第一次压缩后，IssueIAGYDG.zip也会作为文件压缩到IssueIAGYDG.zip中，导致死循环
 		final File filea = new File("d:/test/");

@@ -6,8 +6,8 @@ import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -52,7 +52,7 @@ public class WatchMonitorTest {
 
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testFile() {
 
 		monitor = WatchMonitor.createAll("d:/test/aaa.txt", new DelayWatcher(watcher, 500));
@@ -62,14 +62,14 @@ public class WatchMonitorTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testDir() {
 		monitor = WatchMonitor.createAll("d:/", new DelayWatcher(watcher, 500));
 		monitor.run();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testDelay() {
 		monitor = WatchMonitor.createAll("d:/test", new DelayWatcher(new SimpleWatcher(){
 			@Override

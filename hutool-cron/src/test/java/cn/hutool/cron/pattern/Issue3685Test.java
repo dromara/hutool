@@ -1,7 +1,7 @@
 package cn.hutool.cron.pattern;
 
 import cn.hutool.core.date.DateUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 

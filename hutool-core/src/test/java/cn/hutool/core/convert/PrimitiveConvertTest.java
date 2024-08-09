@@ -1,18 +1,22 @@
 package cn.hutool.core.convert;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PrimitiveConvertTest {
 
 	@Test
-	public void toIntTest(){
+	public void toIntTest() {
 		final int convert = Convert.convert(int.class, "123");
-		Assert.assertEquals(123, convert);
+		assertEquals(123, convert);
 	}
 
-	@Test(expected = NumberFormatException.class)
-	public void toIntErrorTest(){
-		final int convert = Convert.convert(int.class, "aaaa");
+	@Test
+	public void toIntErrorTest() {
+		assertThrows(NumberFormatException.class, () -> {
+			Convert.convert(int.class, "aaaa");
+		});
 	}
 }

@@ -4,7 +4,7 @@ import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
 import cn.hutool.log.dialect.console.ConsoleColorLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class StaticLogTest {
 	@Test

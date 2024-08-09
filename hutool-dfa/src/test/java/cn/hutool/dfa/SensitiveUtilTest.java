@@ -2,8 +2,8 @@ package cn.hutool.dfa;
 
 import cn.hutool.core.collection.ListUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class SensitiveUtilTest {
 		bean.setNum(100);
 		SensitiveUtil.init(wordList);
 		bean = SensitiveUtil.sensitiveFilter(bean, true, null);
-		Assert.assertEquals(bean.getStr(), "我有一颗$****，***的");
+		assertEquals(bean.getStr(), "我有一颗$****，***的");
 	}
 
 	@Data
@@ -37,6 +37,6 @@ public class SensitiveUtilTest {
 		SensitiveUtil.init(ListUtil.of("赵", "赵阿", "赵阿三"));
 
 		String result = SensitiveUtil.sensitiveFilter("赵阿三在做什么。", true, null);
-		Assert.assertEquals("***在做什么。", result);
+		assertEquals("***在做什么。", result);
 	}
 }

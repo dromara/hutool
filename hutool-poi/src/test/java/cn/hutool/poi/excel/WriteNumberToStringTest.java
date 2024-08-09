@@ -2,12 +2,12 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class WriteNumberToStringTest {
 	@Test
-	@Ignore
+	@Disabled
 	public void writeNumberTest() {
 		final ExcelWriter writer = ExcelUtil.getBigWriter("d:/test/dataWithNumber.xlsx");
 

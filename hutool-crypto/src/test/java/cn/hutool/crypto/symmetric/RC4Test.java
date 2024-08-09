@@ -1,8 +1,8 @@
 package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class RC4Test {
 
@@ -13,12 +13,12 @@ public class RC4Test {
 		String message = "Hello, World!";
 		byte[] crypt = rc4.encrypt(message);
 		String msg = rc4.decrypt(crypt);
-		Assert.assertEquals(message, msg);
+		assertEquals(message, msg);
 
 		String message2 = "Hello, World， this is megssage 2";
 		byte[] crypt2 = rc4.encrypt(message2);
 		String msg2 = rc4.decrypt(crypt2);
-		Assert.assertEquals(message2, msg2);
+		assertEquals(message2, msg2);
 	}
 
 	@Test
@@ -28,12 +28,12 @@ public class RC4Test {
 		RC4 rc4 = new RC4(key);
 		byte[] crypt = rc4.encrypt(message);
 		String msg = rc4.decrypt(crypt);
-		Assert.assertEquals(message, msg);
+		assertEquals(message, msg);
 
 		String message2 = "这是第二个中文消息！";
 		byte[] crypt2 = rc4.encrypt(message2);
 		String msg2 = rc4.decrypt(crypt2);
-		Assert.assertEquals(message2, msg2);
+		assertEquals(message2, msg2);
 	}
 
 	@Test
@@ -43,12 +43,12 @@ public class RC4Test {
 		RC4 rc4 = new RC4(key);
 		String encryptHex = rc4.encryptHex(message, CharsetUtil.CHARSET_UTF_8);
 		String msg = rc4.decrypt(encryptHex);
-		Assert.assertEquals(message, msg);
+		assertEquals(message, msg);
 
 		String message2 = "这是第二个用来测试密文为十六进制字符串的消息！";
 		String encryptHex2 = rc4.encryptHex(message2);
 		String msg2 = rc4.decrypt(encryptHex2);
-		Assert.assertEquals(message2, msg2);
+		assertEquals(message2, msg2);
 	}
 
 
@@ -59,11 +59,11 @@ public class RC4Test {
 		RC4 rc4 = new RC4(key);
 		String encryptHex = rc4.encryptBase64(message, CharsetUtil.CHARSET_UTF_8);
 		String msg = rc4.decrypt(encryptHex);
-		Assert.assertEquals(message, msg);
+		assertEquals(message, msg);
 
 		String message2 = "这是第一个用来测试密文为Base64编码的消息！";
 		String encryptHex2 = rc4.encryptBase64(message2);
 		String msg2 = rc4.decrypt(encryptHex2);
-		Assert.assertEquals(message2, msg2);
+		assertEquals(message2, msg2);
 	}
 }

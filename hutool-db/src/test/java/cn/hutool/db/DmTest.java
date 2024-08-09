@@ -1,9 +1,9 @@
 package cn.hutool.db;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
@@ -28,11 +28,11 @@ public class DmTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void upsertTest() throws SQLException {
 		Db db = Db.use(DS_GROUP_NAME);
 		db.upsert(Entity.create("test").set("a", 1).set("b", 111), "a");
 		Entity a1 = db.get("test", "a", 1);
-		Assert.assertEquals(Long.valueOf(111), a1.getLong("b"));
+		assertEquals(Long.valueOf(111), a1.getLong("b"));
 	}
 }

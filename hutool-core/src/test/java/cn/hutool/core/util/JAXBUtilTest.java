@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.annotation.*;
 
@@ -34,18 +34,18 @@ public class JAXBUtilTest {
 		roomVo.setRoomNo("101");
 		schoolVo.setRoom(roomVo);
 
-		Assert.assertEquals(xmlStr, JAXBUtil.beanToXml(schoolVo));
+		assertEquals(xmlStr, JAXBUtil.beanToXml(schoolVo));
 	}
 
 	@Test
 	public void xmlToBeanTest() {
 		final SchoolVo schoolVo = JAXBUtil.xmlToBean(xmlStr, SchoolVo.class);
-		Assert.assertNotNull(schoolVo);
-		Assert.assertEquals("西安市第一中学", schoolVo.getSchoolName());
-		Assert.assertEquals("西安市雁塔区长安堡一号", schoolVo.getSchoolAddress());
+		assertNotNull(schoolVo);
+		assertEquals("西安市第一中学", schoolVo.getSchoolName());
+		assertEquals("西安市雁塔区长安堡一号", schoolVo.getSchoolAddress());
 
-		Assert.assertEquals("101教室", schoolVo.getRoom().getRoomName());
-		Assert.assertEquals("101", schoolVo.getRoom().getRoomNo());
+		assertEquals("101教室", schoolVo.getRoom().getRoomName());
+		assertEquals("101", schoolVo.getRoom().getRoomNo());
 	}
 
 	@XmlRootElement(name = "school")

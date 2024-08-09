@@ -2,8 +2,8 @@ package cn.hutool.poi.excel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class Issue3048Test {
 	@Test
-	@Ignore
+	@Disabled
 	public void excelOutPutBeanListToExcel(){
 		List<TestBean> excelExportList = new ArrayList<>();
 		excelExportList.add(new TestBean("1", new BigDecimal("1.22")));

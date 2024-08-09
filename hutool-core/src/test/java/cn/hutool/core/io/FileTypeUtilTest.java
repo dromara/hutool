@@ -1,9 +1,9 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
@@ -15,19 +15,19 @@ import java.io.*;
 public class FileTypeUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void fileTypeUtilTest() {
 		final File file = FileUtil.file("hutool.jpg");
 		final String type = FileTypeUtil.getType(file);
-		Assert.assertEquals("jpg", type);
+		assertEquals("jpg", type);
 
 		FileTypeUtil.putFileType("ffd8ffe000104a464946", "new_jpg");
 		final String newType = FileTypeUtil.getType(file);
-		Assert.assertEquals("new_jpg", newType);
+		assertEquals("new_jpg", newType);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void emptyTest() {
 		final File file = FileUtil.file("d:/empty.txt");
 		final String type = FileTypeUtil.getType(file);
@@ -35,7 +35,7 @@ public class FileTypeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void docTest() {
 		final File file = FileUtil.file("f:/test/test.doc");
 		final String type = FileTypeUtil.getType(file);
@@ -43,27 +43,27 @@ public class FileTypeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void ofdTest() {
 		final File file = FileUtil.file("e:/test.ofd");
 		final String hex = IoUtil.readHex64Upper(FileUtil.getInputStream(file));
 		Console.log(hex);
 		final String type = FileTypeUtil.getType(file);
 		Console.log(type);
-		Assert.assertEquals("ofd", type);
+		assertEquals("ofd", type);
 	}
 
 
 	@Test
-	@Ignore
+	@Disabled
 	public void inputStreamAndFilenameTest() {
 		final File file = FileUtil.file("e:/laboratory/test.xlsx");
 		final String type = FileTypeUtil.getType(file);
-		Assert.assertEquals("xlsx", type);
+		assertEquals("xlsx", type);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTypeFromInputStream() throws IOException {
 		final File file = FileUtil.file("d:/test/pic.jpg");
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
@@ -74,7 +74,7 @@ public class FileTypeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void webpTest(){
 		// https://gitee.com/dromara/hutool/issues/I5BGTF
 		final File file = FileUtil.file("d:/test/a.webp");
@@ -87,11 +87,11 @@ public class FileTypeUtilTest {
 	public void issueI6MACITest() {
 		final File file = FileUtil.file("text.txt");
 		final String type = FileTypeUtil.getType(file);
-		Assert.assertEquals("txt", type);
+		assertEquals("txt", type);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void issue3024Test() {
 		String x = FileTypeUtil.getType(FileUtil.getInputStream("d:/test/TEST_WPS_DOC.doc"),true);
 		System.out.println(x);

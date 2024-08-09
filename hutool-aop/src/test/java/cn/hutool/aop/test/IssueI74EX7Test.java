@@ -19,7 +19,7 @@ import cn.hutool.aop.proxy.ProxyFactory;
 import cn.hutool.aop.proxy.SpringCglibProxyFactory;
 import cn.hutool.core.lang.Console;
 import lombok.Setter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class IssueI74EX7Test {
 	@Test

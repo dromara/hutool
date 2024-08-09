@@ -6,8 +6,8 @@ import cn.hutool.jwt.signers.AlgorithmUtil;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import io.jsonwebtoken.Jwts;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.security.KeyPair;
 
@@ -32,6 +32,6 @@ public class Issue3205Test {
 
 		final boolean signed = Jwts.parser().verifyWith(keyPair.getPublic()).build().isSigned(token);
 
-		Assert.assertTrue(signed);
+		assertTrue(signed);
 	}
 }

@@ -10,8 +10,8 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,13 +22,13 @@ import java.util.Map;
 
 /**
  * 写出Excel单元测试
- * 
+ *
  * @author looly
  */
 public class BigExcelWriteTest {
-	
+
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest2() {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("e:/excel/single_line.xlsx");
@@ -37,7 +37,7 @@ public class BigExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
@@ -50,7 +50,7 @@ public class BigExcelWriteTest {
 			//超大列表写出测试
 			rows.add(ObjectUtil.clone(row1));
 		}
-		
+
 		String filePath = "e:/bigWriteTest.xlsx";
 		FileUtil.del(filePath);
 		// 通过工具类创建writer
@@ -66,9 +66,9 @@ public class BigExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
-	@Ignore
+	@Disabled
 	public void mergeTest() {
 		List<?> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
@@ -89,16 +89,16 @@ public class BigExcelWriteTest {
 		writer.merge(row1.size() - 1, "测试标题");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
-		
+
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(7, 10, 4, 10, "测试Merge", false);
-		
+
 		// 关闭writer，释放内存
 		writer.close();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapTest() {
 		Map<String, Object> row1 = new LinkedHashMap<>();
 		row1.put("姓名", "张三");
@@ -120,14 +120,14 @@ public class BigExcelWriteTest {
 		String path = "e:/bigWriteMapTest.xlsx";
 		FileUtil.del(path);
 		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
-		
+
 		//设置内容字体
 		Font font = writer.createFont();
 		font.setBold(true);
-		font.setColor(Font.COLOR_RED); 
-		font.setItalic(true); 
+		font.setColor(Font.COLOR_RED);
+		font.setItalic(true);
 		writer.getStyleSet().setFont(font, true);
-		
+
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -135,9 +135,9 @@ public class BigExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapTest2() {
 		Map<String, Object> row1 = MapUtil.newHashMap(true);
 		row1.put("姓名", "张三");
@@ -145,12 +145,12 @@ public class BigExcelWriteTest {
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
 		row1.put("考试日期", DateUtil.date());
-		
+
 		// 通过工具类创建writer
 		String path = "e:/bigWriteMapTest2.xlsx";
 		FileUtil.del(path);
 		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
-		
+
 		// 一次性写出内容，使用默认样式
 		writer.writeRow(row1, true);
 		// 关闭writer，释放内存
@@ -158,7 +158,7 @@ public class BigExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeBeanTest() {
 		cn.hutool.poi.excel.TestBean bean1 = new cn.hutool.poi.excel.TestBean();
 		bean1.setName("张三");
@@ -192,9 +192,9 @@ public class BigExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
-	@Ignore
+	@Disabled
 	public void writeCellValueTest() {
 		String path = "d:/test/cellValueTest.xlsx";
 		FileUtil.del(path);
@@ -204,7 +204,7 @@ public class BigExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void closeTest() {
 		final Map<String, ?> map1 = MapUtil.of("id", "123456");
 		final Map<String, ?> map2 = MapUtil.of("id", "123457");
@@ -217,7 +217,7 @@ public class BigExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void issue1210() {
 		// 通过工具类创建writer
 		String path = "d:/test/issue1210.xlsx";

@@ -12,8 +12,8 @@
 
 package cn.hutool.core.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
 
@@ -22,11 +22,11 @@ public class IssueI7CRIWTest {
 	public void getTypeArgumentsTest() {
 		// 无法从继承获取泛型，则从接口获取
 		Type type = TypeUtil.getTypeArgument(C.class);
-		Assert.assertEquals(type, String.class);
+		assertEquals(type, String.class);
 
 		// 继承和第一个接口都非泛型接口，则从找到的第一个泛型接口获取
 		type = TypeUtil.getTypeArgument(D.class);
-		Assert.assertEquals(type, String.class);
+		assertEquals(type, String.class);
 	}
 
 	static class A{

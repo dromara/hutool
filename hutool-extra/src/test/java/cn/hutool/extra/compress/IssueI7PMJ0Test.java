@@ -14,8 +14,8 @@ package cn.hutool.extra.compress;
 
 import cn.hutool.core.io.FileUtil;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 public class IssueI7PMJ0Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void createArchiverTest() {
 		final File tarFile = FileUtil.file("d:/test/issueI7PMJ0.zip");
 		CompressUtil.createArchiver(StandardCharsets.UTF_8, ArchiveStreamFactory.ZIP, tarFile)

@@ -15,8 +15,8 @@ package cn.hutool.extra.qrcode;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.io.File;
@@ -24,7 +24,7 @@ import java.io.File;
 public class IssueI7RUIVTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateTest() {
 		final QrConfig config = new QrConfig(300, 300);
 

@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -13,8 +13,8 @@ public class IssueI8PC9FTest {
 		final String testJson = "{\"testMap\":\"\"}";
 		final TestBean test = JSONUtil.parseObj(testJson, JSONConfig.create().setIgnoreError(true))
 			.toBean(TestBean.class);
-		Assert.assertNotNull(test);
-		Assert.assertNull(test.getTestMap());
+		assertNotNull(test);
+		assertNull(test.getTestMap());
 	}
 
 	@Data

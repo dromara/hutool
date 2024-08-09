@@ -4,14 +4,15 @@ import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
 import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link BeanPath} 单元测试
@@ -22,7 +23,7 @@ public class BeanPathTest {
 
 	Map<String, Object> tempMap;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		// ------------------------------------------------- 考试信息列表
 		final ExamInfoDict examInfoDict = new ExamInfoDict();
@@ -60,36 +61,36 @@ public class BeanPathTest {
 	@Test
 	public void beanPathTest1() {
 		final BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		assertEquals("userInfo", pattern.patternParts.get(0));
+		assertEquals("examInfoDict", pattern.patternParts.get(1));
+		assertEquals("0", pattern.patternParts.get(2));
+		assertEquals("id", pattern.patternParts.get(3));
 
 	}
 
 	@Test
 	public void beanPathTest2() {
 		final BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		assertEquals("userInfo", pattern.patternParts.get(0));
+		assertEquals("examInfoDict", pattern.patternParts.get(1));
+		assertEquals("0", pattern.patternParts.get(2));
+		assertEquals("id", pattern.patternParts.get(3));
 	}
 
 	@Test
 	public void beanPathTest3() {
 		final BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		assertEquals("userInfo", pattern.patternParts.get(0));
+		assertEquals("examInfoDict", pattern.patternParts.get(1));
+		assertEquals("0", pattern.patternParts.get(2));
+		assertEquals("id", pattern.patternParts.get(3));
 	}
 
 	@Test
 	public void getTest() {
 		final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
 		final Object result = pattern.get(tempMap);
-		Assert.assertEquals(1, result);
+		assertEquals(1, result);
 	}
 
 	@Test
@@ -97,15 +98,15 @@ public class BeanPathTest {
 		final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
 		pattern.set(tempMap, 2);
 		final Object result = pattern.get(tempMap);
-		Assert.assertEquals(2, result);
+		assertEquals(2, result);
 	}
 
 	@Test
 	public void getMapTest() {
 		final BeanPath pattern = BeanPath.create("userInfo[id, photoPath]");
 		@SuppressWarnings("unchecked") final Map<String, Object> result = (Map<String, Object>) pattern.get(tempMap);
-		Assert.assertEquals(1, result.get("id"));
-		Assert.assertEquals("yx.mm.com", result.get("photoPath"));
+		assertEquals(1, result.get("id"));
+		assertEquals("yx.mm.com", result.get("photoPath"));
 	}
 
 	@Test
@@ -114,17 +115,17 @@ public class BeanPathTest {
 
 		BeanPath beanPath = BeanPath.create("list[0].name");
 		beanPath.set(map, "张三");
-		Assert.assertEquals("{list=[{name=张三}]}", map.toString());
+		assertEquals("{list=[{name=张三}]}", map.toString());
 
 		map.clear();
 		beanPath = BeanPath.create("list[1].name");
 		beanPath.set(map, "张三");
-		Assert.assertEquals("{list=[null, {name=张三}]}", map.toString());
+		assertEquals("{list=[null, {name=张三}]}", map.toString());
 
 		map.clear();
 		beanPath = BeanPath.create("list[0].1.name");
 		beanPath.set(map, "张三");
-		Assert.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
+		assertEquals("{list=[[null, {name=张三}]]}", map.toString());
 	}
 
 	@Test
@@ -135,7 +136,7 @@ public class BeanPathTest {
 		BeanPath.create("hobby[1]").set(myUser, "KFC");
 		BeanPath.create("hobby[2]").set(myUser, "COFFE");
 
-		Assert.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
+		assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
 	}
 
 	@Data

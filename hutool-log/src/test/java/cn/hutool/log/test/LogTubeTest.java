@@ -3,7 +3,7 @@ package cn.hutool.log.test;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.dialect.logtube.LogTubeLogFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class LogTubeTest {
 

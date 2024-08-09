@@ -5,15 +5,12 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.junit.Assert;
-import org.junit.Test;
+import lombok.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 集合工具类单元测试
@@ -25,8 +22,8 @@ public class CollUtilTest {
 	@Test
 	public void testPredicateContains() {
 		final ArrayList<String> list = CollUtil.newArrayList("bbbbb", "aaaaa", "ccccc");
-		Assert.assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
-		Assert.assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
+		assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
+		assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
 	}
 
 	@Test
@@ -36,14 +33,14 @@ public class CollUtilTest {
 		final ArrayList<Integer> exceptResultList = CollUtil.newArrayList(1);
 
 		List<Integer> resultList = CollUtil.removeWithAddIf(list, ele -> 1 == ele);
-		Assert.assertEquals(list, exceptRemovedList);
-		Assert.assertEquals(resultList, exceptResultList);
+		assertEquals(list, exceptRemovedList);
+		assertEquals(resultList, exceptResultList);
 
 		list = CollUtil.newArrayList(1, 2, 3);
 		resultList = new ArrayList<>();
 		CollUtil.removeWithAddIf(list, resultList, ele -> 1 == ele);
-		Assert.assertEquals(list, exceptRemovedList);
-		Assert.assertEquals(resultList, exceptResultList);
+		assertEquals(list, exceptRemovedList);
+		assertEquals(resultList, exceptResultList);
 	}
 
 	@Test
@@ -52,17 +49,17 @@ public class CollUtilTest {
 		List<String> answerList = CollUtil.newArrayList("a", "b");
 		CollUtil.padLeft(srcList, 1, "b");
 		CollUtil.padLeft(srcList, 2, "a");
-		Assert.assertEquals(srcList, answerList);
+		assertEquals(srcList, answerList);
 
 		srcList = CollUtil.newArrayList("a", "b");
 		answerList = CollUtil.newArrayList("a", "b");
 		CollUtil.padLeft(srcList, 2, "a");
-		Assert.assertEquals(srcList, answerList);
+		assertEquals(srcList, answerList);
 
 		srcList = CollUtil.newArrayList("c");
 		answerList = CollUtil.newArrayList("a", "a", "c");
 		CollUtil.padLeft(srcList, 3, "a");
-		Assert.assertEquals(srcList, answerList);
+		assertEquals(srcList, answerList);
 	}
 
 	@Test
@@ -70,18 +67,19 @@ public class CollUtilTest {
 		final List<String> srcList = CollUtil.newArrayList("a");
 		final List<String> answerList = CollUtil.newArrayList("a", "b", "b", "b", "b");
 		CollUtil.padRight(srcList, 5, "b");
-		Assert.assertEquals(srcList, answerList);
+		assertEquals(srcList, answerList);
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void isNotEmptyTest() {
-		Assert.assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
+		assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
 	}
 
 	@Test
 	public void newHashSetTest() {
 		final Set<String> set = CollUtil.newHashSet((String[]) null);
-		Assert.assertNotNull(set);
+		assertNotNull(set);
 	}
 
 	@Test
@@ -91,14 +89,14 @@ public class CollUtilTest {
 
 		final String[] keys = v1.keySet().toArray(new String[0]);
 		final ArrayList<Object> v1s = CollUtil.valuesOfKeys(v1, keys);
-		Assert.assertTrue(v1s.contains(12));
-		Assert.assertTrue(v1s.contains(23));
-		Assert.assertTrue(v1s.contains("张三"));
+		assertTrue(v1s.contains(12));
+		assertTrue(v1s.contains(23));
+		assertTrue(v1s.contains("张三"));
 
 		final ArrayList<Object> v2s = CollUtil.valuesOfKeys(v2, keys);
-		Assert.assertTrue(v2s.contains(15));
-		Assert.assertTrue(v2s.contains(13));
-		Assert.assertTrue(v2s.contains("李四"));
+		assertTrue(v2s.contains(15));
+		assertTrue(v2s.contains(13));
+		assertTrue(v2s.contains("李四"));
 	}
 
 	@Test
@@ -108,7 +106,7 @@ public class CollUtilTest {
 
 		final Collection<String> union = CollUtil.union(list1, list2);
 
-		Assert.assertEquals(3, CollUtil.count(union, "b"::equals));
+		assertEquals(3, CollUtil.count(union, "b"::equals));
 	}
 
 	@Test
@@ -117,7 +115,7 @@ public class CollUtilTest {
 		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
 		final Collection<String> intersection = CollUtil.intersection(list1, list2);
-		Assert.assertEquals(2, CollUtil.count(intersection, "b"::equals));
+		assertEquals(2, CollUtil.count(intersection, "b"::equals));
 	}
 
 	@Test
@@ -127,10 +125,10 @@ public class CollUtilTest {
 		final ArrayList<String> list3 = CollUtil.newArrayList();
 
 		final Collection<String> intersectionDistinct = CollUtil.intersectionDistinct(list1, list2);
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), intersectionDistinct);
+		assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), intersectionDistinct);
 
 		final Collection<String> intersectionDistinct2 = CollUtil.intersectionDistinct(list1, list2, list3);
-		Assert.assertTrue(intersectionDistinct2.isEmpty());
+		assertTrue(intersectionDistinct2.isEmpty());
 	}
 
 	@Test
@@ -139,14 +137,14 @@ public class CollUtilTest {
 		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
-		Assert.assertTrue(disjunction.contains("b"));
-		Assert.assertTrue(disjunction.contains("x2"));
-		Assert.assertTrue(disjunction.contains("x"));
+		assertTrue(disjunction.contains("b"));
+		assertTrue(disjunction.contains("x2"));
+		assertTrue(disjunction.contains("x"));
 
 		final Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
-		Assert.assertTrue(disjunction2.contains("b"));
-		Assert.assertTrue(disjunction2.contains("x2"));
-		Assert.assertTrue(disjunction2.contains("x"));
+		assertTrue(disjunction2.contains("b"));
+		assertTrue(disjunction2.contains("x2"));
+		assertTrue(disjunction2.contains("x"));
 	}
 
 	@Test
@@ -156,9 +154,9 @@ public class CollUtilTest {
 		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
-		Assert.assertEquals(list2, disjunction);
+		assertEquals(list2, disjunction);
 		final Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
-		Assert.assertEquals(list2, disjunction2);
+		assertEquals(list2, disjunction2);
 	}
 
 	@Test
@@ -168,19 +166,19 @@ public class CollUtilTest {
 		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "c");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
-		Assert.assertTrue(disjunction.contains("1"));
-		Assert.assertTrue(disjunction.contains("2"));
-		Assert.assertTrue(disjunction.contains("3"));
-		Assert.assertTrue(disjunction.contains("a"));
-		Assert.assertTrue(disjunction.contains("b"));
-		Assert.assertTrue(disjunction.contains("c"));
+		assertTrue(disjunction.contains("1"));
+		assertTrue(disjunction.contains("2"));
+		assertTrue(disjunction.contains("3"));
+		assertTrue(disjunction.contains("a"));
+		assertTrue(disjunction.contains("b"));
+		assertTrue(disjunction.contains("c"));
 		final Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
-		Assert.assertTrue(disjunction2.contains("1"));
-		Assert.assertTrue(disjunction2.contains("2"));
-		Assert.assertTrue(disjunction2.contains("3"));
-		Assert.assertTrue(disjunction2.contains("a"));
-		Assert.assertTrue(disjunction2.contains("b"));
-		Assert.assertTrue(disjunction2.contains("c"));
+		assertTrue(disjunction2.contains("1"));
+		assertTrue(disjunction2.contains("2"));
+		assertTrue(disjunction2.contains("3"));
+		assertTrue(disjunction2.contains("a"));
+		assertTrue(disjunction2.contains("b"));
+		assertTrue(disjunction2.contains("c"));
 	}
 
 	@Test
@@ -188,8 +186,8 @@ public class CollUtilTest {
 		final List<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
 		final List<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 		final Collection<String> subtract = CollUtil.subtract(list1, list2);
-		Assert.assertEquals(1, subtract.size());
-		Assert.assertEquals("x", subtract.iterator().next());
+		assertEquals(1, subtract.size());
+		assertEquals("x", subtract.iterator().next());
 	}
 
 	@Test
@@ -200,7 +198,7 @@ public class CollUtilTest {
 		map1.put("2", "v2");
 		map2.put("2", "v2");
 		final Collection<String> r2 = CollUtil.subtract(map1.keySet(), map2.keySet());
-		Assert.assertEquals("[1]", r2.toString());
+		assertEquals("[1]", r2.toString());
 	}
 
 	@Test
@@ -211,7 +209,7 @@ public class CollUtilTest {
 		map1.put("2", "v2");
 		map2.put("2", "v2");
 		final List<String> r2 = CollUtil.subtractToList(map1.keySet(), map2.keySet());
-		Assert.assertEquals("[1]", r2.toString());
+		assertEquals("[1]", r2.toString());
 	}
 
 	@Test
@@ -227,13 +225,13 @@ public class CollUtilTest {
 		// ----------------------------------------------------------------------------------------
 		final ArrayList<HashMap<String, String>> list = CollUtil.newArrayList(map1, map2);
 		final Map<String, List<String>> map = CollUtil.toListMap(list);
-		Assert.assertEquals("值1", map.get("a").get(0));
-		Assert.assertEquals("值2", map.get("a").get(1));
+		assertEquals("值1", map.get("a").get(0));
+		assertEquals("值2", map.get("a").get(1));
 
 		// ----------------------------------------------------------------------------------------
 		final List<Map<String, String>> listMap = CollUtil.toMapList(map);
-		Assert.assertEquals("值1", listMap.get(0).get("a"));
-		Assert.assertEquals("值2", listMap.get(1).get("a"));
+		assertEquals("值1", listMap.get(0).get("a"));
+		assertEquals("值2", listMap.get(1).get("a"));
 	}
 
 	@Test
@@ -243,24 +241,24 @@ public class CollUtilTest {
 		final ArrayList<Dict> list = CollUtil.newArrayList(v1, v2);
 
 		final List<Object> fieldValues = CollUtil.getFieldValues(list, "name");
-		Assert.assertEquals("张三", fieldValues.get(0));
-		Assert.assertEquals("李四", fieldValues.get(1));
+		assertEquals("张三", fieldValues.get(0));
+		assertEquals("李四", fieldValues.get(1));
 	}
 
 	@Test
 	public void splitTest() {
 		final ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 		final List<List<Integer>> split = CollUtil.split(list, 3);
-		Assert.assertEquals(3, split.size());
-		Assert.assertEquals(3, split.get(0).size());
+		assertEquals(3, split.size());
+		assertEquals(3, split.get(0).size());
 	}
 
 	@Test
 	public void splitTest2() {
 		final ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 		final List<List<Integer>> split = CollUtil.split(list, Integer.MAX_VALUE);
-		Assert.assertEquals(1, split.size());
-		Assert.assertEquals(9, split.get(0).size());
+		assertEquals(1, split.size());
+		assertEquals(9, split.get(0).size());
 	}
 
 	@Test
@@ -277,7 +275,7 @@ public class CollUtilTest {
 				result[0] = value;
 			}
 		});
-		Assert.assertEquals("1", result[0]);
+		assertEquals("1", result[0]);
 	}
 
 	@Test
@@ -286,7 +284,7 @@ public class CollUtilTest {
 
 		final Collection<String> filtered = CollUtil.edit(list, t -> t + 1);
 
-		Assert.assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
+		assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
 	}
 
 	@Test
@@ -296,8 +294,8 @@ public class CollUtilTest {
 		final ArrayList<String> filtered = CollUtil.filter(list, t -> false == "a".equals(t));
 
 		// 原地过滤
-		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+		assertSame(list, filtered);
+		assertEquals(CollUtil.newArrayList("b", "c"), filtered);
 	}
 
 	@Test
@@ -305,7 +303,7 @@ public class CollUtilTest {
 		final Set<String> set = CollUtil.newLinkedHashSet("a", "b", "", "  ", "c");
 		final Set<String> filtered = CollUtil.filter(set, StrUtil::isNotBlank);
 
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c"), filtered);
+		assertEquals(CollUtil.newLinkedHashSet("a", "b", "c"), filtered);
 	}
 
 	@Test
@@ -321,12 +319,12 @@ public class CollUtilTest {
 			return true;
 		});
 
-		Assert.assertEquals(1, removed.size());
-		Assert.assertEquals("a", removed.get(0));
+		assertEquals(1, removed.size());
+		assertEquals("a", removed.get(0));
 
 		// 原地过滤
-		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+		assertSame(list, filtered);
+		assertEquals(CollUtil.newArrayList("b", "c"), filtered);
 	}
 
 	@Test
@@ -336,8 +334,8 @@ public class CollUtilTest {
 		final ArrayList<String> filtered = CollUtil.removeNull(list);
 
 		// 原地过滤
-		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "", "  "), filtered);
+		assertSame(list, filtered);
+		assertEquals(CollUtil.newArrayList("a", "b", "c", "", "  "), filtered);
 	}
 
 	@Test
@@ -347,8 +345,8 @@ public class CollUtilTest {
 		final ArrayList<String> filtered = CollUtil.removeEmpty(list);
 
 		// 原地过滤
-		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "  "), filtered);
+		assertSame(list, filtered);
+		assertEquals(CollUtil.newArrayList("a", "b", "c", "  "), filtered);
 	}
 
 	@Test
@@ -358,32 +356,32 @@ public class CollUtilTest {
 		final ArrayList<String> filtered = CollUtil.removeBlank(list);
 
 		// 原地过滤
-		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c"), filtered);
+		assertSame(list, filtered);
+		assertEquals(CollUtil.newArrayList("a", "b", "c"), filtered);
 	}
 
 	@Test
 	public void groupTest() {
 		final List<String> list = CollUtil.newArrayList("1", "2", "3", "4", "5", "6");
 		final List<List<String>> group = CollUtil.group(list, null);
-		Assert.assertTrue(group.size() > 0);
+		assertFalse(group.isEmpty());
 
 		final List<List<String>> group2 = CollUtil.group(list, t -> {
 			// 按照奇数偶数分类
 			return Integer.parseInt(t) % 2;
 		});
-		Assert.assertEquals(CollUtil.newArrayList("2", "4", "6"), group2.get(0));
-		Assert.assertEquals(CollUtil.newArrayList("1", "3", "5"), group2.get(1));
+		assertEquals(CollUtil.newArrayList("2", "4", "6"), group2.get(0));
+		assertEquals(CollUtil.newArrayList("1", "3", "5"), group2.get(1));
 	}
 
 	@Test
 	public void groupByFieldTest() {
 		final List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12), new TestBean("李四", 13), new TestBean("王五", 12));
 		final List<List<TestBean>> groupByField = CollUtil.groupByField(list, "age");
-		Assert.assertEquals("张三", groupByField.get(0).get(0).getName());
-		Assert.assertEquals("王五", groupByField.get(0).get(1).getName());
+		assertEquals("张三", groupByField.get(0).get(0).getName());
+		assertEquals("王五", groupByField.get(0).get(1).getName());
 
-		Assert.assertEquals("李四", groupByField.get(1).get(0).getName());
+		assertEquals("李四", groupByField.get(1).get(0).getName());
 	}
 
 	@Test
@@ -395,9 +393,9 @@ public class CollUtilTest {
 		);
 
 		CollUtil.sortByProperty(list, "createTime");
-		Assert.assertEquals("李四", list.get(0).getName());
-		Assert.assertEquals("王五", list.get(1).getName());
-		Assert.assertEquals("张三", list.get(2).getName());
+		assertEquals("李四", list.get(0).getName());
+		assertEquals("王五", list.get(1).getName());
+		assertEquals("张三", list.get(2).getName());
 	}
 
 	@Test
@@ -409,9 +407,9 @@ public class CollUtilTest {
 		);
 
 		CollUtil.sortByProperty(list, "age");
-		Assert.assertEquals("李四", list.get(0).getName());
-		Assert.assertEquals("张三", list.get(1).getName());
-		Assert.assertEquals("王五", list.get(2).getName());
+		assertEquals("李四", list.get(0).getName());
+		assertEquals("张三", list.get(1).getName());
+		assertEquals("王五", list.get(2).getName());
 	}
 
 	@Test
@@ -422,9 +420,9 @@ public class CollUtilTest {
 		);
 
 		final Map<String, TestBean> map = CollUtil.fieldValueMap(list, "name");
-		Assert.assertEquals("李四", map.get("李四").getName());
-		Assert.assertEquals("王五", map.get("王五").getName());
-		Assert.assertEquals("张三", map.get("张三").getName());
+		assertEquals("李四", map.get("李四").getName());
+		assertEquals("王五", map.get("王五").getName());
+		assertEquals("张三", map.get("张三").getName());
 	}
 
 	@Test
@@ -435,21 +433,21 @@ public class CollUtilTest {
 		);
 
 		final Map<String, Integer> map = CollUtil.fieldValueAsMap(list, "name", "age");
-		Assert.assertEquals(new Integer(12), map.get("张三"));
-		Assert.assertEquals(new Integer(13), map.get("李四"));
-		Assert.assertEquals(new Integer(14), map.get("王五"));
+		assertEquals(new Integer(12), map.get("张三"));
+		assertEquals(new Integer(13), map.get("李四"));
+		assertEquals(new Integer(14), map.get("王五"));
 	}
 
 	@Test
 	public void emptyTest() {
 		final SortedSet<String> emptySortedSet = CollUtil.empty(SortedSet.class);
-		Assert.assertEquals(Collections.emptySortedSet(), emptySortedSet);
+		assertEquals(Collections.emptySortedSet(), emptySortedSet);
 
 		final Set<String> emptySet = CollUtil.empty(Set.class);
-		Assert.assertEquals(Collections.emptySet(), emptySet);
+		assertEquals(Collections.emptySet(), emptySet);
 
 		final List<String> emptyList = CollUtil.empty(List.class);
-		Assert.assertEquals(Collections.emptyList(), emptyList);
+		assertEquals(Collections.emptyList(), emptyList);
 	}
 
 	@Data
@@ -470,16 +468,16 @@ public class CollUtilTest {
 		final List<Object> list1 = CollUtil.list(false);
 		final List<Object> list2 = CollUtil.list(true);
 
-		Assert.assertTrue(list1 instanceof ArrayList);
-		Assert.assertTrue(list2 instanceof LinkedList);
+		assertInstanceOf(ArrayList.class, list1);
+		assertInstanceOf(LinkedList.class, list2);
 	}
 
 	@Test
 	public void listTest2() {
 		final List<String> list1 = CollUtil.list(false, "a", "b", "c");
 		final List<String> list2 = CollUtil.list(true, "a", "b", "c");
-		Assert.assertEquals("[a, b, c]", list1.toString());
-		Assert.assertEquals("[a, b, c]", list2.toString());
+		assertEquals("[a, b, c]", list1.toString());
+		assertEquals("[a, b, c]", list2.toString());
 	}
 
 	@Test
@@ -491,18 +489,18 @@ public class CollUtilTest {
 
 		final List<String> list1 = CollUtil.list(false, set);
 		final List<String> list2 = CollUtil.list(true, set);
-		Assert.assertEquals("[a, b, c]", list1.toString());
-		Assert.assertEquals("[a, b, c]", list2.toString());
+		assertEquals("[a, b, c]", list1.toString());
+		assertEquals("[a, b, c]", list2.toString());
 	}
 
 	@Test
 	public void getTest() {
 		final HashSet<String> set = CollUtil.set(true, "A", "B", "C", "D");
 		String str = CollUtil.get(set, 2);
-		Assert.assertEquals("C", str);
+		assertEquals("C", str);
 
 		str = CollUtil.get(set, -1);
-		Assert.assertEquals("D", str);
+		assertEquals("D", str);
 	}
 
 	@Test
@@ -515,10 +513,10 @@ public class CollUtilTest {
 		list2.add("3");
 		CollUtil.addAllIfNotContains(list1, list2);
 
-		Assert.assertEquals(3, list1.size());
-		Assert.assertEquals("1", list1.get(0));
-		Assert.assertEquals("2", list1.get(1));
-		Assert.assertEquals("3", list1.get(2));
+		assertEquals(3, list1.size());
+		assertEquals("1", list1.get(0));
+		assertEquals("2", list1.get(1));
+		assertEquals("3", list1.get(2));
 	}
 
 	@Test
@@ -534,7 +532,7 @@ public class CollUtilTest {
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
 		arrayList.add(null);
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
 	@Test
@@ -551,7 +549,7 @@ public class CollUtilTest {
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
 		arrayList.add(null);
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
 	@Test
@@ -566,7 +564,7 @@ public class CollUtilTest {
 
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
 	@Test
@@ -579,7 +577,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
-		Assert.assertTrue(retval.isEmpty());
+		assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -594,7 +592,7 @@ public class CollUtilTest {
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
 	@Test
@@ -609,21 +607,23 @@ public class CollUtilTest {
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
-	@Test(expected = IndexOutOfBoundsException.class)
+	@Test
 	public void subInput1PositiveNegativePositiveOutputArrayIndexOutOfBoundsException() {
-		// Arrange
-		final List<Integer> list = new ArrayList<>();
-		list.add(null);
-		final int start = 2_147_483_643;
-		final int end = -2_147_483_648;
-		final int step = 2;
+		assertThrows(IndexOutOfBoundsException.class, () -> {
+			// Arrange
+			final List<Integer> list = new ArrayList<>();
+			list.add(null);
+			final int start = 2_147_483_643;
+			final int end = -2_147_483_648;
+			final int step = 2;
 
-		// Act
-		CollUtil.sub(list, start, end, step);
-		// Method is not expected to return due to exception thrown
+			// Act
+			CollUtil.sub(list, start, end, step);
+			// Method is not expected to return due to exception thrown
+		});
 	}
 
 	@Test
@@ -636,7 +636,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
-		Assert.assertTrue(retval.isEmpty());
+		assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -651,7 +651,7 @@ public class CollUtilTest {
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
 	@Test
@@ -666,7 +666,7 @@ public class CollUtilTest {
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
 	@Test
@@ -681,7 +681,7 @@ public class CollUtilTest {
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
 		final List<Integer> arrayList = new ArrayList<>();
-		Assert.assertEquals(arrayList, retval);
+		assertEquals(arrayList, retval);
 	}
 
 	@Test
@@ -693,7 +693,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end);
 		// Assert result
-		Assert.assertTrue(retval.isEmpty());
+		assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -701,7 +701,7 @@ public class CollUtilTest {
 		final List<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 		final List<Integer> sortPageAll = CollUtil.sortPageAll(1, 5, Comparator.reverseOrder(), list);
 
-		Assert.assertEquals(CollUtil.newArrayList(4, 3, 2, 1), sortPageAll);
+		assertEquals(CollUtil.newArrayList(4, 3, 2, 1), sortPageAll);
 	}
 
 	@Test
@@ -709,18 +709,18 @@ public class CollUtilTest {
 		final ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4, 5);
 		final ArrayList<Integer> list2 = CollUtil.newArrayList(5, 3, 1, 9, 11);
 
-		Assert.assertTrue(CollUtil.containsAny(list1, list2));
+		assertTrue(CollUtil.containsAny(list1, list2));
 	}
 
 	@Test
 	public void containsAllTest() {
 		final ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4, 5);
 		final ArrayList<Integer> list2 = CollUtil.newArrayList(5, 3, 1);
-		Assert.assertTrue(CollUtil.containsAll(list1, list2));
+		assertTrue(CollUtil.containsAll(list1, list2));
 
 		final ArrayList<Integer> list3 = CollUtil.newArrayList(1);
 		final ArrayList<Integer> list4 = CollUtil.newArrayList();
-		Assert.assertTrue(CollUtil.containsAll(list3, list4));
+		assertTrue(CollUtil.containsAll(list3, list4));
 	}
 
 	@Test
@@ -728,7 +728,7 @@ public class CollUtilTest {
 		// 测试：空数组返回null而不是报错
 		final List<String> test = CollUtil.newArrayList();
 		final String last = CollUtil.getLast(test);
-		Assert.assertNull(last);
+		assertNull(last);
 	}
 
 	@Test
@@ -738,39 +738,39 @@ public class CollUtilTest {
 
 		final Map<String, Integer> map = CollUtil.zip(keys, values);
 
-		Assert.assertEquals(4, Objects.requireNonNull(map).size());
+		assertEquals(4, Objects.requireNonNull(map).size());
 
-		Assert.assertEquals(1, map.get("a").intValue());
-		Assert.assertEquals(2, map.get("b").intValue());
-		Assert.assertEquals(3, map.get("c").intValue());
-		Assert.assertEquals(4, map.get("d").intValue());
+		assertEquals(1, map.get("a").intValue());
+		assertEquals(2, map.get("b").intValue());
+		assertEquals(3, map.get("c").intValue());
+		assertEquals(4, map.get("d").intValue());
 	}
 
 	@Test
 	public void toMapTest() {
 		final Collection<String> keys = CollUtil.newArrayList("a", "b", "c", "d");
 		final Map<String, String> map = CollUtil.toMap(keys, new HashMap<>(), (value) -> "key" + value);
-		Assert.assertEquals("a", map.get("keya"));
-		Assert.assertEquals("b", map.get("keyb"));
-		Assert.assertEquals("c", map.get("keyc"));
-		Assert.assertEquals("d", map.get("keyd"));
+		assertEquals("a", map.get("keya"));
+		assertEquals("b", map.get("keyb"));
+		assertEquals("c", map.get("keyc"));
+		assertEquals("d", map.get("keyd"));
 	}
 
 	@Test
 	public void addIfAbsentTest() {
 		// 为false的情况
-		Assert.assertFalse(CollUtil.addIfAbsent(null, null));
-		Assert.assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList(), null));
-		Assert.assertFalse(CollUtil.addIfAbsent(null, "123"));
-		Assert.assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList("123"), "123"));
-		Assert.assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
+		assertFalse(CollUtil.addIfAbsent(null, null));
+		assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList(), null));
+		assertFalse(CollUtil.addIfAbsent(null, "123"));
+		assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList("123"), "123"));
+		assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
 			new Animal("jack", 20)));
 
 		// 正常情况
-		Assert.assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList("456"), "123"));
-		Assert.assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
+		assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList("456"), "123"));
+		assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
 			new Dog("jack", 20)));
-		Assert.assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
+		assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
 			new Animal("tom", 20)));
 	}
 
@@ -786,9 +786,9 @@ public class CollUtilTest {
 			Map.Entry::getKey,
 			entry -> Long.parseLong(entry.getValue()));
 
-		Assert.assertEquals(1L, (long) map.get("a"));
-		Assert.assertEquals(12L, (long) map.get("b"));
-		Assert.assertEquals(134L, (long) map.get("c"));
+		assertEquals(1L, (long) map.get("a"));
+		assertEquals(12L, (long) map.get("b"));
+		assertEquals(134L, (long) map.get("c"));
 	}
 
 	@Test
@@ -796,17 +796,17 @@ public class CollUtilTest {
 		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
 		final Map<String, Integer> countMap = CollUtil.countMap(list);
 
-		Assert.assertEquals(Integer.valueOf(2), countMap.get("a"));
-		Assert.assertEquals(Integer.valueOf(2), countMap.get("b"));
-		Assert.assertEquals(Integer.valueOf(2), countMap.get("c"));
-		Assert.assertEquals(Integer.valueOf(1), countMap.get("d"));
+		assertEquals(Integer.valueOf(2), countMap.get("a"));
+		assertEquals(Integer.valueOf(2), countMap.get("b"));
+		assertEquals(Integer.valueOf(2), countMap.get("c"));
+		assertEquals(Integer.valueOf(1), countMap.get("d"));
 	}
 
 	@Test
 	public void indexOfTest() {
 		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
 		final int i = CollUtil.indexOf(list, (str) -> str.charAt(0) == 'c');
-		Assert.assertEquals(2, i);
+		assertEquals(2, i);
 	}
 
 	@Test
@@ -814,7 +814,7 @@ public class CollUtilTest {
 		// List有优化
 		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
 		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
-		Assert.assertEquals(3, i);
+		assertEquals(3, i);
 	}
 
 	@Test
@@ -822,7 +822,7 @@ public class CollUtilTest {
 		final Set<String> list = CollUtil.set(true, "a", "b", "c", "c", "a", "b", "d");
 		// 去重后c排第三
 		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
-		Assert.assertEquals(2, i);
+		assertEquals(2, i);
 	}
 
 	@Test
@@ -832,7 +832,7 @@ public class CollUtilTest {
 			objects.add(Dict.create().set("name", "姓名：" + i));
 		}
 
-		Assert.assertEquals(0, CollUtil.page(3, 5, objects).size());
+		assertEquals(0, CollUtil.page(3, 5, objects).size());
 	}
 
 	@Test
@@ -841,15 +841,15 @@ public class CollUtilTest {
 		final List<Long> list2 = Arrays.asList(2L, 3L);
 
 		final List<Long> result = CollUtil.subtractToList(list1, list2);
-		Assert.assertEquals(1, result.size());
-		Assert.assertEquals(1L, (long) result.get(0));
+		assertEquals(1, result.size());
+		assertEquals(1L, (long) result.get(0));
 	}
 
 	@Test
 	public void sortComparableTest() {
 		final List<String> of = ListUtil.toList("a", "c", "b");
 		final List<String> sort = CollUtil.sort(of, new ComparableComparator<>());
-		Assert.assertEquals("a,b,c", CollUtil.join(sort, ","));
+		assertEquals("a,b,c", CollUtil.join(sort, ","));
 	}
 
 	@Test
@@ -872,9 +872,9 @@ public class CollUtilTest {
 		genderMap.put(5, "小孩");
 		genderMap.put(6, "男");
 
-		Assert.assertEquals(people.get(1).getGender(), "woman");
+		assertEquals(people.get(1).getGender(), "woman");
 		CollUtil.setValueByMap(people, genderMap, Person::getId, Person::setGender);
-		Assert.assertEquals(people.get(1).getGender(), "妇女");
+		assertEquals(people.get(1).getGender(), "妇女");
 
 		final Map<Integer, Person> personMap = new HashMap<>();
 		personMap.put(1, new Person("AA", 21, "男", 1));
@@ -890,13 +890,13 @@ public class CollUtilTest {
 			x.setAge(y.getAge());
 		});
 
-		Assert.assertEquals(people.get(1).getGender(), "小孩");
+		assertEquals(people.get(1).getGender(), "小孩");
 	}
 
 	@Test
 	public void distinctTest() {
 		final ArrayList<Integer> distinct = CollUtil.distinct(ListUtil.of(5, 3, 10, 9, 0, 5, 10, 9));
-		Assert.assertEquals(ListUtil.of(5, 3, 10, 9, 0), distinct);
+		assertEquals(ListUtil.of(5, 3, 10, 9, 0), distinct);
 	}
 
 	@Test
@@ -912,15 +912,15 @@ public class CollUtilTest {
 
 		// 覆盖模式下ff覆盖了aa，ee覆盖了bb
 		List<Person> distinct = CollUtil.distinct(people, Person::getGender, true);
-		Assert.assertEquals(2, distinct.size());
-		Assert.assertEquals("ff", distinct.get(0).getName());
-		Assert.assertEquals("ee", distinct.get(1).getName());
+		assertEquals(2, distinct.size());
+		assertEquals("ff", distinct.get(0).getName());
+		assertEquals("ee", distinct.get(1).getName());
 
 		// 非覆盖模式下，保留了最早加入的aa和bb
 		distinct = CollUtil.distinct(people, Person::getGender, false);
-		Assert.assertEquals(2, distinct.size());
-		Assert.assertEquals("aa", distinct.get(0).getName());
-		Assert.assertEquals("bb", distinct.get(1).getName());
+		assertEquals(2, distinct.size());
+		assertEquals("aa", distinct.get(0).getName());
+		assertEquals("bb", distinct.get(1).getName());
 	}
 
 	@SuppressWarnings("ConstantValue")
@@ -930,7 +930,7 @@ public class CollUtilTest {
 		final List<String> list2 = null;
 		final List<String> list3 = null;
 		final Collection<String> union = CollUtil.union(list1, list2, list3);
-		Assert.assertNotNull(union);
+		assertNotNull(union);
 	}
 
 	@SuppressWarnings("ConstantValue")
@@ -940,7 +940,7 @@ public class CollUtilTest {
 		final List<String> list2 = null;
 		final List<String> list3 = null;
 		final Set<String> set = CollUtil.unionDistinct(list1, list2, list3);
-		Assert.assertNotNull(set);
+		assertNotNull(set);
 	}
 
 	@SuppressWarnings({"ConfusingArgumentToVarargsMethod", "ConstantValue"})
@@ -950,10 +950,10 @@ public class CollUtilTest {
 		final List<String> list2 = null;
 		final List<String> list3 = null;
 		final List<String> list = CollUtil.unionAll(list1, list2, list3);
-		Assert.assertNotNull(list);
+		assertNotNull(list);
 
 		final List<String> resList2 = CollUtil.unionAll(null, null, null);
-		Assert.assertNotNull(resList2);
+		assertNotNull(resList2);
 	}
 
 	@Test
@@ -962,8 +962,8 @@ public class CollUtilTest {
 		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
 		final List<Integer> list3 = CollectionUtil.newArrayList(4, 5, 6);
 		final List<Integer> list = CollUtil.unionAll(list1, list2, list3);
-		Assert.assertNotNull(list);
-		Assert.assertArrayEquals(
+		assertNotNull(list);
+		assertArrayEquals(
 			CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3, 4, 5, 6).toArray(),
 			list.toArray());
 	}
@@ -973,8 +973,8 @@ public class CollUtilTest {
 		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
 		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
 		final List<Integer> list = CollUtil.unionAll(list1, list2);
-		Assert.assertNotNull(list);
-		Assert.assertArrayEquals(
+		assertNotNull(list);
+		assertArrayEquals(
 			CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3).toArray(),
 			list.toArray());
 	}
@@ -984,8 +984,8 @@ public class CollUtilTest {
 		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
 		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
 		@SuppressWarnings("ConfusingArgumentToVarargsMethod") final List<Integer> list = CollUtil.unionAll(list1, list2, null);
-		Assert.assertNotNull(list);
-		Assert.assertArrayEquals(
+		assertNotNull(list);
+		assertArrayEquals(
 			CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3).toArray(),
 			list.toArray());
 	}
@@ -995,8 +995,8 @@ public class CollUtilTest {
 		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
 		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
 		final List<Integer> list = CollUtil.unionAll(list1, list2, null, null);
-		Assert.assertNotNull(list);
-		Assert.assertArrayEquals(
+		assertNotNull(list);
+		assertArrayEquals(
 			CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3).toArray(),
 			list.toArray());
 	}
@@ -1010,7 +1010,7 @@ public class CollUtilTest {
 		list2.add("aa");
 		final List<String> list3 = null;
 		final Collection<String> collection = CollUtil.intersection(list1, list2, list3);
-		Assert.assertNotNull(collection);
+		assertNotNull(collection);
 	}
 
 	@Test
@@ -1021,7 +1021,7 @@ public class CollUtilTest {
 		// list2.add("aa");
 		final List<String> list3 = null;
 		final Collection<String> collection = CollUtil.intersectionDistinct(list1, list2, list3);
-		Assert.assertNotNull(collection);
+		assertNotNull(collection);
 	}
 
 	@Data
@@ -1055,33 +1055,34 @@ public class CollUtilTest {
 	public void getFirstTest() {
 		final List<?> nullList = null;
 		final Object first = CollUtil.getFirst(nullList);
-		Assert.assertNull(first);
+		assertNull(first);
 	}
 
 	@Test
 	public void testMatch() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
-		Assert.assertTrue(CollUtil.anyMatch(list, i -> i == 1));
-		Assert.assertFalse(CollUtil.anyMatch(list, i -> i > 6));
-		Assert.assertFalse(CollUtil.allMatch(list, i -> i == 1));
-		Assert.assertTrue(CollUtil.allMatch(list, i -> i <= 6));
+		assertTrue(CollUtil.anyMatch(list, i -> i == 1));
+		assertFalse(CollUtil.anyMatch(list, i -> i > 6));
+		assertFalse(CollUtil.allMatch(list, i -> i == 1));
+		assertTrue(CollUtil.allMatch(list, i -> i <= 6));
 	}
 
 	@Test
 	public void maxTest() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
-		Assert.assertEquals((Integer) 6, CollUtil.max(list));
+		assertEquals((Integer) 6, CollUtil.max(list));
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	public void maxEmptyTest() {
 		final List<? extends Comparable> emptyList = Collections.emptyList();
-		Assert.assertNull(CollUtil.max(emptyList));
+		assertNull(CollUtil.max(emptyList));
 	}
 
 	@Test
 	public void minNullTest() {
-		Assert.assertNull(CollUtil.max(null));
+		assertNull(CollUtil.max(null));
 	}
 
 	@Test
@@ -1098,6 +1099,6 @@ public class CollUtilTest {
 		coll2.add("1");
 		coll2.add("1");
 
-		Assert.assertTrue(CollUtil.containsAll(coll1, coll2));
+		assertTrue(CollUtil.containsAll(coll1, coll2));
 	}
 }

@@ -7,9 +7,9 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.Ignore;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.List;
 import java.util.Map;
@@ -20,10 +20,10 @@ public class CsvReaderTest {
 	public void readTest() {
 		CsvReader reader = new CsvReader();
 		CsvData data = reader.read(ResourceUtil.getReader("test.csv", CharsetUtil.CHARSET_UTF_8));
-		Assert.assertEquals("sss,sss", data.getRow(0).get(0));
-		Assert.assertEquals(1, data.getRow(0).getOriginalLineNumber());
-		Assert.assertEquals("性别", data.getRow(0).get(2));
-		Assert.assertEquals("关注\"对象\"", data.getRow(0).get(3));
+		assertEquals("sss,sss", data.getRow(0).get(0));
+		assertEquals(1, data.getRow(0).getOriginalLineNumber());
+		assertEquals("性别", data.getRow(0).get(2));
+		assertEquals("关注\"对象\"", data.getRow(0).get(3));
 	}
 
 	@Test
@@ -32,20 +32,20 @@ public class CsvReaderTest {
 		final List<Map<String, String>> result = reader.readMapList(
 				ResourceUtil.getUtf8Reader("test_bean.csv"));
 
-		Assert.assertEquals("张三", result.get(0).get("姓名"));
-		Assert.assertEquals("男", result.get(0).get("gender"));
-		Assert.assertEquals("无", result.get(0).get("focus"));
-		Assert.assertEquals("33", result.get(0).get("age"));
+		assertEquals("张三", result.get(0).get("姓名"));
+		assertEquals("男", result.get(0).get("gender"));
+		assertEquals("无", result.get(0).get("focus"));
+		assertEquals("33", result.get(0).get("age"));
 
-		Assert.assertEquals("李四", result.get(1).get("姓名"));
-		Assert.assertEquals("男", result.get(1).get("gender"));
-		Assert.assertEquals("好对象", result.get(1).get("focus"));
-		Assert.assertEquals("23", result.get(1).get("age"));
+		assertEquals("李四", result.get(1).get("姓名"));
+		assertEquals("男", result.get(1).get("gender"));
+		assertEquals("好对象", result.get(1).get("focus"));
+		assertEquals("23", result.get(1).get("age"));
 
-		Assert.assertEquals("王妹妹", result.get(2).get("姓名"));
-		Assert.assertEquals("女", result.get(2).get("gender"));
-		Assert.assertEquals("特别关注", result.get(2).get("focus"));
-		Assert.assertEquals("22", result.get(2).get("age"));
+		assertEquals("王妹妹", result.get(2).get("姓名"));
+		assertEquals("女", result.get(2).get("gender"));
+		assertEquals("特别关注", result.get(2).get("focus"));
+		assertEquals("22", result.get(2).get("age"));
 	}
 
 	@Test
@@ -57,20 +57,20 @@ public class CsvReaderTest {
 		final List<Map<String, String>> result = reader.readMapList(
 				ResourceUtil.getUtf8Reader("test_bean.csv"));
 
-		Assert.assertEquals("张三", result.get(0).get("name"));
-		Assert.assertEquals("男", result.get(0).get("gender"));
-		Assert.assertEquals("无", result.get(0).get("focus"));
-		Assert.assertEquals("33", result.get(0).get("age"));
+		assertEquals("张三", result.get(0).get("name"));
+		assertEquals("男", result.get(0).get("gender"));
+		assertEquals("无", result.get(0).get("focus"));
+		assertEquals("33", result.get(0).get("age"));
 
-		Assert.assertEquals("李四", result.get(1).get("name"));
-		Assert.assertEquals("男", result.get(1).get("gender"));
-		Assert.assertEquals("好对象", result.get(1).get("focus"));
-		Assert.assertEquals("23", result.get(1).get("age"));
+		assertEquals("李四", result.get(1).get("name"));
+		assertEquals("男", result.get(1).get("gender"));
+		assertEquals("好对象", result.get(1).get("focus"));
+		assertEquals("23", result.get(1).get("age"));
 
-		Assert.assertEquals("王妹妹", result.get(2).get("name"));
-		Assert.assertEquals("女", result.get(2).get("gender"));
-		Assert.assertEquals("特别关注", result.get(2).get("focus"));
-		Assert.assertEquals("22", result.get(2).get("age"));
+		assertEquals("王妹妹", result.get(2).get("name"));
+		assertEquals("女", result.get(2).get("gender"));
+		assertEquals("特别关注", result.get(2).get("focus"));
+		assertEquals("22", result.get(2).get("age"));
 	}
 
 	@Test
@@ -79,20 +79,20 @@ public class CsvReaderTest {
 		final List<TestBean> result = reader.read(
 				ResourceUtil.getUtf8Reader("test_bean.csv"), TestBean.class);
 
-		Assert.assertEquals("张三", result.get(0).getName());
-		Assert.assertEquals("男", result.get(0).getGender());
-		Assert.assertEquals("无", result.get(0).getFocus());
-		Assert.assertEquals(Integer.valueOf(33), result.get(0).getAge());
+		assertEquals("张三", result.get(0).getName());
+		assertEquals("男", result.get(0).getGender());
+		assertEquals("无", result.get(0).getFocus());
+		assertEquals(Integer.valueOf(33), result.get(0).getAge());
 
-		Assert.assertEquals("李四", result.get(1).getName());
-		Assert.assertEquals("男", result.get(1).getGender());
-		Assert.assertEquals("好对象", result.get(1).getFocus());
-		Assert.assertEquals(Integer.valueOf(23), result.get(1).getAge());
+		assertEquals("李四", result.get(1).getName());
+		assertEquals("男", result.get(1).getGender());
+		assertEquals("好对象", result.get(1).getFocus());
+		assertEquals(Integer.valueOf(23), result.get(1).getAge());
 
-		Assert.assertEquals("王妹妹", result.get(2).getName());
-		Assert.assertEquals("女", result.get(2).getGender());
-		Assert.assertEquals("特别关注", result.get(2).getFocus());
-		Assert.assertEquals(Integer.valueOf(22), result.get(2).getAge());
+		assertEquals("王妹妹", result.get(2).getName());
+		assertEquals("女", result.get(2).getGender());
+		assertEquals("特别关注", result.get(2).getFocus());
+		assertEquals(Integer.valueOf(22), result.get(2).getAge());
 	}
 
 	@Data
@@ -105,7 +105,7 @@ public class CsvReaderTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readTest2() {
 		final CsvReader reader = CsvUtil.getReader();
 		final CsvData read = reader.read(FileUtil.file("d:/test/test.csv"));
@@ -115,7 +115,7 @@ public class CsvReaderTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readTest3() {
 		final CsvReadConfig csvReadConfig = CsvReadConfig.defaultConfig();
 		csvReadConfig.setContainsHeader(true);
@@ -130,16 +130,16 @@ public class CsvReaderTest {
 	public void lineNoTest() {
 		CsvReader reader = new CsvReader();
 		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
-		Assert.assertEquals(1, data.getRow(0).getOriginalLineNumber());
-		Assert.assertEquals("a,b,c,d", CollUtil.join(data.getRow(0), ","));
+		assertEquals(1, data.getRow(0).getOriginalLineNumber());
+		assertEquals("a,b,c,d", CollUtil.join(data.getRow(0), ","));
 
-		Assert.assertEquals(4, data.getRow(2).getOriginalLineNumber());
-		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容",
+		assertEquals(4, data.getRow(2).getOriginalLineNumber());
+		assertEquals("q,w,e,r,我是一段\n带换行的内容",
 				CollUtil.join(data.getRow(2), ",").replace("\r", ""));
 
 		// 文件中第3行数据，对应原始行号是6（从0开始）
-		Assert.assertEquals(6, data.getRow(3).getOriginalLineNumber());
-		Assert.assertEquals("a,s,d,f", CollUtil.join(data.getRow(3), ","));
+		assertEquals(6, data.getRow(3).getOriginalLineNumber());
+		assertEquals("a,s,d,f", CollUtil.join(data.getRow(3), ","));
 	}
 
 	@Test
@@ -148,16 +148,16 @@ public class CsvReaderTest {
 		CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2));
 		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
 
-		Assert.assertEquals(2, data.getRow(0).getOriginalLineNumber());
-		Assert.assertEquals("1,2,3,4", CollUtil.join(data.getRow(0), ","));
+		assertEquals(2, data.getRow(0).getOriginalLineNumber());
+		assertEquals("1,2,3,4", CollUtil.join(data.getRow(0), ","));
 
-		Assert.assertEquals(4, data.getRow(1).getOriginalLineNumber());
-		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容",
+		assertEquals(4, data.getRow(1).getOriginalLineNumber());
+		assertEquals("q,w,e,r,我是一段\n带换行的内容",
 				CollUtil.join(data.getRow(1), ",").replace("\r", ""));
 
 		// 文件中第3行数据，对应原始行号是6（从0开始）
-		Assert.assertEquals(6, data.getRow(2).getOriginalLineNumber());
-		Assert.assertEquals("a,s,d,f", CollUtil.join(data.getRow(2), ","));
+		assertEquals(6, data.getRow(2).getOriginalLineNumber());
+		assertEquals("a,s,d,f", CollUtil.join(data.getRow(2), ","));
 	}
 
 	@Test
@@ -166,13 +166,13 @@ public class CsvReaderTest {
 		CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2).setContainsHeader(true));
 		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
 
-		Assert.assertEquals(4, data.getRow(0).getOriginalLineNumber());
-		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容",
+		assertEquals(4, data.getRow(0).getOriginalLineNumber());
+		assertEquals("q,w,e,r,我是一段\n带换行的内容",
 				CollUtil.join(data.getRow(0), ",").replace("\r", ""));
 
 		// 文件中第3行数据，对应原始行号是6（从0开始）
-		Assert.assertEquals(6, data.getRow(1).getOriginalLineNumber());
-		Assert.assertEquals("a,s,d,f", CollUtil.join(data.getRow(1), ","));
+		assertEquals(6, data.getRow(1).getOriginalLineNumber());
+		assertEquals("a,s,d,f", CollUtil.join(data.getRow(1), ","));
 	}
 
 	@Test
@@ -183,9 +183,9 @@ public class CsvReaderTest {
 						.setFieldSeparator(';'));
 		final CsvData csvRows = reader.readFromStr("123;456;'789;0'abc;");
 		final CsvRow row = csvRows.getRow(0);
-		Assert.assertEquals("123", row.get(0));
-		Assert.assertEquals("456", row.get(1));
-		Assert.assertEquals("'789;0'abc", row.get(2));
+		assertEquals("123", row.get(0));
+		assertEquals("456", row.get(1));
+		assertEquals("'789;0'abc", row.get(2));
 	}
 
 	@Test
@@ -193,11 +193,11 @@ public class CsvReaderTest {
 		final CsvReader reader = CsvUtil.getReader(CsvReadConfig.defaultConfig().disableComment());
 		final CsvData read = reader.read(ResourceUtil.getUtf8Reader("test.csv"));
 		final CsvRow row = read.getRow(0);
-		Assert.assertEquals("# 这是一行注释，读取时应忽略", row.get(0));
+		assertEquals("# 这是一行注释，读取时应忽略", row.get(0));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void streamTest() {
 		final CsvReader reader = CsvUtil.getReader(ResourceUtil.getUtf8Reader("test_bean.csv"));
 		reader.stream().limit(2).forEach(Console::log);

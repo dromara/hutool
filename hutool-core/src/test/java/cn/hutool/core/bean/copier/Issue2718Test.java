@@ -1,8 +1,8 @@
 package cn.hutool.core.bean.copier;
 
 import lombok.Setter;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 
@@ -16,7 +16,7 @@ public class Issue2718Test {
 				.create(deployment, new LinkedHashMap<String, Object>(), CopyOptions.create().setIgnoreProperties("resources"))
 				.copy();
 
-		Assert.assertTrue(target.isEmpty());
+		assertTrue(target.isEmpty());
 	}
 
 	@Test
@@ -27,7 +27,7 @@ public class Issue2718Test {
 				.create(deployment, new Deployment(), CopyOptions.create().setIgnoreProperties("resources"))
 				.copy();
 
-		Assert.assertNull(target.resources);
+		assertNull(target.resources);
 	}
 
 	@Setter

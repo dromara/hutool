@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Getter;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class IssueI90ADXTest {
 
@@ -15,7 +15,7 @@ public class IssueI90ADXTest {
 		testBean.name = "aaaa";
 
 		final JSONObject json = JSONUtil.parseObj(testBean);
-		Assert.assertEquals("{\"name\":\"aaaa\"}", json.toString());
+		assertEquals("{\"name\":\"aaaa\"}", json.toString());
 	}
 
 	@Getter

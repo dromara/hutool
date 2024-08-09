@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -16,10 +16,10 @@ public class MapBuilderTest {
 				.put(false, "d", () -> getValue(4))
 				.build();
 
-		Assert.assertEquals(map.get("a"), "1");
-		Assert.assertFalse(map.containsKey("b"));
-		Assert.assertEquals(map.get("c"), "3");
-		Assert.assertFalse(map.containsKey("d"));
+		assertEquals(map.get("a"), "1");
+		assertFalse(map.containsKey("b"));
+		assertEquals(map.get("c"), "3");
+		assertFalse(map.containsKey("d"));
 	}
 
 	public String getValue(int value) {

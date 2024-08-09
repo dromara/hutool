@@ -1,10 +1,10 @@
 package cn.hutool.core.text.csv;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 按照 https://datatracker.ietf.org/doc/html/rfc4180#section-2<br>

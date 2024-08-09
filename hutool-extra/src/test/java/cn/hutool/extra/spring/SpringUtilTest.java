@@ -3,8 +3,8 @@ package cn.hutool.extra.spring;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,8 @@ public class SpringUtilTest {
 		SpringUtil.registerBean("registerBean", registerBean);
 
 		Demo2 registerBean2 = SpringUtil.getBean("registerBean");
-		Assert.assertEquals(123, registerBean2.getId());
-		Assert.assertEquals("222", registerBean2.getName());
+		assertEquals(123, registerBean2.getId());
+		assertEquals("222", registerBean2.getName());
 
 
 	}
@@ -44,12 +44,12 @@ public class SpringUtilTest {
 	@Test
 	public void unregisterBeanTest() {
 		registerTestAutoWired();
-		Assert.assertNotNull(SpringUtil.getBean("testAutoWired"));
+		assertNotNull(SpringUtil.getBean("testAutoWired"));
 		SpringUtil.unregisterBean("testAutoWired1");
 		try {
 			SpringUtil.getBean("testAutoWired");
 		} catch (NoSuchBeanDefinitionException e) {
-			Assert.assertEquals(e.getClass(), NoSuchBeanDefinitionException.class);
+			assertEquals(e.getClass(), NoSuchBeanDefinitionException.class);
 		}
 	}
 
@@ -64,26 +64,26 @@ public class SpringUtilTest {
 		SpringUtil.registerBean("testAutoWired", testAutoWired);
 
 		testAutoWired = SpringUtil.getBean("testAutoWired");
-		Assert.assertNotNull(testAutoWired);
-		Assert.assertNotNull(testAutoWired.getAutowiredBean());
-		Assert.assertNotNull(testAutoWired.getResourceBean());
-		Assert.assertEquals("123", testAutoWired.getAutowiredBean().getId());
+		assertNotNull(testAutoWired);
+		assertNotNull(testAutoWired.getAutowiredBean());
+		assertNotNull(testAutoWired.getResourceBean());
+		assertEquals("123", testAutoWired.getAutowiredBean().getId());
 
 	}
 
 	@Test
 	public void getBeanTest(){
 		final Demo2 testDemo = SpringUtil.getBean("testDemo");
-		Assert.assertEquals(12345, testDemo.getId());
-		Assert.assertEquals("test", testDemo.getName());
+		assertEquals(12345, testDemo.getId());
+		assertEquals("test", testDemo.getName());
 	}
 
 	@Test
 	public void getBeanWithTypeReferenceTest() {
 		Map<String, Object> mapBean = SpringUtil.getBean(new TypeReference<Map<String, Object>>() {});
-		Assert.assertNotNull(mapBean);
-		Assert.assertEquals("value1", mapBean.get("key1"));
-		Assert.assertEquals("value2", mapBean.get("key2"));
+		assertNotNull(mapBean);
+		assertEquals("value1", mapBean.get("key1"));
+		assertEquals("value2", mapBean.get("key2"));
 	}
 
 	@Data

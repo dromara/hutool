@@ -3,8 +3,8 @@ package cn.hutool.core.text.csv;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Random;
 public class CsvWriterTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeWithAliasTest(){
 		final CsvWriteConfig csvWriteConfig = CsvWriteConfig.defaultConfig()
 				.addHeaderAlias("name", "姓名")
@@ -30,7 +30,7 @@ public class CsvWriterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void issue2255Test(){
 		String fileName = "D:/test/" + new Random().nextInt(100) + "-a.csv";
 		CsvWriter writer = CsvUtil.getWriter(fileName, CharsetUtil.CHARSET_UTF_8);
@@ -46,7 +46,7 @@ public class CsvWriterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeAppendTest(){
 		final CsvWriter writer = CsvUtil.getWriter(
 				FileUtil.file("d:/test/writeAppendTest.csv"),

@@ -3,8 +3,8 @@ package cn.hutool.json;
 import cn.hutool.core.lang.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,8 @@ public class IssueI7M2GZTest {
 		//Console.log(json);
 		final MyEntity<JSONBeanParserImpl> result = JSONUtil.toBean(json, new TypeReference<MyEntity<JSONBeanParserImpl>>() {
 		}, false);
-		Assert.assertEquals("new Object", result.getList().get(0).getName());
-		Assert.assertNotNull(result.getList().get(0).getParsed());
-		Assert.assertEquals(Integer.valueOf(12), result.getList().get(0).getParsed());
+		assertEquals("new Object", result.getList().get(0).getName());
+		assertNotNull(result.getList().get(0).getParsed());
+		assertEquals(Integer.valueOf(12), result.getList().get(0).getParsed());
 	}
 }

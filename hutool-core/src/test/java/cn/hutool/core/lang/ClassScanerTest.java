@@ -1,15 +1,15 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.util.ClassUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 public class ClassScanerTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scanTest() {
 		ClassScanner scaner = new ClassScanner("cn.hutool.core.util", null);
 		Set<Class<?>> set = scaner.scan();
@@ -19,7 +19,7 @@ public class ClassScanerTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scanPackageBySuperTest(){
 		// 扫描包，如果在classpath下找到，就不扫描JDK的jar了
 		final Set<Class<?>> classes = ClassScanner.scanPackageBySuper(null, Iterable.class);
@@ -27,7 +27,7 @@ public class ClassScanerTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scanAllPackageBySuperTest(){
 		// 扫描包，如果在classpath下找到，就不扫描JDK的jar了
 		final Set<Class<?>> classes = ClassScanner.scanAllPackageBySuper(null, Iterable.class);
@@ -36,7 +36,7 @@ public class ClassScanerTest {
 
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scanAllPackageIgnoreLoadErrorTest(){
 		final ClassScanner classScanner = new ClassScanner(null, null);
 		classScanner.setIgnoreLoadError(true);
@@ -46,7 +46,7 @@ public class ClassScanerTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scanJavaLang() {
 		final Set<Class<?>> classes = ClassUtil.scanPackage("java.lang");
 		for (final Class<?> aClass : classes) {

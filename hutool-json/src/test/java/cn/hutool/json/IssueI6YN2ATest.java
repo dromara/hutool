@@ -13,8 +13,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class IssueI6YN2ATest {
 		final JSONObject jsonObject = JSONUtil.parseObj(str);
 
 		final PageQuery<?> bean = jsonObject.toBean(PageQuery.class);
-		Assert.assertEquals("{name=姓名, age=年龄, email=邮箱, number=号码, pwd=密码}", bean.headers.toString());
+		assertEquals("{name=姓名, age=年龄, email=邮箱, number=号码, pwd=密码}", bean.headers.toString());
 	}
 
 	@Data

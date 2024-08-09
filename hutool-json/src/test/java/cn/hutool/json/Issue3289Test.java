@@ -12,12 +12,16 @@
 
 package cn.hutool.json;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class Issue3289Test {
-	@Test(expected = JSONException.class)
+	@Test
 	public void parseTest() {
-		final String s = "{\"a\":1,[6E962756779]}";
-		JSONUtil.parse(s);
+		assertThrows(JSONException.class, () -> {
+			final String s = "{\"a\":1,[6E962756779]}";
+			JSONUtil.parse(s);
+		});
 	}
 }

@@ -1,12 +1,11 @@
 package cn.hutool.core.text;
 
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CharSequenceUtilTest {
 
@@ -62,7 +61,7 @@ public class CharSequenceUtilTest {
 		String str1 = "\u00C1";
 		String str2 = "\u0041\u0301";
 
-		Assert.assertNotEquals(str1, str2);
+		assertNotEquals(str1, str2);
 
 		str1 = CharSequenceUtil.normalize(str1);
 		str2 = CharSequenceUtil.normalize(str2);
@@ -107,11 +106,11 @@ public class CharSequenceUtilTest {
 		assertFalse(CharSequenceUtil.startWith(null, null, false, true));
 		assertFalse(CharSequenceUtil.startWith("abc", "abc", true, true));
 
-		Assert.assertTrue(CharSequenceUtil.startWithIgnoreCase(null, null));
+		assertTrue(CharSequenceUtil.startWithIgnoreCase(null, null));
 		assertFalse(CharSequenceUtil.startWithIgnoreCase(null, "abc"));
 		assertFalse(CharSequenceUtil.startWithIgnoreCase("abcdef", null));
-		Assert.assertTrue(CharSequenceUtil.startWithIgnoreCase("abcdef", "abc"));
-		Assert.assertTrue(CharSequenceUtil.startWithIgnoreCase("ABCDEF", "abc"));
+		assertTrue(CharSequenceUtil.startWithIgnoreCase("abcdef", "abc"));
+		assertTrue(CharSequenceUtil.startWithIgnoreCase("ABCDEF", "abc"));
 	}
 
 	@Test
@@ -120,11 +119,11 @@ public class CharSequenceUtilTest {
 		assertFalse(CharSequenceUtil.endWith(null, null, false, true));
 		assertFalse(CharSequenceUtil.endWith("abc", "abc", true, true));
 
-		Assert.assertTrue(CharSequenceUtil.endWithIgnoreCase(null, null));
+		assertTrue(CharSequenceUtil.endWithIgnoreCase(null, null));
 		assertFalse(CharSequenceUtil.endWithIgnoreCase(null, "abc"));
 		assertFalse(CharSequenceUtil.endWithIgnoreCase("abcdef", null));
-		Assert.assertTrue(CharSequenceUtil.endWithIgnoreCase("abcdef", "def"));
-		Assert.assertTrue(CharSequenceUtil.endWithIgnoreCase("ABCDEF", "def"));
+		assertTrue(CharSequenceUtil.endWithIgnoreCase("abcdef", "def"));
+		assertTrue(CharSequenceUtil.endWithIgnoreCase("ABCDEF", "def"));
 	}
 
 	@Test
@@ -230,10 +229,10 @@ public class CharSequenceUtilTest {
 	@Test
 	public void testContainsOnly() {
 		// 测试空字符串
-		Assert.assertTrue(CharSequenceUtil.containsOnly("", 'a', 'b'));
+		assertTrue(CharSequenceUtil.containsOnly("", 'a', 'b'));
 
 		// 测试字符串只包含testChars中的字符
-		Assert.assertTrue(CharSequenceUtil.containsOnly("asdf", 'a', 's', 'd', 'f'));
+		assertTrue(CharSequenceUtil.containsOnly("asdf", 'a', 's', 'd', 'f'));
 
 		// 测试字符串包含testChars中的字符和其它字符
 		assertFalse(CharSequenceUtil.containsOnly("asdf123", 'a', 's', 'd', 'f'));

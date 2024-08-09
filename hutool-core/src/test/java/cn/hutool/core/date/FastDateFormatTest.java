@@ -1,13 +1,13 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.FastDateFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FastDateFormatTest {
 	private static final TimeZone timezone = TimeZone.getTimeZone("Etc/Utc");
@@ -41,6 +41,7 @@ public class FastDateFormatTest {
 		);
 	}
 
+	@SuppressWarnings("SuspiciousDateFormat")
 	@Test
 	public void weekYearTest() {
 		Date date = DateUtil.date(0L);

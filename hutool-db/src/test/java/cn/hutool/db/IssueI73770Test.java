@@ -13,8 +13,8 @@
 package cn.hutool.db;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
@@ -28,8 +28,8 @@ public class IssueI73770Test {
 			.page("select * from user where id = ?"
 				, new Page(0, 10), User.class, 9);
 
-		Assert.assertEquals(1, result.size());
-		Assert.assertEquals(Integer.valueOf(9), result.get(0).getId());
+		assertEquals(1, result.size());
+		assertEquals(Integer.valueOf(9), result.get(0).getId());
 	}
 
 	@Data

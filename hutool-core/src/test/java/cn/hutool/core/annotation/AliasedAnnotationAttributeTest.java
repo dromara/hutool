@@ -1,8 +1,8 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.util.ReflectUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -20,13 +20,13 @@ public class AliasedAnnotationAttributeTest {
 		final AliasedAnnotationAttribute valueAnnotationAttribute = new AliasedAnnotationAttribute(valueAttribute, nameAttribute);
 
 		// 注解属性
-		Assert.assertEquals(annotation, valueAnnotationAttribute.getAnnotation());
-		Assert.assertEquals(annotation.annotationType(), valueAnnotationAttribute.getAnnotationType());
+		assertEquals(annotation, valueAnnotationAttribute.getAnnotation());
+		assertEquals(annotation.annotationType(), valueAnnotationAttribute.getAnnotationType());
 
 		// 方法属性
-		Assert.assertEquals(valueMethod.getAnnotation(Alias.class), valueAnnotationAttribute.getAnnotation(Alias.class));
-		Assert.assertEquals(valueMethod.getName(), valueAnnotationAttribute.getAttributeName());
-		Assert.assertEquals(nameMethod.getReturnType(), valueAnnotationAttribute.getAttributeType());
+		assertEquals(valueMethod.getAnnotation(Alias.class), valueAnnotationAttribute.getAnnotation(Alias.class));
+		assertEquals(valueMethod.getName(), valueAnnotationAttribute.getAttributeName());
+		assertEquals(nameMethod.getReturnType(), valueAnnotationAttribute.getAttributeType());
 	}
 
 	@Test
@@ -40,9 +40,9 @@ public class AliasedAnnotationAttributeTest {
 		final AliasedAnnotationAttribute annotationAttribute = new AliasedAnnotationAttribute(valueAttribute, nameAttribute);
 
 		// 值处理
-		Assert.assertEquals("name", annotationAttribute.getValue());
-		Assert.assertFalse(annotationAttribute.isValueEquivalentToDefaultValue());
-		Assert.assertTrue(annotationAttribute.isWrapped());
+		assertEquals("name", annotationAttribute.getValue());
+		assertFalse(annotationAttribute.isValueEquivalentToDefaultValue());
+		assertTrue(annotationAttribute.isWrapped());
 	}
 
 	@Test
@@ -56,9 +56,9 @@ public class AliasedAnnotationAttributeTest {
 		final AliasedAnnotationAttribute annotationAttribute = new AliasedAnnotationAttribute(valueAttribute, nameAttribute);
 
 		// 值处理
-		Assert.assertEquals("value", annotationAttribute.getValue());
-		Assert.assertFalse(annotationAttribute.isValueEquivalentToDefaultValue());
-		Assert.assertTrue(annotationAttribute.isWrapped());
+		assertEquals("value", annotationAttribute.getValue());
+		assertFalse(annotationAttribute.isValueEquivalentToDefaultValue());
+		assertTrue(annotationAttribute.isWrapped());
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

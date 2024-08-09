@@ -6,9 +6,9 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +40,7 @@ public class SnowflakeTest {
 		final long trueOffSet = endId - startId;
 		// 忽略数据中心和工作机器时差值为22个1，否则为12个1
 		final long expectedOffSet = ignore ? ~(-1 << 22) : ~(-1 << 12);
-		Assert.assertEquals(trueOffSet, expectedOffSet);
+		assertEquals(trueOffSet, expectedOffSet);
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class SnowflakeTest {
 		//构建Snowflake，提供终端ID和数据中心ID
 		final Snowflake idWorker = new Snowflake(0, 0);
 		final long nextId = idWorker.nextId();
-		Assert.assertTrue(nextId > 0);
+		assertTrue(nextId > 0);
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class SnowflakeTest {
 			final long id = idWorker.nextId();
 			hashSet.add(id);
 		}
-		Assert.assertEquals(1000L, hashSet.size());
+		assertEquals(1000L, hashSet.size());
 	}
 
 	@Test
@@ -70,13 +70,13 @@ public class SnowflakeTest {
 		final Snowflake idWorker = new Snowflake(1, 2);
 		final long nextId = idWorker.nextId();
 
-		Assert.assertEquals(1, idWorker.getWorkerId(nextId));
-		Assert.assertEquals(2, idWorker.getDataCenterId(nextId));
-		Assert.assertTrue(idWorker.getGenerateDateTime(nextId) - System.currentTimeMillis() < 10);
+		assertEquals(1, idWorker.getWorkerId(nextId));
+		assertEquals(2, idWorker.getDataCenterId(nextId));
+		assertTrue(idWorker.getGenerateDateTime(nextId) - System.currentTimeMillis() < 10);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void uniqueTest(){
 		// 测试并发环境下生成ID是否重复
 		final Snowflake snowflake = IdUtil.getSnowflake(0, 0);
@@ -95,12 +95,12 @@ public class SnowflakeTest {
 	public void getSnowflakeLengthTest(){
 		for (int i = 0; i < 1000; i++) {
 			final long l = IdUtil.getSnowflake(0, 0).nextId();
-			Assert.assertEquals(19, StrUtil.toString(l).length());
+			assertEquals(19, StrUtil.toString(l).length());
 		}
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void snowflakeRandomSequenceTest(){
 		final Snowflake snowflake = new Snowflake(null, 0, 0,
 				false, Snowflake.DEFAULT_TIME_OFFSET, 2);
@@ -112,7 +112,7 @@ public class SnowflakeTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void uniqueOfRandomSequenceTest(){
 		// 测试并发环境下生成ID是否重复
 		final Snowflake snowflake = new Snowflake(null, 0, 0,

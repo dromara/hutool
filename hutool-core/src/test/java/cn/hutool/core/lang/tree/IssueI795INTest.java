@@ -12,8 +12,8 @@
 
 package cn.hutool.core.lang.tree;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +41,6 @@ public class IssueI795INTest {
 	public void getParentsNameTest() {
 		final Tree<Long> tree = TreeUtil.buildSingle(all_menu, 0L);
 		final Tree<Long> chid = tree.getChildren().get(0).getChildren().get(0).getChildren().get(0);
-		Assert.assertEquals("[module-A-menu-1, module-A, root]", chid.getParentsName(true).toString());
+		assertEquals("[module-A-menu-1, module-A, root]", chid.getParentsName(true).toString());
 	}
 }

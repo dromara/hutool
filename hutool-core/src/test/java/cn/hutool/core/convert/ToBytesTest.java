@@ -12,8 +12,8 @@
 
 package cn.hutool.core.convert;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,8 @@ public class ToBytesTest {
 		byteList.add((byte) 3);
 
 		final byte[] bytes = Convert.convert(byte[].class, byteList);
-		Assert.assertEquals(1, bytes[0]);
-		Assert.assertEquals(2, bytes[1]);
-		Assert.assertEquals(3, bytes[2]);
+		assertEquals(1, bytes[0]);
+		assertEquals(2, bytes[1]);
+		assertEquals(3, bytes[2]);
 	}
 }

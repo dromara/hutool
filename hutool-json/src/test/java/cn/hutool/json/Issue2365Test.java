@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class Issue2365Test {
 
@@ -10,8 +10,8 @@ public class Issue2365Test {
 	public void toBeanTest(){
 		String jsonStr = "{\"fileName\":\"aaa\",\"fileBytes\":\"AQ==\"}";
 		final FileInfo fileInfo = JSONUtil.toBean(jsonStr, FileInfo.class);
-		Assert.assertEquals("aaa", fileInfo.getFileName());
-		Assert.assertArrayEquals(new byte[]{1}, fileInfo.getFileBytes());
+		assertEquals("aaa", fileInfo.getFileName());
+		assertArrayEquals(new byte[]{1}, fileInfo.getFileBytes());
 	}
 
 	@Data

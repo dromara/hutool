@@ -1,8 +1,8 @@
 package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.crypto.SecureUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class IssueI6OQJATest {
@@ -12,7 +12,7 @@ public class IssueI6OQJATest {
 
 	@Test
 	public void genKeyTest() {
-		Assert.assertEquals(passCryto("123"), passCryto("123"));
+		assertEquals(passCryto("123"), passCryto("123"));
 	}
 
 	@SuppressWarnings("SameParameterValue")

@@ -4,13 +4,13 @@ import cn.hutool.core.collection.ListUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class IssueI64P2KTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeWithColumnStyleTest() {
 		// 设置默认列样式无效，暂时无解。
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/columnColorTest.xlsx");

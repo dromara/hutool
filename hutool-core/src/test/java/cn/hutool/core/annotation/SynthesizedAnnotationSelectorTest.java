@@ -1,7 +1,7 @@
 package cn.hutool.core.annotation;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -15,15 +15,15 @@ public class SynthesizedAnnotationSelectorTest {
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation1, selector.choose(annotation1, annotation2));
+		assertEquals(annotation1, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(0, 1);
 		annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation1, selector.choose(annotation1, annotation2));
+		assertEquals(annotation1, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(1, 0);
 		annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation2, selector.choose(annotation1, annotation2));
+		assertEquals(annotation2, selector.choose(annotation1, annotation2));
 	}
 
 	@Test
@@ -32,15 +32,15 @@ public class SynthesizedAnnotationSelectorTest {
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation2, selector.choose(annotation1, annotation2));
+		assertEquals(annotation2, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(0, 1);
 		annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation2, selector.choose(annotation1, annotation2));
+		assertEquals(annotation2, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(0, 0);
 		annotation2 = new TestSynthesizedAnnotation(1, 0);
-		Assert.assertEquals(annotation1, selector.choose(annotation1, annotation2));
+		assertEquals(annotation1, selector.choose(annotation1, annotation2));
 	}
 
 	@Test
@@ -49,15 +49,15 @@ public class SynthesizedAnnotationSelectorTest {
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation1, selector.choose(annotation1, annotation2));
+		assertEquals(annotation1, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(0, 1);
 		annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation1, selector.choose(annotation1, annotation2));
+		assertEquals(annotation1, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(0, 0);
 		annotation2 = new TestSynthesizedAnnotation(1, 0);
-		Assert.assertEquals(annotation2, selector.choose(annotation1, annotation2));
+		assertEquals(annotation2, selector.choose(annotation1, annotation2));
 	}
 
 	@Test
@@ -66,15 +66,15 @@ public class SynthesizedAnnotationSelectorTest {
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation2, selector.choose(annotation1, annotation2));
+		assertEquals(annotation2, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(0, 1);
 		annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation2, selector.choose(annotation1, annotation2));
+		assertEquals(annotation2, selector.choose(annotation1, annotation2));
 
 		annotation1 = new TestSynthesizedAnnotation(1, 0);
 		annotation2 = new TestSynthesizedAnnotation(0, 0);
-		Assert.assertEquals(annotation1, selector.choose(annotation1, annotation2));
+		assertEquals(annotation1, selector.choose(annotation1, annotation2));
 	}
 
 	static class TestSynthesizedAnnotation implements SynthesizedAnnotation {

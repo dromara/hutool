@@ -1,7 +1,7 @@
 package cn.hutool.crypto;
 
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Issue3512Test {
 	@Test

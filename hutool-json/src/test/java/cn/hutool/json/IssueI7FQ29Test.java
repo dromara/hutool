@@ -13,8 +13,8 @@
 package cn.hutool.json;
 
 import cn.hutool.core.lang.TypeReference;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class IssueI7FQ29Test {
 		final Map<String, Class<?>> map = JSONUtil.toBean(jsonStr, new TypeReference<Map<String, Class<?>>>() {
 		}, false);
 
-		Assert.assertNotNull(map);
-		Assert.assertEquals(String.class, map.get("trans_no"));
+		assertNotNull(map);
+		assertEquals(String.class, map.get("trans_no"));
 	}
 }

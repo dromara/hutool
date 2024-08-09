@@ -12,16 +12,16 @@
 
 package cn.hutool.core.date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class IssueI7XMYWTest {
 	@Test
 	public void ageTest() {
 		DateTime date1 = DateUtil.parse("2023-08-31");
-		Assert.assertEquals(49, DateUtil.age(DateUtil.parse("1973-08-31"), date1));
+		assertEquals(49, DateUtil.age(DateUtil.parse("1973-08-31"), date1));
 
 		date1 = DateUtil.parse("2023-08-30");
-		Assert.assertEquals(49, DateUtil.age(DateUtil.parse("1973-08-30"), date1));
+		assertEquals(49, DateUtil.age(DateUtil.parse("1973-08-30"), date1));
 	}
 }

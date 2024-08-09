@@ -2,8 +2,8 @@ package cn.hutool.core.exceptions;
 
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.VoidFunc0;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +34,7 @@ public class CheckedUtilTest {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
 			CheckedUtil.uncheck(() -> new FileInputStream(noFile)).call();
 		} catch (Exception re) {
-			Assert.assertTrue(re instanceof RuntimeException);
+			assertTrue(re instanceof RuntimeException);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class CheckedUtilTest {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
 			CheckedUtil.uncheck(afunc).call("hello world");
 		} catch (Exception re) {
-			Assert.assertTrue(re instanceof RuntimeException);
+			assertTrue(re instanceof RuntimeException);
 		}
 
 	}
