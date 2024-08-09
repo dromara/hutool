@@ -261,7 +261,7 @@ public class JakartaMail implements Builder<MimeMessage> {
 					bodyPart.setDataHandler(new DataHandler(attachment));
 					nameEncoded = attachment.getName();
 					if (this.mailAccount.isEncodefilename()) {
-						nameEncoded = InternalMailUtil.encodeText(nameEncoded, charset);
+						nameEncoded = JakartaInternalMailUtil.encodeText(nameEncoded, charset);
 					}
 					// 普通附件文件名
 					bodyPart.setFileName(nameEncoded);
