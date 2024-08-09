@@ -2238,6 +2238,17 @@ public class ImgUtil {
 	}
 
 	/**
+	 * 生成随机颜色，与指定颜色有一定的区分度
+	 *
+	 * @param compareColor 比较颜色
+	 * @return 与指定颜色有一定的区分度的随机颜色，默认是最大可能的三维距离的一半
+	 * @since 5.8.30
+	 */
+	public static Color randomColor(Color compareColor) {
+		return ColorUtil.randomColor(compareColor,ColorUtil.maxDistance(compareColor) / 2);
+	}
+
+	/**
 	 * 生成随机颜色
 	 *
 	 * @param random 随机对象 {@link Random}

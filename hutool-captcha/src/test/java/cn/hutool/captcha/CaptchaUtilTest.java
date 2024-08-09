@@ -26,17 +26,26 @@ public class CaptchaUtilTest {
 
 	@Test
 	@Ignore
-	public void drawStringColourfulTest() {
+	public void drawStringColourfulColorDistanceTest() {
 		for(int i = 0; i < 10; i++) {
-			AbstractCaptcha lineCaptcha = new TestLineCaptcha(200, 100, 5, 10);
-			lineCaptcha.write("d:/captcha/line"+i+".png");
+			AbstractCaptcha lineCaptcha = new TestLineCaptchaColorDistance(200, 100, 5, 10);
+			lineCaptcha.write("d:/captcha/line1-"+i+".png");
 		}
 	}
 
-	static class TestLineCaptcha extends AbstractCaptcha{
+	@Test
+	@Ignore
+	public void drawStringColourfulDefaultColorDistanceTest() {
+		for(int i = 0; i < 10; i++) {
+			AbstractCaptcha lineCaptcha = new TestLineCaptchaColorDistanceDefaultColorDistance(200, 100, 5, 10);
+			lineCaptcha.write("d:/captcha/line2-"+i+".png");
+		}
+	}
+
+	static class TestLineCaptchaColorDistance extends AbstractCaptcha{
 		private static final long serialVersionUID = -558846929114465692L;
 
-		public TestLineCaptcha(int width, int height, int codeCount, int interfereCount) {
+		public TestLineCaptchaColorDistance(int width, int height, int codeCount, int interfereCount) {
 			super(width, height, codeCount, interfereCount);
 		}
 
@@ -62,11 +71,12 @@ public class CaptchaUtilTest {
 		 * @param g {@link Graphics}画笔
 		 * @param code 验证码
 		 */
-		private void drawString(Graphics2D g, String code) {
+		protected void drawString(Graphics2D g, String code) {
 			// 指定透明度
 			if (null != this.textAlpha) {
 				g.setComposite(this.textAlpha);
 			}
+			// 自定义与背景颜色的色差值，200是基于Color.WHITE较为居中的值
 			GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height,Color.WHITE,200);
 		}
 
@@ -88,5 +98,23 @@ public class CaptchaUtilTest {
 			}
 		}
 		// ----------------------------------------------------------------------------------------------------- Private method start
+	}
+
+	static class TestLineCaptchaColorDistanceDefaultColorDistance extends TestLineCaptchaColorDistance {
+
+
+		public TestLineCaptchaColorDistanceDefaultColorDistance(int width, int height, int codeCount, int interfereCount) {
+			super(width, height, codeCount, interfereCount);
+		}
+
+		@Override
+		protected void drawString(Graphics2D g, String code) {
+			// 指定透明度
+			if (null != this.textAlpha) {
+				g.setComposite(this.textAlpha);
+			}
+			// 使用默认色差设置
+			GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height,Color.WHITE);
+		}
 	}
 }
