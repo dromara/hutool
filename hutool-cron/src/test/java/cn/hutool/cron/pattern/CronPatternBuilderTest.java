@@ -1,8 +1,10 @@
 package cn.hutool.cron.pattern;
 
 import cn.hutool.cron.CronException;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CronPatternBuilderTest {
 
@@ -32,13 +34,15 @@ public class CronPatternBuilderTest {
 		assertEquals("* * 2-9 * * *", build);
 	}
 
-	@Test(expected = CronException.class)
+	@Test
 	public void buildRangeErrorTest(){
-		String build = CronPatternBuilder.of()
+		assertThrows(CronException.class, () -> {
+			String build = CronPatternBuilder.of()
 				.set(Part.SECOND, "*")
 				// 55无效值
 				.setRange(Part.HOUR, 2, 55)
 				.build();
-		assertEquals("* * 2-9 * * *", build);
+			assertEquals("* * 2-9 * * *", build);
+		});
 	}
 }

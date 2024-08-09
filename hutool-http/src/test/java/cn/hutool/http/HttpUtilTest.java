@@ -7,7 +7,6 @@ import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +14,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpUtilTest {
 
@@ -392,10 +393,10 @@ public class HttpUtilTest {
 
 		final String resp = HttpUtil.createPost(String.format("http://localhost:%s/formEncoded", port))
 				.form("test", test).execute().body();
-		assertEquals("Form请求参数解码", test, resp);
+		assertEquals(test, resp);
 
 		final String urlGet = UrlBuilder.of(String.format("http://localhost:%s/urlEncoded", port)).addQuery("test", test).build();
 		final String resp2 = HttpUtil.createGet(urlGet).execute().body();
-		assertEquals("QueryString请求参数编码", test, resp2);
+		assertEquals(test, resp2);
 	}
 }

@@ -1,10 +1,11 @@
 package cn.hutool.jwt;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JWTUtilTest {
 
@@ -43,10 +44,12 @@ public class JWTUtilTest {
 		assertEquals(true, jwt.getPayload("admin"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void parseNullTest(){
-		// https://gitee.com/dromara/hutool/issues/I5OCQB
-		JWTUtil.parseToken(null);
+		assertThrows(IllegalArgumentException.class, () -> {
+			// https://gitee.com/dromara/hutool/issues/I5OCQB
+			JWTUtil.parseToken(null);
+		});
 	}
 
 	@Test

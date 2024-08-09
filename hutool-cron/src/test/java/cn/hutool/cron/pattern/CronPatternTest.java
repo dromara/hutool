@@ -2,8 +2,10 @@ package cn.hutool.cron.pattern;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.cron.CronException;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 定时任务单元测试类
@@ -159,10 +161,12 @@ public class CronPatternTest {
 		assertMatch(pattern, "2017-12-02 23:59:59");
 	}
 
-	@Test(expected = CronException.class)
+	@Test
 	public void rangeYearTest() {
-		// year的范围是1970~2099年，超出报错
-		CronPattern.of("0/1 * * * 1/1 ? 2020-2120");
+		assertThrows(CronException.class, () -> {
+			// year的范围是1970~2099年，超出报错
+			CronPattern.of("0/1 * * * 1/1 ? 2020-2120");
+		});
 	}
 
 	/**

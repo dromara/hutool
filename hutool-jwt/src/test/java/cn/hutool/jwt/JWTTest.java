@@ -58,8 +58,8 @@ public class JWTTest {
 			.setPayload("admin", true)
 			.setSigner(JWTSignerUtil.none());
 
-		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
-			"eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9.";
+		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0." +
+			"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Imxvb2x5IiwiYWRtaW4iOnRydWV9.";
 
 		final String token = jwt.sign();
 		assertEquals(rightToken, token);
