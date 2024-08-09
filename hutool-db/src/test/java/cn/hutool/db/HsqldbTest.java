@@ -1,11 +1,12 @@
 package cn.hutool.db;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * HSQLDB数据库单元测试
@@ -17,7 +18,7 @@ public class HsqldbTest {
 
 	private static final String DS_GROUP_NAME = "hsqldb";
 
-	@BeforeClass
+	@BeforeAll
 	public static void init() throws SQLException {
 		Db db = Db.use(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");

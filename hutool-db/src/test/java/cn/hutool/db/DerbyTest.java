@@ -1,12 +1,13 @@
 package cn.hutool.db;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Derby数据库单元测试
@@ -18,7 +19,7 @@ public class DerbyTest {
 
 	private static final String DS_GROUP_NAME = "derby";
 
-	@BeforeClass
+	@BeforeAll
 	public static void init() throws SQLException {
 		Db db = Db.use(DS_GROUP_NAME);
 		try{

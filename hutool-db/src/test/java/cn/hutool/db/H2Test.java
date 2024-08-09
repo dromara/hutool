@@ -2,13 +2,14 @@ package cn.hutool.db;
 
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * H2数据库单元测试
@@ -20,7 +21,7 @@ public class H2Test {
 
 	private static final String DS_GROUP_NAME = "h2";
 
-	@BeforeClass
+	@BeforeAll
 	public static void init() throws SQLException {
 		Db db = Db.use(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");

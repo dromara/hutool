@@ -3,22 +3,27 @@ package cn.hutool.extra.spring;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {SpringUtil.class, SpringUtilTest.Demo2.class})
-//@Import(cn.hutool.extra.spring.SpringUtil.class)
+// @ActiveProfiles("dev") // SpringUtil.getActiveProfile()效果与下面方式一致
+@TestPropertySource(properties = {"spring.profiles.active=dev"})
+//@Import(spring.org.dromara.hutool.extra.SpringUtil.class)
 public class SpringUtilTest {
 
 	/**

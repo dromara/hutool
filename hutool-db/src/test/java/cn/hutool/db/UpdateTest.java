@@ -1,17 +1,19 @@
 package cn.hutool.db;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class UpdateTest {
 
 	Db db;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		db = Db.use("test");
 	}

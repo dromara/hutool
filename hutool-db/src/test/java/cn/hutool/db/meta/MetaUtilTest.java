@@ -4,11 +4,12 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.ds.DSFactory;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 元数据信息单元测试
@@ -46,9 +47,11 @@ public class MetaUtilTest {
 	/**
 	 * 表不存在抛出异常。
 	 */
-	@Test(expected = DbRuntimeException.class)
+	@Test
 	public void getTableNotExistTest() {
-		final Table table = MetaUtil.getTableMeta(ds, "user_not_exist");
-		assertEquals(table.getIndexInfoList().size(), 2);
+		assertThrows(DbRuntimeException.class, () -> {
+			final Table table = MetaUtil.getTableMeta(ds, "user_not_exist");
+			assertEquals(table.getIndexInfoList().size(), 2);
+		});
 	}
 }
