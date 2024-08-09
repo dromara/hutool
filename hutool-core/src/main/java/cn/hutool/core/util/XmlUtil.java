@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
@@ -295,12 +296,12 @@ public class XmlUtil {
 			factory.setNamespaceAware(namespaceAware);
 
 			// https://blog.spoock.com/2018/10/23/java-xxe/
-			try{
+			try {
 				factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 				factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
 				factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 				factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-			} catch (final Exception ignore){
+			} catch (final Exception ignore) {
 				// ignore
 			}
 		}
@@ -320,11 +321,11 @@ public class XmlUtil {
 			// https://blog.spoock.com/2018/10/23/java-xxe/
 			reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 			//  忽略外部DTD
-			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
+			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 			// 不包括外部一般实体。
-			reader.setFeature("http://xml.org/sax/features/external-general-entities",false);
+			reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
 			// 不包含外部参数实体或外部DTD子集。
-			reader.setFeature("http://xml.org/sax/features/external-parameter-entities",false);
+			reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 
 			reader.setContentHandler(contentHandler);
 			reader.parse(source);
@@ -487,8 +488,8 @@ public class XmlUtil {
 	/**
 	 * 将XML文档写入到文件<br>
 	 *
-	 * @param doc     XML文档
-	 * @param path    文件路径绝对路径或相对ClassPath路径，不存在会自动创建
+	 * @param doc         XML文档
+	 * @param path        文件路径绝对路径或相对ClassPath路径，不存在会自动创建
 	 * @param charsetName 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 */
 	public static void toFile(Document doc, String path, String charsetName) {
@@ -999,6 +1000,21 @@ public class XmlUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> T xmlToBean(Node node, Class<T> bean) {
+		return xmlToBean(node, bean, null);
+	}
+
+	/**
+	 * XML转Java Bean
+	 *
+	 * @param <T>         bean类型
+	 * @param node        XML节点
+	 * @param bean        bean类
+	 * @param copyOptions Bean转换选项，可选是否忽略错误等
+	 * @return bean
+	 * @see JAXBUtil#xmlToBean(String, Class)
+	 * @since 5.8.30
+	 */
+	public static <T> T xmlToBean(Node node, Class<T> bean, CopyOptions copyOptions) {
 		final Map<String, Object> map = xmlToMap(node);
 		if (null != map && map.size() == 1) {
 			final String simpleName = bean.getSimpleName();
@@ -1008,7 +1024,7 @@ public class XmlUtil {
 				return BeanUtil.toBean(map.get(nodeName), bean);
 			}
 		}
-		return BeanUtil.toBean(map, bean);
+		return BeanUtil.toBean(map, bean, copyOptions);
 	}
 
 	/**
@@ -1264,7 +1280,7 @@ public class XmlUtil {
 			return null;
 		}
 		return mapToXml(BeanUtil.beanToMap(bean, false, ignoreNull),
-				bean.getClass().getSimpleName(), namespace);
+			bean.getClass().getSimpleName(), namespace);
 	}
 
 	/**
@@ -1487,7 +1503,7 @@ public class XmlUtil {
 			if (false == attributesOnly) {
 				final NodeList childNodes = node.getChildNodes();
 				//noinspection ConstantConditions
-				if(null != childNodes){
+				if (null != childNodes) {
 					Node item;
 					final int childLength = childNodes.getLength();
 					for (int i = 0; i < childLength; i++) {

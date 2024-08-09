@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.30(2024-08-08)
+# 5.8.30(2024-08-09)
 
 ### 🐣新特性
 * 【core   】      Converter转换规则变更，空对象、空值转为Bean时，创建默认对象，而非null（issue#3649@Github）
@@ -19,6 +19,7 @@
 * 【poi    】      ExcelWriter.autoSizeColumn增加可选widthRatio参数，可配置中文字符宽度倍数（pr#3689@Github）
 * 【mail   】      MailAccount增加自定义参数支持（issue#3687@Github）
 * 【mail   】      增加文字颜色与背景颜色色差设置（pr#1252@gitee）
+* 【mail   】      XmlUtil增加xmlToBean重载，支持CopyOptions参数（issue#IAISBB@gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复因RFC3986理解有误导致的UrlPath处理冒号转义问题（issue#IAAE88@Gitee）
