@@ -122,6 +122,10 @@
 					<artifactId>kotlin-stdlib-jdk8</artifactId>
 					<groupId>org.jetbrains.kotlin</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 	</dependencies>

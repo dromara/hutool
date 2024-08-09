@@ -14,7 +14,6 @@ package org.dromara.hutool.core.math;
 
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledForJreRange;
 import org.junit.jupiter.api.condition.JRE;
@@ -25,8 +24,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * {@link NumberUtil} 单元测试类
@@ -362,7 +360,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void equalsTest() {
-		Assertions.assertTrue(NumberUtil.equals(new BigDecimal("0.00"), BigDecimal.ZERO));
+		assertTrue(NumberUtil.equals(new BigDecimal("0.00"), BigDecimal.ZERO));
 	}
 
 	@Test
@@ -467,7 +465,7 @@ public class NumberUtilTest {
 
 		// -------------------------- Parse failed -----------------------
 
-		Assertions.assertNull(NumberUtil.parseInt("abc", null));
+		assertNull(NumberUtil.parseInt("abc", null));
 
 		assertEquals(456, NumberUtil.parseInt("abc", 456));
 
@@ -502,8 +500,8 @@ public class NumberUtilTest {
 		// issue#I5M55F
 		final String numberStr = "429900013E20220812163344551";
 		final Number number = NumberUtil.parseNumber(numberStr);
-		Assertions.assertNotNull(number);
-		Assertions.assertInstanceOf(BigDecimal.class, number);
+		assertNotNull(number);
+		assertInstanceOf(BigDecimal.class, number);
 	}
 
 	@Test
@@ -511,11 +509,11 @@ public class NumberUtilTest {
 
 		// -------------------------- Parse failed -----------------------
 
-		Assertions.assertNull(NumberUtil.parseNumber("abc", (Number) null));
+		assertNull(NumberUtil.parseNumber("abc", (Number) null));
 
-		Assertions.assertNull(NumberUtil.parseNumber(StrUtil.EMPTY, (Number) null));
+		assertNull(NumberUtil.parseNumber(StrUtil.EMPTY, (Number) null));
 
-		Assertions.assertNull(NumberUtil.parseNumber(StrUtil.repeat(StrUtil.SPACE, 10), (Number) null));
+		assertNull(NumberUtil.parseNumber(StrUtil.repeat(StrUtil.SPACE, 10), (Number) null));
 
 		assertEquals(456, NumberUtil.parseNumber("abc", 456).intValue());
 
@@ -580,10 +578,10 @@ public class NumberUtilTest {
 		// -------------------------- Parse failed -----------------------
 
 		final Long v1 = NumberUtil.parseLong(null, null);
-		Assertions.assertNull(v1);
+		assertNull(v1);
 
 		final Long v2 = NumberUtil.parseLong(StrUtil.EMPTY, null);
-		Assertions.assertNull(v2);
+		assertNull(v2);
 
 		final Long v3 = NumberUtil.parseLong("L3221", 1233L);
 		assertEquals(1233L, v3);
@@ -597,11 +595,11 @@ public class NumberUtilTest {
 
 	@Test
 	public void isPowerOfTwoTest() {
-		Assertions.assertFalse(NumberUtil.isPowerOfTwo(-1));
-		Assertions.assertTrue(NumberUtil.isPowerOfTwo(16));
-		Assertions.assertTrue(NumberUtil.isPowerOfTwo(65536));
-		Assertions.assertTrue(NumberUtil.isPowerOfTwo(1));
-		Assertions.assertFalse(NumberUtil.isPowerOfTwo(17));
+		assertFalse(NumberUtil.isPowerOfTwo(-1));
+		assertTrue(NumberUtil.isPowerOfTwo(16));
+		assertTrue(NumberUtil.isPowerOfTwo(65536));
+		assertTrue(NumberUtil.isPowerOfTwo(1));
+		assertFalse(NumberUtil.isPowerOfTwo(17));
 	}
 
 	@Test
@@ -622,28 +620,28 @@ public class NumberUtilTest {
 	@Test
 	public void isOddOrEvenTest() {
 		final int[] a = {0, 32, -32, 123, -123};
-		Assertions.assertFalse(NumberUtil.isOdd(a[0]));
-		Assertions.assertTrue(NumberUtil.isEven(a[0]));
+		assertFalse(NumberUtil.isOdd(a[0]));
+		assertTrue(NumberUtil.isEven(a[0]));
 
-		Assertions.assertFalse(NumberUtil.isOdd(a[1]));
-		Assertions.assertTrue(NumberUtil.isEven(a[1]));
+		assertFalse(NumberUtil.isOdd(a[1]));
+		assertTrue(NumberUtil.isEven(a[1]));
 
-		Assertions.assertFalse(NumberUtil.isOdd(a[2]));
-		Assertions.assertTrue(NumberUtil.isEven(a[2]));
+		assertFalse(NumberUtil.isOdd(a[2]));
+		assertTrue(NumberUtil.isEven(a[2]));
 
-		Assertions.assertTrue(NumberUtil.isOdd(a[3]));
-		Assertions.assertFalse(NumberUtil.isEven(a[3]));
+		assertTrue(NumberUtil.isOdd(a[3]));
+		assertFalse(NumberUtil.isEven(a[3]));
 
-		Assertions.assertTrue(NumberUtil.isOdd(a[4]));
-		Assertions.assertFalse(NumberUtil.isEven(a[4]));
+		assertTrue(NumberUtil.isOdd(a[4]));
+		assertFalse(NumberUtil.isEven(a[4]));
 	}
 
 	@Test
 	public void toBigIntegerTest() {
 		final Number number = 1123123;
 		final Number number2 = 1123123.123;
-		Assertions.assertNotNull(NumberUtil.toBigInteger(number));
-		Assertions.assertNotNull(NumberUtil.toBigInteger(number2));
+		assertNotNull(NumberUtil.toBigInteger(number));
+		assertNotNull(NumberUtil.toBigInteger(number2));
 	}
 
 	@Test
@@ -654,25 +652,25 @@ public class NumberUtilTest {
 
 	@Test
 	public void isDoubleTest() {
-		Assertions.assertFalse(NumberUtil.isDouble(null));
-		Assertions.assertFalse(NumberUtil.isDouble(""));
-		Assertions.assertFalse(NumberUtil.isDouble("  "));
-		Assertions.assertFalse(NumberUtil.isDouble("1"));
-		Assertions.assertFalse(NumberUtil.isDouble("-1"));
-		Assertions.assertFalse(NumberUtil.isDouble("+1"));
-		Assertions.assertFalse(NumberUtil.isDouble("0.1."));
-		Assertions.assertFalse(NumberUtil.isDouble("01"));
-		Assertions.assertFalse(NumberUtil.isDouble("NaN"));
-		Assertions.assertFalse(NumberUtil.isDouble("-NaN"));
-		Assertions.assertFalse(NumberUtil.isDouble("-Infinity"));
+		assertFalse(NumberUtil.isDouble(null));
+		assertFalse(NumberUtil.isDouble(""));
+		assertFalse(NumberUtil.isDouble("  "));
+		assertFalse(NumberUtil.isDouble("1"));
+		assertFalse(NumberUtil.isDouble("-1"));
+		assertFalse(NumberUtil.isDouble("+1"));
+		assertFalse(NumberUtil.isDouble("0.1."));
+		assertFalse(NumberUtil.isDouble("01"));
+		assertFalse(NumberUtil.isDouble("NaN"));
+		assertFalse(NumberUtil.isDouble("-NaN"));
+		assertFalse(NumberUtil.isDouble("-Infinity"));
 
-		Assertions.assertTrue(NumberUtil.isDouble("0."));
-		Assertions.assertTrue(NumberUtil.isDouble("0.1"));
-		Assertions.assertTrue(NumberUtil.isDouble("-0.1"));
-		Assertions.assertTrue(NumberUtil.isDouble("+0.1"));
-		Assertions.assertTrue(NumberUtil.isDouble("0.110"));
-		Assertions.assertTrue(NumberUtil.isDouble("00.1"));
-		Assertions.assertTrue(NumberUtil.isDouble("01.1"));
+		assertTrue(NumberUtil.isDouble("0."));
+		assertTrue(NumberUtil.isDouble("0.1"));
+		assertTrue(NumberUtil.isDouble("-0.1"));
+		assertTrue(NumberUtil.isDouble("+0.1"));
+		assertTrue(NumberUtil.isDouble("0.110"));
+		assertTrue(NumberUtil.isDouble("00.1"));
+		assertTrue(NumberUtil.isDouble("01.1"));
 	}
 
 	@Test
@@ -700,16 +698,16 @@ public class NumberUtilTest {
 
 	@Test
 	public void isPrimeTest(){
-		Assertions.assertTrue(NumberUtil.isPrime(2));
-		Assertions.assertTrue(NumberUtil.isPrime(3));
-		Assertions.assertTrue(NumberUtil.isPrime(7));
-		Assertions.assertTrue(NumberUtil.isPrime(17));
-		Assertions.assertTrue(NumberUtil.isPrime(296731));
-		Assertions.assertTrue(NumberUtil.isPrime(99999989));
+		assertTrue(NumberUtil.isPrime(2));
+		assertTrue(NumberUtil.isPrime(3));
+		assertTrue(NumberUtil.isPrime(7));
+		assertTrue(NumberUtil.isPrime(17));
+		assertTrue(NumberUtil.isPrime(296731));
+		assertTrue(NumberUtil.isPrime(99999989));
 
-		Assertions.assertFalse(NumberUtil.isPrime(4));
-		Assertions.assertFalse(NumberUtil.isPrime(296733));
-		Assertions.assertFalse(NumberUtil.isPrime(20_4123_2399));
+		assertFalse(NumberUtil.isPrime(4));
+		assertFalse(NumberUtil.isPrime(296733));
+		assertFalse(NumberUtil.isPrime(20_4123_2399));
 	}
 
 	@Test
@@ -717,11 +715,11 @@ public class NumberUtilTest {
 
 		// -------------------------- Parse failed -----------------------
 
-		Assertions.assertNull(NumberUtil.parseFloat("abc", null));
+		assertNull(NumberUtil.parseFloat("abc", null));
 
-		Assertions.assertNull(NumberUtil.parseFloat("a123.33", null));
+		assertNull(NumberUtil.parseFloat("a123.33", null));
 
-		Assertions.assertNull(NumberUtil.parseFloat("..123", null));
+		assertNull(NumberUtil.parseFloat("..123", null));
 
 		assertEquals(1233F, NumberUtil.parseFloat(StrUtil.EMPTY, 1233F));
 
@@ -738,9 +736,9 @@ public class NumberUtilTest {
 
 		// -------------------------- Parse failed -----------------------
 
-		Assertions.assertNull(NumberUtil.parseDouble("abc", null));
-		Assertions.assertNull(NumberUtil.parseDouble("a123.33", null));
-		Assertions.assertNull(NumberUtil.parseDouble("..123", null));
+		assertNull(NumberUtil.parseDouble("abc", null));
+		assertNull(NumberUtil.parseDouble("a123.33", null));
+		assertNull(NumberUtil.parseDouble("..123", null));
 		assertEquals(1233D, NumberUtil.parseDouble(StrUtil.EMPTY, 1233D));
 
 		// -------------------------- Parse success -----------------------
@@ -765,7 +763,7 @@ public class NumberUtilTest {
 
 	@Test
 	void issueI6ZD1RTest() {
-		Assertions.assertFalse(NumberUtil.isInteger("999999999999999"));
+		assertFalse(NumberUtil.isInteger("999999999999999"));
 	}
 
 	@Test
@@ -792,7 +790,7 @@ public class NumberUtilTest {
 	@Test
 	public void isValidNumberTest() {
 		final boolean validNumber = NumberUtil.isValidNumber(1);
-		Assertions.assertTrue(validNumber);
+		assertTrue(validNumber);
 	}
 
 	@Test
