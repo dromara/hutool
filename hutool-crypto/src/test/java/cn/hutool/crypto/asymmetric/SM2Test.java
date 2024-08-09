@@ -12,13 +12,14 @@ import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.jcajce.spec.OpenSSHPrivateKeySpec;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * SM2算法单元测试
@@ -338,10 +339,12 @@ public class SM2Test {
 		new SM2(null, publicKey);
 	}
 
-	@Test(expected = DataLengthException.class)
+	@Test
 	public void issueIA824PTest() {
-		SM2 sm2 = SmUtil.sm2();
-		String emptyStr = "";
-		sm2.encryptHex(emptyStr, KeyType.PublicKey);
+		assertThrows(DataLengthException.class, () -> {
+			SM2 sm2 = SmUtil.sm2();
+			String emptyStr = "";
+			sm2.encryptHex(emptyStr, KeyType.PublicKey);
+		});
 	}
 }
