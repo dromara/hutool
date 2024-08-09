@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.xml;
 
 import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
@@ -587,6 +588,7 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	// region ----- xmlToMap or xmlToBean
+
 	/**
 	 * XML转Java Bean<br>
 	 * 如果XML根节点只有一个，且节点名和Bean的名称一致，则直接转换子节点
@@ -598,7 +600,22 @@ public class XmlUtil extends XmlConstants {
 	 * @since 5.2.4
 	 */
 	public static <T> T xmlToBean(final Node node, final Class<T> beanClass) {
-		return XmlMapper.of(node).toBean(beanClass);
+		return xmlToBean(node, beanClass, null);
+	}
+
+	/**
+	 * XML转Java Bean<br>
+	 * 如果XML根节点只有一个，且节点名和Bean的名称一致，则直接转换子节点
+	 *
+	 * @param <T>         bean类型
+	 * @param node        XML节点
+	 * @param beanClass   bean类
+	 * @param copyOptions 拷贝选线，可选是否忽略错误等
+	 * @return bean
+	 * @since 5.8.30
+	 */
+	public static <T> T xmlToBean(final Node node, final Class<T> beanClass, final CopyOptions copyOptions) {
+		return XmlMapper.of(node).toBean(beanClass, copyOptions);
 	}
 
 	/**
@@ -655,6 +672,7 @@ public class XmlUtil extends XmlConstants {
 	// endregion
 
 	// region ----- toXml
+
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
@@ -846,6 +864,7 @@ public class XmlUtil extends XmlConstants {
 	}
 
 	// region ----- append
+
 	/**
 	 * 在已有节点上创建子节点
 	 *

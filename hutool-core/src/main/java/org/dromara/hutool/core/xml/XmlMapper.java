@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.xml;
 
 import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.map.MapUtil;
@@ -60,10 +61,10 @@ public class XmlMapper {
 	 *
 	 * @param <T>  bean类型
 	 * @param bean bean类
+	 * @param copyOptions 拷贝选线，可选是否忽略错误等
 	 * @return bean
-	 * @since 5.2.4
 	 */
-	public <T> T toBean(final Class<T> bean) {
+	public <T> T toBean(final Class<T> bean, final CopyOptions copyOptions) {
 		final Map<String, Object> map = toMap();
 		if (null != map && map.size() == 1) {
 			final String nodeName = CollUtil.getFirst(map.keySet());
@@ -72,7 +73,7 @@ public class XmlMapper {
 				return BeanUtil.toBean(CollUtil.get(map.values(), 0), bean);
 			}
 		}
-		return BeanUtil.toBean(map, bean);
+		return BeanUtil.toBean(map, bean, copyOptions);
 	}
 
 	/**
