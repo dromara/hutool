@@ -1,7 +1,9 @@
 package cn.hutool.extra.mail;
 
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 
@@ -629,7 +631,7 @@ public class MailAccount implements Serializable {
 	 */
 	public MailAccount defaultIfEmpty() {
 		// 去掉发件人的姓名部分
-		final String fromAddress = InternalMailUtil.parseFirstAddress(this.from, this.charset).getAddress();
+		final String fromAddress = ReUtil.get(PatternPool.EMAIL, this.from, 0);
 
 		if (StrUtil.isBlank(this.host)) {
 			// 如果SMTP地址为空，默认使用smtp.<发件人邮箱后缀>

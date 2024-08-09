@@ -3,13 +3,14 @@ package cn.hutool.core.util;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.PatternPool;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReUtilTest {
 	final String content = "ZZZaaabbbccc中文1234";
@@ -227,5 +228,20 @@ public class ReUtilTest {
 		content = "model-v";
 		boolean match = ReUtil.isMatch(regex, content);
 		assertTrue(match);
+	}
+
+	@Test
+	void getEmailAddressTest() {
+		String mail = "姓名<a.b@Hutool.cn>";
+		String s = ReUtil.get(PatternPool.EMAIL, mail, 0);
+		assertEquals("a.b@Hutool.cn", s);
+
+		mail = "姓名 <a.b@Hutool.cn>";
+		s = ReUtil.get(PatternPool.EMAIL, mail, 0);
+		assertEquals("a.b@Hutool.cn", s);
+
+		mail = "a.b@Hutool.cn";
+		s = ReUtil.get(PatternPool.EMAIL, mail, 0);
+		assertEquals("a.b@Hutool.cn", s);
 	}
 }
