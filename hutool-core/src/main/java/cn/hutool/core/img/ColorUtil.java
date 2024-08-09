@@ -207,6 +207,10 @@ public class ColorUtil {
 	 * @since 6.0.0-M16
 	 */
 	public static int maxDistance(final Color color) {
+		if (null == color) {
+			// (0,0,0)到(256,256,256)的距离约等于442.336
+			return 443;
+		}
 		final int maxX = RGB_COLOR_BOUND - 2 * color.getRed();
 		final int maxY = RGB_COLOR_BOUND - 2 * color.getGreen();
 		final int maxZ = RGB_COLOR_BOUND - 2 * color.getBlue();
@@ -223,7 +227,8 @@ public class ColorUtil {
 	 */
 	public static int computeColorDistance(Color color1, Color color2) {
 		if (null == color1 || null == color2) {
-			return 0;
+			// (0,0,0)到(256,256,256)的距离约等于442.336
+			return 443;
 		}
 		return (int) Math.sqrt(Math.pow(color1.getRed() - color2.getRed(), 2)
 				+ Math.pow(color1.getGreen() - color2.getGreen(), 2)
