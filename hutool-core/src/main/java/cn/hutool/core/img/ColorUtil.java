@@ -1,6 +1,7 @@
 package cn.hutool.core.img;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -178,6 +179,9 @@ public class ColorUtil {
 	 * @since 5.8.30
 	 */
 	public static Color randomColor(Color compareColor,int minDistance) {
+		// 注意minDistance太大会增加循环次数，保证至少1/3的概率生成成功
+		Assert.isTrue(minDistance < maxDistance(compareColor) / 3 * 2,
+				"minDistance is too large, there are too few remaining colors!");
 		Color color = randomColor();
 		while (computeColorDistance(compareColor,color) < minDistance) {
 			color = randomColor();
@@ -193,6 +197,20 @@ public class ColorUtil {
 	 */
 	public static Color randomColor() {
 		return randomColor(null);
+	}
+
+	/**
+	 * 计算给定点与其他点之间的最大可能距离。
+	 *
+	 * @param color 指定颜色
+	 * @return 其余颜色与color的最大距离
+	 * @since 6.0.0-M16
+	 */
+	public static int maxDistance(final Color color) {
+		final int maxX = RGB_COLOR_BOUND - 2 * color.getRed();
+		final int maxY = RGB_COLOR_BOUND - 2 * color.getGreen();
+		final int maxZ = RGB_COLOR_BOUND - 2 * color.getBlue();
+		return (int)Math.sqrt(maxX * maxX + maxY * maxY + maxZ * maxZ);
 	}
 
 	/**

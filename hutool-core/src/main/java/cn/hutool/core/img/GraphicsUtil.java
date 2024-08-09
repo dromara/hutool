@@ -102,6 +102,23 @@ public class GraphicsUtil {
 	}
 
 	/**
+	 * 绘制字符串，使用随机颜色，并且与背景颜色保持一定色差，默认抗锯齿
+	 *
+	 * @param g      {@link Graphics}画笔
+	 * @param str    字符串
+	 * @param font   字体
+	 * @param width  字符串总宽度
+	 * @param height 字符串背景高度
+	 * @param backgroundColor 背景颜色
+	 * @return 画笔对象
+	 * @since 4.5.10
+	 */
+	public static Graphics drawStringColourful(Graphics g, String str, Font font, int width, int height, Color backgroundColor) {
+		// 默认色差为最大色差的1/2
+		return drawString(g, str, font, null, width, height, backgroundColor, ColorUtil.maxDistance(backgroundColor) / 2);
+	}
+
+	/**
 	 * 绘制字符串，默认抗锯齿
 	 *
 	 * @param g      {@link Graphics}画笔
