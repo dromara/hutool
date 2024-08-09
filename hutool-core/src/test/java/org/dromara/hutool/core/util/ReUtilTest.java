@@ -247,4 +247,19 @@ public class ReUtilTest {
 		final boolean match = ReUtil.isMatch(regex, content);
 		assertTrue(match);
 	}
+
+	@Test
+	void getEmailAddressTest() {
+		String mail = "姓名<a.b@Hutool.cn>";
+		String s = ReUtil.get(PatternPool.EMAIL, mail, 0);
+		assertEquals("a.b@Hutool.cn", s);
+
+		mail = "姓名 <a.b@Hutool.cn>";
+		s = ReUtil.get(PatternPool.EMAIL, mail, 0);
+		assertEquals("a.b@Hutool.cn", s);
+
+		mail = "a.b@Hutool.cn";
+		s = ReUtil.get(PatternPool.EMAIL, mail, 0);
+		assertEquals("a.b@Hutool.cn", s);
+	}
 }
