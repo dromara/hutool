@@ -269,12 +269,11 @@ public class ColorUtil {
 	 * @since 5.8.30
 	 */
 	public static Color randomColor(final Color compareColor, final int minDistance) {
-		// 注意minDistance太大会增加循环次数，保证至少1/3的概率生成成功
-		Assert.isTrue(minDistance < maxDistance(compareColor) / 3 * 2,
-			"minDistance is too large, there are too few remaining colors!");
-
 		Color color = randomColor();
-		if(null == compareColor || minDistance <= 0){
+		if(null != compareColor && minDistance > 0){
+			// 注意minDistance太大会增加循环次数，保证至少1/3的概率生成成功
+			Assert.isTrue(minDistance < maxDistance(compareColor) / 3 * 2,
+					"minDistance is too large, there are too few remaining colors!");
 			while (computeColorDistance(compareColor, color) < minDistance) {
 				color = randomColor();
 			}
@@ -293,7 +292,8 @@ public class ColorUtil {
 	 */
 	public static int computeColorDistance(final Color color1, final Color color2) {
 		if (null == color1 || null == color2) {
-			return 0;
+			// (0,0,0)到(256,256,256)的距离约等于442.336
+			return 443;
 		}
 		return (int) Math.sqrt(Math.pow(color1.getRed() - color2.getRed(), 2)
 			+ Math.pow(color1.getGreen() - color2.getGreen(), 2)
@@ -308,6 +308,10 @@ public class ColorUtil {
 	 * @since 6.0.0-M16
 	 */
 	public static int maxDistance(final Color color) {
+		if (null == color) {
+			// (0,0,0)到(256,256,256)的距离约等于442.336
+			return 443;
+		}
 		final int maxX = RGB_COLOR_BOUND - 2 * color.getRed();
 		final int maxY = RGB_COLOR_BOUND - 2 * color.getGreen();
 		final int maxZ = RGB_COLOR_BOUND - 2 * color.getBlue();
