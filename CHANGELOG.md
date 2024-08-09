@@ -20,6 +20,7 @@
 * 【mail   】      MailAccount增加自定义参数支持（issue#3687@Github）
 * 【mail   】      增加文字颜色与背景颜色色差设置（pr#1252@gitee）
 * 【mail   】      XmlUtil增加xmlToBean重载，支持CopyOptions参数（issue#IAISBB@gitee）
+* 【core   】      增加默认色差方法（pr#1257@gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复因RFC3986理解有误导致的UrlPath处理冒号转义问题（issue#IAAE88@Gitee）

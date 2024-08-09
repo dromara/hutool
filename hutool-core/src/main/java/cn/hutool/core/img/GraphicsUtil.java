@@ -95,7 +95,7 @@ public class GraphicsUtil {
 	 * @param compareColor 用于比对的颜色
 	 * @param minColorDistance 随机生成的颜色与对比颜色的最小色差，小于此值则重新生成颜色
 	 * @return 画笔对象
-	 * @since 4.5.10
+	 * @since 5.8.30
 	 */
 	public static Graphics drawStringColourful(Graphics g, String str, Font font, int width, int height, Color compareColor, int minColorDistance) {
 		return drawString(g, str, font, null, width, height, compareColor, minColorDistance);
@@ -130,7 +130,7 @@ public class GraphicsUtil {
 	 * @param compareColor 用于比对的颜色
 	 * @param minColorDistance 随机生成的颜色与对比颜色的最小色差，小于此值则重新生成颜色
 	 * @return 画笔对象
-	 * @since 4.5.10
+	 * @since 5.8.30
 	 */
 	public static Graphics drawString(Graphics g, String str, Font font, Color color, int width, int height, Color compareColor, int minColorDistance) {
 		// 抗锯齿
