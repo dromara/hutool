@@ -15,4 +15,4 @@
 # show Hutool logo
 "$(dirname ${BASH_SOURCE[0]})"/logo.sh
 
-mvn clean deploy -P release
+mvn clean deploy -P release -Dhttps.protocols=TLSv1.2
