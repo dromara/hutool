@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -83,10 +84,10 @@ public class JacksonEngine extends AbstractJSONEngine {
 			return;
 		}
 
-		this.mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();
 
 		// 默认配置
-		this.mapper.enable(
+		mapper.enable(
 			// 允许出现单引号
 			JsonParser.Feature.ALLOW_SINGLE_QUOTES,
 			// 允许没有引号的字段名(非标准)
@@ -95,7 +96,9 @@ public class JacksonEngine extends AbstractJSONEngine {
 
 		// 自定义配置
 		if(ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)){
-			this.mapper.writerWithDefaultPrettyPrinter();
+			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		}
+
+		this.mapper = mapper;
 	}
 }

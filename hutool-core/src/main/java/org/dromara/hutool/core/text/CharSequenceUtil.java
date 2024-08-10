@@ -1145,7 +1145,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 移除后的字符串
 	 * @since 5.3.8
 	 */
-	public static String removeAny(final CharSequence str, final CharSequence... strsToRemove) {
+	public static String removeAll(final CharSequence str, final CharSequence... strsToRemove) {
 		String result = toStringOrNull(str);
 		if (isNotEmpty(str)) {
 			for (final CharSequence strToRemove : strsToRemove) {

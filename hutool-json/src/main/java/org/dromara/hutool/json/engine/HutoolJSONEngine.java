@@ -35,7 +35,7 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 	public void serialize(final Object bean, final Writer writer) {
 		initEngine();
 		final JSON json = (JSON) JSONUtil.parse(bean, this.hutoolSJONConfig);
-		json.write(writer, ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false) ? 4 : 0, 0, null);
+		json.write(writer, ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false) ? 2 : 0, 0, null);
 	}
 
 	@Override

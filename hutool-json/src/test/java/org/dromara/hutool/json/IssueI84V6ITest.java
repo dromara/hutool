@@ -23,8 +23,8 @@ public class IssueI84V6ITest {
 //		Console.log(formatJsonStr);
 		Assertions.assertEquals(
 			"{\n" +
-			"    'x': '\\n',\n" +
-			"    'y': ','\n" +
+			"  'x': '\\n',\n" +
+			"  'y': ','\n" +
 			"}", formatJsonStr);
 	}
 }

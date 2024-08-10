@@ -134,7 +134,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @since 3.0.9
 	 */
 	default String toStringPretty() throws JSONException {
-		return this.toJSONString(4);
+		return this.toJSONString(2);
 	}
 
 	/**

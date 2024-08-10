@@ -27,20 +27,20 @@ public class JSONStrFormatter {
 	/**
 	 * 默认实例
 	 */
-	public static final JSONStrFormatter INSTANCE = new JSONStrFormatter(4, CharUtil.LF);
+	public static final JSONStrFormatter INSTANCE = new JSONStrFormatter(2, StrUtil.LF);
 
 	private int indentFactor;
-	private char newLineChar;
+	private CharSequence newLineChars;
 
 	/**
 	 * 构造
 	 *
 	 * @param indentFactor 缩进因子，即每个缩进空格数
-	 * @param newLineChar 换行符
+	 * @param newLineChars 换行符
 	 */
-	public JSONStrFormatter(final int indentFactor, final char newLineChar){
+	public JSONStrFormatter(final int indentFactor, final CharSequence newLineChars){
 		this.indentFactor = indentFactor;
-		this.newLineChar = newLineChar;
+		this.newLineChars = newLineChars;
 	}
 
 	/**
@@ -55,11 +55,11 @@ public class JSONStrFormatter {
 
 	/**
 	 * 设置换行符
-	 * @param newLineChar 换行符
+	 * @param newLineChars 换行符
 	 * @return this
 	 */
-	public JSONStrFormatter setNewLineChar(final char newLineChar) {
-		this.newLineChar = newLineChar;
+	public JSONStrFormatter setNewLineChars(final CharSequence newLineChars) {
+		this.newLineChars = newLineChars;
 		return this;
 	}
 
@@ -124,10 +124,10 @@ public class JSONStrFormatter {
 			if ((key == CharUtil.BRACKET_START) || (key == CharUtil.DELIM_START)) {
 				//如果前面还有字符，并且字符为“：”，打印：换行和缩进字符字符串。
 				if ((i > 1) && (json.charAt(i - 1) == CharUtil.COLON)) {
-					result.append(newLineChar).append(indent(number));
+					result.append(newLineChars).append(indent(number));
 				}
 				//前方括号、前花括号，的后面必须换行。打印：换行。
-				result.append(key).append(newLineChar);
+				result.append(key).append(newLineChars);
 				//每出现一次前方括号、前花括号；缩进次数增加一次。打印：新行缩进。
 				result.append(indent(++number));
 				continue;
@@ -136,7 +136,7 @@ public class JSONStrFormatter {
 			// 3、如果当前字符是后方括号、后花括号做如下处理：
 			if ((key == CharUtil.BRACKET_END) || (key == CharUtil.DELIM_END)) {
 				// （1）后方括号、后花括号，的前面必须换行。打印：换行。
-				result.append(newLineChar);
+				result.append(newLineChars);
 				// （2）每出现一次后方括号、后花括号；缩进次数减少一次。打印：缩进。
 				result.append(indent(--number));
 				// （3）打印：当前字符。
@@ -151,7 +151,7 @@ public class JSONStrFormatter {
 
 			// 4、如果当前字符是逗号。逗号后面换行，并缩进，不改变缩进次数。
 			if ((key == CharUtil.COMMA)) {
-				result.append(key).append(newLineChar).append(indent(number));
+				result.append(key).append(newLineChars).append(indent(number));
 				continue;
 			}
 

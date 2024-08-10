@@ -24,6 +24,15 @@ public class JSONEngineConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 创建JSON引擎配置
+	 *
+	 * @return JSONEngineConfig
+	 */
+	public static JSONEngineConfig of() {
+		return new JSONEngineConfig();
+	}
+
+	/**
 	 * 是否格式化输出
 	 */
 	private boolean prettyPrint;
