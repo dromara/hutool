@@ -1,51 +1,56 @@
 package org.dromara.hutool.core.text.finder;
 
+import org.dromara.hutool.core.text.StrUtil;
+
 import java.util.*;
 
 /**
  * 多字符串查询器 底层思路 使用 AC 自动机实现
+ *
  * @author newshiJ
- * @date 2024/8/2 上午10:07
  */
 public class MultiStrFinder {
 
-	// 字符索引
-	protected final Map<Character,Integer> charIndex = new HashMap<>();
+	/**
+	 * 创建多字符串查询器
+	 * @param source 字符串集合
+	 * @return 多字符串查询器
+	 */
+	public static MultiStrFinder of(final Collection<String> source) {
+		return new MultiStrFinder(source);
+	}
 
+	// 字符索引
+	protected final Map<Character, Integer> charIndexMap = new HashMap<>();
 	// 全部字符数量
 	protected final int allCharSize;
-
 	// 根节点
 	protected final Node root;
-
 	// 全部节点数量
 	int nodeSize;
 
 	/**
 	 * 构建多字符串查询器
-	 * @param source
+	 *
+	 * @param source 字符串集合
 	 */
-	public MultiStrFinder(Collection<String> source){
+	public MultiStrFinder(final Collection<String> source) {
 		// 待匹配的字符串
 		final Set<String> stringSet = new HashSet<>();
 
 		// 所有字符
 		final Set<Character> charSet = new HashSet<>();
-		for (String string : source) {
+		for (final String string : source) {
 			stringSet.add(string);
-			char[] charArray = string.toCharArray();
-			for (char c : charArray) {
-				charSet.add(c);
-			}
+			StrUtil.forEach(string, charSet::add);
 		}
 		allCharSize = charSet.size();
 		int index = 0;
-		for (Character c : charSet) {
-			charIndex.put(c,index);
+		for (final Character c : charSet) {
+			charIndexMap.put(c,index);
 			index ++;
 		}
-
-		root = Node.createRoot(allCharSize);
+		this.root = Node.createRoot(index);
 
 		buildPrefixTree(stringSet);
 		buildFail();
@@ -53,19 +58,18 @@ public class MultiStrFinder {
 
 	/**
 	 * 构建前缀树
+	 *
 	 * @param stringSst 待匹配的字符串
 	 */
-	protected void buildPrefixTree(Collection<String> stringSst){
+	protected void buildPrefixTree(final Collection<String> stringSst) {
 		// 节点编号 根节点已经是0了 所以从 1开始编号
 		int nodeIndex = 1;
-		for (String string : stringSst) {
+		for (final String string : stringSst) {
 			Node node = root;
-			char[] charArray = string.toCharArray();
-			for (int i = 0; i < charArray.length; i++) {
-				char c = charArray[i];
-				boolean addValue = node.addValue(c, nodeIndex, charIndex);
-				if(addValue){
-					nodeIndex ++;
+			for (final char c : string.toCharArray()) {
+				final boolean addValue = node.addValue(c, nodeIndex, charIndexMap);
+				if (addValue) {
+					nodeIndex++;
 				}
 				node = node.directRouter[getIndex(c)];
 			}
@@ -78,11 +82,11 @@ public class MultiStrFinder {
 	 * 构建 fail指针过程
 	 * 构建 directRouter 直接访问路由表 减少跳fail次数 直接跳 router 边
 	 */
-	protected void buildFail(){
-		LinkedList<Node> nodeQueue = new LinkedList<>();
+	protected void buildFail() {
+		final LinkedList<Node> nodeQueue = new LinkedList<>();
 		for (int i = 0; i < root.directRouter.length; i++) {
-			Node nextNode = root.directRouter[i];
-			if(nextNode == null){
+			final Node nextNode = root.directRouter[i];
+			if (nextNode == null) {
 				root.directRouter[i] = root;
 				continue;
 			}
@@ -91,13 +95,13 @@ public class MultiStrFinder {
 		}
 
 		// 进行广度优先遍历
-		while (!nodeQueue.isEmpty()){
-			Node parent = nodeQueue.removeFirst();
+		while (!nodeQueue.isEmpty()) {
+			final Node parent = nodeQueue.removeFirst();
 			// 因为 使用了 charIndex 进行字符到下标的映射 i 可以直接认为就是对应字符 char
 			for (int i = 0; i < parent.directRouter.length; i++) {
-				Node child = parent.directRouter[i];
+				final Node child = parent.directRouter[i];
 				// child 为 null 表示没有子节点
-				if(child == null){
+				if (child == null) {
 					parent.directRouter[i] = parent.fail.directRouter[i];
 					continue;
 				}
@@ -110,27 +114,28 @@ public class MultiStrFinder {
 
 	/**
 	 * 查询匹配的字符串
+	 *
 	 * @param text 返回每个匹配的 字符串 value是字符首字母地址
-	 * @return
+	 * @return 匹配结果
 	 */
-	public Map<String,List<Integer>> findMatch(String text){
+	public Map<String, List<Integer>> findMatch(final String text) {
 		// 节点经过次数 放在方法内部声明变量 希望可以一个构建对象 进行多次匹配
-		HashMap<String, List<Integer>> resultMap = new HashMap<>();
+		final HashMap<String, List<Integer>> resultMap = new HashMap<>();
 
-		char[] chars = text.toCharArray();
+		final char[] chars = text.toCharArray();
 		Node currentNode = root;
 		for (int i = 0; i < chars.length; i++) {
-			char c = chars[i];
-			Integer index = charIndex.get(c);
+			final char c = chars[i];
+			final Integer index = charIndexMap.get(c);
 			// 找不到字符索引 认为一定不在匹配字符中存在 直接从根节点开始重新计算
-			if(index == null){
+			if (index == null) {
 				currentNode = root;
 				continue;
 			}
 			// 进入下一跳 可能是正常下一跳 也可能是fail加上后的 下一跳
 			currentNode = currentNode.directRouter[index];
 			// 判断是否尾部节点 是尾节点 说明已经匹配到了完整的字符串 将匹配结果写入返回对象
-			if(currentNode.isEnd){
+			if (currentNode.isEnd) {
 				resultMap.computeIfAbsent(currentNode.tagetString, k -> new ArrayList<>())
 					.add(i - currentNode.tagetString.length() + 1);
 			}
@@ -143,21 +148,18 @@ public class MultiStrFinder {
 
 	/**
 	 * 获取字符 下标
-	 * @param c
-	 * @return
+	 *
+	 * @param c 字符
+	 * @return 下标
 	 */
-	protected int getIndex(char c){
-		Integer i = charIndex.get(c);
-		if(i == null){
+	protected int getIndex(final char c) {
+		final Integer i = charIndexMap.get(c);
+		if (i == null) {
 			return -1;
 		}
 		return i;
 	}
 
-
-	public static MultiStrFinder create(Collection<String> source){
-		return new MultiStrFinder(source);
-	}
 
 	/**
 	 * AC 自动机节点
@@ -189,19 +191,21 @@ public class MultiStrFinder {
 		// fail指针来源
 		public List<Node> failPre = new ArrayList<>();
 
-		public Node(){}
+		public Node() {
+		}
 
 		/**
 		 * 新增子节点
-		 * @param c 字符
+		 *
+		 * @param c         字符
 		 * @param nodeIndex 节点编号
 		 * @param charIndex 字符索引
 		 * @return 如果已经存在子节点 false 新增 ture
 		 */
-		public boolean addValue(char c, int nodeIndex ,Map<Character,Integer> charIndex){
-			Integer index = charIndex.get(c);
+		public boolean addValue(final char c, final int nodeIndex, final Map<Character, Integer> charIndex) {
+			final Integer index = charIndex.get(c);
 			Node node = directRouter[index];
-			if(node != null){
+			if (node != null) {
 				return false;
 			}
 			node = new Node();
@@ -214,22 +218,24 @@ public class MultiStrFinder {
 
 		/**
 		 * 标记当前节点为 字符串尾节点
+		 *
 		 * @param string
 		 */
-		public void setEnd(String string){
+		public void setEnd(final String string) {
 			tagetString = string;
 			isEnd = true;
 		}
 
 		/**
 		 * 获取下一跳
-		 * @param c 字符
+		 *
+		 * @param c         字符
 		 * @param charIndex 字符索引
 		 * @return
 		 */
-		public Node getNext(char c,Map<Character,Integer> charIndex){
-			Integer index = charIndex.get(c);
-			if(index == null){
+		public Node getNext(final char c, final Map<Character, Integer> charIndex) {
+			final Integer index = charIndex.get(c);
+			if (index == null) {
 				return null;
 			}
 			return directRouter[index];
@@ -237,11 +243,12 @@ public class MultiStrFinder {
 
 		/**
 		 * 构建根节点
+		 *
 		 * @param allCharSize 全部字符数量
 		 * @return
 		 */
-		public static Node createRoot(int allCharSize){
-			Node node = new Node();
+		public static Node createRoot(final int allCharSize) {
+			final Node node = new Node();
 			node.nodeIndex = 0;
 			node.fail = node;
 			node.directRouter = new Node[allCharSize];

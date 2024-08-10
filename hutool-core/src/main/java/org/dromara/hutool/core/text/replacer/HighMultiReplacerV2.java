@@ -14,9 +14,9 @@ import java.util.*;
  *  3、"abc", "bc"  会优先替换"abc"
  *
  * @author newshiJ
- * @date 2024/8/2 下午3:41
  */
 public class HighMultiReplacerV2 extends StrReplacer {
+	private static final long serialVersionUID = 1L;
 
 	private final AhoCorasickAutomaton ahoCorasickAutomaton;
 
@@ -49,19 +49,17 @@ public class HighMultiReplacerV2 extends StrReplacer {
 	protected static class AhoCorasickAutomaton extends MultiStrFinder{
 		protected final Map<String,String> replaceMap;
 
-		public AhoCorasickAutomaton(Map<String,String> replaceMap){
+		public AhoCorasickAutomaton(final Map<String,String> replaceMap){
 			super(replaceMap.keySet());
 			this.replaceMap = replaceMap;
 		}
-
-
 		public void replace(final CharSequence text, final StringBuilder stringBuilder){
 			Node currentNode = root;
 			// 临时字符串存储空间
-			StringBuilder temp = new StringBuilder();
+			final StringBuilder temp = new StringBuilder();
 			for (int i = 0; i < text.length(); i++) {
-				char ch = text.charAt(i);
-				Integer index = charIndex.get(ch);
+				final char ch = text.charAt(i);
+				final Integer index = charIndexMap.get(ch);
 				// 下一个字符在候选转换字符串中都不存在 ch字符一定不会被替换
 				if(index < 0){
 					// 临时缓存空间中的数据写入到输出的 StringBuilder
@@ -94,7 +92,7 @@ public class HighMultiReplacerV2 extends StrReplacer {
 
 				// 表示匹配到 现在进行字符串替换工作
 				if(currentNode.isEnd){
-					int length = currentNode.tagetString.length();
+					final int length = currentNode.tagetString.length();
 					// 先清理匹配到的字符 最后一个字符未加入临时空间
 					temp.delete(temp.length() - length + 1,length - 1);
 					if(temp.length() > 0){

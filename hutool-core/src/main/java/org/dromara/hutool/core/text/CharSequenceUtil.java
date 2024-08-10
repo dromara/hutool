@@ -43,10 +43,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1476,9 +1473,9 @@ public class CharSequenceUtil extends StrValidator {
 	 * }
 	 * </pre>
 	 *
-	 * @param str    被处理的字符串
-	 * @param prefix 前缀
-	 * @param suffix 后缀
+	 * @param str        被处理的字符串
+	 * @param prefix     前缀
+	 * @param suffix     后缀
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 处理后的字符串
 	 * @since 3.1.2
@@ -1494,17 +1491,17 @@ public class CharSequenceUtil extends StrValidator {
 
 		if (startWith(str2, prefix, ignoreCase)) {
 			from = prefix.length();
-			if(from == to){
+			if (from == to) {
 				// "a", "a", "a"  -> ""
 				return EMPTY;
 			}
 		}
 		if (endWith(str2, suffix, ignoreCase)) {
 			to -= suffix.length();
-			if(from == to){
+			if (from == to) {
 				// "a", "a", "a"  -> ""
 				return EMPTY;
-			} else if(to < from){
+			} else if (to < from) {
 				// pre去除后和suffix有重叠，如 ("aba", "ab", "ba") -> "a"
 				to += suffix.length();
 			}
@@ -1574,22 +1571,22 @@ public class CharSequenceUtil extends StrValidator {
 		int from = 0;
 		int to = str2.length();
 
-		if(!prefixStr.isEmpty()){
+		if (!prefixStr.isEmpty()) {
 			while (str2.startsWith(prefixStr, from)) {
 				from += prefix.length();
-				if(from == to){
+				if (from == to) {
 					// "a", "a", "a"  -> ""
 					return EMPTY;
 				}
 			}
 		}
-		if(!suffixStr.isEmpty()){
+		if (!suffixStr.isEmpty()) {
 			while (str2.startsWith(suffixStr, to - suffixStr.length())) {
 				to -= suffixStr.length();
-				if(from == to){
+				if (from == to) {
 					// "a", "a", "a"  -> ""
 					return EMPTY;
-				}else if(to < from){
+				} else if (to < from) {
 					// pre去除后和suffix有重叠，如 ("aba", "ab", "ba") -> "a"
 					to += suffixStr.length();
 					break;
@@ -1730,7 +1727,7 @@ public class CharSequenceUtil extends StrValidator {
 
 		final StringBuilder sb = new StringBuilder();
 		final int subLen = toIndex - fromIndex;
-		str.toString().codePoints().skip(fromIndex).limit(subLen).forEach(v -> sb.append(Character.toChars(v)));
+		str.codePoints().skip(fromIndex).limit(subLen).forEach(v -> sb.append(Character.toChars(v)));
 		return sb.toString();
 	}
 
@@ -4130,5 +4127,29 @@ public class CharSequenceUtil extends StrValidator {
 			return null;
 		}
 		return (isCodePoint ? str.codePoints() : str.chars()).toArray();
+	}
+
+	/**
+	 * 遍历字符串的每个字符，并处理
+	 *
+	 * @param str      字符串
+	 * @param consumer 字符处理
+	 */
+	public static void forEach(final CharSequence str, final Consumer<Character> consumer) {
+		forEach(str, false, (cInt)-> consumer.accept((char) cInt));
+	}
+
+	/**
+	 * 遍历字符串的每个字符，并处理
+	 *
+	 * @param str         字符串
+	 * @param isCodePoint 是否为Unicode码点（即支持emoji等多char字符）
+	 * @param consumer    字符处理
+	 */
+	public static void forEach(final CharSequence str, final boolean isCodePoint, final IntConsumer consumer) {
+		if (null == str) {
+			return;
+		}
+		(isCodePoint ? str.codePoints() : str.chars()).forEach(consumer);
 	}
 }
