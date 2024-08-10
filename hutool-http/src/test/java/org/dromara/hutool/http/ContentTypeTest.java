@@ -14,8 +14,6 @@ package org.dromara.hutool.http;
 
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.http.meta.ContentType;
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

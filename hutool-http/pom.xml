@@ -112,21 +112,5 @@
 			<version>2.0.9</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>mockwebserver</artifactId>
-			<version>4.11.0</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>kotlin-stdlib-jdk8</artifactId>
-					<groupId>org.jetbrains.kotlin</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
 </project>

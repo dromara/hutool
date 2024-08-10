@@ -20,7 +20,7 @@ import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
-import org.dromara.hutool.http.client.engine.ClientEngine;
+import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
@@ -36,9 +36,8 @@ import java.util.concurrent.TimeUnit;
  * @author looly
  * @since 6.0.0
  */
-public class OkHttpEngine implements ClientEngine {
+public class OkHttpEngine extends AbstractClientEngine {
 
-	private ClientConfig config;
 	private OkHttpClient client;
 
 	/**
@@ -53,8 +52,6 @@ public class OkHttpEngine implements ClientEngine {
 	@Override
 	public OkHttpEngine init(final ClientConfig config) {
 		this.config = config;
-		// 重置客户端
-		this.client = null;
 		return this;
 	}
 
@@ -82,10 +79,14 @@ public class OkHttpEngine implements ClientEngine {
 		// do nothing
 	}
 
-	/**
-	 * 初始化引擎
-	 */
-	private void initEngine() {
+	@Override
+	protected void reset() {
+		// 重置客户端
+		this.client = null;
+	}
+
+	@Override
+	protected void initEngine() {
 		if (null != this.client) {
 			return;
 		}

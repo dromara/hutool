@@ -36,7 +36,7 @@ import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
-import org.dromara.hutool.http.client.engine.ClientEngine;
+import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
@@ -54,9 +54,8 @@ import java.util.Map;
  * @author looly
  * @since 6.0.0
  */
-public class HttpClient4Engine implements ClientEngine {
+public class HttpClient4Engine extends AbstractClientEngine {
 
-	private ClientConfig config;
 	private CloseableHttpClient engine;
 
 	/**
@@ -66,15 +65,6 @@ public class HttpClient4Engine implements ClientEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(CloseableHttpClient.class);
-	}
-
-	@Override
-	public HttpClient4Engine init(final ClientConfig config) {
-		this.config = config;
-		// 重置客户端
-		IoUtil.closeQuietly(this.engine);
-		this.engine = null;
-		return this;
 	}
 
 	@Override
@@ -99,13 +89,18 @@ public class HttpClient4Engine implements ClientEngine {
 
 	@Override
 	public void close() throws IOException {
-		this.engine.close();
+		IoUtil.nullSafeClose(this.engine);
 	}
 
-	/**
-	 * 初始化引擎
-	 */
-	private void initEngine() {
+	@Override
+	protected void reset() {
+		// 重置客户端
+		IoUtil.closeQuietly(this.engine);
+		this.engine = null;
+	}
+
+	@Override
+	protected void initEngine() {
 		if (null != this.engine) {
 			return;
 		}

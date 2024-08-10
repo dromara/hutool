@@ -25,7 +25,7 @@ import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
-import org.dromara.hutool.http.client.engine.ClientEngine;
+import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
 
@@ -38,20 +38,13 @@ import java.util.List;
  *
  * @author looly
  */
-public class JdkClientEngine implements ClientEngine {
-
-	private ClientConfig config;
+public class JdkClientEngine extends AbstractClientEngine {
 
 	/**
 	 * 构造
 	 */
 	public JdkClientEngine() {
-	}
-
-	@Override
-	public JdkClientEngine init(final ClientConfig config) {
-		this.config = config;
-		return this;
+		// 无需检查类是否存在
 	}
 
 	@Override
@@ -86,6 +79,16 @@ public class JdkClientEngine implements ClientEngine {
 
 	@Override
 	public void close() {
+		// do nothing
+	}
+
+	@Override
+	protected void reset() {
+		// do nothing
+	}
+
+	@Override
+	protected void initEngine() {
 		// do nothing
 	}
 
