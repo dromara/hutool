@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel.reader;
+package org.dromara.hutool.poi.excel.reader.sheet;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.convert.Convert;
@@ -53,6 +53,7 @@ public class ListSheetReader extends AbstractSheetReader<List<List<Object>>> {
 
 		List<Object> rowList;
 		final CellEditor cellEditor = this.config.getCellEditor();
+		final boolean ignoreEmptyRow = this.config.isIgnoreEmptyRow();
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			rowList = RowUtil.readRow(sheet.getRow(i), cellEditor);
 			if (CollUtil.isNotEmpty(rowList) || !ignoreEmptyRow) {

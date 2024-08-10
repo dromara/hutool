@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel.reader;
+package org.dromara.hutool.poi.excel.reader.sheet;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -48,6 +48,7 @@ public class ColumnSheetReader extends AbstractSheetReader<List<Object>> {
 		final int columnIndex = this.cellRangeAddress.getFirstColumn();
 
 		final CellEditor cellEditor = this.config.getCellEditor();
+		final boolean ignoreEmptyRow = this.config.isIgnoreEmptyRow();
 		Object value;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			value = CellUtil.getCellValue(CellUtil.getCell(sheet.getRow(i), columnIndex), cellEditor);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,12 +10,12 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel.reader;
+package org.dromara.hutool.poi.excel.reader.sheet;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
-import org.dromara.hutool.poi.excel.ExcelConfig;
+import org.dromara.hutool.poi.excel.reader.ExcelReadConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,16 +67,7 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	 *
 	 * @param config Excel配置
 	 */
-	public void setExcelConfig(final ExcelConfig config) {
+	public void setExcelConfig(final ExcelReadConfig config) {
 		this.mapSheetReader.setExcelConfig(config);
-	}
-
-	/**
-	 * 设置是否忽略空行
-	 *
-	 * @param ignoreEmptyRow 是否忽略空行
-	 */
-	public void setIgnoreEmptyRow(final boolean ignoreEmptyRow) {
-		this.mapSheetReader.setIgnoreEmptyRow(ignoreEmptyRow);
 	}
 }

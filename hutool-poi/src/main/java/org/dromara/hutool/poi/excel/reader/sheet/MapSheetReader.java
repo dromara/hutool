@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 looly(loolly@aliyun.com)
+ * Copyright (c) 2024. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.poi.excel.reader;
+package org.dromara.hutool.poi.excel.reader.sheet;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
@@ -72,6 +72,7 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 		final List<String> headerList = this.config.aliasHeader(readRow(sheet, headerRowIndex));
 
 		final List<Map<String, Object>> result = new ArrayList<>(endRowIndex - startRowIndex + 1);
+		final boolean ignoreEmptyRow = this.config.isIgnoreEmptyRow();
 		List<Object> rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			// 跳过标题行

@@ -23,6 +23,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.poi.excel.*;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
+import org.dromara.hutool.poi.excel.reader.sheet.*;
 import org.dromara.hutool.poi.excel.writer.ExcelWriter;
 
 import java.io.File;
@@ -37,13 +38,9 @@ import java.util.Map;
  * @author Looly
  * @since 3.1.0
  */
-public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
+public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 
-	/**
-	 * 是否忽略空行
-	 */
-	private boolean ignoreEmptyRow = true;
-	// ------------------------------------------------------------------------------------------------------- Constructor start
+	// region ----- Constructor
 
 	/**
 	 * 构造
@@ -134,33 +131,9 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
 	 * @param sheet Excel中的sheet
 	 */
 	public ExcelReader(final Sheet sheet) {
-		super(new ExcelConfig(), sheet);
+		super(new ExcelReadConfig(), sheet);
 	}
-	// ------------------------------------------------------------------------------------------------------- Constructor end
-
-	// ------------------------------------------------------------------------------------------------------- Getters and Setters start
-
-	/**
-	 * 是否忽略空行
-	 *
-	 * @return 是否忽略空行
-	 */
-	public boolean isIgnoreEmptyRow() {
-		return ignoreEmptyRow;
-	}
-
-	/**
-	 * 设置是否忽略空行
-	 *
-	 * @param ignoreEmptyRow 是否忽略空行
-	 * @return this
-	 */
-	public ExcelReader setIgnoreEmptyRow(final boolean ignoreEmptyRow) {
-		this.ignoreEmptyRow = ignoreEmptyRow;
-		return this;
-	}
-
-	// ------------------------------------------------------------------------------------------------------- Getters and Setters end
+	// endregion
 
 	/**
 	 * 读取工作簿中指定的Sheet的所有行列数据
@@ -205,7 +178,6 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
 	public List<List<Object>> read(final int startRowIndex, final int endRowIndex, final boolean aliasFirstLine) {
 		final ListSheetReader reader = new ListSheetReader(startRowIndex, endRowIndex, aliasFirstLine);
 		reader.setExcelConfig(this.config);
-		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
 		return read(reader);
 	}
 
@@ -233,7 +205,6 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
 	public List<Object> readColumn(final int columnIndex, final int startRowIndex, final int endRowIndex) {
 		final ColumnSheetReader reader = new ColumnSheetReader(columnIndex, startRowIndex, endRowIndex);
 		reader.setExcelConfig(this.config);
-		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
 		return read(reader);
 	}
 
@@ -262,7 +233,6 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
 
 		final ConsumerSheetReader reader = new ConsumerSheetReader(startRowIndex, endRowIndex, cellHandler);
 		reader.setExcelConfig(this.config);
-		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
 		reader.read(sheet);
 	}
 
@@ -288,7 +258,6 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
 	public List<Map<String, Object>> read(final int headerRowIndex, final int startRowIndex, final int endRowIndex) {
 		final MapSheetReader reader = new MapSheetReader(headerRowIndex, startRowIndex, endRowIndex);
 		reader.setExcelConfig(this.config);
-		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
 		return read(reader);
 	}
 
@@ -330,7 +299,6 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
 	public <T> List<T> read(final int headerRowIndex, final int startRowIndex, final int endRowIndex, final Class<T> beanType) {
 		final BeanSheetReader<T> reader = new BeanSheetReader<>(headerRowIndex, startRowIndex, endRowIndex, beanType);
 		reader.setExcelConfig(this.config);
-		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
 		return read(reader);
 	}
 
