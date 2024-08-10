@@ -33,6 +33,7 @@ import org.dromara.hutool.core.map.multi.RowKeyTable;
 import org.dromara.hutool.core.map.multi.Table;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.poi.excel.SheetUtil;
 import org.dromara.hutool.poi.excel.ExcelBase;
 import org.dromara.hutool.poi.excel.RowUtil;
 import org.dromara.hutool.poi.excel.WorkbookUtil;
@@ -163,7 +164,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(final Workbook workbook, final String sheetName) {
-		this(WorkbookUtil.getOrCreateSheet(workbook, sheetName));
+		this(SheetUtil.getOrCreateSheet(workbook, sheetName));
 	}
 
 	/**

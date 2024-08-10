@@ -18,6 +18,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.dromara.hutool.poi.excel.SheetUtil;
 import org.dromara.hutool.poi.excel.WorkbookUtil;
 
 import java.io.File;
@@ -141,7 +142,7 @@ public class BigExcelWriter extends ExcelWriter {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public BigExcelWriter(final SXSSFWorkbook workbook, final String sheetName) {
-		this(WorkbookUtil.getOrCreateSheet(workbook, sheetName));
+		this(SheetUtil.getOrCreateSheet(workbook, sheetName));
 	}
 
 	/**

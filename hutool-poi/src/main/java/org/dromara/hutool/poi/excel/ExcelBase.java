@@ -189,7 +189,7 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 	 * @since 4.0.10
 	 */
 	public T setSheet(final String sheetName) {
-		return setSheet(WorkbookUtil.getOrCreateSheet(this.workbook, sheetName));
+		return setSheet(SheetUtil.getOrCreateSheet(this.workbook, sheetName));
 	}
 
 	/**
@@ -201,13 +201,13 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 	 * @since 4.0.10
 	 */
 	public T setSheet(final int sheetIndex) {
-		return setSheet(WorkbookUtil.getOrCreateSheet(this.workbook, sheetIndex));
+		return setSheet(SheetUtil.getOrCreateSheet(this.workbook, sheetIndex));
 	}
 
 	/**
 	 * 设置自定义Sheet
 	 *
-	 * @param sheet 自定义sheet，可以通过{@link WorkbookUtil#getOrCreateSheet(Workbook, String)} 创建
+	 * @param sheet 自定义sheet，可以通过{@link SheetUtil#getOrCreateSheet(Workbook, String)} 创建
 	 * @return this
 	 * @since 5.2.1
 	 */

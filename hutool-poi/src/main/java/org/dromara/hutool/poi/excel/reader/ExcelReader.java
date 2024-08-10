@@ -231,7 +231,7 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	public void read(final int startRowIndex, final int endRowIndex, final SerBiConsumer<Cell, Object> cellHandler) {
 		checkNotClosed();
 
-		final ConsumerSheetReader reader = new ConsumerSheetReader(startRowIndex, endRowIndex, cellHandler);
+		final WalkSheetReader reader = new WalkSheetReader(startRowIndex, endRowIndex, cellHandler);
 		reader.setExcelConfig(this.config);
 		reader.read(sheet);
 	}

@@ -13,16 +13,15 @@
 
 package org.dromara.hutool.poi.excel;
 
-import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.poi.exceptions.POIException;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.poi.exceptions.POIException;
 
 import java.io.File;
 import java.io.IOException;
@@ -322,61 +321,6 @@ public class WorkbookUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-	}
-
-	/**
-	 * 获取或者创建sheet表<br>
-	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
-	 *
-	 * @param book      工作簿{@link Workbook}
-	 * @param sheetName 工作表名
-	 * @return 工作表{@link Sheet}
-	 * @since 4.0.2
-	 */
-	public static Sheet getOrCreateSheet(final Workbook book, String sheetName) {
-		if (null == book) {
-			return null;
-		}
-		sheetName = StrUtil.isBlank(sheetName) ? "sheet1" : sheetName;
-		Sheet sheet = book.getSheet(sheetName);
-		if (null == sheet) {
-			sheet = book.createSheet(sheetName);
-		}
-		return sheet;
-	}
-
-	/**
-	 * 获取或者创建sheet表<br>
-	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之（命名为默认）<br>
-	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet
-	 *
-	 * @param book       工作簿{@link Workbook}
-	 * @param sheetIndex 工作表序号
-	 * @return 工作表{@link Sheet}
-	 * @since 5.2.1
-	 */
-	public static Sheet getOrCreateSheet(final Workbook book, final int sheetIndex) {
-		Sheet sheet = null;
-		try {
-			sheet = book.getSheetAt(sheetIndex);
-		} catch (final IllegalArgumentException ignore) {
-			//ignore
-		}
-		if (null == sheet) {
-			sheet = book.createSheet();
-		}
-		return sheet;
-	}
-
-	/**
-	 * sheet是否为空
-	 *
-	 * @param sheet {@link Sheet}
-	 * @return sheet是否为空
-	 * @since 4.0.1
-	 */
-	public static boolean isEmpty(final Sheet sheet) {
-		return null == sheet || (sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0);
 	}
 
 	// -------------------------------------------------------------------------------------------------------- Private method start
