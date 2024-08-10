@@ -73,7 +73,7 @@ public class RowUtil {
 	 */
 	public static List<Object> readRow(final Row row, final int startCellNumInclude, final int endCellNumInclude, final CellEditor cellEditor) {
 		if (null == row) {
-			return new ArrayList<>(0);
+			return ListUtil.empty();
 		}
 		final short rowLength = row.getLastCellNum();
 		if (rowLength < 0) {

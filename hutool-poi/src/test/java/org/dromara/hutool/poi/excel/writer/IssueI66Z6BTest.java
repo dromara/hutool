@@ -57,8 +57,9 @@ public class IssueI66Z6BTest {
 		final ExcelWriter writer = ExcelUtil.getWriter(destFile);
 
 		//自定义标题别名
-		writer.addHeaderAlias("姓名", "name");
-		writer.addHeaderAlias("年龄", "age");
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("姓名", "name");
+		config.addHeaderAlias("年龄", "age");
 
 		writer.write(dataList, true);
 		writer.close();

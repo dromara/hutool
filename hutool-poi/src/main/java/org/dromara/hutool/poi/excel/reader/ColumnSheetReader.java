@@ -12,8 +12,10 @@
 
 package org.dromara.hutool.poi.excel.reader;
 
-import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.dromara.hutool.poi.excel.cell.CellEditor;
+import org.dromara.hutool.poi.excel.cell.CellUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,6 @@ import java.util.List;
  */
 public class ColumnSheetReader extends AbstractSheetReader<List<Object>> {
 
-	private final int columnIndex;
-
 	/**
 	 * 构造
 	 *
@@ -36,17 +36,18 @@ public class ColumnSheetReader extends AbstractSheetReader<List<Object>> {
 	 * @param endRowIndex   结束行（包含，从0开始计数）
 	 */
 	public ColumnSheetReader(final int columnIndex, final int startRowIndex, final int endRowIndex) {
-		super(startRowIndex, endRowIndex);
-		this.columnIndex = columnIndex;
+		super(new CellRangeAddress(startRowIndex, endRowIndex, columnIndex, columnIndex));
 	}
 
 	@Override
 	public List<Object> read(final Sheet sheet) {
 		final List<Object> resultList = new ArrayList<>();
 
-		final int startRowIndex = Math.max(this.startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
-		final int endRowIndex = Math.min(this.endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
+		final int startRowIndex = Math.max(this.cellRangeAddress.getFirstRow(), sheet.getFirstRowNum());// 读取起始行（包含）
+		final int endRowIndex = Math.min(this.cellRangeAddress.getLastRow(), sheet.getLastRowNum());// 读取结束行（包含）
+		final int columnIndex = this.cellRangeAddress.getFirstColumn();
 
+		final CellEditor cellEditor = this.config.getCellEditor();
 		Object value;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			value = CellUtil.getCellValue(CellUtil.getCell(sheet.getRow(i), columnIndex), cellEditor);

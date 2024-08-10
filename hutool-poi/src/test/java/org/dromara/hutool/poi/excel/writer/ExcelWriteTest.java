@@ -306,11 +306,12 @@ public class ExcelWriteTest {
 		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
 		// 自定义标题
-		writer.addHeaderAlias("name", "姓名");
-		writer.addHeaderAlias("age", "年龄");
-		writer.addHeaderAlias("score", "分数");
-		writer.addHeaderAlias("isPass", "是否通过");
-		writer.addHeaderAlias("examDate", "考试时间");
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("name", "姓名");
+		config.addHeaderAlias("age", "年龄");
+		config.addHeaderAlias("score", "分数");
+		config.addHeaderAlias("isPass", "是否通过");
+		config.addHeaderAlias("examDate", "考试时间");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -340,10 +341,11 @@ public class ExcelWriteTest {
 		final String file = "f:/test/test_alias.xlsx";
 		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
-		writer.setOnlyAlias(true);
+		final ExcelWriteConfig config = writer.getConfig();
+		config.setOnlyAlias(true);
 		// 自定义标题
-		writer.addHeaderAlias("name", "姓名");
-		writer.addHeaderAlias("age", "年龄");
+		config.addHeaderAlias("name", "姓名");
+		config.addHeaderAlias("age", "年龄");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -372,10 +374,11 @@ public class ExcelWriteTest {
 		// 通过工具类创建writer
 		final String file = "d:/test/test_alias.xls";
 		final ExcelWriter writer = ExcelUtil.getWriter(file, "test1");
-//		writer.setOnlyAlias(true);
 		// 自定义标题
-		writer.addHeaderAlias("name", "姓名");
-		writer.addHeaderAlias("age", "年龄");
+		final ExcelWriteConfig config = writer.getConfig();
+//		writer.setOnlyAlias(true);
+		config.addHeaderAlias("name", "姓名");
+		config.addHeaderAlias("age", "年龄");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows, true);
 		// 关闭writer，释放内存
@@ -403,12 +406,13 @@ public class ExcelWriteTest {
 		// 通过工具类创建writer
 		final String file = "d:/test/test_alias.xls";
 		final ExcelWriter writer = ExcelUtil.getWriter(file, "test1");
-		writer.setOnlyAlias(true);
+		final ExcelWriteConfig config = writer.getConfig();
+		config.setOnlyAlias(true);
 
 		// 自定义标题
-		writer.addHeaderAlias("name", "姓名");
-		writer.addHeaderAlias("age", "年龄");
-		writer.addHeaderAlias("examDate", "考试时间");
+		config.addHeaderAlias("name", "姓名");
+		config.addHeaderAlias("age", "年龄");
+		config.addHeaderAlias("examDate", "考试时间");
 
 		// 一次性写出内容，使用默认样式
 		writer.write(rows, true);
@@ -438,12 +442,13 @@ public class ExcelWriteTest {
 		final String file = "e:/writeBeanTest.xlsx";
 		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
+		final ExcelWriteConfig config = writer.getConfig();
 		// 自定义标题
-		writer.addHeaderAlias("name", "姓名");
-		writer.addHeaderAlias("age", "年龄");
-		writer.addHeaderAlias("score", "分数");
-		writer.addHeaderAlias("isPass", "是否通过");
-		writer.addHeaderAlias("examDate", "考试时间");
+		config.addHeaderAlias("name", "姓名");
+		config.addHeaderAlias("age", "年龄");
+		config.addHeaderAlias("score", "分数");
+		config.addHeaderAlias("isPass", "是否通过");
+		config.addHeaderAlias("examDate", "考试时间");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -471,9 +476,10 @@ public class ExcelWriteTest {
 		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
 		// 自定义标题
-		writer.addHeaderAlias("id", "编号");
-		writer.addHeaderAlias("num", "序号");
-		writer.addHeaderAlias("body", "内容");
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("id", "编号");
+		config.addHeaderAlias("num", "序号");
+		config.addHeaderAlias("body", "内容");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows, true);
 		// 关闭writer，释放内存
@@ -529,18 +535,19 @@ public class ExcelWriteTest {
 			rows.add(tempList);
 		}
 		final ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheet.xlsx", "正常数据");
-		writer.addHeaderAlias("1", "row1");
-		writer.addHeaderAlias("3", "row2");
-		writer.setOnlyAlias(true);
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("1", "row1");
+		config.addHeaderAlias("3", "row2");
+		config.setOnlyAlias(true);
 
 		writer.write(rows, true);
 		writer.autoSizeColumnAll(false, 0);
 
 		//表2
 		writer.setSheet("当前重复数据");
-		writer.clearHeaderAlias();
-		writer.addHeaderAlias("3", "行3");
-		writer.addHeaderAlias("1", "行1");
+		config.clearHeaderAlias();
+		config.addHeaderAlias("3", "行3");
+		config.addHeaderAlias("1", "行1");
 		writer.write(rows, true);
 		writer.autoSizeColumnAll(false, 0);
 
@@ -749,7 +756,7 @@ public class ExcelWriteTest {
 		//通过工具类创建writer
 		FileUtil.del(FileUtil.file("d:/test/writeTest2123.xlsx"));
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeTest2123.xlsx");
-		writer.addHeaderAlias("xmnf", "项目年份");//1
+		writer.getConfig().addHeaderAlias("xmnf", "项目年份");//1
 
 		//合并单元格后的标题行，使用默认标题样式
 		writer.merge(7, "测试标题");

@@ -27,7 +27,7 @@ public class CellEditorTest {
 	@org.junit.jupiter.api.Test
 	public void readTest(){
 		final ExcelReader excelReader= ExcelUtil.getReader("cell_editor_test.xlsx");
-		excelReader.setCellEditor(new ExcelHandler());
+		excelReader.getConfig().setCellEditor(new ExcelHandler());
 		final List<Test> excelReaderObjects=excelReader.readAll(Test.class);
 
 		Assertions.assertEquals("0", excelReaderObjects.get(0).getTest1());

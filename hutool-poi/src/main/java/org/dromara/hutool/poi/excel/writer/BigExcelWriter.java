@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.poi.excel.writer;
 
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -32,6 +33,9 @@ import java.io.OutputStream;
  */
 public class BigExcelWriter extends ExcelWriter {
 
+	/**
+	 * 默认内存中保存的行数，默认100
+	 */
 	public static final int DEFAULT_WINDOW_SIZE = SXSSFWorkbook.DEFAULT_WINDOW_SIZE;
 
 	/**
@@ -181,6 +185,7 @@ public class BigExcelWriter extends ExcelWriter {
 		return this;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void close() {
 		if (null != this.destFile && !isFlushed) {
@@ -188,7 +193,7 @@ public class BigExcelWriter extends ExcelWriter {
 		}
 
 		// 清理临时文件
-		((SXSSFWorkbook) this.workbook).dispose();
+		IoUtil.closeIfPossible(this.workbook);
 		super.closeWithoutFlush();
 	}
 }

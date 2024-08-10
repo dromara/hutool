@@ -12,18 +12,17 @@
 
 package org.dromara.hutool.poi.excel.reader;
 
-import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.func.SerBiConsumer;
-import org.dromara.hutool.poi.excel.*;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
-import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.dromara.hutool.core.func.SerBiConsumer;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.poi.excel.*;
+import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.writer.ExcelWriter;
 
 import java.io.File;
@@ -38,16 +37,12 @@ import java.util.Map;
  * @author Looly
  * @since 3.1.0
  */
-public class ExcelReader extends ExcelBase<ExcelReader> {
+public class ExcelReader extends ExcelBase<ExcelReader, ExcelConfig> {
 
 	/**
 	 * 是否忽略空行
 	 */
 	private boolean ignoreEmptyRow = true;
-	/**
-	 * 单元格值处理接口
-	 */
-	private CellEditor cellEditor;
 	// ------------------------------------------------------------------------------------------------------- Constructor start
 
 	/**
@@ -139,7 +134,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param sheet Excel中的sheet
 	 */
 	public ExcelReader(final Sheet sheet) {
-		super(sheet);
+		super(new ExcelConfig(), sheet);
 	}
 	// ------------------------------------------------------------------------------------------------------- Constructor end
 
@@ -165,17 +160,6 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 		return this;
 	}
 
-	/**
-	 * 设置单元格值处理逻辑<br>
-	 * 当Excel中的值并不能满足我们的读取要求时，通过传入一个编辑接口，可以对单元格值自定义，例如对数字和日期类型值转换为字符串等
-	 *
-	 * @param cellEditor 单元格值处理接口
-	 * @return this
-	 */
-	public ExcelReader setCellEditor(final CellEditor cellEditor) {
-		this.cellEditor = cellEditor;
-		return this;
-	}
 	// ------------------------------------------------------------------------------------------------------- Getters and Setters end
 
 	/**
@@ -220,9 +204,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 */
 	public List<List<Object>> read(final int startRowIndex, final int endRowIndex, final boolean aliasFirstLine) {
 		final ListSheetReader reader = new ListSheetReader(startRowIndex, endRowIndex, aliasFirstLine);
-		reader.setCellEditor(this.cellEditor);
+		reader.setExcelConfig(this.config);
 		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
-		reader.setHeaderAlias(headerAlias);
 		return read(reader);
 	}
 
@@ -249,9 +232,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 */
 	public List<Object> readColumn(final int columnIndex, final int startRowIndex, final int endRowIndex) {
 		final ColumnSheetReader reader = new ColumnSheetReader(columnIndex, startRowIndex, endRowIndex);
-		reader.setCellEditor(this.cellEditor);
+		reader.setExcelConfig(this.config);
 		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
-		reader.setHeaderAlias(headerAlias);
 		return read(reader);
 	}
 
@@ -275,25 +257,13 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param cellHandler   单元格处理器，用于处理读到的单元格及其数据
 	 * @since 5.3.8
 	 */
-	public void read(int startRowIndex, int endRowIndex, final SerBiConsumer<Cell, Object> cellHandler) {
+	public void read(final int startRowIndex, final int endRowIndex, final SerBiConsumer<Cell, Object> cellHandler) {
 		checkNotClosed();
 
-		startRowIndex = Math.max(startRowIndex, this.sheet.getFirstRowNum());// 读取起始行（包含）
-		endRowIndex = Math.min(endRowIndex, this.sheet.getLastRowNum());// 读取结束行（包含）
-
-		Row row;
-		short columnSize;
-		for (int y = startRowIndex; y <= endRowIndex; y++) {
-			row = this.sheet.getRow(y);
-			if (null != row) {
-				columnSize = row.getLastCellNum();
-				Cell cell;
-				for (short x = 0; x < columnSize; x++) {
-					cell = row.getCell(x);
-					cellHandler.accept(cell, CellUtil.getCellValue(cell));
-				}
-			}
-		}
+		final ConsumerSheetReader reader = new ConsumerSheetReader(startRowIndex, endRowIndex, cellHandler);
+		reader.setExcelConfig(this.config);
+		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
+		reader.read(sheet);
 	}
 
 	/**
@@ -317,9 +287,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 */
 	public List<Map<String, Object>> read(final int headerRowIndex, final int startRowIndex, final int endRowIndex) {
 		final MapSheetReader reader = new MapSheetReader(headerRowIndex, startRowIndex, endRowIndex);
-		reader.setCellEditor(this.cellEditor);
+		reader.setExcelConfig(this.config);
 		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
-		reader.setHeaderAlias(headerAlias);
 		return read(reader);
 	}
 
@@ -360,9 +329,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 */
 	public <T> List<T> read(final int headerRowIndex, final int startRowIndex, final int endRowIndex, final Class<T> beanType) {
 		final BeanSheetReader<T> reader = new BeanSheetReader<>(headerRowIndex, startRowIndex, endRowIndex, beanType);
-		reader.setCellEditor(this.cellEditor);
+		reader.setExcelConfig(this.config);
 		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
-		reader.setHeaderAlias(headerAlias);
 		return read(reader);
 	}
 
@@ -421,7 +389,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @since 4.0.3
 	 */
 	public Object readCellValue(final int x, final int y) {
-		return CellUtil.getCellValue(getCell(x, y), this.cellEditor);
+		return CellUtil.getCellValue(getCell(x, y), this.config.getCellEditor());
 	}
 
 	/**
@@ -452,7 +420,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @return 单元格值列表
 	 */
 	private List<Object> readRow(final Row row) {
-		return RowUtil.readRow(row, this.cellEditor);
+		return RowUtil.readRow(row, this.config.getCellEditor());
 	}
 
 	/**

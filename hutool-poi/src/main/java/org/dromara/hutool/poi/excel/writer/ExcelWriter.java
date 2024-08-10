@@ -22,7 +22,6 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.comparator.IndexedComparator;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -63,16 +62,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 3.2.0
  */
 @SuppressWarnings("resource")
-public class ExcelWriter extends ExcelBase<ExcelWriter> {
+public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 
-	/**
-	 * 是否只保留别名对应的字段
-	 */
-	private boolean onlyAlias;
-	/**
-	 * 标题顺序比较器
-	 */
-	private Comparator<String> aliasComparator;
 	/**
 	 * 样式集，定义不同类型数据样式
 	 */
@@ -81,10 +72,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 标题项对应列号缓存，每次写标题更新此缓存
 	 */
 	private Map<String, Integer> headLocationCache;
-	/**
-	 * 单元格值处理接口
-	 */
-	private CellEditor cellEditor;
 	/**
 	 * 当前行
 	 */
@@ -188,22 +175,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 4.0.6
 	 */
 	public ExcelWriter(final Sheet sheet) {
-		super(sheet);
+		super(new ExcelWriteConfig(), sheet);
 		this.styleSet = new DefaultStyleSet(workbook);
 		this.currentRow = new AtomicInteger(0);
 	}
 	// endregion
 
-	/**
-	 * 设置单元格值处理逻辑<br>
-	 * 当Excel中的值并不能满足我们的读取要求时，通过传入一个编辑接口，可以对单元格值自定义，例如对数字和日期类型值转换为字符串等
-	 *
-	 * @param cellEditor 单元格值处理接口
-	 * @return this
-	 */
-	public ExcelWriter setCellEditor(final CellEditor cellEditor) {
-		this.cellEditor = cellEditor;
-		return this;
+
+	@Override
+	public ExcelWriter setConfig(final ExcelWriteConfig config) {
+		return super.setConfig(config);
 	}
 
 	@Override
@@ -410,39 +391,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	//region header alias
-	@Override
-	public ExcelWriter setHeaderAlias(final Map<String, String> headerAlias) {
-		// 新增别名时清除比较器缓存
-		this.aliasComparator = null;
-		return super.setHeaderAlias(headerAlias);
-	}
-
-	@Override
-	public ExcelWriter clearHeaderAlias() {
-		// 清空别名时清除比较器缓存
-		this.aliasComparator = null;
-		return super.clearHeaderAlias();
-	}
-
-	@Override
-	public ExcelWriter addHeaderAlias(final String name, final String alias) {
-		// 新增别名时清除比较器缓存
-		this.aliasComparator = null;
-		return super.addHeaderAlias(name, alias);
-	}
-
-	/**
-	 * 设置是否只保留别名中的字段值，如果为true，则不设置alias的字段将不被输出，false表示原样输出
-	 * Bean中设置@Alias时，setOnlyAlias是无效的，这个参数只和addHeaderAlias配合使用，原因是注解是Bean内部的操作，而addHeaderAlias是Writer的操作，不互通。
-	 *
-	 * @param isOnlyAlias 是否只保留别名中的字段值
-	 * @return this
-	 * @since 4.1.22
-	 */
-	public ExcelWriter setOnlyAlias(final boolean isOnlyAlias) {
-		this.onlyAlias = isOnlyAlias;
-		return this;
-	}
 	//endregion
 
 	/**
@@ -704,7 +652,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		// 设置内容
 		if (null != content) {
 			final Cell cell = getOrCreateCell(cellRangeAddress.getFirstColumn(), cellRangeAddress.getFirstRow());
-			CellUtil.setCellValue(cell, content, cellStyle, this.cellEditor);
+			CellUtil.setCellValue(cell, content, cellStyle, this.config.getCellEditor());
 		}
 		return this;
 	}
@@ -911,11 +859,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		this.headLocationCache = new SafeConcurrentHashMap<>();
 		final Row row = this.sheet.createRow(this.currentRow.getAndIncrement());
+		final CellEditor cellEditor = this.config.getCellEditor();
 		int i = 0;
 		Cell cell;
 		for (final Object value : rowData) {
 			cell = row.createCell(i);
-			CellUtil.setCellValue(cell, value, this.styleSet, true, this.cellEditor);
+			CellUtil.setCellValue(cell, value, this.styleSet, true, cellEditor);
 			this.headLocationCache.put(StrUtil.toString(value), i);
 			i++;
 		}
@@ -939,6 +888,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		final Iterator<?> iterator = rowData.iterator();
 		//如果获取的row存在单元格，则执行复杂表头逻辑，否则直接调用writeHeadRow(Iterable<?> rowData)
 		if (row.getLastCellNum() != 0) {
+			final CellEditor cellEditor = this.config.getCellEditor();
 			for (int i = 0; i < this.workbook.getSpreadsheetVersion().getMaxColumns(); i++) {
 				Cell cell = row.getCell(i);
 				if (cell != null) {
@@ -946,7 +896,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				}
 				if (iterator.hasNext()) {
 					cell = row.createCell(i);
-					CellUtil.setCellValue(cell, iterator.next(), this.styleSet, true, this.cellEditor);
+					CellUtil.setCellValue(cell, iterator.next(), this.styleSet, true, cellEditor);
 				} else {
 					break;
 				}
@@ -975,10 +925,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public ExcelWriter writeRow(final Object rowBean, final boolean isWriteKeyAsHead) {
+		final ExcelWriteConfig config = this.config;
+
 		final Map rowMap;
 		if (rowBean instanceof Map) {
-			if (MapUtil.isNotEmpty(this.headerAlias)) {
-				rowMap = MapUtil.newTreeMap((Map) rowBean, getCachedAliasComparator());
+			if (MapUtil.isNotEmpty(config.getHeaderAlias())) {
+				rowMap = MapUtil.newTreeMap((Map) rowBean, config.getCachedAliasComparator());
 			} else {
 				rowMap = (Map) rowBean;
 			}
@@ -990,11 +942,11 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			// Hyperlink当成一个值
 			return writeRow(ListUtil.of(rowBean), isWriteKeyAsHead);
 		} else if (BeanUtil.isReadableBean(rowBean.getClass())) {
-			if (MapUtil.isEmpty(this.headerAlias)) {
+			if (MapUtil.isEmpty(config.getHeaderAlias())) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
-				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(getCachedAliasComparator()), false, false);
+				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(config.getCachedAliasComparator()), false, false);
 			}
 		} else {
 			// 其它转为字符串默认输出
@@ -1033,6 +985,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		// 如果已经写出标题行，根据标题行找对应的值写入
 		if (MapUtil.isNotEmpty(this.headLocationCache)) {
 			final Row row = RowUtil.getOrCreateRow(this.sheet, this.currentRow.getAndIncrement());
+			final CellEditor cellEditor = this.config.getCellEditor();
 			Integer location;
 			for (final Table.Cell<?, ?, ?> cell : aliasTable) {
 				// 首先查找原名对应的列号
@@ -1042,7 +995,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 					location = this.headLocationCache.get(StrUtil.toString(cell.getColumnKey()));
 				}
 				if (null != location) {
-					CellUtil.setCellValue(CellUtil.getOrCreateCell(row, location), cell.getValue(), this.styleSet, false, this.cellEditor);
+					CellUtil.setCellValue(CellUtil.getOrCreateCell(row, location), cell.getValue(), this.styleSet, false, cellEditor);
 				}
 			}
 		} else {
@@ -1061,7 +1014,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeRow(final Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false, this.cellEditor);
+		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false, this.config.getCellEditor());
 		return this;
 	}
 	// endregion
@@ -1185,7 +1138,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeCellValue(final int x, final int y, final Object value, final boolean isHeader) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellUtil.setCellValue(cell, value, this.styleSet, isHeader, this.cellEditor);
+		CellUtil.setCellValue(cell, value, this.styleSet, isHeader, this.config.getCellEditor());
 		return this;
 	}
 	// endregion
@@ -1406,15 +1359,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	private Table<?, ?, ?> aliasTable(final Map<?, ?> rowMap) {
 		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), TableMap::new);
-		if (MapUtil.isEmpty(this.headerAlias)) {
+		final Map<String, String> headerAlias = this.config.getHeaderAlias();
+		final boolean onlyAlias = this.config.onlyAlias;
+		if (MapUtil.isEmpty(headerAlias)) {
 			rowMap.forEach((key, value) -> filteredTable.put(key, key, value));
 		} else {
 			rowMap.forEach((key, value) -> {
-				final String aliasName = this.headerAlias.get(StrUtil.toString(key));
+				final String aliasName = headerAlias.get(StrUtil.toString(key));
 				if (null != aliasName) {
 					// 别名键值对加入
 					filteredTable.put(key, aliasName, value);
-				} else if (!this.onlyAlias) {
+				} else if (!onlyAlias) {
 					// 保留无别名设置的键值对
 					filteredTable.put(key, key, value);
 				}
@@ -1422,25 +1377,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 
 		return filteredTable;
-	}
-
-	/**
-	 * 获取单例的别名比较器，比较器的顺序为别名加入的顺序
-	 *
-	 * @return Comparator
-	 * @since 4.1.5
-	 */
-	private Comparator<String> getCachedAliasComparator() {
-		if (MapUtil.isEmpty(this.headerAlias)) {
-			return null;
-		}
-		Comparator<String> aliasComparator = this.aliasComparator;
-		if (null == aliasComparator) {
-			final Set<String> keySet = this.headerAlias.keySet();
-			aliasComparator = new IndexedComparator<>(keySet.toArray(new String[0]));
-			this.aliasComparator = aliasComparator;
-		}
-		return aliasComparator;
 	}
 	// endregion
 }

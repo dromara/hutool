@@ -31,18 +31,22 @@ import java.io.Closeable;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Excel基础类，用于抽象ExcelWriter和ExcelReader中共用部分的对象和方法
  *
  * @param <T> 子类类型，用于返回this
+ * @param <C> ExcelConfig类型
  * @author looly
  * @since 4.1.4
  */
-public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
+public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> implements Closeable {
+
+	/**
+	 * Excel配置，此项不为空
+	 */
+	protected C config;
 	/**
 	 * 是否被关闭
 	 */
@@ -59,20 +63,38 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * Excel中对应的Sheet
 	 */
 	protected Sheet sheet;
-	/**
-	 * 标题行别名
-	 */
-	protected Map<String, String> headerAlias;
 
 	/**
 	 * 构造
 	 *
+	 * @param config config
 	 * @param sheet Excel中的sheet
 	 */
-	public ExcelBase(final Sheet sheet) {
-		Assert.notNull(sheet, "No Sheet provided.");
-		this.sheet = sheet;
+	public ExcelBase(final C config, final Sheet sheet) {
+		this.config = Assert.notNull(config);
+		this.sheet = Assert.notNull(sheet, "No Sheet provided.");
 		this.workbook = sheet.getWorkbook();
+	}
+
+	/**
+	 * 设置Excel配置
+	 *
+	 * @param config Excel配置
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	public T setConfig(final C config) {
+		this.config = config;
+		return (T) this;
+	}
+
+	/**
+	 * 获取Excel配置
+	 *
+	 * @return Excel配置
+	 */
+	public C getConfig() {
+		return this.config;
 	}
 
 	/**
@@ -428,24 +450,26 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 创建 {@link Hyperlink}，默认内容（标签为链接地址本身）
-	 * @param type 链接类型
+	 *
+	 * @param type    链接类型
 	 * @param address 链接地址
 	 * @return 链接
 	 * @since 5.7.13
 	 */
-	public Hyperlink createHyperlink(final HyperlinkType type, final String address){
+	public Hyperlink createHyperlink(final HyperlinkType type, final String address) {
 		return createHyperlink(type, address, address);
 	}
 
 	/**
 	 * 创建 {@link Hyperlink}，默认内容
-	 * @param type 链接类型
+	 *
+	 * @param type    链接类型
 	 * @param address 链接地址
-	 * @param label 标签，即单元格中显示的内容
+	 * @param label   标签，即单元格中显示的内容
 	 * @return 链接
 	 * @since 5.7.13
 	 */
-	public Hyperlink createHyperlink(final HyperlinkType type, final String address, final String label){
+	public Hyperlink createHyperlink(final HyperlinkType type, final String address, final String label) {
 		final Hyperlink hyperlink = this.workbook.getCreationHelper().createHyperlink(type);
 		hyperlink.setAddress(address);
 		hyperlink.setLabel(label);
@@ -571,67 +595,5 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		this.sheet = null;
 		this.workbook = null;
 		this.isClosed = true;
-	}
-
-	/**
-	 * 获得标题行的别名Map
-	 *
-	 * @return 别名Map
-	 */
-	public Map<String, String> getHeaderAlias() {
-		return headerAlias;
-	}
-
-	/**
-	 * 设置标题行的别名Map
-	 *
-	 * @param headerAlias 别名Map
-	 * @return this
-	 */
-	@SuppressWarnings("unchecked")
-	public T setHeaderAlias(final Map<String, String> headerAlias) {
-		this.headerAlias = headerAlias;
-		return (T) this;
-	}
-
-	/**
-	 * 增加标题别名
-	 *
-	 * @param header 标题
-	 * @param alias  别名
-	 * @return this
-	 */
-	@SuppressWarnings("unchecked")
-	public T addHeaderAlias(final String header, final String alias) {
-		Map<String, String> headerAlias = this.headerAlias;
-		if (null == headerAlias) {
-			headerAlias = new LinkedHashMap<>();
-		}
-		this.headerAlias = headerAlias;
-		this.headerAlias.put(header, alias);
-		return (T) this;
-	}
-
-	/**
-	 * 去除标题别名
-	 *
-	 * @param header 标题
-	 * @return this
-	 */
-	@SuppressWarnings("unchecked")
-	public T removeHeaderAlias(final String header) {
-		this.headerAlias.remove(header);
-		return (T) this;
-	}
-
-	/**
-	 * 清空标题别名，key为Map中的key，value为别名
-	 *
-	 * @return this
-	 */
-	@SuppressWarnings("unchecked")
-	public T clearHeaderAlias() {
-		this.headerAlias = null;
-		return (T) this;
 	}
 }

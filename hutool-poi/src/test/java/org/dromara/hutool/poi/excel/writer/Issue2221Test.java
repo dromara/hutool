@@ -37,9 +37,10 @@ public class Issue2221Test {
 	public void writeDuplicateHeaderAliasTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/duplicateAlias.xlsx");
 		// 设置别名
-		writer.addHeaderAlias("androidLc", "安卓");
-		writer.addHeaderAlias("androidAc", "安卓");
-		writer.setOnlyAlias(true);
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("androidLc", "安卓");
+		config.addHeaderAlias("androidAc", "安卓");
+		config.setOnlyAlias(true);
 
 		// 写入数据
 		final List<Map<Object, Object>> data = ListUtil.view(
@@ -77,12 +78,13 @@ public class Issue2221Test {
 		writer.setFreezePane(2);
 
 		// 设置别名
-		writer.addHeaderAlias("date", "日期");
-		writer.addHeaderAlias("androidLc", "安卓");
-		writer.addHeaderAlias("iosLc", "iOS");
-		writer.addHeaderAlias("androidAc", " 安卓");
-		writer.addHeaderAlias("iosAc", " iOS");
-		writer.setOnlyAlias(true);
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("date", "日期");
+		config.addHeaderAlias("androidLc", "安卓");
+		config.addHeaderAlias("iosLc", "iOS");
+		config.addHeaderAlias("androidAc", " 安卓");
+		config.addHeaderAlias("iosAc", " iOS");
+		config.setOnlyAlias(true);
 
 		// 设置合并的单元格
 		writer.merge(new CellRangeAddress(0, 1, 0, 0), "日期", true);

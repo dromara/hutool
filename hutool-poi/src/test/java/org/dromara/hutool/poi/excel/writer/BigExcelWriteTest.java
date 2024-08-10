@@ -191,11 +191,12 @@ public class BigExcelWriteTest {
 		FileUtil.del(FileUtil.file(file));
 		final BigExcelWriter writer = ExcelUtil.getBigWriter(file);
 		//自定义标题
-		writer.addHeaderAlias("name", "姓名");
-		writer.addHeaderAlias("age", "年龄");
-		writer.addHeaderAlias("score", "分数");
-		writer.addHeaderAlias("isPass", "是否通过");
-		writer.addHeaderAlias("examDate", "考试时间");
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("name", "姓名");
+		config.addHeaderAlias("age", "年龄");
+		config.addHeaderAlias("score", "分数");
+		config.addHeaderAlias("isPass", "是否通过");
+		config.addHeaderAlias("examDate", "考试时间");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -234,8 +235,9 @@ public class BigExcelWriteTest {
 		final String path = "d:/test/issue1210.xlsx";
 		FileUtil.del(FileUtil.file(path));
 		final BigExcelWriter writer = ExcelUtil.getBigWriter(path);
-		writer.addHeaderAlias("id", "SN");
-		writer.addHeaderAlias("userName", "User Name");
+		final ExcelWriteConfig config = writer.getConfig();
+		config.addHeaderAlias("id", "SN");
+		config.addHeaderAlias("userName", "User Name");
 
 		final List<Map<String, Object>> list = new ArrayList<>();
 		list.add(new HashMap<String, Object>() {

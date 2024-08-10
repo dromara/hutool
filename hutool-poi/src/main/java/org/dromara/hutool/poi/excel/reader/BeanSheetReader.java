@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.poi.excel.reader;
 
+import org.apache.poi.ss.usermodel.Sheet;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.dromara.hutool.poi.excel.ExcelConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,13 +63,12 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	}
 
 	/**
-	 * 设置单元格值处理逻辑<br>
-	 * 当Excel中的值并不能满足我们的读取要求时，通过传入一个编辑接口，可以对单元格值自定义，例如对数字和日期类型值转换为字符串等
+	 * 设置Excel配置
 	 *
-	 * @param cellEditor 单元格值处理接口
+	 * @param config Excel配置
 	 */
-	public void setCellEditor(final CellEditor cellEditor) {
-		this.mapSheetReader.setCellEditor(cellEditor);
+	public void setExcelConfig(final ExcelConfig config) {
+		this.mapSheetReader.setExcelConfig(config);
 	}
 
 	/**
@@ -79,24 +78,5 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	 */
 	public void setIgnoreEmptyRow(final boolean ignoreEmptyRow) {
 		this.mapSheetReader.setIgnoreEmptyRow(ignoreEmptyRow);
-	}
-
-	/**
-	 * 设置标题行的别名Map
-	 *
-	 * @param headerAlias 别名Map
-	 */
-	public void setHeaderAlias(final Map<String, String> headerAlias) {
-		this.mapSheetReader.setHeaderAlias(headerAlias);
-	}
-
-	/**
-	 * 增加标题别名
-	 *
-	 * @param header 标题
-	 * @param alias  别名
-	 */
-	public void addHeaderAlias(final String header, final String alias) {
-		this.mapSheetReader.addHeaderAlias(header, alias);
 	}
 }

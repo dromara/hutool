@@ -19,6 +19,7 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Cell;
+import org.dromara.hutool.poi.excel.ExcelConfig;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -48,7 +49,7 @@ public class ExcelReadTest {
 		headerAlias.put("库房", "storageName");
 		headerAlias.put("盘点权限", "checkPerm");
 		headerAlias.put("领料审批权限", "allotAuditPerm");
-		reader.setHeaderAlias(headerAlias);
+		reader.getConfig().setHeaderAlias(headerAlias);
 
 		// 读取list时默认首个非空行为标题
 		final List<List<Object>> read = reader.read(0, Integer.MAX_VALUE, true);
@@ -146,10 +147,11 @@ public class ExcelReadTest {
 	@Test
 	public void excelReadToBeanListTest() {
 		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
-		reader.addHeaderAlias("姓名", "name");
-		reader.addHeaderAlias("年龄", "age");
-		reader.addHeaderAlias("性别", "gender");
-		reader.addHeaderAlias("鞋码", "shoeSize");
+		final ExcelConfig config = reader.getConfig();
+		config.addHeaderAlias("姓名", "name");
+		config.addHeaderAlias("年龄", "age");
+		config.addHeaderAlias("性别", "gender");
+		config.addHeaderAlias("鞋码", "shoeSize");
 
 		final List<Person> all = reader.readAll(Person.class);
 		Assertions.assertEquals("张三", all.get(0).getName());
@@ -162,9 +164,10 @@ public class ExcelReadTest {
 	@Disabled
 	public void excelReadToBeanListTest2() {
 		final ExcelReader reader = ExcelUtil.getReader("f:/test/toBean.xlsx");
-		reader.addHeaderAlias("姓名", "name");
-		reader.addHeaderAlias("年龄", "age");
-		reader.addHeaderAlias("性别", "gender");
+		final ExcelConfig config = reader.getConfig();
+		config.addHeaderAlias("姓名", "name");
+		config.addHeaderAlias("年龄", "age");
+		config.addHeaderAlias("性别", "gender");
 
 		final List<Person> all = reader.read(0, 2, Person.class);
 		for (final Person person : all) {
@@ -220,7 +223,8 @@ public class ExcelReadTest {
 	@Test
 	public void nullValueEditTest(){
 		final ExcelReader reader = ExcelUtil.getReader("null_cell_test.xlsx");
-		reader.setCellEditor((cell, value)-> ObjUtil.defaultIfNull(value, "#"));
+		final ExcelConfig config = reader.getConfig();
+		config.setCellEditor((cell, value)-> ObjUtil.defaultIfNull(value, "#"));
 		final List<List<Object>> read = reader.read();
 
 		// 对于任意一个单元格有值的情况下，之前的单元格值按照null处理
@@ -271,14 +275,14 @@ public class ExcelReadTest {
 		//https://gitee.com/dromara/hutool/issues/I5OSFC
 		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read.xlsx"));
 		final List<Map<String, Object>> read = reader.read(1,2,2);
-		for (Map<String, Object> map : read) {
+		for (final Map<String, Object> map : read) {
 			Console.log(map);
 		}
 		//超出lastIndex 抛出相应提示：startRowIndex row index 4 is greater than last row index 2.
 		//而非:Illegal Capacity: -1
 		try {
 			final List<Map<String, Object>> readGreaterIndex = reader.read(1,4,4);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			Console.log(e.toString());
 		}
 	}
