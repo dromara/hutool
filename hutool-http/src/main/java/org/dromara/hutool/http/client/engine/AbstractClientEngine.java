@@ -10,27 +10,26 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.json.engine;
+package org.dromara.hutool.http.client.engine;
+
+import org.dromara.hutool.http.client.ClientConfig;
 
 /**
- * JSONEngine抽象类，用于保存配置和定义初始化，并提供：
+ * 客户端引擎抽象类，用于保存配置和定义初始化，并提供：
  * <ul>
- *     <li>{@link #reset()}用于重置引擎</li>
- *     <li>{@link #initEngine()}初始化引擎</li>
+ *     <li>{@link #reset()}用于重置客户端</li>
+ *     <li>{@link #initEngine()}初始化客户端</li>
  * </ul>
  *
  * @author Looly
  * @since 6.0.0
  */
-public abstract class AbstractJSONEngine implements JSONEngine {
+public abstract class AbstractClientEngine implements ClientEngine{
 
-	/**
-	 * JSON引擎配置，{@code null}表示默认配置
-	 */
-	protected JSONEngineConfig config;
+	protected ClientConfig config;
 
 	@Override
-	public JSONEngine init(final JSONEngineConfig config) {
+	public ClientEngine init(final ClientConfig config) {
 		this.config = config;
 		reset();
 		return this;
