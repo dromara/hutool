@@ -25,13 +25,43 @@ import org.dromara.hutool.core.text.StrUtil;
 public class JSONStrFormatter {
 
 	/**
-	 * 单位缩进字符串。
+	 * 默认实例
 	 */
-	private static final String SPACE = "    ";
+	public static final JSONStrFormatter INSTANCE = new JSONStrFormatter(4, CharUtil.LF);
+
+	private int indentFactor;
+	private char newLineChar;
+
 	/**
-	 * 换行符
+	 * 构造
+	 *
+	 * @param indentFactor 缩进因子，即每个缩进空格数
+	 * @param newLineChar 换行符
 	 */
-	private static final char NEW_LINE = CharUtil.LF;
+	public JSONStrFormatter(final int indentFactor, final char newLineChar){
+		this.indentFactor = indentFactor;
+		this.newLineChar = newLineChar;
+	}
+
+	/**
+	 * 设置缩进因子，即每个缩进空格数
+	 * @param indentFactor 缩进因子，即每个缩进空格数
+	 * @return this
+	 */
+	public JSONStrFormatter setIndentFactor(final int indentFactor) {
+		this.indentFactor = indentFactor;
+		return this;
+	}
+
+	/**
+	 * 设置换行符
+	 * @param newLineChar 换行符
+	 * @return this
+	 */
+	public JSONStrFormatter setNewLineChar(final char newLineChar) {
+		this.newLineChar = newLineChar;
+		return this;
+	}
 
 	/**
 	 * 返回格式化JSON字符串。
@@ -39,7 +69,7 @@ public class JSONStrFormatter {
 	 * @param json 未格式化的JSON字符串。
 	 * @return 格式化的JSON字符串。
 	 */
-	public static String format(final String json) {
+	public String format(final String json) {
 		final StringBuilder result = new StringBuilder();
 
 		Character wrapChar = null;
@@ -94,26 +124,21 @@ public class JSONStrFormatter {
 			if ((key == CharUtil.BRACKET_START) || (key == CharUtil.DELIM_START)) {
 				//如果前面还有字符，并且字符为“：”，打印：换行和缩进字符字符串。
 				if ((i > 1) && (json.charAt(i - 1) == CharUtil.COLON)) {
-					result.append(NEW_LINE);
-					result.append(indent(number));
+					result.append(newLineChar).append(indent(number));
 				}
-				result.append(key);
 				//前方括号、前花括号，的后面必须换行。打印：换行。
-				result.append(NEW_LINE);
+				result.append(key).append(newLineChar);
 				//每出现一次前方括号、前花括号；缩进次数增加一次。打印：新行缩进。
-				number++;
-				result.append(indent(number));
-
+				result.append(indent(++number));
 				continue;
 			}
 
 			// 3、如果当前字符是后方括号、后花括号做如下处理：
 			if ((key == CharUtil.BRACKET_END) || (key == CharUtil.DELIM_END)) {
 				// （1）后方括号、后花括号，的前面必须换行。打印：换行。
-				result.append(NEW_LINE);
+				result.append(newLineChar);
 				// （2）每出现一次后方括号、后花括号；缩进次数减少一次。打印：缩进。
-				number--;
-				result.append(indent(number));
+				result.append(indent(--number));
 				// （3）打印：当前字符。
 				result.append(key);
 				// （4）如果当前字符后面还有字符，并且字符不为“，”，打印：换行。
@@ -125,10 +150,8 @@ public class JSONStrFormatter {
 			}
 
 			// 4、如果当前字符是逗号。逗号后面换行，并缩进，不改变缩进次数。
-			if ((key == ',')) {
-				result.append(key);
-				result.append(NEW_LINE);
-				result.append(indent(number));
+			if ((key == CharUtil.COMMA)) {
+				result.append(key).append(newLineChar).append(indent(number));
 				continue;
 			}
 
@@ -149,7 +172,7 @@ public class JSONStrFormatter {
 	 * @param number 缩进次数。
 	 * @return 指定缩进次数的字符串。
 	 */
-	private static String indent(final int number) {
-		return StrUtil.repeat(SPACE, number);
+	private String indent(final int number) {
+		return StrUtil.repeat(StrUtil.SPACE, number * indentFactor);
 	}
 }

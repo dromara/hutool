@@ -17,7 +17,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
+import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSONException;
 
 import java.io.IOException;
@@ -29,23 +30,24 @@ import java.io.Writer;
  *
  * @author Looly
  */
-public class JacksonEngine extends SimpleWrapper<ObjectMapper> implements JSONEngine{
+public class JacksonEngine extends AbstractJSONEngine {
+
+	private ObjectMapper mapper;
 
 	/**
 	 * 构造
 	 */
 	public JacksonEngine() {
-		super(new ObjectMapper());
-		// 允许出现单引号
-		raw.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		// 允许没有引号的字段名(非标准)
-		raw.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
+		// 此处构造时调用下这个类，以便触发类是否存在的检查
+		Assert.notNull(ObjectMapper.class);
 	}
 
 	@Override
 	public void serialize(final Object bean, final Writer writer) {
+		initEngine();
 		try {
-			raw.writeValue(writer, bean);
+			mapper.writeValue(writer, bean);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -54,18 +56,46 @@ public class JacksonEngine extends SimpleWrapper<ObjectMapper> implements JSONEn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T deserialize(final Reader reader, final Object type) {
+		initEngine();
 		try {
-			if(type instanceof Class){
-				return raw.readValue(reader, (Class<T>)type);
-			} else if(type instanceof TypeReference){
-				return raw.readValue(reader, (TypeReference<T>)type);
-			} else if(type instanceof JavaType){
-				return raw.readValue(reader, (JavaType)type);
+			if (type instanceof Class) {
+				return mapper.readValue(reader, (Class<T>) type);
+			} else if (type instanceof TypeReference) {
+				return mapper.readValue(reader, (TypeReference<T>) type);
+			} else if (type instanceof JavaType) {
+				return mapper.readValue(reader, (JavaType) type);
 			}
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
 		throw new JSONException("Unsupported type: {}", type.getClass());
+	}
+
+	@Override
+	protected void reset() {
+		this.mapper = null;
+	}
+
+	@Override
+	protected void initEngine() {
+		if(null != this.mapper){
+			return;
+		}
+
+		this.mapper = new ObjectMapper();
+
+		// 默认配置
+		this.mapper.enable(
+			// 允许出现单引号
+			JsonParser.Feature.ALLOW_SINGLE_QUOTES,
+			// 允许没有引号的字段名(非标准)
+			JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES
+		);
+
+		// 自定义配置
+		if(ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)){
+			this.mapper.writerWithDefaultPrettyPrinter();
+		}
 	}
 }

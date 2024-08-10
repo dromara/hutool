@@ -79,7 +79,7 @@ public class JSONEngineFactoryTest {
 
 	@Test
 	void fastJSON2Test() {
-		final JSONEngine engine = JSONEngineFactory.createEngine("fastjson2");
+		final JSONEngine engine = JSONEngineFactory.createEngine("fastjson");
 		assertEquals(FastJSON2Engine.class, engine.getClass());
 
 		final StringWriter stringWriter = new StringWriter();

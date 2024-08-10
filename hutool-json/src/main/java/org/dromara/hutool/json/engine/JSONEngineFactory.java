@@ -38,11 +38,16 @@ public class JSONEngineFactory {
 	/**
 	 * 创建自定义引擎
 	 *
-	 * @param engineName 引擎名称，忽略大小写，如`HttpClient4`、`HttpClient5`、`OkHttp`、`JdkClient`
+	 * @param engineName 引擎名称，忽略大小写，如`FastJSON2`、`Jackson`、`Gson`、`HutoolJSON`
 	 * @return 引擎
 	 * @throws JSONException 无对应名称的引擎
 	 */
 	public static JSONEngine createEngine(String engineName) throws JSONException {
+		// fastjson名字兼容
+		if(StrUtil.equalsIgnoreCase("fastjson", engineName)){
+			engineName = "FastJSON2";
+		}
+
 		if (!StrUtil.endWithIgnoreCase(engineName, "Engine")) {
 			engineName = engineName + "Engine";
 		}
@@ -56,10 +61,21 @@ public class JSONEngineFactory {
 	}
 
 	/**
+	 * 根据用户引入的JSON引擎jar，自动创建对应的HTTP客户端引擎对象<br>
+	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
+	 *
+	 * @param config JSON引擎配置
+	 * @return {@code JSONEngine}
+	 */
+	public static JSONEngine createEngine(final JSONEngineConfig config) {
+		return createEngine().init(config);
+	}
+
+	/**
 	 * 根据用户引入的JSON引擎jar，自动创建对应的JSON引擎对象<br>
 	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
 	 *
-	 * @return {@code ClientEngine}
+	 * @return {@code JSONEngine}
 	 */
 	public static JSONEngine createEngine() {
 		// HutoolJSONEngine托底，始终不空

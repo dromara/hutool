@@ -12,7 +12,9 @@
 
 package org.dromara.hutool.json.engine;
 
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.io.Reader;
@@ -25,16 +27,35 @@ import java.lang.reflect.Type;
  * @author Looly
  * @since 6.0.0
  */
-public class HutoolJSONEngine implements JSONEngine {
+public class HutoolJSONEngine extends AbstractJSONEngine {
+
+	private JSONConfig hutoolSJONConfig;
+
 	@Override
 	public void serialize(final Object bean, final Writer writer) {
-		final JSON json = (JSON) JSONUtil.parse(bean);
-		json.write(writer);
+		initEngine();
+		final JSON json = (JSON) JSONUtil.parse(bean, this.hutoolSJONConfig);
+		json.write(writer, ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false) ? 4 : 0, 0, null);
 	}
 
 	@Override
 	public <T> T deserialize(final Reader reader, final Object type) {
-		final JSON json = (JSON) JSONUtil.parse(reader);
+		initEngine();
+		final JSON json = (JSON) JSONUtil.parse(reader, this.hutoolSJONConfig);
 		return json.toBean((Type) type);
+	}
+
+	@Override
+	protected void reset() {
+		hutoolSJONConfig = null;
+	}
+
+	@Override
+	protected void initEngine() {
+		if(null != hutoolSJONConfig){
+			return;
+		}
+
+		hutoolSJONConfig = JSONConfig.of();
 	}
 }

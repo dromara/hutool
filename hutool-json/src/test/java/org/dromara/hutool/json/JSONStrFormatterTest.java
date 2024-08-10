@@ -27,21 +27,21 @@ public class JSONStrFormatterTest {
 	@Test
 	public void formatTest() {
 		final String json = "{'age':23,'aihao':['pashan','movies'],'name':{'firstName':'zhang','lastName':'san','aihao':['pashan','movies','name':{'firstName':'zhang','lastName':'san','aihao':['pashan','movies']}]}}";
-		final String result = JSONStrFormatter.format(json);
+		final String result = JSONStrFormatter.INSTANCE.format(json);
 		Assertions.assertNotNull(result);
 	}
 
 	@Test
 	public void formatTest2() {
 		final String json = "{\"abc\":{\"def\":\"\\\"[ghi]\"}}";
-		final String result = JSONStrFormatter.format(json);
+		final String result = JSONStrFormatter.INSTANCE.format(json);
 		Assertions.assertNotNull(result);
 	}
 
 	@Test
 	public void formatTest3() {
 		final String json = "{\"id\":13,\"title\":\"《标题》\",\"subtitle\":\"副标题z'c'z'xv'c'xv\",\"user_id\":6,\"type\":0}";
-		final String result = JSONStrFormatter.format(json);
+		final String result = JSONStrFormatter.INSTANCE.format(json);
 		Assertions.assertNotNull(result);
 	}
 
@@ -49,6 +49,6 @@ public class JSONStrFormatterTest {
 	@Disabled
 	public void formatTest4(){
 		final String jsonStr = "{\"employees\":[{\"firstName\":\"Bill\",\"lastName\":\"Gates\"},{\"firstName\":\"George\",\"lastName\":\"Bush\"},{\"firstName\":\"Thomas\",\"lastName\":\"Carter\"}]}";
-		Console.log(JSONUtil.formatJsonStr(jsonStr));
+		Console.log(JSONStrFormatter.INSTANCE.format(jsonStr));
 	}
 }
