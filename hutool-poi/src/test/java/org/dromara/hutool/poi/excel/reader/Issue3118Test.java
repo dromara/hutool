@@ -13,7 +13,6 @@
 package org.dromara.hutool.poi.excel.reader;
 
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.poi.excel.ExcelReader;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

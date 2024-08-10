@@ -3,7 +3,6 @@ package org.dromara.hutool.poi.excel.reader;
 import lombok.Data;
 import org.dromara.hutool.core.annotation.Alias;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.poi.excel.ExcelReader;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
