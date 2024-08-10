@@ -24,6 +24,16 @@
  *               ------mapper----->              ---JSONWriter---->
  * }</pre>
  *
+ * 当然，为了高效转换，如果没有自定义需求，Java对象可以不通过JSON对象与JSON字符串转换：
+ * <ul>
+ *     <li>JSONTokener：JSON字符串底层解析器，通过Stream方式读取JSON字符串并对不同字段自定义处理。</li>
+ *     <li>JSONWriter：JSON字符串底层生成器，可以自定义写出任意对象。</li>
+ * </ul>
+ * <pre>{@code
+ *                <---JSONTokener----
+ *     Java对象    <=================>    JSON字符串
+ *                ---JSONWriter---->
+ * }</pre>
  *
  * @author looly
  *
