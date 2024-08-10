@@ -222,7 +222,7 @@ public class SshjSession implements Session {
 		}
 
 		// 发送命令
-		IoUtil.write(shell.getOutputStream(), charset, true, cmd);
+		IoUtil.writeStrs(shell.getOutputStream(), charset, true, cmd);
 
 		// 错误输出
 		if (null != errStream) {

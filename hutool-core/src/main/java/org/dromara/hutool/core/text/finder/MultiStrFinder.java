@@ -220,7 +220,7 @@ public class MultiStrFinder {
 		/**
 		 * 标记当前节点为 字符串尾节点
 		 *
-		 * @param string
+		 * @param string 字符串
 		 */
 		public void setEnd(final String string) {
 			tagetString = string;
@@ -232,7 +232,7 @@ public class MultiStrFinder {
 		 *
 		 * @param c         字符
 		 * @param charIndex 字符索引
-		 * @return
+		 * @return 下一个Node
 		 */
 		public Node getNext(final char c, final Map<Character, Integer> charIndex) {
 			final Integer index = charIndex.get(c);
@@ -246,7 +246,7 @@ public class MultiStrFinder {
 		 * 构建根节点
 		 *
 		 * @param allCharSize 全部字符数量
-		 * @return
+		 * @return 根Node
 		 */
 		public static Node createRoot(final int allCharSize) {
 			final Node node = new Node();

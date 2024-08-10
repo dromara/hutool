@@ -197,7 +197,7 @@ public class GanymedSession implements Session {
 		}
 
 		// 发送命令
-		IoUtil.write(this.raw.getStdin(), charset, true, cmd);
+		IoUtil.writeStrs(this.raw.getStdin(), charset, true, cmd);
 
 		// 错误输出
 		if (null != errStream) {

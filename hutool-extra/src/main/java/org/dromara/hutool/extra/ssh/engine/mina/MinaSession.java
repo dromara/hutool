@@ -158,7 +158,7 @@ public class MinaSession implements Session {
 			throw new IORuntimeException(e);
 		}
 
-		IoUtil.write(shellChannel.getInvertedIn(), charset, false, cmd);
+		IoUtil.writeStrs(shellChannel.getInvertedIn(), charset, false, cmd);
 		return IoUtil.read(shellChannel.getInvertedOut(), charset);
 	}
 }
