@@ -5,7 +5,8 @@ import org.dromara.hutool.core.text.StrUtil;
 import java.util.*;
 
 /**
- * 多字符串查询器 底层思路 使用 AC 自动机实现
+ * 多字符串查询器 底层思路 使用 AC 自动机实现<br>
+ * 设计思路见：https://zhuanlan.zhihu.com/p/368184958
  *
  * @author newshiJ
  */
