@@ -44,7 +44,7 @@ public class ExcelUtil {
 	 */
 	public static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-	// ------------------------------------------------------------------------------------ Read by Sax start
+	// region ----- readBySax
 
 	/**
 	 * 通过Sax方式读取Excel，同时支持03和07格式
@@ -123,9 +123,9 @@ public class ExcelUtil {
 		final ExcelSaxReader<?> reader = ExcelSaxUtil.createSaxReader(ExcelFileUtil.isXlsx(in), rowHandler);
 		reader.read(in, idOrRidOrSheetName);
 	}
-	// ------------------------------------------------------------------------------------ Read by Sax end
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------ getReader
+	// region ----- getReader
 
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
@@ -254,8 +254,9 @@ public class ExcelUtil {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------ getWriter
+	// region ----- getWriter
 
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
@@ -362,8 +363,9 @@ public class ExcelUtil {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------ getBigWriter
+	// region ----- getBigWriter
 
 	/**
 	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet<br>
@@ -455,4 +457,6 @@ public class ExcelUtil {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
+
+	// endregion
 }
