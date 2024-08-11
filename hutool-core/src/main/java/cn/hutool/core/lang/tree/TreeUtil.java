@@ -291,9 +291,12 @@ public class TreeUtil {
 	 * @param <E>			节点类型
 	 * @return List
 	 */
-	public static <T, E> List<E> build(List<E> nodes, T rootId, Function<E, T> idFunc, Function<E, T> parentIdFunc, BiConsumer<E, List<E>> setChildFunc) {
+	public static <T, E> List<E> build(List<E> nodes, T rootId,
+									   Function<E, T> idFunc,
+									   Function<E, T> parentIdFunc,
+									   BiConsumer<E, List<E>> setChildFunc) {
 		List<E> rootList = nodes.stream().filter(tree -> parentIdFunc.apply(tree).equals(rootId)).collect(Collectors.toList());
-		Map<T, T> filterOperated = new HashMap<>(rootList.size() + nodes.size());
+		Set<T> filterOperated = new HashSet<>(rootList.size() + nodes.size());
 		//对每个根节点都封装它的孩子节点
 		rootList.forEach(root -> setChildren(root, nodes, filterOperated, idFunc, parentIdFunc, setChildFunc));
 		return rootList;
@@ -311,15 +314,15 @@ public class TreeUtil {
 	 * @param <T>				节点ID类型
 	 * @param <E>				节点类型
 	 */
-	private static <T, E> void setChildren(E root, List<E> nodes, Map<T, T> filterOperated, Function<E, T> idFunc, Function<E, T> parentIdFunc, BiConsumer<E, List<E>> setChildFunc) {
+	private static <T, E> void setChildren(E root, List<E> nodes, Set<T> filterOperated, Function<E, T> idFunc, Function<E, T> parentIdFunc, BiConsumer<E, List<E>> setChildFunc) {
 		List<E> children = new ArrayList<>();
 		nodes.stream()
 			//过滤出未操作过的节点
-			.filter(body -> !filterOperated.containsKey(idFunc.apply(body)))
+			.filter(body -> !filterOperated.contains(idFunc.apply(body)))
 			//过滤出孩子节点
 			.filter(body -> Objects.equals(idFunc.apply(root), parentIdFunc.apply(body)))
 			.forEach(body -> {
-				filterOperated.put(idFunc.apply(body), idFunc.apply(root));
+				filterOperated.add(idFunc.apply(body));
 				children.add(body);
 				//递归 对每个孩子节点执行同样操作
 				setChildren(body, nodes, filterOperated, idFunc, parentIdFunc, setChildFunc);
