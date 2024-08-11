@@ -501,4 +501,44 @@ public class BooleanUtil {
 	public static boolean isBoolean(Class<?> clazz) {
 		return (clazz == Boolean.class || clazz == boolean.class);
 	}
+
+	/**
+	 * 统计boolean数组中true和false的数量
+	 *
+	 * @param array {@code boolean} 数组
+	 * @return 一个包含trueCount和falseCount的数组
+	 */
+	public static int[] countBooleans(boolean... array) {
+		int trueCount = 0;
+		int falseCount = 0;
+		for (final boolean element : array) {
+			if (element) {
+				trueCount ++;
+			}else {
+				falseCount ++;
+			}
+		}
+		return new int[]{trueCount, falseCount};
+	}
+
+	/**
+	 * 统计Boolean数组中true和false的数量
+	 *
+	 * @param array {@code Boolean} 数组
+	 * @return 一个包含trueCount和falseCount的数组
+	 */
+	public static int[] countBooleansOfWrap(Boolean... array) {
+		int trueCount = 0;
+		int falseCount = 0;
+		for (final Boolean element : array) {
+			if (element != null) {
+				if (element) {
+					trueCount ++;
+				}else {
+					falseCount ++;
+				}
+			}
+		}
+		return new int[]{trueCount, falseCount};
+	}
 }

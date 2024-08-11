@@ -80,4 +80,14 @@ public class BooleanUtilTest {
 		Boolean result = BooleanUtil.andOfWrap(boolean1, boolean2);
 		assertFalse(result);
 	}
+
+	@Test
+	public void countBooleansTest() {
+		boolean[] booleanArray = new boolean[]{true, false, false, false};
+		Boolean[] BooleanArray = new Boolean[]{true, false, null, false};
+		int[] res1 = BooleanUtil.countBooleans(booleanArray);
+		int[] res2 = BooleanUtil.countBooleansOfWrap(BooleanArray);
+		assertArrayEquals(res1, new int[]{1, 3});
+		assertArrayEquals(res2, new int[]{1, 2});
+	}
 }
