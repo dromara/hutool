@@ -145,24 +145,26 @@ public class ByteUtil {
 	 * @return byte数组
 	 */
 	public static byte[] toBytes(final int intValue, final ByteOrder byteOrder) {
+		return fill(intValue, 0, byteOrder, new byte[Integer.BYTES]);
+	}
 
-		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			return new byte[]{ //
-				(byte) (intValue & 0xFF), //
-				(byte) ((intValue >> 8) & 0xFF), //
-				(byte) ((intValue >> 16) & 0xFF), //
-				(byte) ((intValue >> 24) & 0xFF) //
-			};
-
-		} else {
-			return new byte[]{ //
-				(byte) ((intValue >> 24) & 0xFF), //
-				(byte) ((intValue >> 16) & 0xFF), //
-				(byte) ((intValue >> 8) & 0xFF), //
-				(byte) (intValue & 0xFF) //
-			};
+	/**
+	 * 将int值转为bytes并填充到给定的bytes中
+	 *
+	 * @param intValue int值
+	 * @param start     开始位置（包含）
+	 * @param byteOrder 端续
+	 * @param bytes     被填充的bytes
+	 * @return 填充后的bytes
+	 * @since 6.0.0
+	 */
+	public static byte[] fill(int intValue, final int start, final ByteOrder byteOrder, final byte[] bytes) {
+		final int offset = (ByteOrder.LITTLE_ENDIAN == byteOrder) ? 0 : (bytes.length - 1);
+		for (int i = start; i < bytes.length; i++) {
+			bytes[Math.abs(i - offset)] = (byte) (intValue & 0xFF);
+			intValue >>= Byte.SIZE;
 		}
-
+		return bytes;
 	}
 
 	/**
@@ -202,16 +204,10 @@ public class ByteUtil {
 	 * @since 6.0.0
 	 */
 	public static byte[] fill(long longValue, final int start, final ByteOrder byteOrder, final byte[] bytes) {
-		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			for (int i = start; i < bytes.length; i++) {
-				bytes[i] = (byte) (longValue & 0xFF);
-				longValue >>= Byte.SIZE;
-			}
-		} else {
-			for (int i = (bytes.length - 1); i >= start; i--) {
-				bytes[i] = (byte) (longValue & 0xFF);
-				longValue >>= Byte.SIZE;
-			}
+		final int offset = (ByteOrder.LITTLE_ENDIAN == byteOrder) ? 0 : (bytes.length - 1);
+		for (int i = start; i < bytes.length; i++) {
+			bytes[Math.abs(i - offset)] = (byte) (longValue & 0xFF);
+			longValue >>= Byte.SIZE;
 		}
 		return bytes;
 	}
@@ -379,17 +375,23 @@ public class ByteUtil {
 	 * @since 5.7.21
 	 */
 	public static int toInt(final byte[] bytes, final int start, final ByteOrder byteOrder) {
-		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			return bytes[start] & 0xFF | //
-				(bytes[1 + start] & 0xFF) << 8 | //
-				(bytes[2 + start] & 0xFF) << 16 | //
-				(bytes[3 + start] & 0xFF) << 24; //
-		} else {
-			return bytes[3 + start] & 0xFF | //
-				(bytes[2 + start] & 0xFF) << 8 | //
-				(bytes[1 + start] & 0xFF) << 16 | //
-				(bytes[start] & 0xFF) << 24; //
+		if(bytes.length - start < Integer.BYTES){
+			throw new IllegalArgumentException("bytes length must be greater than or equal to " + Long.BYTES);
 		}
+
+		int values = 0;
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			for (int i = (Integer.BYTES - 1); i >= 0; i--) {
+				values <<= Byte.SIZE;
+				values |= (bytes[i + start] & 0xFF);
+			}
+		} else {
+			for (int i = 0; i < Integer.BYTES; i++) {
+				values <<= Byte.SIZE;
+				values |= (bytes[i + start] & 0xFF);
+			}
+		}
+		return values;
 	}
 
 	/**
@@ -443,6 +445,9 @@ public class ByteUtil {
 	 * @since 5.7.21
 	 */
 	public static long toLong(final byte[] bytes, final int start, final ByteOrder byteOrder) {
+		if(bytes.length - start < Long.BYTES){
+			throw new IllegalArgumentException("bytes length must be greater than or equal to " + Long.BYTES);
+		}
 		long values = 0;
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			for (int i = (Long.BYTES - 1); i >= 0; i--) {

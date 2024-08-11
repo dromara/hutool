@@ -29,6 +29,10 @@ import java.nio.charset.*;
 public class CharsetUtil {
 
 	/**
+	 * US_ASCII
+	 */
+	public static final String NAME_US_ASCII = "US_ASCII";
+	/**
 	 * ISO-8859-1
 	 */
 	public static final String NAME_ISO_8859_1 = "ISO-8859-1";
@@ -41,6 +45,10 @@ public class CharsetUtil {
 	 */
 	public static final String NAME_GBK = "GBK";
 
+	/**
+	 * US_ASCII
+	 */
+	public static final Charset US_ASCII = StandardCharsets.US_ASCII;
 	/**
 	 * ISO-8859-1
 	 */
