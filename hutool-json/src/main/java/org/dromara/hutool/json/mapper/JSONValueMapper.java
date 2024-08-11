@@ -21,6 +21,8 @@ import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.serialize.JSONStringer;
 import org.dromara.hutool.json.writer.GlobalValueWriters;
 
+import java.io.Serializable;
+
 /**
  * 对象和JSON值映射器，用于转换对象为JSON对象中的值<br>
  * 有效的JSON值包括：
@@ -36,7 +38,9 @@ import org.dromara.hutool.json.writer.GlobalValueWriters;
  * @author looly
  * @since 6.0.0
  */
-public class JSONValueMapper {
+public class JSONValueMapper implements Serializable {
+
+	private static final long serialVersionUID = -6714488573738940582L;
 
 	/**
 	 * 创建ObjectMapper
