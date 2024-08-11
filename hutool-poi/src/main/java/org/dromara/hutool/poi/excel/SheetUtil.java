@@ -12,11 +12,15 @@
 
 package org.dromara.hutool.poi.excel;
 
+import org.apache.poi.ss.usermodel.IgnoredErrorType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.cellwalk.CellHandler;
 import org.apache.poi.ss.util.cellwalk.CellWalk;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**
@@ -83,6 +87,18 @@ public class SheetUtil {
 	}
 
 	/**
+	 * 遍历Sheet中的所有单元格
+	 *
+	 * @param sheet       {@link Sheet}
+	 * @param cellHandler 单元格处理器
+	 */
+	public static void walk(final Sheet sheet, final CellHandler cellHandler) {
+		walk(sheet,
+			new CellRangeAddress(0, sheet.getLastRowNum(), 0, sheet.getLastRowNum()),
+			cellHandler);
+	}
+
+	/**
 	 * 遍历Sheet中的指定区域单元格
 	 *
 	 * @param sheet       {@link Sheet}
@@ -92,5 +108,29 @@ public class SheetUtil {
 	public static void walk(final Sheet sheet, final CellRangeAddress range, final CellHandler cellHandler) {
 		final CellWalk cellWalk = new CellWalk(sheet, range);
 		cellWalk.traverse(cellHandler);
+	}
+
+	/**
+	 * 设置忽略错误，即Excel中的绿色警告小标，只支持XSSFSheet和SXSSFSheet<br>
+	 * 见：https://stackoverflow.com/questions/23488221/how-to-remove-warning-in-excel-using-apache-poi-in-java
+	 *
+	 * @param sheet             {@link Sheet}
+	 * @param cellRangeAddress  指定单元格范围
+	 * @param ignoredErrorTypes 忽略的错误类型列表
+	 * @throws UnsupportedOperationException 如果sheet不是XSSFSheet
+	 * @since 5.8.28
+	 */
+	public static void addIgnoredErrors(final Sheet sheet, final CellRangeAddress cellRangeAddress, final IgnoredErrorType... ignoredErrorTypes) throws UnsupportedOperationException {
+		if (sheet instanceof XSSFSheet) {
+			((XSSFSheet) sheet).addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
+		} else if (sheet instanceof SXSSFSheet) {
+			// SXSSFSheet并未提供忽略错误方法，获得其内部_sh字段设置
+			final XSSFSheet xssfSheet = (XSSFSheet) FieldUtil.getFieldValue(sheet, "_sh");
+			if (null != xssfSheet) {
+				xssfSheet.addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
+			}
+		} else {
+			throw new UnsupportedOperationException("Only XSSFSheet supports addIgnoredErrors");
+		}
 	}
 }

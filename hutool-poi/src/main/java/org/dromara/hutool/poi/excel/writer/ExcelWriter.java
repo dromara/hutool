@@ -17,9 +17,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -29,7 +26,6 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.map.multi.Table;
-import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.poi.excel.*;
 import org.dromara.hutool.poi.excel.cell.CellRangeUtil;
@@ -67,11 +63,15 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 */
 	private Map<String, Integer> headLocationCache;
 	/**
-	 * 当前行
+	 * 当前行，用于标记初始可写数据的行和部分写完后当前的行
 	 */
 	private final AtomicInteger currentRow;
+	/**
+	 * 模板上下文，存储模板中变量及其位置信息
+	 */
+	private TemplateContext templateContext;
 
-	// region Constructors
+	// region ----- Constructors
 
 	/**
 	 * 构造，默认生成xlsx格式的Excel文件<br>
@@ -148,8 +148,11 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 
 		if (!FileUtil.exists(targetFile)) {
 			this.targetFile = targetFile;
+		} else{
+			// 如果是已经存在的文件，则作为模板加载，此时不能写出到模板文件
+			// 初始化模板
+			this.templateContext = new TemplateContext(this.sheet);
 		}
-		// 如果是已经存在的文件，则作为模板加载，此时不能写出到模板文件
 	}
 
 	/**
@@ -389,9 +392,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 		return this;
 	}
 
-	//region header alias
-	//endregion
-
 	/**
 	 * 设置窗口冻结，之前冻结的窗口会被覆盖，如果rowSplit为0表示取消冻结
 	 *
@@ -502,19 +502,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @since 5.8.28
 	 */
 	public ExcelWriter addIgnoredErrors(final CellRangeAddress cellRangeAddress, final IgnoredErrorType... ignoredErrorTypes) throws UnsupportedOperationException {
-		final Sheet sheet = this.sheet;
-		if (sheet instanceof XSSFSheet) {
-			((XSSFSheet) sheet).addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
-			return this;
-		} else if (sheet instanceof SXSSFSheet) {
-			// SXSSFSheet并未提供忽略错误方法，获得其内部_sh字段设置
-			final XSSFSheet xssfSheet = (XSSFSheet) FieldUtil.getFieldValue(sheet, "_sh");
-			if (null != xssfSheet) {
-				xssfSheet.addIgnoredErrors(cellRangeAddress, ignoredErrorTypes);
-			}
-		}
-
-		throw new UnsupportedOperationException("Only XSSFSheet supports addIgnoredErrors");
+		SheetUtil.addIgnoredErrors(this.sheet, cellRangeAddress, ignoredErrorTypes);
+		return this;
 	}
 
 	/**
@@ -539,21 +528,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @since 4.6.2
 	 */
 	public ExcelWriter addSelect(final CellRangeAddressList regions, final String... selectList) {
-		final DataValidationHelper validationHelper = this.sheet.getDataValidationHelper();
-		final DataValidationConstraint constraint = validationHelper.createExplicitListConstraint(selectList);
-
-		//设置下拉框数据
-		final DataValidation dataValidation = validationHelper.createValidation(constraint, regions);
-
-		//处理Excel兼容性问题
-		if (dataValidation instanceof XSSFDataValidation) {
-			dataValidation.setSuppressDropDownArrow(true);
-			dataValidation.setShowErrorBox(true);
-		} else {
-			dataValidation.setSuppressDropDownArrow(false);
-		}
-
-		return addValidationData(dataValidation);
+		DataValidationUtil.addSelect(this.sheet, regions, selectList);
+		return this;
 	}
 
 	/**
@@ -568,6 +544,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 		return this;
 	}
 
+	// region ----- merge
 	/**
 	 * 合并当前行的单元格
 	 *
@@ -656,7 +633,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 		}
 		return this;
 	}
+	// endregion
 
+	// region ----- write
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加
@@ -744,6 +723,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 		}
 		return this;
 	}
+	// endregion
 
 	// region ----- writeImg
 
@@ -805,7 +785,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @since 6.0.0
 	 */
 	public ExcelWriter writeImg(final byte[] pictureData, final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
-		ExcelImgUtil.writeImg(this.sheet, pictureData, imgType, clientAnchor);
+		ExcelDrawingUtil.drawingImg(this.sheet, pictureData, imgType, clientAnchor);
 		return this;
 	}
 
@@ -843,7 +823,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @since 6.0.0
 	 */
 	public ExcelWriter writeSimpleShape(final SimpleClientAnchor clientAnchor, final ShapeConfig shapeConfig) {
-		SimpleShapeUtil.writeSimpleShape(this.sheet, clientAnchor, shapeConfig);
+		ExcelDrawingUtil.drawingSimpleShape(this.sheet, clientAnchor, shapeConfig);
 		return this;
 	}
 	// endregion

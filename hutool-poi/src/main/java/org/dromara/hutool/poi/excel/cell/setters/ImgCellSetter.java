@@ -17,6 +17,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.poi.excel.ExcelImgType;
 import org.dromara.hutool.poi.excel.ExcelImgUtil;
 import org.dromara.hutool.poi.excel.SimpleClientAnchor;
+import org.dromara.hutool.poi.excel.writer.ExcelDrawingUtil;
 
 import java.io.File;
 
@@ -69,7 +70,7 @@ public class ImgCellSetter implements CellSetter {
 		final int columnIndex = cell.getColumnIndex();
 		final int rowIndex = cell.getRowIndex();
 
-		ExcelImgUtil.writeImg(sheet, this.pictureData, this.imgType,
+		ExcelDrawingUtil.drawingImg(sheet, this.pictureData, this.imgType,
 			new SimpleClientAnchor(columnIndex, rowIndex, columnIndex + 1, rowIndex + 1));
 	}
 }

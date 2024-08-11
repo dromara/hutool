@@ -81,27 +81,6 @@ public class ExcelImgUtil {
 		}
 	}
 
-	/**
-	 * 写出图片，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 添加图片到当前sheet中
-	 *
-	 * @param sheet {@link Sheet}
-	 * @param pictureData  数据bytes
-	 * @param imgType      图片类型，对应poi中Workbook类中的图片类型2-7变量
-	 * @param clientAnchor 图片的位置和大小信息
-	 * @author vhukze
-	 * @since 6.0.0
-	 */
-	public static void writeImg(final Sheet sheet, final byte[] pictureData,
-								final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
-		final Drawing<?> patriarch = sheet.createDrawingPatriarch();
-		final Workbook workbook = sheet.getWorkbook();
-		final ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
-		clientAnchor.copyTo(anchor);
-
-		patriarch.createPicture(anchor, workbook.addPicture(pictureData, imgType.getValue()));
-	}
-
 	// -------------------------------------------------------------------------------------------------------------- Private method start
 
 	/**
