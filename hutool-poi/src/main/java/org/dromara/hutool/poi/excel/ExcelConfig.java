@@ -14,7 +14,7 @@ package org.dromara.hutool.poi.excel;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
+import org.dromara.hutool.poi.excel.cell.editors.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellReferenceUtil;
 
 import java.util.ArrayList;

@@ -14,7 +14,7 @@ package org.dromara.hutool.poi.excel.reader.sheet;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
+import org.dromara.hutool.poi.excel.cell.editors.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 
 import java.util.ArrayList;

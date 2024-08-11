@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.dromara.hutool.core.func.SerBiConsumer;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
+import org.dromara.hutool.poi.excel.cell.editors.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 
 /**

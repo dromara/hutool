@@ -15,7 +15,6 @@ package org.dromara.hutool.poi.excel.cell.editors;
 import org.apache.poi.ss.usermodel.Cell;
 
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
 
 /**
  * 去除String类型的单元格值两边的空格

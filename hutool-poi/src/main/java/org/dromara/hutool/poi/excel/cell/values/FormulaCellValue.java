@@ -12,8 +12,7 @@
 
 package org.dromara.hutool.poi.excel.cell.values;
 
-import org.dromara.hutool.poi.excel.cell.CellSetter;
-import org.dromara.hutool.poi.excel.cell.CellValue;
+import org.dromara.hutool.poi.excel.cell.setters.CellSetter;
 import org.apache.poi.ss.usermodel.Cell;
 
 /**

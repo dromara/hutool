@@ -13,6 +13,7 @@
 package org.dromara.hutool.poi.excel;
 
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.io.file.FileTypeUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.multi.ListValueMap;
 import org.dromara.hutool.core.text.StrUtil;
@@ -32,6 +33,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -40,11 +42,37 @@ import java.util.List;
  * @author looly
  * @since 4.0.7
  */
-public class ExcelPicUtil {
+public class ExcelImgUtil {
+
+	/**
+	 * 获取图片类型
+	 *
+	 * @param imgFile 图片文件
+	 * @return 图片类型，默认PNG
+	 * @since 6.0.0
+	 */
+	public static int getImgType(final File imgFile) {
+		final String type = FileTypeUtil.getType(imgFile);
+		if (StrUtil.equalsAnyIgnoreCase(type, "jpg", "jpeg")) {
+			return Workbook.PICTURE_TYPE_JPEG;
+		} else if (StrUtil.equalsAnyIgnoreCase(type, "emf")) {
+			return Workbook.PICTURE_TYPE_EMF;
+		} else if (StrUtil.equalsAnyIgnoreCase(type, "wmf")) {
+			return Workbook.PICTURE_TYPE_WMF;
+		} else if (StrUtil.equalsAnyIgnoreCase(type, "pict")) {
+			return Workbook.PICTURE_TYPE_PICT;
+		} else if (StrUtil.equalsAnyIgnoreCase(type, "dib")) {
+			return Workbook.PICTURE_TYPE_DIB;
+		}
+
+		// 默认格式
+		return Workbook.PICTURE_TYPE_PNG;
+	}
+
 	/**
 	 * 获取工作簿指定sheet中图片列表
 	 *
-	 * @param workbook 工作簿{@link Workbook}
+	 * @param workbook   工作簿{@link Workbook}
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
@@ -64,10 +92,11 @@ public class ExcelPicUtil {
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 获取XLS工作簿指定sheet中图片列表
 	 *
-	 * @param workbook 工作簿{@link Workbook}
+	 * @param workbook   工作簿{@link Workbook}
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
@@ -92,7 +121,7 @@ public class ExcelPicUtil {
 	/**
 	 * 获取XLSX工作簿指定sheet中图片列表
 	 *
-	 * @param workbook 工作簿{@link Workbook}
+	 * @param workbook   工作簿{@link Workbook}
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
@@ -107,7 +136,7 @@ public class ExcelPicUtil {
 				XSSFPicture pic;
 				CTMarker ctMarker;
 				for (final XSSFShape shape : shapes) {
-					if(shape instanceof XSSFPicture){
+					if (shape instanceof XSSFPicture) {
 						pic = (XSSFPicture) shape;
 						ctMarker = pic.getPreferredSize().getFrom();
 						sheetIndexPicMap.putValue(StrUtil.format("{}_{}", ctMarker.getRow(), ctMarker.getCol()), pic.getPictureData());

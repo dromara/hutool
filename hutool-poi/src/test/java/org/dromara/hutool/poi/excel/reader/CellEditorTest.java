@@ -13,7 +13,7 @@
 package org.dromara.hutool.poi.excel.reader;
 
 import org.dromara.hutool.poi.excel.ExcelUtil;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
+import org.dromara.hutool.poi.excel.cell.editors.CellEditor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Cell;

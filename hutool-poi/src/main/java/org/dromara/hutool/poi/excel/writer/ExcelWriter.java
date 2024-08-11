@@ -13,13 +13,15 @@
 package org.dromara.hutool.poi.excel.writer;
 
 import org.apache.poi.common.usermodel.Hyperlink;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFSimpleShape;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.*;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -33,17 +35,13 @@ import org.dromara.hutool.core.map.multi.RowKeyTable;
 import org.dromara.hutool.core.map.multi.Table;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.poi.excel.SheetUtil;
-import org.dromara.hutool.poi.excel.ExcelBase;
-import org.dromara.hutool.poi.excel.RowUtil;
-import org.dromara.hutool.poi.excel.WorkbookUtil;
-import org.dromara.hutool.poi.excel.cell.CellEditor;
+import org.dromara.hutool.poi.excel.*;
 import org.dromara.hutool.poi.excel.cell.CellRangeUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
-import org.dromara.hutool.poi.excel.style.Align;
-import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
-import org.dromara.hutool.poi.excel.style.StyleSet;
+import org.dromara.hutool.poi.excel.cell.editors.CellEditor;
+import org.dromara.hutool.poi.excel.style.*;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -761,87 +759,119 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @since 5.7.18
 	 */
 	public ExcelWriter writeImg(final File imgFile, final int col1, final int row1, final int col2, final int row2) {
-		return this.writeImg(imgFile, 0, 0, 0, 0, col1, row1, col2, row2);
+		return writeImg(imgFile, new SimpleClientAnchor(col1, row1, col2, row2));
 	}
 
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 添加图片到当前sheet中 / 默认图片类型png
 	 *
-	 * @param imgFile 图片文件
-	 * @param dx1     起始单元格中的x坐标
-	 * @param dy1     起始单元格中的y坐标
-	 * @param dx2     结束单元格中的x坐标
-	 * @param dy2     结束单元格中的y坐标
-	 * @param col1    指定起始的列，下标从0开始
-	 * @param row1    指定起始的行，下标从0开始
-	 * @param col2    指定结束的列，下标从0开始
-	 * @param row2    指定结束的行，下标从0开始
+	 * @param imgFile      图片文件
+	 * @param clientAnchor 图片的位置和大小信息
 	 * @return this
 	 * @author vhukze
-	 * @since 5.7.18
+	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final File imgFile, final int dx1, final int dy1, final int dx2, final int dy2, final int col1, final int row1,
-								final int col2, final int row2) {
-		return this.writeImg(imgFile, Workbook.PICTURE_TYPE_PNG, dx1, dy1, dx2, dy2, col1, row1, col2, row2);
+	public ExcelWriter writeImg(final File imgFile, final SimpleClientAnchor clientAnchor) {
+		return writeImg(imgFile, ExcelImgUtil.getImgType(imgFile), clientAnchor);
 	}
 
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 添加图片到当前sheet中
 	 *
-	 * @param imgFile 图片文件
-	 * @param imgType 图片类型，对应poi中Workbook类中的图片类型2-7变量
-	 * @param dx1     起始单元格中的x坐标
-	 * @param dy1     起始单元格中的y坐标
-	 * @param dx2     结束单元格中的x坐标
-	 * @param dy2     结束单元格中的y坐标
-	 * @param col1    指定起始的列，下标从0开始
-	 * @param row1    指定起始的行，下标从0开始
-	 * @param col2    指定结束的列，下标从0开始
-	 * @param row2    指定结束的行，下标从0开始
+	 * @param imgFile      图片文件
+	 * @param imgType      图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param clientAnchor 图片的位置和大小信息
 	 * @return this
 	 * @author vhukze
-	 * @since 5.7.18
+	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final File imgFile, final int imgType, final int dx1, final int dy1, final int dx2,
-								final int dy2, final int col1, final int row1, final int col2, final int row2) {
-		return writeImg(FileUtil.readBytes(imgFile), imgType, dx1,
-			dy1, dx2, dy2, col1, row1, col2, row2);
+	public ExcelWriter writeImg(final File imgFile, final int imgType, final SimpleClientAnchor clientAnchor) {
+		return writeImg(FileUtil.readBytes(imgFile), imgType, clientAnchor);
 	}
 
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 添加图片到当前sheet中
 	 *
-	 * @param pictureData 数据bytes
-	 * @param imgType     图片类型，对应poi中Workbook类中的图片类型2-7变量
-	 * @param dx1         起始单元格中的x坐标
-	 * @param dy1         起始单元格中的y坐标
-	 * @param dx2         结束单元格中的x坐标
-	 * @param dy2         结束单元格中的y坐标
-	 * @param col1        指定起始的列，下标从0开始
-	 * @param row1        指定起始的行，下标从0开始
-	 * @param col2        指定结束的列，下标从0开始
-	 * @param row2        指定结束的行，下标从0开始
+	 * @param pictureData  数据bytes
+	 * @param imgType      图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param clientAnchor 图片的位置和大小信息
 	 * @return this
 	 * @author vhukze
-	 * @since 5.8.0
+	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final byte[] pictureData, final int imgType, final int dx1, final int dy1, final int dx2,
-								final int dy2, final int col1, final int row1, final int col2, final int row2) {
+	public ExcelWriter writeImg(final byte[] pictureData, final int imgType, final SimpleClientAnchor clientAnchor) {
 		final Drawing<?> patriarch = this.sheet.createDrawingPatriarch();
 		final ClientAnchor anchor = this.workbook.getCreationHelper().createClientAnchor();
-		anchor.setDx1(dx1);
-		anchor.setDy1(dy1);
-		anchor.setDx2(dx2);
-		anchor.setDy2(dy2);
-		anchor.setCol1(col1);
-		anchor.setRow1(row1);
-		anchor.setCol2(col2);
-		anchor.setRow2(row2);
+		clientAnchor.copyTo(anchor);
 
 		patriarch.createPicture(anchor, this.workbook.addPicture(pictureData, imgType));
+		return this;
+	}
+
+	/**
+	 * 绘制线条
+	 *
+	 * @param clientAnchor 绘制区域信息
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ExcelWriter writeLineShape(final SimpleClientAnchor clientAnchor) {
+		return writeSimpleShape(clientAnchor, ShapeConfig.of());
+	}
+
+	/**
+	 * 绘制线条
+	 *
+	 * @param clientAnchor 绘制区域信息
+	 * @param lineStyle    线条样式
+	 * @param lineWidth    线条粗细
+	 * @param lineColor    线条颜色
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ExcelWriter writeLineShape(final SimpleClientAnchor clientAnchor, final LineStyle lineStyle, final int lineWidth, final Color lineColor) {
+		return writeSimpleShape(clientAnchor, ShapeConfig.of().setLineStyle(lineStyle).setLineWidth(lineWidth).setLineColor(lineColor));
+	}
+
+	/**
+	 * 绘制简单形状
+	 *
+	 * @param clientAnchor 绘制区域信息
+	 * @param shapeConfig  形状配置，包括形状类型、线条样式、线条宽度、线条颜色、填充颜色等
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ExcelWriter writeSimpleShape(final SimpleClientAnchor clientAnchor, ShapeConfig shapeConfig) {
+		final Drawing<?> patriarch = this.sheet.createDrawingPatriarch();
+		final ClientAnchor anchor = this.workbook.getCreationHelper().createClientAnchor();
+		clientAnchor.copyTo(anchor);
+
+		if (null == shapeConfig) {
+			shapeConfig = ShapeConfig.of();
+		}
+		final Color lineColor = shapeConfig.getLineColor();
+		if (patriarch instanceof HSSFPatriarch) {
+			final HSSFSimpleShape simpleShape = ((HSSFPatriarch) patriarch).createSimpleShape((HSSFClientAnchor) anchor);
+			simpleShape.setShapeType(shapeConfig.getShapeType().ooxmlId);
+			simpleShape.setLineStyle(shapeConfig.getLineStyle().getValue());
+			simpleShape.setLineWidth(shapeConfig.getLineWidth());
+			if (null != lineColor) {
+				simpleShape.setLineStyleColor(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue());
+			}
+		} else if (patriarch instanceof XSSFDrawing) {
+			final XSSFSimpleShape simpleShape = ((XSSFDrawing) patriarch).createSimpleShape((XSSFClientAnchor) anchor);
+			simpleShape.setShapeType(shapeConfig.getShapeType().ooxmlId);
+			simpleShape.setLineStyle(shapeConfig.getLineStyle().getValue());
+			simpleShape.setLineWidth(shapeConfig.getLineWidth());
+			if (null != lineColor) {
+				simpleShape.setLineStyleColor(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue());
+			}
+		} else {
+			throw new UnsupportedOperationException("Unsupported patriarch type: " + patriarch.getClass().getName());
+		}
 		return this;
 	}
 	// endregion

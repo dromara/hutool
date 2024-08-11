@@ -14,8 +14,6 @@ package org.dromara.hutool.poi.excel.cell.editors;
 
 import org.apache.poi.ss.usermodel.Cell;
 
-import org.dromara.hutool.poi.excel.cell.CellEditor;
-
 /**
  * POI中NUMRIC类型的值默认返回的是Double类型，此编辑器用于转换其为int型
  *
