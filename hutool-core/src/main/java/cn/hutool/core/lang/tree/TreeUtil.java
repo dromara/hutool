@@ -5,9 +5,10 @@ import cn.hutool.core.lang.tree.parser.DefaultNodeParser;
 import cn.hutool.core.lang.tree.parser.NodeParser;
 import cn.hutool.core.util.ObjectUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 树工具类
@@ -276,5 +277,53 @@ public class TreeUtil {
 	 */
 	public static <E> Tree<E> createEmptyNode(E id) {
 		return new Tree<E>().setId(id);
+	}
+
+	/**
+	 * 函数式构建树状结构(无需继承Tree类)
+	 *
+	 * @param nodes			需要构建树集合
+	 * @param rootId		根节点ID
+	 * @param idFunc		获取节点ID函数
+	 * @param parentIdFunc	获取节点父ID函数
+	 * @param setChildFunc	设置孩子集合函数
+	 * @param <T>			节点ID类型
+	 * @param <E>			节点类型
+	 * @return List
+	 */
+	public static <T, E> List<E> build(List<E> nodes, T rootId, Function<E, T> idFunc, Function<E, T> parentIdFunc, BiConsumer<E, List<E>> setChildFunc) {
+		List<E> rootList = nodes.stream().filter(tree -> parentIdFunc.apply(tree).equals(rootId)).collect(Collectors.toList());
+		Map<T, T> filterOperated = new HashMap<>(rootList.size() + nodes.size());
+		//对每个根节点都封装它的孩子节点
+		rootList.forEach(root -> setChildren(root, nodes, filterOperated, idFunc, parentIdFunc, setChildFunc));
+		return rootList;
+	}
+
+	/**
+	 * 封装孩子节点
+	 *
+	 * @param root				根节点
+	 * @param nodes				节点集合
+	 * @param filterOperated	过滤操作Map
+	 * @param idFunc			获取节点ID函数
+	 * @param parentIdFunc		获取节点父ID函数
+	 * @param setChildFunc		设置孩子集合函数
+	 * @param <T>				节点ID类型
+	 * @param <E>				节点类型
+	 */
+	private static <T, E> void setChildren(E root, List<E> nodes, Map<T, T> filterOperated, Function<E, T> idFunc, Function<E, T> parentIdFunc, BiConsumer<E, List<E>> setChildFunc) {
+		List<E> children = new ArrayList<>();
+		nodes.stream()
+			//过滤出未操作过的节点
+			.filter(body -> !filterOperated.containsKey(idFunc.apply(body)))
+			//过滤出孩子节点
+			.filter(body -> Objects.equals(idFunc.apply(root), parentIdFunc.apply(body)))
+			.forEach(body -> {
+				filterOperated.put(idFunc.apply(body), idFunc.apply(root));
+				children.add(body);
+				//递归 对每个孩子节点执行同样操作
+				setChildren(body, nodes, filterOperated, idFunc, parentIdFunc, setChildFunc);
+			});
+		setChildFunc.accept(root, children);
 	}
 }

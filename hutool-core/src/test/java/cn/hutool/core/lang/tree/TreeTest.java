@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.tree;
 
 import cn.hutool.core.collection.CollUtil;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -121,5 +122,40 @@ public class TreeTest {
 		List<String> ids2 = new ArrayList<>();
 		tree.walk((tr) -> ids2.add(tr.getId()));
 		assertEquals(7, ids2.size());
+	}
+
+
+	@Data
+	static class Area {
+		private Integer id;
+		private String name;
+		private Integer parentId;
+		private List<Area> childrenList;
+
+		public Area(Integer id, String name, Integer parentId) {
+			this.id = id;
+			this.name = name;
+			this.parentId = parentId;
+		}
+	}
+	// 模拟数据
+	static List<Area> areaList = CollUtil.newArrayList();
+	static {
+		areaList.add(new Area(1, "中国", 0));
+		areaList.add(new Area(2, "北京", 1));
+		areaList.add(new Area(3, "上海", 1));
+		areaList.add(new Area(4, "广东", 1));
+		areaList.add(new Area(5, "广州", 4));
+		areaList.add(new Area(6, "深圳", 4));
+		areaList.add(new Area(7, "浙江", 1));
+		areaList.add(new Area(8, "杭州", 7));
+	}
+
+	@Test
+	public void builderTest() {
+		List<Area> list = TreeUtil.build(areaList, 0, Area::getId, Area::getParentId, Area::setChildrenList);
+		final Area root = list.get(0);
+		final Integer parentId = root.getChildrenList().get(0).getParentId();
+		assertEquals(root.getId(), parentId);
 	}
 }
