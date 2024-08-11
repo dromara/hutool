@@ -322,7 +322,7 @@ public class FileWriter extends FileWrapper {
 	 * 此方法会自动关闭输入流
 	 *
 	 * @param in 输入流，不关闭
-	 * @return dest
+	 * @return file
 	 * @throws IORuntimeException IO异常
 	 */
 	public File writeFromStream(final InputStream in) throws IORuntimeException {
@@ -334,7 +334,7 @@ public class FileWriter extends FileWrapper {
 	 *
 	 * @param in        输入流，不关闭
 	 * @param isCloseIn 是否关闭输入流
-	 * @return dest
+	 * @return file
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.2
 	 */

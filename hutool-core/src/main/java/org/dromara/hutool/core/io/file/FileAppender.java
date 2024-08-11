@@ -57,12 +57,12 @@ public class FileAppender implements Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param destFile      目标文件
+	 * @param targetFile      目标文件
 	 * @param capacity      当行数积累多少条时刷入到文件
 	 * @param isNewLineMode 追加内容是否为新行
 	 */
-	public FileAppender(final File destFile, final int capacity, final boolean isNewLineMode) {
-		this(destFile, CharsetUtil.UTF_8, capacity, isNewLineMode);
+	public FileAppender(final File targetFile, final int capacity, final boolean isNewLineMode) {
+		this(targetFile, CharsetUtil.UTF_8, capacity, isNewLineMode);
 	}
 
 	/**
