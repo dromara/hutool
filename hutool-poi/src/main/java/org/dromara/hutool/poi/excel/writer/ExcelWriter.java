@@ -13,15 +13,13 @@
 package org.dromara.hutool.poi.excel.writer;
 
 import org.apache.poi.common.usermodel.Hyperlink;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
-import org.apache.poi.hssf.usermodel.HSSFSimpleShape;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -29,9 +27,7 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.map.TableMap;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
-import org.dromara.hutool.core.map.multi.RowKeyTable;
 import org.dromara.hutool.core.map.multi.Table;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -60,7 +56,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Looly
  * @since 3.2.0
  */
-@SuppressWarnings("resource")
 public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 
 	/**
@@ -81,7 +76,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 构造，默认生成xlsx格式的Excel文件<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
-	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
+	 * 若写出到文件，还需调用{@link #setTargetFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
 	 *
 	 * @since 3.2.1
 	 */
@@ -145,18 +140,22 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 构造
 	 *
-	 * @param destFile  目标文件，可以不存在
-	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
+	 * @param targetFile 目标文件，可以不存在
+	 * @param sheetName  sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
-	public ExcelWriter(final File destFile, final String sheetName) {
-		this(WorkbookUtil.createBookForWriter(destFile), sheetName);
-		this.targetFile = destFile;
+	public ExcelWriter(final File targetFile, final String sheetName) {
+		this(WorkbookUtil.createBookForWriter(targetFile), sheetName);
+
+		if (!FileUtil.exists(targetFile)) {
+			this.targetFile = targetFile;
+		}
+		// 如果是已经存在的文件，则作为模板加载，此时不能写出到模板文件
 	}
 
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
-	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
+	 * 若写出到文件，还需调用{@link #setTargetFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
 	 *
 	 * @param workbook  {@link Workbook}
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
@@ -168,7 +167,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
-	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
+	 * 若写出到文件，还需调用{@link #setTargetFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
 	 *
 	 * @param sheet {@link Sheet}
 	 * @since 4.0.6
@@ -188,16 +187,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 
 	@Override
 	public ExcelWriter setSheet(final int sheetIndex) {
+		super.setSheet(sheetIndex);
 		// 切换到新sheet需要重置开始行
-		reset();
-		return super.setSheet(sheetIndex);
+		return reset();
 	}
 
 	@Override
 	public ExcelWriter setSheet(final String sheetName) {
+		super.setSheet(sheetName);
 		// 切换到新sheet需要重置开始行
-		reset();
-		return super.setSheet(sheetName);
+		return reset();
 	}
 
 	/**
@@ -205,15 +204,14 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 *
 	 * <pre>
 	 * 1. 当前行游标归零
-	 * 2. 清空别名比较器
-	 * 3. 清除标题缓存
+	 * 2. 清除标题缓存
 	 * </pre>
 	 *
 	 * @return this
 	 */
 	public ExcelWriter reset() {
-		resetRow();
-		return this;
+		this.headLocationCache.clear();
+		return resetRow();
 	}
 
 	/**
@@ -250,6 +248,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @return this
 	 * @since 4.0.12
 	 */
+	@SuppressWarnings("resource")
 	public ExcelWriter autoSizeColumnAll(final boolean useMergedCells, final float widthRatio) {
 		final int columnCount = this.getColumnCount();
 		for (int i = 0; i < columnCount; i++) {
@@ -379,13 +378,14 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	}
 
 	/**
-	 * 设置写出的目标文件
+	 * 设置写出的目标文件<br>
+	 * 注意这个文件不能存在，存在则{@link #flush()}时会被覆盖
 	 *
-	 * @param destFile 目标文件
+	 * @param targetFile 目标文件
 	 * @return this
 	 */
-	public ExcelWriter setDestFile(final File destFile) {
-		this.targetFile = destFile;
+	public ExcelWriter setTargetFile(final File targetFile) {
+		this.targetFile = targetFile;
 		return this;
 	}
 
@@ -600,6 +600,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @return this
 	 * @since 4.0.10
 	 */
+	@SuppressWarnings("resource")
 	public ExcelWriter merge(final int lastColumn, final Object content, final boolean isSetHeaderStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
@@ -696,6 +697,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param isWriteKeyAsHead 是否强制写出标题行（Map或Bean）
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public ExcelWriter write(final Iterable<?> data, final boolean isWriteKeyAsHead) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		boolean isFirst = true;
@@ -723,7 +725,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @return this
 	 * @since 3.2.3
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings({"rawtypes", "unchecked", "resource"})
 	public ExcelWriter write(final Iterable<?> data, final Comparator<String> comparator) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		boolean isFirstRow = true;
@@ -787,7 +789,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @author vhukze
 	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final File imgFile, final int imgType, final SimpleClientAnchor clientAnchor) {
+	public ExcelWriter writeImg(final File imgFile, final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
 		return writeImg(FileUtil.readBytes(imgFile), imgType, clientAnchor);
 	}
 
@@ -802,12 +804,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @author vhukze
 	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final byte[] pictureData, final int imgType, final SimpleClientAnchor clientAnchor) {
-		final Drawing<?> patriarch = this.sheet.createDrawingPatriarch();
-		final ClientAnchor anchor = this.workbook.getCreationHelper().createClientAnchor();
-		clientAnchor.copyTo(anchor);
-
-		patriarch.createPicture(anchor, this.workbook.addPicture(pictureData, imgType));
+	public ExcelWriter writeImg(final byte[] pictureData, final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
+		ExcelImgUtil.writeImg(this.sheet, pictureData, imgType, clientAnchor);
 		return this;
 	}
 
@@ -844,34 +842,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @return this
 	 * @since 6.0.0
 	 */
-	public ExcelWriter writeSimpleShape(final SimpleClientAnchor clientAnchor, ShapeConfig shapeConfig) {
-		final Drawing<?> patriarch = this.sheet.createDrawingPatriarch();
-		final ClientAnchor anchor = this.workbook.getCreationHelper().createClientAnchor();
-		clientAnchor.copyTo(anchor);
-
-		if (null == shapeConfig) {
-			shapeConfig = ShapeConfig.of();
-		}
-		final Color lineColor = shapeConfig.getLineColor();
-		if (patriarch instanceof HSSFPatriarch) {
-			final HSSFSimpleShape simpleShape = ((HSSFPatriarch) patriarch).createSimpleShape((HSSFClientAnchor) anchor);
-			simpleShape.setShapeType(shapeConfig.getShapeType().ooxmlId);
-			simpleShape.setLineStyle(shapeConfig.getLineStyle().getValue());
-			simpleShape.setLineWidth(shapeConfig.getLineWidth());
-			if (null != lineColor) {
-				simpleShape.setLineStyleColor(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue());
-			}
-		} else if (patriarch instanceof XSSFDrawing) {
-			final XSSFSimpleShape simpleShape = ((XSSFDrawing) patriarch).createSimpleShape((XSSFClientAnchor) anchor);
-			simpleShape.setShapeType(shapeConfig.getShapeType().ooxmlId);
-			simpleShape.setLineStyle(shapeConfig.getLineStyle().getValue());
-			simpleShape.setLineWidth(shapeConfig.getLineWidth());
-			if (null != lineColor) {
-				simpleShape.setLineStyleColor(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue());
-			}
-		} else {
-			throw new UnsupportedOperationException("Unsupported patriarch type: " + patriarch.getClass().getName());
-		}
+	public ExcelWriter writeSimpleShape(final SimpleClientAnchor clientAnchor, final ShapeConfig shapeConfig) {
+		SimpleShapeUtil.writeSimpleShape(this.sheet, clientAnchor, shapeConfig);
 		return this;
 	}
 	// endregion
@@ -914,6 +886,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param rowData 一行的数据
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public ExcelWriter writeSecHeadRow(final Iterable<?> rowData) {
 		final Row row = RowUtil.getOrCreateRow(this.sheet, this.currentRow.getAndIncrement());
 		final Iterator<?> iterator = rowData.iterator();
@@ -994,6 +967,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param isWriteKeyAsHead 为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public ExcelWriter writeRow(final Map<?, ?> rowMap, final boolean isWriteKeyAsHead) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		if (MapUtil.isEmpty(rowMap)) {
@@ -1001,7 +975,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 			return passCurrentRow();
 		}
 
-		final Table<?, ?, ?> aliasTable = aliasTable(rowMap);
+		final Table<?, ?, ?> aliasTable = this.config.aliasTable(rowMap);
 		if (isWriteKeyAsHead) {
 			// 写出标题行，并记录标题别名和列号的关系
 			writeHeadRow(aliasTable.columnKeys());
@@ -1075,6 +1049,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public ExcelWriter writeCol(final Map<?, ? extends Iterable<?>> colMap, int startColIndex, final boolean isWriteKeyAsHead) {
 		for (final Object k : colMap.keySet()) {
 			final Iterable<?> v = colMap.get(k);
@@ -1112,6 +1087,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public ExcelWriter writeCol(final Object headerVal, final int colIndex, final Iterable<?> colData, final boolean isResetRowIndex) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		int currentRowIndex = currentRow.get();
@@ -1297,7 +1273,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>
-	 * 预定义文件可以通过{@link #setDestFile(File)} 方法预定义，或者通过构造定义
+	 * 预定义文件可以通过{@link #setTargetFile(File)} 方法预定义，或者通过构造定义
 	 *
 	 * @return this
 	 * @throws IORuntimeException IO异常
@@ -1360,6 +1336,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * 关闭工作簿<br>
 	 * 如果用户设定了目标文件，先写出目标文件后给关闭工作簿
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public void close() {
 		if (null != this.targetFile) {
@@ -1378,36 +1355,4 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 		// 清空对象
 		this.styleSet = null;
 	}
-
-	// region ----- Private method start
-
-	/**
-	 * 为指定的key列表添加标题别名，如果没有定义key的别名，在onlyAlias为false时使用原key<br>
-	 * key为别名，value为字段值
-	 *
-	 * @param rowMap 一行数据
-	 * @return 别名列表
-	 */
-	private Table<?, ?, ?> aliasTable(final Map<?, ?> rowMap) {
-		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), TableMap::new);
-		final Map<String, String> headerAlias = this.config.getHeaderAlias();
-		final boolean onlyAlias = this.config.onlyAlias;
-		if (MapUtil.isEmpty(headerAlias)) {
-			rowMap.forEach((key, value) -> filteredTable.put(key, key, value));
-		} else {
-			rowMap.forEach((key, value) -> {
-				final String aliasName = headerAlias.get(StrUtil.toString(key));
-				if (null != aliasName) {
-					// 别名键值对加入
-					filteredTable.put(key, aliasName, value);
-				} else if (!onlyAlias) {
-					// 保留无别名设置的键值对
-					filteredTable.put(key, key, value);
-				}
-			});
-		}
-
-		return filteredTable;
-	}
-	// endregion
 }

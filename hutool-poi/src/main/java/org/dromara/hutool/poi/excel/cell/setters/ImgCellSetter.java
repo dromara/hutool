@@ -14,7 +14,9 @@ package org.dromara.hutool.poi.excel.cell.setters;
 
 import org.apache.poi.ss.usermodel.*;
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.poi.excel.ExcelImgType;
 import org.dromara.hutool.poi.excel.ExcelImgUtil;
+import org.dromara.hutool.poi.excel.SimpleClientAnchor;
 
 import java.io.File;
 
@@ -27,7 +29,7 @@ import java.io.File;
 public class ImgCellSetter implements CellSetter {
 
 	private final byte[] pictureData;
-	private final int imgType;
+	private final ExcelImgType imgType;
 
 	// region ----- 构造
 
@@ -37,7 +39,7 @@ public class ImgCellSetter implements CellSetter {
 	 * @param pictureData 图片数据
 	 */
 	public ImgCellSetter(final byte[] pictureData) {
-		this(pictureData, Workbook.PICTURE_TYPE_PNG);
+		this(pictureData, ExcelImgType.PNG);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class ImgCellSetter implements CellSetter {
 	 * @param pictureData 图片数据
 	 * @param imgType     图片类型
 	 */
-	public ImgCellSetter(final byte[] pictureData, final int imgType) {
+	public ImgCellSetter(final byte[] pictureData, final ExcelImgType imgType) {
 		this.pictureData = pictureData;
 		this.imgType = imgType;
 	}
@@ -64,18 +66,10 @@ public class ImgCellSetter implements CellSetter {
 	@Override
 	public void setValue(final Cell cell) {
 		final Sheet sheet = cell.getSheet();
-		final Workbook workbook = sheet.getWorkbook();
-		final Drawing<?> patriarch = sheet.createDrawingPatriarch();
-		final ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
-
 		final int columnIndex = cell.getColumnIndex();
 		final int rowIndex = cell.getRowIndex();
-		// 填充当前单元格
-		anchor.setCol1(columnIndex);
-		anchor.setRow1(rowIndex);
-		anchor.setCol2(columnIndex + 1);
-		anchor.setRow2(rowIndex + 1);
 
-		patriarch.createPicture(anchor, workbook.addPicture(this.pictureData, this.imgType));
+		ExcelImgUtil.writeImg(sheet, this.pictureData, this.imgType,
+			new SimpleClientAnchor(columnIndex, rowIndex, columnIndex + 1, rowIndex + 1));
 	}
 }

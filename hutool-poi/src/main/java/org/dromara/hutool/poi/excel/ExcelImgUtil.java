@@ -12,25 +12,15 @@
 
 package org.dromara.hutool.poi.excel;
 
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.*;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.file.FileTypeUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.multi.ListValueMap;
 import org.dromara.hutool.core.text.StrUtil;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPicture;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
-import org.apache.poi.hssf.usermodel.HSSFShape;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.ss.usermodel.PictureData;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFShape;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
 import java.io.File;
@@ -51,22 +41,22 @@ public class ExcelImgUtil {
 	 * @return 图片类型，默认PNG
 	 * @since 6.0.0
 	 */
-	public static int getImgType(final File imgFile) {
+	public static ExcelImgType getImgType(final File imgFile) {
 		final String type = FileTypeUtil.getType(imgFile);
 		if (StrUtil.equalsAnyIgnoreCase(type, "jpg", "jpeg")) {
-			return Workbook.PICTURE_TYPE_JPEG;
+			return ExcelImgType.JPEG;
 		} else if (StrUtil.equalsAnyIgnoreCase(type, "emf")) {
-			return Workbook.PICTURE_TYPE_EMF;
+			return ExcelImgType.EMF;
 		} else if (StrUtil.equalsAnyIgnoreCase(type, "wmf")) {
-			return Workbook.PICTURE_TYPE_WMF;
+			return ExcelImgType.WMF;
 		} else if (StrUtil.equalsAnyIgnoreCase(type, "pict")) {
-			return Workbook.PICTURE_TYPE_PICT;
+			return ExcelImgType.PICT;
 		} else if (StrUtil.equalsAnyIgnoreCase(type, "dib")) {
-			return Workbook.PICTURE_TYPE_DIB;
+			return ExcelImgType.DIB;
 		}
 
 		// 默认格式
-		return Workbook.PICTURE_TYPE_PNG;
+		return ExcelImgType.PNG;
 	}
 
 	/**
@@ -89,6 +79,27 @@ public class ExcelImgUtil {
 		} else {
 			throw new IllegalArgumentException(StrUtil.format("Workbook type [{}] is not supported!", workbook.getClass()));
 		}
+	}
+
+	/**
+	 * 写出图片，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 添加图片到当前sheet中
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param pictureData  数据bytes
+	 * @param imgType      图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param clientAnchor 图片的位置和大小信息
+	 * @author vhukze
+	 * @since 6.0.0
+	 */
+	public static void writeImg(final Sheet sheet, final byte[] pictureData,
+								final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
+		final Drawing<?> patriarch = sheet.createDrawingPatriarch();
+		final Workbook workbook = sheet.getWorkbook();
+		final ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
+		clientAnchor.copyTo(anchor);
+
+		patriarch.createPicture(anchor, workbook.addPicture(pictureData, imgType.getValue()));
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start
