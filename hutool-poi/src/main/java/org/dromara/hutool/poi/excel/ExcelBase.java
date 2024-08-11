@@ -54,7 +54,7 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 	/**
 	 * 目标文件，如果用户读取为流或自行创建的Workbook或Sheet,此参数为{@code null}
 	 */
-	protected File destFile;
+	protected File targetFile;
 	/**
 	 * 工作簿
 	 */

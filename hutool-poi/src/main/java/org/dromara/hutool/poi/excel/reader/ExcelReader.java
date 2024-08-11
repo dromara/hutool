@@ -71,7 +71,7 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 */
 	public ExcelReader(final File bookFile, final int sheetIndex) {
 		this(WorkbookUtil.createBook(bookFile, true), sheetIndex);
-		this.destFile = bookFile;
+		this.targetFile = bookFile;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 */
 	public ExcelReader(final File bookFile, final String sheetName) {
 		this(WorkbookUtil.createBook(bookFile, true), sheetName);
-		this.destFile = bookFile;
+		this.targetFile = bookFile;
 	}
 
 	/**
@@ -372,11 +372,11 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 * @since 4.0.6
 	 */
 	public ExcelWriter getWriter() {
-		if (null == this.destFile) {
+		if (null == this.targetFile) {
 			// 非读取文件形式，直接获取sheet操作。
 			return new ExcelWriter(this.sheet);
 		}
-		return ExcelUtil.getWriter(this.destFile, this.sheet.getSheetName());
+		return ExcelUtil.getWriter(this.targetFile, this.sheet.getSheetName());
 	}
 
 	// ------------------------------------------------------------------------------------------------------- Private methods start

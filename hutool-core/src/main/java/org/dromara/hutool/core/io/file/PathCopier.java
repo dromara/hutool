@@ -15,7 +15,7 @@ package org.dromara.hutool.core.io.file;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.visitor.CopyVisitor;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.copier.SrcToDestCopier;
+import org.dromara.hutool.core.lang.copier.SrcToTargetCopier;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ import java.nio.file.*;
  * @author looly
  * @since 6.0.0
  */
-public class PathCopier extends SrcToDestCopier<Path, PathCopier> {
+public class PathCopier extends SrcToTargetCopier<Path, PathCopier> {
 	private static final long serialVersionUID = 1L;
 
 	/**

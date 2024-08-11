@@ -130,7 +130,7 @@ public class BigExcelWriter extends ExcelWriter {
 	 */
 	public BigExcelWriter(final File destFile, final String sheetName) {
 		this(destFile.exists() ? WorkbookUtil.createSXSSFBook(destFile) : WorkbookUtil.createSXSSFBook(), sheetName);
-		this.destFile = destFile;
+		this.targetFile = destFile;
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class BigExcelWriter extends ExcelWriter {
 	@SuppressWarnings("resource")
 	@Override
 	public void close() {
-		if (null != this.destFile && !isFlushed) {
+		if (null != this.targetFile && !isFlushed) {
 			flush();
 		}
 

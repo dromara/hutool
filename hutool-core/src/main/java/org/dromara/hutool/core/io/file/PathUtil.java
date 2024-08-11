@@ -265,7 +265,7 @@ public class PathUtil {
 	 * @since 5.8.27
 	 */
 	public static Path copy(final InputStream src, final Path target, final CopyOption... options) throws IORuntimeException {
-		Assert.notNull(target, "Destination File or directory is null !");
+		Assert.notNull(target, "Target File or directory is null !");
 
 		// 创建级联父目录
 		mkParentDirs(target);

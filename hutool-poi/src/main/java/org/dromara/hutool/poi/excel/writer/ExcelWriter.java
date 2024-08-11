@@ -150,7 +150,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 */
 	public ExcelWriter(final File destFile, final String sheetName) {
 		this(WorkbookUtil.createBookForWriter(destFile), sheetName);
-		this.destFile = destFile;
+		this.targetFile = destFile;
 	}
 
 	/**
@@ -385,7 +385,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @return this
 	 */
 	public ExcelWriter setDestFile(final File destFile) {
-		this.destFile = destFile;
+		this.targetFile = destFile;
 		return this;
 	}
 
@@ -1303,7 +1303,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @throws IORuntimeException IO异常
 	 */
 	public ExcelWriter flush() throws IORuntimeException {
-		return flush(this.destFile);
+		return flush(this.targetFile);
 	}
 
 	/**
@@ -1362,7 +1362,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 */
 	@Override
 	public void close() {
-		if (null != this.destFile) {
+		if (null != this.targetFile) {
 			flush();
 		}
 		closeWithoutFlush();

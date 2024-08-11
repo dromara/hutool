@@ -41,7 +41,7 @@ public class Word07Writer implements Closeable {
 	/**
 	 * 目标文件
 	 */
-	protected File destFile;
+	protected File targetFile;
 	/**
 	 * 是否被关闭
 	 */
@@ -59,10 +59,10 @@ public class Word07Writer implements Closeable {
 	/**
 	 * 构造
 	 *
-	 * @param destFile 写出的文件
+	 * @param targetFile 写出的文件
 	 */
-	public Word07Writer(final File destFile) {
-		this(DocUtil.create(destFile), destFile);
+	public Word07Writer(final File targetFile) {
+		this(DocUtil.create(targetFile), targetFile);
 	}
 
 	/**
@@ -78,11 +78,11 @@ public class Word07Writer implements Closeable {
 	 * 构造
 	 *
 	 * @param doc      {@link XWPFDocument}
-	 * @param destFile 写出的文件
+	 * @param targetFile 写出的文件
 	 */
-	public Word07Writer(final XWPFDocument doc, final File destFile) {
+	public Word07Writer(final XWPFDocument doc, final File targetFile) {
 		this.doc = doc;
-		this.destFile = destFile;
+		this.targetFile = targetFile;
 	}
 
 	// endregion
@@ -99,11 +99,11 @@ public class Word07Writer implements Closeable {
 	/**
 	 * 设置写出的目标文件
 	 *
-	 * @param destFile 目标文件
+	 * @param targetFile 目标文件
 	 * @return this
 	 */
-	public Word07Writer setDestFile(final File destFile) {
-		this.destFile = destFile;
+	public Word07Writer setTargetFile(final File targetFile) {
+		this.targetFile = targetFile;
 		return this;
 	}
 
@@ -249,13 +249,13 @@ public class Word07Writer implements Closeable {
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>
-	 * 预定义文件可以通过{@link #setDestFile(File)} 方法预定义，或者通过构造定义
+	 * 预定义文件可以通过{@link #setTargetFile(File)} 方法预定义，或者通过构造定义
 	 *
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	public Word07Writer flush() throws IORuntimeException {
-		return flush(this.destFile);
+		return flush(this.targetFile);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class Word07Writer implements Closeable {
 	@SuppressWarnings("resource")
 	@Override
 	public void close() {
-		if (null != this.destFile) {
+		if (null != this.targetFile) {
 			flush();
 		}
 		closeWithoutFlush();
