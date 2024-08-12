@@ -127,6 +127,22 @@ public class GraphicsUtil {
 	 * @param color  字体颜色，{@code null} 表示使用随机颜色（每个字符单独随机）
 	 * @param width  字符串背景的宽度
 	 * @param height 字符串背景的高度
+	 * @return 画笔对象
+	 * @since 4.5.10
+	 */
+	public static Graphics drawString(Graphics g, String str, Font font, Color color, int width, int height) {
+		return drawString(g, str, font, color, width, height, null, 0);
+	}
+
+	/**
+	 * 绘制字符串，默认抗锯齿
+	 *
+	 * @param g      {@link Graphics}画笔
+	 * @param str    字符串
+	 * @param font   字体
+	 * @param color  字体颜色，{@code null} 表示使用随机颜色（每个字符单独随机）
+	 * @param width  字符串背景的宽度
+	 * @param height 字符串背景的高度
 	 * @param compareColor 用于比对的颜色
 	 * @param minColorDistance 随机生成的颜色与对比颜色的最小色差，小于此值则重新生成颜色
 	 * @return 画笔对象
