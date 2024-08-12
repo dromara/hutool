@@ -24,7 +24,7 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 public class PoiChecker {
 
 	/** 没有引入POI的错误消息 */
-	public static final String NO_POI_ERROR_MSG = "You need to add dependency of 'poi-ooxml' to your project, and version >= 4.1.2";
+	public static final String NO_POI_ERROR_MSG = "You need to add dependency of 'poi-ooxml' to your project, and version >= 5.3.0";
 
 	/**
 	 * 检查POI包的引入情况
