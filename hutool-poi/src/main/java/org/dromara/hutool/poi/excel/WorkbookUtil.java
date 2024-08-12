@@ -21,7 +21,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.poi.exceptions.POIException;
+import org.dromara.hutool.poi.POIException;
 
 import java.io.File;
 import java.io.IOException;

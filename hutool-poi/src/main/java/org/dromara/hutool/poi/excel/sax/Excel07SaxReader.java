@@ -18,7 +18,7 @@ import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
-import org.dromara.hutool.poi.exceptions.POIException;
+import org.dromara.hutool.poi.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;

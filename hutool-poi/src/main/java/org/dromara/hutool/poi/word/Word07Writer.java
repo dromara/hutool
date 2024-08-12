@@ -18,7 +18,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.poi.exceptions.POIException;
+import org.dromara.hutool.poi.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;

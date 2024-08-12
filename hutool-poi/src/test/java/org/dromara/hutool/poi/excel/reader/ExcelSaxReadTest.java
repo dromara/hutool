@@ -23,7 +23,7 @@ import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.cell.values.FormulaCellValue;
 import org.dromara.hutool.poi.excel.sax.Excel03SaxReader;
 import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
-import org.dromara.hutool.poi.exceptions.POIException;
+import org.dromara.hutool.poi.POIException;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;

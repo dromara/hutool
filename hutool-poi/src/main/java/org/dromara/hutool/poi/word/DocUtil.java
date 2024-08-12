@@ -14,7 +14,7 @@ package org.dromara.hutool.poi.word;
 
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.poi.exceptions.POIException;
+import org.dromara.hutool.poi.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;

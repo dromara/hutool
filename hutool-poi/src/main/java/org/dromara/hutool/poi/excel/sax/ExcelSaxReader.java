@@ -13,7 +13,7 @@
 package org.dromara.hutool.poi.excel.sax;
 
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.poi.exceptions.POIException;
+import org.dromara.hutool.poi.POIException;
 
 import java.io.File;
 import java.io.InputStream;
