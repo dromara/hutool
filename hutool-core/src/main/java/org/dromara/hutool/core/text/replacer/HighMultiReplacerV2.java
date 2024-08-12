@@ -61,7 +61,7 @@ public class HighMultiReplacerV2 extends StrReplacer {
 				final char ch = text.charAt(i);
 				final Integer index = charIndexMap.get(ch);
 				// 下一个字符在候选转换字符串中都不存在 ch字符一定不会被替换
-				if(index < 0){
+				if(index == null || index < 0){
 					// 临时缓存空间中的数据写入到输出的 StringBuilder
 					if(temp.length() > 0){
 						stringBuilder.append(temp);
@@ -92,14 +92,16 @@ public class HighMultiReplacerV2 extends StrReplacer {
 
 				// 表示匹配到 现在进行字符串替换工作
 				if(currentNode.isEnd){
-					final int length = currentNode.tagetString.length();
+					final int length = currentNode.tagetString.length() - 1;
 					// 先清理匹配到的字符 最后一个字符未加入临时空间
-					temp.delete(temp.length() - length + 1,length - 1);
+					temp.delete(temp.length() - length,temp.length());
 					if(temp.length() > 0){
 						stringBuilder.append(temp);
 					}
 					// 写入被替换的字符串
 					stringBuilder.append(replaceMap.get(currentNode.tagetString));
+					// 将临时空间删除
+					temp.delete(0, temp.length());
 					// 因为字符串被替换过了 所以当前节点重新指向 root
 					currentNode = root;
 					continue;
