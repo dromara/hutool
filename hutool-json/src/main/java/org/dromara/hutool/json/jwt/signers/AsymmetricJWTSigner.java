@@ -48,7 +48,7 @@ public class AsymmetricJWTSigner implements JWTSigner {
 	public AsymmetricJWTSigner(final String algorithm, final Key key) {
 		final PublicKey publicKey = key instanceof PublicKey ? (PublicKey) key : null;
 		final PrivateKey privateKey = key instanceof PrivateKey ? (PrivateKey) key : null;
-		this.sign = new Sign(algorithm, privateKey, publicKey);
+		this.sign = new Sign(algorithm, new KeyPair(publicKey, privateKey));
 	}
 
 	/**
