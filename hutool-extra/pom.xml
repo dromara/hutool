@@ -549,5 +549,11 @@
 			<version>3.0.2</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- ip2region ip地址转换依赖 -->
+		<dependency>
+			<groupId>net.dreamlu</groupId>
+			<artifactId>mica-ip2region</artifactId>
+			<version>2.5.6</version>
+		</dependency>
 	</dependencies>
 </project>

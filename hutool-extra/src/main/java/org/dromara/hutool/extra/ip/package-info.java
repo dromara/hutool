@@ -11,10 +11,7 @@
  */
 
 /**
- * HanLP分词引擎实现<br>
- * 项目地址：https://github.com/hankcs/HanLP
- *
- * @author looly
- *
+ * Ip2region常用方法封装
+ * @author LGXTvT
  */
-package org.dromara.hutool.extra.tokenizer.engine.hanlp;
+package org.dromara.hutool.extra.ip;
