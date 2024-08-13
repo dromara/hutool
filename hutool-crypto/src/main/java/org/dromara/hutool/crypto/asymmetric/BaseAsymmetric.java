@@ -18,6 +18,7 @@ package org.dromara.hutool.crypto.asymmetric;
 
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.KeyUtil;
 
@@ -44,6 +45,10 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 */
 	protected String algorithm;
 	/**
+	 * 锁
+	 */
+	protected Lock lock = new ReentrantLock();
+	/**
 	 * 公钥
 	 */
 	protected PublicKey publicKey;
@@ -51,11 +56,6 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * 私钥
 	 */
 	protected PrivateKey privateKey;
-	/**
-	 * 锁
-	 */
-	protected final Lock lock = new ReentrantLock();
-
 	// ------------------------------------------------------------------ Constructor start
 
 	/**
@@ -64,13 +64,12 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param algorithm  算法
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
-	 * @since 3.1.1
+	 * @param algorithm 算法
+	 * @param keyPair   密钥对，包括私钥和公钥
+	 * @since 6.0.0
 	 */
-	public BaseAsymmetric(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		init(algorithm, privateKey, publicKey);
+	public BaseAsymmetric(final String algorithm, final KeyPair keyPair) {
+		init(algorithm, keyPair);
 	}
 	// ------------------------------------------------------------------ Constructor end
 
@@ -79,15 +78,16 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密（签名）或者解密（校验）
 	 *
-	 * @param algorithm  算法
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
+	 * @param algorithm 算法
+	 * @param keyPair   密钥对，包括私钥和公钥
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	protected T init(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
+	protected T init(final String algorithm, final KeyPair keyPair) {
 		this.algorithm = algorithm;
 
+		final PrivateKey privateKey = ObjUtil.apply(keyPair, KeyPair::getPrivate);
+		final PublicKey publicKey = ObjUtil.apply(keyPair, KeyPair::getPublic);
 		if (null == privateKey && null == publicKey) {
 			initKeys();
 		} else {
@@ -102,7 +102,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	}
 
 	/**
-	 * 生成公钥和私钥
+	 * 生成随机公钥和私钥
 	 *
 	 * @return this
 	 */
@@ -114,7 +114,20 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 		return (T) this;
 	}
 
-	// --------------------------------------------------------------------------------- Getters and Setters
+	/**
+	 * 自定义锁，无需锁使用{@link org.dromara.hutool.core.thread.lock.NoLock}
+	 *
+	 * @param lock 自定义锁
+	 * @return this
+	 * @since 6.0.0
+	 */
+	@SuppressWarnings("unchecked")
+	public T setLock(final Lock lock) {
+		this.lock = lock;
+		return (T) this;
+	}
+
+	// region ----- getOrSetKeys
 
 	/**
 	 * 获得公钥
@@ -217,4 +230,5 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 		}
 		throw new CryptoException("Unsupported key type: " + type);
 	}
+	// endregion
 }

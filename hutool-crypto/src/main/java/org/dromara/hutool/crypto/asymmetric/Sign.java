@@ -45,10 +45,13 @@ import java.util.Set;
 public class Sign extends BaseAsymmetric<Sign> {
 	private static final long serialVersionUID = 1L;
 
-	/** 签名，用于签名和验证 */
+	/**
+	 * 签名，用于签名和验证
+	 */
 	protected Signature signature;
 
 	// ------------------------------------------------------------------ Constructor start
+
 	/**
 	 * 构造，创建新的私钥公钥对
 	 *
@@ -71,9 +74,9 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *
-	 * @param algorithm {@link SignAlgorithm}
+	 * @param algorithm     {@link SignAlgorithm}
 	 * @param privateKeyStr 私钥Hex或Base64表示
-	 * @param publicKeyStr 公钥Hex或Base64表示
+	 * @param publicKeyStr  公钥Hex或Base64表示
 	 */
 	public Sign(final SignAlgorithm algorithm, final String privateKeyStr, final String publicKeyStr) {
 		this(algorithm.getValue(), SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
@@ -83,9 +86,9 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *
-	 * @param algorithm {@link SignAlgorithm}
+	 * @param algorithm  {@link SignAlgorithm}
 	 * @param privateKey 私钥
-	 * @param publicKey 公钥
+	 * @param publicKey  公钥
 	 */
 	public Sign(final SignAlgorithm algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm.getValue(), privateKey, publicKey);
@@ -96,7 +99,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *
 	 * @param algorithm {@link SignAlgorithm}
-	 * @param keyPair 密钥对（包括公钥和私钥）
+	 * @param keyPair   密钥对，{@code null}表示随机生成
 	 */
 	public Sign(final SignAlgorithm algorithm, final KeyPair keyPair) {
 		this(algorithm.getValue(), keyPair);
@@ -106,21 +109,9 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *
-	 * @param algorithm {@link SignAlgorithm}
-	 * @param privateKey 私钥
-	 * @param publicKey 公钥
-	 */
-	public Sign(final SignAlgorithm algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		this(algorithm.getValue(), privateKey, publicKey);
-	}
-
-	/**
-	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
-	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
-	 *
-	 * @param algorithm 非对称加密算法
+	 * @param algorithm        非对称加密算法
 	 * @param privateKeyBase64 私钥Base64
-	 * @param publicKeyBase64 公钥Base64
+	 * @param publicKeyBase64  公钥Base64
 	 */
 	public Sign(final String algorithm, final String privateKeyBase64, final String publicKeyBase64) {
 		this(algorithm, Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
@@ -132,26 +123,16 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *
-	 * @param algorithm 算法
+	 * @param algorithm  算法
 	 * @param privateKey 私钥
-	 * @param publicKey 公钥
+	 * @param publicKey  公钥
 	 */
 	public Sign(final String algorithm, final byte[] privateKey, final byte[] publicKey) {
-		this(algorithm, //
-				KeyUtil.generatePrivateKey(algorithm, privateKey), //
-				KeyUtil.generatePublicKey(algorithm, publicKey)//
-		);
-	}
-
-	/**
-	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
-	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
-	 *
-	 * @param algorithm 算法，见{@link SignAlgorithm}
-	 * @param keyPair 密钥对（包括公钥和私钥）
-	 */
-	public Sign(final String algorithm, final KeyPair keyPair) {
-		this(algorithm, keyPair.getPrivate(), keyPair.getPublic());
+		this(algorithm,
+			new KeyPair(
+				KeyUtil.generatePublicKey(algorithm, publicKey),
+				KeyUtil.generatePrivateKey(algorithm, privateKey)
+			));
 	}
 
 	/**
@@ -161,26 +142,24 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *
 	 * @param algorithm 算法
-	 * @param privateKey 私钥
-	 * @param publicKey 公钥
+	 * @param keyPair   密钥对，{@code null}表示随机生成
 	 */
-	public Sign(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		super(algorithm, privateKey, publicKey);
+	public Sign(final String algorithm, final KeyPair keyPair) {
+		super(algorithm, keyPair);
 	}
 	// ------------------------------------------------------------------ Constructor end
 
 	/**
 	 * 初始化
 	 *
-	 * @param algorithm 算法
-	 * @param privateKey 私钥
-	 * @param publicKey 公钥
+	 * @param algorithm  算法
+	 * @param keyPair   密钥对，{@code null}表示随机生成
 	 * @return this
 	 */
 	@Override
-	public Sign init(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
+	public Sign init(final String algorithm, final KeyPair keyPair) {
 		signature = SignUtil.createSignature(algorithm);
-		super.init(algorithm, privateKey, publicKey);
+		super.init(algorithm, keyPair);
 		return this;
 	}
 
@@ -201,10 +180,11 @@ public class Sign extends BaseAsymmetric<Sign> {
 	}
 
 	// --------------------------------------------------------------------------------- Sign and Verify
+
 	/**
 	 * 生成文件签名
 	 *
-	 * @param data 被签名数据
+	 * @param data    被签名数据
 	 * @param charset 编码
 	 * @return 签名
 	 * @since 5.7.0
@@ -227,7 +207,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	/**
 	 * 生成文件签名，并转为16进制字符串
 	 *
-	 * @param data 被签名数据
+	 * @param data    被签名数据
 	 * @param charset 编码
 	 * @return 签名
 	 * @since 5.7.0
@@ -295,7 +275,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 生成签名，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
 	 *
-	 * @param data 被签名数据
+	 * @param data         被签名数据
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 签名
 	 * @since 5.7.0
@@ -307,12 +287,12 @@ public class Sign extends BaseAsymmetric<Sign> {
 	/**
 	 * 生成签名
 	 *
-	 * @param data {@link InputStream} 数据流
+	 * @param data         {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 签名bytes
 	 * @since 5.7.0
 	 */
-	public byte[] sign(final InputStream data, int bufferLength){
+	public byte[] sign(final InputStream data, int bufferLength) {
 		if (bufferLength < 1) {
 			bufferLength = IoUtil.DEFAULT_BUFFER_SIZE;
 		}

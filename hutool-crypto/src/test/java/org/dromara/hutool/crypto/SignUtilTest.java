@@ -21,6 +21,7 @@ import org.dromara.hutool.crypto.bc.PemUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.security.KeyPair;
 import java.security.PublicKey;
 
 public class SignUtilTest {
@@ -68,6 +69,6 @@ public class SignUtilTest {
 			"-----END CERTIFICATE-----";
 
 		final PublicKey key = (PublicKey) PemUtil.readPemKey(IoUtil.toUtf8Stream(publicKey));
-		new Sign(SignAlgorithm.SHA256withRSA, null, key);
+		new Sign(SignAlgorithm.SHA256withRSA, new KeyPair(key, null));
 	}
 }

@@ -1008,6 +1008,14 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	}
 	// endregion
 
+	// region ----- fill
+
+	public ExcelWriter fillRow(final Map<?, ?> rowMap){
+		return this;
+	}
+
+	// endregion
+
 	// region ----- writeCol
 
 	/**

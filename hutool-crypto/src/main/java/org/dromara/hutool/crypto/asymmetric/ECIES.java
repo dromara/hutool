@@ -16,8 +16,7 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.KeyPair;
 
 /**
  * ECIES（集成加密方案，elliptic curve integrate encrypt scheme）
@@ -95,12 +94,10 @@ public class ECIES extends AsymmetricCrypto{
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKey 私钥
-	 * @param publicKey 公钥
-	 * @since 3.1.1
+	 * @param keyPair 密钥对，{@code null}表示随机生成
 	 */
-	public ECIES(final PrivateKey privateKey, final PublicKey publicKey) {
-		super(ALGORITHM_ECIES, privateKey, publicKey);
+	public ECIES(final KeyPair keyPair) {
+		super(ALGORITHM_ECIES, keyPair);
 	}
 
 	/**
@@ -109,12 +106,10 @@ public class ECIES extends AsymmetricCrypto{
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
 	 * @param eciesAlgorithm 自定义ECIES算法，例如ECIESwithDESede/NONE/PKCS7Padding
-	 * @param privateKey 私钥
-	 * @param publicKey 公钥
-	 * @since 4.5.8
+	 * @param keyPair 密钥对，{@code null}表示随机生成
 	 */
-	public ECIES(final String eciesAlgorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		super(eciesAlgorithm, privateKey, publicKey);
+	public ECIES(final String eciesAlgorithm, final KeyPair keyPair) {
+		super(eciesAlgorithm, keyPair);
 	}
 	// ------------------------------------------------------------------ Constructor end
 }

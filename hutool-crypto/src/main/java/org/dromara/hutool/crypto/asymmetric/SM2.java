@@ -168,7 +168,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param publicKeyParams  公钥，可以为null
 	 */
 	public SM2(final ECPrivateKeyParameters privateKeyParams, final ECPublicKeyParameters publicKeyParams) {
-		super(ALGORITHM_SM2, null, null);
+		super(ALGORITHM_SM2, null);
 		this.privateKeyParams = privateKeyParams;
 		this.publicKeyParams = publicKeyParams;
 		this.init();

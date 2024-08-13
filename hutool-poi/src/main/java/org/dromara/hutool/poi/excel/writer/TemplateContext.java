@@ -99,4 +99,11 @@ public class TemplateContext {
 			}
 		});
 	}
+
+	@Override
+	public String toString() {
+		return "TemplateContext{" +
+			"varMap=" + varMap +
+			'}';
+	}
 }

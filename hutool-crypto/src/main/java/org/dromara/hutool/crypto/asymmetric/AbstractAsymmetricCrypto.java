@@ -16,8 +16,7 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.KeyPair;
 
 /**
  * 抽象的非对称加密对象，包装了加密和解密为Hex和Base64的封装
@@ -38,12 +37,10 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
 	 * @param algorithm  算法
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
-	 * @since 3.1.1
+	 * @param keyPair 密钥对，如果为{@code null}则生成随机的私钥和公钥
 	 */
-	public AbstractAsymmetricCrypto(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		super(algorithm, privateKey, publicKey);
+	public AbstractAsymmetricCrypto(final String algorithm, final KeyPair keyPair) {
+		super(algorithm, keyPair);
 	}
 	// ------------------------------------------------------------------ Constructor end
 }

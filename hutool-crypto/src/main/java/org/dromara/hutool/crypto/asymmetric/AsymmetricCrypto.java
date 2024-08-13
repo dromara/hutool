@@ -25,10 +25,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.IOException;
-import java.security.Key;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
@@ -124,7 +121,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 3.1.1
 	 */
 	public AsymmetricCrypto(final AsymmetricAlgorithm algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		this(algorithm.getValue(), privateKey, publicKey);
+		this(algorithm.getValue(), new KeyPair(publicKey, privateKey));
 	}
 
 	/**
@@ -151,9 +148,10 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 */
 	public AsymmetricCrypto(final String algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm, //
-			KeyUtil.generatePrivateKey(algorithm, privateKey), //
-			KeyUtil.generatePublicKey(algorithm, publicKey)//
-		);
+			new KeyPair(
+				KeyUtil.generatePublicKey(algorithm, publicKey),
+				KeyUtil.generatePrivateKey(algorithm, privateKey)
+			));
 	}
 
 	/**
@@ -162,13 +160,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param algorithm  算法
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
-	 * @since 3.1.1
+	 * @param algorithm 算法
+	 * @param keyPair   密钥对，包含私钥和公钥，如果为{@code null}，则生成随机键值对
 	 */
-	public AsymmetricCrypto(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		super(algorithm, privateKey, publicKey);
+	public AsymmetricCrypto(final String algorithm, final KeyPair keyPair) {
+		super(algorithm, keyPair);
 	}
 	// ------------------------------------------------------------------ Constructor end
 
@@ -244,8 +240,8 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	}
 
 	@Override
-	public AsymmetricCrypto init(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		super.init(algorithm, privateKey, publicKey);
+	public AsymmetricCrypto init(final String algorithm, final KeyPair keyPair) {
+		super.init(algorithm, keyPair);
 		initCipher();
 		return this;
 	}
@@ -332,12 +328,9 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @throws IOException               IO异常，不会被触发
 	 */
 	private byte[] doFinal(final byte[] data, final int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
-		// 模长
-		final int dataLength = data.length;
-
 		// 不足分段
-		if (dataLength <= maxBlockSize) {
-			return getCipher().doFinal(data, 0, dataLength);
+		if (data.length <= maxBlockSize) {
+			return getCipher().doFinal(data, 0, data.length);
 		}
 
 		// 分段解密
@@ -350,9 +343,6 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param data         数据
 	 * @param maxBlockSize 最大分段的段大小，不能为小于1
 	 * @return 加密或解密后的数据
-	 * @throws IllegalBlockSizeException 分段异常
-	 * @throws BadPaddingException       padding错误异常
-	 * @throws IOException               IO异常，不会被触发
 	 */
 	@SuppressWarnings("resource")
 	private byte[] doFinalWithBlock(final byte[] data, final int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {

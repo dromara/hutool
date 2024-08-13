@@ -21,6 +21,7 @@ import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.KeyUtil;
 
 import java.math.BigInteger;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -161,12 +162,10 @@ public class RSA extends AsymmetricCrypto {
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
 	 * @param rsaAlgorithm 自定义RSA算法，例如RSA/ECB/PKCS1Padding
-	 * @param privateKey 私钥
-	 * @param publicKey 公钥
-	 * @since 4.5.8
+	 * @param  keyPair 密钥对，{@code null}表示随机生成
 	 */
-	public RSA(final String rsaAlgorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		super(rsaAlgorithm, privateKey, publicKey);
+	public RSA(final String rsaAlgorithm, final KeyPair keyPair) {
+		super(rsaAlgorithm, keyPair);
 	}
 	// ------------------------------------------------------------------ Constructor end
 

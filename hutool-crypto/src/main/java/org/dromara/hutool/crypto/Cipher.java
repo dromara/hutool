@@ -16,8 +16,6 @@
 
 package org.dromara.hutool.crypto;
 
-import org.bouncycastle.crypto.BufferedBlockCipher;
-
 import java.util.Arrays;
 
 /**
@@ -93,7 +91,6 @@ public interface Cipher {
 		final byte[] buf = new byte[getOutputSize(in.length)];
 		int len = process(in, 0, in.length, buf, 0);
 		len += doFinal(buf, len);
-
 		if (len == buf.length) {
 			return buf;
 		}
