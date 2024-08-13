@@ -168,7 +168,12 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param encryptBlockSize 加密块大小
 	 */
 	public void setEncryptBlockSize(int encryptBlockSize) {
-		this.encryptBlockSize = encryptBlockSize;
+		lock.lock();
+		try{
+			this.encryptBlockSize = encryptBlockSize;
+		}finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -186,7 +191,12 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param decryptBlockSize 解密块大小
 	 */
 	public void setDecryptBlockSize(int decryptBlockSize) {
-		this.decryptBlockSize = decryptBlockSize;
+		lock.lock();
+		try{
+			this.decryptBlockSize = decryptBlockSize;
+		}finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -208,7 +218,12 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public void setAlgorithmParameterSpec(AlgorithmParameterSpec algorithmParameterSpec) {
-		this.cipherWrapper.setParams(algorithmParameterSpec);
+		lock.lock();
+		try{
+			this.cipherWrapper.setParams(algorithmParameterSpec);
+		}finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -219,14 +234,24 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.7.17
 	 */
 	public AsymmetricCrypto setRandom(SecureRandom random) {
-		this.cipherWrapper.setRandom(random);
+		lock.lock();
+		try{
+			this.cipherWrapper.setRandom(random);
+		}finally {
+			lock.unlock();
+		}
 		return this;
 	}
 
 	@Override
 	public AsymmetricCrypto init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
-		super.init(algorithm, privateKey, publicKey);
-		initCipher();
+		lock.lock();
+		try{
+			super.init(algorithm, privateKey, publicKey);
+			initCipher();
+		}finally {
+			lock.unlock();
+		}
 		return this;
 	}
 

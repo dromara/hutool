@@ -170,14 +170,13 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	}
 
 	/**
-	 * 设置 {@link AlgorithmParameterSpec}，通常用于加盐或偏移向量
+	 * 设置偏移向量
 	 *
-	 * @param params {@link AlgorithmParameterSpec}
+	 * @param iv 偏移向量，加盐
 	 * @return 自身
 	 */
-	public SymmetricCrypto setParams(AlgorithmParameterSpec params) {
-		this.cipherWrapper.setParams(params);
-		return this;
+	public SymmetricCrypto setIv(byte[] iv) {
+		return setIv(new IvParameterSpec(iv));
 	}
 
 	/**
@@ -191,13 +190,19 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	}
 
 	/**
-	 * 设置偏移向量
+	 * 设置 {@link AlgorithmParameterSpec}，通常用于加盐或偏移向量
 	 *
-	 * @param iv 偏移向量，加盐
+	 * @param params {@link AlgorithmParameterSpec}
 	 * @return 自身
 	 */
-	public SymmetricCrypto setIv(byte[] iv) {
-		return setIv(new IvParameterSpec(iv));
+	public SymmetricCrypto setParams(AlgorithmParameterSpec params) {
+		lock.lock();
+		try {
+			this.cipherWrapper.setParams(params);
+		} finally {
+			lock.unlock();
+		}
+		return this;
 	}
 
 	/**
@@ -207,8 +212,13 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return this
 	 * @since 5.7.17
 	 */
-	public SymmetricCrypto setRandom(SecureRandom random){
-		this.cipherWrapper.setRandom(random);
+	public SymmetricCrypto setRandom(SecureRandom random) {
+		lock.lock();
+		try {
+			this.cipherWrapper.setRandom(random);
+		} finally {
+			lock.unlock();
+		}
 		return this;
 	}
 
@@ -221,7 +231,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return this
 	 * @since 5.7.12
 	 */
-	public SymmetricCrypto setMode(CipherMode mode){
+	public SymmetricCrypto setMode(CipherMode mode) {
 		lock.lock();
 		try {
 			initMode(mode.getValue());
@@ -383,7 +393,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	private SymmetricCrypto initParams(String algorithm, AlgorithmParameterSpec paramsSpec) {
 		if (null == paramsSpec) {
 			byte[] iv = Opt.ofNullable(cipherWrapper)
-					.map(CipherWrapper::getCipher).map(Cipher::getIV).get();
+				.map(CipherWrapper::getCipher).map(Cipher::getIV).get();
 
 			// 随机IV
 			if (StrUtil.startWithIgnoreCase(algorithm, "PBE")) {
