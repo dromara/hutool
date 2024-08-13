@@ -35,8 +35,8 @@ import java.security.SecureRandom;
  * <ul>
  *     <li>协议（protocol），默认TLS</li>
  *     <li>{@link KeyManager}，默认空</li>
- *     <li>{@link TrustManager}，默认{@link TrustAnyTrustManager}，即信任全部</li>
- *     <li>{@link SecureRandom}</li>
+ *     <li>{@link TrustManager}，默认{@code null}</li>
+ *     <li>{@link SecureRandom}，默认{@code null}</li>
  * </ul>
  * <p>
  * 构建后可获得{@link SSLContext}，通过调用{@link SSLContext#getSocketFactory()}获取{@link javax.net.ssl.SSLSocketFactory}
@@ -49,8 +49,8 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
-	private TrustManager[] trustManagers = TrustManagerUtil.TRUST_ANYS;
-	private SecureRandom secureRandom = new SecureRandom();
+	private TrustManager[] trustManagers;
+	private SecureRandom secureRandom;
 
 
 	/**
