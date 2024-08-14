@@ -28,7 +28,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 
 /**
- * {@link TrustManager}相关工具类
+ * {@link TrustManager}相关工具类<br>
+ * 此工具用于管理可信任的证书等信息
  *
  * @author Looly
  * @since 6.0.0

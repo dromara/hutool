@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.crypto;
+package org.dromara.hutool.core.net.ssl;
 
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import java.security.*;
 
 /**
- * {@link KeyManager}相关工具
+ * {@link KeyManager}相关工具<br>
+ * 此工具用于读取和使用数字证书、对称密钥等相关信息
  *
  * @author Looly
  * @since 6.0.0
@@ -32,13 +33,22 @@ import java.security.*;
 public class KeyManagerUtil {
 
 	/**
-	 * 获取{@link KeyManagerFactory}，使用全局算法提供者
+	 * 获取{@link KeyManagerFactory}
 	 *
-	 * @param algorithm 算法，{@code null}表示默认算法，如SunX509
 	 * @return {@link KeyManagerFactory}
 	 */
-	public static KeyManagerFactory getKeyManagerFactory(final String algorithm) {
-		return getKeyManagerFactory(algorithm, GlobalProviderFactory.getProvider());
+	public static KeyManagerFactory getDefaultKeyManagerFactory() {
+		return getDefaultKeyManagerFactory(null);
+	}
+
+	/**
+	 * 获取{@link KeyManagerFactory}
+	 *
+	 * @param provider  算法提供者，{@code null}使用JDK默认
+	 * @return {@link KeyManagerFactory}
+	 */
+	public static KeyManagerFactory getDefaultKeyManagerFactory(final Provider provider) {
+		return getKeyManagerFactory(null, provider);
 	}
 
 	/**
@@ -56,23 +66,36 @@ public class KeyManagerUtil {
 		try {
 			return null == provider ? KeyManagerFactory.getInstance(algorithm) : KeyManagerFactory.getInstance(algorithm, provider);
 		} catch (final NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
+			throw new HutoolException(e);
 		}
 	}
 
 	/**
 	 * 从KeyStore中获取{@link KeyManager}列表
 	 *
-	 * @param keyStore KeyStore
-	 * @param password 密码
+	 * @param keyStore  KeyStore
+	 * @param password  密码
 	 * @return {@link KeyManager}列表
 	 */
-	public static KeyManager[] getKeyManagers(final KeyStore keyStore, final char[] password) {
-		final KeyManagerFactory keyManagerFactory = getKeyManagerFactory(null);
+	public static KeyManager[] getDefaultKeyManagers(final KeyStore keyStore, final char[] password) {
+		return getKeyManagers(keyStore, password, null, null);
+	}
+
+	/**
+	 * 从KeyStore中获取{@link KeyManager}列表
+	 *
+	 * @param keyStore  KeyStore
+	 * @param password  密码
+	 * @param algorithm 算法，{@code null}表示默认算法，如SunX509
+	 * @param provider  算法提供者，{@code null}使用JDK默认
+	 * @return {@link KeyManager}列表
+	 */
+	public static KeyManager[] getKeyManagers(final KeyStore keyStore, final char[] password, final String algorithm, final Provider provider) {
+		final KeyManagerFactory keyManagerFactory = getKeyManagerFactory(algorithm, provider);
 		try {
 			keyManagerFactory.init(keyStore, password);
 		} catch (final KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-			throw new CryptoException(e);
+			throw new HutoolException(e);
 		}
 		return keyManagerFactory.getKeyManagers();
 	}
