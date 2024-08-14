@@ -121,9 +121,9 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 	}
 
 	@Override
-	public byte[] processFinal(final byte[] data) {
+	public byte[] processFinal(final byte[] data, final int inOffset, final int inputLen) {
 		try {
-			return this.raw.doFinal(data);
+			return this.raw.doFinal(data, inOffset, inputLen);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}

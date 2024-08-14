@@ -134,6 +134,7 @@ public class RSATest {
 	public void rsaWithBlockTest2() {
 		final RSA rsa = new RSA();
 		rsa.setEncryptBlockSize(3);
+		//rsa.setDecryptBlockSize(3);
 
 		// 获取私钥和公钥
 		assertNotNull(rsa.getPrivateKey());

@@ -21,9 +21,6 @@ import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.crypto.*;
 import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import java.io.IOException;
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
@@ -47,7 +44,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	/**
 	 * Cipher负责完成加密或解密工作
 	 */
-	protected JceCipher cipher;
+	protected Cipher cipher;
 	/**
 	 * 加密的块大小
 	 */
@@ -253,7 +250,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			final JceCipher cipher = initMode(CipherMode.ENCRYPT, key);
+			final Cipher cipher = initMode(CipherMode.ENCRYPT, key);
 
 			if (this.encryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
@@ -278,7 +275,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			final JceCipher cipher = initMode(CipherMode.DECRYPT, key);
+			final Cipher cipher = initMode(CipherMode.DECRYPT, key);
 
 			if (this.decryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
@@ -305,7 +302,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public Cipher getCipher() {
-		return this.cipher.getRaw();
+		return this.cipher;
 	}
 
 	/**
@@ -323,14 +320,12 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param data         被加密或解密的内容数据
 	 * @param maxBlockSize 最大块（分段）大小
 	 * @return 加密或解密后的数据
-	 * @throws IllegalBlockSizeException 分段异常
-	 * @throws BadPaddingException       padding错误异常
-	 * @throws IOException               IO异常，不会被触发
+	 * @throws IOException IO异常，不会被触发
 	 */
-	private byte[] doFinal(final byte[] data, final int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
+	private byte[] doFinal(final byte[] data, final int maxBlockSize) throws IOException {
 		// 不足分段
 		if (data.length <= maxBlockSize) {
-			return getCipher().doFinal(data, 0, data.length);
+			return this.cipher.processFinal(data, 0, data.length);
 		}
 
 		// 分段解密
@@ -345,7 +340,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @return 加密或解密后的数据
 	 */
 	@SuppressWarnings("resource")
-	private byte[] doFinalWithBlock(final byte[] data, final int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
+	private byte[] doFinalWithBlock(final byte[] data, final int maxBlockSize) throws IOException {
 		final int dataLength = data.length;
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 
@@ -356,7 +351,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		// 对数据分段处理
 		while (remainLength > 0) {
 			blockSize = Math.min(remainLength, maxBlockSize);
-			out.write(getCipher().doFinal(data, offSet, blockSize));
+			out.write(this.cipher.processFinal(data, offSet, blockSize));
 
 			offSet += blockSize;
 			remainLength = dataLength - offSet;
@@ -372,8 +367,8 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param key  密钥
 	 * @return {@link JceCipher}
 	 */
-	private JceCipher initMode(final CipherMode mode, final Key key) {
-		final JceCipher cipher = this.cipher;
+	private Cipher initMode(final CipherMode mode, final Key key) {
+		final Cipher cipher = this.cipher;
 		cipher.init(mode, new JceCipher.JceParameters(key, this.algorithmParameterSpec, this.random));
 		return cipher;
 	}

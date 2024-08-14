@@ -88,13 +88,23 @@ public interface Cipher {
 	 * @return 结果数据
 	 */
 	default byte[] processFinal(final byte[] in) {
+		return processFinal(in, 0, in.length);
+	}
+
+	/**
+	 * 处理数据，并返回最终结果
+	 *
+	 * @param in 输入数据
+	 * @param inOffset 输入开始的 input中的偏移量
+	 * @param inputLen 输入长度
+	 * @return 结果数据
+	 */
+	default byte[] processFinal(final byte[] in, final int inOffset, final int inputLen) {
 		final byte[] buf = new byte[getOutputSize(in.length)];
-		int len = process(in, 0, in.length, buf, 0);
+		int len = process(in, inOffset, inputLen, buf, 0);
+		// 处理剩余数据，如Padding数据等
 		len += doFinal(buf, len);
-		if (len == buf.length) {
-			return buf;
-		}
-		return Arrays.copyOfRange(buf, 0, len);
+		return (len == buf.length) ? buf : Arrays.copyOfRange(buf, 0, len);
 	}
 
 	/**
