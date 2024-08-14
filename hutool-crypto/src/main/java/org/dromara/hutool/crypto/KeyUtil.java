@@ -625,15 +625,13 @@ public class KeyUtil {
 	public static KeyFactory getKeyFactory(final String algorithm) {
 		final Provider provider = GlobalProviderFactory.getProvider();
 
-		final KeyFactory keyFactory;
 		try {
-			keyFactory = (null == provider) //
+			return (null == provider) //
 				? KeyFactory.getInstance(getMainAlgorithm(algorithm)) //
 				: KeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
-		return keyFactory;
 	}
 
 	/**
