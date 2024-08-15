@@ -20,8 +20,8 @@ import org.dromara.hutool.core.exception.HutoolException;
 
 /**
  * 加密异常
- * @author Looly
  *
+ * @author Looly
  */
 public class CryptoException extends HutoolException {
 	private static final long serialVersionUID = 8068509879445395353L;

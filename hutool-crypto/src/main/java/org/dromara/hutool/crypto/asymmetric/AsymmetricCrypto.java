@@ -62,8 +62,8 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 自定义随机数
 	 */
 	private SecureRandom random;
-	// ------------------------------------------------------------------ Constructor start
 
+	// region ----- Constructor
 	/**
 	 * 构造，创建新的私钥公钥对
 	 *
@@ -163,7 +163,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	public AsymmetricCrypto(final String algorithm, final KeyPair keyPair) {
 		super(algorithm, keyPair);
 	}
-	// ------------------------------------------------------------------ Constructor end
+	// endregion
 
 	/**
 	 * 获取加密块大小
