@@ -41,6 +41,7 @@ import org.dromara.hutool.crypto.bc.SmUtil;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 
 /**
  * 国密SM2非对称算法实现，基于BC库<br>
@@ -71,6 +72,10 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 
 	private ECPrivateKeyParameters privateKeyParams;
 	private ECPublicKeyParameters publicKeyParams;
+	/**
+	 * 自定义随机数
+	 */
+	private SecureRandom random;
 
 	private DSAEncoding encoding = StandardDSAEncoding.INSTANCE;
 	private Digest digest = new SM3Digest();
@@ -238,7 +243,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		if (KeyType.PublicKey != keyType) {
 			throw new IllegalArgumentException("Encrypt is only support by public key");
 		}
-		return encrypt(data, new ParametersWithRandom(getCipherParameters(keyType)));
+		return encrypt(data, new ParametersWithRandom(getCipherParameters(keyType), this.random));
 	}
 
 	/**
@@ -366,7 +371,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		lock.lock();
 		final SM2Signer signer = getSigner();
 		try {
-			CipherParameters param = new ParametersWithRandom(getCipherParameters(KeyType.PrivateKey));
+			CipherParameters param = new ParametersWithRandom(getCipherParameters(KeyType.PrivateKey), this.random);
 			if (id != null) {
 				param = new ParametersWithID(param, id);
 			}
@@ -480,6 +485,17 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public SM2 setPublicKeyParams(final ECPublicKeyParameters publicKeyParams) {
 		this.publicKeyParams = publicKeyParams;
+		return this;
+	}
+
+	/**
+	 * 设置随机数生成器，可自定义随机数种子
+	 *
+	 * @param random 随机数生成器，可自定义随机数种子
+	 * @return this
+	 */
+	public SM2 setRandom(final SecureRandom random) {
+		this.random = random;
 		return this;
 	}
 

@@ -224,7 +224,7 @@ public class BCCipher implements Cipher, Wrapper<Object> {
 		/**
 		 * 算法的参数
 		 */
-		private final CipherParameters parameters;
+		protected final CipherParameters parameters;
 
 		/**
 		 * 构造
