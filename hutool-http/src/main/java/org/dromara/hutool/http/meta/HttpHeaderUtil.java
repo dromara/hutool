@@ -20,13 +20,15 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * HTTP头相关方法
+ * HTTP头相关方法<br>
+ * 相关规范见：https://www.rfc-editor.org/rfc/rfc5987
  *
  * @author Looly
  * @since 6.0.0
@@ -67,7 +69,6 @@ public class HttpHeaderUtil {
 		final List<String> dispositions = headerList(headers, HeaderName.CONTENT_DISPOSITION.getValue());
 		String fileName = null;
 		if (CollUtil.isNotEmpty(dispositions)) {
-
 			// filename* 采用了 RFC 5987 中规定的编码方式，优先读取
 			fileName = getFileNameFromDispositions(dispositions, StrUtil.addSuffixIfNot(paramName, "*"));
 			if ((!StrUtil.endWith(fileName, "*")) && StrUtil.isBlank(fileName)) {
@@ -86,13 +87,38 @@ public class HttpHeaderUtil {
 	 * @return 文件名，empty表示无
 	 */
 	private static String getFileNameFromDispositions(final List<String> dispositions, String paramName) {
+		// 正则转义
+		paramName = StrUtil.replace(paramName, "*", "\\*");
 		String fileName = null;
 		for (final String disposition : dispositions) {
-			fileName = ReUtil.getGroup1(paramName + "=\"(.*?)\"", disposition);
+			fileName = ReUtil.getGroup1(paramName + "=([^;]+)", disposition);
 			if (StrUtil.isNotBlank(fileName)) {
 				break;
 			}
 		}
-		return fileName;
+		return getRfc5987Value(fileName);
+	}
+
+	/**
+	 * 获取rfc5987标准的值，标准见：https://www.rfc-editor.org/rfc/rfc5987#section-3.2.1<br>
+	 * 包括：
+	 *
+	 *<ul>
+	 *     <li>Non-extended：无双引号包裹的值</li>
+	 *     <li>Non-extended：双引号包裹的值</li>
+	 *     <li>Extended notation：编码'语言'值</li>
+	 *</ul>
+	 *
+	 * @param value 值
+	 * @return 结果值
+	 */
+	private static String getRfc5987Value(final String value){
+		final List<String> split = SplitUtil.split(value, "'");
+		if(3 == split.size()){
+			return split.get(2);
+		}
+
+		// 普通值
+		return StrUtil.unWrap(value, '"');
 	}
 }
