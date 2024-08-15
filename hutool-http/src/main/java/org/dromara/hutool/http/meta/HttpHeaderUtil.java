@@ -18,18 +18,21 @@ package org.dromara.hutool.http.meta;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
+import org.dromara.hutool.core.net.url.UrlDecoder;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
+import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
 /**
  * HTTP头相关方法<br>
  * 相关规范见：https://www.rfc-editor.org/rfc/rfc5987
- * TODO Rfc5987 extended value需要单独解析
  *
  * @author Looly
  * @since 6.0.0
@@ -61,7 +64,7 @@ public class HttpHeaderUtil {
 	 * 按照规范，`Content-Disposition`可能返回多个，此处遍历所有返回头，并且`filename*`始终优先获取，即使`filename`存在并更靠前。<br>
 	 * 参考：https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Disposition
 	 *
-	 * @param headers 头列表
+	 * @param headers   头列表
 	 * @param paramName 文件参数名，如果为{@code null}则使用默认的`filename`
 	 * @return 文件名，empty表示无
 	 */
@@ -104,22 +107,93 @@ public class HttpHeaderUtil {
 	 * 获取rfc5987标准的值，标准见：https://www.rfc-editor.org/rfc/rfc5987#section-3.2.1<br>
 	 * 包括：
 	 *
-	 *<ul>
+	 * <ul>
 	 *     <li>Non-extended：无双引号包裹的值</li>
 	 *     <li>Non-extended：双引号包裹的值</li>
 	 *     <li>Extended notation：编码'语言'值</li>
-	 *</ul>
+	 * </ul>
 	 *
 	 * @param value 值
 	 * @return 结果值
 	 */
-	private static String getRfc5987Value(final String value){
-		final List<String> split = SplitUtil.split(value, "'");
-		if(3 == split.size()){
-			return split.get(2);
+	private static String getRfc5987Value(final String value) {
+		return ExtendedValue.of(value).getDecodeValue();
+	}
+
+	/**
+	 * 根据rfc5987的扩展值，格式为：
+	 * <pre>{@code
+	 *     编码'语言'值
+	 * }</pre>
+	 */
+	public static class ExtendedValue implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * 创建扩展值
+		 *
+		 * @param value 扩展值或普通值
+		 * @return 扩展值
+		 */
+		public static ExtendedValue of(final String value) {
+			return new ExtendedValue(value);
 		}
 
-		// 普通值
-		return StrUtil.unWrap(value, '"');
+		private Charset charset;
+		private String language;
+		private final String value;
+
+		/**
+		 * 构造
+		 *
+		 * @param value 扩展值或普通值
+		 */
+		public ExtendedValue(final String value) {
+			final List<String> split = SplitUtil.split(value, "'");
+			if (3 == split.size()) {
+				this.charset = CharsetUtil.charset(split.get(0));
+				this.language = split.get(1);
+				this.value = split.get(2);
+			} else {
+				this.value = StrUtil.unWrap(value, '"');
+				;
+			}
+		}
+
+		/**
+		 * 获取编码，无定义为{@code null}
+		 *
+		 * @return 编码，无定义为{@code null}
+		 */
+		public Charset getCharset() {
+			return charset;
+		}
+
+		/**
+		 * 获取语言
+		 *
+		 * @return 语言
+		 */
+		public String getLanguage() {
+			return language;
+		}
+
+		/**
+		 * 获取原始值
+		 *
+		 * @return 原始值
+		 */
+		public String getValue() {
+			return value;
+		}
+
+		/**
+		 * 获取解码后的值
+		 *
+		 * @return 解码后的值
+		 */
+		public String getDecodeValue() {
+			return UrlDecoder.decode(value, charset);
+		}
 	}
 }

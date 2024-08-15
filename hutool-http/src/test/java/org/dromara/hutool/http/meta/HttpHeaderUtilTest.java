@@ -15,7 +15,7 @@ public class HttpHeaderUtilTest {
 		headers.put(HeaderName.CONTENT_DISPOSITION.getValue(),
 			ListUtil.of("attachment; filename*=utf-8''%E6%B5%8B%E8%AF%95.xlsx; filename=\"æµ\u008Bè¯\u0095.xlsx\""));
 		final String fileNameFromDisposition = HttpHeaderUtil.getFileNameFromDisposition(headers, null);
-		Assertions.assertEquals("%E6%B5%8B%E8%AF%95.xlsx", fileNameFromDisposition);
+		Assertions.assertEquals("测试.xlsx", fileNameFromDisposition);
 	}
 
 	@Test
@@ -24,7 +24,7 @@ public class HttpHeaderUtilTest {
 		headers.put(HeaderName.CONTENT_DISPOSITION.getValue(),
 			ListUtil.of("attachment; filename*=utf-8''%E6%B5%8B%E8%AF%95.xlsx"));
 		final String fileNameFromDisposition = HttpHeaderUtil.getFileNameFromDisposition(headers, null);
-		Assertions.assertEquals("%E6%B5%8B%E8%AF%95.xlsx", fileNameFromDisposition);
+		Assertions.assertEquals("测试.xlsx", fileNameFromDisposition);
 	}
 
 	@Test
