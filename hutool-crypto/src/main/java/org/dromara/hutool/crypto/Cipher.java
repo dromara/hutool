@@ -19,7 +19,11 @@ package org.dromara.hutool.crypto;
 import java.util.Arrays;
 
 /**
- * 密码接口，提供统一的API，用于兼容和统一JCE和BouncyCastle等库的操作
+ * 密码接口，提供统一的API，用于兼容和统一JCE和BouncyCastle等库的操作<br>
+ * <ul>
+ *     <li>process和doFinal组合使用，用于分块加密或解密</li>
+ *     <li>processFinal默认处理并输出小于块的数据，或一次性数据</li>
+ * </ul>
  *
  * @author Looly
  * @since 6.0.0

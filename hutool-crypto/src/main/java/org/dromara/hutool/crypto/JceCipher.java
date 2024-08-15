@@ -112,6 +112,38 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 		}
 	}
 
+	// region ----- process
+	/**
+	 * 继续多部分加密或解密操作（取决于此密码的初始化方式），处理另一个数据部分。
+	 * 第一inputLen字节在input缓冲区中，从inputOffset以下，被处理，并且结果被存储在output缓冲器。
+	 *
+	 * @param in 输入缓冲区
+	 * @param inOff 输入开始的 input中的偏移量
+	 * @param len 输入长度
+	 * @return 带有结果的新缓冲区，如果底层密码是块密码且输入数据太短而不能产生新块，则返回null。
+	 */
+	public byte[] process(final byte[] in, final int inOff, final int len) {
+		return this.raw.update(in, inOff, len);
+	}
+
+	/**
+	 * 继续多部分加密或解密操作（取决于此密码的初始化方式），处理另一个数据部分。
+	 * 第一inputLen字节在input缓冲区中，从inputOffset以下，被处理，并且结果被存储在output缓冲器。
+	 *
+	 * @param in 输入缓冲区
+	 * @param inOff 输入开始的 input中的偏移量
+	 * @param len 输入长度
+	 * @param out 结果的缓冲区
+	 * @return 存储在 output的字节数
+	 */
+	public int process(final byte[] in, final int inOff, final int len, final byte[] out) {
+		try {
+			return this.raw.update(in, inOff, len, out);
+		} catch (final ShortBufferException e) {
+			throw new CryptoException(e);
+		}
+	}
+
 	@Override
 	public int process(final byte[] in, final int inOff, final int len, final byte[] out, final int outOff) {
 		try {
@@ -120,6 +152,7 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 			throw new CryptoException(e);
 		}
 	}
+	// endregion
 
 	@Override
 	public int doFinal(final byte[] out, final int outOff) {
