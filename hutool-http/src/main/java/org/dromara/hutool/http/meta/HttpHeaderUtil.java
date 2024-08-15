@@ -29,6 +29,7 @@ import java.util.Map;
 /**
  * HTTP头相关方法<br>
  * 相关规范见：https://www.rfc-editor.org/rfc/rfc5987
+ * TODO Rfc5987 extended value需要单独解析
  *
  * @author Looly
  * @since 6.0.0
