@@ -24,6 +24,7 @@ import java.util.zip.ZipOutputStream;
  * @author looly
  * @since 5.7.8
  */
+@SuppressWarnings("resource")
 public class ZipWriter implements Closeable {
 
 	/**
@@ -257,7 +258,7 @@ public class ZipWriter implements Closeable {
 			}
 		} else {
 			// issue#IAGYDG 检查加入的文件是否为压缩结果文件本身，避免死循环
-			if (FileUtil.equals(file, zipFile)) {
+			if (null != this.zipFile && FileUtil.equals(file, zipFile)) {
 				return this;
 			}
 

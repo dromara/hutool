@@ -8,7 +8,8 @@
 
 ### 🐞Bug修复
 * 【http   】      修复getFileNameFromDisposition不符合规范问题（issue#IAKBPD@Gitee）
-* 【crypto 】      修复SymmetricCrypto.setParams和setRandom没有加锁问题（issue#IAJIY3@Github）
+* 【crypto 】      修复SymmetricCrypto.setParams和setRandom没有加锁问题（issue#IAJIY3@Gitee）
+* 【crypto 】      修复ZipUtil压缩成流的方法检查文件时报错问题（issue#3697@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.31(2024-08-12)
