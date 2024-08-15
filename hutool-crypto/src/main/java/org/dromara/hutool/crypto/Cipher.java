@@ -21,8 +21,11 @@ import java.util.Arrays;
 /**
  * 密码接口，提供统一的API，用于兼容和统一JCE和BouncyCastle等库的操作<br>
  * <ul>
- *     <li>process和doFinal组合使用，用于分块加密或解密</li>
- *     <li>processFinal默认处理并输出小于块的数据，或一次性数据</li>
+ *     <li>process和doFinal组合使用，用于分块加密或解密。
+ *     例如处理块的大小为8，实际需要加密的报文长度为23，那么需要分三块进行加密，前面2块长度为8的报文需要调用process进行部分加密，
+ *     部分加密的结果可以从process的返回值获取到，
+ *     最后的7长度(其实一般会填充到长度为块长度8)的报文则调用doFinal进行加密，结束整个部分加密的操作。</li>
+ *     <li>processFinal默认处理并输出小于块的数据，或一次性数据。</li>
  * </ul>
  *
  * @author Looly

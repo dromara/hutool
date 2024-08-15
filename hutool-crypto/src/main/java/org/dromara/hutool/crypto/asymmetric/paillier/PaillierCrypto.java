@@ -16,12 +16,15 @@
 
 package org.dromara.hutool.crypto.asymmetric.paillier;
 
+import org.dromara.hutool.crypto.CipherMode;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.asymmetric.AbstractAsymmetricCrypto;
 import org.dromara.hutool.crypto.asymmetric.KeyType;
 
 import javax.crypto.Cipher;
-import java.security.*;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.SecureRandom;
 
 /**
  * 同态加密算法Paillier<br>
@@ -45,7 +48,11 @@ import java.security.*;
 public class PaillierCrypto extends AbstractAsymmetricCrypto<PaillierCrypto> {
 	private static final long serialVersionUID = 1L;
 
-	private final PaillierCipherSpiImpl spi;
+	private final PaillierCipher cipher;
+	/**
+	 * 自定义随机数
+	 */
+	private SecureRandom random;
 
 	/**
 	 * 构造，使用随机密钥对
@@ -64,7 +71,19 @@ public class PaillierCrypto extends AbstractAsymmetricCrypto<PaillierCrypto> {
 	 */
 	public PaillierCrypto(final KeyPair keyPair) {
 		super(PaillierKey.ALGORITHM_NAME, keyPair);
-		this.spi = new PaillierCipherSpiImpl();
+		this.cipher = new PaillierCipher();
+	}
+
+	/**
+	 * 设置随机数生成器，可自定义随机数种子
+	 *
+	 * @param random 随机数生成器，可自定义随机数种子
+	 * @return this
+	 * @since 5.7.17
+	 */
+	public PaillierCrypto setRandom(final SecureRandom random) {
+		this.random = random;
+		return this;
 	}
 
 	@Override
@@ -72,7 +91,7 @@ public class PaillierCrypto extends AbstractAsymmetricCrypto<PaillierCrypto> {
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			initMode(Cipher.ENCRYPT_MODE, key);
+			initMode(CipherMode.ENCRYPT, key);
 			return doFinal(data, 0, data.length);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
@@ -86,7 +105,7 @@ public class PaillierCrypto extends AbstractAsymmetricCrypto<PaillierCrypto> {
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			initMode(Cipher.DECRYPT_MODE, key);
+			initMode(CipherMode.DECRYPT, key);
 			return doFinal(bytes, 0, bytes.length);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
@@ -105,10 +124,9 @@ public class PaillierCrypto extends AbstractAsymmetricCrypto<PaillierCrypto> {
 	 * @param mode 模式，可选{@link Cipher#ENCRYPT_MODE}或{@link Cipher#DECRYPT_MODE}
 	 * @param key  公钥或私钥
 	 * @return this
-	 * @throws InvalidKeyException 密钥错误
 	 */
-	public PaillierCrypto initMode(final int mode, final Key key) throws InvalidKeyException {
-		this.spi.engineInit(mode, key, null);
+	public PaillierCrypto initMode(final CipherMode mode, final Key key) {
+		this.cipher.init(mode, new PaillierCipher.PaillierParameters(key, this.random));
 		return this;
 	}
 
@@ -121,6 +139,6 @@ public class PaillierCrypto extends AbstractAsymmetricCrypto<PaillierCrypto> {
 	 * @return 执行后的数据
 	 */
 	public byte[] doFinal(final byte[] input, final int inputOffset, final int inputLen) {
-		return this.spi.engineDoFinal(input, inputOffset, inputLen);
+		return this.cipher.processFinal(input, inputOffset, inputLen);
 	}
 }
