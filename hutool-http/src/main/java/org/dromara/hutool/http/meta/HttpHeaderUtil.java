@@ -56,7 +56,9 @@ public class HttpHeaderUtil {
 	}
 
 	/**
-	 * 从Content-Disposition头中获取文件名，以参数名为`filename`为例，规则为：
+	 * 从Content-Disposition头中获取文件名。<br>
+	 * 参考标准：https://datatracker.ietf.org/doc/html/rfc6266#section-4.1<br>
+	 * 以参数名为`filename`为例，规则为：
 	 * <ul>
 	 *     <li>首先按照RFC5987规范检查`filename*`参数对应的值，即：`filename*="example.txt"`，则获取`example.txt`</li>
 	 *     <li>如果找不到`filename*`参数，则检查`filename`参数对应的值，即：`filename="example.txt"`，则获取`example.txt`</li>
@@ -95,7 +97,7 @@ public class HttpHeaderUtil {
 		paramName = StrUtil.replace(paramName, "*", "\\*");
 		String fileName = null;
 		for (final String disposition : dispositions) {
-			fileName = ReUtil.getGroup1(paramName + "=([^;]+)", disposition);
+			fileName = ReUtil.getGroup1(paramName + "\\s*=\\s*([^;]+)", disposition);
 			if (StrUtil.isNotBlank(fileName)) {
 				break;
 			}
@@ -193,7 +195,8 @@ public class HttpHeaderUtil {
 		 * @return 解码后的值
 		 */
 		public String getDecodeValue() {
-			return UrlDecoder.decode(value, charset);
+			// 非application/x-www-form-urlencoded环境+都不做解码
+			return UrlDecoder.decodeForPath(value, charset);
 		}
 	}
 }
