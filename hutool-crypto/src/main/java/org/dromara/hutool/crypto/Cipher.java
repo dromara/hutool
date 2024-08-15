@@ -49,8 +49,9 @@ public interface Cipher {
 	void init(CipherMode mode, Parameters parameters);
 
 	/**
-	 * 根据输入长度，获取输出长度，输出长度与算法相关<br>
-	 * 输出长度只针对本次输入关联，即len长度的数据对应输出长度加doFinal的长度
+	 * 返回输出缓冲区为了保存下一个update或doFinal操作的结果所需的长度（以字节为单位）<br>
+	 * 下一个update或doFinal调用的实际输出长度可能小于此方法返回的长度。<br>
+	 * 一般为块大小对应的输出大小
 	 *
 	 * @param len 输入长度
 	 * @return 输出长度，-1表示非块加密
@@ -58,7 +59,8 @@ public interface Cipher {
 	int getOutputSize(int len);
 
 	/**
-	 * 执行运算，可以是加密运算或解密运算
+	 * 执行运算，可以是加密运算或解密运算<br>
+	 * 此方法主要处理一块数据，一块数据处理完毕后，应调用{@link #doFinal(byte[], int)}处理padding等剩余数据。
 	 *
 	 * @param in     输入数据
 	 * @param inOff  输入数据开始位置
@@ -82,7 +84,8 @@ public interface Cipher {
 	int doFinal(byte[] out, int outOff);
 
 	/**
-	 * 处理数据，并返回最终结果
+	 * 处理数据，并返回最终结果<br>
+	 * 此方法用于完整处理一块数据并返回。
 	 *
 	 * @param in 输入数据
 	 * @return 结果数据
@@ -92,12 +95,15 @@ public interface Cipher {
 	}
 
 	/**
-	 * 处理数据，并返回最终结果
+	 * 处理数据，并返回最终结果<br>
+	 * 此方法用于完整处理一块数据并返回。
 	 *
-	 * @param in 输入数据
+	 * @param in       输入数据
 	 * @param inOffset 输入开始的 input中的偏移量
 	 * @param inputLen 输入长度
 	 * @return 结果数据
+	 * @see #process(byte[], int, int, byte[], int)
+	 * @see #doFinal(byte[], int)
 	 */
 	default byte[] processFinal(final byte[] in, final int inOffset, final int inputLen) {
 		final byte[] buf = new byte[getOutputSize(in.length)];

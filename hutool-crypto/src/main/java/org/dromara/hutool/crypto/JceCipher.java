@@ -66,6 +66,16 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 		return this.raw.getOutputSize(len);
 	}
 
+	/**
+	 * 返回新缓冲区中的初始化向量（IV）<br>
+	 * 这在创建随机IV的情况下，或在基于密码的加密或解密的上下文中是有用的，其中IV是从用户提供的密码导出的。
+	 *
+	 * @return 新缓冲区中的初始化向量，如果基础算法不使用IV，或者尚未设置IV，则为null。
+	 */
+	public byte[] getIV() {
+		return this.raw.getIV();
+	}
+
 	@Override
 	public void init(final CipherMode mode, final Parameters parameters) {
 		Assert.isInstanceOf(JceParameters.class, parameters, "Only support JceParameters!");
@@ -115,6 +125,15 @@ public class JceCipher extends SimpleWrapper<javax.crypto.Cipher> implements Cip
 	public int doFinal(final byte[] out, final int outOff) {
 		try {
 			return this.raw.doFinal(out, outOff);
+		} catch (final Exception e) {
+			throw new CryptoException(e);
+		}
+	}
+
+	@Override
+	public byte[] processFinal(final byte[] in) {
+		try {
+			return this.raw.doFinal(in);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}

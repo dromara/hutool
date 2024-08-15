@@ -294,6 +294,32 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		return HexUtil.encodeStr(update(data));
 	}
 
+	/**
+	 * 完成多部分加密或解密操作，具体取决于此密码的初始化方式。
+	 *
+	 * @return 带有结果的新缓冲区
+	 */
+	public byte[] doFinal() {
+		final Cipher cipher = this.cipher.getRaw();
+		lock.lock();
+		try {
+			return cipher.doFinal();
+		} catch (final Exception e) {
+			throw new CryptoException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 完成多部分加密或解密操作，具体取决于此密码的初始化方式。
+	 *
+	 * @return 带有结果的新缓冲区
+	 */
+	public String doFinalHex() {
+		return HexUtil.encodeStr(doFinal());
+	}
+
 	// --------------------------------------------------------------------------------- Encrypt
 
 	@Override
