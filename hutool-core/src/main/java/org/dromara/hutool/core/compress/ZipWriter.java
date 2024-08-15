@@ -303,7 +303,7 @@ public class ZipWriter implements Closeable {
 			}
 		} else {
 			// issue#IAGYDG 检查加入的文件是否为压缩结果文件本身，避免死循环
-			if (null != this.zipFile && FileUtil.equals(file, zipFile)) {
+			if (FileUtil.equals(file, zipFile)) {
 				return;
 			}
 
