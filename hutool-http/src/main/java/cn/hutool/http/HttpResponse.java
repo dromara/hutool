@@ -504,7 +504,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	// ---------------------------------------------------------------- Private method start
-
 	/**
 	 * 从Content-Disposition头中获取文件名
 	 *
@@ -513,14 +512,39 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return 文件名，empty表示无
 	 */
 	private static String getFileNameFromDispositions(final List<String> dispositions, String paramName) {
+		// 正则转义
+		paramName = StrUtil.replace(paramName, "*", "\\*");
 		String fileName = null;
-		for (String disposition : dispositions) {
-			fileName = ReUtil.getGroup1(paramName + "=\"(.*?)\"", disposition);
+		for (final String disposition : dispositions) {
+			fileName = ReUtil.getGroup1(paramName + "=([^;]+)", disposition);
 			if (StrUtil.isNotBlank(fileName)) {
 				break;
 			}
 		}
-		return fileName;
+		return getRfc5987Value(fileName);
+	}
+
+	/**
+	 * 获取rfc5987标准的值，标准见：https://www.rfc-editor.org/rfc/rfc5987#section-3.2.1<br>
+	 * 包括：
+	 *
+	 *<ul>
+	 *     <li>Non-extended：无双引号包裹的值</li>
+	 *     <li>Non-extended：双引号包裹的值</li>
+	 *     <li>Extended notation：编码'语言'值</li>
+	 *</ul>
+	 *
+	 * @param value 值
+	 * @return 结果值
+	 */
+	private static String getRfc5987Value(final String value){
+		final List<String> split = StrUtil.split(value, '\'');
+		if(3 == split.size()){
+			return split.get(2);
+		}
+
+		// 普通值
+		return StrUtil.unWrap(value, '"');
 	}
 
 	/**
