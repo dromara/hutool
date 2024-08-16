@@ -575,7 +575,7 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
-	 * 修改为月的开始时间，例如：2024-08-31 23:59:59,999
+	 * 修改为月的结束时间，例如：2024-08-31 23:59:59,999
 	 *
 	 * @param time 日期时间
 	 * @return 月的开始时间
@@ -585,7 +585,7 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
-	 * 修改为月的开始时间，例如：2024-08-31 23:59:59,999
+	 * 修改为月的结束时间，例如：2024-08-31 23:59:59,999
 	 *
 	 * @param time 日期时间
 	 * @param truncateMillisecond 是否毫秒归零
