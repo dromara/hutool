@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -207,6 +208,40 @@ public class LocalDateTimeUtilTest {
 
 		endOfDay = LocalDateTimeUtil.endOfDay(localDateTime, true);
 		assertEquals("2020-01-23T23:59:59", endOfDay.toString());
+	}
+
+
+	@Test
+	public void lengthOfMonthTest() {
+		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2024-08-16T12:23:56");
+		int lengthOfMonth = LocalDateTimeUtil.lengthOfMonth(localDateTime);
+		assertEquals(31, lengthOfMonth);
+		// 闰年2月
+		final LocalDateTime localDateTime1 = LocalDateTimeUtil.parse("2024-02-16T12:23:56");
+		int lengthOfMonth1 = LocalDateTimeUtil.lengthOfMonth(localDateTime1);
+		assertEquals(29, lengthOfMonth1);
+
+	}
+	@Test
+	public void beginOfMonthTest() {
+		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2024-08-16T12:23:56");
+		final LocalDateTime beginOfMonth = LocalDateTimeUtil.beginOfMonth(localDateTime);
+		assertEquals("2024-08-01T00:00", beginOfMonth.toString());
+	}
+
+	@Test
+	public void endOfMonthTest() {
+		LocalDateTime localDateTime = LocalDateTimeUtil.parse("2024-08-16T12:23:56");
+		LocalDateTime endOfMonth = LocalDateTimeUtil.endOfMonth(localDateTime);
+		assertEquals("2024-08-31T23:59:59.999999999", endOfMonth.toString());
+
+		endOfMonth = LocalDateTimeUtil.endOfMonth(localDateTime, true);
+		assertEquals("2024-08-31T23:59:59", endOfMonth.toString());
+
+		// 闰年2月
+		localDateTime = LocalDateTimeUtil.parse("2024-02-16T12:23:56");
+		endOfMonth = LocalDateTimeUtil.endOfMonth(localDateTime);
+		assertEquals("2024-02-29T23:59:59.999999999", endOfMonth.toString());
 	}
 
 	@Test

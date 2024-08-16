@@ -549,6 +549,64 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 获取本月的开始时间，例如：2024-08-01 00:00:00,000
+	 * @return 月的开始时间
+	 */
+	public static LocalDateTime beginOfMonth() {
+		return beginOfMonth(now());
+	}
+
+	/**
+	 * 修改为月的开始时间，例如：2024-08-01 00:00:00,000
+	 *
+	 * @param time 日期时间
+	 * @return 月的开始时间
+	 */
+	public static LocalDateTime beginOfMonth(LocalDateTime time) {
+		return time.withDayOfMonth(1).with(LocalTime.MIN);
+	}
+
+	/**
+	 * 获取本月的结束时间，例如：2024-08-31 23:59:59,999
+	 * @return 月的开始时间
+	 */
+	public static LocalDateTime endOfMonth() {
+		return endOfDay(now());
+	}
+
+	/**
+	 * 修改为月的结束时间，例如：2024-08-31 23:59:59,999
+	 *
+	 * @param time 日期时间
+	 * @return 月的开始时间
+	 */
+	public static LocalDateTime endOfMonth(LocalDateTime time) {
+		return endOfMonth(time, false);
+	}
+
+	/**
+	 * 修改为月的结束时间，例如：2024-08-31 23:59:59,999
+	 *
+	 * @param time 日期时间
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return 月的开始时间
+	 */
+	public static LocalDateTime endOfMonth(LocalDateTime time,boolean truncateMillisecond) {
+		int lengthOfMonth = lengthOfMonth(time);
+		return endOfDay(time.withDayOfMonth(lengthOfMonth),truncateMillisecond);
+	}
+
+	/**
+	 * 获取日期所在月份的长度,例如，一月份的日期将返回 31。
+	 *
+	 * @param time 日期时间
+	 * @return 月份的长度（以天数表示），从 28 到 31
+	 */
+	public static int lengthOfMonth(LocalDateTime time) {
+		return YearMonth.of(time.getYear(), time.getMonth()).lengthOfMonth();
+	}
+
+	/**
 	 * {@link TemporalAccessor}转换为 时间戳（从1970-01-01T00:00:00Z开始的毫秒数）
 	 *
 	 * @param temporalAccessor Date对象
