@@ -12,15 +12,16 @@
 
 package org.dromara.hutool.poi.excel.writer;
 
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.poi.excel.ExcelUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class TemplateContextTest {
 	@Test
 	void readTemplate() {
-		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/template.xlsx");
+		final ExcelWriter writer = ExcelUtil.getWriter("template.xlsx");
 		final TemplateContext templateContext = new TemplateContext(writer.getSheet());
-		Console.log(templateContext);
+		Assertions.assertNotNull(templateContext.getCell("date"));
+		Assertions.assertNotNull(templateContext.getCell(".month"));
 	}
 }

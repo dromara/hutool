@@ -105,13 +105,13 @@ public class ExcelConfig {
 	 * @param headerList 原标题列表
 	 * @return 转换别名列表
 	 */
-	public List<String> aliasHeader(final List<Object> headerList) {
+	public List<Object> aliasHeader(final List<Object> headerList) {
 		if (CollUtil.isEmpty(headerList)) {
 			return new ArrayList<>(0);
 		}
 
 		final int size = headerList.size();
-		final List<String> result = new ArrayList<>(size);
+		final List<Object> result = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			result.add(aliasHeader(headerList.get(i), i));
 		}
@@ -125,16 +125,15 @@ public class ExcelConfig {
 	 * @param index     标题所在列号，当标题为空时，列号对应的字母便是header
 	 * @return 转换别名列表
 	 */
-	public String aliasHeader(final Object headerObj, final int index) {
+	public Object aliasHeader(final Object headerObj, final int index) {
 		if (null == headerObj) {
 			return CellReferenceUtil.indexToColName(index);
 		}
 
-		final String header = headerObj.toString();
 		if (null != this.headerAlias) {
-			return ObjUtil.defaultIfNull(this.headerAlias.get(header), header);
+			return ObjUtil.defaultIfNull(this.headerAlias.get(headerObj.toString()), headerObj);
 		}
-		return header;
+		return headerObj;
 	}
 
 	/**

@@ -16,8 +16,8 @@ public class IssueI8PT9ZTest {
 	@Disabled
 	void readTest() {
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/test.xlsx");
-		final List<Map<String, Object>> read = reader.read(2, 4, Integer.MAX_VALUE);
-		for (final Map<String, Object> stringObjectMap : read) {
+		final List<Map<Object, Object>> read = reader.read(2, 4, Integer.MAX_VALUE);
+		for (final Map<Object, Object> stringObjectMap : read) {
 			Console.log(stringObjectMap);
 		}
 

@@ -58,8 +58,8 @@ public class ExcelReadTest {
 		Assertions.assertEquals("checkPerm", read.get(0).get(2));
 		Assertions.assertEquals("allotAuditPerm", read.get(0).get(3));
 
-		final List<Map<String, Object>> readAll = reader.readAll();
-		for (final Map<String, Object> map : readAll) {
+		final List<Map<Object, Object>> readAll = reader.readAll();
+		for (final Map<Object, Object> map : readAll) {
 			Assertions.assertTrue(map.containsKey("userName"));
 			Assertions.assertTrue(map.containsKey("storageName"));
 			Assertions.assertTrue(map.containsKey("checkPerm"));
@@ -70,7 +70,7 @@ public class ExcelReadTest {
 	@Test
 	public void excelReadTestOfEmptyLine() {
 		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("priceIndex.xls"));
-		final List<Map<String, Object>> readAll = reader.readAll();
+		final List<Map<Object, Object>> readAll = reader.readAll();
 
 		Assertions.assertEquals(4, readAll.size());
 	}
@@ -137,7 +137,7 @@ public class ExcelReadTest {
 	@Test
 	public void excelReadToMapListTest() {
 		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
-		final List<Map<String, Object>> readAll = reader.readAll();
+		final List<Map<Object, Object>> readAll = reader.readAll();
 
 		Assertions.assertEquals("张三", readAll.get(0).get("姓名"));
 		Assertions.assertEquals("男", readAll.get(0).get("性别"));
@@ -241,7 +241,7 @@ public class ExcelReadTest {
 	@Disabled
 	public void readEmptyTest(){
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/issue.xlsx");
-		final List<Map<String, Object>> maps = reader.readAll();
+		final List<Map<Object, Object>> maps = reader.readAll();
 		Console.log(maps);
 	}
 
@@ -274,14 +274,14 @@ public class ExcelReadTest {
 	public void readIssueTest() {
 		//https://gitee.com/dromara/hutool/issues/I5OSFC
 		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read.xlsx"));
-		final List<Map<String, Object>> read = reader.read(1,2,2);
-		for (final Map<String, Object> map : read) {
+		final List<Map<Object, Object>> read = reader.read(1,2,2);
+		for (final Map<Object, Object> map : read) {
 			Console.log(map);
 		}
 		//超出lastIndex 抛出相应提示：startRowIndex row index 4 is greater than last row index 2.
 		//而非:Illegal Capacity: -1
 		try {
-			final List<Map<String, Object>> readGreaterIndex = reader.read(1,4,4);
+			final List<Map<Object, Object>> readGreaterIndex = reader.read(1,4,4);
 		} catch (final Exception e) {
 			Console.log(e.toString());
 		}

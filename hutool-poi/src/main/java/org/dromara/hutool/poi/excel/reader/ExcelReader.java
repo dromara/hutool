@@ -246,7 +246,7 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 *
 	 * @return Map的列表
 	 */
-	public List<Map<String, Object>> readAll() {
+	public List<Map<Object, Object>> readAll() {
 		return read(0, 1, Integer.MAX_VALUE);
 	}
 
@@ -259,7 +259,7 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 * @param endRowIndex    读取结束行（包含，从0开始计数）
 	 * @return Map的列表
 	 */
-	public List<Map<String, Object>> read(final int headerRowIndex, final int startRowIndex, final int endRowIndex) {
+	public List<Map<Object, Object>> read(final int headerRowIndex, final int startRowIndex, final int endRowIndex) {
 		final MapSheetReader reader = new MapSheetReader(headerRowIndex, startRowIndex, endRowIndex);
 		reader.setExcelConfig(this.config);
 		return read(reader);

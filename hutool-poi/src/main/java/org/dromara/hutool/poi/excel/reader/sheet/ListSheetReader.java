@@ -63,7 +63,7 @@ public class ListSheetReader extends AbstractSheetReader<List<List<Object>>> {
 			if (CollUtil.isNotEmpty(rowList) || !ignoreEmptyRow) {
 				if (aliasFirstLine && i == startRowIndex) {
 					// 第一行作为标题行，替换别名
-					rowList = Convert.toList(Object.class, this.config.aliasHeader(rowList));
+					rowList = this.config.aliasHeader(rowList);
 				}
 				resultList.add(rowList);
 			}

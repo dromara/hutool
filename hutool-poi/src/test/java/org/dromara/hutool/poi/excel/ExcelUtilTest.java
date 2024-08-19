@@ -72,7 +72,7 @@ public class ExcelUtilTest {
 	@Test
 	public void getReaderByBookFilePathAndSheetNameTest() {
 		final ExcelReader reader = ExcelUtil.getReader("aaa.xlsx", "12");
-		final List<Map<String, Object>> list = reader.readAll();
+		final List<Map<Object, Object>> list = reader.readAll();
 		reader.close();
 		Assertions.assertEquals(1L, list.get(1).get("鞋码"));
 	}

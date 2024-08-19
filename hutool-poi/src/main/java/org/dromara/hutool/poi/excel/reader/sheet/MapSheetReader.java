@@ -33,7 +33,7 @@ import java.util.Map;
  * @author looly
  * @since 5.4.4
  */
-public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>>> {
+public class MapSheetReader extends AbstractSheetReader<List<Map<Object, Object>>> {
 
 	private final int headerRowIndex;
 
@@ -50,7 +50,7 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 	}
 
 	@Override
-	public List<Map<String, Object>> read(final Sheet sheet) {
+	public List<Map<Object, Object>> read(final Sheet sheet) {
 		// 边界判断
 		final int firstRowNum = sheet.getFirstRowNum();
 		final int lastRowNum = sheet.getLastRowNum();
@@ -73,9 +73,9 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 		final int endRowIndex = Math.min(this.cellRangeAddress.getLastRow(), lastRowNum);// 读取结束行（包含）
 
 		// 读取header
-		final List<String> headerList = this.config.aliasHeader(readRow(sheet, headerRowIndex));
+		final List<Object> headerList = this.config.aliasHeader(readRow(sheet, headerRowIndex));
 
-		final List<Map<String, Object>> result = new ArrayList<>(endRowIndex - startRowIndex + 1);
+		final List<Map<Object, Object>> result = new ArrayList<>(endRowIndex - startRowIndex + 1);
 		final boolean ignoreEmptyRow = this.config.isIgnoreEmptyRow();
 		List<Object> rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
