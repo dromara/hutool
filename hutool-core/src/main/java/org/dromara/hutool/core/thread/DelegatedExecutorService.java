@@ -37,19 +37,18 @@ import java.util.concurrent.TimeoutException;
 public class DelegatedExecutorService extends AbstractExecutorService implements Wrapper<ExecutorService> {
 	private final ExecutorService raw;
 
-	@Override
-	public ExecutorService getRaw() {
-		return this.raw;
-	}
-
 	/**
 	 * 构造
 	 *
 	 * @param executor {@link ExecutorService}
 	 */
 	public DelegatedExecutorService(final ExecutorService executor) {
-		Assert.notNull(executor, "executor must be not null !");
-		raw = executor;
+		raw = Assert.notNull(executor, "executor must be not null !");
+	}
+
+	@Override
+	public ExecutorService getRaw() {
+		return this.raw;
 	}
 
 	@Override
