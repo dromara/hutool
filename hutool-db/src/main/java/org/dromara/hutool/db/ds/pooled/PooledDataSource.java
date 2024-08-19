@@ -22,10 +22,10 @@ import org.dromara.hutool.core.pool.ObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionPoolConfig;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbException;
 import org.dromara.hutool.db.config.ConnectionConfig;
 import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.db.ds.simple.AbstractDataSource;
+import org.dromara.hutool.log.LogUtil;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
@@ -125,7 +125,10 @@ public class PooledDataSource extends AbstractDataSource {
 					return null != connection
 						&& connection.isValid(maxWait);
 				} catch (final SQLException e) {
-					throw new DbException(e);
+					// 验证对象时抛出异常会导致资源无法释放或回收，此处忽略之
+					LogUtil.error(e);
+					//throw new DbException(e);
+					return false;
 				}
 			}
 
