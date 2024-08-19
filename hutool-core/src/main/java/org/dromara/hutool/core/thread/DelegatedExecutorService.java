@@ -17,6 +17,7 @@
 package org.dromara.hutool.core.thread;
 
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,8 +34,13 @@ import java.util.concurrent.TimeoutException;
  *
  * @author loolly
  */
-public class DelegatedExecutorService extends AbstractExecutorService {
-	private final ExecutorService e;
+public class DelegatedExecutorService extends AbstractExecutorService implements Wrapper<ExecutorService> {
+	private final ExecutorService raw;
+
+	@Override
+	public ExecutorService getRaw() {
+		return this.raw;
+	}
 
 	/**
 	 * 构造
@@ -43,74 +49,74 @@ public class DelegatedExecutorService extends AbstractExecutorService {
 	 */
 	public DelegatedExecutorService(final ExecutorService executor) {
 		Assert.notNull(executor, "executor must be not null !");
-		e = executor;
+		raw = executor;
 	}
 
 	@Override
 	public void execute(final Runnable command) {
-		e.execute(command);
+		raw.execute(command);
 	}
 
 	@Override
 	public void shutdown() {
-		e.shutdown();
+		raw.shutdown();
 	}
 
 	@Override
 	public List<Runnable> shutdownNow() {
-		return e.shutdownNow();
+		return raw.shutdownNow();
 	}
 
 	@Override
 	public boolean isShutdown() {
-		return e.isShutdown();
+		return raw.isShutdown();
 	}
 
 	@Override
 	public boolean isTerminated() {
-		return e.isTerminated();
+		return raw.isTerminated();
 	}
 
 	@Override
 	public boolean awaitTermination(final long timeout, final TimeUnit unit) throws InterruptedException {
-		return e.awaitTermination(timeout, unit);
+		return raw.awaitTermination(timeout, unit);
 	}
 
 	@Override
 	public Future<?> submit(final Runnable task) {
-		return e.submit(task);
+		return raw.submit(task);
 	}
 
 	@Override
 	public <T> Future<T> submit(final Callable<T> task) {
-		return e.submit(task);
+		return raw.submit(task);
 	}
 
 	@Override
 	public <T> Future<T> submit(final Runnable task, final T result) {
-		return e.submit(task, result);
+		return raw.submit(task, result);
 	}
 
 	@Override
 	public <T> List<Future<T>> invokeAll(final Collection<? extends Callable<T>> tasks) throws InterruptedException {
-		return e.invokeAll(tasks);
+		return raw.invokeAll(tasks);
 	}
 
 	@Override
 	public <T> List<Future<T>> invokeAll(final Collection<? extends Callable<T>> tasks, final long timeout, final TimeUnit unit)
 			throws InterruptedException {
-		return e.invokeAll(tasks, timeout, unit);
+		return raw.invokeAll(tasks, timeout, unit);
 	}
 
 	@Override
 	public <T> T invokeAny(final Collection<? extends Callable<T>> tasks)
 			throws InterruptedException, ExecutionException {
-		return e.invokeAny(tasks);
+		return raw.invokeAny(tasks);
 	}
 
 	@Override
 	public <T> T invokeAny(final Collection<? extends Callable<T>> tasks, final long timeout, final TimeUnit unit)
 			throws InterruptedException, ExecutionException, TimeoutException {
-		return e.invokeAny(tasks, timeout, unit);
+		return raw.invokeAny(tasks, timeout, unit);
 	}
 }
