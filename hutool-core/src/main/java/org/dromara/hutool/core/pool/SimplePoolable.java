@@ -14,41 +14,40 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.pool.partition;
-
-import org.dromara.hutool.core.pool.SimplePoolable;
+package org.dromara.hutool.core.pool;
 
 /**
- * 分区可池化对象，此对象会同时持有原始对象和所在的分区
+ * 简单可池化对象，此对象会同时持有原始对象和所在的分区
  *
  * @param <T> 对象类型
  */
-public class PartitionPoolable<T> extends SimplePoolable<T> {
+public class SimplePoolable<T> implements Poolable<T> {
 
-	private final PoolPartition<T> partition;
+	private final T raw;
+	private long lastReturn;
 
 	/**
 	 * 构造
 	 *
 	 * @param raw       原始对象
-	 * @param partition 对象所在分区
 	 */
-	public PartitionPoolable(final T raw, final PoolPartition<T> partition) {
-		super(raw);
-		this.partition = partition;
+	public SimplePoolable(final T raw) {
+		this.raw = raw;
+		this.lastReturn = System.currentTimeMillis();
 	}
 
-	/**
-	 * 归还对象
-	 */
-	public void returnObject() {
-		this.partition.returnObject(this.getRaw());
+	@Override
+	public T getRaw() {
+		return this.raw;
 	}
 
-	/**
-	 * 释放对象
-	 */
-	public void free() {
-		this.partition.free(this.getRaw());
+	@Override
+	public long getLastReturn() {
+		return lastReturn;
+	}
+
+	@Override
+	public void setLastReturn(final long lastReturn) {
+		this.lastReturn = lastReturn;
 	}
 }

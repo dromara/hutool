@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.core.pool.partition;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.pool.*;
 
 import java.io.IOException;
@@ -183,7 +184,8 @@ public class PoolPartition<T> implements ObjectPool<T> {
 	 */
 	protected Poolable<T> createPoolable() {
 		final T t = objectFactory.create();
-		return null == t ? null : wrapPoolable(t);
+		Assert.notNull(t, "Null object created and not allow!");
+		return wrapPoolable(t);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -208,12 +210,8 @@ public class PoolPartition<T> implements ObjectPool<T> {
 		}
 
 		try {
-			Poolable<T> poolable;
 			for (int i = 0; i < increaseSize; i++) {
-				poolable = createPoolable();
-				if(null != poolable){
-					queue.put(poolable);
-				}
+				queue.put(createPoolable());
 			}
 			total += increaseSize;
 		} catch (final InterruptedException e) {
