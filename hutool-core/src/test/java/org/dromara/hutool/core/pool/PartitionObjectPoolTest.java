@@ -56,8 +56,8 @@ public class PartitionObjectPoolTest {
 		Assertions.assertEquals(4, pool.getTotal());
 
 		for (int i = 0; i < 20; i++) {
-			final Poolable<StringBuilder> obj = pool.borrowObject();
-			obj.getRaw().append("hutool");
+			final StringBuilder obj = pool.borrowObject();
+			obj.append("hutool");
 		}
 		// 池1的2个+池2借出的20个，合计22个
 		Assertions.assertEquals(22, pool.getTotal());
@@ -73,10 +73,10 @@ public class PartitionObjectPoolTest {
 		// 初始4个对象
 		Assertions.assertEquals(4, pool.getTotal());
 
-		final ArrayList<Poolable<StringBuilder>> borrowed = ListUtil.of();
+		final ArrayList<StringBuilder> borrowed = ListUtil.of();
 		for (int i = 0; i < 10; i++) {
-			final Poolable<StringBuilder> obj = pool.borrowObject();
-			obj.getRaw().append("hutool");
+			final StringBuilder obj = pool.borrowObject();
+			obj.append("hutool");
 			borrowed.add(obj);
 		}
 		// 池1的2个+池2借出的10个，合计12个
@@ -85,7 +85,7 @@ public class PartitionObjectPoolTest {
 		Assertions.assertEquals(2, pool.getIdleCount());
 
 		// 全部归还
-		for (final Poolable<StringBuilder> obj : borrowed) {
+		for (final StringBuilder obj : borrowed) {
 			pool.returnObject(obj);
 		}
 

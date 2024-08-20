@@ -92,15 +92,22 @@ public class PartitionObjectPool<T> implements ObjectPool<T> {
 	}
 
 	@Override
-	public Poolable<T> borrowObject() {
+	public T borrowObject() {
 		checkClosed();
 		return this.partitions[getPartitionIndex(this.config)].borrowObject();
 	}
 
 	@Override
-	public PartitionObjectPool<T> returnObject(final Poolable<T> obj) {
+	public PartitionObjectPool<T> returnObject(final T obj) {
 		checkClosed();
 		this.partitions[getPartitionIndex(this.config)].returnObject(obj);
+		return this;
+	}
+
+	@Override
+	public ObjectPool<T> free(final T obj) {
+		checkClosed();
+		this.partitions[getPartitionIndex(this.config)].free(obj);
 		return this;
 	}
 

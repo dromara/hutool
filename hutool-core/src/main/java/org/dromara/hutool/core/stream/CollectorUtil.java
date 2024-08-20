@@ -16,9 +16,8 @@
 
 package org.dromara.hutool.core.stream;
 
-import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.*;
 import java.util.function.*;
@@ -112,7 +111,7 @@ public class CollectorUtil {
 		final Supplier<A> downstreamSupplier = downstream.supplier();
 		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
 		final BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
-			final K key = Opt.ofNullable(t).map(classifier).orElse(null);
+			final K key = Optional.ofNullable(t).map(classifier).orElse(null);
 			final A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
 			if (ArrayUtil.isArray(container) || Objects.nonNull(t)) {
 				// 如果是数组类型，不需要判空，场景——分组后需要使用：java.util.unwrap.Collectors.counting 求null元素个数
@@ -288,7 +287,8 @@ public class CollectorUtil {
 							 final BinaryOperator<U> mergeFunction,
 							 final Supplier<M> mapSupplier) {
 		final BiConsumer<M, T> accumulator
-			= (map, element) -> map.put(Opt.ofNullable(element).map(keyMapper).get(), Opt.ofNullable(element).map(valueMapper).get());
+			= (map, element) -> map.put(Optional.ofNullable(element).map(keyMapper).orElse(null),
+			Optional.ofNullable(element).map(valueMapper).orElse(null));
 		return new SimpleCollector<>(mapSupplier, accumulator, mapMerger(mergeFunction), CH_ID);
 	}
 
@@ -464,7 +464,7 @@ public class CollectorUtil {
 								 final Collector<? super T, A, R> downstream) {
 		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
 		return new SimpleCollector<>(downstream.supplier(),
-			(r, t) -> Opt.of(t).filter(predicate).ifPresent(e -> downstreamAccumulator.accept(r, e)),
+			(r, t) -> Optional.of(t).filter(predicate).ifPresent(e -> downstreamAccumulator.accept(r, e)),
 			downstream.combiner(), downstream.finisher(),
 			downstream.characteristics());
 	}

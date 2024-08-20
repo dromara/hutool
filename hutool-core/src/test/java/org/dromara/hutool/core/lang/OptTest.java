@@ -72,23 +72,23 @@ public class OptTest {
 	public void peekTest() {
 		final User user = new User();
 		// 相当于ifPresent的链式调用
-		Opt.ofNullable("hutool").peek(user::setUsername).peek(user::setNickname);
+		Opt.ofNullable("hutool").ifPresent(user::setUsername).ifPresent(user::setNickname);
 		Assertions.assertEquals("hutool", user.getNickname());
 		Assertions.assertEquals("hutool", user.getUsername());
 
 		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素
-		final String name = Opt.ofNullable("hutool").peek(username -> username = "123").peek(username -> username = "456").get();
+		final String name = Opt.ofNullable("hutool").ifPresent(username -> username = "123").ifPresent(username -> username = "456").get();
 		Assertions.assertEquals("hutool", name);
 	}
 
 	@Test
-	public void peeksTest() {
+	public void ifPresentsTest() {
 		final User user = new User();
 		// 相当于上面peek的动态参数调用，更加灵活，你可以像操作数组一样去动态设置中间的步骤，也可以使用这种方式去编写你的代码
 		// 可以一行搞定
-		Opt.ofNullable("hutool").peeks(user::setUsername, user::setNickname);
+		Opt.ofNullable("hutool").ifPresents(user::setUsername, user::setNickname);
 		// 也可以在适当的地方换行使得代码的可读性提高
-		Opt.of(user).peeks(
+		Opt.of(user).ifPresents(
 			u -> Assertions.assertEquals("hutool", u.getNickname()),
 			u -> Assertions.assertEquals("hutool", u.getUsername())
 		);
@@ -97,14 +97,14 @@ public class OptTest {
 
 		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素,这是java语言的特性。。。
 		// 这也是为什么我们需要getter和setter而不直接给bean中的属性赋值中的其中一个原因
-		final String name = Opt.ofNullable("hutool").peeks(
+		final String name = Opt.ofNullable("hutool").ifPresents(
 			username -> username = "123", username -> username = "456",
 			n -> Assertions.assertEquals("hutool", n)).get();
 		Assertions.assertEquals("hutool", name);
 
 		// 当然，以下情况不会抛出NPE，但也没什么意义
-		Opt.ofNullable("hutool").peeks().peeks().peeks();
-		Opt.ofNullable(null).peeks(i -> {
+		Opt.ofNullable("hutool").ifPresents().ifPresents().ifPresents();
+		Opt.ofNullable(null).ifPresents(i -> {
 		});
 
 	}
@@ -254,7 +254,6 @@ public class OptTest {
 		Assertions.assertEquals(i, 1);
 	}
 
-	@SuppressWarnings({"NumericOverflow", "divzero"})
 	@Test
 	@Disabled
 	void testToEasyStream() {

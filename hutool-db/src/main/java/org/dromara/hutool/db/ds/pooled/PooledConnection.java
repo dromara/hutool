@@ -98,12 +98,12 @@ public class PooledConnection extends ConnectionWrapper implements Poolable<Conn
 	}
 
 	@Override
-	public long getLastBorrow() {
+	public long getLastReturn() {
 		return lastBorrow;
 	}
 
 	@Override
-	public void setLastBorrow(final long lastBorrow) {
-		this.lastBorrow = lastBorrow;
+	public void setLastReturn(final long lastReturn) {
+		this.lastBorrow = lastReturn;
 	}
 }

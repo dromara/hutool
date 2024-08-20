@@ -27,16 +27,26 @@ import org.dromara.hutool.core.lang.wrapper.Wrapper;
 public interface Poolable<T> extends Wrapper<T> {
 
 	/**
-	 * 获取最后借出时间
+	 * 获取对象空闲时长，单位：毫秒<br>
+	 * 空闲时间指在池中的时间，即借出时间到上次归还时间的差
+	 *
+	 * @return 空闲毫秒数
+	 */
+	default long getIdle() {
+		return System.currentTimeMillis() - getLastReturn();
+	}
+
+	/**
+	 * 获取最后归还时间
 	 *
 	 * @return 最后借出时间
 	 */
-	long getLastBorrow();
+	long getLastReturn();
 
 	/**
-	 * 设置最后借出时间，在成功借出此对象时更新时间
+	 * 设置最后归还时间，在成功归还此对象时更新时间
 	 *
-	 * @param lastBorrow 最后借出时间
+	 * @param lastReturn 最后归还时间
 	 */
-	void setLastBorrow(final long lastBorrow);
+	void setLastReturn(final long lastReturn);
 }

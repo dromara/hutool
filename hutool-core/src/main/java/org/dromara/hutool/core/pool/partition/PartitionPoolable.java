@@ -50,16 +50,16 @@ public class PartitionPoolable<T> implements Poolable<T> {
 	 * 归还对象
 	 */
 	public void returnObject() {
-		this.partition.returnObject(this);
+		this.partition.returnObject(this.getRaw());
 	}
 
 	@Override
-	public long getLastBorrow() {
+	public long getLastReturn() {
 		return lastBorrow;
 	}
 
 	@Override
-	public void setLastBorrow(final long lastBorrow) {
-		this.lastBorrow = lastBorrow;
+	public void setLastReturn(final long lastReturn) {
+		this.lastBorrow = lastReturn;
 	}
 }

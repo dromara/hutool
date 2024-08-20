@@ -18,18 +18,13 @@ package org.dromara.hutool.core.collection;
 
 
 import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.stream.CollectorUtil;
 import org.dromara.hutool.core.stream.StreamUtil;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -53,7 +48,7 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @return 转化后的map
 	 */
-	public static <V, K> Map<K, V> toIdentityMap(final Collection<V> collection, final Function<V, K> key) {
+	public static <V, K> Map<K, V> toIdentityMap(final Collection<V> collection, final SerFunction<V, K> key) {
 		return toIdentityMap(collection, key, false);
 	}
 
@@ -69,7 +64,7 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @return 转化后的map
 	 */
-	public static <V, K> Map<K, V> toIdentityMap(final Collection<V> collection, final Function<V, K> key, final boolean isParallel) {
+	public static <V, K> Map<K, V> toIdentityMap(final Collection<V> collection, final SerFunction<V, K> key, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return MapUtil.zero();
 		}
@@ -230,8 +225,8 @@ public class CollStreamUtil {
 	 * @param <V>        List中的value类型
 	 * @return 分组后的map
 	 */
-	public static <E, K, V> Map<K, List<V>> groupKeyValue(final Collection<E> collection, final Function<E, K> key,
-														  final Function<E, V> value) {
+	public static <E, K, V> Map<K, List<V>> groupKeyValue(final Collection<E> collection, final SerFunction<E, K> key,
+														  final SerFunction<E, V> value) {
 		return groupKeyValue(collection, key, value, false);
 	}
 
@@ -248,8 +243,8 @@ public class CollStreamUtil {
 	 * @param <V>        List中的value类型
 	 * @return 分组后的map
 	 */
-	public static <E, K, V> Map<K, List<V>> groupKeyValue(final Collection<E> collection, final Function<E, K> key,
-														  final Function<E, V> value, final boolean isParallel) {
+	public static <E, K, V> Map<K, List<V>> groupKeyValue(final Collection<E> collection, final SerFunction<E, K> key,
+														  final SerFunction<E, V> value, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return MapUtil.zero();
 		}

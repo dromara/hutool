@@ -197,7 +197,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 		final Predicate<T> recursive = SerPredicate.multiOr(condition::test,
 				e -> Opt.ofEmptyAble(childrenGetter.apply(e))
 						.map(children -> EasyStream.of(children).filter(recursiveRef.get()).toList())
-						.peek(children -> childrenSetter.accept(e, children))
+						.ifPresent(children -> childrenSetter.accept(e, children))
 						.filter(s -> !s.isEmpty()).isPresent());
 		recursiveRef.set(recursive);
 		return EasyStream.of(tree).filter(recursive).toList();
@@ -215,7 +215,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 		final AtomicReference<Consumer<T>> recursiveRef = new AtomicReference<>();
 		final Consumer<T> recursive = SerConsumer.multi(action::accept,
 				e -> Opt.ofEmptyAble(childrenGetter.apply(e))
-						.peek(children -> EasyStream.of(children).forEach(recursiveRef.get())));
+						.ifPresent(children -> EasyStream.of(children).forEach(recursiveRef.get())));
 		recursiveRef.set(recursive);
 		EasyStream.of(tree).forEach(recursive);
 		return tree;

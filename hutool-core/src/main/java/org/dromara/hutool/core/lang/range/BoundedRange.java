@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.core.lang.range;
 
+import org.dromara.hutool.core.func.SerPredicate;
 import org.dromara.hutool.core.lang.Assert;
 
 import java.util.Objects;
@@ -60,7 +61,8 @@ import java.util.function.Predicate;
  * @see Bound
  * @since 6.0.0
  */
-public class BoundedRange<T extends Comparable<? super T>> implements Predicate<T> {
+public class BoundedRange<T extends Comparable<? super T>> implements SerPredicate<T> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 双向无界的区间
@@ -93,9 +95,9 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
-				new BoundedRange<>(
-						Bound.atLeast(lowerBound), Bound.atMost(upperBound)
-				)
+			new BoundedRange<>(
+				Bound.atLeast(lowerBound), Bound.atMost(upperBound)
+			)
 		);
 	}
 
@@ -113,7 +115,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
-				new BoundedRange<>(Bound.greaterThan(lowerBound), Bound.lessThan(upperBound))
+			new BoundedRange<>(Bound.greaterThan(lowerBound), Bound.lessThan(upperBound))
 		);
 	}
 
@@ -131,10 +133,10 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
-				new BoundedRange<>(
-						Bound.atLeast(lowerBound),
-						Bound.lessThan(upperBound)
-				)
+			new BoundedRange<>(
+				Bound.atLeast(lowerBound),
+				Bound.lessThan(upperBound)
+			)
 		);
 	}
 
@@ -152,10 +154,10 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
-				new BoundedRange<>(
-						Bound.greaterThan(lowerBound),
-						Bound.atMost(upperBound)
-				)
+			new BoundedRange<>(
+				Bound.greaterThan(lowerBound),
+				Bound.atMost(upperBound)
+			)
 		);
 	}
 
@@ -315,8 +317,8 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 		}
 		// 上界小于下界时为空
 		return compareValue > 0
-				// 上下界的边界值相等，且不为退化区间是为空
-				|| !(low.getType().isClose() && up.getType().isClose());
+			// 上下界的边界值相等，且不为退化区间是为空
+			|| !(low.getType().isClose() && up.getType().isClose());
 	}
 
 	/**
@@ -369,7 +371,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 */
 	public boolean isSuperset(final BoundedRange<T> other) {
 		return getLowerBound().compareTo(other.getLowerBound()) <= 0
-				&& getUpperBound().compareTo(other.getUpperBound()) >= 0;
+			&& getUpperBound().compareTo(other.getUpperBound()) >= 0;
 	}
 
 	/**
@@ -380,7 +382,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 */
 	public boolean isProperSuperset(final BoundedRange<T> other) {
 		return getLowerBound().compareTo(other.getLowerBound()) < 0
-				&& getUpperBound().compareTo(other.getUpperBound()) > 0;
+			&& getUpperBound().compareTo(other.getUpperBound()) > 0;
 	}
 
 	/**
@@ -391,7 +393,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 */
 	public boolean isSubset(final BoundedRange<T> other) {
 		return getLowerBound().compareTo(other.getLowerBound()) >= 0
-				&& getUpperBound().compareTo(other.getUpperBound()) <= 0;
+			&& getUpperBound().compareTo(other.getUpperBound()) <= 0;
 	}
 
 	/**
@@ -402,7 +404,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 */
 	public boolean isProperSubset(final BoundedRange<T> other) {
 		return getLowerBound().compareTo(other.getLowerBound()) > 0
-				&& getUpperBound().compareTo(other.getUpperBound()) < 0;
+			&& getUpperBound().compareTo(other.getUpperBound()) < 0;
 	}
 
 	/**
@@ -432,10 +434,10 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @return 是否
 	 */
 	@Override
-	public boolean test(final T value) {
+	public boolean testing(final T value) {
 		return getLowerBound()
-				.and(getUpperBound())
-				.test(value);
+			.and(getUpperBound())
+			.test(value);
 	}
 
 	// endregion
