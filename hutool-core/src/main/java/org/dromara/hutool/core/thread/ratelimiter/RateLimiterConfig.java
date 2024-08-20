@@ -16,6 +16,8 @@
 
 package org.dromara.hutool.core.thread.ratelimiter;
 
+import java.time.Duration;
+
 /**
  * 限流通用配置
  *
@@ -27,23 +29,23 @@ public class RateLimiterConfig {
 	/**
 	 * 创建限流配置
 	 *
-	 * @param timeoutDuration    超时时间，即超过这个时间没有获取到许可，则返回false
+	 * @param timeout            超时时间，即超过这个时间没有获取到许可，则返回false
 	 * @param limitRefreshPeriod 限制刷新周期，即每多少时间刷新一次
 	 * @param limitForPeriod     个周期的许可数
 	 * @return RateLimiterConfig
 	 */
-	public static RateLimiterConfig of(final long timeoutDuration, final long limitRefreshPeriod, final int limitForPeriod) {
-		return new RateLimiterConfig(timeoutDuration, limitRefreshPeriod, limitForPeriod);
+	public static RateLimiterConfig of(final Duration timeout, final Duration limitRefreshPeriod, final int limitForPeriod) {
+		return new RateLimiterConfig(timeout, limitRefreshPeriod, limitForPeriod);
 	}
 
 	/**
-	 * 超时时间，即超过这个时间没有获取到许可，则返回false，单位毫秒
+	 * 超时时间，即超过这个时间没有获取到许可，则返回false
 	 */
-	private final long timeoutDuration;
+	private final Duration timeout;
 	/**
-	 * 限制刷新周期，即每多少时间刷新一次，单位毫秒
+	 * 限制刷新周期，即每多少时间刷新一次
 	 */
-	private final long limitRefreshPeriod;
+	private final Duration limitRefreshPeriod;
 	/**
 	 * 每个周期的许可数
 	 */
@@ -52,12 +54,12 @@ public class RateLimiterConfig {
 	/**
 	 * 构造
 	 *
-	 * @param timeoutDuration    超时时间，即超过这个时间没有获取到许可，则返回false
+	 * @param timeout            超时时间，即超过这个时间没有获取到许可，则返回false
 	 * @param limitRefreshPeriod 限制刷新周期，即每多少时间刷新一次
 	 * @param limitForPeriod     个周期的许可数
 	 */
-	public RateLimiterConfig(final long timeoutDuration, final long limitRefreshPeriod, final int limitForPeriod) {
-		this.timeoutDuration = timeoutDuration;
+	public RateLimiterConfig(final Duration timeout, final Duration limitRefreshPeriod, final int limitForPeriod) {
+		this.timeout = timeout;
 		this.limitRefreshPeriod = limitRefreshPeriod;
 		this.limitForPeriod = limitForPeriod;
 	}
@@ -67,8 +69,8 @@ public class RateLimiterConfig {
 	 *
 	 * @return 超时时间，单位毫秒
 	 */
-	public long getTimeoutDuration() {
-		return timeoutDuration;
+	public Duration getTimeout() {
+		return timeout;
 	}
 
 	/**
@@ -76,7 +78,7 @@ public class RateLimiterConfig {
 	 *
 	 * @return 限制刷新周期，单位毫秒
 	 */
-	public long getLimitRefreshPeriod() {
+	public Duration getLimitRefreshPeriod() {
 		return limitRefreshPeriod;
 	}
 

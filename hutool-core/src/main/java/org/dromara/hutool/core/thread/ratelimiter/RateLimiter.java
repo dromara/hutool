@@ -28,8 +28,31 @@ public interface RateLimiter {
 	/**
 	 * 尝试获取许可，非阻塞方法
 	 *
+	 * @return {@code true}表示成功获取，{@code false}表示无足够的许可可获取，此时需要等待给定的时间
+	 */
+	default boolean tryAcquire() {
+		return tryAcquire(1);
+	}
+
+	/**
+	 * 尝试获取许可，非阻塞方法
+	 *
 	 * @param permits 需要的许可数
 	 * @return {@code true}表示成功获取，{@code false}表示无足够的许可可获取，此时需要等待给定的时间
 	 */
 	boolean tryAcquire(int permits);
+
+	/**
+	 * 获取许可，阻塞方法，如果没有足够的许可，则阻塞等待
+	 */
+	default void acquire() {
+		acquire(1);
+	}
+
+	/**
+	 * 获取许可，阻塞方法，如果没有足够的许可，则阻塞等待
+	 *
+	 * @param permits 需要的许可数
+	 */
+	void acquire(int permits);
 }

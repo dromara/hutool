@@ -19,6 +19,7 @@ package org.dromara.hutool.core.thread;
 import org.dromara.hutool.core.util.RuntimeUtil;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.CountDownLatch;
@@ -203,9 +204,9 @@ public class ThreadUtil {
 	 * @since 5.8.0
 	 */
 	public static ThreadPoolExecutor newFixedExecutor(final int nThreads,
-												   final int maximumQueueSize,
-												   final String threadNamePrefix,
-												   final RejectedExecutionHandler handler) {
+													  final int maximumQueueSize,
+													  final String threadNamePrefix,
+													  final RejectedExecutionHandler handler) {
 		return ExecutorBuilder.of()
 			.setCorePoolSize(nThreads).setMaxPoolSize(nThreads)
 			.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
@@ -429,6 +430,8 @@ public class ThreadUtil {
 		return t;
 	}
 
+	// region ----- sleep
+
 	/**
 	 * 挂起当前线程
 	 *
@@ -456,6 +459,20 @@ public class ThreadUtil {
 			return true;
 		}
 		return sleep(millis.longValue());
+	}
+
+	/**
+	 * 挂起当前线程
+	 *
+	 * @param duration 挂起的时长
+	 * @return 被中断返回false，否则true
+	 * @since 6.0.0
+	 */
+	public static boolean sleep(final Duration duration) {
+		if (duration == null) {
+			return true;
+		}
+		return sleep(duration.toMillis());
 	}
 
 	/**
@@ -492,6 +509,20 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 挂起当前线程
+	 *
+	 * @param duration 挂起的时长
+	 * @return 被中断返回false，否则true
+	 * @since 6.0.0
+	 */
+	public static boolean safeSleep(final Duration duration) {
+		if (duration == null) {
+			return true;
+		}
+		return safeSleep(duration.toMillis());
+	}
+
+	/**
 	 * 考虑{@link Thread#sleep(long)}方法有可能时间不足给定毫秒数，此方法保证sleep时间不小于给定的毫秒数
 	 *
 	 * @param millis 给定的sleep时间（毫秒）
@@ -513,6 +544,7 @@ public class ThreadUtil {
 		}
 		return true;
 	}
+	// endregion
 
 	/**
 	 * @return 获得堆栈列表

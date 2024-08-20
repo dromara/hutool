@@ -31,39 +31,39 @@ import java.util.concurrent.*;
  */
 public class SemaphoreRateLimiter implements RateLimiter {
 
-	private final RateLimiterConfig rateLimiterConfig;
+	private final RateLimiterConfig config;
 	private final ScheduledExecutorService scheduler;
 	private final Semaphore semaphore;
 
 	/**
 	 * 构造
 	 *
-	 * @param rateLimiterConfig 限流配置
+	 * @param config 限流配置
 	 */
-	public SemaphoreRateLimiter(final RateLimiterConfig rateLimiterConfig) {
-		this(rateLimiterConfig, null);
+	public SemaphoreRateLimiter(final RateLimiterConfig config) {
+		this(config, null);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param rateLimiterConfig 限流配置
+	 * @param config 限流配置
 	 * @param semaphore         {@link Semaphore}
 	 */
-	public SemaphoreRateLimiter(final RateLimiterConfig rateLimiterConfig, final Semaphore semaphore) {
-		this(rateLimiterConfig, semaphore, null);
+	public SemaphoreRateLimiter(final RateLimiterConfig config, final Semaphore semaphore) {
+		this(config, semaphore, null);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param rateLimiterConfig 限流配置
+	 * @param config 限流配置
 	 * @param semaphore         {@link Semaphore}
 	 * @param scheduler         定时器
 	 */
-	public SemaphoreRateLimiter(final RateLimiterConfig rateLimiterConfig, final Semaphore semaphore, final ScheduledExecutorService scheduler) {
-		this.rateLimiterConfig = Assert.notNull(rateLimiterConfig);
-		this.semaphore = Opt.ofNullable(semaphore).orElseGet(() -> new Semaphore(rateLimiterConfig.getLimitForPeriod()));
+	public SemaphoreRateLimiter(final RateLimiterConfig config, final Semaphore semaphore, final ScheduledExecutorService scheduler) {
+		this.config = Assert.notNull(config);
+		this.semaphore = Opt.ofNullable(semaphore).orElseGet(() -> new Semaphore(config.getLimitForPeriod()));
 		this.scheduler = Opt.ofNullable(scheduler).orElseGet(this::configureScheduler);
 		//启动定时器
 		scheduleLimitRefresh();
@@ -74,6 +74,11 @@ public class SemaphoreRateLimiter implements RateLimiter {
 		return semaphore.tryAcquire(permits);
 	}
 
+	@Override
+	public void acquire(final int permits) {
+		semaphore.acquireUninterruptibly(permits);
+	}
+
 	/**
 	 * 刷新限制，填满许可数为{@link RateLimiterConfig#getLimitForPeriod()}<br>
 	 * 用户可手动调用此方法填满许可
@@ -81,7 +86,7 @@ public class SemaphoreRateLimiter implements RateLimiter {
 	 * @see RateLimiterConfig#getLimitForPeriod()
 	 */
 	public void refreshLimit() {
-		semaphore.release(this.rateLimiterConfig.getLimitForPeriod() - semaphore.availablePermits());
+		semaphore.release(this.config.getLimitForPeriod() - semaphore.availablePermits());
 	}
 
 	/**
@@ -98,12 +103,12 @@ public class SemaphoreRateLimiter implements RateLimiter {
 	 * 启动定时器
 	 */
 	private void scheduleLimitRefresh() {
-		final long limitRefreshPeriod = this.rateLimiterConfig.getLimitRefreshPeriod();
+		final long limitRefreshPeriod = this.config.getLimitRefreshPeriod().toNanos();
 		scheduler.scheduleAtFixedRate(
 			this::refreshLimit,
 			limitRefreshPeriod,
 			limitRefreshPeriod,
-			TimeUnit.MILLISECONDS
+			TimeUnit.NANOSECONDS
 		);
 	}
 }
