@@ -11,7 +11,7 @@ public class SemaphoreRateLimiterTest {
 	@Test
 	void test() {
 		final RateLimiterConfig rateLimiterConfig = RateLimiterConfig.of(Duration.ofSeconds(5), Duration.ofMillis(300), 5);
-		final RateLimiter rateLimiter = new SemaphoreRateLimiter(rateLimiterConfig);
+		final RateLimiter rateLimiter = new FixedRateLimiter(rateLimiterConfig);
 
 		final boolean b = rateLimiter.tryAcquire(5);
 		Assertions.assertTrue(b);

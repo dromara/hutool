@@ -45,23 +45,23 @@ public class RateLimiterConfig {
 	/**
 	 * 限制刷新周期，即每多少时间刷新一次
 	 */
-	private final Duration limitRefreshPeriod;
+	private final Duration refreshPeriod;
 	/**
-	 * 每个周期的许可数
+	 * 容量，可以是总容量，或者每个周期的容量
 	 */
-	private final int limitForPeriod;
+	private final int capacity;
 
 	/**
 	 * 构造
 	 *
-	 * @param timeout            超时时间，即超过这个时间没有获取到许可，则返回false
-	 * @param limitRefreshPeriod 限制刷新周期，即每多少时间刷新一次
-	 * @param limitForPeriod     个周期的许可数
+	 * @param timeout       超时时间，即超过这个时间没有获取到许可，则返回false
+	 * @param refreshPeriod 刷新周期，即每多少时间刷新一次
+	 * @param capacity      容量
 	 */
-	public RateLimiterConfig(final Duration timeout, final Duration limitRefreshPeriod, final int limitForPeriod) {
+	public RateLimiterConfig(final Duration timeout, final Duration refreshPeriod, final int capacity) {
 		this.timeout = timeout;
-		this.limitRefreshPeriod = limitRefreshPeriod;
-		this.limitForPeriod = limitForPeriod;
+		this.refreshPeriod = refreshPeriod;
+		this.capacity = capacity;
 	}
 
 	/**
@@ -74,20 +74,20 @@ public class RateLimiterConfig {
 	}
 
 	/**
-	 * 限制刷新周期，即每多少时间刷新一次，单位毫秒
+	 * 刷新周期，即每多少时间刷新一次，单位毫秒
 	 *
-	 * @return 限制刷新周期，单位毫秒
+	 * @return 刷新周期，单位毫秒
 	 */
-	public Duration getLimitRefreshPeriod() {
-		return limitRefreshPeriod;
+	public Duration getRefreshPeriod() {
+		return refreshPeriod;
 	}
 
 	/**
-	 * 每个周期的许可数
+	 * 容量，可以是总容量，或者每个周期的容量
 	 *
-	 * @return 每个周期的许可数
+	 * @return 容量
 	 */
-	public int getLimitForPeriod() {
-		return limitForPeriod;
+	public int getCapacity() {
+		return capacity;
 	}
 }

@@ -18,31 +18,25 @@ package org.dromara.hutool.core.thread.ratelimiter;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.thread.NamedThreadFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 基于{@link Semaphore} 实现的限流器<br>
- * 此算法实现了：固定窗口(Fixed Window)计数法，即设置固定窗口<br>
- * 窗口时间为{@link RateLimiterConfig#getLimitRefreshPeriod()}，每次窗口内请求数不超过{@link RateLimiterConfig#getLimitForPeriod()}<br>
- * 在窗口期允许的请求数是固定的，请求结束后拒绝访问，直到下一个窗口开始则重新开始计数。<br>
- * 参考：https://github.com/TFdream/juice/blob/master/juice-ratelimiter/src/main/java/juice/ratelimiter/internal/SemaphoreBasedRateLimiter.java
- *
- * <ul>
- *     <li>优点：内存占用小，实现简单</li>
- *     <li>缺点：不够平滑，在窗口期开始时可能请求暴增，窗口结束时大量请求丢失，即“突刺现象”。</li>
- * </ul>
+ * 基于{@link Semaphore} 实现的限流器
  *
  * @author Ricky Fung
+ * @author Looly
  * @since 6.0.0
  */
-public class SemaphoreRateLimiter implements RateLimiter {
+public abstract class SemaphoreRateLimiter implements RateLimiter {
 
-	private final RateLimiterConfig config;
-	private final ScheduledExecutorService scheduler;
-	private final Semaphore semaphore;
+	protected final RateLimiterConfig config;
+	protected final Semaphore semaphore;
+	protected final ScheduledExecutorService scheduler;
 
+	// region ----- Constructor
 	/**
 	 * 构造
 	 *
@@ -66,16 +60,17 @@ public class SemaphoreRateLimiter implements RateLimiter {
 	 * 构造
 	 *
 	 * @param config    限流配置
-	 * @param semaphore {@link Semaphore}
-	 * @param scheduler 定时器
+	 * @param semaphore {@link Semaphore}，默认使用{@link RateLimiterConfig#getCapacity()}创建
+	 * @param scheduler 定时器，{@code null}表示不定时
 	 */
 	public SemaphoreRateLimiter(final RateLimiterConfig config, final Semaphore semaphore, final ScheduledExecutorService scheduler) {
 		this.config = Assert.notNull(config);
-		this.semaphore = Opt.ofNullable(semaphore).orElseGet(() -> new Semaphore(config.getLimitForPeriod()));
-		this.scheduler = Opt.ofNullable(scheduler).orElseGet(this::configureScheduler);
+		this.semaphore = Opt.ofNullable(semaphore).orElseGet(() -> new Semaphore(config.getCapacity()));
+		this.scheduler = scheduler;
 		//启动定时器
 		scheduleLimitRefresh();
 	}
+	// endregion
 
 	@Override
 	public boolean tryAcquire(final int permits) {
@@ -88,30 +83,26 @@ public class SemaphoreRateLimiter implements RateLimiter {
 	}
 
 	/**
-	 * 刷新限制，填满许可数为{@link RateLimiterConfig#getLimitForPeriod()}<br>
-	 * 用户可手动调用此方法填满许可
+	 * 刷新限制，用户可重写此方法，改变填充许可方式，如：
+	 * <ul>
+	 *     <li>填满窗口，一般用于固定窗口（Fixed Window）</li>
+	 *     <li>固定频率填充，如每个周期只填充1个，配合{@link RateLimiterConfig#getRefreshPeriod()}，可实现令牌桶（Token Bucket）</li>
+	 * </ul>
+	 * 同样，用户可通过调用此方法手动刷新<br>
+	 * 注意：重写此方法前需判断许可是否已满
 	 *
-	 * @see RateLimiterConfig#getLimitForPeriod()
+	 * @see RateLimiterConfig#getCapacity()
 	 */
-	public void refreshLimit() {
-		semaphore.release(this.config.getLimitForPeriod() - semaphore.availablePermits());
-	}
+	public abstract void refreshLimit();
 
 	/**
-	 * 创建定时器
-	 *
-	 * @return 定时器
-	 */
-	private ScheduledExecutorService configureScheduler() {
-		final ThreadFactory threadFactory = new NamedThreadFactory("SemaphoreRateLimiterScheduler-", true);
-		return new ScheduledThreadPoolExecutor(1, threadFactory);
-	}
-
-	/**
-	 * 启动定时器
+	 * 启动定时器，未定义则不启动
 	 */
 	private void scheduleLimitRefresh() {
-		final long limitRefreshPeriod = this.config.getLimitRefreshPeriod().toNanos();
+		if (null == this.scheduler) {
+			return;
+		}
+		final long limitRefreshPeriod = this.config.getRefreshPeriod().toNanos();
 		scheduler.scheduleAtFixedRate(
 			this::refreshLimit,
 			limitRefreshPeriod,
