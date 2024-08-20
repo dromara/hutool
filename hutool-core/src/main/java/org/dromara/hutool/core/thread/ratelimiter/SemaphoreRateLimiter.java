@@ -24,7 +24,15 @@ import java.util.concurrent.*;
 
 /**
  * 基于{@link Semaphore} 实现的限流器<br>
+ * 此算法实现了：固定窗口(Fixed Window)计数法，即设置固定窗口<br>
+ * 窗口时间为{@link RateLimiterConfig#getLimitRefreshPeriod()}，每次窗口内请求数不超过{@link RateLimiterConfig#getLimitForPeriod()}<br>
+ * 在窗口期允许的请求数是固定的，请求结束后拒绝访问，直到下一个窗口开始则重新开始计数。<br>
  * 参考：https://github.com/TFdream/juice/blob/master/juice-ratelimiter/src/main/java/juice/ratelimiter/internal/SemaphoreBasedRateLimiter.java
+ *
+ * <ul>
+ *     <li>优点：内存占用小，实现简单</li>
+ *     <li>缺点：不够平滑，在窗口期开始时可能请求暴增，窗口结束时大量请求丢失，即“突刺现象”。</li>
+ * </ul>
  *
  * @author Ricky Fung
  * @since 6.0.0
@@ -47,8 +55,8 @@ public class SemaphoreRateLimiter implements RateLimiter {
 	/**
 	 * 构造
 	 *
-	 * @param config 限流配置
-	 * @param semaphore         {@link Semaphore}
+	 * @param config    限流配置
+	 * @param semaphore {@link Semaphore}
 	 */
 	public SemaphoreRateLimiter(final RateLimiterConfig config, final Semaphore semaphore) {
 		this(config, semaphore, null);
@@ -57,9 +65,9 @@ public class SemaphoreRateLimiter implements RateLimiter {
 	/**
 	 * 构造
 	 *
-	 * @param config 限流配置
-	 * @param semaphore         {@link Semaphore}
-	 * @param scheduler         定时器
+	 * @param config    限流配置
+	 * @param semaphore {@link Semaphore}
+	 * @param scheduler 定时器
 	 */
 	public SemaphoreRateLimiter(final RateLimiterConfig config, final Semaphore semaphore, final ScheduledExecutorService scheduler) {
 		this.config = Assert.notNull(config);
