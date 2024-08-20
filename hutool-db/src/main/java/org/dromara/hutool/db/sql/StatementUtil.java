@@ -54,7 +54,7 @@ public class StatementUtil {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(returnGeneratedKey)
-			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).get())
+			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).getOrNull())
 			.setSql(sql)
 			.setParams(params)
 			.build();
@@ -89,7 +89,7 @@ public class StatementUtil {
 		return StatementBuilder.of()
 			.setConnection(conn)
 			.setReturnGeneratedKey(false)
-			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).get())
+			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).getOrNull())
 			.setSql(sql)
 			.setParamList(StreamUtil.of(paramsBatch).collect(Collectors.toList()))
 			.buildForBatch();
@@ -109,7 +109,7 @@ public class StatementUtil {
 	public static CallableStatement prepareCall(final DbConfig config, final Connection conn, final String sql, final Object... params) throws SQLException {
 		return StatementBuilder.of()
 			.setConnection(conn)
-			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).get())
+			.setSqlFilter(Opt.ofNullable(config).map(DbConfig::getSqlFilters).getOrNull())
 			.setSql(sql)
 			.setParams(params)
 			.buildForCall();

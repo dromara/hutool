@@ -53,10 +53,10 @@ public class OptTest {
 	}
 
 	@Test
-	public void getTest() {
+	public void getOrNullTest() {
 		// 和原版Optional有区别的是，get不会抛出NoSuchElementException
 		// 如果想使用原版Optional中的get这样，获取一个一定不为空的值，则应该使用orElseThrow
-		final Object opt = Opt.ofNullable(null).get();
+		final Object opt = Opt.ofNullable(null).getOrNull();
 		Assertions.assertNull(opt);
 	}
 
@@ -77,7 +77,7 @@ public class OptTest {
 		Assertions.assertEquals("hutool", user.getUsername());
 
 		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素
-		final String name = Opt.ofNullable("hutool").ifPresent(username -> username = "123").ifPresent(username -> username = "456").get();
+		final String name = Opt.ofNullable("hutool").ifPresent(username -> username = "123").ifPresent(username -> username = "456").getOrNull();
 		Assertions.assertEquals("hutool", name);
 	}
 
@@ -99,7 +99,7 @@ public class OptTest {
 		// 这也是为什么我们需要getter和setter而不直接给bean中的属性赋值中的其中一个原因
 		final String name = Opt.ofNullable("hutool").ifPresents(
 			username -> username = "123", username -> username = "456",
-			n -> Assertions.assertEquals("hutool", n)).get();
+			n -> Assertions.assertEquals("hutool", n)).getOrNull();
 		Assertions.assertEquals("hutool", name);
 
 		// 当然，以下情况不会抛出NPE，但也没什么意义
@@ -119,7 +119,7 @@ public class OptTest {
 		final User user = User.builder().username("hutool").build();
 		final Opt<User> userOpt = Opt.of(user);
 		// 获取昵称，获取不到则获取用户名
-		final String name = userOpt.map(User::getNickname).or(() -> userOpt.map(User::getUsername)).get();
+		final String name = userOpt.map(User::getNickname).or(() -> userOpt.map(User::getUsername)).getOrNull();
 		Assertions.assertEquals("hutool", name);
 	}
 

@@ -68,7 +68,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return MapUtil.zero();
 		}
-		return toMap(collection, (v) -> Opt.ofNullable(v).map(key).get(), Function.identity(), isParallel);
+		return toMap(collection, (v) -> Opt.ofNullable(v).map(key).getOrNull(), Function.identity(), isParallel);
 	}
 
 	/**

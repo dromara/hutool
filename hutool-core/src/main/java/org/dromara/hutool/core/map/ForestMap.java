@@ -279,7 +279,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	default V getNodeValue(final K key) {
 		return Opt.ofNullable(get(key))
 				.map(TreeEntry::getValue)
-				.get();
+				.getOrNull();
 	}
 
 	// ===================== 子节点相关方法 =====================

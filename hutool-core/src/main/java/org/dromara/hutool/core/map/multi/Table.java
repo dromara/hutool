@@ -60,7 +60,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 行是否存在
 	 */
 	default boolean containsRow(final R rowKey) {
-		return Opt.ofNullable(rowMap()).map((map) -> map.containsKey(rowKey)).get();
+		return Opt.ofNullable(rowMap()).map((map) -> map.containsKey(rowKey)).getOrNull();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 行映射，返回的键为列键，值为表格的值
 	 */
 	default Map<C, V> getRow(final R rowKey) {
-		return Opt.ofNullable(rowMap()).map((map) -> map.get(rowKey)).get();
+		return Opt.ofNullable(rowMap()).map((map) -> map.get(rowKey)).getOrNull();
 	}
 
 	/**
@@ -79,7 +79,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 行键
 	 */
 	default Set<R> rowKeySet() {
-		return Opt.ofNullable(rowMap()).map(Map::keySet).get();
+		return Opt.ofNullable(rowMap()).map(Map::keySet).getOrNull();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 列是否存在
 	 */
 	default boolean containsColumn(final C columnKey) {
-		return Opt.ofNullable(columnMap()).map((map) -> map.containsKey(columnKey)).get();
+		return Opt.ofNullable(columnMap()).map((map) -> map.containsKey(columnKey)).getOrNull();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 列映射，返回的键为行键，值为表格的值
 	 */
 	default Map<R, V> getColumn(final C columnKey) {
-		return Opt.ofNullable(columnMap()).map((map) -> map.get(columnKey)).get();
+		return Opt.ofNullable(columnMap()).map((map) -> map.get(columnKey)).getOrNull();
 	}
 
 	/**
@@ -118,7 +118,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 列set
 	 */
 	default Set<C> columnKeySet() {
-		return Opt.ofNullable(columnMap()).map(Map::keySet).get();
+		return Opt.ofNullable(columnMap()).map(Map::keySet).getOrNull();
 	}
 
 	/**
@@ -157,7 +157,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 值
 	 */
 	default boolean containsValue(final V value){
-		final Collection<Map<C, V>> rows = Opt.ofNullable(rowMap()).map(Map::values).get();
+		final Collection<Map<C, V>> rows = Opt.ofNullable(rowMap()).map(Map::values).getOrNull();
 		if(null != rows){
 			for (final Map<C, V> row : rows) {
 				if (row.containsValue(value)) {
@@ -176,7 +176,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 值，如果值不存在，返回{@code null}
 	 */
 	default V get(final R rowKey, final C columnKey) {
-		return Opt.ofNullable(getRow(rowKey)).map((map) -> map.get(columnKey)).get();
+		return Opt.ofNullable(getRow(rowKey)).map((map) -> map.get(columnKey)).getOrNull();
 	}
 
 	/**

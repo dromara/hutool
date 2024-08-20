@@ -52,8 +52,8 @@ public class WeakCache<K, V> extends TimedCache<K, V>{
 		final WeakConcurrentMap<Mutable<K>, CacheObj<K, V>> map = (WeakConcurrentMap<Mutable<K>, CacheObj<K, V>>) this.cacheMap;
 		// WeakKey回收之后，key对应的值已经是null了，因此此处的key也为null
 		map.setPurgeListener((key, value)-> listener.onRemove(
-			Opt.ofNullable(key).map(Ref::get).map(Mutable::get).get(),
-			Opt.ofNullable(value).map(Ref::get).map(CacheObj::getValue).get()));
+			Opt.ofNullable(key).map(Ref::get).map(Mutable::get).getOrNull(),
+			Opt.ofNullable(value).map(Ref::get).map(CacheObj::getValue).getOrNull()));
 
 		return this;
 	}

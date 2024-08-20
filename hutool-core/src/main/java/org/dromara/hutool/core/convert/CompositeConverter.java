@@ -127,7 +127,7 @@ public class CompositeConverter extends RegisterConverter {
 
 		// issue#I7WJHH，Opt和Optional处理
 		if (value instanceof Opt) {
-			value = ((Opt<T>) value).get();
+			value = ((Opt<T>) value).getOrNull();
 			if (ObjUtil.isNull(value)) {
 				return defaultValue;
 			}

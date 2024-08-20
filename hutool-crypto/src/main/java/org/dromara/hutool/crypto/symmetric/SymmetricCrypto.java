@@ -450,7 +450,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	private SymmetricCrypto initParams(final String algorithm, AlgorithmParameterSpec paramsSpec) {
 		if (null == paramsSpec) {
 			byte[] iv = Opt.ofNullable(cipher)
-				.map(JceCipher::getRaw).map(Cipher::getIV).get();
+				.map(JceCipher::getRaw).map(Cipher::getIV).getOrNull();
 
 			// 随机IV
 			if (StrUtil.startWithIgnoreCase(algorithm, "PBE")) {

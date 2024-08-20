@@ -33,7 +33,7 @@ public class KClassUtil {
 
 	@SuppressWarnings("unchecked")
 	private static final Class<? extends Annotation> META_DATA_CLASS =
-		(Class<? extends Annotation>) Opt.ofTry(() -> Class.forName("kotlin.Metadata")).get();
+		(Class<? extends Annotation>) Opt.ofTry(() -> Class.forName("kotlin.Metadata")).getOrNull();
 
 	/**
 	 * 是否提供或处于Kotlin环境中

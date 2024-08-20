@@ -145,7 +145,7 @@ public class JSONConverter implements Converter, Serializable {
 		if (obj instanceof Optional) {
 			obj = ((Optional<?>) obj).orElse(null);
 		} else if (obj instanceof Opt) {
-			obj = ((Opt<?>) obj).get();
+			obj = ((Opt<?>) obj).getOrNull();
 		}
 
 		final JSON json;

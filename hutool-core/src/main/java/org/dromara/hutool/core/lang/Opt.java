@@ -151,16 +151,15 @@ public class Opt<T> {
 
 	/**
 	 * 返回包裹里的元素，取不到则为{@code null}，注意！！！此处和{@link java.util.Optional#get()}不同的一点是本方法并不会抛出{@code NoSuchElementException}
-	 * 如果元素为空，则返回{@code null}，如果需要一个绝对不能为{@code null}的值，则使用{@link #orElseThrow()}
 	 *
 	 * <p>
-	 * 如果需要一个绝对不能为 {@code null}的值，则使用{@link #orElseThrow()}
+	 * 如果元素为空，则返回{@code null}，如果需要一个绝对不能为 {@code null}的值，则使用{@link #orElseThrow()}
 	 * 做此处修改的原因是，有时候我们确实需要返回一个null给前端，并且这样的时候并不少见
 	 * 而使用 {@code .orElse(null)}需要写整整12个字符，用{@code .get()}就只需要6个啦
 	 *
 	 * @return 包裹里的元素，有可能为{@code null}
 	 */
-	public T get() {
+	public T getOrNull() {
 		return this.value;
 	}
 
@@ -362,7 +361,8 @@ public class Opt<T> {
 	 */
 	@SafeVarargs
 	public final Opt<T> ifPresents(final SerConsumer<T>... actions) throws NullPointerException {
-		return ifPresent(Stream.of(actions).reduce(SerConsumer::andThen).orElseGet(() -> o -> {}));
+		return ifPresent(Stream.of(actions).reduce(SerConsumer::andThen).orElseGet(() -> o -> {
+		}));
 	}
 
 	/**

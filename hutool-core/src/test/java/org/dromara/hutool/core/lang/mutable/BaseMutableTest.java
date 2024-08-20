@@ -84,7 +84,7 @@ abstract class BaseMutableTest<V, M extends Mutable<V>> {
 	@Test
 	void testToOpt() {
 		final Mutable<V> mutableObj = getMutable(getValue1());
-		final V value = mutableObj.toOpt().get();
+		final V value = mutableObj.toOpt().getOrNull();
 		Assertions.assertEquals(getValue1(), value);
 	}
 

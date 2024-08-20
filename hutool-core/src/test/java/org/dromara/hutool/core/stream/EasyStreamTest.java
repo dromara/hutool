@@ -548,19 +548,19 @@ public class EasyStreamTest {
 		final Opt<BigDecimal> bigDecimalAvgFullParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
 				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity(), 2, RoundingMode.HALF_UP);
-		Assertions.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgFullParam.get());
+		Assertions.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgFullParam.getOrNull());
 
 		//测试bigDecimal的avg单参
 		final Opt<BigDecimal> bigDecimalAvgOneParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
 				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity());
-		Assertions.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgOneParam.get());
+		Assertions.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgOneParam.getOrNull());
 
 		//测试bigDecimal的avg双参
 		final Opt<BigDecimal> bigDecimalAvgTwoParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
 				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity(), 2);
-		Assertions.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgTwoParam.get());
+		Assertions.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgTwoParam.getOrNull());
 
 		//测试bigDecimal的avg 空元素
 		final Opt<BigDecimal> emptyBigDecimalAvg = EasyStream.of(bigDecimalEmptyList)
@@ -585,7 +585,7 @@ public class EasyStreamTest {
 		final BigDecimal sum = EasyStream.of(testList).sum(BigDecimalTest::getCount);
 		Assertions.assertEquals(15, sum.intValue());
 
-		final BigDecimal avg = EasyStream.of(testList).avg(BigDecimalTest::getCount).get();
+		final BigDecimal avg = EasyStream.of(testList).avg(BigDecimalTest::getCount).getOrNull();
 		Assertions.assertEquals(3, avg.intValue());
 	}
 
