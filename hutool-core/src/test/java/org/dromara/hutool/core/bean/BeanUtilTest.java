@@ -411,7 +411,7 @@ public class BeanUtilTest {
 		p2.setName("oldName");
 
 		// null值不覆盖目标属性
-		BeanUtil.copyProperties(p1, p2, CopyOptions.of().ignoreNullValue());
+		BeanUtil.copyProperties(p1, p2, CopyOptions.of().setIgnoreNullValue(true));
 		assertEquals("oldName", p2.getName());
 
 		// null覆盖目标属性

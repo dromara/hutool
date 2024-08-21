@@ -30,7 +30,7 @@ public class BeanCopierTest {
 		Assertions.assertNull(map.get("value"));
 
 		// 忽略null的情况下，空字段不写入map
-		map = BeanCopier.of(a, new HashMap<>(), CopyOptions.of().ignoreNullValue()).copy();
+		map = BeanCopier.of(a, new HashMap<>(), CopyOptions.of().setIgnoreNullValue(true)).copy();
 		Assertions.assertFalse(map.containsKey("value"));
 		Assertions.assertEquals(0, map.size());
 	}

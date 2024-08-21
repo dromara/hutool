@@ -174,16 +174,6 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
-	 * 设置忽略空值，当源对象的值为null时，忽略而不注入此值
-	 *
-	 * @return CopyOptions
-	 * @since 4.5.7
-	 */
-	public CopyOptions ignoreNullValue() {
-		return setIgnoreNullValue(true);
-	}
-
-	/**
 	 * 属性过滤器，断言通过的属性才会被复制<br>
 	 * {@link BiPredicate#test(Object, Object)}返回{@code true}则属性通过，{@code false}不通过，抛弃之
 	 *
@@ -238,16 +228,6 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
-	 * 设置忽略字段的注入错误
-	 *
-	 * @return CopyOptions
-	 * @since 4.5.7
-	 */
-	public CopyOptions ignoreError() {
-		return setIgnoreError(true);
-	}
-
-	/**
 	 * 设置是否忽略字段的大小写
 	 *
 	 * @param ignoreCase 是否忽略大小写
@@ -256,16 +236,6 @@ public class CopyOptions implements Serializable {
 	public CopyOptions setIgnoreCase(final boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
 		return this;
-	}
-
-	/**
-	 * 设置忽略字段的大小写
-	 *
-	 * @return CopyOptions
-	 * @since 4.5.7
-	 */
-	public CopyOptions ignoreCase() {
-		return setIgnoreCase(true);
 	}
 
 	/**
