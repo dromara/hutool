@@ -29,57 +29,67 @@ public class RateLimiterConfig {
 	/**
 	 * 创建限流配置
 	 *
-	 * @param timeout            超时时间，即超过这个时间没有获取到许可，则返回false
-	 * @param limitRefreshPeriod 限制刷新周期，即每多少时间刷新一次
-	 * @param limitForPeriod     个周期的许可数
 	 * @return RateLimiterConfig
 	 */
-	public static RateLimiterConfig of(final Duration timeout, final Duration limitRefreshPeriod, final int limitForPeriod) {
-		return new RateLimiterConfig(timeout, limitRefreshPeriod, limitForPeriod);
+	public static RateLimiterConfig of() {
+		return new RateLimiterConfig();
 	}
 
 	/**
 	 * 超时时间，即超过这个时间没有获取到许可，则返回false
 	 */
-	private final Duration timeout;
+	private Duration timeout;
 	/**
 	 * 限制刷新周期，即每多少时间刷新一次
 	 */
-	private final Duration refreshPeriod;
+	private Duration refreshPeriod;
 	/**
 	 * 容量，可以是总容量，或者每个周期的容量
 	 */
-	private final int capacity;
-
+	private int capacity;
 	/**
-	 * 构造
-	 *
-	 * @param timeout       超时时间，即超过这个时间没有获取到许可，则返回false
-	 * @param refreshPeriod 刷新周期，即每多少时间刷新一次
-	 * @param capacity      容量
+	 * 在刷新周期内释放的最大数量，不能超过{@link #capacity}
 	 */
-	public RateLimiterConfig(final Duration timeout, final Duration refreshPeriod, final int capacity) {
-		this.timeout = timeout;
-		this.refreshPeriod = refreshPeriod;
-		this.capacity = capacity;
-	}
+	private int maxReleaseCount;
 
 	/**
-	 * 超时时间，即超过这个时间没有获取到许可，则返回false，单位毫秒
+	 * 超时时间，即超过这个时间没有获取到许可，则返回false
 	 *
-	 * @return 超时时间，单位毫秒
+	 * @return 超时时间
 	 */
 	public Duration getTimeout() {
 		return timeout;
 	}
 
 	/**
-	 * 刷新周期，即每多少时间刷新一次，单位毫秒
+	 * 设置超时时间，即超过这个时间没有获取到许可，则返回false
 	 *
-	 * @return 刷新周期，单位毫秒
+	 * @param timeout 超时时间
+	 * @return this
+	 */
+	public RateLimiterConfig setTimeout(final Duration timeout) {
+		this.timeout = timeout;
+		return this;
+	}
+
+	/**
+	 * 刷新周期，即每多少时间刷新一次
+	 *
+	 * @return 刷新周期
 	 */
 	public Duration getRefreshPeriod() {
 		return refreshPeriod;
+	}
+
+	/**
+	 * 设置刷新周期，即每多少时间刷新一次，单位毫秒
+	 *
+	 * @param refreshPeriod 刷新周期
+	 * @return this
+	 */
+	public RateLimiterConfig setRefreshPeriod(final Duration refreshPeriod) {
+		this.refreshPeriod = refreshPeriod;
+		return this;
 	}
 
 	/**
@@ -89,5 +99,35 @@ public class RateLimiterConfig {
 	 */
 	public int getCapacity() {
 		return capacity;
+	}
+
+	/**
+	 * 设置容量，可以是总容量，或者每个周期的容量
+	 * @param capacity 容量
+	 * @return this
+	 */
+	public RateLimiterConfig setCapacity(final int capacity) {
+		this.capacity = capacity;
+		return this;
+	}
+
+	/**
+	 * 在刷新周期内释放的最大数量，不能超过{@link #capacity}
+	 *
+	 * @return 在刷新周期内释放的最大数量
+	 */
+	public int getMaxReleaseCount() {
+		return maxReleaseCount;
+	}
+
+	/**
+	 * 设置在刷新周期内释放的最大数量，不能超过{@link #capacity}
+	 *
+	 * @param maxReleaseCount 在刷新周期内释放的最大数量
+	 * @return this
+	 */
+	public RateLimiterConfig setMaxReleaseCount(final int maxReleaseCount) {
+		this.maxReleaseCount = maxReleaseCount;
+		return this;
 	}
 }

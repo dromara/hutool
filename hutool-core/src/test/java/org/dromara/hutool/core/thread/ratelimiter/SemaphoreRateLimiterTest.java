@@ -10,8 +10,12 @@ public class SemaphoreRateLimiterTest {
 
 	@Test
 	void test() {
-		final RateLimiterConfig rateLimiterConfig = RateLimiterConfig.of(Duration.ofSeconds(5), Duration.ofMillis(300), 5);
-		final RateLimiter rateLimiter = new FixedRateLimiter(rateLimiterConfig);
+		final RateLimiterConfig rateLimiterConfig = RateLimiterConfig.of()
+			.setCapacity(5)
+			.setMaxReleaseCount(5)
+			.setRefreshPeriod(Duration.ofMillis(300))
+			.setTimeout(Duration.ofSeconds(5));
+		final TokenBucketRateLimiter rateLimiter = new TokenBucketRateLimiter(rateLimiterConfig);
 
 		final boolean b = rateLimiter.tryAcquire(5);
 		Assertions.assertTrue(b);
@@ -27,5 +31,7 @@ public class SemaphoreRateLimiterTest {
 		// 超过数量
 		final boolean b3 = rateLimiter.tryAcquire(1);
 		Assertions.assertFalse(b3);
+
+		rateLimiter.close();
 	}
 }

@@ -19,9 +19,7 @@ package org.dromara.hutool.core.thread.ratelimiter;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 基于{@link Semaphore} 实现的限流器
@@ -34,7 +32,6 @@ public abstract class SemaphoreRateLimiter implements RateLimiter {
 
 	protected final RateLimiterConfig config;
 	protected final Semaphore semaphore;
-	protected final ScheduledExecutorService scheduler;
 
 	// region ----- Constructor
 	/**
@@ -50,25 +47,11 @@ public abstract class SemaphoreRateLimiter implements RateLimiter {
 	 * 构造
 	 *
 	 * @param config    限流配置
-	 * @param semaphore {@link Semaphore}
+	 * @param semaphore {@link Semaphore}，默认使用{@link RateLimiterConfig#getCapacity()}创建
 	 */
 	public SemaphoreRateLimiter(final RateLimiterConfig config, final Semaphore semaphore) {
-		this(config, semaphore, null);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param config    限流配置
-	 * @param semaphore {@link Semaphore}，默认使用{@link RateLimiterConfig#getCapacity()}创建
-	 * @param scheduler 定时器，{@code null}表示不定时
-	 */
-	public SemaphoreRateLimiter(final RateLimiterConfig config, final Semaphore semaphore, final ScheduledExecutorService scheduler) {
 		this.config = Assert.notNull(config);
 		this.semaphore = Opt.ofNullable(semaphore).orElseGet(() -> new Semaphore(config.getCapacity()));
-		this.scheduler = scheduler;
-		//启动定时器
-		scheduleLimitRefresh();
 	}
 	// endregion
 
@@ -94,20 +77,4 @@ public abstract class SemaphoreRateLimiter implements RateLimiter {
 	 * @see RateLimiterConfig#getCapacity()
 	 */
 	public abstract void refreshLimit();
-
-	/**
-	 * 启动定时器，未定义则不启动
-	 */
-	private void scheduleLimitRefresh() {
-		if (null == this.scheduler) {
-			return;
-		}
-		final long limitRefreshPeriod = this.config.getRefreshPeriod().toNanos();
-		scheduler.scheduleAtFixedRate(
-			this::refreshLimit,
-			limitRefreshPeriod,
-			limitRefreshPeriod,
-			TimeUnit.NANOSECONDS
-		);
-	}
 }
