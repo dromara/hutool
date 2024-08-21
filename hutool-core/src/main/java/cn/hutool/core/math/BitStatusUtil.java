@@ -2,7 +2,7 @@ package cn.hutool.core.math;
 
 /**
  * 通过位运算表示状态的工具类<br>
- * 参数必须是 `偶数` 且 `大于等于0`！
+ * 参数必须 `大于等于0`！
  *
  * 工具实现见博客：https://blog.starxg.com/2020/11/bit-status/
  *
@@ -72,9 +72,6 @@ public class BitStatusUtil {
 		for (int arg : args) {
 			if (arg < 0) {
 				throw new IllegalArgumentException(arg + " 必须大于等于0");
-			}
-			if ((arg & 1) == 1) {
-				throw new IllegalArgumentException(arg + " 不是偶数");
 			}
 		}
 	}
