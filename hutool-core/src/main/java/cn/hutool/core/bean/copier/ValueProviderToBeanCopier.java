@@ -79,6 +79,8 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 			if (false == copyOptions.testPropertyFilter(tDesc.getField(), sValue)) {
 				return;
 			}
+
+			// 自定义值
 			sValue = copyOptions.editFieldValue(tFieldName, sValue);
 
 			// 目标赋值

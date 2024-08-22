@@ -5,7 +5,6 @@ import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapWrapper;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -89,6 +88,7 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 			final Type fieldType = TypeUtil.getActualType(this.targetType, tDesc.getFieldType());
 			//Object newValue = Convert.convertWithCheck(fieldType, sValue, null, this.copyOptions.ignoreError);
 			Object newValue = this.copyOptions.convertField(fieldType, sValue);
+			// 自定义值
 			newValue = copyOptions.editFieldValue(sKeyStr, newValue);
 
 			// 目标赋值
