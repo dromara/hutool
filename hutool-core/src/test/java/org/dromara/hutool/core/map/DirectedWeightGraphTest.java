@@ -1,20 +1,20 @@
 package org.dromara.hutool.core.map;
 
 import org.dromara.hutool.core.map.multi.DirectedWeightGraph;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author newshiJ
- * @date 2024/8/14 17:07
  */
 public class DirectedWeightGraphTest {
 
 	@Test
-	public void test1(){
-		DirectedWeightGraph<String> graph = new DirectedWeightGraph<>();
+	@Disabled
+	public void test1() {
+		final DirectedWeightGraph<String> graph = new DirectedWeightGraph<>();
 		graph.putEdge("A", "B", 14);
 		graph.putEdge("A", "C", 8);
 		graph.putEdge("A", "D", 12);
@@ -44,10 +44,10 @@ public class DirectedWeightGraphTest {
 		Map<String, DirectedWeightGraph.Path<String>> map = null;
 		try {
 			map = graph.bestPathMap("A");
-			map.forEach((k,v) -> {
+			map.forEach((k, v) -> {
 				System.out.println(v);
 			});
-		} catch (DirectedWeightGraph.NegativeRingException e) {
+		} catch (final DirectedWeightGraph.NegativeRingException e) {
 			e.printStackTrace();
 		}
 

@@ -66,10 +66,6 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 				return;
 			}
 			sValue = entry.getValue();
-			// 忽略空值
-			if (copyOptions.ignoreNullValue && sValue == null) {
-				return;
-			}
 
 			final Object targetValue = target.get(sKey);
 			// 非覆盖模式下，如果目标值存在，则跳过
@@ -81,6 +77,11 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 			final Type[] typeArguments = TypeUtil.getTypeArguments(this.targetType);
 			if(null != typeArguments){
 				sValue = this.copyOptions.convertField(typeArguments[1], sValue);
+			}
+
+			// 忽略空值
+			if (copyOptions.ignoreNullValue && sValue == null) {
+				return;
 			}
 
 			// 目标赋值
