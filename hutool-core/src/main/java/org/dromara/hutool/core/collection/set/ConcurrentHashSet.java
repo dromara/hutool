@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.collection;
+package org.dromara.hutool.core.collection.set;
 
-import org.dromara.hutool.core.collection.set.SetFromMap;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 
 import java.util.Collection;

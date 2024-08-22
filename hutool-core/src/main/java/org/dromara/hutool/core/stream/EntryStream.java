@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.stream;
 
-import org.dromara.hutool.core.collection.ConcurrentHashSet;
+import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.map.multi.RowKeyTable;
 import org.dromara.hutool.core.map.multi.Table;

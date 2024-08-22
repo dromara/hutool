@@ -154,23 +154,23 @@ public class CompositeConverter extends RegisterConverter {
 			return converter.convert(type, value, defaultValue);
 		}
 
-		Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
-		if (null == rowType) {
+		Class<T> rawType = (Class<T>) TypeUtil.getClass(type);
+		if (null == rawType) {
 			if (null != defaultValue) {
-				rowType = (Class<T>) defaultValue.getClass();
+				rawType = (Class<T>) defaultValue.getClass();
 			} else {
 				throw new ConvertException("Can not get class from type: {}", type);
 			}
 		}
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		final T result = convertSpecial(type, rowType, value, defaultValue);
+		final T result = convertSpecial(type, rawType, value, defaultValue);
 		if (null != result) {
 			return result;
 		}
 
 		// 尝试转Bean
-		if (BeanUtil.isWritableBean(rowType)) {
+		if (BeanUtil.isWritableBean(rawType)) {
 			return (T) BeanConverter.INSTANCE.convert(type, value);
 		}
 
@@ -193,80 +193,81 @@ public class CompositeConverter extends RegisterConverter {
 	 *
 	 * @param <T>          转换的目标类型（转换器转换到的类型）
 	 * @param type         类型
+	 * @param rawType      原始类型
 	 * @param value        值
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T convertSpecial(final Type type, final Class<T> rowType, final Object value, final T defaultValue) {
-		if (null == rowType) {
+	private <T> T convertSpecial(final Type type, final Class<T> rawType, final Object value, final T defaultValue) {
+		if (null == rawType) {
 			return null;
 		}
 
 		// 日期、java.sql中的日期以及自定义日期统一处理
-		if (Date.class.isAssignableFrom(rowType)) {
+		if (Date.class.isAssignableFrom(rawType)) {
 			return DateConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// 集合转换（含有泛型参数，不可以默认强转）
-		if (Collection.class.isAssignableFrom(rowType)) {
+		if (Collection.class.isAssignableFrom(rawType)) {
 			return (T) CollectionConverter.INSTANCE.convert(type, value, (Collection<?>) defaultValue);
 		}
 
 		// Map类型（含有泛型参数，不可以默认强转）
-		if (Map.class.isAssignableFrom(rowType)) {
+		if (Map.class.isAssignableFrom(rawType)) {
 			return (T) MapConverter.INSTANCE.convert(type, value, (Map<?, ?>) defaultValue);
 		}
 
 		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
-		if (Map.Entry.class.isAssignableFrom(rowType)) {
+		if (Map.Entry.class.isAssignableFrom(rawType)) {
 			return (T) EntryConverter.INSTANCE.convert(type, value);
 		}
 
 		// 默认强转
-		if (rowType.isInstance(value)) {
+		if (rawType.isInstance(value)) {
 			return (T) value;
 		}
 
 		// 原始类型转换
-		if (rowType.isPrimitive()) {
+		if (rawType.isPrimitive()) {
 			return PrimitiveConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// 数字类型转换
-		if (Number.class.isAssignableFrom(rowType)) {
+		if (Number.class.isAssignableFrom(rawType)) {
 			return NumberConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// 枚举转换
-		if (rowType.isEnum()) {
+		if (rawType.isEnum()) {
 			return EnumConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// 数组转换
-		if (rowType.isArray()) {
+		if (rawType.isArray()) {
 			return ArrayConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// Record
-		if (RecordUtil.isRecord(rowType)) {
+		if (RecordUtil.isRecord(rawType)) {
 			return (T) RecordConverter.INSTANCE.convert(type, value);
 		}
 
 		// Kotlin Bean
-		if (KClassUtil.isKotlinClass(rowType)) {
+		if (KClassUtil.isKotlinClass(rawType)) {
 			return (T) KBeanConverter.INSTANCE.convert(type, value);
 		}
 
 		// issue#I7FQ29 Class
-		if ("java.lang.Class".equals(rowType.getName())) {
+		if ("java.lang.Class".equals(rawType.getName())) {
 			return (T) ClassConverter.INSTANCE.convert(type, value);
 		}
 
 		// 空值转空Bean
-		if(ObjUtil.isEmpty(value)){
+		if (ObjUtil.isEmpty(value)) {
 			// issue#3649 空值转空对象，则直接实例化
-			return ConstructorUtil.newInstanceIfPossible(rowType);
+			return ConstructorUtil.newInstanceIfPossible(rawType);
 		}
 
 		// 表示非需要特殊转换的对象

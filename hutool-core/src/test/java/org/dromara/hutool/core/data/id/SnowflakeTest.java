@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.data.id;
 
-import org.dromara.hutool.core.collection.ConcurrentHashSet;
+import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.tuple.Pair;

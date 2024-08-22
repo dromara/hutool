@@ -61,8 +61,9 @@ public class JSONConverter implements Converter, Serializable {
 	public static final JSONConverter INSTANCE = new JSONConverter(null);
 
 	static {
-		RegisterConverter.getInstance().putCustom(JSONObject.class, INSTANCE);
-		RegisterConverter.getInstance().putCustom(JSONArray.class, INSTANCE);
+		final RegisterConverter converter = RegisterConverter.getInstance();
+		converter.putCustom(JSONObject.class, INSTANCE);
+		converter.putCustom(JSONArray.class, INSTANCE);
 	}
 
 	/**

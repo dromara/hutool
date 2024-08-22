@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.util;
 
-import org.dromara.hutool.core.collection.ConcurrentHashSet;
+import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.exception.HutoolException;

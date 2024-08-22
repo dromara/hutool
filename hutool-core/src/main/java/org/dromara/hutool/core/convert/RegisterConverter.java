@@ -42,7 +42,10 @@ import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * 基于类型注册的转换器，转换器默认提供一些固定的类型转换，用户可调用{@link #putCustom(Type, Converter)} 注册自定义转换规则
+ * 基于类型注册的转换器<br>
+ * 即转换的目标类型和转换器一一对应，转换器只针对目标类型，不针对源类型<br>
+ * 转换器默认提供一些固定的类型转换，用户可调用{@link #putCustom(Type, Converter)} 注册自定义转换规则<br>
+ * 注意：注册的转换器要求目标类型必须一致，不能是子类等
  *
  * @author looly
  * @since 6.0.0
@@ -164,7 +167,7 @@ public class RegisterConverter implements Converter, Serializable {
 	 * 注册默认转换器
 	 */
 	private void registerDefault() {
-		defaultConverterMap = new SafeConcurrentHashMap<>(64);
+		final Map<Class<?>, Converter> defaultConverterMap = new SafeConcurrentHashMap<>(64);
 
 		// 包装类转换器
 		defaultConverterMap.put(Character.class, new CharacterConverter());
@@ -220,5 +223,7 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(Pair.class, PairConverter.INSTANCE);// since 6.0.0
 		defaultConverterMap.put(Triple.class, TripleConverter.INSTANCE);// since 6.0.0
 		defaultConverterMap.put(Tuple.class, TupleConverter.INSTANCE);// since 6.0.0
+
+		this.defaultConverterMap = defaultConverterMap;
 	}
 }

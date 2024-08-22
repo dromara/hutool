@@ -20,7 +20,6 @@ import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.json.convert.JSONConverter;
 
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -193,6 +192,6 @@ public interface JSON extends Converter, Cloneable, Serializable {
 
 	@Override
 	default Object convert(final Type targetType, final Object value) throws ConvertException {
-		return JSONConverter.of(config()).convert(targetType, value);
+		return config().getConverter().convert(targetType, value);
 	}
 }

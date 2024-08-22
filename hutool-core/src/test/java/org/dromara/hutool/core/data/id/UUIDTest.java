@@ -12,8 +12,7 @@
 
 package org.dromara.hutool.core.data.id;
 
-import org.dromara.hutool.core.collection.ConcurrentHashSet;
-import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

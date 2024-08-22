@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.io.watch.watchers;
 
-import org.dromara.hutool.core.collection.ConcurrentHashSet;
+import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.io.watch.Watcher;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.thread.ThreadUtil;
