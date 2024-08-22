@@ -27,6 +27,7 @@ import org.dromara.hutool.http.server.filter.HttpFilter;
 import org.dromara.hutool.http.server.filter.SimpleFilter;
 import org.dromara.hutool.http.server.handler.ActionHandler;
 
+import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -70,7 +71,17 @@ public class SimpleServer {
 	 * @param address 监听地址
 	 */
 	public SimpleServer(final InetSocketAddress address) {
-		this(address, null);
+		this(address, (HttpsConfigurator) null);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param address 监听地址
+	 * @param sslContext ssl配置
+	 */
+	public SimpleServer(final InetSocketAddress address, final SSLContext sslContext) {
+		this(address, new HttpsConfigurator(sslContext));
 	}
 
 	/**
