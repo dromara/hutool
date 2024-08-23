@@ -19,10 +19,7 @@ package org.dromara.hutool.json.convert;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
-import org.dromara.hutool.core.convert.ConvertException;
-import org.dromara.hutool.core.convert.ConvertUtil;
-import org.dromara.hutool.core.convert.Converter;
-import org.dromara.hutool.core.convert.RegisterConverter;
+import org.dromara.hutool.core.convert.*;
 import org.dromara.hutool.core.convert.impl.DateConverter;
 import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
 import org.dromara.hutool.core.lang.Opt;
@@ -233,8 +230,14 @@ public class JSONConverter implements Converter, Serializable {
 			return (T) json;
 			//throw new JSONException("Can not get class from type: {}", targetType);
 		}
+
+		// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
+		if (KClassUtil.isKotlinClass(rawType) && json instanceof JSONGetter) {
+			return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>) json));
+		}
+
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		final T result = (T) JSONSpecialConverter.getInstance().convert(targetType, rawType, json);
+		final T result = (T) SpecialConverter.getInstance().convert(targetType, rawType, json);
 		if (null != result) {
 			return result;
 		}
@@ -247,11 +250,6 @@ public class JSONConverter implements Converter, Serializable {
 
 		// 尝试转Bean
 		if (BeanUtil.isWritableBean(rawType)) {
-			// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
-			if (KClassUtil.isKotlinClass(rawType) && json instanceof JSONGetter) {
-				return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>) json));
-			}
-
 			return BeanCopier.of(json,
 				ConstructorUtil.newInstanceIfPossible(rawType), targetType,
 				InternalJSONUtil.toCopyOptions(json.config())).copy();
