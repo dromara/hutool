@@ -15,7 +15,7 @@ package org.dromara.hutool.http.server;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.net.multipart.MultipartFormData;
+import org.dromara.hutool.http.multipart.MultipartFormData;
 import org.dromara.hutool.http.HttpUtil;
 
 import java.util.concurrent.TimeUnit;

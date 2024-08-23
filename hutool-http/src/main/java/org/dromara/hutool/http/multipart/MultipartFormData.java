@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.net.multipart;
+package org.dromara.hutool.http.multipart;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.convert.ConvertUtil;

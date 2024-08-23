@@ -20,4 +20,4 @@
  * @author looly
  *
  */
-package org.dromara.hutool.core.net.multipart;
+package org.dromara.hutool.http.multipart;

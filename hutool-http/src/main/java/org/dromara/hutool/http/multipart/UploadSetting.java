@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.net.multipart;
+package org.dromara.hutool.http.multipart;
 
 /**
  * 上传文件设定文件

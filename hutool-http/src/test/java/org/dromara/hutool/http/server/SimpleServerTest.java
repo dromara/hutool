@@ -15,7 +15,7 @@ package org.dromara.hutool.http.server;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.net.multipart.UploadFile;
+import org.dromara.hutool.http.multipart.UploadFile;
 import org.dromara.hutool.http.meta.ContentType;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.HttpUtil;
