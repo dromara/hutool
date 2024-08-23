@@ -19,7 +19,7 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.codec.binary.HexUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveLinkedMap;
@@ -148,7 +148,7 @@ public final class InternalJSONUtil {
 	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 */
 	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
-		final String[] path = SplitUtil.splitToArray(Convert.toStr(key), StrUtil.DOT);
+		final String[] path = SplitUtil.splitToArray(ConvertUtil.toStr(key), StrUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {

@@ -13,7 +13,7 @@
 package org.dromara.hutool.extra.spring.cglib;
 
 import lombok.Data;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledForJreRange;
@@ -41,7 +41,7 @@ public class CglibUtilTest {
 
 		otherBean = new OtherSampleBean();
 		//自定义转换器
-		CglibUtil.copy(bean, otherBean, (value, target, context) -> Convert.convertQuietly(target, value));
+		CglibUtil.copy(bean, otherBean, (value, target, context) -> ConvertUtil.convertQuietly(target, value));
 		Assertions.assertEquals("Hello world", otherBean.getValue());
 		Assertions.assertEquals(123, otherBean.getValue2());
 	}

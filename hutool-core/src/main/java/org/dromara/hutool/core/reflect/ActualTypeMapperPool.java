@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 
 import java.lang.reflect.ParameterizedType;
@@ -53,7 +53,7 @@ public class ActualTypeMapperPool {
 	 * @since 5.7.16
 	 */
 	public static Map<String, Type> getStrKeyMap(final Type type){
-		return Convert.toMap(String.class, Type.class, get(type));
+		return ConvertUtil.toMap(String.class, Type.class, get(type));
 	}
 
 	/**

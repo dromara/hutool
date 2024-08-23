@@ -20,14 +20,14 @@ public class PrimitiveConvertTest {
 
 	@Test
 	public void toIntTest(){
-		final int convert = Convert.convert(int.class, "123");
+		final int convert = ConvertUtil.convert(int.class, "123");
 		Assertions.assertEquals(123, convert);
 	}
 
 	@Test
 	public void toIntErrorTest(){
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
-			Convert.convert(int.class, "aaaa");
+			ConvertUtil.convert(int.class, "aaaa");
 		});
 	}
 

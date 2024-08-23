@@ -17,7 +17,7 @@
 package org.dromara.hutool.setting;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.io.IoUtil;
@@ -512,7 +512,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return 被删除的值，如果值不存在，返回null
 	 */
 	public String remove(final String group, final Object key) {
-		return this.groupedMap.remove(group, Convert.toStr(key));
+		return this.groupedMap.remove(group, ConvertUtil.toStr(key));
 	}
 
 	/**
@@ -641,7 +641,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	@Override
 	public boolean containsKey(final Object key) {
-		return this.groupedMap.containsKey(DEFAULT_GROUP, Convert.toStr(key));
+		return this.groupedMap.containsKey(DEFAULT_GROUP, ConvertUtil.toStr(key));
 	}
 
 	/**
@@ -652,7 +652,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	@Override
 	public boolean containsValue(final Object value) {
-		return this.groupedMap.containsValue(DEFAULT_GROUP, Convert.toStr(value));
+		return this.groupedMap.containsValue(DEFAULT_GROUP, ConvertUtil.toStr(value));
 	}
 
 	/**

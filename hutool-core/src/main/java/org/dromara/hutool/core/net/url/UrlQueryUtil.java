@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.net.url;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -199,7 +199,7 @@ public class UrlQueryUtil {
 		if (MapUtil.isEmpty(queryMap)) {
 			return MapUtil.empty();
 		}
-		return Convert.toMap(String.class, String.class, queryMap);
+		return ConvertUtil.toMap(String.class, String.class, queryMap);
 	}
 
 	/**

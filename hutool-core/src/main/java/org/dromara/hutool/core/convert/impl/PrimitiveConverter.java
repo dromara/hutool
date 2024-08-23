@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -88,9 +88,9 @@ public class PrimitiveConverter extends AbstractConverter {
 		} else if (double.class == primitiveClass) {
 			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Double.class, toStringFunc), 0);
 		} else if (char.class == primitiveClass) {
-			return Convert.convert(Character.class, value);
+			return ConvertUtil.convert(Character.class, value);
 		} else if (boolean.class == primitiveClass) {
-			return Convert.convert(Boolean.class, value);
+			return ConvertUtil.convert(Boolean.class, value);
 		}
 
 		throw new ConvertException("Unsupported target type: {}", primitiveClass);

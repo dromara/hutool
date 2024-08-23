@@ -18,7 +18,7 @@ package org.dromara.hutool.core.bean.copier;
 
 import org.dromara.hutool.core.bean.BeanDesc;
 import org.dromara.hutool.core.bean.PropDesc;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;
@@ -105,7 +105,7 @@ public class CopyOptions implements Serializable {
 	 * 自定义类型转换器，默认使用全局万能转换器转换
 	 */
 	protected Converter converter = (type, value) ->
-		Convert.convertWithCheck(type, value, null, ignoreError);
+		ConvertUtil.convertWithCheck(type, value, null, ignoreError);
 
 	//region create
 

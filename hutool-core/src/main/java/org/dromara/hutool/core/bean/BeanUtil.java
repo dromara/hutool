@@ -22,7 +22,7 @@ import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.collection.set.SetUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.impl.RecordConverter;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
@@ -524,7 +524,7 @@ public class BeanUtil {
 
 		// issue#3091
 		if (ClassUtil.isBasicType(targetType) || String.class == targetType) {
-			return Convert.toList(targetType, collection);
+			return ConvertUtil.toList(targetType, collection);
 		}
 
 		return collection.stream().map((source) -> {

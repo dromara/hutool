@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.lang.getter;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -77,7 +77,7 @@ public interface GroupedTypeGetter<K, G> {
 	 * @return 结果值
 	 */
 	default <T> T getByGroup(final K key, final G group, final Type type, final T defaultValue) {
-		return Convert.convert(type, getObjByGroup(key, group), defaultValue);
+		return ConvertUtil.convert(type, getObjByGroup(key, group), defaultValue);
 	}
 
 	/**

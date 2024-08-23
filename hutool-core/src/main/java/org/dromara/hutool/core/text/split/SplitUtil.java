@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.text.split;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.text.StrUtil;
@@ -54,7 +54,7 @@ public class SplitUtil {
 	 * @return long数组
 	 */
 	public static <T> T splitTo(final CharSequence str, final CharSequence separator, final Class<T> resultType) {
-		return Convert.convert(resultType, splitTrim(str, separator));
+		return ConvertUtil.convert(resultType, splitTrim(str, separator));
 	}
 	// endregion
 

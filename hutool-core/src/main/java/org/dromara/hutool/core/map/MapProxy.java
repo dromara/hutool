@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.map;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.getter.TypeGetter;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
@@ -160,7 +160,7 @@ public class MapProxy implements Map<Object, Object>, TypeGetter<Object>, Invoca
 						// 驼峰不存在转下划线尝试
 						fieldName = StrUtil.toUnderlineCase(fieldName);
 					}
-					return Convert.convert(method.getGenericReturnType(), this.get(fieldName));
+					return ConvertUtil.convert(method.getGenericReturnType(), this.get(fieldName));
 				}
 			}
 

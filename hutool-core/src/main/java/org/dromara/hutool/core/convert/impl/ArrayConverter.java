@@ -21,7 +21,7 @@ import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -223,7 +223,7 @@ public class ArrayConverter extends AbstractConverter {
 	 * @since 5.4.3
 	 */
 	private Object convertComponentType(final Class<?> targetComponentType, final Object value) {
-		return Convert.convertWithCheck(targetComponentType, value, null, this.ignoreElementError);
+		return ConvertUtil.convertWithCheck(targetComponentType, value, null, this.ignoreElementError);
 	}
 	// -------------------------------------------------------------------------------------- Private method end
 }

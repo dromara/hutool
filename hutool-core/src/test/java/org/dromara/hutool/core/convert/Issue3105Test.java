@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 public class Issue3105Test {
 	@Test
 	void toLongTest() {
-		final Long aLong = Convert.toLong("0.a");
+		final Long aLong = ConvertUtil.toLong("0.a");
 		Assertions.assertEquals(0L, aLong);
 	}
 }

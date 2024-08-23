@@ -19,7 +19,7 @@ package org.dromara.hutool.db.sql;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.builder.Builder;
 import org.dromara.hutool.core.map.MapUtil;
@@ -219,7 +219,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 
 		if (ArrayUtil.isNotEmpty(params) && 1 == params.length && params[0] instanceof Map) {
 			// 检查参数是否为命名方式的参数
-			final NamedSql namedSql =  new NamedSql(sql, Convert.toMap(String.class, Object.class, params[0]));
+			final NamedSql namedSql =  new NamedSql(sql, ConvertUtil.toMap(String.class, Object.class, params[0]));
 			sql = namedSql.getSql();
 			params = namedSql.getParamArray();
 		}

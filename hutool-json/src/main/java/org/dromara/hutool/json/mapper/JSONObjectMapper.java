@@ -19,7 +19,7 @@ package org.dromara.hutool.json.mapper;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
@@ -114,11 +114,11 @@ public class JSONObjectMapper {
 		} else if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				jsonObject.set(Convert.toStr(e.getKey()), e.getValue(), predicate, false);
+				jsonObject.set(ConvertUtil.toStr(e.getKey()), e.getValue(), predicate, false);
 			}
 		} else if (source instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) source;
-			jsonObject.set(Convert.toStr(entry.getKey()), entry.getValue(), predicate, false);
+			jsonObject.set(ConvertUtil.toStr(entry.getKey()), entry.getValue(), predicate, false);
 		} else if (source instanceof CharSequence) {
 			// 可能为JSON字符串
 			mapFromStr((CharSequence) source, jsonObject);

@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Validator;
@@ -402,7 +402,7 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 			return this;
 		}
 		if (isEmpty()) {
-			setNewArray((A) Convert.convert(array.getClass(), arrayToInsert));
+			setNewArray((A) ConvertUtil.convert(array.getClass(), arrayToInsert));
 			return this;
 		}
 
@@ -414,7 +414,7 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 		// 已有数组的元素类型
 		// 如果 已有数组的元素类型是 原始类型，则需要转换 新元素数组 为该类型，避免ArrayStoreException
 		if (this.componentType.isPrimitive()) {
-			arrayToInsert = (A) Convert.convert(array.getClass(), arrayToInsert);
+			arrayToInsert = (A) ConvertUtil.convert(array.getClass(), arrayToInsert);
 		}
 
 		final A result = (A) Array.newInstance(this.componentType, Math.max(len, index) + appendLength);
@@ -451,7 +451,7 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 			return this;
 		}
 		if (isEmpty()) {
-			setNewArray((A) Convert.convert(array.getClass(), values));
+			setNewArray((A) ConvertUtil.convert(array.getClass(), values));
 		}
 		if (index < 0) {
 			// 从头部追加

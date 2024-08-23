@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.util;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.map.MapUtil;
 
@@ -52,7 +52,7 @@ public class JNDIUtil {
 			if (MapUtil.isEmpty(environment)) {
 				return new InitialDirContext();
 			}
-			return new InitialDirContext(Convert.convert(Hashtable.class, environment));
+			return new InitialDirContext(ConvertUtil.convert(Hashtable.class, environment));
 		} catch (final NamingException e) {
 			throw new HutoolException(e);
 		}
@@ -69,7 +69,7 @@ public class JNDIUtil {
 			if (MapUtil.isEmpty(environment)) {
 				return new InitialContext();
 			}
-			return new InitialContext(Convert.convert(Hashtable.class, environment));
+			return new InitialContext(ConvertUtil.convert(Hashtable.class, environment));
 		} catch (final NamingException e) {
 			throw new HutoolException(e);
 		}

@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.lang.getter;
 
 import org.dromara.hutool.core.convert.CompositeConverter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.Converter;
 
 import java.lang.reflect.Type;
@@ -57,7 +57,7 @@ import java.util.Date;
  *     <li>LocalTime</li>
  * </ul>
  * 通过实现此接口，最简单方式为通过实现{@link #getObj(Object, Object)}方法，完成所有类型的值获取，获取默认采用
- * {@link Convert}方式自动转换。如果有自定义实现，重写对应getXXX方法即可。
+ * {@link ConvertUtil}方式自动转换。如果有自定义实现，重写对应getXXX方法即可。
  *
  * @param <K> 键类型
  * @author Looly

@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.io;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 
@@ -53,7 +53,7 @@ public class CharsetDetector {
 				"BIG5",
 				"UNICODE",
 				"US-ASCII"};
-		DEFAULT_CHARSETS = Convert.convert(Charset[].class, names);
+		DEFAULT_CHARSETS = ConvertUtil.convert(Charset[].class, names);
 	}
 
 	/**

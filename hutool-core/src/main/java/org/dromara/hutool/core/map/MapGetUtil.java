@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.map;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 
 import java.util.Date;
@@ -280,7 +280,7 @@ public class MapGetUtil {
 	 * @since 5.3.11
 	 */
 	public static <T> T get(final Map<?, ?> map, final Object key, final Class<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : ConvertUtil.convert(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class MapGetUtil {
 	 * @since 5.5.3
 	 */
 	public static <T> T getQuietly(final Map<?, ?> map, final Object key, final Class<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : ConvertUtil.convertQuietly(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class MapGetUtil {
 	 * @since 5.3.11
 	 */
 	public static <T> T get(final Map<?, ?> map, final Object key, final TypeReference<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : ConvertUtil.convert(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -339,6 +339,6 @@ public class MapGetUtil {
 	 * @since 5.5.3
 	 */
 	public static <T> T getQuietly(final Map<?, ?> map, final Object key, final TypeReference<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : ConvertUtil.convertQuietly(type, map.get(key), defaultValue);
 	}
 }

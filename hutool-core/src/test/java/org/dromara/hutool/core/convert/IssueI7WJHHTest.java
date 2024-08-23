@@ -22,7 +22,7 @@ public class IssueI7WJHHTest {
 	@Test
 	public void toIntTest() {
 		final Optional<Integer> optional = Optional.of(1);
-		final Integer integer = Convert.toInt(optional);
+		final Integer integer = ConvertUtil.toInt(optional);
 
 		Assertions.assertEquals(Integer.valueOf(1), integer);
 	}
@@ -30,7 +30,7 @@ public class IssueI7WJHHTest {
 	@Test
 	public void toIntTest2() {
 		final Opt<Integer> optional = Opt.of(1);
-		final Integer integer = Convert.toInt(optional);
+		final Integer integer = ConvertUtil.toInt(optional);
 
 		Assertions.assertEquals(Integer.valueOf(1), integer);
 	}

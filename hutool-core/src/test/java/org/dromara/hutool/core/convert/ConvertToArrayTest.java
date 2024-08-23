@@ -36,14 +36,14 @@ public class ConvertToArrayTest {
 	public void toIntArrayTest() {
 		final String[] b = { "1", "2", "3", "4" };
 
-		final Integer[] integerArray = Convert.toIntArray(b);
+		final Integer[] integerArray = ConvertUtil.toIntArray(b);
 		Assertions.assertArrayEquals(integerArray, new Integer[]{1,2,3,4});
 
-		final int[] intArray = Convert.convert(int[].class, b);
+		final int[] intArray = ConvertUtil.convert(int[].class, b);
 		Assertions.assertArrayEquals(intArray, new int[]{1,2,3,4});
 
 		final long[] c = {1,2,3,4,5};
-		final Integer[] intArray2 = Convert.toIntArray(c);
+		final Integer[] intArray2 = ConvertUtil.toIntArray(c);
 		Assertions.assertArrayEquals(intArray2, new Integer[]{1,2,3,4,5});
 	}
 
@@ -60,14 +60,14 @@ public class ConvertToArrayTest {
 	public void toLongArrayTest() {
 		final String[] b = { "1", "2", "3", "4" };
 
-		final Long[] longArray = Convert.toLongArray(b);
+		final Long[] longArray = ConvertUtil.toLongArray(b);
 		Assertions.assertArrayEquals(longArray, new Long[]{1L,2L,3L,4L});
 
-		final long[] longArray2 = Convert.convert(long[].class, b);
+		final long[] longArray2 = ConvertUtil.convert(long[].class, b);
 		Assertions.assertArrayEquals(longArray2, new long[]{1L,2L,3L,4L});
 
 		final int[] c = {1,2,3,4,5};
-		final Long[] intArray2 = Convert.toLongArray(c);
+		final Long[] intArray2 = ConvertUtil.toLongArray(c);
 		Assertions.assertArrayEquals(intArray2, new Long[]{1L,2L,3L,4L,5L});
 	}
 
@@ -75,14 +75,14 @@ public class ConvertToArrayTest {
 	public void toDoubleArrayTest() {
 		final String[] b = { "1", "2", "3", "4" };
 
-		final Double[] doubleArray = Convert.toDoubleArray(b);
+		final Double[] doubleArray = ConvertUtil.toDoubleArray(b);
 		Assertions.assertArrayEquals(doubleArray, new Double[]{1D,2D,3D,4D});
 
-		final double[] doubleArray2 = Convert.convert(double[].class, b);
+		final double[] doubleArray2 = ConvertUtil.convert(double[].class, b);
 		Assertions.assertArrayEquals(doubleArray2, new double[]{1D,2D,3D,4D}, 2);
 
 		final int[] c = {1,2,3,4,5};
-		final Double[] intArray2 = Convert.toDoubleArray(c);
+		final Double[] intArray2 = ConvertUtil.toDoubleArray(c);
 		Assertions.assertArrayEquals(intArray2, new Double[]{1D,2D,3D,4D,5D});
 	}
 
@@ -113,7 +113,7 @@ public class ConvertToArrayTest {
 		list.add("b");
 		list.add("c");
 
-		final String[] result = Convert.toStrArray(list);
+		final String[] result = ConvertUtil.toStrArray(list);
 		Assertions.assertEquals(list.get(0), result[0]);
 		Assertions.assertEquals(list.get(1), result[1]);
 		Assertions.assertEquals(list.get(2), result[2]);
@@ -122,7 +122,7 @@ public class ConvertToArrayTest {
 	@Test
 	public void strToCharArrayTest() {
 		final String testStr = "abcde";
-		final Character[] array = Convert.toCharArray(testStr);
+		final Character[] array = ConvertUtil.toCharArray(testStr);
 
 		//包装类型数组
 		Assertions.assertEquals(new Character('a'), array[0]);
@@ -132,7 +132,7 @@ public class ConvertToArrayTest {
 		Assertions.assertEquals(new Character('e'), array[4]);
 
 		//原始类型数组
-		final char[] array2 = Convert.convert(char[].class, testStr);
+		final char[] array2 = ConvertUtil.convert(char[].class, testStr);
 		Assertions.assertEquals('a', array2[0]);
 		Assertions.assertEquals('b', array2[1]);
 		Assertions.assertEquals('c', array2[2]);
@@ -146,7 +146,7 @@ public class ConvertToArrayTest {
 	public void toUrlArrayTest() {
 		final File[] files = FileUtil.file("D:\\workspace").listFiles();
 
-		final URL[] urls = Convert.convert(URL[].class, files);
+		final URL[] urls = ConvertUtil.convert(URL[].class, files);
 
 		for (final URL url : urls) {
 			Console.log(url.getPath());

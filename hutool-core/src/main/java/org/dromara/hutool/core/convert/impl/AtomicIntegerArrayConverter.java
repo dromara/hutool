@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -32,7 +32,7 @@ public class AtomicIntegerArrayConverter extends AbstractConverter {
 
 	@Override
 	protected AtomicIntegerArray convertInternal(final Class<?> targetClass, final Object value) {
-		return new AtomicIntegerArray(Convert.convert(int[].class, value));
+		return new AtomicIntegerArray(ConvertUtil.convert(int[].class, value));
 	}
 
 }

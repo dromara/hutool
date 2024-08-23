@@ -19,7 +19,7 @@ package org.dromara.hutool.core.reflect.method;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
@@ -749,7 +749,7 @@ public class MethodUtil {
 					actualArgs[i] = null;
 				} else if (!parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convert(parameterTypes[i], args[i], args[i]);
+					final Object targetValue = ConvertUtil.convert(parameterTypes[i], args[i], args[i]);
 					if (null != targetValue) {
 						actualArgs[i] = targetValue;
 					}

@@ -18,7 +18,7 @@ package org.dromara.hutool.core.bean;
 
 import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.annotation.PropIgnore;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.*;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 
@@ -217,7 +217,7 @@ public class PropDesc {
 			// 尝试将结果转换为目标类型，如果转换失败，返回null，即跳过此属性值。
 			// 来自：issues#I41WKP@Gitee，当忽略错误情况下，目标类型转换失败应返回null
 			// 如果返回原值，在集合注入时会成功，但是集合取值时会报类型转换错误
-			return Convert.convertWithCheck(targetType, result, null, ignoreError);
+			return ConvertUtil.convertWithCheck(targetType, result, null, ignoreError);
 		}
 		return result;
 	}
@@ -303,7 +303,7 @@ public class PropDesc {
 		if (null != value) {
 			final Class<?> propClass = getFieldClass();
 			if (!propClass.isInstance(value)) {
-				value = Convert.convertWithCheck(propClass, value, null, ignoreError);
+				value = ConvertUtil.convertWithCheck(propClass, value, null, ignoreError);
 			}
 		}
 

@@ -15,8 +15,7 @@ package org.dromara.hutool.core.util;
 import org.dromara.hutool.core.collection.ListUtil;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -224,8 +223,8 @@ public class ObjUtilTest {
 
 	@Test
 	public void toStringTest() {
-		Assertions.assertEquals("null", Convert.toStrOrNullStr(null));
-		Assertions.assertEquals(Collections.emptyMap().toString(), Convert.toStrOrNullStr(Collections.emptyMap()));
+		Assertions.assertEquals("null", ConvertUtil.toStrOrNullStr(null));
+		Assertions.assertEquals(Collections.emptyMap().toString(), ConvertUtil.toStrOrNullStr(Collections.emptyMap()));
 		Assertions.assertEquals("[1, 2]", Arrays.asList("1", "2").toString());
 	}
 

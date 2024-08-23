@@ -19,7 +19,7 @@ package org.dromara.hutool.poi.word;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -147,7 +147,7 @@ public class TableUtil {
 		int index = 0;
 		for (final Object cellData : rowData) {
 			cell = getOrCreateCell(row, index);
-			cell.setText(Convert.toStr(cellData));
+			cell.setText(ConvertUtil.toStr(cellData));
 			index++;
 		}
 	}

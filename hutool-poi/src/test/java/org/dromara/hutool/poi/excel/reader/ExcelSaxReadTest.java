@@ -14,7 +14,7 @@ package org.dromara.hutool.poi.excel.reader;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
@@ -93,7 +93,7 @@ public class ExcelSaxReadTest {
 	@Disabled
 	public void readBlankLineTest() {
 		ExcelUtil.readBySax("e:/ExcelBlankLine.xlsx", 0, (sheetIndex, rowIndex, rowList) -> {
-			if (StrUtil.isAllEmpty(Convert.toStrArray(rowList))) {
+			if (StrUtil.isAllEmpty(ConvertUtil.toStrArray(rowList))) {
 				return;
 			}
 			Console.log(rowList);

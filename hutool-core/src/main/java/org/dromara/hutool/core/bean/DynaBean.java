@@ -19,7 +19,7 @@ package org.dromara.hutool.core.bean;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ClassUtil;
@@ -174,10 +174,10 @@ public class DynaBean implements Cloneable, Serializable {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			((Map) bean).put(fieldName, value);
 		} else if (bean instanceof List) {
-			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldName), value);
+			ListUtil.setOrPadding((List) bean, ConvertUtil.toInt(fieldName), value);
 		} else if (ArrayUtil.isArray(bean)) {
 			// issue#3008，追加产生新数组，此处返回新数组
-			this.bean = ArrayUtil.setOrPadding(bean, Convert.toInt(fieldName), value);
+			this.bean = ArrayUtil.setOrPadding(bean, ConvertUtil.toInt(fieldName), value);
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 			if (null == prop) {

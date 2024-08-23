@@ -29,7 +29,7 @@ import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;
 import org.dromara.hutool.core.convert.CompositeConverter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.func.SerConsumer3;
@@ -1159,7 +1159,7 @@ public class CollUtil {
 	 */
 	public static <T> List<T> getFieldValues(final Iterable<?> collection, final String fieldName, final Class<T> elementType) {
 		final Collection<Object> fieldValues = getFieldValues(collection, fieldName);
-		return Convert.toList(elementType, fieldValues);
+		return ConvertUtil.toList(elementType, fieldValues);
 	}
 
 	/**
@@ -1341,7 +1341,7 @@ public class CollUtil {
 	 * @since 5.2.5
 	 */
 	public static <T> int[] indexOfAll(final Collection<T> collection, final Predicate<T> predicate) {
-		return Convert.convert(int[].class, indexListOfAll(collection, predicate));
+		return ConvertUtil.convert(int[].class, indexListOfAll(collection, predicate));
 	}
 
 	/**

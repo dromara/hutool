@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.map;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.text.StrUtil;
 import lombok.Builder;
@@ -60,7 +60,7 @@ public class MapUtilTest {
 		map.put("c", "3");
 		map.put("d", "4");
 
-		final Map<String, String> map2 = MapUtil.filter(map, t -> Convert.toInt(t.getValue()) % 2 == 0);
+		final Map<String, String> map2 = MapUtil.filter(map, t -> ConvertUtil.toInt(t.getValue()) % 2 == 0);
 
 		Assertions.assertEquals(2, map2.size());
 
@@ -119,7 +119,7 @@ public class MapUtilTest {
 
 		final Map<String, String> camelCaseMap = MapUtil.toCamelCaseMap(map);
 
-		final Map<String, String> map2 = MapUtil.filter(camelCaseMap, t -> Convert.toInt(t.getValue()) % 2 == 0);
+		final Map<String, String> map2 = MapUtil.filter(camelCaseMap, t -> ConvertUtil.toInt(t.getValue()) % 2 == 0);
 
 		Assertions.assertEquals(2, map2.size());
 

@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.extra.template.engine.rythm;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.extra.template.Template;
 
@@ -57,7 +57,7 @@ public class RythmTemplate implements Template, Serializable {
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final Writer writer) {
-		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Map<String, Object> map = ConvertUtil.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.__setRenderArgs(map);
 		rawTemplate.render(writer);
 	}

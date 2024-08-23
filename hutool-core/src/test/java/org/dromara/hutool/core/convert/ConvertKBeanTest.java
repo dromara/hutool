@@ -27,7 +27,7 @@ public class ConvertKBeanTest {
 		map.put("age", 18);
 		map.put("id", "VampireAchao");
 
-		final TestKBean testKBean = Convert.convert(TestKBean.class, map);
+		final TestKBean testKBean = ConvertUtil.convert(TestKBean.class, map);
 
 		Assertions.assertEquals("VampireAchao", testKBean.getId());
 		Assertions.assertEquals("中国", testKBean.getCountry());

@@ -19,7 +19,7 @@ package org.dromara.hutool.http.client;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpUtil;
@@ -191,7 +191,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @since 5.7.9
 	 */
 	default long contentLength() {
-		long contentLength = Convert.toLong(header(HeaderName.CONTENT_LENGTH), -1L);
+		long contentLength = ConvertUtil.toLong(header(HeaderName.CONTENT_LENGTH), -1L);
 		if (contentLength > 0 && (isChunked() || StrUtil.isNotBlank(contentEncoding()))) {
 			//按照HTTP协议规范，在 Transfer-Encoding和Content-Encoding设置后 Content-Length 无效。
 			contentLength = -1;

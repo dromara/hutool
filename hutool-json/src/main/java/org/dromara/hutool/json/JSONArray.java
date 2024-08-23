@@ -17,7 +17,7 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.impl.ArrayConverter;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.mutable.Mutable;
@@ -520,7 +520,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @since 3.0.8
 	 */
 	public <T> List<T> toList(final Class<T> elementType) {
-		return Convert.toList(elementType, this);
+		return ConvertUtil.toList(elementType, this);
 	}
 
 	/**

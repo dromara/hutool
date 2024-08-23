@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.extra.template.engine.jetbrick;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.extra.template.Template;
 import jetbrick.template.JetTemplate;
@@ -59,13 +59,13 @@ public class JetbrickTemplate implements Template, Serializable{
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final Writer writer) {
-		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Map<String, Object> map = ConvertUtil.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.render(map, writer);
 	}
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
-		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Map<String, Object> map = ConvertUtil.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.render(map, out);
 	}
 

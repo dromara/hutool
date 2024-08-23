@@ -18,7 +18,7 @@ package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.annotation.Alias;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
@@ -341,7 +341,7 @@ public class FieldUtil {
 		if (null != value) {
 			if (!fieldType.isAssignableFrom(value.getClass())) {
 				//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-				final Object targetValue = Convert.convert(fieldType, value);
+				final Object targetValue = ConvertUtil.convert(fieldType, value);
 				if (null != targetValue) {
 					value = targetValue;
 				}

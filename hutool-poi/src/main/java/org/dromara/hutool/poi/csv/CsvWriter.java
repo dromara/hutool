@@ -19,7 +19,7 @@ package org.dromara.hutool.poi.csv;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -228,7 +228,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	public CsvWriter write(final Iterable<?> lines) throws IORuntimeException {
 		if (CollUtil.isNotEmpty(lines)) {
 			for (final Object values : lines) {
-				appendLine(Convert.toStrArray(values));
+				appendLine(ConvertUtil.toStrArray(values));
 			}
 			flush();
 		}
@@ -286,7 +286,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 					writeHeaderLine(map.keySet().toArray(new String[0]));
 					isFirst = false;
 				}
-				writeLine(Convert.toStrArray(map.values()));
+				writeLine(ConvertUtil.toStrArray(map.values()));
 			}
 			flush();
 		}

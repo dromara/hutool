@@ -20,7 +20,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.convert.RegisterConverter;
@@ -121,7 +121,7 @@ public class JSONConverter implements Converter, Serializable {
 			}
 		}
 
-		return Convert.convertWithCheck(targetType, value, null, config.isIgnoreError());
+		return ConvertUtil.convertWithCheck(targetType, value, null, config.isIgnoreError());
 	}
 
 	/**

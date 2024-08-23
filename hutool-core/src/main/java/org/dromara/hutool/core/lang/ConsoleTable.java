@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -116,7 +116,7 @@ public class ConsoleTable {
 		for (int i = 0; i < columns.length; i++) {
 			column = StrUtil.toString(columns[i]);
 			if (isSBCMode) {
-				column = Convert.toSBC(column);
+				column = ConvertUtil.toSBC(column);
 			}
 			l.add(column);
 			final int width = column.length();

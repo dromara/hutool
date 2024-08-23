@@ -17,7 +17,7 @@
 package org.dromara.hutool.db.sql;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.CharUtil;
@@ -456,7 +456,7 @@ public class Condition implements Cloneable, Serializable {
 			} else if (value instanceof CharSequence) {
 				valuesForIn = SplitUtil.split((CharSequence) value, StrUtil.COMMA);
 			} else {
-				valuesForIn = Arrays.asList(Convert.convert(Object[].class, value));
+				valuesForIn = Arrays.asList(ConvertUtil.convert(Object[].class, value));
 			}
 			conditionStrBuilder.append(StrUtil.repeatAndJoin("?", valuesForIn.size(), StrUtil.COMMA));
 			if (null != paramValues) {

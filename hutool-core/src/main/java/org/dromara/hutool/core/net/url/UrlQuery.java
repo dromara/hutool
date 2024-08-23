@@ -19,7 +19,7 @@ package org.dromara.hutool.core.net.url;
 import org.dromara.hutool.core.codec.PercentCodec;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.TableMap;
 import org.dromara.hutool.core.text.StrUtil;
@@ -386,7 +386,7 @@ public class UrlQuery {
 		} else if (value instanceof Iterator) {
 			result = IterUtil.join((Iterator<?>) value, ",");
 		} else {
-			result = Convert.toStr(value);
+			result = ConvertUtil.toStr(value);
 		}
 		return result;
 	}

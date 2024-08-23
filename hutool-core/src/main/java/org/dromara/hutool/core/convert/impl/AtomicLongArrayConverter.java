@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 
 import java.util.concurrent.atomic.AtomicLongArray;
 
@@ -32,7 +32,7 @@ public class AtomicLongArrayConverter extends AbstractConverter {
 
 	@Override
 	protected AtomicLongArray convertInternal(final Class<?> targetClass, final Object value) {
-		return new AtomicLongArray(Convert.convert(long[].class, value));
+		return new AtomicLongArray(ConvertUtil.convert(long[].class, value));
 	}
 
 }

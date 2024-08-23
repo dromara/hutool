@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.junit.jupiter.api.Assertions;
@@ -95,7 +95,7 @@ public class RandomUtilTest {
 	public void generateRandomNumberTest(){
 		final int[] ints = RandomUtil.randomPickInts(5, NumberUtil.range(5, 20));
 		Assertions.assertEquals(5, ints.length);
-		final Set<?> set = Convert.convert(Set.class, ints);
+		final Set<?> set = ConvertUtil.convert(Set.class, ints);
 		Assertions.assertEquals(5, set.size());
 	}
 }

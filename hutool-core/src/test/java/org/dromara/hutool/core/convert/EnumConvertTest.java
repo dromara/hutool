@@ -22,19 +22,19 @@ public class EnumConvertTest {
 
 	@Test
 	public void convertTest(){
-		TestEnum bbb = Convert.convert(TestEnum.class, "BBB");
+		TestEnum bbb = ConvertUtil.convert(TestEnum.class, "BBB");
 		Assertions.assertEquals(TestEnum.B, bbb);
 
-		bbb = Convert.convert(TestEnum.class, 22);
+		bbb = ConvertUtil.convert(TestEnum.class, 22);
 		Assertions.assertEquals(TestEnum.B, bbb);
 	}
 
 	@Test
 	public void toEnumTest(){
-		TestEnum ccc = Convert.toEnum(TestEnum.class, "CCC");
+		TestEnum ccc = ConvertUtil.toEnum(TestEnum.class, "CCC");
 		Assertions.assertEquals(TestEnum.C, ccc);
 
-		ccc = Convert.toEnum(TestEnum.class, 33);
+		ccc = ConvertUtil.toEnum(TestEnum.class, 33);
 		Assertions.assertEquals(TestEnum.C, ccc);
 	}
 

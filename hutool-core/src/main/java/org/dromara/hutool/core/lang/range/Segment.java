@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.lang.range;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 
@@ -53,6 +53,6 @@ public interface Segment<T extends Number> {
 	default T length(){
 		final T start = Assert.notNull(getBeginIndex(), "Start index must be not null!");
 		final T end = Assert.notNull(getEndIndex(), "End index must be not null!");
-		return Convert.convert((Type) start.getClass(), NumberUtil.sub(end, start).abs());
+		return ConvertUtil.convert((Type) start.getClass(), NumberUtil.sub(end, start).abs());
 	}
 }

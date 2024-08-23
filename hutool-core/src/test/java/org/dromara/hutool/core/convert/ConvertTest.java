@@ -52,7 +52,7 @@ public class ConvertTest {
 
 	@Test
 	public void toObjectTest() {
-		final Object result = Convert.convert(Object.class, "aaaa");
+		final Object result = ConvertUtil.convert(Object.class, "aaaa");
 		assertEquals("aaaa", result);
 	}
 
@@ -72,24 +72,24 @@ public class ConvertTest {
 		final int a = 1;
 		final long[] b = { 1, 2, 3, 4, 5 };
 
-		assertEquals("[1, 2, 3, 4, 5]", Convert.convert(String.class, b));
+		assertEquals("[1, 2, 3, 4, 5]", ConvertUtil.convert(String.class, b));
 
-		final String aStr = Convert.toStr(a);
+		final String aStr = ConvertUtil.toStr(a);
 		assertEquals("1", aStr);
-		final String bStr = Convert.toStr(b);
-		assertEquals("[1, 2, 3, 4, 5]", Convert.toStr(bStr));
+		final String bStr = ConvertUtil.toStr(b);
+		assertEquals("[1, 2, 3, 4, 5]", ConvertUtil.toStr(bStr));
 	}
 
 	@Test
 	public void toStrTest2() {
-		final String result = Convert.convert(String.class, "aaaa");
+		final String result = ConvertUtil.convert(String.class, "aaaa");
 		assertEquals("aaaa", result);
 	}
 
 	@Test
 	public void toStrTest3() {
 		final char a = 'a';
-		final String result = Convert.convert(String.class, a);
+		final String result = ConvertUtil.convert(String.class, a);
 		assertEquals("a", result);
 	}
 
@@ -97,7 +97,7 @@ public class ConvertTest {
 	public void toStrTest4() {
 		// 被当作八进制
 		@SuppressWarnings("OctalInteger")
-		final String result = Convert.toStr(001200);
+		final String result = ConvertUtil.toStr(001200);
 		assertEquals("640", result);
 	}
 
@@ -106,47 +106,47 @@ public class ConvertTest {
 		// 被转化的对象有值，正常转换
 		final String a = "aaaa";
 		final String aDefaultValue = "aDefault";
-		final String aResult = Convert.toStr(a, aDefaultValue);
+		final String aResult = ConvertUtil.toStr(a, aDefaultValue);
 		assertEquals(aResult, a);
 
 		// 被转化的对象为null，返回默认值
 		final String b = null;
 		final String bDefaultValue = "bDefault";
-		final String bResult = Convert.toStr(b, bDefaultValue);
+		final String bResult = ConvertUtil.toStr(b, bDefaultValue);
 		assertEquals(bResult, bDefaultValue);
 
 		// 转换失败，返回默认值
 		final TestExceptionClass c = new TestExceptionClass();
 		final String cDefaultValue = "cDefault";
-		final String cResult = Convert.toStr(c, cDefaultValue);
+		final String cResult = ConvertUtil.toStr(c, cDefaultValue);
 		assertEquals(cResult, cDefaultValue);
 	}
 
 	@Test
 	public void toIntTest() {
 		final String a = " 34232";
-		final Integer aInteger = Convert.toInt(a);
+		final Integer aInteger = ConvertUtil.toInt(a);
 		assertEquals(Integer.valueOf(34232), aInteger);
 		final int aInt = (int) CompositeConverter.getInstance().convert(int.class, a);
 		assertEquals(34232, aInt);
 
 		// 带小数测试
 		final String b = " 34232.00";
-		final Integer bInteger = Convert.toInt(b);
+		final Integer bInteger = ConvertUtil.toInt(b);
 		assertEquals(Integer.valueOf(34232), bInteger);
 		final int bInt = (int) CompositeConverter.getInstance().convert(int.class, b);
 		assertEquals(34232, bInt);
 
 		// boolean测试
 		final boolean c = true;
-		final Integer cInteger = Convert.toInt(c);
+		final Integer cInteger = ConvertUtil.toInt(c);
 		assertEquals(Integer.valueOf(1), cInteger);
 		final int cInt = (int) CompositeConverter.getInstance().convert(int.class, c);
 		assertEquals(1, cInt);
 
 		// boolean测试
 		final String d = "08";
-		final Integer dInteger = Convert.toInt(d);
+		final Integer dInteger = ConvertUtil.toInt(d);
 		assertEquals(Integer.valueOf(8), dInteger);
 		final int dInt = (int) CompositeConverter.getInstance().convert(int.class, d);
 		assertEquals(8, dInt);
@@ -155,14 +155,14 @@ public class ConvertTest {
 	@Test
 	public void toIntTest2() {
 		final ArrayList<String> array = new ArrayList<>();
-		final Integer aInt = Convert.convertQuietly(Integer.class, array, -1);
+		final Integer aInt = ConvertUtil.convertQuietly(Integer.class, array, -1);
 		assertEquals(Integer.valueOf(-1), aInt);
 	}
 
 	@Test
 	public void toIntOfExceptionTest(){
 		Assertions.assertThrows(NumberFormatException.class, ()->{
-			final Integer d = Convert.convert(Integer.class, "d");
+			final Integer d = ConvertUtil.convert(Integer.class, "d");
 			Assertions.assertNotNull(d);
 		});
 	}
@@ -170,28 +170,28 @@ public class ConvertTest {
 	@Test
 	public void toLongTest() {
 		final String a = " 342324545435435";
-		final Long aLong = Convert.toLong(a);
+		final Long aLong = ConvertUtil.toLong(a);
 		assertEquals(Long.valueOf(342324545435435L), aLong);
 		final long aLong2 = (long) CompositeConverter.getInstance().convert(long.class, a);
 		assertEquals(342324545435435L, aLong2);
 
 		// 带小数测试
 		final String b = " 342324545435435.245435435";
-		final Long bLong = Convert.toLong(b);
+		final Long bLong = ConvertUtil.toLong(b);
 		assertEquals(Long.valueOf(342324545435435L), bLong);
 		final long bLong2 = (long) CompositeConverter.getInstance().convert(long.class, b);
 		assertEquals(342324545435435L, bLong2);
 
 		// boolean测试
 		final boolean c = true;
-		final Long cLong = Convert.toLong(c);
+		final Long cLong = ConvertUtil.toLong(c);
 		assertEquals(Long.valueOf(1), cLong);
 		final long cLong2 = (long) CompositeConverter.getInstance().convert(long.class, c);
 		assertEquals(1, cLong2);
 
 		// boolean测试
 		final String d = "08";
-		final Long dLong = Convert.toLong(d);
+		final Long dLong = ConvertUtil.toLong(d);
 		assertEquals(Long.valueOf(8), dLong);
 		final long dLong2 = (long) CompositeConverter.getInstance().convert(long.class, d);
 		assertEquals(8, dLong2);
@@ -200,26 +200,26 @@ public class ConvertTest {
 	@Test
 	public void toCharTest() {
 		final String str = "aadfdsfs";
-		final Character c = Convert.toChar(str);
+		final Character c = ConvertUtil.toChar(str);
 		assertEquals(Character.valueOf('a'), c);
 
 		// 转换失败
 		final Object str2 = "";
-		final Character c2 = Convert.toChar(str2);
+		final Character c2 = ConvertUtil.toChar(str2);
 		Assertions.assertNull(c2);
 	}
 
 	@Test
 	public void toNumberTest() {
 		final Object a = "12.45";
-		final Number number = Convert.toNumber(a);
+		final Number number = ConvertUtil.toNumber(a);
 		assertEquals(12.45D, number.doubleValue(), 0);
 	}
 
 	@Test
 	public void emptyToNumberTest() {
 		final Object a = "";
-		final Number number = Convert.toNumber(a);
+		final Number number = ConvertUtil.toNumber(a);
 		Assertions.assertNull(number);
 	}
 
@@ -227,10 +227,10 @@ public class ConvertTest {
 	public void intAndByteConvertTest() {
 		// 测试 int 转 byte
 		final int int0 = 234;
-		final byte byte0 = Convert.intToByte(int0);
+		final byte byte0 = ConvertUtil.intToByte(int0);
 		assertEquals(-22, byte0);
 
-		final int int1 = Convert.byteToUnsignedInt(byte0);
+		final int int1 = ConvertUtil.byteToUnsignedInt(byte0);
 		assertEquals(int0, int1);
 	}
 
@@ -238,10 +238,10 @@ public class ConvertTest {
 	public void intAndBytesTest() {
 		// 测试 int 转 byte 数组
 		final int int2 = 1417;
-		final byte[] bytesInt = Convert.intToBytes(int2);
+		final byte[] bytesInt = ConvertUtil.intToBytes(int2);
 
 		// 测试 byte 数组转 int
-		final int int3 = Convert.bytesToInt(bytesInt);
+		final int int3 = ConvertUtil.bytesToInt(bytesInt);
 		assertEquals(int2, int3);
 	}
 
@@ -250,8 +250,8 @@ public class ConvertTest {
 		// 测试 long 转 byte 数组
 		final long long1 = 2223;
 
-		final byte[] bytesLong = Convert.longToBytes(long1);
-		final long long2 = Convert.bytesToLong(bytesLong);
+		final byte[] bytesLong = ConvertUtil.longToBytes(long1);
+		final long long2 = ConvertUtil.bytesToLong(bytesLong);
 
 		assertEquals(long1, long2);
 	}
@@ -259,8 +259,8 @@ public class ConvertTest {
 	@Test
 	public void shortAndBytesTest() {
 		final short short1 = 122;
-		final byte[] bytes = Convert.shortToBytes(short1);
-		final short short2 = Convert.bytesToShort(bytes);
+		final byte[] bytes = ConvertUtil.shortToBytes(short1);
+		final short short2 = ConvertUtil.bytesToShort(bytes);
 
 		assertEquals(short2, short1);
 	}
@@ -268,12 +268,12 @@ public class ConvertTest {
 	@Test
 	public void toListTest() {
 		final List<String> list = Arrays.asList("1", "2");
-		final String str = Convert.toStr(list);
-		final List<String> list2 = Convert.toList(String.class, str);
+		final String str = ConvertUtil.toStr(list);
+		final List<String> list2 = ConvertUtil.toList(String.class, str);
 		assertEquals("1", list2.get(0));
 		assertEquals("2", list2.get(1));
 
-		final List<Integer> list3 = Convert.toList(Integer.class, str);
+		final List<Integer> list3 = ConvertUtil.toList(Integer.class, str);
 		assertEquals(1, list3.get(0).intValue());
 		assertEquals(2, list3.get(1).intValue());
 	}
@@ -281,11 +281,11 @@ public class ConvertTest {
 	@Test
 	public void toListTest2(){
 		final String str = "1,2";
-		final List<String> list2 = Convert.toList(String.class, str);
+		final List<String> list2 = ConvertUtil.toList(String.class, str);
 		assertEquals("1", list2.get(0));
 		assertEquals("2", list2.get(1));
 
-		final List<Integer> list3 = Convert.toList(Integer.class, str);
+		final List<Integer> list3 = ConvertUtil.toList(Integer.class, str);
 		assertEquals(1, list3.get(0).intValue());
 		assertEquals(2, list3.get(1).intValue());
 	}
@@ -293,10 +293,10 @@ public class ConvertTest {
 	@Test
 	public void toByteArrayTest(){
 		// 测试Serializable转换为bytes，调用序列化转换
-		final byte[] bytes = Convert.toPrimitiveByteArray(new Product("zhangsan", "张三", "5.1.1"));
+		final byte[] bytes = ConvertUtil.toPrimitiveByteArray(new Product("zhangsan", "张三", "5.1.1"));
 		Assertions.assertNotNull(bytes);
 
-		final Product product = Convert.convert(Product.class, bytes);
+		final Product product = ConvertUtil.convert(Product.class, bytes);
 		assertEquals("zhangsan", product.getName());
 		assertEquals("张三", product.getCName());
 		assertEquals("5.1.1", product.getVersion());
@@ -305,27 +305,27 @@ public class ConvertTest {
 	@Test
 	public void numberToByteArrayTest(){
 		// 测试Serializable转换为bytes，调用序列化转换
-		final byte[] bytes = Convert.toPrimitiveByteArray(12L);
+		final byte[] bytes = ConvertUtil.toPrimitiveByteArray(12L);
 		Assertions.assertArrayEquals(ByteUtil.toBytes(12L), bytes);
 	}
 
 	@Test
 	public void toAtomicIntegerArrayTest(){
 		final String str = "1,2";
-		final AtomicIntegerArray atomicIntegerArray = Convert.convert(AtomicIntegerArray.class, str);
+		final AtomicIntegerArray atomicIntegerArray = ConvertUtil.convert(AtomicIntegerArray.class, str);
 		assertEquals("[1, 2]", atomicIntegerArray.toString());
 	}
 
 	@Test
 	public void toAtomicLongArrayTest(){
 		final String str = "1,2";
-		final AtomicLongArray atomicLongArray = Convert.convert(AtomicLongArray.class, str);
+		final AtomicLongArray atomicLongArray = ConvertUtil.convert(AtomicLongArray.class, str);
 		assertEquals("[1, 2]", atomicLongArray.toString());
 	}
 
 	@Test
 	public void toClassTest(){
-		final Class<?> convert = Convert.convert(Class.class, "org.dromara.hutool.core.convert.ConvertTest.Product");
+		final Class<?> convert = ConvertUtil.convert(Class.class, "org.dromara.hutool.core.convert.ConvertTest.Product");
 		Assertions.assertSame(Product.class, convert);
 	}
 
@@ -341,13 +341,13 @@ public class ConvertTest {
 
 	@Test
 	public void enumToIntTest(){
-		final Integer integer = Convert.toInt(BuildingType.CUO);
+		final Integer integer = ConvertUtil.toInt(BuildingType.CUO);
 		assertEquals(1, integer.intValue());
 	}
 
 	@Test
 	public void toSetTest(){
-		final Set<Integer> result = Convert.convert(new TypeReference<Set<Integer>>() {
+		final Set<Integer> result = ConvertUtil.convert(new TypeReference<Set<Integer>>() {
 		}, "1,2,3");
 		assertEquals(SetUtil.of(1,2,3), result);
 	}
@@ -374,19 +374,19 @@ public class ConvertTest {
 	public void toDateTest(){
 		Assertions.assertThrows(DateException.class, ()->{
 			// 默认转换失败报错而不是返回null
-			Convert.convert(Date.class, "aaaa");
+			ConvertUtil.convert(Date.class, "aaaa");
 		});
 	}
 
 	@Test
 	public void toDateTest2(){
-		final Date date = Convert.toDate("2021-01");
+		final Date date = ConvertUtil.toDate("2021-01");
 		assertEquals("2021-01-01", DateUtil.formatDate(date));
 	}
 
 	@Test
 	public void toSqlDateTest(){
-		final java.sql.Date date = Convert.convert(java.sql.Date.class, DateUtil.parse("2021-07-28"));
+		final java.sql.Date date = ConvertUtil.convert(java.sql.Date.class, DateUtil.parse("2021-07-28"));
 		assertEquals("2021-07-28", date.toString());
 	}
 
@@ -398,7 +398,7 @@ public class ConvertTest {
 		map.put("a3", "v3");
 
 		@SuppressWarnings("unchecked")
-		final Hashtable<String, String> hashtable = Convert.convert(Hashtable.class, map);
+		final Hashtable<String, String> hashtable = ConvertUtil.convert(Hashtable.class, map);
 		assertEquals("v1", hashtable.get("a1"));
 		assertEquals("v2", hashtable.get("a2"));
 		assertEquals("v3", hashtable.get("a3"));
@@ -408,10 +408,10 @@ public class ConvertTest {
 	public void toBigDecimalTest(){
 		// https://github.com/dromara/hutool/issues/1818
 		final String str = "33020000210909112800000124";
-		final BigDecimal bigDecimal = Convert.toBigDecimal(str);
+		final BigDecimal bigDecimal = ConvertUtil.toBigDecimal(str);
 		assertEquals(str, bigDecimal.toPlainString());
 
-		Assertions.assertNull(Convert.toBigDecimal("  "));
+		Assertions.assertNull(ConvertUtil.toBigDecimal("  "));
 	}
 
 	@Test
@@ -419,63 +419,63 @@ public class ConvertTest {
 		// https://gitee.com/dromara/hutool/issues/I4M0E4
 		final String hex2 = "CD0CCB43";
 		final byte[] value = HexUtil.decode(hex2);
-		final float f = Convert.toFloat(value);
+		final float f = ConvertUtil.toFloat(value);
 		assertEquals(406.1F, f, 0);
 	}
 
 	@Test
 	public void floatToDoubleTest(){
 		final float a = 0.45f;
-		final double b = Convert.toDouble(a);
+		final double b = ConvertUtil.toDouble(a);
 		assertEquals(0.45D, b, 0);
 	}
 
 	@Test
 	public void floatToDoubleAddrTest(){
 		final float a = 0.45f;
-		final DoubleAdder adder = Convert.convert(DoubleAdder.class, a);
+		final DoubleAdder adder = ConvertUtil.convert(DoubleAdder.class, a);
 		assertEquals(0.45D, adder.doubleValue(), 0);
 	}
 
 	@Test
 	public void doubleToFloatTest(){
 		final double a = 0.45f;
-		final float b = Convert.toFloat(a);
+		final float b = ConvertUtil.toFloat(a);
 		assertEquals(a, b, 0);
 	}
 
 	@Test
 	public void localDateTimeToLocalDateTest(){
 		final LocalDateTime localDateTime = LocalDateTime.now();
-		final LocalDate convert = Convert.convert(LocalDate.class, localDateTime);
+		final LocalDate convert = ConvertUtil.convert(LocalDate.class, localDateTime);
 		assertEquals(localDateTime.toLocalDate(), convert);
 	}
 
 	@Test
 	public void toSBCTest(){
-		final String s = Convert.toSBC(null);
+		final String s = ConvertUtil.toSBC(null);
 		Assertions.assertNull(s);
 	}
 
 	@Test
 	public void toDBCTest(){
-		final String s = Convert.toDBC(null);
+		final String s = ConvertUtil.toDBC(null);
 		Assertions.assertNull(s);
 	}
 
 	@Test
 	public void convertQuietlyTest(){
 		final String a = "12";
-		final Object s = Convert.convertQuietly(int.class, a, a);
+		final Object s = ConvertUtil.convertQuietly(int.class, a, a);
 		assertEquals(12, s);
 	}
 
 	@Test
 	public void issue3662Test() {
-		String s = Convert.digitToChinese(0);
+		String s = ConvertUtil.digitToChinese(0);
 		assertEquals("零元整", s);
 
-		s = Convert.digitToChinese(null);
+		s = ConvertUtil.digitToChinese(null);
 		assertEquals("零元整", s);
 	}
 }

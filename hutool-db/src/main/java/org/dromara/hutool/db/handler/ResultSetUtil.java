@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.db.handler;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbException;
@@ -59,7 +59,7 @@ public class ResultSetUtil {
 		} else if (Iterable.class.isAssignableFrom(beanClass)) {
 			//集合
 			final Object[] objRow = toBean(meta, rs, Object[].class);
-			return Convert.convert(beanClass, objRow);
+			return ConvertUtil.convert(beanClass, objRow);
 		} else if (beanClass.isAssignableFrom(Entity.class)) {
 			//Entity的父类都可按照Entity返回
 			return (T) new EntityRowHandler(meta, false, true).handle(rs);
@@ -191,7 +191,7 @@ public class ResultSetUtil {
 			return rawValue;
 		} else {
 			// 按照返回值要求转换
-			return Convert.convert(targetColumnType, rawValue);
+			return ConvertUtil.convert(targetColumnType, rawValue);
 		}
 	}
 }

@@ -19,7 +19,7 @@ package org.dromara.hutool.poi.excel.sax.handler;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public abstract class BeanRowHandler<T> extends AbstractRowHandler<T> {
 	@Override
 	public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
 		if (rowIndex == this.headerRowIndex) {
-			this.headerList = ListUtil.view(Convert.toList(String.class, rowCells));
+			this.headerList = ListUtil.view(ConvertUtil.toList(String.class, rowCells));
 			return;
 		}
 		super.handle(sheetIndex, rowIndex, rowCells);

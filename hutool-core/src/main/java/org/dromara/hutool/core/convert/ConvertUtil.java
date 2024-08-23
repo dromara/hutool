@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author looly
  */
-public class Convert {
+public class ConvertUtil {
 
 	/**
 	 * 转换为字符串<br>

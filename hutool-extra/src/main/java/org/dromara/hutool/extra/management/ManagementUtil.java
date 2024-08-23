@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.extra.management;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -462,6 +462,6 @@ public class ManagementUtil {
 	 * @param value   值
 	 */
 	protected static void append(final StringBuilder builder, final String caption, final Object value) {
-		builder.append(caption).append(ObjUtil.defaultIfNull(Convert.toStr(value), "[n/a]")).append("\n");
+		builder.append(caption).append(ObjUtil.defaultIfNull(ConvertUtil.toStr(value), "[n/a]")).append("\n");
 	}
 }

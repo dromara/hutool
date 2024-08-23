@@ -17,7 +17,7 @@
 package org.dromara.hutool.db.meta;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -123,7 +123,7 @@ public class DatabaseMetaDataWrapper extends SimpleWrapper<DatabaseMetaData> {
 	 */
 	public List<String> getTableNames(final String tableNamePattern, final TableType... types) {
 		List<String> result = null;
-		try (final ResultSet rs = this.raw.getTables(catalog, schema, tableNamePattern, Convert.toStrArray(types))) {
+		try (final ResultSet rs = this.raw.getTables(catalog, schema, tableNamePattern, ConvertUtil.toStrArray(types))) {
 			if (null != rs) {
 				// 初始化结果列表，大小为ResultSet的获取大小。
 				result = new ArrayList<>(rs.getFetchSize());

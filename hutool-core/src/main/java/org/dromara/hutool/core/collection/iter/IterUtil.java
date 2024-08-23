@@ -19,7 +19,7 @@ package org.dromara.hutool.core.collection.iter;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
@@ -911,7 +911,7 @@ public class IterUtil {
 	 * @since 5.8.0
 	 */
 	public static <E> String toStr(final Iterator<E> iterator) {
-		return toStr(iterator, Convert::toStrOrNullStr);
+		return toStr(iterator, ConvertUtil::toStrOrNullStr);
 	}
 
 	/**

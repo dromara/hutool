@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.json.serialize;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TemporalAccessorUtil;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
@@ -86,7 +86,7 @@ public class DateJSONString implements JSONStringer {
 			if (dateObj instanceof TemporalAccessor) {
 				dateStr = TemporalAccessorUtil.format((TemporalAccessor) dateObj, format);
 			} else {
-				dateStr = DateUtil.format(Convert.toDate(dateObj), format);
+				dateStr = DateUtil.format(ConvertUtil.toDate(dateObj), format);
 			}
 
 			if (GlobalCustomFormat.FORMAT_SECONDS.equals(format)

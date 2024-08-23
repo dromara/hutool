@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.db.config;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.resource.NoResourceException;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -148,7 +148,7 @@ public class SettingConfigParser implements ConfigParser {
 		// 大小写等配置
 		final String caseInsensitive = setting.getAndRemove(DSKeys.KEY_CASE_INSENSITIVE);
 		if (StrUtil.isNotBlank(caseInsensitive)) {
-			dbConfig.setCaseInsensitive(Convert.toBoolean(caseInsensitive));
+			dbConfig.setCaseInsensitive(ConvertUtil.toBoolean(caseInsensitive));
 		}
 
 		// remarks等连接配置，since 5.3.8
@@ -183,18 +183,18 @@ public class SettingConfigParser implements ConfigParser {
 	 */
 	private static SqlLogFilter getSqlLogFilter(final Setting setting) {
 		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL), false);
+		final boolean isShowSql = ConvertUtil.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL), false);
 		if (!isShowSql) {
 			return null;
 		}
 
-		final boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL), false);
-		final boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS), false);
+		final boolean isFormatSql = ConvertUtil.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL), false);
+		final boolean isShowParams = ConvertUtil.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS), false);
 		String sqlLevelStr = setting.remove(DSKeys.KEY_SQL_LEVEL);
 		if (null != sqlLevelStr) {
 			sqlLevelStr = sqlLevelStr.toUpperCase();
 		}
-		final Level level = Convert.toEnum(Level.class, sqlLevelStr, Level.DEBUG);
+		final Level level = ConvertUtil.toEnum(Level.class, sqlLevelStr, Level.DEBUG);
 
 		final SqlLog sqlLog = new SqlLog();
 		sqlLog.init(isShowSql, isFormatSql, isShowParams, level);

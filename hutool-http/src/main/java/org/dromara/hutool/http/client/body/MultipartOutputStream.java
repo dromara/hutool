@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.http.client.body;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -123,7 +123,7 @@ public class MultipartOutputStream extends OutputStream {
 			appendResource(formFieldName, new InputStreamResource((Reader) value, this.charset));
 		} else {
 			appendResource(formFieldName,
-				new StringResource(Convert.toStr(value), null, this.charset));
+				new StringResource(ConvertUtil.toStr(value), null, this.charset));
 		}
 
 		write(StrUtil.CRLF);

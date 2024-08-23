@@ -18,7 +18,7 @@ package org.dromara.hutool.core.bean.copier.provider;
 
 import org.dromara.hutool.core.bean.DynaBean;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 
 import java.lang.reflect.Type;
 
@@ -47,7 +47,7 @@ public class DynaBeanValueProvider implements ValueProvider<String> {
 	@Override
 	public Object value(final String key, final Type valueType) {
 		final Object value = dynaBean.get(key);
-		return Convert.convertWithCheck(valueType, value, null, this.ignoreError);
+		return ConvertUtil.convertWithCheck(valueType, value, null, this.ignoreError);
 	}
 
 	@Override

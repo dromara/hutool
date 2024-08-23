@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.math;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -220,50 +220,50 @@ public class ChineseNumberFormatterTest {
 
 	@Test
 	public void digitToChineseTest() {
-		String digitToChinese = Convert.digitToChinese(12_4124_1241_2421.12);
+		String digitToChinese = ConvertUtil.digitToChinese(12_4124_1241_2421.12);
 		Assertions.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元壹角贰分", digitToChinese);
 
-		digitToChinese = Convert.digitToChinese(12_0000_1241_2421L);
+		digitToChinese = ConvertUtil.digitToChinese(12_0000_1241_2421L);
 		Assertions.assertEquals("壹拾贰万亿零壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元整", digitToChinese);
 
-		digitToChinese = Convert.digitToChinese(12_0000_0000_2421L);
+		digitToChinese = ConvertUtil.digitToChinese(12_0000_0000_2421L);
 		Assertions.assertEquals("壹拾贰万亿零贰仟肆佰贰拾壹元整", digitToChinese);
 
-		digitToChinese = Convert.digitToChinese(12_4124_1241_2421D);
+		digitToChinese = ConvertUtil.digitToChinese(12_4124_1241_2421D);
 		Assertions.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元整", digitToChinese);
 
-		digitToChinese = Convert.digitToChinese(2421.02);
+		digitToChinese = ConvertUtil.digitToChinese(2421.02);
 		Assertions.assertEquals("贰仟肆佰贰拾壹元零贰分", digitToChinese);
 	}
 
 	@Test
 	public void digitToChineseTest2() {
 		double a = 67556.32;
-		String digitUppercase = Convert.digitToChinese(a);
+		String digitUppercase = ConvertUtil.digitToChinese(a);
 		Assertions.assertEquals("陆万柒仟伍佰伍拾陆元叁角贰分", digitUppercase);
 
 		a = 1024.00;
-		digitUppercase = Convert.digitToChinese(a);
+		digitUppercase = ConvertUtil.digitToChinese(a);
 		Assertions.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 
 		final double b = 1024;
-		digitUppercase = Convert.digitToChinese(b);
+		digitUppercase = ConvertUtil.digitToChinese(b);
 		Assertions.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 	}
 
 	@Test
 	public void digitToChineseTest3() {
-		String digitToChinese = Convert.digitToChinese(2_0000_0000.00);
+		String digitToChinese = ConvertUtil.digitToChinese(2_0000_0000.00);
 		Assertions.assertEquals("贰亿元整", digitToChinese);
-		digitToChinese = Convert.digitToChinese(2_0000.00);
+		digitToChinese = ConvertUtil.digitToChinese(2_0000.00);
 		Assertions.assertEquals("贰万元整", digitToChinese);
-		digitToChinese = Convert.digitToChinese(2_0000_0000_0000.00);
+		digitToChinese = ConvertUtil.digitToChinese(2_0000_0000_0000.00);
 		Assertions.assertEquals("贰万亿元整", digitToChinese);
 	}
 
 	@Test
 	public void digitToChineseTest4() {
-		final String digitToChinese = Convert.digitToChinese(400_0000.00);
+		final String digitToChinese = ConvertUtil.digitToChinese(400_0000.00);
 		Assertions.assertEquals("肆佰万元整", digitToChinese);
 	}
 

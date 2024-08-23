@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.util;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Console;
 
 import java.util.Properties;
@@ -134,7 +134,7 @@ public class SystemUtil {
 	 * @return 值
 	 */
 	public static int getInt(final String key, final int defaultValue) {
-		return Convert.toInt(get(key), defaultValue);
+		return ConvertUtil.toInt(get(key), defaultValue);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class SystemUtil {
 	 * @return 值
 	 */
 	public static long getLong(final String key, final long defaultValue) {
-		return Convert.toLong(get(key), defaultValue);
+		return ConvertUtil.toLong(get(key), defaultValue);
 	}
 
 	/**

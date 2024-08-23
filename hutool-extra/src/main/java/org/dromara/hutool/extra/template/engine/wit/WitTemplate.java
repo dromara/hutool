@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.extra.template.engine.wit;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.febit.wit.Template;
 
@@ -56,13 +56,13 @@ public class WitTemplate implements org.dromara.hutool.extra.template.Template, 
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final Writer writer) {
-		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Map<String, Object> map = ConvertUtil.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.merge(map, writer);
 	}
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
-		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Map<String, Object> map = ConvertUtil.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.merge(map, out);
 	}
 

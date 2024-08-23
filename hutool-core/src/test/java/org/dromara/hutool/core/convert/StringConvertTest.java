@@ -21,7 +21,7 @@ public class StringConvertTest {
 
 	@Test
 	public void timezoneToStrTest(){
-		final String s = Convert.toStr(TimeZone.getTimeZone("Asia/Shanghai"));
+		final String s = ConvertUtil.toStr(TimeZone.getTimeZone("Asia/Shanghai"));
 		Assertions.assertEquals("Asia/Shanghai", s);
 	}
 }

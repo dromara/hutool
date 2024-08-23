@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.bean.copier.provider;
 
 import org.dromara.hutool.core.bean.copier.ValueProvider;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class MapValueProvider implements ValueProvider<String> {
 
 	@Override
 	public Object value(final String key, final Type valueType) {
-		return Convert.convert(valueType, map.get(key));
+		return ConvertUtil.convert(valueType, map.get(key));
 	}
 
 	@Override

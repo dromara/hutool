@@ -19,7 +19,7 @@ package org.dromara.hutool.core.regex;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.comparator.StrLengthComparator;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Validator;
@@ -801,7 +801,7 @@ public class ReUtil {
 	 * @return 整数
 	 */
 	public static Integer getFirstNumber(final CharSequence stringWithNumber) {
-		return Convert.toInt(get(PatternPool.NUMBERS, stringWithNumber, 0), null);
+		return ConvertUtil.toInt(get(PatternPool.NUMBERS, stringWithNumber, 0), null);
 	}
 
 	/**

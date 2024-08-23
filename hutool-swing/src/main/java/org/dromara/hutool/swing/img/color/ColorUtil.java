@@ -17,7 +17,7 @@
 package org.dromara.hutool.swing.img.color;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.ansi.Ansi4BitColor;
 import org.dromara.hutool.core.lang.ansi.Ansi8BitColor;
@@ -175,12 +175,12 @@ public class ColorUtil {
 
 		if (3 == size) {
 			// RGB
-			final Integer[] rgbIntegers = Convert.toIntArray(rgb);
+			final Integer[] rgbIntegers = ConvertUtil.toIntArray(rgb);
 			return new Color(rgbIntegers[0], rgbIntegers[1], rgbIntegers[2]);
 		}
 		if (4 == size) {
 			// RGBA
-			final Float[] rgbFloats = Convert.toFloatArray(rgb);
+			final Float[] rgbFloats = ConvertUtil.toFloatArray(rgb);
 			Float a = rgbFloats[3];
 			if (a < 1) {
 				// 识别CSS形式

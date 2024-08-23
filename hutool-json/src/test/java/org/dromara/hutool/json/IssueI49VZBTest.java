@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.junit.jupiter.api.Assertions;
@@ -82,7 +82,7 @@ public class IssueI49VZBTest {
 
 	@Test
 	public void enumConvertTest(){
-		final NBCloudKeyType type = Convert.toEnum(NBCloudKeyType.class, "snapKey");
+		final NBCloudKeyType type = ConvertUtil.toEnum(NBCloudKeyType.class, "snapKey");
 		Assertions.assertEquals(NBCloudKeyType.snapKey, type);
 	}
 }

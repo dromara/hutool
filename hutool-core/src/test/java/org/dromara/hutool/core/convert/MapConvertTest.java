@@ -34,7 +34,7 @@ public class MapConvertTest {
 		user.setName("AAA");
 		user.setAge(45);
 
-		final HashMap<?, ?> map = Convert.convert(HashMap.class, user);
+		final HashMap<?, ?> map = ConvertUtil.convert(HashMap.class, user);
 		Assertions.assertEquals("AAA", map.get("name"));
 		Assertions.assertEquals(45, map.get("age"));
 	}
@@ -46,7 +46,7 @@ public class MapConvertTest {
 				.put("name", "AAA")
 				.put("age", 45).map();
 
-		final LinkedHashMap<?, ?> map = Convert.convert(LinkedHashMap.class, srcMap);
+		final LinkedHashMap<?, ?> map = ConvertUtil.convert(LinkedHashMap.class, srcMap);
 		Assertions.assertEquals("AAA", map.get("name"));
 		Assertions.assertEquals(45, map.get("age"));
 	}

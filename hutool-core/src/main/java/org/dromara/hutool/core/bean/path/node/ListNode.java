@@ -19,7 +19,7 @@ package org.dromara.hutool.core.bean.path.node;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -53,9 +53,9 @@ public class ListNode implements Node{
 		final List<String> names = this.names;
 
 		if (bean instanceof Collection) {
-			return CollUtil.getAny((Collection<?>) bean, Convert.convert(int[].class, names));
+			return CollUtil.getAny((Collection<?>) bean, ConvertUtil.convert(int[].class, names));
 		} else if (ArrayUtil.isArray(bean)) {
-			return ArrayUtil.getAny(bean, Convert.convert(int[].class, names));
+			return ArrayUtil.getAny(bean, ConvertUtil.convert(int[].class, names));
 		} else {
 			final String[] unWrappedNames = getUnWrappedNames(names);
 			if (bean instanceof Map) {

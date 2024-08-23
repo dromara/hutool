@@ -20,7 +20,7 @@ import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.collection.set.SetUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.func.LambdaInfo;
 import org.dromara.hutool.core.func.LambdaUtil;
@@ -111,7 +111,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 		for (int i = 0; i < keysAndValues.length; i++) {
 			// 偶数
 			if ((i & 1) == 0) {
-				key = Convert.toStr(keysAndValues[i]);
+				key = ConvertUtil.toStr(keysAndValues[i]);
 			} else {
 				dict.put(key, keysAndValues[i]);
 			}
@@ -431,7 +431,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @since 5.7.14
 	 */
 	public <T> T getByPath(final String expression, final Type resultType) {
-		return Convert.convert(resultType, getByPath(expression));
+		return ConvertUtil.convert(resultType, getByPath(expression));
 	}
 	// -------------------------------------------------------------------- Get end
 

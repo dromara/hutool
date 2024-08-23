@@ -20,17 +20,17 @@ public class ConvertToBooleanTest {
 	@Test
 	public void intToBooleanTest() {
 		final int a = 100;
-		final Boolean aBoolean = Convert.toBoolean(a);
+		final Boolean aBoolean = ConvertUtil.toBoolean(a);
 		Assertions.assertTrue(aBoolean);
 
 		final int b = 0;
-		final Boolean bBoolean = Convert.toBoolean(b);
+		final Boolean bBoolean = ConvertUtil.toBoolean(b);
 		Assertions.assertFalse(bBoolean);
 	}
 
 	@Test
 	public void issueI65P8ATest() {
-		final Boolean bool = Convert.toBoolean("", Boolean.TRUE);
+		final Boolean bool = ConvertUtil.toBoolean("", Boolean.TRUE);
 		Assertions.assertFalse(bool);
 	}
 

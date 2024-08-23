@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.net.multipart;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.multi.ListValueMap;
 import org.dromara.hutool.core.map.multi.MultiValueMap;
 
@@ -163,7 +163,7 @@ public class MultipartFormData {
 	 * @return 所有属性的集合
 	 */
 	public Map<String, String[]> getParamMap() {
-		return Convert.toMap(String.class, String[].class, getParamListMap());
+		return ConvertUtil.toMap(String.class, String[].class, getParamListMap());
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class MultipartFormData {
 	 * @return 文件映射
 	 */
 	public Map<String, UploadFile[]> getFileMap() {
-		return Convert.toMap(String.class, UploadFile[].class, getFileListValueMap());
+		return ConvertUtil.toMap(String.class, UploadFile[].class, getFileListValueMap());
 	}
 
 	/**

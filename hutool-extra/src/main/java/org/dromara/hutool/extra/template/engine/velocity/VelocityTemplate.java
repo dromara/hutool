@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.extra.template.engine.velocity;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
@@ -82,7 +82,7 @@ public class VelocityTemplate implements Template, Serializable {
 	 * @return {@link VelocityContext}
 	 */
 	private VelocityContext toContext(final Map<?, ?> bindingMap) {
-		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Map<String, Object> map = ConvertUtil.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		return new VelocityContext(map);
 	}
 

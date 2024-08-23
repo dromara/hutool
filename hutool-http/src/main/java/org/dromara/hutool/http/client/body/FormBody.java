@@ -17,7 +17,7 @@
 package org.dromara.hutool.http.client.body;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.resource.FileResource;
 import org.dromara.hutool.core.io.resource.MultiFileResource;
 import org.dromara.hutool.core.map.MapUtil;
@@ -120,7 +120,7 @@ public abstract class FormBody<T extends FormBody<T>> implements HttpBody {
 			strValue = ArrayUtil.join(value, ",");
 		} else {
 			// 其他对象一律转换为字符串
-			strValue = Convert.toStr(value, null);
+			strValue = ConvertUtil.toStr(value, null);
 		}
 
 		return putToForm(name, strValue);

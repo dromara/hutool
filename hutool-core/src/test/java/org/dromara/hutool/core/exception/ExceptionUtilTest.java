@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.exception;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -50,12 +50,12 @@ public class ExceptionUtilTest {
 
 	@Test
 	public void bytesIntConvertTest(){
-		final String s = Convert.toStr(12);
-		final int integer = Convert.toInt(s);
+		final String s = ConvertUtil.toStr(12);
+		final int integer = ConvertUtil.toInt(s);
 		Assertions.assertEquals(12, integer);
 
-		final byte[] bytes = Convert.intToBytes(12);
-		final int i = Convert.bytesToInt(bytes);
+		final byte[] bytes = ConvertUtil.intToBytes(12);
+		final int i = ConvertUtil.bytesToInt(bytes);
 		Assertions.assertEquals(12, i);
 	}
 }

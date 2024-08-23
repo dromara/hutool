@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.extra.template.engine.thymeleaf;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -72,7 +72,7 @@ public class ThymeleafTemplate implements Template, Serializable {
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final Writer writer) {
-		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Map<String, Object> map = ConvertUtil.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		final Context context = new Context(Locale.getDefault(), map);
 		this.engine.process(this.template, context, writer);
 	}

@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -397,7 +397,7 @@ public class JSONUtil {
 		}
 
 		//issue#I7CW27，其他类型使用默认转换
-		return Convert.convert(type, json);
+		return ConvertUtil.convert(type, json);
 	}
 	// -------------------------------------------------------------------- toBean end
 

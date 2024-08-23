@@ -24,7 +24,7 @@ public class ConvertToNumberTest {
 	@Test
 	public void dateToLongTest(){
 		final Date date = DateUtil.parse("2020-05-17 12:32:00");
-		final Long dateLong = Convert.toLong(date);
+		final Long dateLong = ConvertUtil.toLong(date);
 		assert date != null;
 		Assertions.assertEquals(date.getTime(), dateLong.longValue());
 	}
@@ -32,7 +32,7 @@ public class ConvertToNumberTest {
 	@Test
 	public void dateToIntTest(){
 		final Date date = DateUtil.parse("2020-05-17 12:32:00");
-		final Integer dateInt = Convert.toInt(date);
+		final Integer dateInt = ConvertUtil.toInt(date);
 		assert date != null;
 		Assertions.assertEquals((int)date.getTime(), dateInt.intValue());
 	}
@@ -40,24 +40,24 @@ public class ConvertToNumberTest {
 	@Test
 	public void dateToAtomicLongTest(){
 		final Date date = DateUtil.parse("2020-05-17 12:32:00");
-		final AtomicLong dateLong = Convert.convert(AtomicLong.class, date);
+		final AtomicLong dateLong = ConvertUtil.convert(AtomicLong.class, date);
 		assert date != null;
 		Assertions.assertEquals(date.getTime(), dateLong.longValue());
 	}
 
 	@Test
 	public void toBigDecimalTest(){
-		BigDecimal bigDecimal = Convert.toBigDecimal("1.1f");
+		BigDecimal bigDecimal = ConvertUtil.toBigDecimal("1.1f");
 		Assertions.assertEquals(1.1f, bigDecimal.floatValue(), 0);
 
-		bigDecimal = Convert.toBigDecimal("1L");
+		bigDecimal = ConvertUtil.toBigDecimal("1L");
 		Assertions.assertEquals(1L, bigDecimal.longValue());
 	}
 
 	@Test
 	public void toNumberTest(){
 		// 直接转换为抽象Number，默认使用BigDecimal实现
-		final Number number = Convert.toNumber("1");
+		final Number number = ConvertUtil.toNumber("1");
 		Assertions.assertEquals(BigDecimal.class, number.getClass());
 	}
 }
