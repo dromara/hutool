@@ -27,13 +27,12 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 /**
- * 复合转换器，融合了所有支持类型和自定义类型的转换规则
- * <p>
- * 将各种类型Convert对象放入符合转换器，通过convert方法查找目标类型对应的转换器，将被转换对象转换之。
- * </p>
- * <p>
- * 在此类中，存放着默认转换器和自定义转换器，默认转换器是Hutool中预定义的一些转换器，自定义转换器存放用户自定的转换器。
- * </p>
+ * 复合转换器，融合了所有支持类型和自定义类型的转换规则<br>
+ * 在此类中，存放着默认转换器和自定义转换器，默认转换器是Hutool中预定义的一些转换器，自定义转换器存放用户自定的转换器。<br>
+ * 转换过程类似于转换链，过程如下：
+ * <pre>{@code
+ *     处理null、Opt、Optional --> 自定义匹配转换器 --> 自定义类型转换器 --> 预注册的标准转换器 --> Map、集合、Enum等特殊转换器 --> Bean转换器
+ * }</pre>
  *
  * @author Looly
  */
@@ -143,7 +142,7 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// 标准转换器
-		final Converter converter = getConverter(type, isCustomFirst);
+		final Converter converter = getConverter(type, value, isCustomFirst);
 		if (null != converter) {
 			return converter.convert(type, value, defaultValue);
 		}

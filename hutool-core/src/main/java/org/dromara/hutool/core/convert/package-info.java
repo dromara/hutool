@@ -15,12 +15,18 @@
  */
 
 /**
- * 万能类型转换器以及各种类型转换的实现类，其中Convert为转换器入口，提供各种toXXX方法和convert方法
+ * 万能类型转换器以及各种类型转换的实现类，其中Convert为转换器入口，提供各种toXXX方法和convert方法<br>
+ * 转换器是典型的策略模式应用，可自定义转换策略。Hutool提供了常用类型的转换策略，自定义转换接口包括：
+ * <ul>
+ *     <li>{@link org.dromara.hutool.core.convert.Converter}，标准转换接口，通过类型匹配策略后调用使用。</li>
+ *     <li>{@link org.dromara.hutool.core.convert.MatcherConverter}，带有match方法的Converter，通过自身匹配判断调用转换。</li>
+ * </ul>
  *
- * <p>
- * 转换器是典型的策略模式应用，通过实现{@link org.dromara.hutool.core.convert.Converter} 接口，
- * 自定义转换策略。Hutool提供了常用类型的转换策略。
- * </p>
+ * 公共的转换器封装有两种：
+ * <ul>
+ *     <li>{@link org.dromara.hutool.core.convert.RegisterConverter}，提供预定义的转换规则，也可以注册自定义转换规则。</li>
+ *     <li>{@link org.dromara.hutool.core.convert.CompositeConverter}，复合转换器，封装基于注册的、特别转换（泛型转换）等规则，实现万能转换。</li>
+ * </ul>
  *
  * @author looly
  *

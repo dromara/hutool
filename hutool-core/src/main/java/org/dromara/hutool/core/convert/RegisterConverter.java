@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.core.convert;
 
+import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.tuple.Pair;
@@ -23,6 +24,7 @@ import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.stream.StreamUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
@@ -42,10 +44,12 @@ import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * 基于类型注册的转换器<br>
- * 即转换的目标类型和转换器一一对应，转换器只针对目标类型，不针对源类型<br>
- * 转换器默认提供一些固定的类型转换，用户可调用{@link #putCustom(Type, Converter)} 注册自定义转换规则<br>
- * 注意：注册的转换器要求目标类型必须一致，不能是子类等
+ * 基于类型注册的转换器，提供两种注册方式，按照优先级依次为：
+ * <ol>
+ *     <li>按照匹配注册，使用{@link #register(MatcherConverter)}。
+ *     注册后一旦给定的目标类型和值满足{@link MatcherConverter#match(Type, Class, Object)}，即可调用对应转换器转换。</li>
+ *     <li>按照类型注册，使用{@link #register(Type, Converter)}，目标类型一致，即可调用转换。</li>
+ * </ol>
  *
  * @author looly
  * @since 6.0.0
@@ -73,13 +77,18 @@ public class RegisterConverter implements Converter, Serializable {
 	}
 
 	/**
+	 * 用户自定义类型转换器，存储自定义匹配规则的一类对象的转换器
+	 */
+	private volatile Set<MatcherConverter> converterSet;
+	/**
+	 * 用户自定义精确类型转换器<br>
+	 * 主要存储类型明确（无子类）的转换器
+	 */
+	private volatile Map<Type, Converter> customConverterMap;
+	/**
 	 * 默认类型转换器
 	 */
 	private Map<Class<?>, Converter> defaultConverterMap;
-	/**
-	 * 用户自定义类型转换器
-	 */
-	private volatile Map<Type, Converter> customConverterMap;
 
 	/**
 	 * 构造
@@ -91,7 +100,7 @@ public class RegisterConverter implements Converter, Serializable {
 	@Override
 	public Object convert(final Type targetType, final Object value) throws ConvertException {
 		// 标准转换器
-		final Converter converter = getConverter(targetType, true);
+		final Converter converter = getConverter(targetType, value, true);
 		if (null != converter) {
 			return converter.convert(targetType, value);
 		}
@@ -104,19 +113,26 @@ public class RegisterConverter implements Converter, Serializable {
 	 * 获得转换器<br>
 	 *
 	 * @param type          类型
+	 * @param value         转换的值
 	 * @param isCustomFirst 是否自定义转换器优先
 	 * @return 转换器
 	 */
-	public Converter getConverter(final Type type, final boolean isCustomFirst) {
+	public Converter getConverter(final Type type, final Object value, final boolean isCustomFirst) {
 		Converter converter;
 		if (isCustomFirst) {
-			converter = this.getCustomConverter(type);
+			converter = this.getCustomConverter(type, value);
+			if(null == converter){
+				converter = this.getCustomConverter(type);
+			}
 			if (null == converter) {
 				converter = this.getDefaultConverter(type);
 			}
 		} else {
 			converter = this.getDefaultConverter(type);
 			if (null == converter) {
+				converter = this.getCustomConverter(type, value);
+			}
+			if(null == converter){
 				converter = this.getCustomConverter(type);
 			}
 		}
@@ -135,7 +151,21 @@ public class RegisterConverter implements Converter, Serializable {
 	}
 
 	/**
-	 * 获得自定义转换器
+	 * 获得匹配类型的自定义转换器
+	 *
+	 * @param type  类型
+	 * @param value 被转换的值
+	 * @return 转换器
+	 */
+	public Converter getCustomConverter(final Type type, final Object value) {
+		return StreamUtil.of(converterSet)
+			.filter((predicate) -> predicate.match(type, value))
+			.findFirst()
+			.orElse(null);
+	}
+
+	/**
+	 * 获得指定类型对应的自定义转换器
 	 *
 	 * @param type 类型
 	 * @return 转换器
@@ -145,13 +175,13 @@ public class RegisterConverter implements Converter, Serializable {
 	}
 
 	/**
-	 * 登记自定义转换器
+	 * 登记自定义转换器，登记的目标类型必须一致
 	 *
 	 * @param type      转换的目标类型
 	 * @param converter 转换器
 	 * @return ConverterRegistry
 	 */
-	public RegisterConverter putCustom(final Type type, final Converter converter) {
+	public RegisterConverter register(final Type type, final Converter converter) {
 		if (null == customConverterMap) {
 			synchronized (this) {
 				if (null == customConverterMap) {
@@ -160,6 +190,24 @@ public class RegisterConverter implements Converter, Serializable {
 			}
 		}
 		customConverterMap.put(type, converter);
+		return this;
+	}
+
+	/**
+	 * 登记自定义转换器，符合{@link MatcherConverter#match(Type, Class, Object)}则使用其转换器
+	 *
+	 * @param converter 转换器
+	 * @return ConverterRegistry
+	 */
+	public RegisterConverter register(final MatcherConverter converter) {
+		if (null == this.converterSet) {
+			synchronized (this) {
+				if (null == this.converterSet) {
+					this.converterSet = new ConcurrentHashSet<>();
+				}
+			}
+		}
+		this.converterSet.add(converter);
 		return this;
 	}
 

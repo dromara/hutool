@@ -45,7 +45,7 @@ import java.util.Optional;
  * JSON转换器，实现Object对象转换为{@link JSON}，支持的对象：
  * <ul>
  *     <li>任意支持的对象，转换为JSON</li>
- *     <li>JSOn转换为指定对象Bean</li>
+ *     <li>JSON转换为指定对象Bean</li>
  * </ul>
  *
  * @author looly
@@ -61,8 +61,8 @@ public class JSONConverter implements Converter, Serializable {
 
 	static {
 		final RegisterConverter converter = RegisterConverter.getInstance();
-		converter.putCustom(JSONObject.class, INSTANCE);
-		converter.putCustom(JSONArray.class, INSTANCE);
+		converter.register(JSONObject.class, INSTANCE);
+		converter.register(JSONArray.class, INSTANCE);
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class JSONConverter implements Converter, Serializable {
 		// RFC8259，JSON字符串值、number, boolean, or null
 		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), config);
 		final Object value = jsonParser.nextValue();
-		if(jsonParser.getTokener().nextClean() != JSONTokener.EOF){
+		if (jsonParser.getTokener().nextClean() != JSONTokener.EOF) {
 			// 对于用户提供的未转义字符串导致解析未结束，报错
 			throw new JSONException("JSON format error: {}", jsonStr);
 		}
@@ -197,7 +197,7 @@ public class JSONConverter implements Converter, Serializable {
 			case '\'':
 				return InternalJSONUtil.quote((CharSequence) value);
 			default:
-				if(ObjUtil.equals(jsonStr, value)){
+				if (ObjUtil.equals(jsonStr, value)) {
 					// 对于直接的字符串，如abc，按照字符串处理
 					return InternalJSONUtil.quote((CharSequence) value);
 				}
@@ -208,7 +208,10 @@ public class JSONConverter implements Converter, Serializable {
 	// ----------------------------------------------------------- Private method start
 
 	/**
-	 * JSON转Bean
+	 * JSON转Bean，流程为：
+	 * <pre>{@code
+	 *     自定义反序列化 --> 尝试转Kotlin --> 基于注册的标准转换器 --> Collection、Map等含有泛型的特殊转换器 --> 普通Bean转换器
+	 * }</pre>
 	 *
 	 * @param <T>        目标类型
 	 * @param targetType 目标类型，
@@ -236,16 +239,16 @@ public class JSONConverter implements Converter, Serializable {
 			return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>) json));
 		}
 
+		// 标准转换器
+		final Converter converter = RegisterConverter.getInstance().getConverter(targetType, json, true);
+		if (null != converter) {
+			return (T) converter.convert(targetType, json);
+		}
+
 		// 特殊类型转换，包括Collection、Map、强转、Array等
 		final T result = (T) SpecialConverter.getInstance().convert(targetType, rawType, json);
 		if (null != result) {
 			return result;
-		}
-
-		// 标准转换器
-		final Converter converter = RegisterConverter.getInstance().getConverter(targetType, true);
-		if (null != converter) {
-			return (T) converter.convert(targetType, json);
 		}
 
 		// 尝试转Bean
