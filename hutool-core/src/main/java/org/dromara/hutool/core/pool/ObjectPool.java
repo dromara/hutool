@@ -23,8 +23,8 @@ import java.io.Serializable;
  * 对象池接口，提供：
  * <ul>
  *     <li>{@link #borrowObject()}        对象借出。</li>
- *     <li>{@link #returnObject(Poolable)}对象归还。</li>
- *     <li>{@link #free(Poolable)}        对象销毁。</li>
+ *     <li>{@link #returnObject(Object)}对象归还。</li>
+ *     <li>{@link #free(Object)}        对象销毁。</li>
  * </ul>
  * <p>
  * 对于对象池中对象维护，通过{@link PoolConfig#getMaxIdle()}控制，规则如下：
