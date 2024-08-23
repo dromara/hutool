@@ -17,10 +17,11 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
@@ -30,12 +31,18 @@ import java.util.Collection;
  * @author Looly
  * @since 3.0.8
  */
-public class CollectionConverter implements Converter {
+public class CollectionConverter implements MatcherConverter, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例实体
 	 */
 	public static CollectionConverter INSTANCE = new CollectionConverter();
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return Collection.class.isAssignableFrom(rawType);
+	}
 
 	@Override
 	public Collection<?> convert(Type targetType, final Object value) {

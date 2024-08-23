@@ -30,6 +30,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AtomicBooleanConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
+	public static final AtomicBooleanConverter INSTANCE = new AtomicBooleanConverter();
+
 	@Override
 	protected AtomicBoolean convertInternal(final Class<?> targetClass, final Object value) {
 		if (value instanceof Boolean) {

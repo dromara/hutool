@@ -18,12 +18,14 @@ package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
+import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.temporal.TemporalAccessor;
@@ -53,13 +55,18 @@ import java.util.function.Function;
  *
  * @author Looly
  */
-public class NumberConverter extends AbstractConverter {
+public class NumberConverter extends AbstractConverter implements MatcherConverter {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例
 	 */
 	public static final NumberConverter INSTANCE = new NumberConverter();
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return Number.class.isAssignableFrom(rawType);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

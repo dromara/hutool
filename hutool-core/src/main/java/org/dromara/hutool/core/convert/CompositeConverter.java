@@ -17,19 +17,13 @@
 package org.dromara.hutool.core.convert;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.bean.RecordUtil;
-import org.dromara.hutool.core.convert.impl.*;
+import org.dromara.hutool.core.convert.impl.BeanConverter;
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -164,7 +158,7 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		final T result = convertSpecial(type, rawType, value, defaultValue);
+		final T result = (T) SpecialConverter.getInstance().convert(type, rawType, value);
 		if (null != result) {
 			return result;
 		}
@@ -177,101 +171,4 @@ public class CompositeConverter extends RegisterConverter {
 		// 无法转换
 		throw new ConvertException("Can not convert from {}: [{}] to [{}]", value.getClass().getName(), value, type.getTypeName());
 	}
-
-	// ----------------------------------------------------------- Private method start
-
-	/**
-	 * 特殊类型转换<br>
-	 * 包括：
-	 *
-	 * <pre>
-	 * Collection
-	 * Map
-	 * 强转（无需转换）
-	 * 数组
-	 * </pre>
-	 *
-	 * @param <T>          转换的目标类型（转换器转换到的类型）
-	 * @param type         类型
-	 * @param rawType      原始类型
-	 * @param value        值
-	 * @param defaultValue 默认值
-	 * @return 转换后的值
-	 */
-	@SuppressWarnings("unchecked")
-	private <T> T convertSpecial(final Type type, final Class<T> rawType, final Object value, final T defaultValue) {
-		if (null == rawType) {
-			return null;
-		}
-
-		// 日期、java.sql中的日期以及自定义日期统一处理
-		if (Date.class.isAssignableFrom(rawType)) {
-			return DateConverter.INSTANCE.convert(type, value, defaultValue);
-		}
-
-		// 集合转换（含有泛型参数，不可以默认强转）
-		if (Collection.class.isAssignableFrom(rawType)) {
-			return (T) CollectionConverter.INSTANCE.convert(type, value, (Collection<?>) defaultValue);
-		}
-
-		// Map类型（含有泛型参数，不可以默认强转）
-		if (Map.class.isAssignableFrom(rawType)) {
-			return (T) MapConverter.INSTANCE.convert(type, value, (Map<?, ?>) defaultValue);
-		}
-
-		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
-		if (Map.Entry.class.isAssignableFrom(rawType)) {
-			return (T) EntryConverter.INSTANCE.convert(type, value);
-		}
-
-		// 默认强转
-		if (rawType.isInstance(value)) {
-			return (T) value;
-		}
-
-		// 原始类型转换
-		if (rawType.isPrimitive()) {
-			return PrimitiveConverter.INSTANCE.convert(type, value, defaultValue);
-		}
-
-		// 数字类型转换
-		if (Number.class.isAssignableFrom(rawType)) {
-			return NumberConverter.INSTANCE.convert(type, value, defaultValue);
-		}
-
-		// 枚举转换
-		if (rawType.isEnum()) {
-			return EnumConverter.INSTANCE.convert(type, value, defaultValue);
-		}
-
-		// 数组转换
-		if (rawType.isArray()) {
-			return ArrayConverter.INSTANCE.convert(type, value, defaultValue);
-		}
-
-		// Record
-		if (RecordUtil.isRecord(rawType)) {
-			return (T) RecordConverter.INSTANCE.convert(type, value);
-		}
-
-		// Kotlin Bean
-		if (KClassUtil.isKotlinClass(rawType)) {
-			return (T) KBeanConverter.INSTANCE.convert(type, value);
-		}
-
-		// issue#I7FQ29 Class
-		if ("java.lang.Class".equals(rawType.getName())) {
-			return (T) ClassConverter.INSTANCE.convert(type, value);
-		}
-
-		// 空值转空Bean
-		if (ObjUtil.isEmpty(value)) {
-			// issue#3649 空值转空对象，则直接实例化
-			return ConstructorUtil.newInstanceIfPossible(rawType);
-		}
-
-		// 表示非需要特殊转换的对象
-		return null;
-	}
-	// ----------------------------------------------------------- Private method end
 }

@@ -25,7 +25,7 @@ import java.util.Set;
 
 /**
  * 用户自定义转换器<br>
- * 通过自定义实现{@link PredicateConverter}，可以通过{@link PredicateConverter#test(Object)} 检查目标类型是否匹配<br>
+ * 通过自定义实现{@link MatcherConverter}，可以通过{@link MatcherConverter#match(Type, Class, Object)} 检查目标类型是否匹配<br>
  * 如果匹配，则直接转换，否则使用默认转换器转换。
  *
  * @author Looly
@@ -41,37 +41,38 @@ public class CustomConverter implements Converter, Serializable {
 		/**
 		 * 静态初始化器，由JVM来保证线程安全
 		 */
-		private static final RegisterConverter INSTANCE = new RegisterConverter();
+		private static final CustomConverter INSTANCE = new CustomConverter();
 	}
 
 	/**
-	 * 获得单例的 RegisterConverter
+	 * 获得单例的 CustomConverter
 	 *
-	 * @return RegisterConverter
+	 * @return CustomConverter
 	 */
-	public static RegisterConverter getInstance() {
+	public static CustomConverter getInstance() {
 		return CustomConverter.SingletonHolder.INSTANCE;
 	}
 
 	/**
 	 * 用户自定义类型转换器
 	 */
-	private volatile Set<PredicateConverter> converterSet;
+	private volatile Set<MatcherConverter> converterSet;
 
 	@Override
 	public Object convert(final Type targetType, final Object value) throws ConvertException {
-		final Converter customConverter = getCustomConverter(targetType);
+		final Converter customConverter = getCustomConverter(targetType, value);
 		return null == customConverter ? null : customConverter.convert(targetType, value);
 	}
 
 	/**
 	 * 获得匹配类型的自定义转换器
 	 *
-	 * @param type 类型
+	 * @param type  类型
+	 * @param value 被转换的值
 	 * @return 转换器
 	 */
-	public Converter getCustomConverter(final Type type) {
-		return getConverterFromSet(this.converterSet, type);
+	public Converter getCustomConverter(final Type type, final Object value) {
+		return getConverterFromSet(this.converterSet, type, value);
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class CustomConverter implements Converter, Serializable {
 	 * @param converter 转换器
 	 * @return ConverterRegistry
 	 */
-	public CustomConverter add(final PredicateConverter converter) {
+	public CustomConverter add(final MatcherConverter converter) {
 		if (null == this.converterSet) {
 			synchronized (this) {
 				if (null == this.converterSet) {
@@ -98,7 +99,7 @@ public class CustomConverter implements Converter, Serializable {
 	 * @param type 类型
 	 * @return 转换器
 	 */
-	private static Converter getConverterFromSet(final Set<? extends PredicateConverter> converterSet, final Type type) {
-		return StreamUtil.of(converterSet).filter((predicate) -> predicate.test(type)).findFirst().orElse(null);
+	private static Converter getConverterFromSet(final Set<? extends MatcherConverter> converterSet, final Type type, final Object value) {
+		return StreamUtil.of(converterSet).filter((predicate) -> predicate.match(type, value)).findFirst().orElse(null);
 	}
 }

@@ -18,6 +18,7 @@ package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
+import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.lang.EnumItem;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
@@ -27,6 +28,7 @@ import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.util.EnumUtil;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,7 +40,7 @@ import java.util.stream.Collectors;
  * @since 4.0.2
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class EnumConverter extends AbstractConverter {
+public class EnumConverter extends AbstractConverter implements MatcherConverter {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -47,6 +49,11 @@ public class EnumConverter extends AbstractConverter {
 	public static final EnumConverter INSTANCE = new EnumConverter();
 
 	private static final WeakConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakConcurrentMap<>();
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return rawType.isEnum();
+	}
 
 	@Override
 	protected Object convertInternal(final Class<?> targetClass, final Object value) {

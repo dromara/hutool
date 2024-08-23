@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2024 Hutool Team and hutool.cn
+ * Copyright (c) 2024 Hutool Team and hutool.cn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,52 +17,35 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.convert.MatcherConverter;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 
 /**
- * 类转换器<br>
- * 将类名转换为类，默认初始化这个类（执行static块）
+ * 空值或空对象转换器，转换结果为目标类型对象的实例化对象
  *
  * @author Looly
+ * @since 6.0.0
  */
-public class ClassConverter extends AbstractConverter implements MatcherConverter {
+public class EmptyBeanConverter extends AbstractConverter implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例
 	 */
-	public static ClassConverter INSTANCE = new ClassConverter();
-
-	private final boolean isInitialized;
-
-	/**
-	 * 构造
-	 */
-	public ClassConverter() {
-		this(true);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
-	 * @since 5.5.0
-	 */
-	public ClassConverter(final boolean isInitialized) {
-		this.isInitialized = isInitialized;
-	}
+	public static final EmptyBeanConverter INSTANCE = new EmptyBeanConverter();
 
 	@Override
 	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
-		return "java.lang.Class".equals(rawType.getName());
+		return ObjUtil.isEmpty(value);
 	}
 
 	@Override
-	protected Class<?> convertInternal(final Class<?> targetClass, final Object value) {
-		return ClassLoaderUtil.loadClass(convertToStr(value), isInitialized);
+	protected Object convertInternal(final Class<?> targetClass, final Object value) {
+		// issue#3649 空值转空对象，则直接实例化
+		return ConstructorUtil.newInstanceIfPossible(targetClass);
 	}
-
 }

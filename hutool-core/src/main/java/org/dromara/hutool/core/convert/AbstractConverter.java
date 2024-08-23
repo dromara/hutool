@@ -56,7 +56,7 @@ public abstract class AbstractConverter implements Converter, Serializable {
 		// 尝试强转
 		if (targetClass.isInstance(value)) {
 			// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
-			return CastUtil.castTo(targetClass, value);
+			return value;
 		}
 		return convertInternal(targetClass, value);
 	}

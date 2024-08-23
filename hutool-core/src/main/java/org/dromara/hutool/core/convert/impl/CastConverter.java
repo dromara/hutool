@@ -16,23 +16,34 @@
 
 package org.dromara.hutool.core.convert.impl;
 
-import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
+import org.dromara.hutool.core.convert.MatcherConverter;
+
+import java.io.Serializable;
+import java.lang.reflect.Type;
 
 /**
  * 强转转换器
  *
  * @author Looly
- * @param <T> 强制转换到的类型
  * @since 4.0.2
  */
-public class CastConverter<T> extends AbstractConverter {
+public class CastConverter implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
+	public static final CastConverter INSTANCE = new CastConverter();
+
 	@Override
-	protected T convertInternal(final Class<?> targetClass, final Object value) {
-		// 由于在AbstractConverter中已经有类型判断并强制转换，因此当在上一步强制转换失败时直接抛出异常
-		throw new ConvertException("Can not cast value to [{}]", targetClass);
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return rawType.isInstance(value);
 	}
 
+	@Override
+	public Object convert(final Type targetType, final Object value) throws ConvertException{
+		// 此处无需逻辑，目标对象类型是value的父类或接口，直接返回匹配即可
+		return value;
+	}
 }

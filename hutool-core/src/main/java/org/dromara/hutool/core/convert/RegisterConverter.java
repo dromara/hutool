@@ -170,11 +170,12 @@ public class RegisterConverter implements Converter, Serializable {
 		final Map<Class<?>, Converter> defaultConverterMap = new SafeConcurrentHashMap<>(64);
 
 		// 包装类转换器
-		defaultConverterMap.put(Character.class, new CharacterConverter());
-		defaultConverterMap.put(Boolean.class, new BooleanConverter());
-		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());// since 3.0.8
-		defaultConverterMap.put(CharSequence.class, new StringConverter());
-		defaultConverterMap.put(String.class, new StringConverter());
+		defaultConverterMap.put(Character.class, CharacterConverter.INSTANCE);
+		defaultConverterMap.put(Boolean.class, BooleanConverter.INSTANCE);
+		defaultConverterMap.put(AtomicBoolean.class, AtomicBooleanConverter.INSTANCE);// since 3.0.8
+		final StringConverter stringConverter = new StringConverter();
+		defaultConverterMap.put(CharSequence.class, stringConverter);
+		defaultConverterMap.put(String.class, stringConverter);
 
 		// URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());

@@ -23,7 +23,9 @@ import org.dromara.hutool.core.bean.copier.provider.BeanValueProvider;
 import org.dromara.hutool.core.bean.copier.provider.MapValueProvider;
 import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
+import org.dromara.hutool.core.convert.MatcherConverter;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -34,13 +36,18 @@ import java.util.Map;
  *   ValueProvider =》 Record
  * </pre>
  */
-public class RecordConverter extends AbstractConverter {
+public class RecordConverter extends AbstractConverter implements MatcherConverter {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象
 	 */
 	public static RecordConverter INSTANCE = new RecordConverter();
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return RecordUtil.isRecord(rawType);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

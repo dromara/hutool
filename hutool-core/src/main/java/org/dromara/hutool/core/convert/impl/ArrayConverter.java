@@ -22,6 +22,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertUtil;
+import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -29,6 +30,7 @@ import org.dromara.hutool.core.util.ByteUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +40,7 @@ import java.util.List;
  *
  * @author Looly
  */
-public class ArrayConverter extends AbstractConverter {
+public class ArrayConverter extends AbstractConverter implements MatcherConverter {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -65,6 +67,11 @@ public class ArrayConverter extends AbstractConverter {
 	 */
 	public ArrayConverter(final boolean ignoreElementError) {
 		this.ignoreElementError = ignoreElementError;
+	}
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return rawType.isArray();
 	}
 
 	@Override

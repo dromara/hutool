@@ -18,13 +18,13 @@ package org.dromara.hutool.json.convert;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
-import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.ConvertException;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.convert.RegisterConverter;
-import org.dromara.hutool.core.convert.impl.*;
+import org.dromara.hutool.core.convert.impl.DateConverter;
+import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
@@ -40,7 +40,9 @@ import org.dromara.hutool.json.serialize.JSONStringer;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.temporal.TemporalAccessor;
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * JSON转换器，实现Object对象转换为{@link JSON}，支持的对象：
@@ -232,7 +234,7 @@ public class JSONConverter implements Converter, Serializable {
 			//throw new JSONException("Can not get class from type: {}", targetType);
 		}
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		final T result = toSpecial(targetType, rawType, json);
+		final T result = (T) JSONSpecialConverter.getInstance().convert(targetType, rawType, json);
 		if (null != result) {
 			return result;
 		}
@@ -263,74 +265,6 @@ public class JSONConverter implements Converter, Serializable {
 		// 无法转换
 		throw new JSONException("Can not convert from '{}': {} to '{}'",
 			json.getClass().getName(), json, targetType.getTypeName());
-	}
-
-	/**
-	 * 特殊类型转换<br>
-	 * 包括：
-	 *
-	 * <pre>
-	 * Collection
-	 * Map
-	 * Map.Entry
-	 * 强转（无需转换）
-	 * 数组
-	 * </pre>
-	 *
-	 * @param <T>   转换的目标类型（转换器转换到的类型）
-	 * @param type  类型
-	 * @param value 值
-	 * @return 转换后的值
-	 */
-	@SuppressWarnings("unchecked")
-	private <T> T toSpecial(final Type type, final Class<T> rowType, final JSON value) {
-		if (null == rowType) {
-			return null;
-		}
-
-		// 日期、java.sql中的日期以及自定义日期统一处理
-		if (Date.class.isAssignableFrom(rowType)) {
-			return (T) DateConverter.INSTANCE.convert(type, value);
-		}
-
-		// 集合转换（含有泛型参数，不可以默认强转）
-		if (Collection.class.isAssignableFrom(rowType)) {
-			return (T) CollectionConverter.INSTANCE.convert(type, value);
-		}
-
-		// Map类型（含有泛型参数，不可以默认强转）
-		if (Map.class.isAssignableFrom(rowType)) {
-			return (T) MapConverter.INSTANCE.convert(type, value);
-		}
-
-		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
-		if (Map.Entry.class.isAssignableFrom(rowType)) {
-			return (T) EntryConverter.INSTANCE.convert(type, value);
-		}
-
-		// 默认强转
-		if (rowType.isInstance(value)) {
-			return (T) value;
-		}
-
-		// 数组转换
-		if (rowType.isArray()) {
-			return (T) ArrayConverter.INSTANCE.convert(type, value);
-		}
-
-		// Record
-		if (RecordUtil.isRecord(rowType)) {
-			return (T) RecordConverter.INSTANCE.convert(type, value);
-		}
-
-		// 空值转空Bean
-		if (ObjUtil.isEmpty(value)) {
-			// issue#3649 空值转空对象，则直接实例化
-			return ConstructorUtil.newInstanceIfPossible(rowType);
-		}
-
-		// 表示非需要特殊转换的对象
-		return null;
 	}
 
 	private Object toDateWithFormat(final Class<?> targetClass, final Object value) {

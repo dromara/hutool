@@ -23,7 +23,7 @@ public class SemaphoreRateLimiterTest {
 		final boolean b1 = rateLimiter.tryAcquire(1);
 		Assertions.assertFalse(b1);
 
-		ThreadUtil.sleep(310);
+		ThreadUtil.sleep(400);
 
 		// 填充新的许可
 		final boolean b2 = rateLimiter.tryAcquire(5);

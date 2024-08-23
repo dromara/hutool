@@ -22,6 +22,7 @@ import org.dromara.hutool.core.bean.copier.provider.BeanValueProvider;
 import org.dromara.hutool.core.bean.copier.provider.MapValueProvider;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
@@ -40,13 +41,18 @@ import java.util.Map;
  *
  * @author Looly
  */
-public class KBeanConverter implements Converter, Serializable {
+public class KBeanConverter implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象
 	 */
 	public static KBeanConverter INSTANCE = new KBeanConverter();
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return KClassUtil.isKotlinClass(rawType);
+	}
 
 	@Override
 	public Object convert(final Type targetType, final Object value) throws ConvertException {

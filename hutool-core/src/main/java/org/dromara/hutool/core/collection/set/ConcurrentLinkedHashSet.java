@@ -36,7 +36,7 @@ public class ConcurrentLinkedHashSet<E> extends SetFromMap<E> {
 	 * 构造
 	 */
 	public ConcurrentLinkedHashSet() {
-		super(new ConcurrentLinkedHashMap.Builder<E, Boolean>().build());
+		super(new ConcurrentLinkedHashMap.Builder<E, Boolean>().maximumWeightedCapacity(64).build());
 	}
 
 	/**
@@ -46,7 +46,10 @@ public class ConcurrentLinkedHashSet<E> extends SetFromMap<E> {
 	 * @param initialCapacity 初始大小
 	 */
 	public ConcurrentLinkedHashSet(final int initialCapacity) {
-		super(new ConcurrentLinkedHashMap.Builder<E, Boolean>().initialCapacity(initialCapacity).build());
+		super(new ConcurrentLinkedHashMap.Builder<E, Boolean>()
+			.initialCapacity(initialCapacity)
+			.maximumWeightedCapacity(initialCapacity)
+			.build());
 	}
 
 	/**
@@ -58,6 +61,7 @@ public class ConcurrentLinkedHashSet<E> extends SetFromMap<E> {
 	public ConcurrentLinkedHashSet(final int initialCapacity, final int concurrencyLevel) {
 		super(new ConcurrentLinkedHashMap.Builder<E, Boolean>()
 			.initialCapacity(initialCapacity)
+			.maximumWeightedCapacity(initialCapacity)
 			.concurrencyLevel(concurrencyLevel)
 			.build());
 	}

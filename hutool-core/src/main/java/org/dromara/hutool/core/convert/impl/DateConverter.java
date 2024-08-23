@@ -18,11 +18,13 @@ package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
+import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.SqlDateUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.lang.reflect.Type;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,7 +34,7 @@ import java.util.Date;
  *
  * @author Looly
  */
-public class DateConverter extends AbstractConverter {
+public class DateConverter extends AbstractConverter implements MatcherConverter {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -77,6 +79,11 @@ public class DateConverter extends AbstractConverter {
 	 */
 	public void setFormat(final String format) {
 		this.format = format;
+	}
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return Date.class.isAssignableFrom(rawType);
 	}
 
 	@Override

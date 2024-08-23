@@ -17,12 +17,11 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.ConvertException;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.core.convert.MatcherConverter;
 
-import java.util.function.Function;
+import java.io.Serializable;
+import java.lang.reflect.Type;
 
 /**
  * 原始类型转换器<br>
@@ -40,7 +39,7 @@ import java.util.function.Function;
  *
  * @author Looly
  */
-public class PrimitiveConverter extends AbstractConverter {
+public class PrimitiveConverter extends AbstractConverter implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -48,51 +47,38 @@ public class PrimitiveConverter extends AbstractConverter {
 	 */
 	public static final PrimitiveConverter INSTANCE = new PrimitiveConverter();
 
-	/**
-	 * 构造<br>
-	 *
-	 * @throws IllegalArgumentException 传入的转换类型非原始类型时抛出
-	 */
-	public PrimitiveConverter() {
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return rawType.isPrimitive();
 	}
 
 	@Override
-	protected Object convertInternal(final Class<?> targetClass, final Object value) {
-		return PrimitiveConverter.convert(value, targetClass, this::convertToStr);
-	}
-
-	@Override
-	protected String convertToStr(final Object value) {
-		return StrUtil.trim(super.convertToStr(value));
-	}
-
-	/**
-	 * 将指定值转换为原始类型的值
-	 * @param value 值
-	 * @param primitiveClass 原始类型
-	 * @param toStringFunc 当无法直接转换时，转为字符串后再转换的函数
-	 * @return 转换结果
-	 * @since 5.5.0
-	 */
-	protected static Object convert(final Object value, final Class<?> primitiveClass, final Function<Object, String> toStringFunc) {
+	protected Object convertInternal(final Class<?> primitiveClass, final Object value) {
+		final Object result;
 		if (byte.class == primitiveClass) {
-			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Byte.class, toStringFunc), 0);
+			result = NumberConverter.INSTANCE.convert(Byte.class, value);
 		} else if (short.class == primitiveClass) {
-			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Short.class, toStringFunc), 0);
+			result = NumberConverter.INSTANCE.convert(Short.class, value);
 		} else if (int.class == primitiveClass) {
-			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Integer.class, toStringFunc), 0);
+			result = NumberConverter.INSTANCE.convert(Integer.class, value);
 		} else if (long.class == primitiveClass) {
-			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Long.class, toStringFunc), 0);
+			result = NumberConverter.INSTANCE.convert(Long.class, value);
 		} else if (float.class == primitiveClass) {
-			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Float.class, toStringFunc), 0);
+			result = NumberConverter.INSTANCE.convert(Float.class, value);
 		} else if (double.class == primitiveClass) {
-			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Double.class, toStringFunc), 0);
+			result = NumberConverter.INSTANCE.convert(Double.class, value);
 		} else if (char.class == primitiveClass) {
-			return ConvertUtil.convert(Character.class, value);
+			result = CharacterConverter.INSTANCE.convert(Character.class, value);
 		} else if (boolean.class == primitiveClass) {
-			return ConvertUtil.convert(Boolean.class, value);
+			result = BooleanConverter.INSTANCE.convert(Boolean.class, value);
+		} else{
+			throw new ConvertException("Unsupported target type: {}", primitiveClass);
 		}
 
-		throw new ConvertException("Unsupported target type: {}", primitiveClass);
+		if(null == result){
+			throw new ConvertException("Can not convert {} to {}", value, primitiveClass);
+		}
+
+		return result;
 	}
 }

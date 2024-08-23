@@ -19,7 +19,7 @@ package org.dromara.hutool.core.convert.impl;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.ConvertException;
-import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
@@ -40,13 +40,18 @@ import java.util.Objects;
  * @author Looly
  * @since 3.0.8
  */
-public class MapConverter implements Converter, Serializable {
+public class MapConverter implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例
 	 */
 	public static MapConverter INSTANCE = new MapConverter();
+
+	@Override
+	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
+		return Map.class.isAssignableFrom(rawType);
+	}
 
 	@Override
 	public Object convert(Type targetType, final Object value) throws ConvertException {
