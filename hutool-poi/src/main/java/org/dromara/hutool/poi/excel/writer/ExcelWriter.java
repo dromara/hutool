@@ -1011,6 +1011,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	// region ----- fill
 
 	public ExcelWriter fillRow(final Map<?, ?> rowMap){
+		rowMap.forEach((key, value)->{
+
+		});
+		return this;
+	}
+
+	public ExcelWriter fillCell(final String name, final Object value){
+		final Cell cell = this.templateContext.getCell(name);
+		if(null != cell){
+			CellUtil.setCellValue(cell, value, this.config.getCellEditor());
+		}
 		return this;
 	}
 

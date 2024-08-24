@@ -318,11 +318,7 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 	 * @since 4.0.6
 	 */
 	public Cell getCell(final int x, final int y, final boolean isCreateIfNotExist) {
-		final Row row = isCreateIfNotExist ? RowUtil.getOrCreateRow(this.sheet, y) : this.sheet.getRow(y);
-		if (null != row) {
-			return isCreateIfNotExist ? CellUtil.getOrCreateCell(row, x) : row.getCell(x);
-		}
-		return null;
+		return CellUtil.getCell(this.sheet, x, y, isCreateIfNotExist);
 	}
 
 
