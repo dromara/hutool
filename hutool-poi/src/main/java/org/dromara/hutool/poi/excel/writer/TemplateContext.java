@@ -20,11 +20,14 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.poi.excel.SheetUtil;
+import org.dromara.hutool.poi.excel.cell.CellUtil;
+import org.dromara.hutool.poi.excel.cell.VirtualCell;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -50,7 +53,7 @@ public class TemplateContext {
 	private static final Pattern ESCAPE_VAR_PATTERN = Pattern.compile("\\\\\\{([.$_a-zA-Z]+\\d*[.$_a-zA-Z]*)\\\\}");
 
 	// 存储变量对应单元格的映射
-	private final Map<String, Cell> varMap = new HashMap<>();
+	private final Map<String, Cell> varMap = new LinkedHashMap<>();
 
 	/**
 	 * 构造
@@ -62,13 +65,52 @@ public class TemplateContext {
 	}
 
 	/**
-	 * 获取变量对应的单元格，列表变量以.开头
+	 * 获取变量对应的当前单元格，列表变量以开头
 	 *
 	 * @param varName 变量名
 	 * @return 单元格
 	 */
 	public Cell getCell(final String varName) {
 		return varMap.get(varName);
+	}
+
+	/**
+	 * 填充变量名name指向的单元格，并将变量指向下一列
+	 *
+	 * @param name  变量名
+	 * @param rowData 一行数据的键值对
+	 * @since 6.0.0
+	 */
+	public void fillAndPointToNext(final String name, final Map<?, ?> rowData) {
+		Cell cell = varMap.get(name);
+		if (null == cell) {
+			// 没有对应变量占位
+			return;
+		}
+
+		final String templateStr = cell.getStringCellValue();
+
+		// 指向下一列的单元格
+		final Cell next = new VirtualCell(cell, cell.getColumnIndex(), cell.getRowIndex() + 1);
+		next.setCellValue(templateStr);
+		varMap.put(name, next);
+
+		if(cell instanceof VirtualCell){
+			// 虚拟单元格，转换为实际单元格
+			final Cell newCell = CellUtil.getCell(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex(), true);
+			Assert.notNull(newCell, "Can not get or create cell at {},{}", cell.getColumnIndex(), cell.getRowIndex());
+			newCell.setCellStyle(cell.getCellStyle());
+			cell = newCell;
+		}
+
+		// 模板替换
+		if(StrUtil.equals(name, StrUtil.unWrap(templateStr, "{", "}"))){
+			// 一个单元格只有一个变量
+			CellUtil.setCellValue(cell, rowData.get(name));
+		} else {
+			// 模板中存在多个变量或模板填充
+			CellUtil.setCellValue(cell, StrUtil.format(templateStr, rowData));
+		}
 	}
 
 	/**

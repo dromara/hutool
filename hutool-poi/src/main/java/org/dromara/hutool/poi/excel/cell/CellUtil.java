@@ -39,6 +39,7 @@ import org.dromara.hutool.poi.excel.style.StyleSet;
 public class CellUtil {
 
 	// region ----- getCellValue
+
 	/**
 	 * 获取单元格值
 	 *
@@ -103,6 +104,7 @@ public class CellUtil {
 	// endregion
 
 	// region ----- setCellValue
+
 	/**
 	 * 设置单元格值<br>
 	 * 根据传入的styleSet自动匹配样式<br>
@@ -169,8 +171,8 @@ public class CellUtil {
 	 * 根据传入的styleSet自动匹配样式<br>
 	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 *
-	 * @param cell       单元格
-	 * @param value      值或{@link CellSetter}
+	 * @param cell  单元格
+	 * @param value 值或{@link CellSetter}
 	 * @since 5.6.4
 	 */
 	public static void setCellValue(final Cell cell, final Object value) {
@@ -191,10 +193,11 @@ public class CellUtil {
 	// endregion
 
 	// region ----- getCell
+
 	/**
 	 * 获取指定坐标单元格，如果isCreateIfNotExist为false，则在单元格不存在时返回{@code null}
 	 *
-	 * @param sheet {@link Sheet}
+	 * @param sheet              {@link Sheet}
 	 * @param x                  X坐标，从0计数，即列号
 	 * @param y                  Y坐标，从0计数，即行号
 	 * @param isCreateIfNotExist 单元格不存在时是否创建
@@ -249,6 +252,7 @@ public class CellUtil {
 	// endregion
 
 	// region ----- merging 合并单元格
+
 	/**
 	 * 判断指定的单元格是否是合并单元格
 	 *
@@ -287,7 +291,7 @@ public class CellUtil {
 		for (int i = 0; i < sheetMergeCount; i++) {
 			ca = sheet.getMergedRegion(i);
 			if (y >= ca.getFirstRow() && y <= ca.getLastRow()
-					&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
+				&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
 				return true;
 			}
 		}
@@ -297,7 +301,7 @@ public class CellUtil {
 	/**
 	 * 合并单元格，可以根据设置的值来合并行和列
 	 *
-	 * @param sheet       表对象
+	 * @param sheet            表对象
 	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
 	 * @return 合并后的单元格号
 	 */
@@ -308,9 +312,9 @@ public class CellUtil {
 	/**
 	 * 合并单元格，可以根据设置的值来合并行和列
 	 *
-	 * @param sheet       表对象
+	 * @param sheet            表对象
 	 * @param cellRangeAddress 合并单元格范围，定义了起始行列和结束行列
-	 * @param cellStyle   单元格样式，只提取边框样式，null表示无样式
+	 * @param cellStyle        单元格样式，只提取边框样式，null表示无样式
 	 * @return 合并后的单元格号
 	 */
 	public static int mergingCells(final Sheet sheet, final CellRangeAddress cellRangeAddress, final CellStyle cellStyle) {
@@ -360,8 +364,8 @@ public class CellUtil {
 			return null;
 		}
 		return ObjUtil.defaultIfNull(
-				getCellIfMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex()),
-				cell);
+			getCellIfMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex()),
+			cell);
 	}
 
 	/**
@@ -376,8 +380,8 @@ public class CellUtil {
 	 */
 	public static Cell getMergedRegionCell(final Sheet sheet, final int x, final int y) {
 		return ObjUtil.defaultIfNull(
-				getCellIfMergedRegion(sheet, x, y),
-				() -> SheetUtil.getCell(sheet, y, x));
+			getCellIfMergedRegion(sheet, x, y),
+			() -> SheetUtil.getCell(sheet, y, x));
 	}
 	// endregion
 
@@ -420,13 +424,25 @@ public class CellUtil {
 		// 修正在XSSFCell中未设置地址导致错位问题
 		comment.setAddress(cell.getAddress());
 		comment.setString(factory.createRichTextString(commentText));
-		if(null != commentAuthor){
+		if (null != commentAuthor) {
 			comment.setAuthor(commentAuthor);
 		}
 		cell.setCellComment(comment);
 	}
 
+	/**
+	 * 移除指定单元格
+	 *
+	 * @param cell 单元格
+	 */
+	public static void remove(final Cell cell) {
+		if (null != cell) {
+			cell.getRow().removeCell(cell);
+		}
+	}
+
 	// -------------------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 获取合并单元格，非合并单元格返回{@code null}<br>
 	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格

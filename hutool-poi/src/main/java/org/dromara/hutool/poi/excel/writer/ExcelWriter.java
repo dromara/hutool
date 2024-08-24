@@ -91,7 +91,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
-	 * 若写出到文件，需要调用{@link #flush(File)} 写出到文件
+	 * 若写出到文件，需要调用{@link #flush(File, boolean)} 写出到文件
 	 *
 	 * @param isXlsx 是否为xlsx格式
 	 * @since 3.2.1
@@ -112,7 +112,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
-	 * 若写出到文件，需要调用{@link #flush(File)} 写出到文件
+	 * 若写出到文件，需要调用{@link #flush(File, boolean)} 写出到文件
 	 *
 	 * @param isXlsx    是否为xlsx格式
 	 * @param sheetName sheet名，第一个sheet名并写出到此sheet，例如sheet1
@@ -152,7 +152,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 
 		if (!FileUtil.exists(targetFile)) {
 			this.targetFile = targetFile;
-		} else{
+		} else {
 			// 如果是已经存在的文件，则作为模板加载，此时不能写出到模板文件
 			// 初始化模板
 			this.templateContext = new TemplateContext(this.sheet);
@@ -549,6 +549,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	}
 
 	// region ----- merge
+
 	/**
 	 * 合并当前行的单元格
 	 *
@@ -640,6 +641,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	// endregion
 
 	// region ----- write
+
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加
@@ -1010,21 +1012,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 
 	// region ----- fill
 
-	public ExcelWriter fillRow(final Map<?, ?> rowMap){
-		rowMap.forEach((key, value)->{
-
-		});
+	/**
+	 * 填充模板行
+	 *
+	 * @param rowMap 行数据
+	 * @return this
+	 */
+	public ExcelWriter fillRow(final Map<?, ?> rowMap) {
+		rowMap.forEach((key, value) -> this.templateContext.fillAndPointToNext(StrUtil.toStringOrNull(key), rowMap));
 		return this;
 	}
-
-	public ExcelWriter fillCell(final String name, final Object value){
-		final Cell cell = this.templateContext.getCell(name);
-		if(null != cell){
-			CellUtil.setCellValue(cell, value, this.config.getCellEditor());
-		}
-		return this;
-	}
-
 	// endregion
 
 	// region ----- writeCol
@@ -1282,21 +1279,39 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @throws IORuntimeException IO异常
 	 */
 	public ExcelWriter flush() throws IORuntimeException {
-		return flush(this.targetFile);
+		return flush(false);
+	}
+
+	/**
+	 * 将Excel Workbook刷出到预定义的文件<br>
+	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>
+	 * 预定义文件可以通过{@link #setTargetFile(File)} 方法预定义，或者通过构造定义
+	 *
+	 * @param override 是否覆盖已有文件
+	 * @return this
+	 * @throws IORuntimeException IO异常
+	 */
+	public ExcelWriter flush(final boolean override) throws IORuntimeException {
+		Assert.notNull(this.targetFile, "[targetFile] is null, and you must call setTargetFile(File) first.");
+		return flush(this.targetFile, override);
 	}
 
 	/**
 	 * 将Excel Workbook刷出到文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}
 	 *
-	 * @param destFile 写出到的文件
+	 * @param targetFile 写出到的文件
+	 * @param override   是否覆盖已有文件
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.6
 	 */
-	public ExcelWriter flush(final File destFile) throws IORuntimeException {
-		Assert.notNull(destFile, "[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
-		return flush(FileUtil.getOutputStream(destFile), true);
+	public ExcelWriter flush(final File targetFile, final boolean override) throws IORuntimeException {
+		Assert.notNull(targetFile, "targetFile is null!");
+		if (FileUtil.exists(targetFile) && !override) {
+			throw new IORuntimeException("File to write exist: " + targetFile);
+		}
+		return flush(FileUtil.getOutputStream(targetFile), true);
 	}
 
 	/**
@@ -1321,6 +1336,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 */
 	public ExcelWriter flush(final OutputStream out, final boolean isCloseOut) throws IORuntimeException {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+
 		try {
 			this.workbook.write(out);
 			out.flush();

@@ -22,6 +22,6 @@ public class TemplateContextTest {
 		final ExcelWriter writer = ExcelUtil.getWriter("template.xlsx");
 		final TemplateContext templateContext = new TemplateContext(writer.getSheet());
 		Assertions.assertNotNull(templateContext.getCell("date"));
-		Assertions.assertNotNull(templateContext.getCell(".month"));
+		Assertions.assertNotNull(templateContext.getCell("month"));
 	}
 }

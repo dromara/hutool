@@ -143,7 +143,7 @@ public class ExcelWriteTest {
 		writer.writeRow(row2);
 
 		// 生成文件或导出Excel
-		writer.flush(FileUtil.file("d:/test/writeWithSheetTest.xlsx"));
+		writer.flush(FileUtil.file("d:/test/writeWithSheetTest.xlsx"), true);
 
 		writer.close();
 	}
@@ -868,7 +868,7 @@ public class ExcelWriteTest {
 
 		writer.writeImg(file, 0, 0, 5, 10);
 
-		writer.flush(new File("C:\\Users\\zsz\\Desktop\\2.xlsx"));
+		writer.flush(new File("C:\\Users\\zsz\\Desktop\\2.xlsx"), true);
 
 		writer.close();
 	}
