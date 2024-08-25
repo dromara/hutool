@@ -17,19 +17,16 @@
 package org.dromara.hutool.core.text.placeholder.template;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.bean.BeanDesc;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrPool;
 import org.dromara.hutool.core.text.placeholder.StrTemplate;
 import org.dromara.hutool.core.text.placeholder.segment.*;
 
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.*;
 
@@ -345,15 +342,6 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 		}
 		if (beanOrMap instanceof Map) {
 			return format((Map<String, ?>) beanOrMap);
-		} else if (BeanUtil.isReadableBean(beanOrMap.getClass())) {
-			final BeanDesc beanDesc = BeanUtil.getBeanDesc(beanOrMap.getClass());
-			return format(fieldName -> {
-				final Method getterMethod = beanDesc.getGetter(fieldName);
-				if (getterMethod == null) {
-					return null;
-				}
-				return LambdaUtil.buildGetter(getterMethod).apply(beanOrMap);
-			});
 		}
 		return format(fieldName -> BeanUtil.getProperty(beanOrMap, fieldName));
 	}
@@ -374,14 +362,14 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 	/**
 	 * 使用 占位变量名称 从 valueSupplier 中查询值来 替换 占位符
 	 *
-	 * @param valueSupplier 根据 占位变量名称 返回 值
+	 * @param valueProvider 根据 占位变量名称 返回 值
 	 * @return 格式化字符串
 	 */
-	public String format(final Function<String, ?> valueSupplier) {
-		if (valueSupplier == null) {
+	public String format(final Function<String, ?> valueProvider) {
+		if (valueProvider == null) {
 			return getTemplate();
 		}
-		return formatBySegment(segment -> valueSupplier.apply(segment.getPlaceholder()));
+		return formatBySegment(segment -> valueProvider.apply(segment.getPlaceholder()));
 	}
 
 	/**

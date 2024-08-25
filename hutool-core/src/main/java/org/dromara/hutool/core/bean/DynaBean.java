@@ -94,6 +94,17 @@ public class DynaBean implements Cloneable, Serializable {
 	}
 
 	/**
+	 * 获得path表达式对应的值
+	 *
+	 * @param expression path表达式
+	 * @param <T>        属性值类型
+	 * @return 值
+	 */
+	public <T> T getProperty(final String expression) {
+		return BeanUtil.getProperty(bean, expression);
+	}
+
+	/**
 	 * 获得字段对应值
 	 *
 	 * @param <T>       属性值类型
@@ -159,6 +170,18 @@ public class DynaBean implements Cloneable, Serializable {
 		} catch (final Exception e) {
 			return null;
 		}
+	}
+
+	/**
+	 * 设置属性值
+	 *
+	 * @param expression path表达式
+	 * @param value      值
+	 * @return this
+	 */
+	public DynaBean setProperty(final String expression, final Object value) {
+		BeanUtil.setProperty(bean, expression, value);
+		return this;
 	}
 
 	/**

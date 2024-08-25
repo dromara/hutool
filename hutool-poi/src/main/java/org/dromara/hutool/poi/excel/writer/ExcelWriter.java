@@ -847,12 +847,15 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	public ExcelWriter writeHeadRow(final Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		this.headLocationCache = new SafeConcurrentHashMap<>();
-		final Row row = this.sheet.createRow(this.currentRow.getAndIncrement());
+
+		final int rowNum = this.currentRow.getAndIncrement();
+		final Row row = this.config.insertRow ?  this.sheet.createRow(rowNum) : RowUtil.getOrCreateRow(this.sheet, rowNum);
+
 		final CellEditor cellEditor = this.config.getCellEditor();
 		int i = 0;
 		Cell cell;
 		for (final Object value : rowData) {
-			cell = row.createCell(i);
+			cell = CellUtil.getOrCreateCell(row, i);
 			CellUtil.setCellValue(cell, value, this.styleSet, true, cellEditor);
 			this.headLocationCache.put(StrUtil.toString(value), i);
 			i++;
@@ -946,6 +949,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	}
 
 	/**
+	 * 填充非列表模板变量（一次性变量）
+	 *
+	 * @param rowMap    行数据
+	 * @return this
+	 */
+	public ExcelWriter fillOnce(final Map<?, ?> rowMap) {
+		rowMap.forEach((key, value) -> this.templateContext.fill(StrUtil.toStringOrNull(key), rowMap, false));
+		return this;
+	}
+
+	/**
 	 * 将一个Map写入到Excel，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values<br>
 	 * 如果rowMap为空（包括null），则写出空行
 	 *
@@ -961,11 +975,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 			return passCurrentRow();
 		}
 
+		// 模板写出
+		if (null != this.templateContext) {
+			fillRow(rowMap, this.config.insertRow);
+			return this;
+		}
+
 		final Table<?, ?, ?> aliasTable = this.config.aliasTable(rowMap);
 		if (isWriteKeyAsHead) {
 			// 写出标题行，并记录标题别名和列号的关系
 			writeHeadRow(aliasTable.columnKeys());
-			// 记录原数据key对应列号
+			// 记录原数据key和别名对应列号
 			int i = 0;
 			for (final Object key : aliasTable.rowKeySet()) {
 				this.headLocationCache.putIfAbsent(StrUtil.toString(key), i);
@@ -1005,21 +1025,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 */
 	public ExcelWriter writeRow(final Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false, this.config.getCellEditor());
-		return this;
-	}
-	// endregion
 
-	// region ----- fill
-
-	/**
-	 * 填充模板行
-	 *
-	 * @param rowMap 行数据
-	 * @return this
-	 */
-	public ExcelWriter fillRow(final Map<?, ?> rowMap) {
-		rowMap.forEach((key, value) -> this.templateContext.fillAndPointToNext(StrUtil.toStringOrNull(key), rowMap));
+		final int rowNum = this.currentRow.getAndIncrement();
+		final Row row = this.config.insertRow ?  this.sheet.createRow(rowNum) : RowUtil.getOrCreateRow(this.sheet, rowNum);
+		RowUtil.writeRow(row, rowData, this.styleSet, false, this.config.getCellEditor());
 		return this;
 	}
 	// endregion
@@ -1373,5 +1382,32 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 
 		// 清空对象
 		this.styleSet = null;
+	}
+
+	/**
+	 * 填充模板行，用于列表填充
+	 *
+	 * @param rowMap    行数据
+	 * @param insertRow 是否插入行，如果为{@code true}，则已有行下移，否则利用已有行
+	 */
+	private void fillRow(final Map<?, ?> rowMap, final boolean insertRow) {
+		if(insertRow){
+			// 当前填充行的模板行以下全部下移
+			final int bottomRowIndex = this.templateContext.getBottomRowIndex(rowMap);
+			if(bottomRowIndex < 0){
+				// 无可填充行
+				return;
+			}
+			if(bottomRowIndex != 0){
+				final int lastRowNum = this.sheet.getLastRowNum();
+				if(bottomRowIndex <= lastRowNum){
+					// 填充行底部需有数据，无数据跳过
+					// 虚拟行的行号就是需要填充的行，这行的已有数据整体下移
+					this.sheet.shiftRows(bottomRowIndex, this.sheet.getLastRowNum(), 1);
+				}
+			}
+		}
+
+		rowMap.forEach((key, value) -> this.templateContext.fill(StrUtil.toStringOrNull(key), rowMap, true));
 	}
 }

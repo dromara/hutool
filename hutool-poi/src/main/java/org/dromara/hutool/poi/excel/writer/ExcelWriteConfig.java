@@ -42,6 +42,11 @@ public class ExcelWriteConfig extends ExcelConfig {
 	 */
 	protected boolean onlyAlias;
 	/**
+	 * 是否强制插入行<br>
+	 * 如果为{@code true}，则写入行以下的已存在行下移，{@code false}则利用填充已有行，不存在再创建行
+	 */
+	protected boolean insertRow;
+	/**
 	 * 标题顺序比较器
 	 */
 	protected Comparator<String> aliasComparator;
@@ -73,6 +78,17 @@ public class ExcelWriteConfig extends ExcelConfig {
 	 */
 	public ExcelWriteConfig setOnlyAlias(final boolean isOnlyAlias) {
 		this.onlyAlias = isOnlyAlias;
+		return this;
+	}
+
+	/**
+	 * 设置是否插入行，如果为true，则写入行以下的已存在行下移，false则利用填充已有行，不存在时创建行
+	 *
+	 * @param insertRow 是否插入行
+	 * @return this
+	 */
+	public ExcelWriteConfig setInsertRow(final boolean insertRow) {
+		this.insertRow = insertRow;
 		return this;
 	}
 

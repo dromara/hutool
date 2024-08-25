@@ -346,11 +346,7 @@ public abstract class StrTemplate {
 			// 根据 占位符 返回 需要序列化的值
 			final Object value = valueSupplier.apply(segment);
 			if (value != null) {
-				if (value instanceof String) {
-					return (String) value;
-				} else {
-					return StrUtil.utf8Str(value);
-				}
+				return StrUtil.utf8Str(value);
 			} else {
 				// 处理null值
 				return formatNullValue(segment);

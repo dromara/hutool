@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.regex.ReUtil;
+import org.dromara.hutool.core.text.StrPool;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.poi.excel.SheetUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
@@ -39,6 +40,9 @@ import java.util.regex.Pattern;
  * @since 6.0.0
  */
 public class TemplateContext {
+
+	private static final String VAR_PREFIX = StrPool.DELIM_START;
+	private static final String VAR_SUFFIX = StrPool.DELIM_END;
 
 	/**
 	 * 变量正则
@@ -75,14 +79,43 @@ public class TemplateContext {
 	}
 
 	/**
-	 * 填充变量名name指向的单元格，并将变量指向下一列
+	 * 获取当前替换的数据行对应变量的底部索引<br>
+	 * 此方法用户获取填充行，以便下移填充行后的行<br>
+	 * <ul>
+	 *     <li>如果为实体单元格，直接填充，无需下移，返回0</li>
+	 *     <li>如果为{@link VirtualCell}，返回最底部虚拟单元格各行号</li>
+	 * </ul>
 	 *
-	 * @param name  变量名
-	 * @param rowData 一行数据的键值对
+	 * @param rowData 填充数据
+	 * @return 最大行索引，-1表示无数据填充，0表示无需下移
+	 */
+	public int getBottomRowIndex(final Map<?, ?> rowData) {
+		int bottomRowIndex = -1;
+		Cell cell;
+		for (final Object key : rowData.keySet()) {
+			cell = this.varMap.get(StrUtil.toStringOrNull(key));
+			if (null != cell) {
+				if(cell instanceof VirtualCell){
+					bottomRowIndex = Math.max(bottomRowIndex, cell.getRowIndex());
+				} else{
+					// 实体单元格，直接填充，无需下移
+					bottomRowIndex = 0;
+				}
+			}
+		}
+		return bottomRowIndex;
+	}
+
+	/**
+	 * 填充变量名name指向的单元格
+	 *
+	 * @param name      变量名
+	 * @param rowData   一行数据的键值对
+	 * @param isListVar 是否为列表填充，列表填充会自动指向下一列，否则填充结束后删除变量
 	 * @since 6.0.0
 	 */
-	public void fillAndPointToNext(final String name, final Map<?, ?> rowData) {
-		Cell cell = varMap.get(name);
+	public void fill(final String name, final Map<?, ?> rowData, final boolean isListVar) {
+		final Cell cell = varMap.get(name);
 		if (null == cell) {
 			// 没有对应变量占位
 			return;
@@ -90,27 +123,49 @@ public class TemplateContext {
 
 		final String templateStr = cell.getStringCellValue();
 
-		// 指向下一列的单元格
-		final Cell next = new VirtualCell(cell, cell.getColumnIndex(), cell.getRowIndex() + 1);
-		next.setCellValue(templateStr);
-		varMap.put(name, next);
+		if (isListVar) {
+			// 指向下一列的单元格
+			final Cell next = new VirtualCell(cell, cell.getColumnIndex(), cell.getRowIndex() + 1);
+			next.setCellValue(templateStr);
+			varMap.put(name, next);
+		} else {
+			// 非列表，一次性填充，即变量填充后，和此单元格去掉关联
+			varMap.remove(name);
+		}
 
-		if(cell instanceof VirtualCell){
+		fill(cell, name, templateStr, rowData);
+	}
+
+	/**
+	 * 填充数据
+	 *
+	 * @param cell        单元格，非模板中变量所在单元格则为{@link VirtualCell}
+	 * @param name        变量名
+	 * @param templateStr 模板字符串
+	 * @param rowData     填充的数据
+	 */
+	private void fill(Cell cell, final String name, final String templateStr, final Map<?, ?> rowData) {
+		if (cell instanceof VirtualCell) {
 			// 虚拟单元格，转换为实际单元格
-			final Cell newCell = CellUtil.getCell(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex(), true);
+			final Cell newCell;
+
+			newCell = CellUtil.getCell(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex(), true);
 			Assert.notNull(newCell, "Can not get or create cell at {},{}", cell.getColumnIndex(), cell.getRowIndex());
+
 			newCell.setCellStyle(cell.getCellStyle());
 			cell = newCell;
 		}
 
+		final Object cellValue;
 		// 模板替换
-		if(StrUtil.equals(name, StrUtil.unWrap(templateStr, "{", "}"))){
+		if (StrUtil.equals(name, StrUtil.unWrap(templateStr, VAR_PREFIX, VAR_SUFFIX))) {
 			// 一个单元格只有一个变量
-			CellUtil.setCellValue(cell, rowData.get(name));
+			cellValue = rowData.get(name);
 		} else {
-			// 模板中存在多个变量或模板填充
-			CellUtil.setCellValue(cell, StrUtil.format(templateStr, rowData));
+			// 模板中存在多个变量或模板填充，直接赋值为String
+			cellValue = StrUtil.format(templateStr, rowData);
 		}
+		CellUtil.setCellValue(cell, cellValue);
 	}
 
 	/**
@@ -134,7 +189,7 @@ public class TemplateContext {
 				}
 
 				// 替换转义的变量
-				final String str = ReUtil.replaceAll(cellValue, ESCAPE_VAR_PATTERN, (matcher) -> "{" + matcher.group(1) + "}");
+				final String str = ReUtil.replaceAll(cellValue, ESCAPE_VAR_PATTERN, (matcher) -> VAR_PREFIX + matcher.group(1) + VAR_SUFFIX);
 				if (!StrUtil.equals(cellValue, str)) {
 					cell.setCellValue(str);
 				}
