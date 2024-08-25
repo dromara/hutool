@@ -69,7 +69,9 @@ public class TripleConverter implements Converter {
 	public Triple<?, ?, ?> convert(final Type leftType, final Type middleType, final Type rightType, final Object value)
 		throws ConvertException {
 		Map map = null;
-		if (BeanUtil.isReadableBean(value.getClass())) {
+		if(value instanceof Map){
+			map = (Map) value;
+		}else if (BeanUtil.isReadableBean(value.getClass())) {
 			// 一次性只读场景，包装为Map效率更高
 			map = BeanUtil.toBeanMap(value);
 		}
