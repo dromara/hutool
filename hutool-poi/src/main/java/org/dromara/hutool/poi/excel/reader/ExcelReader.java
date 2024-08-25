@@ -233,7 +233,7 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 * @since 5.3.8
 	 */
 	public void read(final int startRowIndex, final int endRowIndex, final SerBiConsumer<Cell, Object> cellHandler) {
-		checkNotClosed();
+		checkClosed();
 
 		final WalkSheetReader reader = new WalkSheetReader(startRowIndex, endRowIndex, cellHandler);
 		reader.setExcelConfig(this.config);
@@ -315,7 +315,7 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 * @since 5.4.4
 	 */
 	public <T> T read(final SheetReader<T> sheetReader) {
-		checkNotClosed();
+		checkClosed();
 		return Assert.notNull(sheetReader).read(this.sheet);
 	}
 
@@ -393,13 +393,6 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 */
 	private List<Object> readRow(final Row row) {
 		return RowUtil.readRow(row, this.config.getCellEditor());
-	}
-
-	/**
-	 * 检查是否未关闭状态
-	 */
-	private void checkNotClosed() {
-		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
 	}
 
 	/**

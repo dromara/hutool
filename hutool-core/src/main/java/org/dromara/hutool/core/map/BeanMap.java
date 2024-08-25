@@ -88,6 +88,16 @@ public class BeanMap implements Map<String, Object> {
 		return null;
 	}
 
+	/**
+	 * 获取Path表达式对应的值
+	 *
+	 * @param expression Path表达式
+	 * @return 值
+	 */
+	public Object getProperty(final String expression) {
+		return BeanUtil.getProperty(bean, expression);
+	}
+
 	@Override
 	public Object put(final String key, final Object value) {
 		final PropDesc propDesc = this.propDescMap.get(key);
@@ -97,6 +107,16 @@ public class BeanMap implements Map<String, Object> {
 			return oldValue;
 		}
 		return null;
+	}
+
+	/**
+	 * 设置Path表达式对应的值
+	 *
+	 * @param expression Path表达式
+	 * @param value      新值
+	 */
+	public void putProperty(final String expression, final Object value) {
+		BeanUtil.setProperty(bean, expression, value);
 	}
 
 	@Override

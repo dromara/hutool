@@ -19,6 +19,7 @@ package org.dromara.hutool.http.meta;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.net.url.UrlDecoder;
+import org.dromara.hutool.core.net.url.UrlEncoder;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -53,6 +54,22 @@ public class HttpHeaderUtil {
 
 		final CaseInsensitiveMap<String, List<String>> headersIgnoreCase = new CaseInsensitiveMap<>(headers);
 		return headersIgnoreCase.get(name.trim());
+	}
+
+	/**
+	 * 生成Content-Disposition头，用于下载文件<br>
+	 * 格式为：
+	 * <pre>{@code
+	 *     attachment;filename="example.txt";filename*=UTF-8''example.txt
+	 * }</pre>
+	 *
+	 * @param fileName 文件名
+	 * @param charset  编码
+	 * @return Content-Disposition头
+	 */
+	public static String createAttachmentDisposition(final String fileName, final Charset charset) {
+		final String encodeText = UrlEncoder.encodeAll(fileName, charset);
+		return StrUtil.format("attachment;filename=\"{}\";filename*={}''{}", encodeText, charset.name(), encodeText);
 	}
 
 	/**

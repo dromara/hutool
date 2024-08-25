@@ -50,11 +50,7 @@ public class SheetUtil {
 
 		Sheet sheet;
 		if (null == sheetName) {
-			sheet = book.getSheetAt(0);
-			if (null == sheet) {
-				// 工作簿中无sheet，创建默认
-				sheet = book.createSheet();
-			}
+			sheet = getOrCreateSheet(book, 0);
 		} else {
 			sheet = book.getSheet(sheetName);
 			if (null == sheet) {

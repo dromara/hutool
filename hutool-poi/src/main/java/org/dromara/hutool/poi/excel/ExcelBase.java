@@ -22,18 +22,13 @@ import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.net.url.UrlEncoder;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
 
 import java.io.Closeable;
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,16 +105,7 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 		return this.workbook;
 	}
 
-	/**
-	 * 创建字体
-	 *
-	 * @return 字体
-	 * @since 4.1.0
-	 */
-	public Font createFont() {
-		return getWorkbook().createFont();
-	}
-
+	// region ----- sheet ops
 	/**
 	 * 返回工作簿表格数
 	 *
@@ -246,7 +232,9 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 		}
 		return (T) this;
 	}
+	// endregion
 
+	// region ----- cell ops
 	/**
 	 * 获取指定坐标单元格，单元格不存在时返回{@code null}
 	 *
@@ -320,8 +308,9 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 	public Cell getCell(final int x, final int y, final boolean isCreateIfNotExist) {
 		return CellUtil.getCell(this.sheet, x, y, isCreateIfNotExist);
 	}
+	// endregion
 
-
+	// region ----- row ops
 	/**
 	 * 获取或者创建行
 	 *
@@ -333,6 +322,36 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 		return RowUtil.getOrCreateRow(this.sheet, y);
 	}
 
+	/**
+	 * 获取总行数，计算方法为：
+	 *
+	 * <pre>
+	 * 最后一行序号 + 1
+	 * </pre>
+	 *
+	 * @return 行数
+	 * @since 4.5.4
+	 */
+	public int getRowCount() {
+		return this.sheet.getLastRowNum() + 1;
+	}
+
+	/**
+	 * 获取有记录的行数，计算方法为：
+	 *
+	 * <pre>
+	 * 最后一行序号 - 第一行序号 + 1
+	 * </pre>
+	 *
+	 * @return 行数
+	 * @since 4.5.4
+	 */
+	public int getPhysicalRowCount() {
+		return this.sheet.getPhysicalNumberOfRows();
+	}
+	// endregion
+
+	// region ----- style ops
 	/**
 	 * 为指定单元格获取或者创建样式，返回样式后可以设置样式内容
 	 *
@@ -449,6 +468,18 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 	}
 
 	/**
+	 * 创建字体
+	 *
+	 * @return 字体
+	 * @since 4.1.0
+	 */
+	public Font createFont() {
+		return getWorkbook().createFont();
+	}
+	// endregion
+
+	// region ----- hyperlink ops
+	/**
 	 * 创建 {@link Hyperlink}，默认内容（标签为链接地址本身）
 	 *
 	 * @param type    链接类型
@@ -475,34 +506,7 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 		hyperlink.setLabel(label);
 		return hyperlink;
 	}
-
-	/**
-	 * 获取总行数，计算方法为：
-	 *
-	 * <pre>
-	 * 最后一行序号 + 1
-	 * </pre>
-	 *
-	 * @return 行数
-	 * @since 4.5.4
-	 */
-	public int getRowCount() {
-		return this.sheet.getLastRowNum() + 1;
-	}
-
-	/**
-	 * 获取有记录的行数，计算方法为：
-	 *
-	 * <pre>
-	 * 最后一行序号 - 第一行序号 + 1
-	 * </pre>
-	 *
-	 * @return 行数
-	 * @since 4.5.4
-	 */
-	public int getPhysicalRowCount() {
-		return this.sheet.getPhysicalNumberOfRows();
-	}
+	// endregion
 
 	/**
 	 * 获取第一行总列数，计算方法为：
@@ -561,31 +565,6 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 	}
 
 	/**
-	 * 获取Content-Disposition头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
-	 *
-	 * <pre>
-	 * response.setHeader("Content-Disposition", excelWriter.getDisposition("test.xlsx", CharsetUtil.CHARSET_UTF_8));
-	 * </pre>
-	 *
-	 * @param fileName 文件名，如果文件名没有扩展名，会自动按照生成Excel类型补齐扩展名，如果提供空，使用随机UUID
-	 * @param charset  编码，null则使用默认UTF-8编码
-	 * @return Content-Disposition值
-	 */
-	public String getDisposition(String fileName, Charset charset) {
-		if (null == charset) {
-			charset = CharsetUtil.UTF_8;
-		}
-
-		if (StrUtil.isBlank(fileName)) {
-			// 未提供文件名使用随机UUID作为文件名
-			fileName = IdUtil.fastSimpleUUID();
-		}
-
-		fileName = StrUtil.addSuffixIfNot(UrlEncoder.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
-		return StrUtil.format("attachment; filename=\"{}\"", fileName);
-	}
-
-	/**
 	 * 关闭工作簿<br>
 	 * 如果用户设定了目标文件，先写出目标文件后给关闭工作簿
 	 */
@@ -595,5 +574,12 @@ public class ExcelBase<T extends ExcelBase<T, C>, C extends ExcelConfig> impleme
 		this.sheet = null;
 		this.workbook = null;
 		this.isClosed = true;
+	}
+
+	/**
+	 * 校验Excel是否已经关闭
+	 */
+	protected void checkClosed() {
+		Assert.isFalse(this.isClosed, "Excel has been closed!");
 	}
 }

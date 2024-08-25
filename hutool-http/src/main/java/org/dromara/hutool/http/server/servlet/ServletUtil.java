@@ -16,52 +16,38 @@
 
 package org.dromara.hutool.http.server.servlet;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.net.NetUtil;
-import org.dromara.hutool.core.net.url.UrlEncoder;
-import org.dromara.hutool.http.multipart.MultipartFormData;
-import org.dromara.hutool.http.multipart.UploadSetting;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-
+import org.dromara.hutool.http.meta.HeaderName;
+import org.dromara.hutool.http.meta.HttpHeaderUtil;
 import org.dromara.hutool.http.meta.Method;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.dromara.hutool.http.multipart.MultipartFormData;
+import org.dromara.hutool.http.multipart.UploadSetting;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Servlet相关工具类封装
@@ -610,10 +596,8 @@ public class ServletUtil {
 	 */
 	public static void write(final HttpServletResponse response, final InputStream in, final String contentType, final String fileName) {
 		final String charset = ObjUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.NAME_UTF_8);
-		final String encodeText = UrlEncoder.encodeAll(fileName, CharsetUtil.charset(charset));
-		response.setHeader("Content-Disposition",
-				StrUtil.format("attachment;filename=\"{}\";filename*={}''{}", encodeText, charset, encodeText));
 		response.setContentType(contentType);
+		response.setHeader(HeaderName.CONTENT_DISPOSITION.getValue(), HttpHeaderUtil.createAttachmentDisposition(fileName, CharsetUtil.charset(charset)));
 		write(response, in);
 	}
 

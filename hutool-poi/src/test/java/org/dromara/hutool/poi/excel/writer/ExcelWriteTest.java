@@ -23,14 +23,14 @@ import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.*;
+import org.dromara.hutool.poi.excel.ExcelUtil;
+import org.dromara.hutool.poi.excel.OrderExcel;
+import org.dromara.hutool.poi.excel.TestBean;
 import org.dromara.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
 import org.dromara.hutool.poi.excel.reader.ExcelReader;
 import org.dromara.hutool.poi.excel.style.DefaultStyleSet;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -871,13 +871,6 @@ public class ExcelWriteTest {
 		writer.flush(new File("C:\\Users\\zsz\\Desktop\\2.xlsx"), true);
 
 		writer.close();
-	}
-
-	@Test
-	public void getDispositionTest() {
-		final ExcelWriter writer = ExcelUtil.getWriter(true);
-		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.UTF_8);
-		Assertions.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
 	}
 
 	@Test
