@@ -9,21 +9,15 @@ import java.util.Map;
 
 public class TemplateWriterTest {
 
-	@Test
-	void insertTest() {
-		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/template.xlsx");
-		writer.getConfig().setInsertRow(true);
-		writer.setCurrentRow(3);
-		writer.getSheet().shiftRows(4, 4, 10);
+	private static final String targetDir = "d:/test/templateWriter/";
 
-		writer.flush(FileUtil.file("d:/test/templateInsertResult.xlsx"), true);
-		writer.close();
-	}
-
+	/**
+	 * 正常数据填充
+	 */
 	@Test
-	void writeRowTest() {
-		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/template.xlsx");
-		writer.getConfig().setInsertRow(true);
+	void writeTest() {
+		final ExcelWriter writer = ExcelUtil.getWriter("template.xlsx");
+		writer.getConfig().setInsertRow(false);
 
 		// 单个替换的变量
 		writer.fillOnce(MapUtil
@@ -35,14 +29,17 @@ public class TemplateWriterTest {
 			writer.writeRow(createRow(), false);
 		}
 
-		writer.flush(FileUtil.file("d:/test/templateResult.xlsx"), true);
+		writer.flush(FileUtil.file(targetDir + "templateResult.xlsx"), true);
 		writer.close();
 	}
 
+	/**
+	 * 带有页脚的数据填充，通过插入方式完成，页脚下移
+	 */
 	@Test
-	void writeRowWithFooterTest() {
-		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/templateWithFooter.xlsx");
-		writer.getConfig().setInsertRow(true);
+	void writeWithFooterTest() {
+		final ExcelWriter writer = ExcelUtil.getWriter("templateWithFooter.xlsx");
+		//writer.getConfig().setInsertRow(true);
 
 		// 单个替换的变量
 		writer.fillOnce(MapUtil
@@ -54,7 +51,29 @@ public class TemplateWriterTest {
 			writer.writeRow(createRow(), false);
 		}
 
-		writer.flush(FileUtil.file("d:/test/templateWithFooterResult.xlsx"), true);
+		writer.flush(FileUtil.file(targetDir + "templateWithFooterResult.xlsx"), true);
+		writer.close();
+	}
+
+	/**
+	 * 错位数据，即变量不在一行上
+	 */
+	@Test
+	void writeNoneOneLineTest() {
+		final ExcelWriter writer = ExcelUtil.getWriter(targetDir + "templateWithFooterNoneOneLine.xlsx");
+		//writer.getConfig().setInsertRow(true);
+
+		// 单个替换的变量
+		writer.fillOnce(MapUtil
+			.builder("date", (Object)"2024-01-01")
+			.build());
+
+		// 列表替换
+		for (int i = 0; i < 10; i++) {
+			writer.writeRow(createRow(), false);
+		}
+
+		writer.flush(FileUtil.file(targetDir + "templateWithFooterResult.xlsx"), true);
 		writer.close();
 	}
 

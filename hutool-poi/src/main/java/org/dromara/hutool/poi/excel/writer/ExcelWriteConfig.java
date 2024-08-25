@@ -45,7 +45,7 @@ public class ExcelWriteConfig extends ExcelConfig {
 	 * 是否强制插入行<br>
 	 * 如果为{@code true}，则写入行以下的已存在行下移，{@code false}则利用填充已有行，不存在再创建行
 	 */
-	protected boolean insertRow;
+	protected boolean insertRow = true;
 	/**
 	 * 标题顺序比较器
 	 */
