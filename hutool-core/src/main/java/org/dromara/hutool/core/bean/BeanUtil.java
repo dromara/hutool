@@ -25,6 +25,7 @@ import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.convert.impl.RecordConverter;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.map.BeanMap;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.map.MapUtil;
@@ -296,6 +297,16 @@ public class BeanUtil {
 	// endregion
 
 	// region ----- beanToMap
+
+	/**
+	 * 将Bean包装为Map形式
+	 * @param bean Bean
+	 * @return {@link BeanMap}
+	 * @since 6.0.0
+	 */
+	public static Map<String, Object> toBeanMap(final Object bean) {
+		return BeanMap.of(bean);
+	}
 
 	/**
 	 * 将bean的部分属性转换成map<br>

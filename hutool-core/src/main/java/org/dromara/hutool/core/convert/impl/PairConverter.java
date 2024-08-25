@@ -84,7 +84,8 @@ public class PairConverter implements Converter {
 			final CharSequence str = (CharSequence) value;
 			map = strToMap(str);
 		} else if (BeanUtil.isReadableBean(value.getClass())) {
-			map = BeanUtil.beanToMap(value);
+			// 一次性只读场景，包装为Map效率更高
+			map = BeanUtil.toBeanMap(value);
 		}
 
 		if (null != map) {
@@ -123,13 +124,14 @@ public class PairConverter implements Converter {
 	@SuppressWarnings("rawtypes")
 	private static Pair<?, ?> mapToPair(final Type keyType, final Type valueType, final Map map) {
 
-		Object left = null;
-		Object right = null;
+		final Object left;
+		final Object right;
 		if (1 == map.size()) {
 			final Map.Entry entry = (Map.Entry) map.entrySet().iterator().next();
 			left = entry.getKey();
 			right = entry.getValue();
-		} else if (2 == map.size()) {
+		} else {
+			// 忽略Map中其它属性
 			left = map.get("left");
 			right = map.get("right");
 		}

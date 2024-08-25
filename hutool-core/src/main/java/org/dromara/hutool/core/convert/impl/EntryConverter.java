@@ -84,16 +84,17 @@ public class EntryConverter implements MatcherConverter, Serializable {
 		if (value instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) value;
 			map = MapUtil.of(entry.getKey(), entry.getValue());
-		}else if (value instanceof Pair) {
+		} else if (value instanceof Pair) {
 			final Pair entry = (Pair<?, ?>) value;
 			map = MapUtil.of(entry.getLeft(), entry.getRight());
-		}else if (value instanceof Map) {
+		} else if (value instanceof Map) {
 			map = (Map) value;
 		} else if (value instanceof CharSequence) {
 			final CharSequence str = (CharSequence) value;
 			map = strToMap(str);
 		} else if (BeanUtil.isWritableBean(value.getClass())) {
-			map = BeanUtil.beanToMap(value);
+			// 一次性只读场景，包装为Map效率更高
+			map = BeanUtil.toBeanMap(value);
 		}
 
 		if (null != map) {
@@ -133,13 +134,14 @@ public class EntryConverter implements MatcherConverter, Serializable {
 	@SuppressWarnings("rawtypes")
 	private static Map.Entry<?, ?> mapToEntry(final Type targetType, final Type keyType, final Type valueType, final Map map) {
 
-		Object key = null;
-		Object value = null;
+		final Object key;
+		final Object value;
 		if (1 == map.size()) {
 			final Map.Entry entry = (Map.Entry) map.entrySet().iterator().next();
 			key = entry.getKey();
 			value = entry.getValue();
-		} else if (2 == map.size()) {
+		} else {
+			// 忽略Map中其它属性
 			key = map.get("key");
 			value = map.get("value");
 		}

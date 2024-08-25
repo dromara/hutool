@@ -70,7 +70,8 @@ public class TripleConverter implements Converter {
 		throws ConvertException {
 		Map map = null;
 		if (BeanUtil.isReadableBean(value.getClass())) {
-			map = BeanUtil.beanToMap(value);
+			// 一次性只读场景，包装为Map效率更高
+			map = BeanUtil.toBeanMap(value);
 		}
 
 		if (null != map) {

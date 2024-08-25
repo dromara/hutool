@@ -246,7 +246,8 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 */
 	public <T> Dict parseBean(final T bean) {
 		Assert.notNull(bean, "Bean must not be null");
-		this.putAll(BeanUtil.beanToMap(bean));
+		// 一次性使用，避免先生成Map，再复制造成空间浪费
+		this.putAll(BeanUtil.toBeanMap(bean));
 		return this;
 	}
 
