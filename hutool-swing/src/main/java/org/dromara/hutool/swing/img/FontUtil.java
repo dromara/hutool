@@ -19,10 +19,7 @@ package org.dromara.hutool.swing.img;
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.FontMetrics;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -37,6 +34,16 @@ import java.io.InputStream;
  * @since 5.3.6
  */
 public class FontUtil {
+
+	/**
+	 * 获得系统中支持的所有字体
+	 *
+	 * @return 字体数组
+	 */
+	public static Font[] getAllFonts() {
+		final GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		return e.getAllFonts();
+	}
 
 	/**
 	 * 创建默认字体
@@ -116,7 +123,7 @@ public class FontUtil {
 	 * 获得字体对应字符串的长宽信息
 	 *
 	 * @param metrics {@link FontMetrics}
-	 * @param str  字符串
+	 * @param str     字符串
 	 * @return 长宽信息
 	 */
 	public static Dimension getDimension(final FontMetrics metrics, final String str) {
