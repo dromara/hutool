@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.core.text;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.dromara.hutool.core.text.placeholder.StrFormatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -61,5 +63,21 @@ public class StrFormatterTest {
 		//转义\
 		final String result3 = StrFormatter.formatWith("this is \\\\$$$ for $$$", "$$$", "a", "b");
 		Assertions.assertEquals("this is \\a for b", result3);
+	}
+
+	@Test
+	void formatByBeanTest() {
+		final User user = new User("张三", 18, true);
+		final String s = StrFormatter.formatByBean("User name: {name}, age: {age}, gender: {gender}", user, true);
+
+		Assertions.assertEquals("User name: 张三, age: 18, gender: true", s);
+	}
+
+	@Data
+	@AllArgsConstructor
+	private static class User{
+		private String name;
+		private int age;
+		private boolean gender;
 	}
 }

@@ -22,6 +22,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrPool;
 import org.dromara.hutool.core.text.placeholder.StrTemplate;
@@ -353,7 +354,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 	 * @return 格式化字符串
 	 */
 	public String format(final Map<String, ?> map) {
-		if (map == null) {
+		if (MapUtil.isEmpty(map)) {
 			return getTemplate();
 		}
 		return format(map::get, map::containsKey);

@@ -43,10 +43,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.text.MessageFormat;
 import java.text.Normalizer;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -2484,6 +2481,46 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static String indexedFormat(final CharSequence pattern, final Object... arguments) {
 		return MessageFormat.format(pattern.toString(), arguments);
+	}
+
+	/**
+	 * 格式化文本，使用 {varName} 占位<br>
+	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
+	 *
+	 * @param template 文本模板，被替换的部分用 {key} 表示
+	 * @param map      参数值对
+	 * @return 格式化后的文本
+	 */
+	public static String formatByMap(final CharSequence template, final Map<?, ?> map) {
+		return formatByMap(template, map, true);
+	}
+
+	/**
+	 * 格式化文本，使用 {varName} 占位<br>
+	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
+	 *
+	 * @param template   文本模板，被替换的部分用 {key} 表示
+	 * @param map        参数值对
+	 * @param ignoreNull 是否忽略 {@code null} 值，忽略则 {@code null} 值对应的变量不被替换，否则替换为""
+	 * @return 格式化后的文本
+	 * @since 5.4.3
+	 */
+	public static String formatByMap(final CharSequence template, final Map<?, ?> map, final boolean ignoreNull) {
+		return StrFormatter.formatByBean(template, map, ignoreNull);
+	}
+
+	/**
+	 * 格式化文本，使用 {varName} 占位<br>
+	 * bean = User:{a: "aValue", b: "bValue"} format("{a} and {b}", bean) ---=》 aValue and bValue
+	 *
+	 * @param template   文本模板，被替换的部分用 {key} 表示
+	 * @param bean       参数Bean
+	 * @param ignoreNull 是否忽略 {@code null} 值，忽略则 {@code null} 值对应的变量不被替换，否则替换为""
+	 * @return 格式化后的文本
+	 * @since 5.4.3
+	 */
+	public static String formatByBean(final CharSequence template, final Object bean, final boolean ignoreNull) {
+		return StrFormatter.formatByBean(template, bean, ignoreNull);
 	}
 	// endregion
 

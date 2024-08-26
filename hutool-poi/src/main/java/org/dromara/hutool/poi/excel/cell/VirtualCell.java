@@ -41,6 +41,7 @@ public class VirtualCell extends CellBase {
 	private CellType cellType;
 	private Object value;
 	private CellStyle style;
+	private Comment comment;
 
 	/**
 	 * 构造
@@ -57,7 +58,20 @@ public class VirtualCell extends CellBase {
 		this.comment = cell.getCellComment();
 	}
 
-	private Comment comment;
+	/**
+	 * 构造
+	 *
+	 * @param cell  参照单元格
+	 * @param x     新的列号，从0开始
+	 * @param y     新的行号，从0开始
+	 * @param value 新值
+	 */
+	public VirtualCell(final Cell cell, final int x, final int y, final Object value) {
+		this(cell.getRow(), x, y);
+		this.style = cell.getCellStyle();
+		this.comment = cell.getCellComment();
+		CellUtil.setCellValue(this, value);
+	}
 
 	/**
 	 * 构造
@@ -91,31 +105,37 @@ public class VirtualCell extends CellBase {
 
 	@Override
 	protected void setCellValueImpl(final double value) {
+		this.cellType = CellType.NUMERIC;
 		this.value = value;
 	}
 
 	@Override
 	protected void setCellValueImpl(final Date value) {
+		this.cellType = CellType.NUMERIC;
 		this.value = value;
 	}
 
 	@Override
 	protected void setCellValueImpl(final LocalDateTime value) {
+		this.cellType = CellType.NUMERIC;
 		this.value = value;
 	}
 
 	@Override
 	protected void setCellValueImpl(final Calendar value) {
+		this.cellType = CellType.NUMERIC;
 		this.value = value;
 	}
 
 	@Override
 	protected void setCellValueImpl(final String value) {
+		this.cellType = CellType.STRING;
 		this.value = value;
 	}
 
 	@Override
 	protected void setCellValueImpl(final RichTextString value) {
+		this.cellType = CellType.STRING;
 		this.value = value;
 	}
 
@@ -192,11 +212,13 @@ public class VirtualCell extends CellBase {
 
 	@Override
 	public void setCellValue(final boolean value) {
+		this.cellType = CellType.BOOLEAN;
 		this.value = value;
 	}
 
 	@Override
 	public void setCellErrorValue(final byte value) {
+		this.cellType = CellType.ERROR;
 		this.value = value;
 	}
 

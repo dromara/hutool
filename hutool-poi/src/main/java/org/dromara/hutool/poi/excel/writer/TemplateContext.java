@@ -19,11 +19,14 @@ package org.dromara.hutool.poi.excel.writer;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrPool;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.poi.excel.SheetUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.cell.VirtualCell;
@@ -31,6 +34,7 @@ import org.dromara.hutool.poi.excel.cell.VirtualCell;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -86,54 +90,71 @@ public class TemplateContext {
 	 *     <li>如果为{@link VirtualCell}，返回最底部虚拟单元格各行号</li>
 	 * </ul>
 	 *
-	 * @param rowData 填充数据
+	 * @param rowDataBean 填充数据
 	 * @return 最大行索引，-1表示无数据填充，0表示无需下移
 	 */
-	public int getBottomRowIndex(final Map<?, ?> rowData) {
-		int bottomRowIndex = -1;
-		Cell cell;
-		for (final Object key : rowData.keySet()) {
-			cell = this.varMap.get(StrUtil.toStringOrNull(key));
-			if (null != cell) {
-				if(cell instanceof VirtualCell){
-					bottomRowIndex = Math.max(bottomRowIndex, cell.getRowIndex());
-				} else{
+	public int getBottomRowIndex(final Object rowDataBean) {
+		final AtomicInteger bottomRowIndex = new AtomicInteger(-1);
+		this.varMap.forEach((name, cell) -> {
+			if(null != BeanUtil.getProperty(rowDataBean, name)){
+				if (cell instanceof VirtualCell) {
+					bottomRowIndex.set(Math.max(bottomRowIndex.get(), cell.getRowIndex()));
+				} else if(bottomRowIndex.get() < 0){
 					// 实体单元格，直接填充，无需下移
-					bottomRowIndex = 0;
+					bottomRowIndex.set(0);
 				}
 			}
-		}
-		return bottomRowIndex;
+		});
+		return bottomRowIndex.get();
 	}
 
 	/**
 	 * 填充变量名name指向的单元格
 	 *
-	 * @param name      变量名
-	 * @param rowData   一行数据的键值对
-	 * @param isListVar 是否为列表填充，列表填充会自动指向下一列，否则填充结束后删除变量
+	 * @param rowDataBean 一行数据的键值对
+	 * @param isListVar   是否为列表填充，列表填充会自动指向下一列，否则填充结束后删除变量
 	 * @since 6.0.0
 	 */
-	public void fill(final String name, final Map<?, ?> rowData, final boolean isListVar) {
-		final Cell cell = varMap.get(name);
-		if (null == cell) {
-			// 没有对应变量占位
-			return;
+	public void fill(final Object rowDataBean, final boolean isListVar) {
+		final Map<String, Cell> varMap = this.varMap;
+		varMap.forEach((name, cell) -> {
+			if (null == cell) {
+				return;
+			}
+
+			final String templateStr = cell.getStringCellValue();
+			// 填充单元格
+			if (fill(cell, name, rowDataBean)) {
+				// 指向下一个单元格
+				putNext(name, cell, templateStr, isListVar);
+			}
+		});
+
+		if (!isListVar) {
+			// 清理已经匹配完毕的变量
+			MapUtil.removeNullValue(varMap);
 		}
+	}
 
-		final String templateStr = cell.getStringCellValue();
-
+	/**
+	 * 将变量指向下一行的单元格<br>
+	 * 如果为列表，则指向下一行的虚拟单元格（不创建单元格）
+	 * 如果非列表，则清空此变量
+	 *
+	 * @param name        变量名
+	 * @param currentCell 当前单元格
+	 * @param templateStr 模板字符串
+	 * @param isListVar   是否为列表填充
+	 */
+	private void putNext(final String name, final Cell currentCell, final String templateStr, final boolean isListVar) {
 		if (isListVar) {
 			// 指向下一列的单元格
-			final Cell next = new VirtualCell(cell, cell.getColumnIndex(), cell.getRowIndex() + 1);
-			next.setCellValue(templateStr);
+			final Cell next = new VirtualCell(currentCell, currentCell.getColumnIndex(), currentCell.getRowIndex() + 1, templateStr);
 			varMap.put(name, next);
 		} else {
 			// 非列表，一次性填充，即变量填充后，和此单元格去掉关联
-			varMap.remove(name);
+			varMap.put(name, null);
 		}
-
-		fill(cell, name, templateStr, rowData);
 	}
 
 	/**
@@ -141,10 +162,11 @@ public class TemplateContext {
 	 *
 	 * @param cell        单元格，非模板中变量所在单元格则为{@link VirtualCell}
 	 * @param name        变量名
-	 * @param templateStr 模板字符串
-	 * @param rowData     填充的数据
+	 * @param rowDataBean 填充的数据，可以为Map或Bean
+	 * @return 是否填充成功，{@code false}表示无数据
 	 */
-	private void fill(Cell cell, final String name, final String templateStr, final Map<?, ?> rowData) {
+	private boolean fill(Cell cell, final String name, final Object rowDataBean) {
+		final String templateStr = cell.getStringCellValue();
 		if (cell instanceof VirtualCell) {
 			// 虚拟单元格，转换为实际单元格
 			final Cell newCell;
@@ -159,13 +181,23 @@ public class TemplateContext {
 		final Object cellValue;
 		// 模板替换
 		if (StrUtil.equals(name, StrUtil.unWrap(templateStr, VAR_PREFIX, VAR_SUFFIX))) {
-			// 一个单元格只有一个变量
-			cellValue = rowData.get(name);
+			// 一个单元格只有一个变量，支持多级表达式
+			cellValue = BeanUtil.getProperty(rowDataBean, name);
+			if (null == cellValue) {
+				// 对应表达式无提供的值，跳过填充
+				return false;
+			}
 		} else {
 			// 模板中存在多个变量或模板填充，直接赋值为String
-			cellValue = StrUtil.format(templateStr, rowData);
+			// 没有找到值的变量保留原样
+			cellValue = StrUtil.formatByBean(templateStr, rowDataBean, false);
+			if (ObjUtil.equals(cellValue, templateStr)) {
+				// 模板无修改，说明没有变量替换，跳过填充
+				return false;
+			}
 		}
 		CellUtil.setCellValue(cell, cellValue);
+		return true;
 	}
 
 	/**

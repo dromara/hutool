@@ -18,6 +18,7 @@ package org.dromara.hutool.core.text.placeholder;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.placeholder.template.NamedPlaceholderStrTemplate;
@@ -70,27 +71,31 @@ public class StrFormatter {
 			return strPattern;
 		}
 		return ((SinglePlaceholderStrTemplate) CACHE.computeIfAbsent(MutableEntry.of(strPattern, placeHolder), k ->
-				StrTemplate.of(strPattern).placeholder(placeHolder).build()))
-				.format(argArray);
+			StrTemplate.of(strPattern).placeholder(placeHolder).build()))
+			.format(argArray);
 	}
 
 	/**
 	 * 格式化文本，使用 {varName} 占位<br>
-	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
+	 * bean = User:{a: "aValue", b: "bValue"} format("{a} and {b}", bean) ---=》 aValue and bValue
 	 *
 	 * @param template   文本模板，被替换的部分用 {key} 表示
-	 * @param map        参数值对
+	 * @param bean       参数Bean
 	 * @param ignoreNull 是否忽略 {@code null} 值，忽略则 {@code null} 值对应的变量不被替换，否则替换为""
 	 * @return 格式化后的文本
-	 * @since 5.7.10
+	 * @since 6.0.0
 	 */
-	public static String format(final CharSequence template, final Map<?, ?> map, final boolean ignoreNull) {
+	public static String formatByBean(final CharSequence template, final Object bean, final boolean ignoreNull) {
 		if (null == template) {
 			return null;
 		}
-		if (null == map || map.isEmpty()) {
-			return template.toString();
+
+		if (bean instanceof Map) {
+			if (MapUtil.isEmpty((Map<?, ?>) bean)) {
+				return template.toString();
+			}
 		}
+		// Bean的空检查需要反射，性能很差，此处不检查
 
 		return ((NamedPlaceholderStrTemplate) CACHE.computeIfAbsent(MutableEntry.of(template, ignoreNull), k -> {
 			final NamedPlaceholderStrTemplate.Builder builder = StrTemplate.ofNamed(template.toString());
@@ -100,7 +105,7 @@ public class StrFormatter {
 				builder.addFeatures(StrTemplate.Feature.FORMAT_NULL_VALUE_TO_EMPTY);
 			}
 			return builder.build();
-		})).format(map);
+		})).format(bean);
 	}
 
 	/**

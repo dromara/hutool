@@ -195,6 +195,15 @@ public class BeanUtil {
 		if (null == bean || StrUtil.isBlank(expression)) {
 			return null;
 		}
+
+		// 先尝试直接获取属性
+		if (bean instanceof Map) {
+			final Map<?, ?> map = (Map<?, ?>) bean;
+			if(map.containsKey(expression)){
+				return (T) map.get(expression);
+			}
+		}
+
 		return (T) BeanPath.of(expression).getValue(bean);
 	}
 

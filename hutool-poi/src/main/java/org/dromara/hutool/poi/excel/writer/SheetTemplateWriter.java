@@ -18,7 +18,6 @@ package org.dromara.hutool.poi.excel.writer;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.dromara.hutool.core.map.BeanMap;
-import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Map;
 
@@ -57,31 +56,20 @@ public class SheetTemplateWriter {
 	 * @return this
 	 */
 	public SheetTemplateWriter fillOnce(final Map<?, ?> rowMap) {
-		rowMap.forEach((key, value) -> this.templateContext.fill(StrUtil.toStringOrNull(key), rowMap, false));
+		this.templateContext.fill(rowMap, false);
 		return this;
 	}
 
 	/**
 	 * 填充模板行，用于列表填充
 	 *
-	 * @param rowBean 行的Bean数据
+	 * @param rowBean 行的Bean或Map数据
 	 * @return this
 	 */
 	public SheetTemplateWriter fillRow(final Object rowBean) {
-		// TODO 支持Bean的级联属性获取
-		return fillRow(new BeanMap(rowBean));
-	}
-
-	/**
-	 * 填充模板行，用于列表填充
-	 *
-	 * @param rowMap 行数据
-	 * @return this
-	 */
-	public SheetTemplateWriter fillRow(final Map<?, ?> rowMap) {
 		if (this.config.insertRow) {
 			// 当前填充行的模板行以下全部下移
-			final int bottomRowIndex = this.templateContext.getBottomRowIndex(rowMap);
+			final int bottomRowIndex = this.templateContext.getBottomRowIndex(rowBean);
 			if (bottomRowIndex < 0) {
 				// 无可填充行
 				return this;
@@ -96,7 +84,7 @@ public class SheetTemplateWriter {
 			}
 		}
 
-		rowMap.forEach((key, value) -> this.templateContext.fill(StrUtil.toStringOrNull(key), rowMap, true));
+		this.templateContext.fill(rowBean, true);
 
 		return this;
 	}

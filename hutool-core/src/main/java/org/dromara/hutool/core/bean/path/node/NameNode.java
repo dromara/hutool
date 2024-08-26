@@ -52,6 +52,9 @@ public class NameNode implements Node {
 
 	@Override
 	public Object getValue(final Object bean) {
+		if(null == bean){
+			return null;
+		}
 		if ("$".equals(name)) {
 			return bean;
 		}

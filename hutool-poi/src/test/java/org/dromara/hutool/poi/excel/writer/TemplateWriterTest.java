@@ -1,5 +1,6 @@
 package org.dromara.hutool.poi.excel.writer;
 
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ public class TemplateWriterTest {
 			writer.writeRow(createRow(), false);
 		}
 
-		//writer.flush(FileUtil.file(targetDir + "templateResult.xlsx"), true);
+		writer.flush(FileUtil.file(targetDir + "templateResult.xlsx"), true);
 		writer.close();
 	}
 
@@ -50,7 +51,7 @@ public class TemplateWriterTest {
 			writer.writeRow(createRow(), false);
 		}
 
-		//writer.flush(FileUtil.file(targetDir + "templateWithFooterResult.xlsx"), true);
+		writer.flush(FileUtil.file(targetDir + "templateWithFooterResult.xlsx"), true);
 		writer.close();
 	}
 

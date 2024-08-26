@@ -18,7 +18,6 @@ package org.dromara.hutool.core.text;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.func.FunctionPool;
-import org.dromara.hutool.core.text.placeholder.StrFormatter;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
@@ -26,7 +25,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.Map;
 
 /**
  * 字符串工具类<br>
@@ -36,10 +34,10 @@ import java.util.Map;
  * 字符串分割<strong>split</strong>参考：{@link SplitUtil} &nbsp;&nbsp;<br>
  * 多字符串判空<strong>hasBlank</strong>参考：{@link ArrayUtil}
  * </p>
- * @see SplitUtil#split(CharSequence, CharSequence)  对字符串分割
- * @see ArrayUtil#hasBlank(CharSequence...) 对多个字符串判空
  *
  * @author Looly
+ * @see SplitUtil#split(CharSequence, CharSequence)  对字符串分割
+ * @see ArrayUtil#hasBlank(CharSequence...) 对多个字符串判空
  */
 public class StrUtil extends CharSequenceUtil implements StrPool {
 
@@ -130,6 +128,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	// region ----- str
+
 	/**
 	 * 将对象转为字符串<br>
 	 *
@@ -164,9 +163,9 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 
 		if (obj instanceof String) {
 			return (String) obj;
-		}else if(obj instanceof char[]){
+		} else if (obj instanceof char[]) {
 			return new String((char[]) obj);
-		}else if (obj instanceof byte[]) {
+		} else if (obj instanceof byte[]) {
 			return str((byte[]) obj, charset);
 		} else if (obj instanceof Byte[]) {
 			return str((Byte[]) obj, charset);
@@ -240,7 +239,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param value char[]值，注意这个数组不可修改！！
 	 * @return String
 	 */
-	public static String strFast(final char[] value){
+	public static String strFast(final char[] value) {
 		return FunctionPool.createString(value);
 	}
 	// endregion
@@ -371,31 +370,5 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String similar(final String str1, final String str2, final int scale) {
 		return TextSimilarity.similar(str1, str2, scale);
-	}
-
-	/**
-	 * 格式化文本，使用 {varName} 占位<br>
-	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
-	 *
-	 * @param template 文本模板，被替换的部分用 {key} 表示
-	 * @param map      参数值对
-	 * @return 格式化后的文本
-	 */
-	public static String format(final CharSequence template, final Map<?, ?> map) {
-		return format(template, map, true);
-	}
-
-	/**
-	 * 格式化文本，使用 {varName} 占位<br>
-	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
-	 *
-	 * @param template   文本模板，被替换的部分用 {key} 表示
-	 * @param map        参数值对
-	 * @param ignoreNull 是否忽略 {@code null} 值，忽略则 {@code null} 值对应的变量不被替换，否则替换为""
-	 * @return 格式化后的文本
-	 * @since 5.4.3
-	 */
-	public static String format(final CharSequence template, final Map<?, ?> map, final boolean ignoreNull) {
-		return StrFormatter.format(template, map, ignoreNull);
 	}
 }

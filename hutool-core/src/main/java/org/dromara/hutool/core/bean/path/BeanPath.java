@@ -164,6 +164,9 @@ public class BeanPath implements Iterator<BeanPath> {
 	 */
 	public Object getValue(final Object bean) {
 		final Object value = this.node.getValue(bean);
+		if(null == value){
+			return null;
+		}
 		if (!hasNext()) {
 			return value;
 		}
