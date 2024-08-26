@@ -60,7 +60,7 @@ public class TemplateWriterTest {
 	 */
 	@Test
 	void writeNoneOneLineTest() {
-		final ExcelWriter writer = ExcelUtil.getWriter(targetDir + "templateWithFooterNoneOneLine.xlsx");
+		final ExcelWriter writer = ExcelUtil.getWriter("templateWithFooterNoneOneLine.xlsx");
 		//writer.getConfig().setInsertRow(true);
 
 		// 单个替换的变量
@@ -73,7 +73,7 @@ public class TemplateWriterTest {
 			writer.writeRow(createRow(), false);
 		}
 
-		//writer.flush(FileUtil.file(targetDir + "templateWithFooterNoneOneLineResult.xlsx"), true);
+		writer.flush(FileUtil.file(targetDir + "templateWithFooterNoneOneLineResult.xlsx"), true);
 		writer.close();
 	}
 
