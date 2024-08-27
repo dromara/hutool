@@ -906,35 +906,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	}
 
 	/**
-	 * 写出一行，根据rowBean数据类型不同，写出情况如下：
-	 *
-	 * <pre>
-	 * 1、如果为Iterable，直接写出一行
-	 * 2、如果为Map，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
-	 * 3、如果为Bean，转为Map写出，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
-	 * </pre>
-	 *
-	 * @param rowBean          写出的Bean
-	 * @param isWriteKeyAsHead 为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
-	 * @return this
-	 * @see #writeRow(Iterable)
-	 * @see #writeRow(Map, boolean)
-	 * @since 4.1.5
-	 */
-	public ExcelWriter writeRow(final Object rowBean, final boolean isWriteKeyAsHead) {
-		checkClosed();
-
-		// 模板写出
-		if (null != this.sheetTemplateWriter) {
-			this.sheetTemplateWriter.fillRow(rowBean);
-			return this;
-		}
-
-		getSheetDataWriter().writeRow(rowBean, isWriteKeyAsHead);
-		return this;
-	}
-
-	/**
 	 * 填充非列表模板变量（一次性变量）
 	 *
 	 * @param rowMap 行数据
@@ -948,23 +919,28 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	}
 
 	/**
-	 * 将一个Map写入到Excel，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values<br>
-	 * 如果rowMap为空（包括null），则写出空行
+	 * 写出一行，根据rowBean数据类型不同，写出情况如下：
 	 *
-	 * @param rowMap           写出的Map，为空（包括null），则写出空行
+	 * <pre>
+	 * 1、如果为Iterable，直接写出一行
+	 * 2、如果为Map，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
+	 * 3、如果为Bean，转为Map写出，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
+	 * </pre>
+	 *
+	 * @param rowBean          写出的Bean，可以是Map、Bean或Iterable
 	 * @param isWriteKeyAsHead 为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
 	 * @return this
 	 */
-	public ExcelWriter writeRow(final Map<?, ?> rowMap, final boolean isWriteKeyAsHead) {
+	public ExcelWriter writeRow(final Object rowBean, final boolean isWriteKeyAsHead) {
 		checkClosed();
 
 		// 模板写出
 		if (null != this.sheetTemplateWriter) {
-			this.sheetTemplateWriter.fillRow(rowMap);
+			this.sheetTemplateWriter.fillRow(rowBean);
 			return this;
 		}
 
-		getSheetDataWriter().writeRow(rowMap, isWriteKeyAsHead);
+		getSheetDataWriter().writeRow(rowBean, isWriteKeyAsHead);
 		return this;
 	}
 
