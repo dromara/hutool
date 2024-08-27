@@ -35,14 +35,13 @@ public class JSONEngineFactoryTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine("jackson");
 		assertEquals(JacksonEngine.class, engine.getClass());
 
-		final StringWriter stringWriter = new StringWriter();
 		final TestBean testBean = new TestBean("张三", 18, true);
-		engine.serialize(testBean, stringWriter);
+		final String jsonString = engine.toJsonString(testBean);
 
-		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, stringWriter.toString());
+		final String resultJsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
+		assertEquals(resultJsonStr, jsonString);
 
-		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
+		final TestBean testBean1 = engine.fromJsonString(resultJsonStr, TestBean.class);
 		assertEquals(testBean, testBean1);
 	}
 
