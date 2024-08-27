@@ -190,7 +190,7 @@ public class TemplateContext {
 		} else {
 			// 模板中存在多个变量或模板填充，直接赋值为String
 			// 没有找到值的变量保留原样
-			cellValue = StrUtil.formatByBean(templateStr, rowDataBean, false);
+			cellValue = StrUtil.formatByBean(templateStr, rowDataBean, true);
 			if (ObjUtil.equals(cellValue, templateStr)) {
 				// 模板无修改，说明没有变量替换，跳过填充
 				return false;

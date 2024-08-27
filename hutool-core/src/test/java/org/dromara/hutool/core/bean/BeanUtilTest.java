@@ -335,6 +335,21 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void getPropertyWithClassNameTest() {
+		final SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		// 获取Bean属性时，如果用户传入名称以对象名开头，则自动去掉对象名，获取剩余部分的属性值
+		final Object name = BeanUtil.getProperty(person, "subPerson.name");
+		assertEquals("测试A11", name);
+		final Object subName = BeanUtil.getProperty(person, "subPerson.subName");
+		assertEquals("sub名字", subName);
+	}
+
+	@Test
 	@SuppressWarnings("ConstantConditions")
 	public void getNullPropertyTest() {
 		final Object property = BeanUtil.getProperty(null, "name");

@@ -43,6 +43,9 @@ public class DynaBeanTest {
 		//执行指定方法
 		final Object invoke = bean2.invoke("testMethod");
 		Assertions.assertEquals("test for 李华", invoke);
+
+		// 不存在的字段测试
+		Assertions.assertNull(bean.get("notExist"));
 	}
 
 

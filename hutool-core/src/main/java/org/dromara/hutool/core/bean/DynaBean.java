@@ -133,7 +133,9 @@ public class DynaBean implements Cloneable, Serializable {
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 			if (null == prop) {
-				throw new BeanException("No public field or get method for {}", fieldName);
+				// 节点字段不存在，类似于Map无key，返回null而非报错
+				return null;
+				//throw new BeanException("No public field or get method for {}", fieldName);
 			}
 			return (T) prop.getValue(bean);
 		}

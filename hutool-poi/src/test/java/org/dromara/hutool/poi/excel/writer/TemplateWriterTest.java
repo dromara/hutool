@@ -1,5 +1,7 @@
 package org.dromara.hutool.poi.excel.writer;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.poi.excel.ExcelUtil;
@@ -77,6 +79,28 @@ public class TemplateWriterTest {
 		writer.close();
 	}
 
+	/**
+	 * 错位数据，即变量不在一行上
+	 */
+	@Test
+	void writeBeanTest() {
+		final ExcelWriter writer = ExcelUtil.getWriter("templateWithFooterNoneOneLine.xlsx");
+		//writer.getConfig().setInsertRow(true);
+
+		// 单个替换的变量
+		writer.fillOnce(MapUtil
+			.builder("date", (Object)"2024-01-01")
+			.build());
+
+		// 列表替换
+		for (int i = 0; i < 10; i++) {
+			writer.writeRow(new User("李四", 25, "某个街道"), false);
+		}
+
+		writer.flush(FileUtil.file(targetDir + "templateWriteWithBeanResult.xlsx"), true);
+		writer.close();
+	}
+
 	private static Map<String, Object> createRow(){
 		return MapUtil
 			.builder("user.name", (Object)"张三")
@@ -84,9 +108,16 @@ public class TemplateWriterTest {
 			.put("year", 2024)
 			.put("month", 8)
 			.put("day", 24)
-			.put("day", 24)
 			.put("user.area123", "某某市")
 			.put("invalid", "不替换")
 			.build();
+	}
+
+	@Data
+	@AllArgsConstructor
+	private static class User{
+		private String name;
+		private int age;
+		private String area123;
 	}
 }
