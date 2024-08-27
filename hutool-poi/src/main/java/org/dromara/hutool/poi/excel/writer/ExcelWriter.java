@@ -90,10 +90,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 构造，默认写出到第一个sheet，第一个sheet名为sheet1
 	 *
-	 * @param destFilePath 目标文件路径，可以不存在
+	 * @param templateFilePath 模板文件，不存在则默认为目标写出文件
 	 */
-	public ExcelWriter(final String destFilePath) {
-		this(destFilePath, null);
+	public ExcelWriter(final String templateFilePath) {
+		this(templateFilePath, null);
 	}
 
 	/**
@@ -112,33 +112,33 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 构造
 	 *
-	 * @param destFilePath 目标文件路径，可以不存在
-	 * @param sheetName    sheet名，第一个sheet名并写出到此sheet，例如sheet1
+	 * @param templateFilePath 模板文件，不存在则默认为目标写出文件
+	 * @param sheetName        sheet名，第一个sheet名并写出到此sheet，例如sheet1
 	 */
-	public ExcelWriter(final String destFilePath, final String sheetName) {
-		this(FileUtil.file(destFilePath), sheetName);
+	public ExcelWriter(final String templateFilePath, final String sheetName) {
+		this(FileUtil.file(templateFilePath), sheetName);
 	}
 
 	/**
 	 * 构造，默认写出到第一个sheet，第一个sheet名为sheet1
 	 *
-	 * @param destFile 目标文件，可以不存在
+	 * @param templateFile 模板文件，不存在则默认为目标写出文件
 	 */
-	public ExcelWriter(final File destFile) {
-		this(destFile, null);
+	public ExcelWriter(final File templateFile) {
+		this(templateFile, null);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param targetFile 目标文件，可以不存在
-	 * @param sheetName  sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
+	 * @param templateFile 模板文件，不存在则默认为目标写出文件
+	 * @param sheetName    sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
-	public ExcelWriter(final File targetFile, final String sheetName) {
-		this(WorkbookUtil.createBookForWriter(targetFile), sheetName);
+	public ExcelWriter(final File templateFile, final String sheetName) {
+		this(WorkbookUtil.createBookForWriter(templateFile), sheetName);
 
-		if (!FileUtil.exists(targetFile)) {
-			this.targetFile = targetFile;
+		if (!FileUtil.exists(templateFile)) {
+			this.targetFile = templateFile;
 		} else {
 			// 如果是已经存在的文件，则作为模板加载，此时不能写出到模板文件
 			// 初始化模板
@@ -151,11 +151,11 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
 	 * 若写出到文件，还需调用{@link #setTargetFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
 	 *
-	 * @param workbook  {@link Workbook}
-	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
+	 * @param templateWorkbook 模板{@link Workbook}
+	 * @param sheetName        sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
-	public ExcelWriter(final Workbook workbook, final String sheetName) {
-		this(SheetUtil.getOrCreateSheet(workbook, sheetName));
+	public ExcelWriter(final Workbook templateWorkbook, final String sheetName) {
+		this(SheetUtil.getOrCreateSheet(templateWorkbook, sheetName));
 	}
 
 	/**

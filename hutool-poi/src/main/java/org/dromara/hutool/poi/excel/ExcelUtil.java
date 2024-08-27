@@ -298,12 +298,12 @@ public class ExcelUtil {
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet
 	 *
-	 * @param destFilePath 目标文件路径
+	 * @param templateFilePath 模板文件路径
 	 * @return {@link ExcelWriter}
 	 */
-	public static ExcelWriter getWriter(final String destFilePath) {
+	public static ExcelWriter getWriter(final String templateFilePath) {
 		try {
-			return new ExcelWriter(destFilePath);
+			return new ExcelWriter(templateFilePath);
 		} catch (final NoClassDefFoundError e) {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
@@ -327,12 +327,12 @@ public class ExcelUtil {
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet，名字为sheet1
 	 *
-	 * @param destFile 目标文件
+	 * @param templateFile 目标文件
 	 * @return {@link ExcelWriter}
 	 */
-	public static ExcelWriter getWriter(final File destFile) {
+	public static ExcelWriter getWriter(final File templateFile) {
 		try {
-			return new ExcelWriter(destFile);
+			return new ExcelWriter(templateFile);
 		} catch (final NoClassDefFoundError e) {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
@@ -341,13 +341,13 @@ public class ExcelUtil {
 	/**
 	 * 获得{@link ExcelWriter}
 	 *
-	 * @param destFilePath 目标文件路径
+	 * @param templateFilePath 目标文件路径
 	 * @param sheetName    sheet表名
 	 * @return {@link ExcelWriter}
 	 */
-	public static ExcelWriter getWriter(final String destFilePath, final String sheetName) {
+	public static ExcelWriter getWriter(final String templateFilePath, final String sheetName) {
 		try {
-			return new ExcelWriter(destFilePath, sheetName);
+			return new ExcelWriter(templateFilePath, sheetName);
 		} catch (final NoClassDefFoundError e) {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
@@ -356,13 +356,13 @@ public class ExcelUtil {
 	/**
 	 * 获得{@link ExcelWriter}
 	 *
-	 * @param destFile  目标文件
+	 * @param templateFilePath  目标文件
 	 * @param sheetName sheet表名
 	 * @return {@link ExcelWriter}
 	 */
-	public static ExcelWriter getWriter(final File destFile, final String sheetName) {
+	public static ExcelWriter getWriter(final File templateFilePath, final String sheetName) {
 		try {
-			return new ExcelWriter(destFile, sheetName);
+			return new ExcelWriter(templateFilePath, sheetName);
 		} catch (final NoClassDefFoundError e) {
 			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
