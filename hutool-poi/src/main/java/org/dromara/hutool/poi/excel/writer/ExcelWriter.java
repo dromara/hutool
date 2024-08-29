@@ -21,6 +21,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.CellReference;
 import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -29,7 +30,6 @@ import org.dromara.hutool.poi.POIException;
 import org.dromara.hutool.poi.excel.*;
 import org.dromara.hutool.poi.excel.cell.CellRangeUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
-import org.dromara.hutool.poi.excel.cell.editors.CellEditor;
 import org.dromara.hutool.poi.excel.style.*;
 
 import java.awt.Color;
@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -644,7 +644,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	public ExcelWriter merge(final CellRangeAddress cellRangeAddress, final Object content, final CellStyle cellStyle) {
 		checkClosed();
 
-		CellUtil.mergingCells(this.getSheet(), cellRangeAddress, cellStyle);
+		if(cellRangeAddress.getNumberOfCells() > 1){
+			CellUtil.mergingCells(this.getSheet(), cellRangeAddress, cellStyle);
+		}
 
 		// 设置内容
 		if (null != content) {
@@ -742,6 +744,63 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 				isFirstRow = false;
 			}
 		}
+		return this;
+	}
+
+	/**
+	 * 写出分组标题行
+	 *
+	 * @param rowGroup 分组行
+	 * @return this
+	 */
+	public ExcelWriter writeHeader(final RowGroup rowGroup) {
+		return writeHeader(0, getCurrentRow(), 1, rowGroup);
+	}
+
+	/**
+	 * 写出分组标题行
+	 *
+	 * @param x        开始的列，下标从0开始
+	 * @param y        开始的行，下标从0开始
+	 * @param rowCount 当前分组行所占行数，此数值为标题占用行数+子分组占用的最大行数，不确定传1
+	 * @param rowGroup 分组行
+	 * @return this
+	 */
+	@SuppressWarnings("resource")
+	public ExcelWriter writeHeader(int x, int y, int rowCount, final RowGroup rowGroup) {
+
+		// 写主标题
+		final String name = rowGroup.getName();
+		final List<RowGroup> children = rowGroup.getChildren();
+		if (null != name) {
+			if(!CollUtil.isEmpty(children)){
+				// 有子节点，标题行只占用除子节点占用的行数
+				rowCount = Math.max(1, rowCount - rowGroup.childrenMaxRowCount());
+				//nameRowCount = 1;
+			}
+
+			// 如果无子节点，则标题行占用所有行
+			final CellRangeAddress cellAddresses = CellRangeUtil.of(y, y + rowCount - 1, x, x + rowGroup.maxColumnCount() - 1);
+			final CellStyle style = rowGroup.getStyle();
+			if(null == style){
+				merge(cellAddresses, name, true);
+			} else{
+				merge(cellAddresses, name, style);
+			}
+			// 子分组写到下N行
+			y += rowCount;
+		}
+
+		// 写分组
+		final int childrenMaxRowCount = rowGroup.childrenMaxRowCount();
+		if(childrenMaxRowCount > 0){
+			for (final RowGroup child : children) {
+				// 子分组行高填充为当前分组最大值
+				writeHeader(x, y, childrenMaxRowCount, child);
+				x += child.maxColumnCount();
+			}
+		}
+
 		return this;
 	}
 	// endregion
@@ -859,49 +918,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param rowData 一行的数据
 	 * @return this
 	 */
-	public ExcelWriter writeHeadRow(final Iterable<?> rowData) {
+	public ExcelWriter writeHeaderRow(final Iterable<?> rowData) {
 		checkClosed();
-		getSheetDataWriter().writeHeadRow(rowData);
-		return this;
-	}
-
-	/**
-	 * 写出复杂标题的第二行标题数据<br>
-	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
-	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1
-	 *
-	 * <p>
-	 * 此方法的逻辑是：将一行数据写出到当前行，遇到已存在的单元格跳过，不存在的创建并赋值。
-	 * </p>
-	 *
-	 * @param rowData 一行的数据
-	 * @return this
-	 */
-	@SuppressWarnings("resource")
-	public ExcelWriter writeSecHeadRow(final Iterable<?> rowData) {
-		checkClosed();
-		final Row row = getOrCreateRow(getCurrentRow());
-		passCurrentRow();
-
-		final Iterator<?> iterator = rowData.iterator();
-		//如果获取的row存在单元格，则执行复杂表头逻辑，否则直接调用writeHeadRow(Iterable<?> rowData)
-		if (row.getLastCellNum() != 0) {
-			final CellEditor cellEditor = this.config.getCellEditor();
-			for (int i = 0; ; i++) {
-				Cell cell = row.getCell(i);
-				if (cell != null) {
-					continue;
-				}
-				if (iterator.hasNext()) {
-					cell = row.createCell(i);
-					CellUtil.setCellValue(cell, iterator.next(), this.styleSet, true, cellEditor);
-				} else {
-					break;
-				}
-			}
-		} else {
-			writeHeadRow(rowData);
-		}
+		getSheetDataWriter().writeHeaderRow(rowData);
 		return this;
 	}
 

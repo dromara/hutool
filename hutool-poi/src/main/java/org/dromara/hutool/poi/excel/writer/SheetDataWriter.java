@@ -149,7 +149,7 @@ public class SheetDataWriter {
 		final Table<?, ?, ?> aliasTable = this.config.aliasTable(rowMap);
 		if (isWriteKeyAsHead) {
 			// 写出标题行，并记录标题别名和列号的关系
-			writeHeadRow(aliasTable.columnKeys());
+			writeHeaderRow(aliasTable.columnKeys());
 			// 记录原数据key和别名对应列号
 			int i = 0;
 			for (final Object key : aliasTable.rowKeySet()) {
@@ -183,7 +183,7 @@ public class SheetDataWriter {
 	 * @param rowData 一行的数据
 	 * @return this
 	 */
-	public SheetDataWriter writeHeadRow(final Iterable<?> rowData) {
+	public SheetDataWriter writeHeaderRow(final Iterable<?> rowData) {
 		this.headLocationCache = new SafeConcurrentHashMap<>();
 
 		final int rowNum = this.currentRow.getAndIncrement();

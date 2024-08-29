@@ -662,52 +662,6 @@ public class ExcelWriteTest {
 		writer.close();
 	}
 
-	@Test
-	@Disabled
-	public void writeSecHeadRowTest() {
-		final List<?> row1 = ListUtil.of(1, "aa", "bb", "cc", "dd", "ee");
-		final List<?> row2 = ListUtil.of(2, "aa1", "bb1", "cc1", "dd1", "ee1");
-		final List<?> row3 = ListUtil.of(3, "aa2", "bb2", "cc2", "dd2", "ee2");
-		final List<?> row4 = ListUtil.of(4, "aa3", "bb3", "cc3", "dd3", "ee3");
-		final List<?> row5 = ListUtil.of(5, "aa4", "bb4", "cc4", "dd4", "ee4");
-
-		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
-
-		// 通过工具类创建writer
-		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeSecHeadRowTest.xlsx");
-
-		final CellStyle cellStyle = writer.getWorkbook().createCellStyle();
-		cellStyle.setWrapText(false);
-		cellStyle.setAlignment(HorizontalAlignment.CENTER);
-		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-		//设置标题内容字体
-		final Font font = writer.createFont();
-		font.setBold(true);
-		font.setFontHeightInPoints((short) 15);
-		font.setFontName("Arial");
-		//设置边框样式
-		StyleUtil.setBorder(cellStyle, BorderStyle.THICK, IndexedColors.RED);
-		cellStyle.setFont(font);
-
-		// 合并单元格后的标题行，使用设置好的样式
-		writer.merge(new CellRangeAddress(0, 1, 0, row1.size() - 1), "标题XXXXXXXX", cellStyle);
-		Console.log(writer.getCurrentRow());
-
-		//设置复杂表头
-		writer.merge(new CellRangeAddress(2, 3, 0, 0), "序号", true);
-		writer.merge(new CellRangeAddress(2, 2, 1, 2), "AABB", true);
-		writer.merge(new CellRangeAddress(2, 3, 3, 3), "CCCC", true);
-		writer.merge(new CellRangeAddress(2, 2, 4, 5), "DDEE", true);
-		writer.setCurrentRow(3);
-
-		final List<String> sechead = ListUtil.of("AA", "BB", "DD", "EE");
-		writer.writeSecHeadRow(sechead);
-		// 一次性写出内容，使用默认样式
-		writer.write(rows);
-		// 关闭writer，释放内存
-		writer.close();
-	}
-
 	/**
 	 * issue#1659@Github
 	 * 测试使用BigWriter写出，ExcelWriter修改失败
@@ -782,7 +736,7 @@ public class ExcelWriteTest {
 	@Disabled
 	public void changeHeaderStyleTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
-		writer.writeHeadRow(ListUtil.view("姓名", "性别", "年龄"));
+		writer.writeHeaderRow(ListUtil.view("姓名", "性别", "年龄"));
 		final CellStyle headCellStyle = ((DefaultStyleSet)writer.getStyleSet()).getHeadCellStyle();
 		headCellStyle.setFillForegroundColor(IndexedColors.YELLOW1.index);
 		headCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
