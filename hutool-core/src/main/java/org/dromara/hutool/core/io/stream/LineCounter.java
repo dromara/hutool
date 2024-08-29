@@ -70,8 +70,8 @@ public class LineCounter implements Closeable {
 	}
 
 	private int count() throws IOException {
-		final byte[] c = new byte[bufferSize];
-		int readChars = is.read(c);
+		final byte[] buf = new byte[bufferSize];
+		int readChars = is.read(buf);
 		if (readChars == -1) {
 			// 空文件，返回0
 			return 0;
@@ -82,23 +82,35 @@ public class LineCounter implements Closeable {
 		// 如果多行，最后一行无换行符，最后一行需要单独计数
 		// 如果多行，最后一行有换行符，则空行算作一行
 		int count = 1;
+		byte pre;
+		byte c = 0;
 		while (readChars == bufferSize) {
 			for (int i = 0; i < bufferSize; i++) {
-				if (c[i] == CharUtil.LF) {
+				pre = c;
+				c = buf[i];
+				// 换行符兼容MAC
+				if (c == CharUtil.LF || pre == CharUtil.CR) {
 					++count;
 				}
 			}
-			readChars = is.read(c);
+			readChars = is.read(buf);
 		}
 
 		// count remaining characters
 		while (readChars != -1) {
 			for (int i = 0; i < readChars; i++) {
-				if (c[i] == CharUtil.LF) {
+				pre = c;
+				c = buf[i];
+				if (c == CharUtil.LF || pre == CharUtil.CR) {
 					++count;
 				}
 			}
-			readChars = is.read(c);
+			readChars = is.read(buf);
+		}
+
+		// 最后一个字符为换行符，则单独计数行
+		if(c == CharUtil.CR){
+			++count;
 		}
 
 		return count;

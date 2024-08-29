@@ -27,6 +27,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link FileUtil} 单元测试类
  *
@@ -499,6 +501,20 @@ public class FileUtilTest {
 		// 此文件最后一行有换行符，则最后的空行算作一行
 		final int totalLines = FileUtil.getTotalLines(FileUtil.file("test_lines.csv"));
 		Assertions.assertEquals(8, totalLines);
+	}
+
+	@Test
+	public void getTotalLinesCrTest() {
+		// 此文件最后一行有换行符，则最后的空行算作一行
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file("test_lines_cr.csv"));
+		assertEquals(8, totalLines);
+	}
+
+	@Test
+	public void getTotalLinesCrlfTest() {
+		// 此文件最后一行有换行符，则最后的空行算作一行
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file("test_lines_crlf.csv"));
+		assertEquals(8, totalLines);
 	}
 
 	@Test
