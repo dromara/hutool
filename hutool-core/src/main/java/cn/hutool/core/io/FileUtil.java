@@ -572,8 +572,8 @@ public class FileUtil extends PathUtil {
 			bufferSize = 1024;
 		}
 		try (InputStream is = getInputStream(file)) {
-			byte[] c = new byte[bufferSize];
-			int readChars = is.read(c);
+			byte[] chars = new byte[bufferSize];
+			int readChars = is.read(chars);
 			if (readChars == -1) {
 				// 空文件，返回0
 				return 0;
@@ -584,23 +584,35 @@ public class FileUtil extends PathUtil {
 			// 如果多行，最后一行无换行符，最后一行需要单独计数
 			// 如果多行，最后一行有换行符，则空行算作一行
 			int count = 1;
+			byte pre;
+			byte c = 0;
 			while (readChars == bufferSize) {
 				for (int i = 0; i < bufferSize; i++) {
-					if (c[i] == CharUtil.LF) {
+					pre = c;
+					c = chars[i];
+					// 换行符兼容MAC
+					if (c == CharUtil.LF || pre == CharUtil.CR) {
 						++count;
 					}
 				}
-				readChars = is.read(c);
+				readChars = is.read(chars);
 			}
 
 			// count remaining characters
 			while (readChars != -1) {
 				for (int i = 0; i < readChars; i++) {
-					if (c[i] == CharUtil.LF) {
+					pre = c;
+					c = chars[i];
+					if (c == CharUtil.LF || pre == CharUtil.CR) {
 						++count;
 					}
 				}
-				readChars = is.read(c);
+				readChars = is.read(chars);
+			}
+
+			// 最后一个字符为换行符，则单独计数行
+			if(c == CharUtil.CR){
+				++count;
 			}
 
 			return count;

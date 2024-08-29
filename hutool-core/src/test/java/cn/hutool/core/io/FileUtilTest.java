@@ -533,6 +533,20 @@ public class FileUtilTest {
 	}
 
 	@Test
+	public void getTotalLinesCrTest() {
+		// 此文件最后一行有换行符，则最后的空行算作一行
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file("test_lines_cr.csv"));
+		assertEquals(8, totalLines);
+	}
+
+	@Test
+	public void getTotalLinesCrlfTest() {
+		// 此文件最后一行有换行符，则最后的空行算作一行
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file("test_lines_crlf.csv"));
+		assertEquals(8, totalLines);
+	}
+
+	@Test
 	public void issue3591Test() {
 		// 此文件最后一行末尾无换行符
 		final int totalLines = FileUtil.getTotalLines(FileUtil.file("1_psi_index_0.txt"));
