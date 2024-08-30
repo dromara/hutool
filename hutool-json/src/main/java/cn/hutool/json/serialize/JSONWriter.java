@@ -1,6 +1,7 @@
 package cn.hutool.json.serialize;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.convert.NumberWithFormat;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.date.format.GlobalCustomFormat;
@@ -254,6 +255,11 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
 			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
+			// issue#IALQ0N，避免设置日期格式后writeLongAsString失效
+			if(value instanceof NumberWithFormat){
+				value = ((NumberWithFormat) value).getNumber();
+			}
+
 			if(value instanceof Long && config.isWriteLongAsString()){
 				// issue#3541
 				// long可能溢出，此时可选是否将long写出为字符串类型

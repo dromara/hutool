@@ -13,7 +13,7 @@ import java.util.Date;
  * @author looly
  * @since 5.8.13
  */
-public class NumberWithFormat extends Number implements TypeConverter{
+public class NumberWithFormat extends Number implements TypeConverter {
 	private static final long serialVersionUID = 1L;
 
 	private final Number number;
@@ -21,6 +21,7 @@ public class NumberWithFormat extends Number implements TypeConverter{
 
 	/**
 	 * 构造
+	 *
 	 * @param number 数字
 	 * @param format 格式
 	 */
@@ -40,7 +41,7 @@ public class NumberWithFormat extends Number implements TypeConverter{
 				return new DateConverter((Class<? extends Date>) clazz, format).convert(this.number, null);
 			} else if (TemporalAccessor.class.isAssignableFrom(clazz)) {
 				return new TemporalAccessorConverter(clazz, format).convert(this.number, null);
-			} else if(String.class == clazz){
+			} else if (String.class == clazz) {
 				return toString();
 			}
 
@@ -49,6 +50,16 @@ public class NumberWithFormat extends Number implements TypeConverter{
 
 		// 按照正常数字转换
 		return Convert.convertWithCheck(targetType, this.number, null, false);
+	}
+
+	/**
+	 * 获取原始Number
+	 *
+	 * @return 原始Number
+	 * @since 5.8.32
+	 */
+	public Object getNumber() {
+		return this.number;
 	}
 
 	@Override

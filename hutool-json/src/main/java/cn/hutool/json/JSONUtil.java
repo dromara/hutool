@@ -1,5 +1,6 @@
 package cn.hutool.json;
 
+import cn.hutool.core.convert.NumberWithFormat;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.lang.TypeReference;
@@ -754,6 +755,10 @@ public class JSONUtil {
 				|| object instanceof Number //
 				|| ObjectUtil.isBasicType(object) //
 		) {
+			if(object instanceof Number && null != jsonConfig.getDateFormat()){
+				// 当JSONConfig中设置了日期格式，则包装为NumberWithFormat，以便在Converter中使用自定义格式转换日期时间
+				return new NumberWithFormat((Number) object, jsonConfig.getDateFormat());
+			}
 			return object;
 		}
 
