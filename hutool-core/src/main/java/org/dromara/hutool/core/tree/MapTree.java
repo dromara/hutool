@@ -368,22 +368,25 @@ public class MapTree<T> extends LinkedHashMap<String, Object> implements Node<T>
 	 */
 	public MapTree<T> cloneTree() {
 		final MapTree<T> result = ObjUtil.clone(this);
-		result.setChildren(cloneChildren());
+		result.setChildren(cloneChildren(result));
 		return result;
 	}
 
 	/**
 	 * 递归复制子节点
 	 *
+	 * @param parent 新的父节点
 	 * @return 新的子节点列表
 	 */
-	private List<MapTree<T>> cloneChildren() {
+	private List<MapTree<T>> cloneChildren(final MapTree<T> parent) {
 		final List<MapTree<T>> children = getChildren();
 		if (null == children) {
 			return null;
 		}
 		final List<MapTree<T>> newChildren = new ArrayList<>(children.size());
-		children.forEach((t) -> newChildren.add(t.cloneTree()));
+		children.forEach((t) -> {
+			newChildren.add(t.cloneTree().setParent(parent));
+		});
 		return newChildren;
 	}
 
