@@ -24,6 +24,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 提供通用唯一识别码（universally unique identifier）（UUID）实现，UUID表示一个128位的值。<br>
@@ -81,6 +82,9 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	private static class Holder {
 		static final SecureRandom NUMBER_GENERATOR = RandomUtil.getSecureRandom();
 	}
+
+	private static final AtomicLong lastV7time = new AtomicLong(0);
+	private static final long NANOS_PER_MILLI = 1_000_000;
 
 	private final Number128 idValue;
 
@@ -176,6 +180,62 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		md5Bytes[8] &= 0x3f; /* clear variant */
 		md5Bytes[8] |= (byte) 0x80; /* set to IETF variant */
 		return new UUID(md5Bytes);
+	}
+
+	/**
+	 * 获取随机生成的UUIDv7
+	 *
+	 * @return UUIDv7
+	 */
+	public static UUID randomUUID7() {
+		byte[] randomBytes = new byte[16];
+		final Random ng = Holder.NUMBER_GENERATOR;
+		ng.nextBytes(randomBytes);
+
+		long[] v7Time = getV7Time();
+		long milli = v7Time[0];
+		long seq = v7Time[1];
+
+		randomBytes[0] = (byte) (milli >> 40);
+		randomBytes[1] = (byte) (milli >> 32);
+		randomBytes[2] = (byte) (milli >> 24);
+		randomBytes[3] = (byte) (milli >> 16);
+		randomBytes[4] = (byte) (milli >> 8);
+		randomBytes[5] = (byte) milli;
+
+		randomBytes[6] = (byte) ((0x70) | (0x0F & (seq >> 8)));
+		randomBytes[7] = (byte) seq;
+		randomBytes[8] &= 0x3f; /* clear variant */
+		randomBytes[8] |= 0x80; /* set to IETF variant */
+
+		return new UUID(convertToLong(randomBytes, 0), convertToLong(randomBytes, 8));
+	}
+
+	private static long[] getV7Time() {
+		long nano = System.nanoTime();
+		long milli = nano / NANOS_PER_MILLI;
+		long seq = (nano - milli * NANOS_PER_MILLI) >> 8;
+		long now = (milli << 12) + seq;
+
+		while (true) {
+			long last = lastV7time.get();
+			if (now <= last) {
+				now = last + 1;
+				milli = now >> 12;
+				seq = now & 0xfff;
+			}
+			if (lastV7time.compareAndSet(last, now)) {
+				return new long[]{milli, seq};
+			}
+		}
+	}
+
+	private static long convertToLong(byte[] bytes, int start) {
+		long result = 0;
+		for (int i = start; i < start + 8; i++) {
+			result = (result << 8) | (bytes[i] & 0xFF);
+		}
+		return result;
 	}
 
 	/**
@@ -453,7 +513,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		// The ordering is intentionally set up so that the UUIDs
 		// can simply be numerically compared as two numbers
 		int compare = Long.compare(this.getMostSignificantBits(), val.getMostSignificantBits());
-		if(0 == compare){
+		if (0 == compare) {
 			compare = Long.compare(this.getLeastSignificantBits(), val.getLeastSignificantBits());
 		}
 		return compare;
