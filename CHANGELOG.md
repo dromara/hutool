@@ -2,10 +2,11 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.32(2024-08-29)
+# 5.8.32(2024-08-30)
 
 ### 🐣新特性
 * 【core   】      FileUtil.getTotalLines()支持CR换行符（issue#IAMZYR@Gitee）
+* 【json   】      GlobalSerializeMapping增加null检查（issue#IANH1Y@Gitee）
 
 ### 🐞Bug修复
 * 【http   】      修复getFileNameFromDisposition不符合规范问题（issue#IAKBPD@Gitee）
