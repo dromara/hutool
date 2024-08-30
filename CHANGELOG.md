@@ -14,6 +14,7 @@
 * 【crypto 】      修复ZipUtil压缩成流的方法检查文件时报错问题（issue#3697@Github）
 * 【core   】      修复CopyOptions.setFieldValueEditor后生成null值setIgnoreNullValue无效问题（issue#3702@Github）
 * 【json   】      修复JSONConfig.setDateFormat设置后setWriteLongAsString失效问题（issue#IALQ0N@Gitee）
+* 【core   】      修复Tree.cloneTree的Parent节点引用错误问题（issue#IANJTC@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.31(2024-08-12)
