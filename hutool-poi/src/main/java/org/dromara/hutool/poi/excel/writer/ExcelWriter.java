@@ -21,7 +21,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.CellReference;
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -37,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -644,9 +642,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	public ExcelWriter merge(final CellRangeAddress cellRangeAddress, final Object content, final CellStyle cellStyle) {
 		checkClosed();
 
-		if(cellRangeAddress.getNumberOfCells() > 1){
-			CellUtil.mergingCells(this.getSheet(), cellRangeAddress, cellStyle);
-		}
+		CellUtil.mergingCells(this.getSheet(), cellRangeAddress, cellStyle);
 
 		// 设置内容
 		if (null != content) {
@@ -766,41 +762,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @param rowGroup 分组行
 	 * @return this
 	 */
-	@SuppressWarnings("resource")
-	public ExcelWriter writeHeader(int x, int y, int rowCount, final RowGroup rowGroup) {
-
-		// 写主标题
-		final String name = rowGroup.getName();
-		final List<RowGroup> children = rowGroup.getChildren();
-		if (null != name) {
-			if(!CollUtil.isEmpty(children)){
-				// 有子节点，标题行只占用除子节点占用的行数
-				rowCount = Math.max(1, rowCount - rowGroup.childrenMaxRowCount());
-				//nameRowCount = 1;
-			}
-
-			// 如果无子节点，则标题行占用所有行
-			final CellRangeAddress cellAddresses = CellRangeUtil.of(y, y + rowCount - 1, x, x + rowGroup.maxColumnCount() - 1);
-			final CellStyle style = rowGroup.getStyle();
-			if(null == style){
-				merge(cellAddresses, name, true);
-			} else{
-				merge(cellAddresses, name, style);
-			}
-			// 子分组写到下N行
-			y += rowCount;
-		}
-
-		// 写分组
-		final int childrenMaxRowCount = rowGroup.childrenMaxRowCount();
-		if(childrenMaxRowCount > 0){
-			for (final RowGroup child : children) {
-				// 子分组行高填充为当前分组最大值
-				writeHeader(x, y, childrenMaxRowCount, child);
-				x += child.maxColumnCount();
-			}
-		}
-
+	public ExcelWriter writeHeader(final int x, final int y, final int rowCount, final RowGroup rowGroup) {
+		checkClosed();
+		this.getSheetDataWriter().writeHeader(x, y, rowCount, rowGroup);
 		return this;
 	}
 	// endregion

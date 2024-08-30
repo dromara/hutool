@@ -77,7 +77,7 @@ public class CompositeCellValue implements CellValue<Object> {
 		}
 
 		// 尝试获取合并单元格，如果是合并单元格，则重新获取单元格类型
-		final Cell mergedCell = CellUtil.getMergedRegionCell(cell);
+		final Cell mergedCell = CellUtil.getFirstCellOfMerged(cell);
 		if (mergedCell != cell) {
 			cell = mergedCell;
 			cellType = cell.getCellType();

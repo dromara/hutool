@@ -19,16 +19,15 @@ package org.dromara.hutool.poi.excel.cell;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.ss.util.SheetUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.poi.excel.RowUtil;
+import org.dromara.hutool.poi.excel.SheetUtil;
 import org.dromara.hutool.poi.excel.cell.editors.CellEditor;
 import org.dromara.hutool.poi.excel.cell.editors.TrimEditor;
 import org.dromara.hutool.poi.excel.cell.setters.CellSetter;
 import org.dromara.hutool.poi.excel.cell.setters.CellSetterFactory;
 import org.dromara.hutool.poi.excel.cell.values.CompositeCellValue;
 import org.dromara.hutool.poi.excel.style.StyleSet;
+import org.dromara.hutool.poi.excel.style.StyleUtil;
 
 /**
  * Excel表格中单元格工具类
@@ -195,6 +194,18 @@ public class CellUtil {
 	// region ----- getCell
 
 	/**
+	 * 获取或创建指定坐标单元格
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     X坐标，从0计数，即列号
+	 * @param y     Y坐标，从0计数，即行号
+	 * @return {@link Cell}
+	 */
+	public static Cell getOrCreateCell(final Sheet sheet, final int x, final int y) {
+		return getCell(sheet, x, y, true);
+	}
+
+	/**
 	 * 获取指定坐标单元格，如果isCreateIfNotExist为false，则在单元格不存在时返回{@code null}
 	 *
 	 * @param sheet              {@link Sheet}
@@ -318,54 +329,33 @@ public class CellUtil {
 	 * @return 合并后的单元格号
 	 */
 	public static int mergingCells(final Sheet sheet, final CellRangeAddress cellRangeAddress, final CellStyle cellStyle) {
-		setMergeCellStyle(cellStyle, cellRangeAddress, sheet);
+		if (cellRangeAddress.getNumberOfCells() <= 1) {
+			// 非合并单元格，无需合并
+			return -1;
+		}
+		StyleUtil.setBorderStyle(sheet, cellRangeAddress, cellStyle);
 		return sheet.addMergedRegion(cellRangeAddress);
 	}
 
 	/**
-	 * 获取合并单元格的值<br>
-	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
-	 *
-	 * @param sheet       {@link Sheet}
-	 * @param locationRef 单元格地址标识符，例如A11，B5
-	 * @return 合并单元格的值
-	 * @since 5.1.5
-	 */
-	public static Object getMergedRegionValue(final Sheet sheet, final String locationRef) {
-		final CellReference cellReference = new CellReference(locationRef);
-		return getMergedRegionValue(sheet, cellReference.getCol(), cellReference.getRow());
-	}
-
-	/**
-	 * 获取合并单元格的值<br>
-	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
-	 *
-	 * @param sheet {@link Sheet}
-	 * @param x     列号，从0开始，可以是合并单元格范围中的任意一列
-	 * @param y     行号，从0开始，可以是合并单元格范围中的任意一行
-	 * @return 合并单元格的值
-	 * @since 4.6.3
-	 */
-	public static Object getMergedRegionValue(final Sheet sheet, final int x, final int y) {
-		// 合并单元格的识别在getCellValue已经集成，无需重复获取合并单元格
-		return getCellValue(SheetUtil.getCell(sheet, x, y));
-	}
-
-	/**
-	 * 获取合并单元格<br>
-	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
+	 * 获取合并单元格中的第一个单元格<br>
+	 * 传入的cell可以是合并单元格范围内的任意一个单元格
 	 *
 	 * @param cell {@link Cell}
 	 * @return 合并单元格
 	 * @since 5.1.5
 	 */
-	public static Cell getMergedRegionCell(final Cell cell) {
+	public static Cell getFirstCellOfMerged(final Cell cell) {
 		if (null == cell) {
 			return null;
 		}
-		return ObjUtil.defaultIfNull(
-			getCellIfMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex()),
-			cell);
+
+		final MergedCell mergedCell = getMergedCell(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
+		if (null != mergedCell) {
+			return mergedCell.getFirst();
+		}
+
+		return cell;
 	}
 
 	/**
@@ -378,10 +368,16 @@ public class CellUtil {
 	 * @return 合并单元格，如果非合并单元格，返回坐标对应的单元格
 	 * @since 5.1.5
 	 */
-	public static Cell getMergedRegionCell(final Sheet sheet, final int x, final int y) {
-		return ObjUtil.defaultIfNull(
-			getCellIfMergedRegion(sheet, x, y),
-			() -> SheetUtil.getCell(sheet, y, x));
+	public static MergedCell getMergedCell(final Sheet sheet, final int x, final int y) {
+		if (null == sheet) {
+			return null;
+		}
+
+		final CellRangeAddress mergedRegion = SheetUtil.getMergedRegion(sheet, x, y);
+		if (null != mergedRegion) {
+			return MergedCell.of(getCell(sheet, mergedRegion.getFirstColumn(), mergedRegion.getFirstRow(), false), mergedRegion);
+		}
+		return null;
 	}
 	// endregion
 
@@ -440,46 +436,4 @@ public class CellUtil {
 			cell.getRow().removeCell(cell);
 		}
 	}
-
-	// -------------------------------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * 获取合并单元格，非合并单元格返回{@code null}<br>
-	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
-	 *
-	 * @param sheet {@link Sheet}
-	 * @param x     列号，从0开始，可以是合并单元格范围中的任意一列
-	 * @param y     行号，从0开始，可以是合并单元格范围中的任意一行
-	 * @return 合并单元格，如果非合并单元格，返回{@code null}
-	 * @since 5.4.5
-	 */
-	private static Cell getCellIfMergedRegion(final Sheet sheet, final int x, final int y) {
-		for (final CellRangeAddress ca : sheet.getMergedRegions()) {
-			if (ca.isInRange(y, x)) {
-				return SheetUtil.getCell(sheet, ca.getFirstRow(), ca.getFirstColumn());
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 根据{@link CellStyle}设置合并单元格边框样式
-	 *
-	 * @param cellStyle        {@link CellStyle}
-	 * @param cellRangeAddress {@link CellRangeAddress}
-	 * @param sheet            {@link Sheet}
-	 */
-	private static void setMergeCellStyle(final CellStyle cellStyle, final CellRangeAddress cellRangeAddress, final Sheet sheet) {
-		if (null != cellStyle) {
-			RegionUtil.setBorderTop(cellStyle.getBorderTop(), cellRangeAddress, sheet);
-			RegionUtil.setBorderRight(cellStyle.getBorderRight(), cellRangeAddress, sheet);
-			RegionUtil.setBorderBottom(cellStyle.getBorderBottom(), cellRangeAddress, sheet);
-			RegionUtil.setBorderLeft(cellStyle.getBorderLeft(), cellRangeAddress, sheet);
-			RegionUtil.setTopBorderColor(cellStyle.getTopBorderColor(), cellRangeAddress, sheet);
-			RegionUtil.setRightBorderColor(cellStyle.getRightBorderColor(), cellRangeAddress, sheet);
-			RegionUtil.setLeftBorderColor(cellStyle.getLeftBorderColor(), cellRangeAddress, sheet);
-			RegionUtil.setBottomBorderColor(cellStyle.getBottomBorderColor(), cellRangeAddress, sheet);
-		}
-	}
-	// -------------------------------------------------------------------------------------------------------------- Private method end
 }

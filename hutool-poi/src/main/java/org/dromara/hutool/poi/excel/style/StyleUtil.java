@@ -17,6 +17,8 @@
 package org.dromara.hutool.poi.excel.style;
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.dromara.hutool.core.text.StrUtil;
@@ -154,6 +156,41 @@ public class StyleUtil {
 	 */
 	public static CellStyle setBorder(final CellStyle cellStyle, final CellBorderStyle cellBorderStyle) {
 		return cellBorderStyle.setTo(cellStyle);
+	}
+
+	/**
+	 * 根据{@link CellStyle}设置指定范围边框样式
+	 *
+	 * @param sheet            {@link Sheet}
+	 * @param cellRangeAddress 边框样式范围
+	 * @param cellBorderStyle  边框风格，包括边框样式、颜色
+	 */
+	public static void setBorderStyle(final Sheet sheet, final CellRangeAddress cellRangeAddress, final CellBorderStyle cellBorderStyle) {
+		if (null != cellBorderStyle) {
+			RegionUtil.setBorderTop(cellBorderStyle.getTopStyle(), cellRangeAddress, sheet);
+			RegionUtil.setBorderRight(cellBorderStyle.getRightStyle(), cellRangeAddress, sheet);
+			RegionUtil.setBorderBottom(cellBorderStyle.getBottomStyle(), cellRangeAddress, sheet);
+			RegionUtil.setBorderLeft(cellBorderStyle.getLeftStyle(), cellRangeAddress, sheet);
+
+			RegionUtil.setTopBorderColor(cellBorderStyle.getTopColor(), cellRangeAddress, sheet);
+			RegionUtil.setRightBorderColor(cellBorderStyle.getRightColor(), cellRangeAddress, sheet);
+			RegionUtil.setLeftBorderColor(cellBorderStyle.getLeftColor(), cellRangeAddress, sheet);
+			RegionUtil.setBottomBorderColor(cellBorderStyle.getBottomColor(), cellRangeAddress, sheet);
+		}
+	}
+
+	/**
+	 * 根据{@link CellStyle}设置指定范围边框样式
+	 *
+	 * @param sheet            {@link Sheet}
+	 * @param cellRangeAddress {@link CellRangeAddress}
+	 * @param cellStyle        {@link CellStyle}
+	 */
+	public static void setBorderStyle(final Sheet sheet, final CellRangeAddress cellRangeAddress, final CellStyle cellStyle) {
+		if (null != cellStyle) {
+			final CellBorderStyle cellBorderStyle = CellBorderStyle.of(cellStyle);
+			setBorderStyle(sheet, cellRangeAddress, cellBorderStyle);
+		}
 	}
 
 	// region ----- color

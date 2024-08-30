@@ -37,7 +37,7 @@ public interface StyleSet {
 	 *
 	 * @param reference 单元格引用，包含单元格位置等信息
 	 * @param cellValue 单元格值
-	 * @param isHeader  是否为表头，扁头定义的特殊样式
+	 * @param isHeader  是否为表头，表头定义的特殊样式
 	 * @return 单元格样式
 	 */
 	CellStyle getStyleFor(CellReference reference, Object cellValue, boolean isHeader);

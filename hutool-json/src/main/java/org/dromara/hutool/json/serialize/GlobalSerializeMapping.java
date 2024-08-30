@@ -97,7 +97,7 @@ public class GlobalSerializeMapping {
 	 * @return 自定义的序列化器或者{@code null}
 	 */
 	public static JSONSerializer<? extends JSON, ?> getSerializer(final Type type) {
-		if (null == serializerMap) {
+		if (null == serializerMap || null == type) {
 			return null;
 		}
 		return serializerMap.get(ObjUtil.defaultIfNull(type, NullType.INSTANCE));
@@ -110,7 +110,7 @@ public class GlobalSerializeMapping {
 	 * @return 自定义的反序列化器或者{@code null}
 	 */
 	public static JSONDeserializer<?> getDeserializer(final Type type) {
-		if (null == deserializerMap) {
+		if (null == deserializerMap || null == type) {
 			return null;
 		}
 		return deserializerMap.get(ObjUtil.defaultIfNull(type, NullType.INSTANCE));

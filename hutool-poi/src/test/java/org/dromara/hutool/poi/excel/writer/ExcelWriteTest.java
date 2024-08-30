@@ -215,6 +215,17 @@ public class ExcelWriteTest {
 
 	@Test
 	@Disabled
+	public void mergeNotExistCellTest(){
+		final ExcelWriter writer = ExcelUtil.getWriter()
+			.merge(5);
+
+		writer
+			.flush(FileUtil.file("d:/test/mergeNotExist.xlsx"), true)
+			.close();
+	}
+
+	@Test
+	@Disabled
 	public void mergeTest2() {
 		final ArrayList<Map<String, Object>> rows = ListUtil.of(MAP_DATA_1, MAP_DATA_2);
 

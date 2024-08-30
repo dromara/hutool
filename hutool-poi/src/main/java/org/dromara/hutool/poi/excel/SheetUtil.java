@@ -141,4 +141,21 @@ public class SheetUtil {
 			throw new UnsupportedOperationException("Only XSSFSheet supports addIgnoredErrors");
 		}
 	}
+
+	/**
+	 * 获取指定坐标点对应的合并单元格范围
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     x坐标，即列号
+	 * @param y     行号
+	 * @return CellRangeAddress or null
+	 */
+	public static CellRangeAddress getMergedRegion(final Sheet sheet, final int x, final int y) {
+		for (final CellRangeAddress ca : sheet.getMergedRegions()) {
+			if (ca.isInRange(y, x)) {
+				return ca;
+			}
+		}
+		return null;
+	}
 }
