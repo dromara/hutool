@@ -213,7 +213,7 @@ public class IdUtilTest {
 	 * UUIDv7的性能测试
 	 */
 	@Test
-	public void uuidv7BenchTest() {
+	public void testUUIDv7Benchmark() {
 		final StopWatch timer = DateUtil.createStopWatch();
 
 		// UUID v7 generation benchmark
