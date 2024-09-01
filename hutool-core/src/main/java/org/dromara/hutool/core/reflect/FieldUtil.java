@@ -116,7 +116,7 @@ public class FieldUtil {
 	 * @param name      字段名称
 	 * @return 字段对象，如果未找到返回{@code null}
 	 */
-	public static Field getDeclearField(final Class<?> beanClass, final String name) {
+	public static Field getDeclaredField(final Class<?> beanClass, final String name) {
 		final Field[] fields = getDeclaredFields(beanClass, (field -> StrUtil.equals(name, field.getName())));
 		return ArrayUtil.isEmpty(fields) ? null : fields[0];
 	}
