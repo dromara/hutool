@@ -21,12 +21,7 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.StreamProgress;
 import org.dromara.hutool.core.text.StrUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.EOFException;
-import java.io.FileNotFoundException;
-import java.io.FilterInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * 同步流，可将包装的流同步为ByteArrayInputStream，以便持有内容并关闭原流

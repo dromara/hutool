@@ -92,8 +92,11 @@ public class ResponseBody implements HttpBody, Closeable {
 	 *
 	 * @return 响应内容bytes
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public byte[] getBytes() {
+		// issue#IANZ38 同步数据到内存
+		sync();
 		return this.bodyStream.readBytes();
 	}
 
