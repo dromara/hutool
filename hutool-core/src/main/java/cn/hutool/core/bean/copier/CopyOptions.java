@@ -4,6 +4,7 @@ import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.TypeConverter;
+import cn.hutool.core.convert.impl.DateConverter;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
@@ -14,6 +15,7 @@ import cn.hutool.core.util.StrUtil;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -95,6 +97,11 @@ public class CopyOptions implements Serializable {
 
 		return Convert.convertWithCheck(type, value, null, ignoreError);
 	};
+
+	/**
+	 * 在Bean转换时，如果源是String，目标对象是Date或LocalDateTime，则可自定义转换格式
+	 */
+	private String formatIfDate;
 
 	//region create
 
@@ -360,6 +367,24 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
+	 * 获取日期格式，用于日期转字符串，默认为{@code null}
+	 * @return 日期格式
+	 */
+	public String getFormatIfDate() {
+		return formatIfDate;
+	}
+
+	/**
+	 * 设置日期格式，用于日期转字符串，默认为{@code null}
+	 * @param formatIfDate 日期格式
+	 * @return this
+	 */
+	public CopyOptions setFormatIfDate(String formatIfDate) {
+		this.formatIfDate = formatIfDate;
+		return this;
+	}
+
+	/**
 	 * 使用自定义转换器转换字段值<br>
 	 * 如果自定义转换器为{@code null}，则返回原值。
 	 *
@@ -368,7 +393,12 @@ public class CopyOptions implements Serializable {
 	 * @return 编辑后的字段值
 	 * @since 5.8.0
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	protected Object convertField(Type targetType, Object fieldValue) {
+		if((targetType instanceof Class && Date.class.isAssignableFrom((Class<?>) targetType)) && null != this.formatIfDate){
+			return new DateConverter((Class) targetType, this.formatIfDate).convert(fieldValue, null);
+		}
+
 		return (null != this.converter) ?
 			this.converter.convert(targetType, fieldValue) : fieldValue;
 	}

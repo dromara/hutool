@@ -130,7 +130,7 @@ public class JSONConverter implements Converter<JSON> {
 
 				final JSONConfig config = ((JSONGetter<?>) value).getConfig();
 				final Converter<T> converter = new BeanConverter<>(targetType,
-						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
+						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError).setFormatIfDate(config.getDateFormat()));
 				return converter.convertWithCheck(value, null, ignoreError);
 			}
 		}

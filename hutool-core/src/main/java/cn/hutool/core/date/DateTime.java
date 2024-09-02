@@ -1090,6 +1090,13 @@ public class DateTime extends Date {
 			String pattern;
 			if (dateFormat instanceof SimpleDateFormat) {
 				pattern = ((SimpleDateFormat) dateFormat).toPattern();
+
+				// issue#3713 尝试使用US Locale解析
+				try {
+					DateUtil.newSimpleFormat(pattern, Locale.US, null).parse(dateStr.toString());
+				} catch (Exception ignore) {
+					// ignore
+				}
 			} else {
 				pattern = dateFormat.toString();
 			}
