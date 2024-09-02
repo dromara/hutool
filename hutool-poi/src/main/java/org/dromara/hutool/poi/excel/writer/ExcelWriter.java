@@ -464,16 +464,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	/**
 	 * 设置行高，值为一个点的高度
 	 *
-	 * @param rownum 行号（从0开始计数，-1表示所有行的默认高度）
+	 * @param rowNum 行号（从0开始计数，-1表示所有行的默认高度）
 	 * @param height 高度
 	 * @return this
 	 * @since 4.0.8
 	 */
-	public ExcelWriter setRowHeight(final int rownum, final int height) {
-		if (rownum < 0) {
+	public ExcelWriter setRowHeight(final int rowNum, final int height) {
+		if (rowNum < 0) {
 			this.sheet.setDefaultRowHeightInPoints(height);
 		} else {
-			final Row row = this.sheet.getRow(rownum);
+			final Row row = this.sheet.getRow(rowNum);
 			if (null != row) {
 				row.setHeightInPoints(height);
 			}
