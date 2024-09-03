@@ -324,6 +324,8 @@ public class ValidatorTest {
 		Assertions.assertTrue(Validator.isChineseName("阿卜杜尼亚孜·毛力尼亚孜"));
 		Assertions.assertFalse(Validator.isChineseName("阿卜杜尼亚孜./毛力尼亚孜"));
 		Assertions.assertTrue(Validator.isChineseName("段正淳"));
+		Assertions.assertTrue(Validator.isChineseName("刘欣䶮"));
+
 		Assertions.assertFalse(Validator.isChineseName("孟  伟"));
 		Assertions.assertFalse(Validator.isChineseName("李"));
 		Assertions.assertFalse(Validator.isChineseName("连逍遥0"));
