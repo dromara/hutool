@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.util.IdUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -265,9 +266,13 @@ public class ValidatorTest {
 		assertTrue(Validator.isChineseName("阿卜杜尼亚孜·毛力尼亚孜"));
 		assertFalse(Validator.isChineseName("阿卜杜尼亚孜./毛力尼亚孜"));
 		assertTrue(Validator.isChineseName("段正淳"));
+		assertTrue(Validator.isChineseName("刘欣䶮"));
 		assertFalse(Validator.isChineseName("孟  伟"));
 		assertFalse(Validator.isChineseName("李"));
 		assertFalse(Validator.isChineseName("连逍遥0"));
 		assertFalse(Validator.isChineseName("SHE"));
+
+		// issue#IAOGDR
+		Assertions.assertFalse(Validator.isChineseName("张三。"));
 	}
 }
