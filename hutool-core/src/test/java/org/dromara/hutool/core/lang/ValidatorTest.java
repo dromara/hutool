@@ -328,6 +328,9 @@ public class ValidatorTest {
 		Assertions.assertFalse(Validator.isChineseName("李"));
 		Assertions.assertFalse(Validator.isChineseName("连逍遥0"));
 		Assertions.assertFalse(Validator.isChineseName("SHE"));
+
+		// issue#IAOGDR
+		Assertions.assertFalse(Validator.isChineseName("张三。"));
 	}
 
 	@Test
