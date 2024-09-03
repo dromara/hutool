@@ -58,6 +58,18 @@ public class SyncFinisher implements Closeable {
 	}
 
 	/**
+	 * 设置自定义线程池，默认为{@link ExecutorBuilder}创建的线程池
+	 *
+	 * @param executorService 线程池
+	 * @return this
+	 * @since 5.8.33
+	 */
+	public SyncFinisher setExecutorService(ExecutorService executorService) {
+		this.executorService = executorService;
+		return this;
+	}
+
+	/**
 	 * 设置是否所有worker线程同时开始
 	 *
 	 * @param isBeginAtSameTime 是否所有worker线程同时开始

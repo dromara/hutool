@@ -5,6 +5,8 @@
 # 5.8.33(2024-09-02)
 
 ### 🐣新特性
+* 【core   】      SyncFinisher增加setExecutorService方法（issue#IANKQ1@Gitee）
+
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Gitee）
 

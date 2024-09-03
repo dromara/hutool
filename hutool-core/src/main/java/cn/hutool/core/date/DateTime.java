@@ -1093,7 +1093,7 @@ public class DateTime extends Date {
 
 				// issue#3713 尝试使用US Locale解析
 				try {
-					DateUtil.newSimpleFormat(pattern, Locale.US, null).parse(dateStr.toString());
+					return DateUtil.newSimpleFormat(pattern, Locale.US, null).parse(dateStr.toString());
 				} catch (Exception ignore) {
 					// ignore
 				}
