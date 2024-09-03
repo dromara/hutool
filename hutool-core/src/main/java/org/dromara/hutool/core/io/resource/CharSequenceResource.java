@@ -16,14 +16,9 @@
 
 package org.dromara.hutool.core.io.resource;
 
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
-import java.io.*;
-import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
@@ -32,12 +27,13 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 5.5.2
  */
-public class CharSequenceResource implements Resource, Serializable {
+public class CharSequenceResource extends BytesResource {
 	private static final long serialVersionUID = 1L;
 
-	private final CharSequence data;
-	private final CharSequence name;
-	private final Charset charset;
+	/**
+	 * 由于{@link Charset} 无法序列化，此处使用编码名称
+	 */
+	private final String charsetName;
 
 	/**
 	 * 构造，使用UTF8编码
@@ -61,49 +57,39 @@ public class CharSequenceResource implements Resource, Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param data 资源数据
-	 * @param name 资源名称
+	 * @param data    资源数据
+	 * @param name    资源名称
 	 * @param charset 编码
 	 */
-	public CharSequenceResource(final CharSequence data, final CharSequence name, final Charset charset) {
-		this.data = data;
-		this.name = name;
-		this.charset = charset;
+	public CharSequenceResource(final CharSequence data, final String name, final Charset charset) {
+		super(ByteUtil.toBytes(data, charset), name);
+		this.charsetName = charset.name();
 	}
 
-	@Override
-	public String getName() {
-		return StrUtil.toStringOrNull(this.name);
+	/**
+	 * 读取为字符串
+	 *
+	 * @return 字符串
+	 */
+	public String readStr() {
+		return readStr(getCharset());
 	}
 
-	@Override
-	public URL getUrl() {
-		return null;
+	/**
+	 * 获取编码名
+	 *
+	 * @return 编码名
+	 */
+	public String getCharsetName() {
+		return this.charsetName;
 	}
 
-	@Override
-	public long size() {
-		return data.length();
+	/**
+	 * 获取编码
+	 *
+	 * @return 编码
+	 */
+	public Charset getCharset() {
+		return CharsetUtil.charset(this.charsetName);
 	}
-
-	@Override
-	public InputStream getStream() {
-		return new ByteArrayInputStream(readBytes());
-	}
-
-	@Override
-	public BufferedReader getReader(final Charset charset) {
-		return IoUtil.toBuffered(new StringReader(this.data.toString()));
-	}
-
-	@Override
-	public String readStr(final Charset charset) throws IORuntimeException {
-		return this.data.toString();
-	}
-
-	@Override
-	public byte[] readBytes() throws IORuntimeException {
-		return ByteUtil.toBytes(this.data, this.charset);
-	}
-
 }
