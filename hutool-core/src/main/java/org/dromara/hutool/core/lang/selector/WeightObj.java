@@ -29,7 +29,7 @@ public class WeightObj<T> {
 	/** 对象 */
 	protected T obj;
 	/** 权重 */
-	protected final int weight;
+	protected int weight;
 
 	/**
 	 * 构造
