@@ -384,7 +384,11 @@ public class Request implements HeaderOperation<Request> {
 
 		// 根据内容赋值默认Content-Type
 		if (StrUtil.isBlank(header(HeaderName.CONTENT_TYPE))) {
-			header(HeaderName.CONTENT_TYPE, body.contentType(charset()), true);
+			final String contentType = body.contentType(charset());
+			// 如果用户自定义的Header为null，不调用，防止实现类中可能的空指针问题
+			if(null != contentType){
+				header(HeaderName.CONTENT_TYPE, contentType, true);
+			}
 		}
 
 		return this;
