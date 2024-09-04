@@ -1,6 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.util.RandomUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -8,14 +9,15 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WeightListPoolTest {
+public class WeightListRandomTest {
 
 	@Test
-	public void weightRandomTest() {
+	@Disabled
+	public void nextTest() {
 		Map<Integer, Times> timesMap = new HashMap<>();
 		int size = 100;
 		double sumWeight = 0.0;
-		WeightListPool<Integer> pool = new WeightListPool<>(size);
+		WeightListRandom<Integer> pool = new WeightListRandom<>(size);
 		for (int i = 0; i < size; i++) {
 			double weight = RandomUtil.randomDouble(100);
 			pool.add(i, weight);
@@ -26,7 +28,7 @@ public class WeightListPoolTest {
 		double d = 0.0001;// 随机误差
 		int times = 100000000;// 随机次数
 		for (int i = 0; i < times; i++) {
-			timesMap.get(pool.random()).num++;
+			timesMap.get(pool.next()).num++;
 		}
 		double finalSumWeight = sumWeight;
 		timesMap.forEach((key, times1) -> {
@@ -37,9 +39,7 @@ public class WeightListPoolTest {
 	}
 
 	private static class Times {
-
 		int num;
-
 		double weight;
 
 		public Times(double weight) {

@@ -7,6 +7,7 @@
 ### 🐣新特性
 * 【core   】      SyncFinisher增加setExecutorService方法（issue#IANKQ1@Gitee）
 * 【http   】      HttpConfig增加`setUseDefaultContentTypeIfNull`方法（issue#3719@Github）
+* 【core   】      用ArrayList重新实现权重随机类：WeightListRandom（pr#3720@Github）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）
