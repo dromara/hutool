@@ -2,10 +2,11 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.33(2024-09-03)
+# 5.8.33(2024-09-04)
 
 ### 🐣新特性
 * 【core   】      SyncFinisher增加setExecutorService方法（issue#IANKQ1@Gitee）
+* 【http   】      HttpConfig增加`setUseDefaultContentTypeIfNull`方法（issue#3719@Github）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）

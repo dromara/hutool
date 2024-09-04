@@ -1358,7 +1358,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException IO异常
 	 */
 	private void sendFormUrlEncoded() throws IOException {
-		if (StrUtil.isBlank(this.header(Header.CONTENT_TYPE))) {
+		if (this.config.useDefaultContentTypeIfNull && StrUtil.isBlank(this.header(Header.CONTENT_TYPE))) {
 			// 如果未自定义Content-Type，使用默认的application/x-www-form-urlencoded
 			this.httpConnection.header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(this.charset), true);
 		}
