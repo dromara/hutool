@@ -64,6 +64,7 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 		final JSONConfig hutoolSJONConfig = JSONConfig.of();
 		if(null != this.config){
 			hutoolSJONConfig.setDateFormat(this.config.getDateFormat());
+			hutoolSJONConfig.setIgnoreNullValue(this.config.isIgnoreNullValue());
 		}
 
 		this.hutoolSJONConfig = hutoolSJONConfig;

@@ -33,4 +33,17 @@ public class HutoolJSONTest {
 		engine.init(JSONEngineConfig.of().setDateFormat("yyyy-MM-dd HH:mm:ss"));
 		Assertions.assertEquals("{\"date1\":\"2024-01-01 01:12:21\",\"date2\":\"2024-01-01 01:12:21\"}", engine.toJsonString(bean));
 	}
+
+	@Test
+	void writeNullTest() {
+		final BeanWithDate bean = new BeanWithDate(null, null);
+		final JSONEngine engine = JSONEngineFactory.createEngine("hutool");
+
+		String jsonString = engine.toJsonString(bean);
+		Assertions.assertEquals("{}", jsonString);
+
+		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
+		jsonString = engine.toJsonString(bean);
+		Assertions.assertEquals("{\"date1\":null,\"date2\":null}", jsonString);
+	}
 }

@@ -78,11 +78,13 @@ public class GsonEngine extends AbstractJSONEngine {
 			return;
 		}
 
+		// 自定义配置
+		final JSONEngineConfig config = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::of);
 		final GsonBuilder builder = new GsonBuilder();
-		if (ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)) {
+		if (config.isPrettyPrint()) {
 			builder.setPrettyPrinting();
 		}
-		final String dateFormat = ObjUtil.apply(this.config, JSONEngineConfig::getDateFormat);
+		final String dateFormat = config.getDateFormat();
 		if (StrUtil.isNotEmpty(dateFormat)) {
 			builder.setDateFormat(dateFormat);
 			builder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> TimeUtil.parse(json.getAsString(), dateFormat));
@@ -94,6 +96,9 @@ public class GsonEngine extends AbstractJSONEngine {
 			builder.registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, jsonSerializationContext) -> new JsonPrimitive(date.getTime()));
 			builder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> TimeUtil.of(json.getAsJsonPrimitive().getAsLong()));
 			builder.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (date, type, jsonSerializationContext) -> new JsonPrimitive(TimeUtil.toEpochMilli(date)));
+		}
+		if(!config.isIgnoreNullValue()){
+			builder.serializeNulls();
 		}
 
 		this.gson = builder.create();

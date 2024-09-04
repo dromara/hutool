@@ -92,21 +92,26 @@ public class FastJSON2Engine extends AbstractJSONEngine {
 
 	@Override
 	protected void initEngine() {
+		JSONEngineConfig config;
 		if(null == this.readerContext){
 			this.readerContext = JSONFactory.createReadContext();
-			final String dateFormat = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::getDateFormat, "millis");
-			this.readerContext.setDateFormat(ObjUtil.defaultIfNull(dateFormat, "millis"));
+
+			config = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::of);
+			this.readerContext.setDateFormat(ObjUtil.defaultIfNull(config.getDateFormat(), "millis"));
 		}
 		if(null == this.writerContext){
 			final List<JSONWriter.Feature> features = ListUtil.of();
-			if(ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)){
+			config = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::of);
+			if(config.isPrettyPrint()){
 				features.add(JSONWriter.Feature.PrettyFormat);
+			}
+			if(!config.isIgnoreNullValue()){
+				features.add(JSONWriter.Feature.WriteMapNullValue);
 			}
 			this.writerContext = JSONFactory.createWriteContext(features.toArray(new JSONWriter.Feature[0]));
 
-			// 自定义配置
-			final String dateFormat = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::getDateFormat, "millis");
-			this.writerContext.setDateFormat(ObjUtil.defaultIfNull(dateFormat, "millis"));
+			// 自定义其它配置
+			this.writerContext.setDateFormat(ObjUtil.defaultIfNull(config.getDateFormat(), "millis"));
 		}
 	}
 }

@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.json.engine;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
@@ -112,18 +113,22 @@ public class JacksonEngine extends AbstractJSONEngine {
 			JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES
 		);
 
+		// 支持Java8+日期格式
+		registerModule(mapper, "com.fasterxml.jackson.datatype.jsr310.JavaTimeModule");
+
 		// 自定义配置
-		if (ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)) {
+		final JSONEngineConfig config = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::of);
+		if(config.isPrettyPrint()){
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		}
-		final String dateFormat = ObjUtil.apply(this.config, JSONEngineConfig::getDateFormat);
+		final String dateFormat = config.getDateFormat();
 		if(StrUtil.isNotEmpty(dateFormat)){
 			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 			mapper.setDateFormat(DateUtil.newSimpleFormat(dateFormat));
 		}
-
-		// 支持Java8+日期格式
-		registerModule(mapper, "com.fasterxml.jackson.datatype.jsr310.JavaTimeModule");
+		if(config.isIgnoreNullValue()){
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		}
 
 		this.mapper = mapper;
 	}

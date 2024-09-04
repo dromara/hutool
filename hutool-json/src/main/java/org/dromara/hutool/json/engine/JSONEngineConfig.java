@@ -44,6 +44,10 @@ public class JSONEngineConfig implements Serializable {
 	 * 日期格式，null表示默认的时间戳
 	 */
 	private String dateFormat;
+	/**
+	 * 是否忽略null值
+	 */
+	private boolean ignoreNullValue = true;
 
 	/**
 	 * 获取是否启用格式化输出
@@ -83,6 +87,26 @@ public class JSONEngineConfig implements Serializable {
 	 */
 	public JSONEngineConfig setDateFormat(final String dateFormat) {
 		this.dateFormat = dateFormat;
+		return this;
+	}
+
+	/**
+	 * 是否忽略null值
+	 *
+	 * @return 是否忽略null值
+	 */
+	public boolean isIgnoreNullValue() {
+		return this.ignoreNullValue;
+	}
+
+	/**
+	 * 设置是否忽略null值
+	 *
+	 * @param ignoreNullValue 是否忽略null值
+	 * @return this
+	 */
+	public JSONEngineConfig setIgnoreNullValue(final boolean ignoreNullValue) {
+		this.ignoreNullValue = ignoreNullValue;
 		return this;
 	}
 }
