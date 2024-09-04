@@ -33,6 +33,7 @@
 		<!-- versions -->
 		<bouncycastle.version>1.78.1</bouncycastle.version>
 		<jjwt.version>0.12.6</jjwt.version>
+		<jackson.version>2.17.2</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -52,8 +53,14 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.17.2</version>
+			<version>${jackson.version}</version>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

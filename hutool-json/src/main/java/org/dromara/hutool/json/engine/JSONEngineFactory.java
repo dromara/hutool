@@ -51,6 +51,9 @@ public class JSONEngineFactory {
 		if(StrUtil.equalsIgnoreCase("fastjson", engineName)){
 			engineName = "FastJSON2";
 		}
+		if(StrUtil.equalsIgnoreCase("hutool", engineName)){
+			engineName = "HutoolJSON";
+		}
 
 		if (!StrUtil.endWithIgnoreCase(engineName, "Engine")) {
 			engineName = engineName + "Engine";

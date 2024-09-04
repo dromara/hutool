@@ -60,6 +60,12 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 			return;
 		}
 
-		hutoolSJONConfig = JSONConfig.of();
+		// 自定义配置
+		final JSONConfig hutoolSJONConfig = JSONConfig.of();
+		if(null != this.config){
+			hutoolSJONConfig.setDateFormat(this.config.getDateFormat());
+		}
+
+		this.hutoolSJONConfig = hutoolSJONConfig;
 	}
 }

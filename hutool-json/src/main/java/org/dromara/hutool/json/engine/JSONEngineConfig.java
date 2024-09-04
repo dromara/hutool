@@ -40,6 +40,10 @@ public class JSONEngineConfig implements Serializable {
 	 * 是否格式化输出
 	 */
 	private boolean prettyPrint;
+	/**
+	 * 日期格式，null表示默认的时间戳
+	 */
+	private String dateFormat;
 
 	/**
 	 * 获取是否启用格式化输出
@@ -58,6 +62,27 @@ public class JSONEngineConfig implements Serializable {
 	 */
 	public JSONEngineConfig setPrettyPrint(final boolean prettyPrint) {
 		this.prettyPrint = prettyPrint;
+		return this;
+	}
+
+	/**
+	 * 日期格式，null表示默认的时间戳
+	 *
+	 * @return 日期格式，null表示默认的时间戳
+	 */
+	public String getDateFormat() {
+		return dateFormat;
+	}
+
+	/**
+	 * 设置日期格式，null表示默认的时间戳<br>
+	 * 此方法设置的日期格式仅对转换为JSON字符串有效，对解析JSON为bean无效。
+	 *
+	 * @param dateFormat 日期格式，null表示默认的时间戳
+	 * @return this
+	 */
+	public JSONEngineConfig setDateFormat(final String dateFormat) {
+		this.dateFormat = dateFormat;
 		return this;
 	}
 }

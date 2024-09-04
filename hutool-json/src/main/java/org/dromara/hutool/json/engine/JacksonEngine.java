@@ -19,10 +19,14 @@ package org.dromara.hutool.json.engine;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSONException;
 
@@ -46,6 +50,16 @@ public class JacksonEngine extends AbstractJSONEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(ObjectMapper.class);
+	}
+
+	/**
+	 * 获取Jackson的{@link ObjectMapper}对象
+	 *
+	 * @return {@link ObjectMapper}对象
+	 */
+	public ObjectMapper getMapper() {
+		initEngine();
+		return mapper;
 	}
 
 	@Override
@@ -84,7 +98,7 @@ public class JacksonEngine extends AbstractJSONEngine {
 
 	@Override
 	protected void initEngine() {
-		if(null != this.mapper){
+		if (null != this.mapper) {
 			return;
 		}
 
@@ -99,10 +113,36 @@ public class JacksonEngine extends AbstractJSONEngine {
 		);
 
 		// 自定义配置
-		if(ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)){
+		if (ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)) {
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		}
+		final String dateFormat = ObjUtil.apply(this.config, JSONEngineConfig::getDateFormat);
+		if(StrUtil.isNotEmpty(dateFormat)){
+			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+			mapper.setDateFormat(DateUtil.newSimpleFormat(dateFormat));
+		}
+
+		// 支持Java8+日期格式
+		registerModule(mapper, "com.fasterxml.jackson.datatype.jsr310.JavaTimeModule");
 
 		this.mapper = mapper;
+	}
+
+	/**
+	 * 注册模块
+	 *
+	 * @param mapper      Jackson的{@link ObjectMapper}对象
+	 * @param moduleClass 模块类名
+	 */
+	@SuppressWarnings("SameParameterValue")
+	private void registerModule(final ObjectMapper mapper, final String moduleClass) {
+		final Class<?> aClass;
+		try {
+			aClass = Class.forName(moduleClass);
+		} catch (final ClassNotFoundException ignore) {
+			//用户未引入JSR310，则跳过不加载模块
+			return;
+		}
+		mapper.registerModule((Module) ConstructorUtil.newInstance(aClass));
 	}
 }

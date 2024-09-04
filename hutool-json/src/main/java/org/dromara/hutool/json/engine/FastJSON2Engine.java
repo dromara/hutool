@@ -94,6 +94,8 @@ public class FastJSON2Engine extends AbstractJSONEngine {
 	protected void initEngine() {
 		if(null == this.readerContext){
 			this.readerContext = JSONFactory.createReadContext();
+			final String dateFormat = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::getDateFormat, "millis");
+			this.readerContext.setDateFormat(ObjUtil.defaultIfNull(dateFormat, "millis"));
 		}
 		if(null == this.writerContext){
 			final List<JSONWriter.Feature> features = ListUtil.of();
@@ -101,6 +103,10 @@ public class FastJSON2Engine extends AbstractJSONEngine {
 				features.add(JSONWriter.Feature.PrettyFormat);
 			}
 			this.writerContext = JSONFactory.createWriteContext(features.toArray(new JSONWriter.Feature[0]));
+
+			// 自定义配置
+			final String dateFormat = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::getDateFormat, "millis");
+			this.writerContext.setDateFormat(ObjUtil.defaultIfNull(dateFormat, "millis"));
 		}
 	}
 }

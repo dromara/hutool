@@ -16,15 +16,18 @@
 
 package org.dromara.hutool.json.engine;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import org.dromara.hutool.core.date.TimeUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSONException;
 
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Gson引擎实现
@@ -32,7 +35,7 @@ import java.lang.reflect.Type;
  * @author Looly
  * @since 6.0.0
  */
-public class GsonEngine extends AbstractJSONEngine{
+public class GsonEngine extends AbstractJSONEngine {
 
 	private Gson gson;
 
@@ -55,10 +58,10 @@ public class GsonEngine extends AbstractJSONEngine{
 	@Override
 	public <T> T deserialize(final Reader reader, final Object type) {
 		initEngine();
-		if(type instanceof Class){
-			return gson.fromJson(reader, (Class<T>)type);
-		} else if(type instanceof Type){
-			return gson.fromJson(reader, (Type)type);
+		if (type instanceof Class) {
+			return gson.fromJson(reader, (Class<T>) type);
+		} else if (type instanceof Type) {
+			return gson.fromJson(reader, (Type) type);
 		}
 
 		throw new JSONException("Unsupported type: {}", type.getClass());
@@ -71,14 +74,28 @@ public class GsonEngine extends AbstractJSONEngine{
 
 	@Override
 	protected void initEngine() {
-		if(null != this.gson){
+		if (null != this.gson) {
 			return;
 		}
 
 		final GsonBuilder builder = new GsonBuilder();
-		if(ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)){
+		if (ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)) {
 			builder.setPrettyPrinting();
 		}
+		final String dateFormat = ObjUtil.apply(this.config, JSONEngineConfig::getDateFormat);
+		if (StrUtil.isNotEmpty(dateFormat)) {
+			builder.setDateFormat(dateFormat);
+			builder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> TimeUtil.parse(json.getAsString(), dateFormat));
+			builder.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (date, type, jsonSerializationContext) -> new JsonPrimitive(TimeUtil.format(date, dateFormat)));
+		} else {
+			// 无自定义格式，则默认输出时间戳
+			// https://stackoverflow.com/questions/41979086/how-to-serialize-date-to-long-using-gson
+			builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> new Date(json.getAsJsonPrimitive().getAsLong()));
+			builder.registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, jsonSerializationContext) -> new JsonPrimitive(date.getTime()));
+			builder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> TimeUtil.of(json.getAsJsonPrimitive().getAsLong()));
+			builder.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (date, type, jsonSerializationContext) -> new JsonPrimitive(TimeUtil.toEpochMilli(date)));
+		}
+
 		this.gson = builder.create();
 	}
 }
