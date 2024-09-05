@@ -665,4 +665,12 @@ public class NumberUtilTest {
 		final Number number = NumberUtil.parseNumber("12,234,456");
 		assertEquals(new BigDecimal(12234456), number);
 	}
+
+	@Test
+	public void addIntAndDoubleTest() {
+		int v1 = 91007279;
+		double v2 = 0.3545;
+		final double result = NumberUtil.add(v1, v2);
+		assertEquals(91007279.3545, result, 0);
+	}
 }
