@@ -1,6 +1,7 @@
 package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.BCUtil;
 import cn.hutool.crypto.CryptoException;
@@ -292,6 +293,18 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @since 5.1.6
 	 */
 	public byte[] decrypt(byte[] data, CipherParameters privateKeyParameters) throws CryptoException {
+		Assert.isTrue(data.length > 1, "Invalid SM2 cipher text, must be at least 1 byte long");
+		// 检查数据，gmssl等库生成的密文不包含04前缀（非压缩数据标识），此处检查并补充
+		// 参考：https://blog.csdn.net/softt/article/details/139978608
+		// 根据公钥压缩形态不同，密文分为两种压缩形式：
+		// C1( 03 + X ) + C3（32个字节）+ C2
+		// C1( 02 + X ) + C3（32个字节）+ C2
+		// 非压缩公钥正常形态为04 + X  + Y，由于各个算法库差异，04有时候会省略
+		// 非压缩密文正常形态为04 + C1 + C3 + C2
+		if (data[0] != 0x04 && data[0] != 0x02 && data[0] != 0x03) {
+			data = (byte[]) ArrayUtil.insert(data, 0, 0x04);
+		}
+
 		lock.lock();
 		final SM2Engine engine = getEngine();
 		try {
