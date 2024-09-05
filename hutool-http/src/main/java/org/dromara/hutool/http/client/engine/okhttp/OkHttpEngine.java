@@ -129,8 +129,8 @@ public class OkHttpEngine extends AbstractClientEngine {
 		// 设置代理
 		setProxy(builder, config);
 
-		// 默认关闭自动跳转
-		builder.followRedirects(false);
+		// 重定向
+		builder.followRedirects(config.isFollowRedirects());
 
 		this.client = builder.build();
 	}

@@ -293,6 +293,7 @@ public class Request implements HeaderOperation<Request> {
 	// endregion
 
 	// region body get
+
 	/**
 	 * 获取请求体
 	 *
@@ -343,6 +344,7 @@ public class Request implements HeaderOperation<Request> {
 	// endregion
 
 	// region body set
+
 	/**
 	 * 添加请求表单内容
 	 *
@@ -386,7 +388,7 @@ public class Request implements HeaderOperation<Request> {
 		if (StrUtil.isBlank(header(HeaderName.CONTENT_TYPE))) {
 			final String contentType = body.contentType(charset());
 			// 如果用户自定义的Header为null，不调用，防止实现类中可能的空指针问题
-			if(null != contentType){
+			if (null != contentType) {
 				header(HeaderName.CONTENT_TYPE, contentType, true);
 			}
 		}
@@ -396,7 +398,8 @@ public class Request implements HeaderOperation<Request> {
 	// endregion
 
 	/**
-	 * 获取最大重定向请求次数
+	 * 获取最大重定向请求次数<br>
+	 * 注意：当{@link ClientConfig#isFollowRedirects()}为{@code true}时，此参数无效
 	 *
 	 * @return 最大重定向请求次数
 	 */
@@ -406,7 +409,8 @@ public class Request implements HeaderOperation<Request> {
 
 	/**
 	 * 设置最大重定向次数<br>
-	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向
+	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向<br>
+	 * 注意：当{@link ClientConfig#isFollowRedirects()}为{@code true}时，此参数无效
 	 *
 	 * @param maxRedirectCount 最大重定向次数
 	 * @return this
@@ -477,13 +481,14 @@ public class Request implements HeaderOperation<Request> {
 
 	/**
 	 * 检查form表单中的对象是否为Multipart对象
+	 *
 	 * @param value 对象
 	 * @return 是否为Multipart对象
 	 */
-	private static boolean hasMultipartValue(final Object value){
-		if(value instanceof Iterable){
+	private static boolean hasMultipartValue(final Object value) {
+		if (value instanceof Iterable) {
 			for (final Object subValue : (Iterable<?>) value) {
-				if(hasMultipartValue(subValue)){
+				if (hasMultipartValue(subValue)) {
 					return true;
 				}
 			}

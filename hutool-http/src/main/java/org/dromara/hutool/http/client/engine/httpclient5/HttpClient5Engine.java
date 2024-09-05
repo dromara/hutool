@@ -21,6 +21,7 @@ import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.DefaultRedirectStrategy;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -119,15 +120,19 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, HttpClientConfig::of);
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
 		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
-		if(config.isDisableCache()){
+		if (config.isDisableCache()) {
 			clientBuilder.disableAuthCaching();
 		}
 
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
 
-		// 默认关闭自动重定向
-		clientBuilder.disableRedirectHandling();
+		// 重定向
+		if (config.isFollowRedirects()) {
+			clientBuilder.setRedirectStrategy(DefaultRedirectStrategy.INSTANCE);
+		} else {
+			clientBuilder.disableRedirectHandling();
+		}
 
 		// 设置代理
 		setProxy(clientBuilder, config);
@@ -153,7 +158,7 @@ public class HttpClient5Engine extends AbstractClientEngine {
 
 		// 填充自定义消息体
 		final HttpBody body = message.handledBody();
-		if(null != body){
+		if (null != body) {
 			request.setEntity(new HttpClient5BodyEntity(
 				// 用户自定义的内容类型
 				message.header(HeaderName.CONTENT_TYPE),
@@ -202,7 +207,7 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		}
 
 		// 连接池配置
-		if(config instanceof HttpClientConfig){
+		if (config instanceof HttpClientConfig) {
 			final HttpClientConfig httpClientConfig = (HttpClientConfig) config;
 			final int maxTotal = httpClientConfig.getMaxTotal();
 			final int maxPerRoute = httpClientConfig.getMaxPerRoute();

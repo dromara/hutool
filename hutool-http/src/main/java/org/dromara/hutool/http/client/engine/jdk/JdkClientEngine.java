@@ -129,8 +129,8 @@ public class JdkClientEngine extends AbstractClientEngine {
 			.setReadTimeout(config.getReadTimeout())
 			.setMethod(message.method())//
 			.setSSLInfo(config.getSslInfo())
-			// 关闭JDK自动转发，采用手动转发方式
-			.setInstanceFollowRedirects(false)
+			// 如果客户端设置自动重定向，则Request中maxRedirectCount无效
+			.setInstanceFollowRedirects(config.isFollowRedirects())
 			.setDisableCache(config.isDisableCache())
 			// 覆盖默认Header
 			.header(message.headers(), true);

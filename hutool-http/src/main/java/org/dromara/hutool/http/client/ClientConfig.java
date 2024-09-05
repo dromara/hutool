@@ -56,6 +56,10 @@ public class ClientConfig {
 	 * 代理
 	 */
 	private HttpProxy proxy;
+	/**
+	 * 是否遇到响应状态码3xx时自动重定向请求
+	 */
+	private boolean followRedirects;
 
 	/**
 	 * 构造
@@ -152,7 +156,7 @@ public class ClientConfig {
 	 *
 	 * @return this
 	 */
-	public ClientConfig enableSSLVerify(){
+	public ClientConfig enableSSLVerify() {
 		return setSSLInfo(SSLInfo.DEFAULT);
 	}
 
@@ -202,6 +206,28 @@ public class ClientConfig {
 	 */
 	public ClientConfig setProxy(final HttpProxy proxy) {
 		this.proxy = proxy;
+		return this;
+	}
+
+	/**
+	 * 是否遇到响应状态码3xx时自动重定向请求<br>
+	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirectCount()}无效
+	 *
+	 * @return 是否遇到响应状态码3xx时自动重定向请求
+	 */
+	public boolean isFollowRedirects() {
+		return followRedirects;
+	}
+
+	/**
+	 * 设置是否遇到响应状态码3xx时自动重定向请求<br>
+	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirectCount()}无效
+	 *
+	 * @param followRedirects 是否遇到响应状态码3xx时自动重定向请求
+	 * @return this
+	 */
+	public ClientConfig setFollowRedirects(final boolean followRedirects) {
+		this.followRedirects = followRedirects;
 		return this;
 	}
 }

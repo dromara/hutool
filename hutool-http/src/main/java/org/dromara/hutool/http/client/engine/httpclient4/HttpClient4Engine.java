@@ -25,10 +25,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
@@ -118,7 +115,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		if (null != sslInfo) {
 			clientBuilder.setSSLSocketFactory(buildSocketFactory(sslInfo));
 		}
-		if(config.isDisableCache()){
+		if (config.isDisableCache()) {
 			clientBuilder.disableAuthCaching();
 		}
 
@@ -128,8 +125,12 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
 
-		// 默认关闭自动重定向
-		clientBuilder.disableRedirectHandling();
+		// 重定向
+		if (config.isFollowRedirects()) {
+			clientBuilder.setRedirectStrategy(LaxRedirectStrategy.INSTANCE);
+		} else {
+			clientBuilder.disableRedirectHandling();
+		}
 
 		// 设置代理
 		setProxy(clientBuilder, config);
@@ -156,7 +157,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 
 		// 填充自定义消息体
 		final HttpBody body = message.handledBody();
-		if(null != body){
+		if (null != body) {
 			requestBuilder.setEntity(new HttpClient4BodyEntity(
 				// 用户自定义的内容类型
 				message.header(HeaderName.CONTENT_TYPE),
@@ -194,6 +195,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 
 	/**
 	 * 构建连接池管理器
+	 *
 	 * @param config 配置
 	 * @return PoolingHttpClientConnectionManager
 	 */
@@ -201,7 +203,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		final PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
 
 		// 连接池配置
-		if(config instanceof HttpClientConfig){
+		if (config instanceof HttpClientConfig) {
 			final HttpClientConfig httpClientConfig = (HttpClientConfig) config;
 			manager.setMaxTotal(httpClientConfig.getMaxTotal());
 			manager.setDefaultMaxPerRoute(httpClientConfig.getMaxPerRoute());
