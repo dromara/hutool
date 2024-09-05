@@ -168,12 +168,12 @@ public class RequestTest {
 //		String url = "https://api.btstu.cn/sjtx/api.php?lx=b1";
 
 		// 方式1：全局设置
-		HttpGlobalConfig.setMaxRedirectCount(1);
+		HttpGlobalConfig.setMaxRedirects(1);
 		Response execute = Request.of(url).send();
 		Console.log(execute.getStatus(), execute.header(HeaderName.LOCATION));
 
 		// 方式2，单独设置
-		execute = Request.of(url).setMaxRedirectCount(1).send();
+		execute = Request.of(url).setMaxRedirects(1).send();
 		Console.log(execute.getStatus(), execute.header(HeaderName.LOCATION));
 	}
 

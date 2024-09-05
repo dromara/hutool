@@ -133,7 +133,7 @@ public class Request implements HeaderOperation<Request> {
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirectCount;
+	private int maxRedirects;
 	/**
 	 * 是否是REST请求模式，REST模式运行GET请求附带body
 	 */
@@ -145,7 +145,7 @@ public class Request implements HeaderOperation<Request> {
 	public Request() {
 		method = Method.GET;
 		headers = new ListValueMap<>(new LinkedHashMap<>());
-		maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
+		maxRedirects = HttpGlobalConfig.getMaxRedirects();
 
 		// 全局默认请求头
 		header(GlobalHeaders.INSTANCE.headers(), false);
@@ -403,8 +403,8 @@ public class Request implements HeaderOperation<Request> {
 	 *
 	 * @return 最大重定向请求次数
 	 */
-	public int maxRedirectCount() {
-		return maxRedirectCount;
+	public int maxRedirects() {
+		return maxRedirects;
 	}
 
 	/**
@@ -412,11 +412,11 @@ public class Request implements HeaderOperation<Request> {
 	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向<br>
 	 * 注意：当{@link ClientConfig#isFollowRedirects()}为{@code true}时，此参数无效
 	 *
-	 * @param maxRedirectCount 最大重定向次数
+	 * @param maxRedirects 最大重定向次数
 	 * @return this
 	 */
-	public Request setMaxRedirectCount(final int maxRedirectCount) {
-		this.maxRedirectCount = Math.max(maxRedirectCount, 0);
+	public Request setMaxRedirects(final int maxRedirects) {
+		this.maxRedirects = Math.max(maxRedirects, 0);
 		return this;
 	}
 

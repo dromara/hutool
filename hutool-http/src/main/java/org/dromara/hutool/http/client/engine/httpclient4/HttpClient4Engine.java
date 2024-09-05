@@ -110,17 +110,23 @@ public class HttpClient4Engine extends AbstractClientEngine {
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, HttpClientConfig::of);
+
 		// SSL配置
 		final SSLInfo sslInfo = config.getSslInfo();
 		if (null != sslInfo) {
 			clientBuilder.setSSLSocketFactory(buildSocketFactory(sslInfo));
 		}
+
+		// 连接配置
+		clientBuilder.setConnectionManager(buildConnectionManager(config));
+
+		// 实例级别默认请求配置
+		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
+
+		// 缓存
 		if (config.isDisableCache()) {
 			clientBuilder.disableAuthCaching();
 		}
-
-		clientBuilder.setConnectionManager(buildConnectionManager(config));
-		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
 
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
@@ -151,6 +157,9 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		final RequestBuilder requestBuilder = RequestBuilder
 			.create(message.method().name())
 			.setUri(url.toURI());
+
+		// 自定义单次请求配置
+		requestBuilder.setConfig(buildRequestConfig(message));
 
 		// 填充自定义头
 		message.headers().forEach((k, v1) -> v1.forEach((v2) -> requestBuilder.addHeader(k, v2)));
@@ -210,6 +219,23 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		}
 
 		return manager;
+	}
+
+	/**
+	 * 构建请求配置，包括重定向
+	 * @param request 请求
+	 * @return {@link RequestConfig}
+	 */
+	private static RequestConfig buildRequestConfig(final Request request) {
+		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+		final int maxRedirects = request.maxRedirects();
+		if (maxRedirects > 0) {
+			requestConfigBuilder.setMaxRedirects(maxRedirects);
+		} else {
+			requestConfigBuilder.setRedirectsEnabled(false);
+		}
+
+		return requestConfigBuilder.build();
 	}
 
 	/**

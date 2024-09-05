@@ -594,7 +594,7 @@ public class SoapClient implements HeaderOperation<SoapClient> {
 	public Response sendForResponse() {
 		final Request request = Request.of(this.url)
 			.method(Method.POST)
-			.setMaxRedirectCount(2)
+			.setMaxRedirects(2)
 			.contentType(getXmlContentType())
 			.header(this.headers, false)
 			.body(getMsgStr(false));

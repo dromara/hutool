@@ -98,7 +98,7 @@ public class HttpUtilTest {
 	public void get12306Test() {
 		// 某些网站需要打开信任全部域
 		// HttpGlobalConfig.setTrustAnyHost(true);
-		HttpUtil.send(Request.of("https://kyfw.12306.cn/otn/").setMaxRedirectCount(2))
+		HttpUtil.send(Request.of("https://kyfw.12306.cn/otn/").setMaxRedirects(2))
 				.then(response -> Console.log(response.bodyStr()));
 	}
 

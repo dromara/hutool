@@ -217,7 +217,7 @@ public class DownloadTest {
 	public void downloadTeamViewerTest() throws IOException {
 		// 此URL有3次重定向, 需要请求4次
 		final String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";
-		HttpGlobalConfig.setMaxRedirectCount(20);
+		HttpGlobalConfig.setMaxRedirects(20);
 		final Path temp = Files.createTempFile("tmp", ".exe");
 		final File file = HttpDownloader.downloadFile(url, temp.toFile());
 		Console.log(file.length());

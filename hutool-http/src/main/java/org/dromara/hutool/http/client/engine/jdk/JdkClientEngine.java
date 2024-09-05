@@ -163,7 +163,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 	 */
 	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final Request message, final boolean isAsync) {
 		// 手动实现重定向
-		if (message.maxRedirectCount() > 0) {
+		if (message.maxRedirects() > 0) {
 			final int code;
 			try {
 				code = conn.getCode();
@@ -176,7 +176,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 			if (code != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(code)) {
 					message.url(getLocationUrl(message.handledUrl(), conn.header(HeaderName.LOCATION)));
-					if (conn.redirectCount < message.maxRedirectCount()) {
+					if (conn.redirectCount < message.maxRedirects()) {
 						conn.redirectCount++;
 						return send(message, isAsync);
 					}

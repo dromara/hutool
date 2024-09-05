@@ -42,7 +42,7 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	private static int timeout = -1;
 	private static String boundary = "--------------------Hutool_" + RandomUtil.randomStringLower(16);
-	private static int maxRedirectCount = 0;
+	private static int maxRedirects = 0;
 	private static boolean ignoreEOFError = true;
 	/**
 	 * 是否从响应正文中的meta标签获取编码信息
@@ -99,10 +99,9 @@ public class HttpGlobalConfig implements Serializable {
 	 * 如果设置为1，表示重定向一次，即请求两次
 	 *
 	 * @return 全局默认的最大重定向次数
-	 * @since 5.7.19
 	 */
-	public static int getMaxRedirectCount() {
-		return maxRedirectCount;
+	public static int getMaxRedirects() {
+		return maxRedirects;
 	}
 
 	/**
@@ -112,8 +111,8 @@ public class HttpGlobalConfig implements Serializable {
 	 * @param customMaxRedirectCount 全局默认的最大重定向次数
 	 * @since 5.7.19
 	 */
-	synchronized public static void setMaxRedirectCount(final int customMaxRedirectCount) {
-		maxRedirectCount = customMaxRedirectCount;
+	synchronized public static void setMaxRedirects(final int customMaxRedirectCount) {
+		maxRedirects = customMaxRedirectCount;
 	}
 
 	/**

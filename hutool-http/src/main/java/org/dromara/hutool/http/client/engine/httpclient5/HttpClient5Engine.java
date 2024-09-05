@@ -116,10 +116,15 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		}
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
-
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, HttpClientConfig::of);
+
+		// 连接配置，包括SSL配置等
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
+
+		// 实例级别默认请求配置
 		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
+
+		// 缓存
 		if (config.isDisableCache()) {
 			clientBuilder.disableAuthCaching();
 		}
@@ -151,7 +156,10 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		final UrlBuilder url = message.handledUrl();
 		Assert.notNull(url, "Request URL must be not null!");
 
-		final ClassicHttpRequest request = new HttpUriRequestBase(message.method().name(), url.toURI());
+		final HttpUriRequestBase request = new HttpUriRequestBase(message.method().name(), url.toURI());
+
+		// 自定义单次请求配置
+		request.setConfig(buildRequestConfig(message));
 
 		// 填充自定义头
 		request.setHeaders(toHeaderList(message.headers()).toArray(new Header[0]));
@@ -223,6 +231,24 @@ public class HttpClient5Engine extends AbstractClientEngine {
 	}
 
 	/**
+	 * 构建请求配置，包括重定向配置
+	 *
+	 * @param request 请求
+	 * @return {@link RequestConfig}
+	 */
+	private static RequestConfig buildRequestConfig(final Request request) {
+		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+		final int maxRedirects = request.maxRedirects();
+		if (maxRedirects > 0) {
+			requestConfigBuilder.setMaxRedirects(maxRedirects);
+		} else {
+			requestConfigBuilder.setRedirectsEnabled(false);
+		}
+
+		return requestConfigBuilder.build();
+	}
+
+	/**
 	 * 构建请求配置，包括连接请求超时和响应（读取）超时
 	 *
 	 * @param config {@link ClientConfig}
@@ -240,7 +266,7 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		if (readTimeout > 0) {
 			requestConfigBuilder.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
 		}
-		if(config instanceof HttpClientConfig){
+		if (config instanceof HttpClientConfig) {
 			requestConfigBuilder.setMaxRedirects(((HttpClientConfig) config).getMaxRedirects());
 		}
 

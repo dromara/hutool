@@ -211,7 +211,7 @@ public class ClientConfig {
 
 	/**
 	 * 是否遇到响应状态码3xx时自动重定向请求<br>
-	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirectCount()}无效
+	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirects()}无效
 	 *
 	 * @return 是否遇到响应状态码3xx时自动重定向请求
 	 */
@@ -221,7 +221,7 @@ public class ClientConfig {
 
 	/**
 	 * 设置是否遇到响应状态码3xx时自动重定向请求<br>
-	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirectCount()}无效
+	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirects()}无效
 	 *
 	 * @param followRedirects 是否遇到响应状态码3xx时自动重定向请求
 	 * @return this
