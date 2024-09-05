@@ -103,6 +103,38 @@ public class NumberUtil {
 	 * @param v1 被加数
 	 * @param v2 加数
 	 * @return 和
+	 */
+	public static double add(long v1, double v2) {
+		return add(Long.toString(v1), Double.toString(v2)).doubleValue();
+	}
+
+	/**
+	 * 提供精确的加法运算
+	 *
+	 * @param v1 被加数
+	 * @param v2 加数
+	 * @return 和
+	 */
+	public static double add(double v1, long v2) {
+		return add(Double.toString(v1), Long.toString(v2)).doubleValue();
+	}
+
+	/**
+	 * 提供精确的加法运算
+	 * @param v1 被加数
+	 * @param v2 加数
+	 * @return 和
+	 */
+	public static double add(long v1, long v2) {
+		return add(Long.toString(v1), Long.toString(v2)).doubleValue();
+	}
+
+	/**
+	 * 提供精确的加法运算
+	 *
+	 * @param v1 被加数
+	 * @param v2 加数
+	 * @return 和
 	 * @since 3.1.1
 	 */
 	public static double add(Double v1, Double v2) {
