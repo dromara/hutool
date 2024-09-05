@@ -97,22 +97,27 @@ public class OkHttpEngine extends AbstractClientEngine {
 
 		final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-		final ClientConfig conf = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
 		// 连接超时
-		final int connectionTimeout = conf.getConnectionTimeout();
+		final int connectionTimeout = config.getConnectionTimeout();
 		if (connectionTimeout > 0) {
 			builder.connectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 		}
 		// 读写超时
-		final int readTimeout = conf.getReadTimeout();
+		final int readTimeout = config.getReadTimeout();
 		if (readTimeout > 0) {
 			// 读写共用读取超时
-			builder.readTimeout(conf.getReadTimeout(), TimeUnit.MILLISECONDS)
-				.writeTimeout(conf.getReadTimeout(), TimeUnit.MILLISECONDS);
+			builder.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS)
+				.writeTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
+		}
+
+		// 连接池
+		if(config instanceof OkHttpClientConfig){
+			builder.connectionPool(((OkHttpClientConfig) config).getConnectionPool());
 		}
 
 		// SSL
-		final SSLInfo sslInfo = conf.getSslInfo();
+		final SSLInfo sslInfo = config.getSslInfo();
 		if (null != sslInfo){
 			final SSLSocketFactory socketFactory = sslInfo.getSocketFactory();
 			final X509TrustManager trustManager = sslInfo.getTrustManager();
@@ -122,7 +127,7 @@ public class OkHttpEngine extends AbstractClientEngine {
 		}
 
 		// 设置代理
-		setProxy(builder, conf);
+		setProxy(builder, config);
 
 		// 默认关闭自动跳转
 		builder.followRedirects(false);

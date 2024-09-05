@@ -40,6 +40,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
+import org.dromara.hutool.http.client.HttpClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
@@ -115,7 +116,7 @@ public class HttpClient5Engine extends AbstractClientEngine {
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
 
-		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, HttpClientConfig::of);
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
 		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
 		if(config.isDisableCache()){
@@ -198,6 +199,19 @@ public class HttpClient5Engine extends AbstractClientEngine {
 			connectionManagerBuilder.setDefaultConnectionConfig(ConnectionConfig.custom()
 				.setSocketTimeout(connectionTimeout, TimeUnit.MILLISECONDS)
 				.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS).build());
+		}
+
+		// 连接池配置
+		if(config instanceof HttpClientConfig){
+			final HttpClientConfig httpClientConfig = (HttpClientConfig) config;
+			final int maxTotal = httpClientConfig.getMaxTotal();
+			final int maxPerRoute = httpClientConfig.getMaxPerRoute();
+			if (maxTotal > 0) {
+				connectionManagerBuilder.setMaxConnTotal(maxTotal);
+			}
+			if (maxPerRoute > 0) {
+				connectionManagerBuilder.setMaxConnPerRoute(maxPerRoute);
+			}
 		}
 
 		return connectionManagerBuilder.build();

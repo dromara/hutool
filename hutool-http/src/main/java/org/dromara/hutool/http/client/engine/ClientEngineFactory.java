@@ -43,7 +43,15 @@ public class ClientEngineFactory {
 
 	/**
 	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的HTTP客户端引擎对象<br>
-	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
+	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎<br>
+	 * 对不同引擎个性化配置，使用对应的{@link ClientConfig} 子类：
+	 *
+	 * <ul>
+	 *     <li>HttpClient4和HttpClient5使用{@link org.dromara.hutool.http.client.HttpClientConfig}</li>
+	 *     <li>OkHttp使用{@link org.dromara.hutool.http.client.engine.okhttp.OkHttpClientConfig}</li>
+	 * </ul>
+	 * <p>
+	 * 如果混用这些配置，则个性配置不生效
 	 *
 	 * @param config Http客户端配置
 	 * @return {@code ClientEngine}

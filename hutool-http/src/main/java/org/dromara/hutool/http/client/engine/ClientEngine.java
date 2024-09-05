@@ -32,6 +32,14 @@ public interface ClientEngine extends Closeable {
 
 	/**
 	 * 设置客户端引擎参数，如超时、代理等信息
+	 * 对不同引擎个性化配置，使用对应的{@link ClientConfig} 子类：
+	 *
+	 * <ul>
+	 *     <li>HttpClient4和HttpClient5使用{@link org.dromara.hutool.http.client.HttpClientConfig}</li>
+	 *     <li>OkHttp使用{@link org.dromara.hutool.http.client.engine.okhttp.OkHttpClientConfig}</li>
+	 * </ul>
+	 * <p>
+	 * 如果混用这些配置，则个性配置不生效
 	 *
 	 * @param config 客户端设置
 	 * @return this

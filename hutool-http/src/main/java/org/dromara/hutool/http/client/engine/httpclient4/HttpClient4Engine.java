@@ -29,6 +29,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -37,6 +38,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
+import org.dromara.hutool.http.client.HttpClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
@@ -110,7 +112,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		}
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
-		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, HttpClientConfig::of);
 		// SSL配置
 		final SSLInfo sslInfo = config.getSslInfo();
 		if (null != sslInfo) {
@@ -120,6 +122,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 			clientBuilder.disableAuthCaching();
 		}
 
+		clientBuilder.setConnectionManager(buildConnectionManager(config));
 		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
 
 		// 设置默认头信息
@@ -187,6 +190,24 @@ public class HttpClient4Engine extends AbstractClientEngine {
 			sslInfo.getProtocols(),
 			null,
 			sslInfo.getHostnameVerifier());
+	}
+
+	/**
+	 * 构建连接池管理器
+	 * @param config 配置
+	 * @return PoolingHttpClientConnectionManager
+	 */
+	private PoolingHttpClientConnectionManager buildConnectionManager(final ClientConfig config) {
+		final PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
+
+		// 连接池配置
+		if(config instanceof HttpClientConfig){
+			final HttpClientConfig httpClientConfig = (HttpClientConfig) config;
+			manager.setMaxTotal(httpClientConfig.getMaxTotal());
+			manager.setDefaultMaxPerRoute(httpClientConfig.getMaxPerRoute());
+		}
+
+		return manager;
 	}
 
 	/**
