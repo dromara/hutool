@@ -16,5 +16,66 @@
 
 package org.dromara.hutool.json.engine;
 
+import org.dromara.hutool.core.date.DateTime;
+import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.date.TimeUtil;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
 public class JSONEngineTest {
+
+	private final String[] engineNames = {"jackson", "gson", "fastjson", "hutool"};
+
+	@Test
+	void writeDateFormatTest() {
+		Arrays.stream(engineNames).forEach(this::assertWriteDateFormat);
+	}
+
+	@Test
+	void writeNullTest() {
+		Arrays.stream(engineNames).forEach(this::assertWriteNull);
+	}
+
+	@Test
+	void writeLocalDateFormatTest() {
+		Arrays.stream(engineNames).forEach(this::assertWriteLocalDateFormat);
+	}
+
+	private void assertWriteDateFormat(final String engineName) {
+		final DateTime date = DateUtil.parse("2024-01-01 01:12:21");
+		final BeanWithDate bean = new BeanWithDate(date, TimeUtil.of(date));
+		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
+
+		final String jsonString = engine.toJsonString(bean);
+		Assertions.assertEquals("{\"date1\":1704042741000,\"date2\":1704042741000}", jsonString);
+
+		engine.init(JSONEngineConfig.of().setDateFormat("yyyy-MM-dd HH:mm:ss"));
+		Assertions.assertEquals("{\"date1\":\"2024-01-01 01:12:21\",\"date2\":\"2024-01-01 01:12:21\"}", engine.toJsonString(bean));
+	}
+
+	void assertWriteLocalDateFormat(final String engineName) {
+		final DateTime date = DateUtil.parse("2024-01-01 01:12:21");
+		final BeanWithLocalDate bean = new BeanWithLocalDate(TimeUtil.of(date).toLocalDate());
+		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
+
+		final String jsonString = engine.toJsonString(bean);
+		Assertions.assertEquals("{\"date\":1704038400000}", jsonString);
+
+		engine.init(JSONEngineConfig.of().setDateFormat("yyyy-MM-dd HH:mm:ss"));
+		Assertions.assertEquals("{\"date\":\"2024-01-01 00:00:00\"}", engine.toJsonString(bean));
+	}
+
+	private void assertWriteNull(final String engineName) {
+		final BeanWithDate bean = new BeanWithDate(null, null);
+		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
+
+		String jsonString = engine.toJsonString(bean);
+		Assertions.assertEquals("{}", jsonString);
+
+		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
+		jsonString = engine.toJsonString(bean);
+		Assertions.assertEquals("{\"date1\":null,\"date2\":null}", jsonString);
+	}
 }

@@ -42,28 +42,16 @@ public class GsonTest {
 	}
 
 	@Test
-	void writeDateFormatTest() {
+	void writeLocalDateFormatTest() {
 		final DateTime date = DateUtil.parse("2024-01-01 01:12:21");
-		final BeanWithDate bean = new BeanWithDate(date, TimeUtil.of(date));
+		final BeanWithLocalDate bean = new BeanWithLocalDate(TimeUtil.of(date).toLocalDate());
 		final JSONEngine engine = JSONEngineFactory.createEngine("gson");
 
 		final String jsonString = engine.toJsonString(bean);
-		Assertions.assertEquals("{\"date1\":1704042741000,\"date2\":1704042741000}", jsonString);
+		Assertions.assertEquals("{\"date\":1704038400000}", jsonString);
 
 		engine.init(JSONEngineConfig.of().setDateFormat("yyyy-MM-dd HH:mm:ss"));
-		Assertions.assertEquals("{\"date1\":\"2024-01-01 01:12:21\",\"date2\":\"2024-01-01 01:12:21\"}", engine.toJsonString(bean));
+		Assertions.assertEquals("{\"date\":\"2024-01-01 00:00:00\"}", engine.toJsonString(bean));
 	}
 
-	@Test
-	void writeNullTest() {
-		final BeanWithDate bean = new BeanWithDate(null, null);
-		final JSONEngine engine = JSONEngineFactory.createEngine("gson");
-
-		String jsonString = engine.toJsonString(bean);
-		Assertions.assertEquals("{}", jsonString);
-
-		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
-		jsonString = engine.toJsonString(bean);
-		Assertions.assertEquals("{\"date1\":null,\"date2\":null}", jsonString);
-	}
 }

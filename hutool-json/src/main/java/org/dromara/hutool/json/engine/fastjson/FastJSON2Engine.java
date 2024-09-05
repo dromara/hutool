@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.engine;
+package org.dromara.hutool.json.engine.fastjson;
 
 import com.alibaba.fastjson2.JSONFactory;
 import com.alibaba.fastjson2.JSONReader;
@@ -24,6 +24,8 @@ import com.alibaba.fastjson2.writer.ObjectWriter;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.engine.AbstractJSONEngine;
+import org.dromara.hutool.json.engine.JSONEngineConfig;
 
 import java.io.Reader;
 import java.io.Writer;

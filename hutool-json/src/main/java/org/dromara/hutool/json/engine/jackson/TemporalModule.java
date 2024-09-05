@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.engine;
+package org.dromara.hutool.json.engine.jackson;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+/**
+ * 时间相关序列化模块
+ *
+ * @author Looly
+ * @since 6.0.0
+ */
+public class TemporalModule extends SimpleModule {
+	private static final long serialVersionUID = 1L;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BeanWithDate {
-	private Date date1;
-	private LocalDateTime date2;
+	/**
+	 * 构造
+	 *
+	 * @param dateFormat 日期格式，null表示使用时间戳
+	 */
+	public TemporalModule(final String dateFormat) {
+		super();
+		this.addSerializer(new JacksonTemporalSerializer(dateFormat));
+	}
 }

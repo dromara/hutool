@@ -20,7 +20,9 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.hutool.json.engine.fastjson.FastJSON2Engine;
 import org.dromara.hutool.json.engine.gson.GsonEngine;
+import org.dromara.hutool.json.engine.jackson.JacksonEngine;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;

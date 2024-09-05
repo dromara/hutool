@@ -16,10 +16,9 @@
 
 package org.dromara.hutool.json.engine.gson;
 
-import com.google.gson.*;
-import org.dromara.hutool.core.date.TimeUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.engine.AbstractJSONEngine;
@@ -28,7 +27,9 @@ import org.dromara.hutool.json.engine.JSONEngineConfig;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -86,23 +87,28 @@ public class GsonEngine extends AbstractJSONEngine {
 		if (config.isPrettyPrint()) {
 			builder.setPrettyPrinting();
 		}
+
 		final String dateFormat = config.getDateFormat();
-		if (StrUtil.isNotEmpty(dateFormat)) {
-			builder.setDateFormat(dateFormat);
-			builder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> TimeUtil.parse(json.getAsString(), dateFormat));
-			builder.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (date, type, jsonSerializationContext) -> new JsonPrimitive(TimeUtil.format(date, dateFormat)));
-		} else {
-			// 无自定义格式，则默认输出时间戳
-			// https://stackoverflow.com/questions/41979086/how-to-serialize-date-to-long-using-gson
-			builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-			builder.registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, jsonSerializationContext) -> new JsonPrimitive(date.getTime()));
-			builder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> TimeUtil.of(json.getAsJsonPrimitive().getAsLong()));
-			builder.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (date, type, jsonSerializationContext) -> new JsonPrimitive(TimeUtil.toEpochMilli(date)));
-		}
+		registerDate(builder, dateFormat);
+
 		if(!config.isIgnoreNullValue()){
 			builder.serializeNulls();
 		}
 
 		this.gson = builder.create();
+	}
+
+	/**
+	 * 注册日期相关序列化描述<br>
+	 * 参考：https://stackoverflow.com/questions/41979086/how-to-serialize-date-to-long-using-gson
+	 *
+	 * @param builder Gson构造器
+	 * @param dateFormat 日期格式
+	 */
+	private void registerDate(final GsonBuilder builder, final String dateFormat){
+		builder.registerTypeAdapter(Date.class, new DateSerDesc(dateFormat));
+		builder.registerTypeAdapter(LocalDateTime.class, new TemporalSerDesc(LocalDateTime.class, dateFormat));
+		builder.registerTypeAdapter(LocalDate.class, new TemporalSerDesc(LocalDate.class, dateFormat));
+		builder.registerTypeAdapter(LocalTime.class, new TemporalSerDesc(LocalTime.class, dateFormat));
 	}
 }

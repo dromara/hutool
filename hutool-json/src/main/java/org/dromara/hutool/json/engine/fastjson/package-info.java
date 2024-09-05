@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.engine;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BeanWithDate {
-	private Date date1;
-	private LocalDateTime date2;
-}
+/**
+ * Fastjson2引擎实现<br>
+ * https://github.com/alibaba/fastjson2
+ *
+ * @author Looly
+ * @since 6.0.0
+ */
+package org.dromara.hutool.json.engine.fastjson;

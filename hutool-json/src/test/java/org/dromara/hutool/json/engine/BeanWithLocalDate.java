@@ -18,15 +18,11 @@ package org.dromara.hutool.json.engine;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class BeanWithDate {
-	private Date date1;
-	private LocalDateTime date2;
+public class BeanWithLocalDate {
+	private LocalDate date;
 }

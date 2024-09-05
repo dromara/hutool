@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.engine;
+package org.dromara.hutool.json.engine.jackson;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
@@ -30,6 +30,8 @@ import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSONException;
+import org.dromara.hutool.json.engine.AbstractJSONEngine;
+import org.dromara.hutool.json.engine.JSONEngineConfig;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -122,6 +124,8 @@ public class JacksonEngine extends AbstractJSONEngine {
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		}
 		final String dateFormat = config.getDateFormat();
+		// 用于处理java.time库中对象的序列化和反序列化
+		mapper.registerModule(new TemporalModule(dateFormat));
 		if(StrUtil.isNotEmpty(dateFormat)){
 			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 			mapper.setDateFormat(DateUtil.newSimpleFormat(dateFormat));

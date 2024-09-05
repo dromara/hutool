@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.engine;
+package org.dromara.hutool.json.engine.gson;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonSerializer;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BeanWithDate {
-	private Date date1;
-	private LocalDateTime date2;
+/**
+ * Gson序列化描述接口，用于自定义序列化和反序列化
+ *
+ * @param <T> 序列化对象类型
+ * @author Looly
+ * @since 6.0.0
+ */
+public interface GsonSerDesc<T> extends JsonSerializer<T>, JsonDeserializer<T> {
 }
