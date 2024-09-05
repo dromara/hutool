@@ -232,6 +232,9 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		if (readTimeout > 0) {
 			requestConfigBuilder.setSocketTimeout(readTimeout);
 		}
+		if(config instanceof HttpClientConfig){
+			requestConfigBuilder.setMaxRedirects(((HttpClientConfig) config).getMaxRedirects());
+		}
 
 		return requestConfigBuilder.build();
 	}
