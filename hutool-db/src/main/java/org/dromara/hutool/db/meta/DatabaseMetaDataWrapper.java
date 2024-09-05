@@ -159,7 +159,7 @@ public class DatabaseMetaDataWrapper extends SimpleWrapper<DatabaseMetaData> {
 		// issue#I9BANE Oracle中特殊表名需要解包
 		tableName = getPureTableName(tableName);
 
-		try (final ResultSet rs = this.raw.getTables(catalog, schema, tableName, new String[]{TableType.TABLE.value()})) {
+		try (final ResultSet rs = this.raw.getTables(catalog, schema, tableName, new String[]{TableType.TABLE.getValue()})) {
 			if (null != rs) {
 				if (rs.next()) {
 					return rs.getString("REMARKS");

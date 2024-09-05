@@ -22,12 +22,33 @@ package org.dromara.hutool.db.meta;
  * @author Looly
  */
 public enum TableType {
+	/**
+	 * 数据库表
+	 */
 	TABLE("TABLE"),
+	/**
+	 * 视图
+	 */
 	VIEW("VIEW"),
+	/**
+	 * 系统表
+	 */
 	SYSTEM_TABLE("SYSTEM TABLE"),
+	/**
+	 * 全局临时表
+	 */
 	GLOBAL_TEMPORARY("GLOBAL TEMPORARY"),
+	/**
+	 * 本地临时表
+	 */
 	LOCAL_TEMPORARY("LOCAL TEMPORARY"),
+	/**
+	 * 别名
+	 */
 	ALIAS("ALIAS"),
+	/**
+	 * 快捷方式
+	 */
 	SYNONYM("SYNONYM");
 
 	private final String value;
@@ -46,12 +67,12 @@ public enum TableType {
 	 *
 	 * @return 值
 	 */
-	public String value() {
+	public String getValue() {
 		return this.value;
 	}
 
 	@Override
 	public String toString() {
-		return this.value();
+		return this.getValue();
 	}
 }

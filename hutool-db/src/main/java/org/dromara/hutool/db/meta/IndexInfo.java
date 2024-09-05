@@ -77,55 +77,127 @@ public class IndexInfo implements Serializable, Cloneable {
 		this.tableName = tableName;
 		this.schema = schema;
 		this.catalog = catalog;
-		this.setColumnIndexInfoList(new ArrayList<>());
+		this.columnIndexInfoList = new ArrayList<>();
 	}
 
+	/**
+	 * 检查索引是否是非唯一的
+	 *
+	 * @return 如果索引是非唯一的，返回true；否则返回false
+	 */
 	public boolean isNonUnique() {
 		return nonUnique;
 	}
 
-	public void setNonUnique(final boolean nonUnique) {
+	/**
+	 * 设置索引的非唯一状态
+	 *
+	 * @param nonUnique 索引的非唯一状态
+	 * @return 当前的IndexInfo对象，以支持链式调用
+	 */
+	public IndexInfo setNonUnique(final boolean nonUnique) {
 		this.nonUnique = nonUnique;
+		return this;
 	}
 
+	/**
+	 * 获取索引名称
+	 *
+	 * @return 索引名称
+	 */
 	public String getIndexName() {
 		return indexName;
 	}
 
-	public void setIndexName(final String indexName) {
+	/**
+	 * 设置索引名称
+	 *
+	 * @param indexName 索引名称
+	 * @return 当前的IndexInfo对象，以支持链式调用
+	 */
+	public IndexInfo setIndexName(final String indexName) {
 		this.indexName = indexName;
+		return this;
 	}
 
+	/**
+	 * 获取表名称
+	 *
+	 * @return 表名称
+	 */
 	public String getTableName() {
 		return tableName;
 	}
 
-	public void setTableName(final String tableName) {
+	/**
+	 * 设置表名称
+	 *
+	 * @param tableName 表名称
+	 * @return 当前的IndexInfo对象，以支持链式调用
+	 */
+	public IndexInfo setTableName(final String tableName) {
 		this.tableName = tableName;
+		return this;
 	}
 
+	/**
+	 * 获取 schema 名称
+	 *
+	 * @return schema 名称
+	 */
 	public String getSchema() {
 		return schema;
 	}
 
-	public void setSchema(final String schema) {
+	/**
+	 * 设置 schema 名称
+	 *
+	 * @param schema schema 名称
+	 * @return 当前的IndexInfo对象，以支持链式调用
+	 */
+	public IndexInfo setSchema(final String schema) {
 		this.schema = schema;
+		return this;
 	}
 
+	/**
+	 * 获取目录名称
+	 *
+	 * @return 目录名称
+	 */
 	public String getCatalog() {
 		return catalog;
 	}
 
-	public void setCatalog(final String catalog) {
+	/**
+	 * 设置目录名称
+	 *
+	 * @param catalog 目录名称
+	 * @return 当前的IndexInfo对象，以支持链式调用
+	 */
+	public IndexInfo setCatalog(final String catalog) {
 		this.catalog = catalog;
+		return this;
 	}
 
+	/**
+	 * 获取列索引信息列表
+	 *
+	 * @return 列索引信息列表
+	 */
 	public List<ColumnIndexInfo> getColumnIndexInfoList() {
 		return columnIndexInfoList;
 	}
 
-	public void setColumnIndexInfoList(final List<ColumnIndexInfo> columnIndexInfoList) {
+	/**
+	 * 设置列索引信息列表
+	 *
+	 * @param columnIndexInfoList 列索引信息列表
+	 * @return 当前的IndexInfo对象，以支持链式调用
+	 */
+	public IndexInfo setColumnIndexInfoList(final List<ColumnIndexInfo> columnIndexInfoList) {
 		this.columnIndexInfoList = columnIndexInfoList;
+		return this;
 	}
 
 	@Override
@@ -138,7 +210,7 @@ public class IndexInfo implements Serializable, Cloneable {
 		}
 		final IndexInfo indexInfo = (IndexInfo) o;
 		return ObjUtil.equals(indexName, indexInfo.indexName)
-				&& ObjUtil.equals(tableName, indexInfo.tableName);
+			&& ObjUtil.equals(tableName, indexInfo.tableName);
 	}
 
 	@Override
@@ -154,12 +226,12 @@ public class IndexInfo implements Serializable, Cloneable {
 	@Override
 	public String toString() {
 		return "IndexInfo{" +
-				"nonUnique=" + nonUnique +
-				", indexName='" + indexName + '\'' +
-				", tableName='" + tableName + '\'' +
-				", schema='" + schema + '\'' +
-				", catalog='" + catalog + '\'' +
-				", columnIndexInfoList=" + columnIndexInfoList +
-				'}';
+			"nonUnique=" + nonUnique +
+			", indexName='" + indexName + '\'' +
+			", tableName='" + tableName + '\'' +
+			", schema='" + schema + '\'' +
+			", catalog='" + catalog + '\'' +
+			", columnIndexInfoList=" + columnIndexInfoList +
+			'}';
 	}
 }

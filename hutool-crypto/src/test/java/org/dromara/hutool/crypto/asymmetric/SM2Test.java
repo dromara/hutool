@@ -32,6 +32,8 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * SM2算法单元测试
  *
@@ -332,5 +334,18 @@ public class SM2Test {
 		final SM2 sm2 = new SM2(null, q);
 		Assertions.assertNotNull(sm1);
 		Assertions.assertNotNull(sm2);
+	}
+
+	@Test
+	void decryptFromGmSSLTest() {
+		// https://the-x.cn/zh-cn/cryptography/Sm2.aspx
+		// python gmssl加密后的内容无04标识，检查并补充
+		final String privateKey = "MHcCAQEEICxTSOhWA4oYj2DI95zunPqHHEKZSi5QFLvWz57BfIGVoAoGCCqBHM9VAYItoUQDQgAEIGRS/PssvgZ8Paw2YeFaW4VXrkgceBELKPWcXmq/p3iMhHxYfcaFAa5AzvPJOmYmVzVwu9QygMMrg/30Ok1npw==";
+		final SM2 sm2 = new SM2(privateKey, null);
+		sm2.setMode(SM2Engine.Mode.C1C2C3);
+
+		final String encrypt = "x0KA1DKkmuA/YZdmvMr8X+1ZQb7a19Pr5nSxxe2ItUYpDAioa263tm9u7vST38hAEUoOxxXftD+7bRQ7Y8v1tcFXeheKodetA6LrPIuh0QYZMdBqIKSKdmlGeVE0Vdm3excisbtC";
+		final byte[] decrypt = sm2.decrypt(encrypt, KeyType.PrivateKey);
+		assertEquals("123456", StrUtil.utf8Str(decrypt));
 	}
 }

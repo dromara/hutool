@@ -34,4 +34,9 @@ public class ConvertToBooleanTest {
 		Assertions.assertFalse(bool);
 	}
 
+	@Test
+	void toBooleanWithDefaultTest() {
+		Assertions.assertFalse(ConvertUtil.toBoolean("ddddd", false));
+	}
+
 }
