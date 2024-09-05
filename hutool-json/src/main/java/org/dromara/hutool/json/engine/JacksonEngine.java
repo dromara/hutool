@@ -145,7 +145,7 @@ public class JacksonEngine extends AbstractJSONEngine {
 		try {
 			aClass = Class.forName(moduleClass);
 		} catch (final ClassNotFoundException ignore) {
-			//用户未引入JSR310，则跳过不加载模块
+			//用户未引入，则跳过不加载模块
 			return;
 		}
 		mapper.registerModule((Module) ConstructorUtil.newInstance(aClass));

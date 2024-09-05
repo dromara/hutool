@@ -15,6 +15,6 @@
 #
 
 org.dromara.hutool.json.engine.JacksonEngine
-org.dromara.hutool.json.engine.GsonEngine
+org.dromara.hutool.json.engine.gson.GsonEngine
 org.dromara.hutool.json.engine.FastJSON2Engine
 org.dromara.hutool.json.engine.HutoolJSONEngine

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.engine;
+package org.dromara.hutool.json.engine.gson;
 
 import com.google.gson.*;
 import org.dromara.hutool.core.date.TimeUtil;
@@ -22,6 +22,8 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSONException;
+import org.dromara.hutool.json.engine.AbstractJSONEngine;
+import org.dromara.hutool.json.engine.JSONEngineConfig;
 
 import java.io.Reader;
 import java.io.Writer;
