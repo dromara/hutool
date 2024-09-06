@@ -21,7 +21,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -75,14 +74,11 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		initEngine();
 
 		final HttpUriRequest request = buildRequest(message);
-		final CloseableHttpResponse response;
 		try {
-			response = this.engine.execute(request);
+			return this.engine.execute(request, response -> new HttpClient4Response(response, message.charset()));
 		} catch (final IOException e) {
 			throw new HttpException(e);
 		}
-
-		return new HttpClient4Response(response, message.charset());
 	}
 
 	@Override
@@ -223,6 +219,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 
 	/**
 	 * 构建请求配置，包括重定向
+	 *
 	 * @param request 请求
 	 * @return {@link RequestConfig}
 	 */
@@ -258,7 +255,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		if (readTimeout > 0) {
 			requestConfigBuilder.setSocketTimeout(readTimeout);
 		}
-		if(config instanceof HttpClientConfig){
+		if (config instanceof HttpClientConfig) {
 			requestConfigBuilder.setMaxRedirects(((HttpClientConfig) config).getMaxRedirects());
 		}
 

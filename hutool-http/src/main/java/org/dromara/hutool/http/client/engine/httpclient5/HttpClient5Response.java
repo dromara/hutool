@@ -16,8 +16,10 @@
 
 package org.dromara.hutool.http.client.engine.httpclient5;
 
+import org.apache.hc.core5.http.HttpEntity;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
@@ -43,12 +45,9 @@ import java.util.Map;
  *
  * @author looly
  */
-public class HttpClient5Response implements Response {
+public class HttpClient5Response extends SimpleWrapper<ClassicHttpResponse> implements Response {
 
-	/**
-	 * HttpClient的响应对象
-	 */
-	private final ClassicHttpResponse rawRes;
+	private final HttpEntity entity;
 	/**
 	 * 请求时的默认编码
 	 */
@@ -62,19 +61,20 @@ public class HttpClient5Response implements Response {
 	 * @param requestCharset 请求时的编码
 	 */
 	public HttpClient5Response(final ClassicHttpResponse rawRes, final Charset requestCharset) {
-		this.rawRes = rawRes;
+		super(rawRes);
+		this.entity = rawRes.getEntity();
 		this.requestCharset = requestCharset;
 	}
 
 
 	@Override
 	public int getStatus() {
-		return rawRes.getCode();
+		return this.raw.getCode();
 	}
 
 	@Override
 	public String header(final String name) {
-		final Header[] headers = rawRes.getHeaders(name);
+		final Header[] headers = this.raw.getHeaders(name);
 		if (ArrayUtil.isNotEmpty(headers)) {
 			return headers[0].getValue();
 		}
@@ -84,7 +84,7 @@ public class HttpClient5Response implements Response {
 
 	@Override
 	public Map<String, List<String>> headers() {
-		final Header[] headers = rawRes.getHeaders();
+		final Header[] headers = this.raw.getHeaders();
 		final HashMap<String, List<String>> result = new LinkedHashMap<>(headers.length, 1);
 		for (final Header header : headers) {
 			final List<String> valueList = result.computeIfAbsent(header.getName(), k -> new ArrayList<>());
@@ -95,7 +95,7 @@ public class HttpClient5Response implements Response {
 
 	@Override
 	public long contentLength() {
-		return rawRes.getEntity().getContentLength();
+		return this.entity.getContentLength();
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class HttpClient5Response implements Response {
 	@Override
 	public InputStream bodyStream() {
 		try {
-			return rawRes.getEntity().getContent();
+			return this.entity.getContent();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -115,7 +115,7 @@ public class HttpClient5Response implements Response {
 	@Override
 	public String bodyStr() throws HttpException {
 		try {
-			return EntityUtils.toString(rawRes.getEntity(), charset());
+			return EntityUtils.toString(this.entity, charset());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} catch (final ParseException e) {
@@ -125,7 +125,7 @@ public class HttpClient5Response implements Response {
 
 	@Override
 	public void close() throws IOException {
-		rawRes.close();
+		this.raw.close();
 	}
 
 	@Override

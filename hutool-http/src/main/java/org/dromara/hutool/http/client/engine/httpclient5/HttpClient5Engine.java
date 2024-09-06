@@ -30,7 +30,6 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.message.BasicHeader;
@@ -82,14 +81,11 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		initEngine();
 
 		final ClassicHttpRequest request = buildRequest(message);
-		final ClassicHttpResponse response;
 		try {
-			response = this.engine.executeOpen(null, request, null);
+			return this.engine.execute(request, (response -> new HttpClient5Response(response, message.charset())));
 		} catch (final IOException e) {
 			throw new HttpException(e);
 		}
-
-		return new HttpClient5Response(response, message.charset());
 	}
 
 	@Override

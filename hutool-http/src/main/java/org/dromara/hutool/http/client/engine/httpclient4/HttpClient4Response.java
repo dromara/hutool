@@ -16,25 +16,25 @@
 
 package org.dromara.hutool.http.client.engine.httpclient4;
 
-import org.dromara.hutool.core.io.IORuntimeException;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.Response;
-import org.apache.http.Header;
-import org.apache.http.ParseException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.util.EntityUtils;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * HttpClient响应包装<br>
@@ -42,12 +42,12 @@ import java.util.Map;
  *
  * @author looly
  */
-public class HttpClient4Response implements Response {
+public class HttpClient4Response extends SimpleWrapper<HttpResponse> implements Response {
 
 	/**
-	 * HttpClient的响应对象
+	 * 响应主体
 	 */
-	private final CloseableHttpResponse rawRes;
+	private final HttpEntity entity;
 	/**
 	 * 请求时的默认编码
 	 */
@@ -57,23 +57,24 @@ public class HttpClient4Response implements Response {
 	 * 构造<br>
 	 * 通过传入一个请求时的编码，当无法获取响应内容的编码时，默认使用响应时的编码
 	 *
-	 * @param rawRes         {@link CloseableHttpResponse}
+	 * @param rawRes         {@link HttpResponse}
 	 * @param requestCharset 请求时的编码
 	 */
-	public HttpClient4Response(final CloseableHttpResponse rawRes, final Charset requestCharset) {
-		this.rawRes = rawRes;
+	public HttpClient4Response(final HttpResponse rawRes, final Charset requestCharset) {
+		super(rawRes);
+		this.entity = rawRes.getEntity();
 		this.requestCharset = requestCharset;
 	}
 
 
 	@Override
 	public int getStatus() {
-		return rawRes.getStatusLine().getStatusCode();
+		return this.raw.getStatusLine().getStatusCode();
 	}
 
 	@Override
 	public String header(final String name) {
-		final Header[] headers = rawRes.getHeaders(name);
+		final Header[] headers = this.raw.getHeaders(name);
 		if (ArrayUtil.isNotEmpty(headers)) {
 			return headers[0].getValue();
 		}
@@ -83,7 +84,7 @@ public class HttpClient4Response implements Response {
 
 	@Override
 	public Map<String, List<String>> headers() {
-		final Header[] headers = rawRes.getAllHeaders();
+		final Header[] headers = this.raw.getAllHeaders();
 		final HashMap<String, List<String>> result = new LinkedHashMap<>(headers.length, 1);
 		for (final Header header : headers) {
 			final List<String> valueList = result.computeIfAbsent(header.getName(), k -> new ArrayList<>());
@@ -94,7 +95,7 @@ public class HttpClient4Response implements Response {
 
 	@Override
 	public long contentLength() {
-		return rawRes.getEntity().getContentLength();
+		return this.entity.getContentLength();
 	}
 
 	@Override
@@ -105,7 +106,7 @@ public class HttpClient4Response implements Response {
 	@Override
 	public InputStream bodyStream() {
 		try {
-			return rawRes.getEntity().getContent();
+			return this.entity.getContent();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -114,7 +115,7 @@ public class HttpClient4Response implements Response {
 	@Override
 	public String bodyStr() throws HttpException {
 		try {
-			return EntityUtils.toString(rawRes.getEntity(), charset());
+			return EntityUtils.toString(this.entity, charset());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} catch (final ParseException e) {
@@ -124,7 +125,9 @@ public class HttpClient4Response implements Response {
 
 	@Override
 	public void close() throws IOException {
-		rawRes.close();
+		if(this.raw instanceof Closeable){
+			((Closeable) this.raw).close();
+		}
 	}
 
 	@Override
