@@ -21,7 +21,6 @@ package org.dromara.hutool.http.meta;
  *
  * @author Looly, Ningqingsheng
  * @see java.net.HttpURLConnection
- *
  */
 public interface HttpStatus {
 
@@ -112,12 +111,16 @@ public interface HttpStatus {
 	int HTTP_MOVED_PERM = 301;
 
 	/**
-	 * HTTP Status-Code 302: Temporary Redirect.
+	 * HTTP Status-Code 302: Temporary Redirect.<br>
+	 * 由于不可预见的原因该页面暂不可用。<br>
+	 * GET 方法不会发生变更。其他方法有可能会变更为 GET 方法。
 	 */
 	int HTTP_MOVED_TEMP = 302;
 
 	/**
-	 * HTTP Status-Code 303: See Other.
+	 * HTTP Status-Code 303: See Other.<br>
+	 * 用于 PUT 或 POST 请求完成之后重定向，来防止由于页面刷新导致的操作的重复触发。<br>
+	 * GET 方法不会发生变更，其他方法会变更为 GET 方法（消息主体丢失）。
 	 */
 	int HTTP_SEE_OTHER = 303;
 
@@ -133,7 +136,9 @@ public interface HttpStatus {
 
 	/**
 	 * HTTP 1.1 Status-Code 307: Temporary Redirect.<br>
-	 * 见：RFC-7231
+	 * 由于不可预见的原因该页面暂不可用。当站点支持非 GET 方法的链接或操作的时候，该状态码优于 302 状态码。<br>
+	 * 方法和消息主体都不发生变化。<br>
+	 * 见：https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
 	 */
 	int HTTP_TEMP_REDIRECT = 307;
 
@@ -349,17 +354,18 @@ public interface HttpStatus {
 
 	/**
 	 * 是否为重定向状态码
+	 *
 	 * @param responseCode 被检查的状态码
 	 * @return 是否为重定向状态码
 	 * @since 5.6.3
 	 */
-	static boolean isRedirected(final int responseCode){
+	static boolean isRedirected(final int responseCode) {
 		return responseCode == HTTP_MOVED_PERM
-				|| responseCode == HTTP_MOVED_TEMP
-				|| responseCode == HTTP_SEE_OTHER
-				// issue#1504@Github，307和308是RFC 7538中http 1.1定义的规范
-				|| responseCode == HTTP_TEMP_REDIRECT
-				|| responseCode == HTTP_PERMANENT_REDIRECT;
+			|| responseCode == HTTP_MOVED_TEMP
+			|| responseCode == HTTP_SEE_OTHER
+			// issue#1504@Github，307和308是RFC 7538中http 1.1定义的规范
+			|| responseCode == HTTP_TEMP_REDIRECT
+			|| responseCode == HTTP_PERMANENT_REDIRECT;
 
 	}
 }

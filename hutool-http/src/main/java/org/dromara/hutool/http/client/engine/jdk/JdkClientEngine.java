@@ -32,6 +32,7 @@ import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
+import org.dromara.hutool.http.meta.Method;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -135,13 +136,13 @@ public class JdkClientEngine extends AbstractClientEngine {
 			// 覆盖默认Header
 			.header(message.headers(), true);
 
-		if(!message.method().isIgnoreBody()){
+		if (!message.method().isIgnoreBody()) {
 			// 在允许发送body的情况下，如果用户自定义了Content-Length，则使用用户定义的值
 			final long contentLength = message.contentLength();
-			if(contentLength > 0){
+			if (contentLength > 0) {
 				// 固定请求长度
 				conn.setFixedLengthStreamingMode(contentLength);
-			} else if(message.isChunked()){
+			} else if (message.isChunked()) {
 				conn.setChunkedStreamingMode(4096);
 			}
 		}
@@ -176,6 +177,15 @@ public class JdkClientEngine extends AbstractClientEngine {
 			if (code != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(code)) {
 					message.url(getLocationUrl(message.handledUrl(), conn.header(HeaderName.LOCATION)));
+
+					// https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
+					// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Redirections
+					// 307方法和消息主体都不发生变化。
+					if (HttpStatus.HTTP_TEMP_REDIRECT != code) {
+						// 重定向默认使用GET
+						message.method(Method.GET);
+					}
+
 					if (conn.redirectCount < message.maxRedirects()) {
 						conn.redirectCount++;
 						return send(message, isAsync);
