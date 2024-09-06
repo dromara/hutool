@@ -38,6 +38,14 @@ import java.sql.PreparedStatement;
 public interface Dialect extends Serializable {
 
 	/**
+	 * 方言名
+	 *
+	 * @return 方言名
+	 * @since 5.5.3
+	 */
+	String dialectName();
+
+	/**
 	 * @return 包装器
 	 */
 	QuoteWrapper getWrapper();
@@ -98,6 +106,19 @@ public interface Dialect extends Serializable {
 	 * @throws DbException SQL执行异常
 	 */
 	PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws DbException;
+
+	/**
+	 * 构建用于upsert的{@link PreparedStatement}<br>
+	 * 方言实现需实现此默认方法，如果没有实现，抛出{@link DbException}
+	 *
+	 * @param conn   数据库连接对象
+	 * @param entity 数据实体类（包含表名）
+	 * @param keys   查找字段，某些数据库此字段必须，如H2，某些数据库无需此字段，如MySQL（通过主键）
+	 * @return PreparedStatement
+	 * @throws DbException SQL执行异常，或方言数据不支持此操作
+	 * @since 5.7.20
+	 */
+	PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws DbException;
 
 	// -------------------------------------------- Query
 
@@ -173,28 +194,4 @@ public interface Dialect extends Serializable {
 				.append(") hutool_alias_count_");
 		return psForPage(conn, sqlBuilder, null);
 	}
-
-	/**
-	 * 构建用于upsert的{@link PreparedStatement}<br>
-	 * 方言实现需实现此默认方法，如果没有实现，抛出{@link DbException}
-	 *
-	 * @param conn   数据库连接对象
-	 * @param entity 数据实体类（包含表名）
-	 * @param keys   查找字段，某些数据库此字段必须，如H2，某些数据库无需此字段，如MySQL（通过主键）
-	 * @return PreparedStatement
-	 * @throws DbException SQL执行异常，或方言数据不支持此操作
-	 * @since 5.7.20
-	 */
-	default PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws DbException {
-		throw new DbException("Unsupported upsert operation of " + dialectName());
-	}
-
-
-	/**
-	 * 方言名
-	 *
-	 * @return 方言名
-	 * @since 5.5.3
-	 */
-	String dialectName();
 }

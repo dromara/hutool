@@ -109,6 +109,11 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
+	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws DbException {
+		throw new DbException("Unsupported upsert operation of " + dialectName());
+	}
+
+	@Override
 	public PreparedStatement psForFind(final Connection conn, final Query query) {
 		return psForPage(conn, query);
 	}
