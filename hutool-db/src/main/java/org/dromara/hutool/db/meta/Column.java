@@ -37,23 +37,15 @@ public class Column implements Serializable, Cloneable {
 	 * 表名
 	 */
 	private String tableName;
-
 	/**
 	 * 列名
 	 */
 	private String name;
 	/**
-	 * 类型，对应java.sql.Types中的类型
+	 * 数据库字段类型，包括长度
 	 */
-	private int type;
-	/**
-	 * 类型名称
-	 */
-	private String typeName;
-	/**
-	 * 大小或数据长度
-	 */
-	private long size;
+	private ColumnType type;
+
 	/**
 	 * 保留小数位数
 	 */
@@ -134,14 +126,13 @@ public class Column implements Serializable, Cloneable {
 		this.name = columnMetaRs.getString("COLUMN_NAME");
 		this.isPk = table.isPk(this.name);
 
-		this.type = columnMetaRs.getInt("DATA_TYPE");
-
+		final int type = columnMetaRs.getInt("DATA_TYPE");
 		String typeName = columnMetaRs.getString("TYPE_NAME");
 		//issue#2201@Gitee
 		typeName = ReUtil.delLast("\\(\\d+\\)", typeName);
-		this.typeName = typeName;
+		final long size = columnMetaRs.getLong("COLUMN_SIZE");
+		this.type = new ColumnType(type, typeName, size);
 
-		this.size = columnMetaRs.getLong("COLUMN_SIZE");
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
 		this.remarks = columnMetaRs.getString("REMARKS");
 		this.columnDef = columnMetaRs.getString("COLUMN_DEF");
@@ -203,76 +194,6 @@ public class Column implements Serializable, Cloneable {
 	 */
 	public Column setName(final String name) {
 		this.name = name;
-		return this;
-	}
-
-	/**
-	 * 获取字段类型的枚举
-	 *
-	 * @return 阻断类型枚举
-	 * @since 4.5.8
-	 */
-	public JdbcType getTypeEnum() {
-		return JdbcType.valueOf(this.type);
-	}
-
-	/**
-	 * 获取类型，对应{@link java.sql.Types}中的类型
-	 *
-	 * @return 类型
-	 */
-	public int getType() {
-		return type;
-	}
-
-	/**
-	 * 设置类型，对应java.sql.Types中的类型
-	 *
-	 * @param type 类型
-	 * @return this
-	 */
-	public Column setType(final int type) {
-		this.type = type;
-		return this;
-	}
-
-	/**
-	 * 获取类型名称
-	 *
-	 * @return 类型名称
-	 */
-	public String getTypeName() {
-		return typeName;
-	}
-
-	/**
-	 * 设置类型名称
-	 *
-	 * @param typeName 类型名称
-	 * @return this
-	 */
-	public Column setTypeName(final String typeName) {
-		this.typeName = typeName;
-		return this;
-	}
-
-	/**
-	 * 获取大小或数据长度
-	 *
-	 * @return 大小或数据长度
-	 */
-	public long getSize() {
-		return size;
-	}
-
-	/**
-	 * 设置大小或数据长度
-	 *
-	 * @param size 大小或数据长度
-	 * @return this
-	 */
-	public Column setSize(final long size) {
-		this.size = size;
 		return this;
 	}
 
@@ -424,7 +345,7 @@ public class Column implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return "Column [tableName=" + tableName + ", name=" + name + ", type=" + type + ", size=" + size + ", isNullable=" + isNullable + ", order=" + order + "]";
+		return "Column [tableName=" + tableName + ", name=" + name + ", type=" + type + ", isNullable=" + isNullable + ", order=" + order + "]";
 	}
 
 	@Override

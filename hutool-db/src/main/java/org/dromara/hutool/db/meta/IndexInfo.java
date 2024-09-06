@@ -26,7 +26,7 @@ import java.util.Objects;
 
 /**
  * 数据库表的索引信息<br>
- * 如果时单列索引，只有一个{@link ColumnIndexInfo}，联合索引则拥有多个{@link ColumnIndexInfo}
+ * 如果时单列索引，只有一个{@link ColumnIndex}，联合索引则拥有多个{@link ColumnIndex}
  *
  * @author huzhongying
  */
@@ -60,7 +60,7 @@ public class IndexInfo implements Serializable, Cloneable {
 	/**
 	 * 索引中的列信息,按索引顺序排列
 	 */
-	private List<ColumnIndexInfo> columnIndexInfoList;
+	private List<ColumnIndex> columnIndexList;
 
 	/**
 	 * 构造
@@ -77,7 +77,7 @@ public class IndexInfo implements Serializable, Cloneable {
 		this.tableName = tableName;
 		this.schema = schema;
 		this.catalog = catalog;
-		this.columnIndexInfoList = new ArrayList<>();
+		this.columnIndexList = new ArrayList<>();
 	}
 
 	/**
@@ -185,18 +185,18 @@ public class IndexInfo implements Serializable, Cloneable {
 	 *
 	 * @return 列索引信息列表
 	 */
-	public List<ColumnIndexInfo> getColumnIndexInfoList() {
-		return columnIndexInfoList;
+	public List<ColumnIndex> getColumnIndexInfoList() {
+		return columnIndexList;
 	}
 
 	/**
 	 * 设置列索引信息列表
 	 *
-	 * @param columnIndexInfoList 列索引信息列表
+	 * @param columnIndexList 列索引信息列表
 	 * @return 当前的IndexInfo对象，以支持链式调用
 	 */
-	public IndexInfo setColumnIndexInfoList(final List<ColumnIndexInfo> columnIndexInfoList) {
-		this.columnIndexInfoList = columnIndexInfoList;
+	public IndexInfo setColumnIndexInfoList(final List<ColumnIndex> columnIndexList) {
+		this.columnIndexList = columnIndexList;
 		return this;
 	}
 
@@ -231,7 +231,7 @@ public class IndexInfo implements Serializable, Cloneable {
 			", tableName='" + tableName + '\'' +
 			", schema='" + schema + '\'' +
 			", catalog='" + catalog + '\'' +
-			", columnIndexInfoList=" + columnIndexInfoList +
+			", columnIndexInfoList=" + columnIndexList +
 			'}';
 	}
 }

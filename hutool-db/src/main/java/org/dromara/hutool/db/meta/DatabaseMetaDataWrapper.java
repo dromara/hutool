@@ -231,7 +231,7 @@ public class DatabaseMetaDataWrapper extends SimpleWrapper<DatabaseMetaData> {
 						indexInfo = new IndexInfo(rs.getBoolean("NON_UNIQUE"), indexName, tableName, schema, catalog);
 						indexInfoMap.put(key, indexInfo);
 					}
-					indexInfo.getColumnIndexInfoList().add(ColumnIndexInfo.of(rs));
+					indexInfo.getColumnIndexInfoList().add(ColumnIndex.of(rs));
 				}
 			}
 		} catch (final SQLException e) {

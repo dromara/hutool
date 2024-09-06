@@ -23,12 +23,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 索引中的列信息
+ * 索引中的列索引信息
  *
  * @author huzhongying
  * @since 5.7.23
  */
-public class ColumnIndexInfo implements Serializable, Cloneable {
+public class ColumnIndex implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -37,9 +37,9 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 	 * @param rs 结果集，通过DatabaseMetaData#getIndexInfo获取
 	 * @return ColumnIndexInfo
 	 */
-	public static ColumnIndexInfo of(final ResultSet rs) {
+	public static ColumnIndex of(final ResultSet rs) {
 		try {
-			return new ColumnIndexInfo(
+			return new ColumnIndex(
 					rs.getString("COLUMN_NAME"),
 					rs.getString("ASC_OR_DESC"));
 		} catch (final SQLException e) {
@@ -62,7 +62,7 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 	 * @param columnName 索引列名
 	 * @param ascOrDesc  正序或反序，null表示无顺序表示
 	 */
-	public ColumnIndexInfo(final String columnName, final String ascOrDesc) {
+	public ColumnIndex(final String columnName, final String ascOrDesc) {
 		this.columnName = columnName;
 		this.ascOrDesc = ascOrDesc;
 	}
@@ -84,8 +84,8 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 	}
 
 	@Override
-	public ColumnIndexInfo clone() throws CloneNotSupportedException {
-		return (ColumnIndexInfo) super.clone();
+	public ColumnIndex clone() throws CloneNotSupportedException {
+		return (ColumnIndex) super.clone();
 	}
 
 	@Override
