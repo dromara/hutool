@@ -100,11 +100,6 @@ public class HttpConfig {
 	 * @since 5.8.33
 	 */
 	boolean useDefaultContentTypeIfNull = true;
-	/**
-	 * 当重定向时，是否使用Get方式发送请求<br>
-	 * issue#3722 部分请求要求重定向时，必须使用Get方式发送请求
-	 */
-	boolean useGetIfRedirect;
 
 	/**
 	 * 设置超时，单位：毫秒<br>
@@ -335,18 +330,6 @@ public class HttpConfig {
 	 */
 	public HttpConfig setUseDefaultContentTypeIfNull(boolean useDefaultContentTypeIfNull) {
 		this.useDefaultContentTypeIfNull = useDefaultContentTypeIfNull;
-		return this;
-	}
-
-	/**
-	 * 重定向时是否使用GET方式
-	 *
-	 * @param useGetIfRedirect 重定向时是否使用GET方式
-	 * @return this
-	 * @since 5.8.33
-	 */
-	public HttpConfig setUseGetIfRedirect(boolean useGetIfRedirect) {
-		this.useGetIfRedirect = useGetIfRedirect;
 		return this;
 	}
 }
