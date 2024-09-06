@@ -96,9 +96,15 @@ public class HttpConfig {
 	boolean followRedirectsCookie;
 	/**
 	 * issue#3719 如果为true，则当请求头中Content-Type为空时，使用默认的Content-Type，即application/x-www-form-urlencoded
+	 *
 	 * @since 5.8.33
 	 */
 	boolean useDefaultContentTypeIfNull = true;
+	/**
+	 * 当重定向时，是否使用Get方式发送请求<br>
+	 * issue#3722 部分请求要求重定向时，必须使用Get方式发送请求
+	 */
+	boolean useGetIfRedirect;
 
 	/**
 	 * 设置超时，单位：毫秒<br>
@@ -186,7 +192,7 @@ public class HttpConfig {
 	 */
 	public HttpConfig setHttpProxy(String host, int port) {
 		final Proxy proxy = new Proxy(Proxy.Type.HTTP,
-				new InetSocketAddress(host, port));
+			new InetSocketAddress(host, port));
 		return setProxy(proxy);
 	}
 
@@ -322,12 +328,25 @@ public class HttpConfig {
 
 	/**
 	 * 设置是否使用默认Content-Type，如果请求中未设置Content-Type，是否使用默认值
+	 *
 	 * @param useDefaultContentTypeIfNull 是否使用默认Content-Type
 	 * @return this
 	 * @since 5.8.33
 	 */
 	public HttpConfig setUseDefaultContentTypeIfNull(boolean useDefaultContentTypeIfNull) {
 		this.useDefaultContentTypeIfNull = useDefaultContentTypeIfNull;
+		return this;
+	}
+
+	/**
+	 * 重定向时是否使用GET方式
+	 *
+	 * @param useGetIfRedirect 重定向时是否使用GET方式
+	 * @return this
+	 * @since 5.8.33
+	 */
+	public HttpConfig setUseGetIfRedirect(boolean useGetIfRedirect) {
+		this.useGetIfRedirect = useGetIfRedirect;
 		return this;
 	}
 }

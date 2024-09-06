@@ -1313,9 +1313,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 						redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
 					}
 					setUrl(redirectUrl);
+					if(config.useGetIfRedirect){
+						// since 5.8.33, issue#3722
+						setMethod(Method.GET);
+					}
 					if (redirectCount < config.maxRedirectCount) {
 						redirectCount++;
-						// 重定向不再走过滤器
+						// 重定向可选是否走过滤器
 						return doExecute(isAsync, config.interceptorOnRedirect ? config.requestInterceptors : null,
 								config.interceptorOnRedirect ? config.responseInterceptors : null);
 					}
