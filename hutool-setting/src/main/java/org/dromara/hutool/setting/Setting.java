@@ -103,7 +103,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	private SettingLoader settingLoader;
 	private WatchMonitor watchMonitor;
 
-	// ------------------------------------------------------------------------------------- Constructor start
+	// region ----- Constructor
 
 	/**
 	 * 空构造
@@ -166,7 +166,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	public Setting(final Resource resource, final Charset charset, final boolean isUseVariable) {
 		this.init(resource, charset, isUseVariable);
 	}
-	// ------------------------------------------------------------------------------------- Constructor end
+	// endregion
 
 	/**
 	 * 初始化设定文件
