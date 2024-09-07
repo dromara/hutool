@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.core.io.stream;
 
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 
 import java.io.FilterInputStream;
@@ -35,6 +36,16 @@ public class LimitedInputStream extends FilterInputStream {
 	/**
 	 * 构造
 	 *
+	 * @param in    {@link InputStream}
+	 * @param limit 限制最大读取量，单位byte
+	 */
+	public LimitedInputStream(final InputStream in, final long limit) {
+		this(in, limit, true);
+	}
+
+	/**
+	 * 构造
+	 *
 	 * @param in                  {@link InputStream}
 	 * @param limit               限制最大读取量，单位byte
 	 * @param throwWhenReachLimit 是否在达到限制时抛出异常，{@code false}则读取到限制后返回-1
@@ -47,7 +58,7 @@ public class LimitedInputStream extends FilterInputStream {
 
 	@Override
 	public int read() throws IOException {
-		final int data = (limit == 0) ? -1 : super.read();
+		final int data = (limit == 0) ? IoUtil.EOF : super.read();
 		checkLimit(data);
 		limit = (data < 0) ? 0 : limit - 1;
 		return data;
@@ -55,7 +66,7 @@ public class LimitedInputStream extends FilterInputStream {
 
 	@Override
 	public int read(final byte[] b, final int off, final int len) throws IOException {
-		final int length = (limit == 0) ? -1 : super.read(b, off, len > limit ? (int) limit : len);
+		final int length = (limit == 0) ? IoUtil.EOF : super.read(b, off, len > limit ? (int) limit : len);
 		checkLimit(length);
 		limit = (length < 0) ? 0 : limit - length;
 		return length;
@@ -72,7 +83,7 @@ public class LimitedInputStream extends FilterInputStream {
 	@Override
 	public int available() throws IOException {
 		final int length = super.available();
-		return length > limit ? (int)limit : length;
+		return length > limit ? (int) limit : length;
 	}
 
 	/**

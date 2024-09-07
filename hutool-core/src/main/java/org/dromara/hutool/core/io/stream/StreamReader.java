@@ -20,9 +20,9 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Predicate;
 
 /**
  * {@link InputStream}读取器
@@ -102,27 +102,37 @@ public class StreamReader {
 	 */
 	public FastByteArrayOutputStream read(final int limit) throws IORuntimeException {
 		final InputStream in = this.in;
-		final FastByteArrayOutputStream out;
-		if (in instanceof FileInputStream) {
-			// 文件流的长度是可预见的，此时直接读取效率更高
-			try {
-				int length = in.available();
-				if (limit > 0 && limit < length) {
-					length = limit;
-				}
-				out = new FastByteArrayOutputStream(length);
-			} catch (final IOException e) {
-				throw new IORuntimeException(e);
-			}
-		} else {
-			out = new FastByteArrayOutputStream();
-		}
+		final FastByteArrayOutputStream out = FastByteArrayOutputStream.of(in, limit);
 		try {
 			IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, limit, null);
 		} finally {
 			if (closeAfterRead) {
 				IoUtil.closeQuietly(in);
 			}
+		}
+		return out;
+	}
+
+	/**
+	 * 从流中读取内容，直到遇到给定token满足{@link Predicate#test(Object)}
+	 *
+	 * @param predicate 读取结束条件, {@link Predicate#test(Object)}返回true表示结束
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 */
+	public FastByteArrayOutputStream readTo(final Predicate<Integer> predicate) throws IORuntimeException {
+		final InputStream in = this.in;
+		final FastByteArrayOutputStream out = FastByteArrayOutputStream.of(in, -1);
+		int read;
+		try {
+			while ((read = in.read()) > 0) {
+				if (null != predicate && predicate.test(read)) {
+					break;
+				}
+				out.write(read);
+			}
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
 		}
 		return out;
 	}
@@ -142,7 +152,7 @@ public class StreamReader {
 	 * @param acceptClasses 读取对象类型
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
-	 * @throws HutoolException      ClassNotFoundException包装
+	 * @throws HutoolException    ClassNotFoundException包装
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T readObj(final Class<?>... acceptClasses) throws IORuntimeException, HutoolException {

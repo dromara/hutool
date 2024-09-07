@@ -16,12 +16,14 @@
 
 package org.dromara.hutool.core.io.stream;
 
-import org.dromara.hutool.core.io.buffer.FastByteBuffer;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.buffer.FastByteBuffer;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
@@ -38,13 +40,32 @@ import java.nio.charset.Charset;
  */
 public class FastByteArrayOutputStream extends OutputStream {
 
+	/**
+	 * 根据输入流的总长度创建一个{@code FastByteArrayOutputStream}对象<br>
+	 * 如果输入流的长度不确定，且
+	 *
+	 * @param in    输入流
+	 * @param limit 限制大小
+	 * @return {@code FastByteArrayOutputStream}
+	 */
+	public static FastByteArrayOutputStream of(final InputStream in, final int limit) {
+		int length = IoUtil.length(in);
+		if (length < 0 || length > limit) {
+			length = limit;
+		}
+		if (length < 0) {
+			length = IoUtil.DEFAULT_BUFFER_SIZE;
+		}
+		return new FastByteArrayOutputStream(length);
+	}
+
 	private final FastByteBuffer buffer;
 
 	/**
 	 * 构造
 	 */
 	public FastByteArrayOutputStream() {
-		this(1024);
+		this(IoUtil.DEFAULT_BUFFER_SIZE);
 	}
 
 	/**

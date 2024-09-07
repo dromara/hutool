@@ -67,7 +67,7 @@ import java.util.Objects;
  */
 public class IoUtil extends NioUtil {
 
-	// region -------------------------------------------------------------------------------------- Copy
+	// region ----- Copy
 
 	/**
 	 * 将Reader中的内容复制到Writer中 使用默认缓存大小，拷贝后不关闭Reader
@@ -197,9 +197,9 @@ public class IoUtil extends NioUtil {
 		return FileChannelCopier.of().copy(in, out);
 	}
 
-	// endregion -------------------------------------------------------------------------------------- Copy
+	// endregion ----- Copy
 
-	// region -------------------------------------------------------------------------------------- toReader and toWriter
+	// region ----- toReader and toWriter
 
 	/**
 	 * 获得一个文件读取器，默认使用 UTF-8 编码
@@ -274,9 +274,9 @@ public class IoUtil extends NioUtil {
 			return new OutputStreamWriter(out, charset);
 		}
 	}
-	// endregion -------------------------------------------------------------------------------------- toReader and toWriter
+	// endregion ----- toReader and toWriter
 
-	// region -------------------------------------------------------------------------------------- read
+	// region ----- read
 
 	/**
 	 * 从流中读取UTF8编码的内容
@@ -423,7 +423,7 @@ public class IoUtil extends NioUtil {
 	 * @param acceptClasses 读取对象类型
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
-	 * @throws HutoolException      ClassNotFoundException包装
+	 * @throws HutoolException    ClassNotFoundException包装
 	 */
 	public static <T> T readObj(final InputStream in, final Class<?>... acceptClasses) throws IORuntimeException, HutoolException {
 		return StreamReader.of(in, false).readObj(acceptClasses);
@@ -513,9 +513,9 @@ public class IoUtil extends NioUtil {
 		}
 	}
 
-	// endregion -------------------------------------------------------------------------------------- read
+	// endregion ----- read
 
-	// region -------------------------------------------------------------------------------------- toStream
+	// region ----- toStream
 
 	/**
 	 * String 转为UTF-8编码的字节流流
@@ -806,9 +806,9 @@ public class IoUtil extends NioUtil {
 
 		return pushbackInputStream;
 	}
-	// endregion -------------------------------------------------------------------------------------- toStream
+	// endregion ----- toStream
 
-	// region ----------------------------------------------------------------------------------------------- write
+	// region -------------- write
 
 	/**
 	 * 将byte[]写到流中，并关闭目标流
@@ -882,7 +882,7 @@ public class IoUtil extends NioUtil {
 	public static void writeObjects(final OutputStream out, final boolean isCloseOut, final Object... contents) throws IORuntimeException {
 		StreamWriter.of(out, isCloseOut).writeObjs(contents);
 	}
-	// endregion ----------------------------------------------------------------------------------------------- write
+	// endregion -------------- write
 
 	/**
 	 * 从缓存中刷出数据
@@ -1098,5 +1098,23 @@ public class IoUtil extends NioUtil {
 		} catch (final UnsupportedEncodingException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 获取流长度，对于文件流，会调用{@link FileInputStream#available()}方法，对于其他流，返回-1<br>
+	 * 对于网络流，available可能为分段大小，所以返回-1
+	 *
+	 * @param in 流
+	 * @return 长度，-1表示未知长度
+	 */
+	public static int length(final InputStream in) {
+		if (in instanceof FileInputStream) {
+			try {
+				return in.available();
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
+		return -1;
 	}
 }
