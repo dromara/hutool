@@ -31,7 +31,7 @@ import java.nio.file.Path;
 
 /**
  * Multipart/form-data输出流封装<br>
- * 遵循RFC2388规范
+ * 遵循RFC2387规范，见：https://www.rfc-editor.org/rfc/rfc2387
  *
  * @author looly
  * @since 5.7.17
@@ -97,6 +97,7 @@ public class MultipartOutputStream extends OutputStream {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
+	@SuppressWarnings("resource")
 	public MultipartOutputStream write(final String formFieldName, final Object value) throws IORuntimeException {
 		// 多资源
 		if (value instanceof MultiResource) {

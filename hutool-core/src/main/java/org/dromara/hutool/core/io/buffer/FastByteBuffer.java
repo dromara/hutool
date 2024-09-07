@@ -17,6 +17,7 @@
 package org.dromara.hutool.core.io.buffer;
 
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.lang.Assert;
 
 /**
  * 代码移植自<a href="https://github.com/biezhi/blade">blade</a><br>
@@ -247,30 +248,6 @@ public class FastByteBuffer {
 	}
 
 	/**
-	 * 返回快速缓冲中的数据
-	 *
-	 * @return 快速缓冲中的数据
-	 */
-	public byte[] toArray() {
-		int pos = 0;
-		final byte[] array = new byte[size];
-
-		if (currentBufferIndex == -1) {
-			return array;
-		}
-
-		for (int i = 0; i < currentBufferIndex; i++) {
-			final int len = buffers[i].length;
-			System.arraycopy(buffers[i], 0, array, pos, len);
-			pos += len;
-		}
-
-		System.arraycopy(buffers[currentBufferIndex], 0, array, pos, offset);
-
-		return array;
-	}
-
-	/**
 	 * 返回快速缓冲中的数据，如果缓冲区中的数据长度固定，则直接返回原始数组<br>
 	 * 注意此方法共享数组，不能修改数组内容！
 	 *
@@ -290,18 +267,32 @@ public class FastByteBuffer {
 	/**
 	 * 返回快速缓冲中的数据
 	 *
+	 * @return 快速缓冲中的数据
+	 */
+	public byte[] toArray() {
+		return toArray(0, this.size);
+	}
+
+	/**
+	 * 返回快速缓冲中的数据
+	 *
 	 * @param start 逻辑起始位置
 	 * @param len   逻辑字节长
 	 * @return 快速缓冲中的数据
 	 */
-	public byte[] toArray(int start, final int len) {
+	public byte[] toArray(int start, int len) {
+		Assert.isTrue(start >= 0, "Start must be greater than zero!");
+		Assert.isTrue(len >= 0, "Length must be greater than zero!");
+
+		if(start >= this.size || len == 0){
+			return new byte[0];
+		}
+		if(len > (this.size - start)){
+			len = this.size - start;
+		}
 		int remaining = len;
 		int pos = 0;
-		final byte[] array = new byte[len];
-
-		if (len == 0) {
-			return array;
-		}
+		final byte[] result = new byte[len];
 
 		int i = 0;
 		while (start >= buffers[i].length) {
@@ -310,18 +301,17 @@ public class FastByteBuffer {
 		}
 
 		while (i < buffersCount) {
-			final byte[] buf = buffers[i];
-			final int c = Math.min(buf.length - start, remaining);
-			System.arraycopy(buf, start, array, pos, c);
-			pos += c;
-			remaining -= c;
+			final int bufLen = Math.min(buffers[i].length - start, remaining);
+			System.arraycopy(buffers[i], start, result, pos, bufLen);
+			pos += bufLen;
+			remaining -= bufLen;
 			if (remaining == 0) {
 				break;
 			}
 			start = 0;
 			i++;
 		}
-		return array;
+		return result;
 	}
 
 	/**

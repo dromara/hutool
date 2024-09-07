@@ -19,6 +19,7 @@ package org.dromara.hutool.core.io;
 import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.collection.iter.LineIter;
 import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.io.copy.FileChannelCopier;
 import org.dromara.hutool.core.io.copy.ReaderWriterCopier;
 import org.dromara.hutool.core.io.copy.StreamCopier;
@@ -26,38 +27,18 @@ import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.io.stream.StreamReader;
 import org.dromara.hutool.core.io.stream.StreamWriter;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.Flushable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PushbackInputStream;
-import java.io.PushbackReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * IO工具类<br>
@@ -511,6 +492,30 @@ public class IoUtil extends NioUtil {
 		for (final String line : lineIter(reader)) {
 			lineHandler.accept(line);
 		}
+	}
+
+	/**
+	 * 从流中读取内容，直到遇到给定token
+	 *
+	 * @param in    输入流
+	 * @param token 停止的字符
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 */
+	public static FastByteArrayOutputStream readToToken(final InputStream in, final int token) throws IORuntimeException {
+		return readTo(in, (c) -> c == token);
+	}
+
+	/**
+	 * 从流中读取内容，直到遇到给定token满足{@link Predicate#test(Object)}
+	 *
+	 * @param in        输入流
+	 * @param predicate 读取结束条件, {@link Predicate#test(Object)}返回true表示结束
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 */
+	public static FastByteArrayOutputStream readTo(final InputStream in, final Predicate<Integer> predicate) {
+		return StreamReader.of(in, false).readTo(predicate);
 	}
 
 	// endregion ----- read

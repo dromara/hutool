@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * Multipart/form-data数据的请求体封装<br>
- * 遵循RFC2388规范
+ * 遵循RFC2387规范，见：https://www.rfc-editor.org/rfc/rfc2387
  *
  * @author looly
  * @since 5.3.5

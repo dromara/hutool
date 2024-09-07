@@ -146,6 +146,17 @@ public class FastByteArrayOutputStream extends OutputStream {
 	}
 
 	/**
+	 * 转为Byte数组
+	 *
+	 * @param start 起始位置（包含）
+	 * @param len   长度
+	 * @return Byte数组
+	 */
+	public byte[] toByteArray(final int start, final int len) {
+		return buffer.toArray(start, len);
+	}
+
+	/**
 	 * 转为Byte数组，如果缓冲区中的数据长度固定，则直接返回原始数组<br>
 	 * 注意此方法共享数组，不能修改数组内容！
 	 *
@@ -171,4 +182,12 @@ public class FastByteArrayOutputStream extends OutputStream {
 			ObjUtil.defaultIfNull(charset, CharsetUtil::defaultCharset));
 	}
 
+	/**
+	 * 获取指定位置的字节
+	 * @param index 位置
+	 * @return 字节
+	 */
+	public byte get(final int index){
+		return buffer.get(index);
+	}
 }
