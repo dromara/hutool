@@ -64,6 +64,10 @@ public enum DataUnit {
 	 * 单位名称列表
 	 */
 	public static final String[] UNIT_NAMES = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB"};
+	/**
+	 * 单位名称列表（简写）
+	 */
+	public static final String[] UNIT_NAMES_SIMPLE = new String[]{"B", "K", "M", "G", "T", "P", "E"};
 
 	private final String suffix;
 
