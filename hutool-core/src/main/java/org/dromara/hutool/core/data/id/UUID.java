@@ -17,9 +17,11 @@
 package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.codec.Number128;
+import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -208,7 +210,8 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		randomBytes[8] &= 0x3f; /* clear variant */
 		randomBytes[8] |= 0x80; /* set to IETF variant */
 
-		return new UUID(convertToLong(randomBytes, 0), convertToLong(randomBytes, 8));
+		return new UUID(ByteUtil.toLong(randomBytes, 0, ByteOrder.BIG_ENDIAN),
+				ByteUtil.toLong(randomBytes, 8, ByteOrder.BIG_ENDIAN));
 	}
 
 	private static long[] getV7Time() {
@@ -230,13 +233,6 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		}
 	}
 
-	private static long convertToLong(byte[] bytes, int start) {
-		long result = 0;
-		for (int i = start; i < start + 8; i++) {
-			result = (result << 8) | (bytes[i] & 0xFF);
-		}
-		return result;
-	}
 
 	/**
 	 * 根据 {@link #toString()} 方法中描述的字符串标准表示形式创建{@code UUID}。
