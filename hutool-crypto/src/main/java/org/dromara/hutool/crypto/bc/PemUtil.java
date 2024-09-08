@@ -43,6 +43,7 @@ import java.security.PublicKey;
  */
 public class PemUtil {
 
+	// region ----- readPem
 	/**
 	 * 读取PEM格式的私钥
 	 *
@@ -84,7 +85,7 @@ public class PemUtil {
 					return KeyUtil.generatePrivateKey("EC", object.getContent());
 				} catch (final Exception e) {
 					// 尝试PKCS#1
-					return KeyUtil.generatePrivateKey("EC", ECKeyUtil.createOpenSSHPrivateKeySpec(object.getContent()));
+					return KeyUtil.generatePrivateKey("EC", ECKeySpecUtil.getOpenSSHPrivateKeySpec(object.getContent()));
 				}
 			}
 			if (type.endsWith("PRIVATE KEY")) {
@@ -98,7 +99,7 @@ public class PemUtil {
 					return KeyUtil.generatePublicKey("EC", object.getContent());
 				} catch (final Exception ignore) {
 					// 尝试PKCS#1
-					return KeyUtil.generatePublicKey("EC", ECKeyUtil.createOpenSSHPublicKeySpec(object.getContent()));
+					return KeyUtil.generatePublicKey("EC", ECKeySpecUtil.getOpenSSHPublicKeySpec(object.getContent()));
 				}
 			} else if (type.endsWith("PUBLIC KEY")) {
 				return KeyUtil.generateRSAPublicKey(object.getContent());
@@ -155,7 +156,9 @@ public class PemUtil {
 			IoUtil.closeQuietly(pemReader);
 		}
 	}
+	// endregion
 
+	// region ----- writePem
 	/**
 	 * 将私钥或公钥转换为PEM格式的字符串
 	 * @param type 密钥类型（私钥、公钥、证书）
@@ -221,4 +224,5 @@ public class PemUtil {
 			IoUtil.closeQuietly(pemWriter);
 		}
 	}
+	// endregion
 }

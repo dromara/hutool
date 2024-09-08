@@ -89,7 +89,7 @@ public interface AsymmetricDecryptor {
 	 *
 	 * @param data    数据，Hex（16进制）或Base64字符串
 	 * @param keyType 密钥类型
-	 * @return 解密后的密文
+	 * @return 解密后的密文，UTF-8编码
 	 * @since 4.5.2
 	 */
 	default String decryptStr(final String data, final KeyType keyType) {

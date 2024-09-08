@@ -16,8 +16,6 @@
 
 package org.dromara.hutool.crypto.bc;
 
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
@@ -29,10 +27,10 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.asymmetric.SM2;
-import org.dromara.hutool.crypto.digest.mac.HMac;
-import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 import org.dromara.hutool.crypto.digest.SM3;
 import org.dromara.hutool.crypto.digest.mac.BCHMacEngine;
+import org.dromara.hutool.crypto.digest.mac.HMac;
+import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 import org.dromara.hutool.crypto.digest.mac.MacEngine;
 import org.dromara.hutool.crypto.symmetric.SM4;
 import org.dromara.hutool.crypto.symmetric.SymmetricCrypto;
@@ -64,18 +62,6 @@ import java.security.PublicKey;
 public class SmUtil {
 
 	private final static int RS_LEN = 32;
-	/**
-	 * SM2默认曲线
-	 */
-	public static final String SM2_CURVE_NAME = "sm2p256v1";
-	/**
-	 * SM2推荐曲线参数（来自https://github.com/ZZMarquis/gmhelper）
-	 */
-	public static final ECDomainParameters SM2_DOMAIN_PARAMS = BCUtil.toDomainParams(GMNamedCurves.getByName(SM2_CURVE_NAME));
-	/**
-	 * SM2国密算法公钥参数的Oid标识
-	 */
-	public static final ASN1ObjectIdentifier ID_SM2_PUBLIC_KEY_PARAM = new ASN1ObjectIdentifier("1.2.156.10197.1.301");
 
 	/**
 	 * 创建SM2算法对象<br>
@@ -271,7 +257,7 @@ public class SmUtil {
 	public static byte[] rsAsn1ToPlain(final byte[] rsDer) {
 		final BigInteger[] decode;
 		try {
-			decode = StandardDSAEncoding.INSTANCE.decode(SM2_DOMAIN_PARAMS.getN(), rsDer);
+			decode = StandardDSAEncoding.INSTANCE.decode(SM2Constant.SM2_DOMAIN_PARAMS.getN(), rsDer);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -296,7 +282,7 @@ public class SmUtil {
 		final BigInteger r = new BigInteger(1, Arrays.copyOfRange(sign, 0, RS_LEN));
 		final BigInteger s = new BigInteger(1, Arrays.copyOfRange(sign, RS_LEN, RS_LEN * 2));
 		try {
-			return StandardDSAEncoding.INSTANCE.encode(SM2_DOMAIN_PARAMS.getN(), r, s);
+			return StandardDSAEncoding.INSTANCE.encode(SM2Constant.SM2_DOMAIN_PARAMS.getN(), r, s);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

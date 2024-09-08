@@ -33,13 +33,17 @@ import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.encoders.Hex;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.codec.binary.HexUtil;
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.SecureUtil;
 import org.dromara.hutool.crypto.bc.ECKeyUtil;
 import org.dromara.hutool.crypto.bc.SmUtil;
 
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -73,19 +77,24 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 
 	private ECPrivateKeyParameters privateKeyParams;
 	private ECPublicKeyParameters publicKeyParams;
+
 	/**
 	 * 自定义随机数
 	 */
 	private SecureRandom random;
+	/**
+	 * 是否去除压缩04压缩标识
+	 */
+	private boolean removeCompressedFlag;
 
 	private DSAEncoding encoding = StandardDSAEncoding.INSTANCE;
 	private Digest digest = new SM3Digest();
 	private SM2Engine.Mode mode = SM2Engine.Mode.C1C3C2;
 
-	// ------------------------------------------------------------------ Constructor start
+	// region ----- Constructors
 
 	/**
-	 * 构造，生成新的私钥公钥对
+	 * 构造，生成新的随机私钥公钥对
 	 */
 	public SM2() {
 		this(null, (byte[]) null);
@@ -113,27 +122,9 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public SM2(final byte[] privateKey, final byte[] publicKey) {
 		this(
-			ECKeyUtil.decodePrivateKeyParams(privateKey),
-			ECKeyUtil.decodePublicKeyParams(publicKey)
+			ECKeyUtil.generateSm2PrivateKey(privateKey),
+			ECKeyUtil.generateSm2PublicKey(publicKey)
 		);
-	}
-
-	/**
-	 * 构造 <br>
-	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
-	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
-	 *
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
-	 */
-	public SM2(final PrivateKey privateKey, final PublicKey publicKey) {
-		this(ECKeyUtil.toPrivateParams(privateKey), ECKeyUtil.toPublicParams(publicKey));
-		if (null != privateKey) {
-			this.privateKey = privateKey;
-		}
-		if (null != publicKey) {
-			this.publicKey = publicKey;
-		}
 	}
 
 	/**
@@ -147,7 +138,11 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @since 5.2.0
 	 */
 	public SM2(final String privateKeyDValue, final String publicKeyPointXHex, final String publicKeyPointYHex) {
-		this(ECKeyUtil.toSm2PrivateParams(privateKeyDValue), ECKeyUtil.toSm2PublicParams(publicKeyPointXHex, publicKeyPointYHex));
+		this(
+			SecureUtil.decode(privateKeyDValue),
+			SecureUtil.decode(publicKeyPointXHex),
+			SecureUtil.decode(publicKeyPointYHex)
+		);
 	}
 
 	/**
@@ -161,8 +156,23 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @since 5.2.0
 	 */
 	public SM2(final byte[] privateKeyDValue, final byte[] publicKeyPointX, final byte[] publicKeyPointY) {
-		this(ECKeyUtil.toSm2PrivateParams(privateKeyDValue),
-			ECKeyUtil.toSm2PublicParams(publicKeyPointX, publicKeyPointY));
+		this(ECKeyUtil.generateSm2PrivateKey(privateKeyDValue),
+			ECKeyUtil.generateSm2PublicKey(publicKeyPointX, publicKeyPointY));
+	}
+
+	/**
+	 * 构造 <br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 *
+	 * @param privateKey 私钥
+	 * @param publicKey  公钥
+	 */
+	public SM2(final PrivateKey privateKey, final PublicKey publicKey) {
+		super(ALGORITHM_SM2, new KeyPair(publicKey, privateKey));
+		this.privateKeyParams = ECKeyUtil.toPrivateParams(this.privateKey);
+		this.publicKeyParams = ECKeyUtil.toPublicParams(this.publicKey);
+		this.init();
 	}
 
 	/**
@@ -179,8 +189,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		this.publicKeyParams = publicKeyParams;
 		this.init();
 	}
-
-	// ------------------------------------------------------------------ Constructor end
+	// endregion
 
 	/**
 	 * 初始化<br>
@@ -191,6 +200,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public SM2 init() {
 		if (null == this.privateKeyParams && null == this.publicKeyParams) {
+			// 随机密钥对
 			super.initKeys();
 			this.privateKeyParams = ECKeyUtil.toPrivateParams(this.privateKey);
 			this.publicKeyParams = ECKeyUtil.toPublicParams(this.publicKey);
@@ -205,7 +215,91 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		return this;
 	}
 
-	// --------------------------------------------------------------------------------- Encrypt
+	// region ----- Encrypt
+
+	/**
+	 * 使用公钥加密，SM2非对称加密的结果由C1,C3,C2三部分组成，其中：
+	 *
+	 * <pre>
+	 * C1 生成随机数的计算出的椭圆曲线点
+	 * C3 SM3的摘要值
+	 * C2 密文数据
+	 * </pre>
+	 *
+	 * @param data 被加密的字符串，UTF8编码
+	 * @return 加密后的Base64
+	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
+	 */
+	public String encryptBase64(final String data) {
+		return encryptBase64(data, KeyType.PublicKey);
+	}
+
+	/**
+	 * 使用公钥加密，SM2非对称加密的结果由C1,C3,C2三部分组成，其中：
+	 *
+	 * <pre>
+	 * C1 生成随机数的计算出的椭圆曲线点
+	 * C3 SM3的摘要值
+	 * C2 密文数据
+	 * </pre>
+	 *
+	 * @param in 被加密的数据流
+	 * @return 加密后的Base64
+	 * @throws IORuntimeException IO异常
+	 */
+	public String encryptBase64(final InputStream in) throws IORuntimeException {
+		return encryptBase64(in, KeyType.PublicKey);
+	}
+
+	/**
+	 * 使用公钥加密，SM2非对称加密的结果由C1,C3,C2三部分组成，其中：
+	 *
+	 * <pre>
+	 * C1 生成随机数的计算出的椭圆曲线点
+	 * C3 SM3的摘要值
+	 * C2 密文数据
+	 * </pre>
+	 *
+	 * @param data 被加密的bytes
+	 * @return 加密后的Base64
+	 */
+	public String encryptBase64(final byte[] data) {
+		return encryptBase64(data, KeyType.PublicKey);
+	}
+
+	/**
+	 * 使用公钥加密，SM2非对称加密的结果由C1,C3,C2三部分组成，其中：
+	 *
+	 * <pre>
+	 * C1 生成随机数的计算出的椭圆曲线点
+	 * C3 SM3的摘要值
+	 * C2 密文数据
+	 * </pre>
+	 *
+	 * @param data 被加密的字符串，UTF8编码
+	 * @return 加密后的bytes
+	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
+	 */
+	public byte[] encrypt(final String data) {
+		return encrypt(data, KeyType.PublicKey);
+	}
+
+	/**
+	 * 使用公钥加密，SM2非对称加密的结果由C1,C3,C2三部分组成，其中：
+	 *
+	 * <pre>
+	 * C1 生成随机数的计算出的椭圆曲线点
+	 * C3 SM3的摘要值
+	 * C2 密文数据
+	 * </pre>
+	 *
+	 * @param in 被加密的数据流
+	 * @return 加密后的bytes
+	 * @throws IORuntimeException IO异常
+	 */
+	public byte[] encrypt(final InputStream in) throws IORuntimeException {
+		return encrypt(in, KeyType.PublicKey);
+	}
 
 	/**
 	 * 使用公钥加密，SM2非对称加密的结果由C1,C3,C2三部分组成，其中：
@@ -267,15 +361,60 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		final SM2Engine engine = getEngine();
 		try {
 			engine.init(true, pubKeyParameters);
-			return engine.processBlock(data, 0, data.length);
+			final byte[] result = engine.processBlock(data, 0, data.length);
+			return this.removeCompressedFlag ? removeCompressedFlag(result) : result;
 		} catch (final InvalidCipherTextException e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
 		}
 	}
+	// endregion
 
-	// --------------------------------------------------------------------------------- Decrypt
+	// region ----- Decrypt
+
+	/**
+	 * 使用私钥解密
+	 *
+	 * @param data SM2密文数据，Hex（16进制）或Base64字符串
+	 * @return 解密后的字符串，UTF-8 编码
+	 */
+	public String decryptStr(final String data) {
+		return decryptStr(data, KeyType.PrivateKey);
+	}
+
+	/**
+	 * 使用私钥解密
+	 *
+	 * @param data    SM2密文数据，Hex（16进制）或Base64字符串
+	 * @param charset 编码
+	 * @return 解密后的bytes
+	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
+	 */
+	public String decryptStr(final String data, final Charset charset) {
+		return decryptStr(data, KeyType.PrivateKey, charset);
+	}
+
+	/**
+	 * 使用私钥解密
+	 *
+	 * @param in 密文数据流
+	 * @return 解密后的bytes
+	 * @throws IORuntimeException IO异常
+	 */
+	public byte[] decrypt(final InputStream in) throws IORuntimeException {
+		return super.decrypt(in, KeyType.PrivateKey);
+	}
+
+	/**
+	 * 使用私钥解密
+	 *
+	 * @param data SM2密文，实际包含三部分：ECC公钥、真正的密文、公钥和原文的SM3-HASH值
+	 * @return 解密后的bytes
+	 */
+	public byte[] decrypt(final String data) {
+		return super.decrypt(data, KeyType.PrivateKey);
+	}
 
 	/**
 	 * 使用私钥解密
@@ -316,17 +455,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public byte[] decrypt(byte[] data, final CipherParameters privateKeyParameters) throws CryptoException {
 		Assert.isTrue(data.length > 1, "Invalid SM2 cipher text, must be at least 1 byte long");
-		// 检查数据，gmssl等库生成的密文不包含04前缀（非压缩数据标识），此处检查并补充
-		// 参考：https://blog.csdn.net/softt/article/details/139978608
-		// 根据公钥压缩形态不同，密文分为两种压缩形式：
-		// C1( 03 + X ) + C3（32个字节）+ C2
-		// C1( 02 + X ) + C3（32个字节）+ C2
-		// 非压缩公钥正常形态为04 + X  + Y，由于各个算法库差异，04有时候会省略
-		// 非压缩密文正常形态为04 + C1 + C3 + C2
-		if (data[0] != 0x04 && data[0] != 0x02 && data[0] != 0x03) {
-			// 默认非压缩形态
-			data = ArrayUtil.insert(data, 0, 0x04);
-		}
+		data = prependCompressedFlag(data);
 
 		lock.lock();
 		final SM2Engine engine = getEngine();
@@ -339,7 +468,9 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 			lock.unlock();
 		}
 	}
-	// --------------------------------------------------------------------------------- Sign and Verify
+	//endregion
+
+	// region ----- Sign and Verify
 
 	/**
 	 * 用私钥对信息生成数字签名
@@ -458,6 +589,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 			lock.unlock();
 		}
 	}
+	// endregion
 
 	@Override
 	public SM2 setPrivateKey(final PrivateKey privateKey) {
@@ -510,6 +642,18 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public SM2 setRandom(final SecureRandom random) {
 		this.random = random;
+		return this;
+	}
+
+	/**
+	 * 设置是否移除压缩标记，默认为false<br>
+	 * 移除后的密文兼容gmssl等库
+	 *
+	 * @param removeCompressedFlag 是否移除压缩标记
+	 * @return this
+	 */
+	public SM2 setRemoveCompressedFlag(final boolean removeCompressedFlag) {
+		this.removeCompressedFlag = removeCompressedFlag;
 		return this;
 	}
 
@@ -650,6 +794,43 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 		this.digest.reset();
 		return this.signer;
+	}
+
+	/**
+	 * 去除04压缩标识<br>
+	 * gmssl等库生成的密文不包含04前缀，此处兼容
+	 *
+	 * @param data 密文数据
+	 * @return 处理后的数据
+	 */
+	private static byte[] removeCompressedFlag(final byte[] data) {
+		if (data[0] != 0x04) {
+			return data;
+		}
+		final byte[] result = new byte[data.length - 1];
+		System.arraycopy(data, 1, result, 0, result.length);
+		return result;
+	}
+
+	/**
+	 * 追加压缩标识<br>
+	 * 检查数据，gmssl等库生成的密文不包含04前缀（非压缩数据标识），此处检查并补充
+	 * 参考：https://blog.csdn.net/softt/article/details/139978608
+	 * 根据公钥压缩形态不同，密文分为两种压缩形式：
+	 * C1( 03 + X ) + C3（32个字节）+ C2
+	 * C1( 02 + X ) + C3（32个字节）+ C2
+	 * 非压缩公钥正常形态为04 + X  + Y，由于各个算法库差异，04有时候会省略
+	 * 非压缩密文正常形态为04 + C1 + C3 + C2
+	 *
+	 * @param data 待解密数据
+	 * @return 增加压缩标识后的数据
+	 */
+	private static byte[] prependCompressedFlag(byte[] data) {
+		if (data[0] != 0x04 && data[0] != 0x02 && data[0] != 0x03) {
+			// 默认非压缩形态
+			data = ArrayUtil.insert(data, 0, 0x04);
+		}
+		return data;
 	}
 	// ------------------------------------------------------------------------------------------------------------------------- Private method end
 }

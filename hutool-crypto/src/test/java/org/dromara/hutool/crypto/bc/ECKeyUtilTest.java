@@ -18,8 +18,13 @@ package org.dromara.hutool.crypto.bc;
 
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.jce.interfaces.ECPrivateKey;
+import org.dromara.hutool.crypto.KeyUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.security.KeyPair;
+import java.security.PublicKey;
 
 public class ECKeyUtilTest {
 
@@ -41,5 +46,12 @@ public class ECKeyUtilTest {
 
 		final ECPrivateKeyParameters keyParameters = ECKeyUtil.toSm2PrivateParams(privateKeyHex);
 		Assertions.assertNotNull(keyParameters);
+	}
+
+	@Test
+	void getECPublicKeyTest() {
+		final KeyPair sm2 = KeyUtil.generateKeyPair("sm2");
+		final PublicKey ecPublicKey = ECKeyUtil.getECPublicKey((ECPrivateKey) sm2.getPrivate(), SM2Constant.SM2_EC_SPEC);
+		Assertions.assertEquals(sm2.getPublic(), ecPublicKey);
 	}
 }

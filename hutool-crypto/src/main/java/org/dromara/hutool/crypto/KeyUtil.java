@@ -25,7 +25,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import org.dromara.hutool.crypto.bc.ECKeyUtil;
-import org.dromara.hutool.crypto.bc.SmUtil;
+import org.dromara.hutool.crypto.bc.SM2Constant;
 import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
 
@@ -421,7 +421,7 @@ public class KeyUtil {
 	public static KeyPair generateKeyPair(final String algorithm, final int keySize, final byte[] seed) {
 		// SM2算法需要单独定义其曲线生成
 		if ("SM2".equalsIgnoreCase(algorithm)) {
-			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SmUtil.SM2_CURVE_NAME);
+			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2Constant.SM2_CURVE_NAME);
 			return generateKeyPair(algorithm, keySize, seed, sm2p256v1);
 		}
 

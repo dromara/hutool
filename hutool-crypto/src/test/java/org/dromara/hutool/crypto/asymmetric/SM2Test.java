@@ -24,6 +24,7 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.crypto.bc.ECKeyUtil;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.bc.SM2Constant;
 import org.dromara.hutool.crypto.bc.SmUtil;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
@@ -35,6 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -208,8 +210,8 @@ public class SM2Test {
 		final byte[] data = KeyUtil.encodeECPublicKey(publicKey);
 		final String encodeHex = HexUtil.encodeStr(data);
 		final String encodeB64 = Base64.encode(data);
-		final PublicKey Hexdecode = KeyUtil.decodeECPoint(encodeHex, SmUtil.SM2_CURVE_NAME);
-		final PublicKey B64decode = KeyUtil.decodeECPoint(encodeB64, SmUtil.SM2_CURVE_NAME);
+		final PublicKey Hexdecode = KeyUtil.decodeECPoint(encodeHex, SM2Constant.SM2_CURVE_NAME);
+		final PublicKey B64decode = KeyUtil.decodeECPoint(encodeB64, SM2Constant.SM2_CURVE_NAME);
 		Assertions.assertEquals(HexUtil.encodeStr(publicKey.getEncoded()), HexUtil.encodeStr(Hexdecode.getEncoded()));
 		Assertions.assertEquals(HexUtil.encodeStr(publicKey.getEncoded()), HexUtil.encodeStr(B64decode.getEncoded()));
 	}
@@ -286,7 +288,8 @@ public class SM2Test {
 		final String priKey = "MHcCAQEEIE29XqAFV/rkJbnJzCoQRJLTeAHG2TR0h9ZCWag0+ZMEoAoGCCqBHM9VAYItoUQDQgAESkOzNigIsH5ehFvr9y" +
 				"QNQ66genyOrm+Q4umCA4aWXPeRzmcTAWSlTineiReTFN2lqor2xaulT8u3a4w3AM/F6A==";
 
-		final PrivateKey privateKey = KeyUtil.generatePrivateKey("sm2", new OpenSSHPrivateKeySpec(SecureUtil.decode(priKey)));
+		final PrivateKey privateKey = KeyUtil.generatePrivateKey("sm2", new OpenSSHPrivateKeySpec(
+			Objects.requireNonNull(SecureUtil.decode(priKey))));
 		final ECPrivateKeyParameters privateKeyParameters = ECKeyUtil.toPrivateParams(privateKey);
 
 		final SM2 sm2 = new SM2(privateKeyParameters, ECKeyUtil.getPublicParams(privateKeyParameters));
