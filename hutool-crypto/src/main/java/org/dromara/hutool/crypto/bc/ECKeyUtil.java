@@ -49,6 +49,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.KeySpec;
+import java.util.Objects;
 
 /**
  * 椭圆曲线EC(Elliptic Curves)密钥参数相关工具类封装
@@ -339,7 +340,9 @@ public class ECKeyUtil {
 		if (null == d) {
 			return null;
 		}
-		return toPrivateParams(BigIntegers.fromUnsignedByteArray(SecureUtil.decode(d)), domainParameters);
+		return toPrivateParams(
+			BigIntegers.fromUnsignedByteArray(Objects.requireNonNull(SecureUtil.decode(d))),
+			domainParameters);
 	}
 
 	/**
