@@ -2074,7 +2074,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			}
 		}
 
-		return -1;
+		return INDEX_NOT_FOUND;
 	}
 
 	/**
