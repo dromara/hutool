@@ -1892,7 +1892,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (!ObjUtil.equals(array[i + firstIndex], subArray[i])) {
+			if (ObjUtil.notEqual(array[i + firstIndex], subArray[i])) {
 				return lastIndexOfSub(array, firstIndex - 1, subArray);
 			}
 		}
