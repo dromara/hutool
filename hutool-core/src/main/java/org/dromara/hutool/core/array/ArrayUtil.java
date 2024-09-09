@@ -1603,7 +1603,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[] 	reverse(final T[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static <T> T[] reverse(final T[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -2046,22 +2046,35 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
-	public static <T> int indexOfSub(final T[] array, final int beginInclude, final T[] subArray) {
-		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length) {
+	public static <T> int indexOfSub(final T[] array, int beginInclude, final T[] subArray) {
+		if (isEmpty(array) || isEmpty(subArray)) {
 			return INDEX_NOT_FOUND;
 		}
-		final int firstIndex = indexOf(array, subArray[0], beginInclude);
-		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
+		if(beginInclude < 0){
+			beginInclude += array.length;
+		}
+		if(beginInclude < 0 || beginInclude > array.length - 1){
+			return INDEX_NOT_FOUND;
+		}
+		if (array.length - beginInclude < subArray.length) {
+			// 剩余长度不足
 			return INDEX_NOT_FOUND;
 		}
 
-		for (int i = 0; i < subArray.length; i++) {
-			if (!ObjUtil.equals(array[i + firstIndex], subArray[i])) {
-				return indexOfSub(array, firstIndex + 1, subArray);
+		for (int i = beginInclude; i <= array.length - subArray.length; i++) {
+			boolean found = true;
+			for (int j = 0; j < subArray.length; j++) {
+				if (ObjUtil.notEquals(array[i + j], subArray[j])) {
+					found = false;
+					break;
+				}
+			}
+			if (found) {
+				return i;
 			}
 		}
 
-		return firstIndex;
+		return -1;
 	}
 
 	/**
@@ -2084,29 +2097,45 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 查找最后一个子数组的开始位置
 	 *
 	 * @param array      数组
-	 * @param endInclude 从后往前查找时的开始位置（包含）
+	 * @param endInclude 从后往前查找时的开始位置（包含），负数为从后向前的位置，如-1表示最后一位
 	 * @param subArray   子数组
 	 * @param <T>        数组元素类型
 	 * @return 最后一个子数组的开始位置，即从后往前，子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
-	public static <T> int lastIndexOfSub(final T[] array, final int endInclude, final T[] subArray) {
-		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length || endInclude < 0) {
+	public static <T> int lastIndexOfSub(final T[] array, int endInclude, final T[] subArray) {
+		if (isEmpty(array) || isEmpty(subArray)) {
+			return INDEX_NOT_FOUND;
+		}
+		if (endInclude < 0) {
+			endInclude += array.length;
+		}
+		if (endInclude < 0) {
+			return INDEX_NOT_FOUND;
+		}
+		if (endInclude > array.length - 1) {
+			// 结束位置超过最大值
+			endInclude = array.length - 1;
+		}
+		if (subArray.length - 1 > endInclude) {
+			// 剩余长度不足
 			return INDEX_NOT_FOUND;
 		}
 
-		final int firstIndex = lastIndexOf(array, subArray[0], endInclude);
-		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
-			return INDEX_NOT_FOUND;
-		}
-
-		for (int i = 0; i < subArray.length; i++) {
-			if (!ObjUtil.equals(array[i + firstIndex], subArray[i])) {
-				return lastIndexOfSub(array, firstIndex - 1, subArray);
+		for (int i = Math.min(array.length - subArray.length, endInclude); i >= 0; i--) {
+			boolean found = true;
+			for (int j = 0; j < subArray.length; j++) {
+				if (ObjUtil.notEquals(array[i + j], subArray[j])) {
+					found = false;
+					break;
+				}
+			}
+			if (found) {
+				return i;
 			}
 		}
 
-		return firstIndex;
+		return INDEX_NOT_FOUND;
 	}
 	// region
 
