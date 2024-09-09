@@ -6,10 +6,7 @@ import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.*;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 
@@ -1864,29 +1861,49 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 查找最后一个子数组的开始位置
 	 *
 	 * @param array      数组
-	 * @param endInclude 查找结束的位置（包含）
+	 * @param endInclude 查找结束的位置（包含），-1表示最后一位
 	 * @param subArray   子数组
 	 * @param <T>        数组元素类型
 	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
 	public static <T> int lastIndexOfSub(T[] array, int endInclude, T[] subArray) {
-		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length || endInclude < 0) {
+		if (isEmpty(array) || isEmpty(subArray)) {
+			return INDEX_NOT_FOUND;
+		}
+		if(endInclude < 0){
+			endInclude += array.length;
+		}
+		if(endInclude < 0){
+			return INDEX_NOT_FOUND;
+		}
+		if(endInclude > array.length - 1){
+			// 结束位置超过最大值
+			endInclude = array.length - 1;
+		}
+		if(subArray.length - 1 > endInclude){
+			// 剩余长度不足
 			return INDEX_NOT_FOUND;
 		}
 
-		int firstIndex = lastIndexOf(array, subArray[0]);
-		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
+		final int lastEleIndex = lastIndexOf(array, subArray[subArray.length - 1], endInclude);
+		if (lastEleIndex < 0 || lastEleIndex  < subArray.length - 1) {
 			return INDEX_NOT_FOUND;
 		}
 
-		for (int i = 0; i < subArray.length; i++) {
-			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
-				return lastIndexOfSub(array, firstIndex - 1, subArray);
+		// 匹配字串后续字符
+		boolean isAllMatch = true;
+		for (int i = 0; i < subArray.length - 1; i++) {
+			if (ObjectUtil.notEqual(array[i + lastEleIndex - subArray.length + 1], subArray[i])) {
+				isAllMatch =false;
+				break;
 			}
 		}
+		if(isAllMatch){
+			return lastEleIndex - subArray.length + 1;
+		}
 
-		return firstIndex;
+		return lastIndexOfSub(array, lastEleIndex - 1, subArray);
 	}
 
 	// O(n)时间复杂度检查数组是否有序
