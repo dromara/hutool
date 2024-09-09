@@ -4,7 +4,6 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.NumberUtil;
@@ -1899,6 +1898,9 @@ public class ImgUtil {
 			throw new IORuntimeException(e);
 		} finally {
 			writer.dispose();
+			// issue#IAPZG7
+			// FileCacheImageOutputStream会产生临时文件，此处关闭清除
+			IoUtil.close(output);
 		}
 		return true;
 	}

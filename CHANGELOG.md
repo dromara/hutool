@@ -16,6 +16,7 @@
 * 【core   】      修复RegexPool.CHINESE_NAME范围太大的问题（issue#IAOGDR@Gitee）
 * 【http   】      修复重定向没有按照RFC7231规范跳转的问题，修改为除了307外重定向使用GET方式（issue#3722@Github）
 * 【core   】      修复ArrayUtil.lastIndexOfSub死循环问题（issue#IAQ16E@Gitee）
+* 【core   】      修复ImgUtil.write写出临时文件未清理问题（issue#IAPZG7@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 **# 5.8.32(2024-08-30)
