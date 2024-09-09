@@ -60,6 +60,12 @@ public class ClientConfig {
 	 * 是否遇到响应状态码3xx时自动重定向请求
 	 */
 	private boolean followRedirects;
+	/**
+	 * 是否使用引擎默认的Cookie管理器，默认为true<br>
+	 * 默认情况下每个客户端维护一个自己的Cookie管理器，这个管理器用于在多次请求中记录并自动附带Cookie信息<br>
+	 * 如请求登录后，服务器返回Set-Cookie信息，Cookie管理器记录之，后续请求会自动带上这个Cookie信息，从而实现会话保持。
+	 */
+	private boolean useCookieManager = true;
 
 	/**
 	 * 构造
@@ -228,6 +234,30 @@ public class ClientConfig {
 	 */
 	public ClientConfig setFollowRedirects(final boolean followRedirects) {
 		this.followRedirects = followRedirects;
+		return this;
+	}
+
+	/**
+	 * 是否使用引擎默认的Cookie管理器，默认为true<br>
+	 * 默认情况下每个客户端维护一个自己的Cookie管理器，这个管理器用于在多次请求中记录并自动附带Cookie信息<br>
+	 * 如请求登录后，服务器返回Set-Cookie信息，Cookie管理器记录之，后续请求会自动带上这个Cookie信息，从而实现会话保持。
+	 *
+	 * @return 是否使用引擎默认的Cookie管理器
+	 */
+	public boolean isUseCookieManager() {
+		return useCookieManager;
+	}
+
+	/**
+	 * 是否使用引擎默认的Cookie管理器，默认为true<br>
+	 * 默认情况下每个客户端维护一个自己的Cookie管理器，这个管理器用于在多次请求中记录并自动附带Cookie信息<br>
+	 * 如请求登录后，服务器返回Set-Cookie信息，Cookie管理器记录之，后续请求会自动带上这个Cookie信息，从而实现会话保持。
+	 *
+	 * @param useCookieManager 是否使用引擎默认的Cookie管理器
+	 * @return this
+	 */
+	public ClientConfig setUseCookieManager(final boolean useCookieManager) {
+		this.useCookieManager = useCookieManager;
 		return this;
 	}
 }

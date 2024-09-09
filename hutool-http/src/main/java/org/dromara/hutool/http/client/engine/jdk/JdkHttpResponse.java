@@ -23,7 +23,7 @@ import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.ResponseBody;
-import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
+import org.dromara.hutool.http.meta.HeaderName;
 
 import java.io.Closeable;
 import java.io.FileNotFoundException;
@@ -47,9 +47,16 @@ public class JdkHttpResponse implements Response, Closeable {
 	 */
 	private final Charset requestCharset;
 	/**
+	 * Cookie管理器
+	 */
+	private final JdkCookieManager cookieManager;
+	/**
 	 * 响应内容体，{@code null} 表示无内容
 	 */
 	private ResponseBody body;
+	/**
+	 * 响应头
+	 */
 	private Map<String, List<String>> headers;
 
 	/**
@@ -72,14 +79,20 @@ public class JdkHttpResponse implements Response, Closeable {
 	 * 构造
 	 *
 	 * @param httpConnection {@link JdkHttpConnection}
+	 * @param cookieManager  Cookie管理器
 	 * @param ignoreEOFError 是否忽略响应读取时可能的EOF异常
 	 * @param requestCharset 编码，从请求编码中获取默认编码
 	 * @param isAsync        是否异步
 	 * @param isIgnoreBody   是否忽略读取响应体
 	 */
-	protected JdkHttpResponse(final JdkHttpConnection httpConnection, final boolean ignoreEOFError,
-							  final Charset requestCharset, final boolean isAsync, final boolean isIgnoreBody) {
+	protected JdkHttpResponse(final JdkHttpConnection httpConnection,
+							  final JdkCookieManager cookieManager,
+							  final boolean ignoreEOFError,
+							  final Charset requestCharset,
+							  final boolean isAsync,
+							  final boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
+		this.cookieManager = cookieManager;
 		this.ignoreEOFError = ignoreEOFError;
 		this.requestCharset = requestCharset;
 		init(isAsync, isIgnoreBody);
@@ -133,13 +146,16 @@ public class JdkHttpResponse implements Response, Closeable {
 	// ---------------------------------------------------------------- Http Response Header start
 
 	/**
-	 * 获取Cookie
+	 * 获取Cookie<br>
+	 * 如果启用Cookie管理器，则返回这个站点相关的所有Cookie信息，否则返回当前的响应的Cookie信息
 	 *
 	 * @return Cookie列表
-	 * @since 3.1.1
 	 */
 	public List<HttpCookie> getCookies() {
-		return GlobalCookieManager.getCookies(this.httpConnection);
+		if (this.cookieManager.isEnable()) {
+			return this.cookieManager.getCookies(this.httpConnection);
+		}
+		return HttpCookie.parse(this.header(HeaderName.SET_COOKIE));
 	}
 
 	/**
@@ -256,7 +272,7 @@ public class JdkHttpResponse implements Response, Closeable {
 		}
 
 		// 存储服务端设置的Cookie信息
-		GlobalCookieManager.store(httpConnection, this.headers);
+		this.cookieManager.saveFromResponse(this.httpConnection, this.headers);
 
 		// 获取响应内容流
 		if (!isIgnoreBody) {

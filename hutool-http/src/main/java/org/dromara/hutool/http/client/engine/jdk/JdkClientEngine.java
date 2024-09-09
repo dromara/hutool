@@ -28,7 +28,6 @@ import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
-import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
@@ -46,10 +45,23 @@ import java.util.List;
 public class JdkClientEngine extends AbstractClientEngine {
 
 	/**
+	 * Cookie管理
+	 */
+	private JdkCookieManager cookieManager;
+
+	/**
 	 * 构造
 	 */
 	public JdkClientEngine() {
-		// 无需检查类是否存在
+	}
+
+	/**
+	 * 获取Cookie管理器
+	 *
+	 * @return Cookie管理器
+	 */
+	public JdkCookieManager getCookieManager() {
+		return this.cookieManager;
 	}
 
 	@Override
@@ -84,7 +96,8 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 	@Override
 	public void close() {
-		// do nothing
+		// 关闭Cookie管理器
+		this.cookieManager = null;
 	}
 
 	@Override
@@ -94,7 +107,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 	@Override
 	protected void initEngine() {
-		// do nothing
+		this.cookieManager = this.config.isUseCookieManager() ? new JdkCookieManager() : new JdkCookieManager(null);
 	}
 
 	/**
@@ -148,8 +161,9 @@ public class JdkClientEngine extends AbstractClientEngine {
 		}
 
 		if (null == message.header(HeaderName.COOKIE)) {
-			// 用户没有自定义Cookie，则读取全局Cookie信息并附带到请求中
-			GlobalCookieManager.add(conn);
+			// 用户没有自定义Cookie，则读取Cookie管理器中的信息并附带到请求中
+			// 不覆盖模式回填Cookie头，这样用户定义的Cookie将优先
+			conn.header(this.cookieManager.loadForRequest(conn), false);
 		}
 
 		return conn;
@@ -195,7 +209,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 		}
 
 		// 最终页面
-		return new JdkHttpResponse(conn, true, message.charset(), isAsync, message.method().isIgnoreBody());
+		return new JdkHttpResponse(conn, this.cookieManager, true, message.charset(), isAsync, message.method().isIgnoreBody());
 	}
 
 	/**

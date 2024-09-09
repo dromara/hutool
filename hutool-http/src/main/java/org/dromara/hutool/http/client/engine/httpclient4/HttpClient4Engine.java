@@ -20,6 +20,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -34,7 +35,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.HttpClientConfig;
+import org.dromara.hutool.http.client.ApacheHttpClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
@@ -59,6 +60,7 @@ import java.util.Map;
 public class HttpClient4Engine extends AbstractClientEngine {
 
 	private CloseableHttpClient engine;
+	private CookieStore cookieStore;
 
 	/**
 	 * 构造
@@ -67,6 +69,15 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(CloseableHttpClient.class);
+	}
+
+	/**
+	 * 获得Cookie存储器
+	 *
+	 * @return Cookie存储器
+	 */
+	public CookieStore getCookieStore() {
+		return this.cookieStore;
 	}
 
 	@Override
@@ -105,7 +116,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		}
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
-		final ClientConfig config = ObjUtil.defaultIfNull(this.config, HttpClientConfig::of);
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ApacheHttpClientConfig::of);
 
 		// SSL配置
 		final SSLInfo sslInfo = config.getSslInfo();
@@ -113,7 +124,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 			clientBuilder.setSSLSocketFactory(buildSocketFactory(sslInfo));
 		}
 
-		// 连接配置
+		// 连接配置，包括连接池
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
 
 		// 实例级别默认请求配置
@@ -136,6 +147,12 @@ public class HttpClient4Engine extends AbstractClientEngine {
 
 		// 设置代理
 		setProxy(clientBuilder, config);
+
+		// Cookie管理
+		if(config.isUseCookieManager()){
+			this.cookieStore = new BasicCookieStore();
+			clientBuilder.setDefaultCookieStore(this.cookieStore);
+		}
 
 		this.engine = clientBuilder.build();
 	}
@@ -208,10 +225,10 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		final PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
 
 		// 连接池配置
-		if (config instanceof HttpClientConfig) {
-			final HttpClientConfig httpClientConfig = (HttpClientConfig) config;
-			manager.setMaxTotal(httpClientConfig.getMaxTotal());
-			manager.setDefaultMaxPerRoute(httpClientConfig.getMaxPerRoute());
+		if (config instanceof ApacheHttpClientConfig) {
+			final ApacheHttpClientConfig apacheHttpClientConfig = (ApacheHttpClientConfig) config;
+			manager.setMaxTotal(apacheHttpClientConfig.getMaxTotal());
+			manager.setDefaultMaxPerRoute(apacheHttpClientConfig.getMaxPerRoute());
 		}
 
 		return manager;
@@ -255,8 +272,8 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		if (readTimeout > 0) {
 			requestConfigBuilder.setSocketTimeout(readTimeout);
 		}
-		if (config instanceof HttpClientConfig) {
-			requestConfigBuilder.setMaxRedirects(((HttpClientConfig) config).getMaxRedirects());
+		if (config instanceof ApacheHttpClientConfig) {
+			requestConfigBuilder.setMaxRedirects(((ApacheHttpClientConfig) config).getMaxRedirects());
 		}
 
 		return requestConfigBuilder.build();

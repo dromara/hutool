@@ -43,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpEngine extends AbstractClientEngine {
 
 	private OkHttpClient client;
+	private OkCookieStore cookieStore;
 
 	/**
 	 * 构造
@@ -51,6 +52,15 @@ public class OkHttpEngine extends AbstractClientEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(OkHttpClient.class);
+	}
+
+	/**
+	 * 获得Cookie存储器
+	 *
+	 * @return Cookie存储器
+	 */
+	public OkCookieStore getCookieStore() {
+		return this.cookieStore;
 	}
 
 	@Override
@@ -96,13 +106,24 @@ public class OkHttpEngine extends AbstractClientEngine {
 		}
 
 		final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+
+		// SSL
+		final SSLInfo sslInfo = config.getSslInfo();
+		if (null != sslInfo) {
+			final SSLSocketFactory socketFactory = sslInfo.getSocketFactory();
+			final X509TrustManager trustManager = sslInfo.getTrustManager();
+			if (null != socketFactory && null != trustManager) {
+				builder.sslSocketFactory(socketFactory, trustManager);
+			}
+		}
+
 		// 连接超时
 		final int connectionTimeout = config.getConnectionTimeout();
 		if (connectionTimeout > 0) {
 			builder.connectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 		}
+
 		// 读写超时
 		final int readTimeout = config.getReadTimeout();
 		if (readTimeout > 0) {
@@ -112,25 +133,21 @@ public class OkHttpEngine extends AbstractClientEngine {
 		}
 
 		// 连接池
-		if(config instanceof OkHttpClientConfig){
+		if (config instanceof OkHttpClientConfig) {
 			builder.connectionPool(((OkHttpClientConfig) config).getConnectionPool());
 		}
 
-		// SSL
-		final SSLInfo sslInfo = config.getSslInfo();
-		if (null != sslInfo){
-			final SSLSocketFactory socketFactory = sslInfo.getSocketFactory();
-			final X509TrustManager trustManager = sslInfo.getTrustManager();
-			if(null != socketFactory && null != trustManager){
-				builder.sslSocketFactory(socketFactory, trustManager);
-			}
-		}
+		// 重定向
+		builder.followRedirects(config.isFollowRedirects());
 
 		// 设置代理
 		setProxy(builder, config);
 
-		// 重定向
-		builder.followRedirects(config.isFollowRedirects());
+		// Cookie管理
+		if (this.config.isUseCookieManager()) {
+			this.cookieStore = new InMemoryOkCookieStore();
+			builder.cookieJar(new CookieJarImpl(this.cookieStore));
+		}
 
 		this.client = builder.build();
 	}
@@ -156,7 +173,7 @@ public class OkHttpEngine extends AbstractClientEngine {
 		}
 
 		// 填充头信息
-		message.headers().forEach((key, values)-> values.forEach(value-> builder.addHeader(key, value)));
+		message.headers().forEach((key, values) -> values.forEach(value -> builder.addHeader(key, value)));
 
 		return builder.build();
 	}

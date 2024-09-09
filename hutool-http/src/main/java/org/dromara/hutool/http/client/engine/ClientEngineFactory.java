@@ -21,6 +21,7 @@ import org.dromara.hutool.core.spi.ServiceLoader;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
+import org.dromara.hutool.http.client.ApacheHttpClientConfig;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.log.LogUtil;
 
@@ -47,7 +48,7 @@ public class ClientEngineFactory {
 	 * 对不同引擎个性化配置，使用对应的{@link ClientConfig} 子类：
 	 *
 	 * <ul>
-	 *     <li>HttpClient4和HttpClient5使用{@link org.dromara.hutool.http.client.HttpClientConfig}</li>
+	 *     <li>HttpClient4和HttpClient5使用{@link ApacheHttpClientConfig}</li>
 	 *     <li>OkHttp使用{@link org.dromara.hutool.http.client.engine.okhttp.OkHttpClientConfig}</li>
 	 * </ul>
 	 * <p>

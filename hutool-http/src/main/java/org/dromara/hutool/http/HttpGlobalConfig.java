@@ -17,10 +17,8 @@
 package org.dromara.hutool.http;
 
 import org.dromara.hutool.core.util.RandomUtil;
-import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
 
 import java.io.Serializable;
-import java.net.CookieManager;
 import java.net.HttpURLConnection;
 
 /**
@@ -137,38 +135,6 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	synchronized public static void setIgnoreEOFError(final boolean customIgnoreEOFError) {
 		ignoreEOFError = customIgnoreEOFError;
-	}
-
-	/**
-	 * 获取Cookie管理器，用于自定义Cookie管理
-	 *
-	 * @return {@link CookieManager}
-	 * @see GlobalCookieManager#getCookieManager()
-	 * @since 4.1.0
-	 */
-	public static CookieManager getCookieManager() {
-		return GlobalCookieManager.getCookieManager();
-	}
-
-	/**
-	 * 自定义{@link CookieManager}
-	 *
-	 * @param customCookieManager 自定义的{@link CookieManager}
-	 * @see GlobalCookieManager#setCookieManager(CookieManager)
-	 * @since 4.5.14
-	 */
-	synchronized public static void setCookieManager(final CookieManager customCookieManager) {
-		GlobalCookieManager.setCookieManager(customCookieManager);
-	}
-
-	/**
-	 * 关闭Cookie
-	 *
-	 * @see GlobalCookieManager#setCookieManager(CookieManager)
-	 * @since 4.1.9
-	 */
-	synchronized public static void closeCookie() {
-		GlobalCookieManager.setCookieManager(null);
 	}
 
 	/**

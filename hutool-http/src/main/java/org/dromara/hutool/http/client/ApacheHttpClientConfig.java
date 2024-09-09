@@ -22,15 +22,15 @@ package org.dromara.hutool.http.client;
  * @author Looly
  * @since 6.0.0
  */
-public class HttpClientConfig extends ClientConfig {
+public class ApacheHttpClientConfig extends ClientConfig {
 
 	/**
 	 * 创建新的 HttpClientConfig
 	 *
 	 * @return HttpClientConfig
 	 */
-	public static HttpClientConfig of() {
-		return new HttpClientConfig();
+	public static ApacheHttpClientConfig of() {
+		return new ApacheHttpClientConfig();
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class HttpClientConfig extends ClientConfig {
 	 * @param maxTotal 最大连接总数
 	 * @return 当前HttpClientConfig实例，用于链式调用
 	 */
-	public HttpClientConfig setMaxTotal(final int maxTotal) {
+	public ApacheHttpClientConfig setMaxTotal(final int maxTotal) {
 		this.maxTotal = maxTotal;
 		return this;
 	}
@@ -81,7 +81,7 @@ public class HttpClientConfig extends ClientConfig {
 	 * @param maxPerRoute 每个路由的最大连接数
 	 * @return 当前HttpClientConfig实例，用于链式调用
 	 */
-	public HttpClientConfig setMaxPerRoute(final int maxPerRoute) {
+	public ApacheHttpClientConfig setMaxPerRoute(final int maxPerRoute) {
 		this.maxPerRoute = maxPerRoute;
 		return this;
 	}
@@ -101,7 +101,7 @@ public class HttpClientConfig extends ClientConfig {
 	 * @param maxRedirects 重定向最大次数
 	 * @return this
 	 */
-	public HttpClientConfig setMaxRedirects(final int maxRedirects) {
+	public ApacheHttpClientConfig setMaxRedirects(final int maxRedirects) {
 		this.maxRedirects = maxRedirects;
 		return this;
 	}

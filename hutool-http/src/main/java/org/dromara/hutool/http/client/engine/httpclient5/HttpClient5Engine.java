@@ -21,6 +21,8 @@ import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.CookieStore;
 import org.apache.hc.client5.http.impl.DefaultRedirectStrategy;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -40,7 +42,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.HttpClientConfig;
+import org.dromara.hutool.http.client.ApacheHttpClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
@@ -66,6 +68,7 @@ import java.util.concurrent.TimeUnit;
 public class HttpClient5Engine extends AbstractClientEngine {
 
 	private CloseableHttpClient engine;
+	private CookieStore cookieStore;
 
 	/**
 	 * 构造
@@ -74,6 +77,15 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(CloseableHttpClient.class);
+	}
+
+	/**
+	 * 获得Cookie存储器
+	 *
+	 * @return Cookie存储器
+	 */
+	public CookieStore getCookieStore() {
+		return this.cookieStore;
 	}
 
 	@Override
@@ -112,7 +124,7 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		}
 
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
-		final ClientConfig config = ObjUtil.defaultIfNull(this.config, HttpClientConfig::of);
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ApacheHttpClientConfig::of);
 
 		// 连接配置，包括SSL配置等
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
@@ -137,6 +149,12 @@ public class HttpClient5Engine extends AbstractClientEngine {
 
 		// 设置代理
 		setProxy(clientBuilder, config);
+
+		// Cookie管理
+		if(config.isUseCookieManager()){
+			this.cookieStore = new BasicCookieStore();
+			clientBuilder.setDefaultCookieStore(this.cookieStore);
+		}
 
 		this.engine = clientBuilder.build();
 	}
@@ -211,10 +229,10 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		}
 
 		// 连接池配置
-		if (config instanceof HttpClientConfig) {
-			final HttpClientConfig httpClientConfig = (HttpClientConfig) config;
-			final int maxTotal = httpClientConfig.getMaxTotal();
-			final int maxPerRoute = httpClientConfig.getMaxPerRoute();
+		if (config instanceof ApacheHttpClientConfig) {
+			final ApacheHttpClientConfig apacheHttpClientConfig = (ApacheHttpClientConfig) config;
+			final int maxTotal = apacheHttpClientConfig.getMaxTotal();
+			final int maxPerRoute = apacheHttpClientConfig.getMaxPerRoute();
 			if (maxTotal > 0) {
 				connectionManagerBuilder.setMaxConnTotal(maxTotal);
 			}
@@ -262,8 +280,8 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		if (readTimeout > 0) {
 			requestConfigBuilder.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
 		}
-		if (config instanceof HttpClientConfig) {
-			requestConfigBuilder.setMaxRedirects(((HttpClientConfig) config).getMaxRedirects());
+		if (config instanceof ApacheHttpClientConfig) {
+			requestConfigBuilder.setMaxRedirects(((ApacheHttpClientConfig) config).getMaxRedirects());
 		}
 
 		return requestConfigBuilder.build();

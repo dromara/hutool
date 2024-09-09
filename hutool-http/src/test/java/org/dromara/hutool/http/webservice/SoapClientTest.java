@@ -21,9 +21,6 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPMessage;
-
 /**
  * SOAP相关单元测试
  *
@@ -42,17 +39,16 @@ public class SoapClientTest {
 
 		Console.log(client.getMsgStr(true));
 
-		Console.log(client.send(true));
+		Console.log(client.send().getResponseStr(true));
 	}
 
 	@Test
 	@Disabled
-	public void requestForMessageTest() throws SOAPException {
+	public void requestForMessageTest() {
 		final SoapClient client = SoapClient.of("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 				.setMethod("web:getCountryCityByIp", "http://WebXml.com.cn/")
 				.setParam("theIpAddress", "218.21.240.106");
 
-		final SOAPMessage message = client.sendForMessage();
-		Console.log(message.getSOAPBody().getTextContent());
+		Console.log(client.send().getBodyText());
 	}
 }
