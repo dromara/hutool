@@ -16,24 +16,20 @@
 
 package org.dromara.hutool.http.webservice;
 
+import jakarta.xml.soap.*;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.core.xml.XmlUtil;
 import org.dromara.hutool.http.client.HeaderOperation;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
+import org.dromara.hutool.http.meta.Method;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
-
-import jakarta.xml.soap.*;
-import org.dromara.hutool.http.meta.Method;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -542,48 +538,13 @@ public class SoapClient implements HeaderOperation<SoapClient> {
 	}
 
 	/**
-	 * 执行Webservice请求，即发送SOAP内容
+	 * 发送请求，获取响应对象
 	 *
-	 * @return 返回结果
+	 * @return {@link SoapResponse}
 	 */
-	public SOAPMessage sendForMessage() {
-		final Response res = sendForResponse();
-		final MimeHeaders headers = new MimeHeaders();
-		for (final Entry<String, List<String>> entry : res.headers().entrySet()) {
-			if (StrUtil.isNotEmpty(entry.getKey())) {
-				headers.setHeader(entry.getKey(), CollUtil.get(entry.getValue(), 0));
-			}
-		}
-		try {
-			return this.factory.createMessage(headers, res.bodyStream());
-		} catch (final IOException | SOAPException e) {
-			throw new SoapRuntimeException(e);
-		} finally {
-			IoUtil.closeQuietly(res);
-		}
+	public SoapResponse send() {
+		return new SoapResponse(this.sendForResponse(), this.factory);
 	}
-
-	/**
-	 * 执行Webservice请求，即发送SOAP内容
-	 *
-	 * @return 返回结果
-	 */
-	public String send() {
-		return send(false);
-	}
-
-	/**
-	 * 执行Webservice请求，即发送SOAP内容
-	 *
-	 * @param pretty 是否格式化
-	 * @return 返回结果
-	 */
-	@SuppressWarnings("resource")
-	public String send(final boolean pretty) {
-		final String body = sendForResponse().bodyStr();
-		return pretty ? XmlUtil.format(body) : body;
-	}
-
 	// -------------------------------------------------------------------------------------------------------- Private method start
 
 	/**
