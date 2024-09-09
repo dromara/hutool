@@ -141,6 +141,9 @@ public class ImgWriter implements Flushable {
 			throw new IORuntimeException(e);
 		} finally {
 			writer.dispose();
+			// issue#IAPZG7
+			// FileCacheImageOutputStream会产生临时文件，此处关闭清除
+			IoUtil.closeQuietly(output);
 		}
 	}
 
