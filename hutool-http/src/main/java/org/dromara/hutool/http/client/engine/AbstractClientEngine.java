@@ -17,6 +17,7 @@
 package org.dromara.hutool.http.client.engine;
 
 import org.dromara.hutool.http.client.ClientConfig;
+import org.dromara.hutool.http.client.cookie.CookieStoreSpi;
 
 /**
  * 客户端引擎抽象类，用于保存配置和定义初始化，并提供：
@@ -31,6 +32,16 @@ import org.dromara.hutool.http.client.ClientConfig;
 public abstract class AbstractClientEngine implements ClientEngine{
 
 	protected ClientConfig config;
+	protected CookieStoreSpi cookieStore;
+
+	/**
+	 * 获得Cookie存储器
+	 *
+	 * @return Cookie存储器
+	 */
+	public CookieStoreSpi getCookieStore() {
+		return this.cookieStore;
+	}
 
 	@Override
 	public ClientEngine init(final ClientConfig config) {

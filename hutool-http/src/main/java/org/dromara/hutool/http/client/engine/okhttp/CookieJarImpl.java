@@ -19,7 +19,11 @@ package org.dromara.hutool.http.client.engine.okhttp;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.http.client.cookie.CookieSpi;
+import org.dromara.hutool.http.client.cookie.CookieStoreSpi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,13 +34,15 @@ import java.util.List;
  */
 public class CookieJarImpl implements CookieJar {
 
-	private final OkCookieStore cookieStore;
+	private final CookieStoreSpi cookieStore;
 
 	/**
 	 * 构造
+	 *
+	 * @param cookieStore Cookie存储器，用于自定义Cookie存储实现
 	 */
-	public CookieJarImpl() {
-		this(new InMemoryOkCookieStore());
+	public CookieJarImpl(final CookieStoreSpi cookieStore) {
+		this.cookieStore = cookieStore;
 	}
 
 	/**
@@ -44,26 +50,28 @@ public class CookieJarImpl implements CookieJar {
 	 *
 	 * @return Cookie存储器
 	 */
-	public OkCookieStore getCookieStore() {
+	public CookieStoreSpi getCookieStore() {
 		return this.cookieStore;
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param cookieStore Cookie存储器，用于自定义Cookie存储实现
-	 */
-	public CookieJarImpl(final OkCookieStore cookieStore) {
-		this.cookieStore = cookieStore;
 	}
 
 	@Override
 	public List<Cookie> loadForRequest(final HttpUrl httpUrl) {
-		return this.cookieStore.get(httpUrl);
+		final List<CookieSpi> cookieSpis = this.cookieStore.get(httpUrl.uri());
+		final List<Cookie> cookies = new ArrayList<>(cookieSpis.size());
+		for (final CookieSpi cookieSpi : cookieSpis) {
+			cookies.add(((OkCookie)cookieSpi).getRaw());
+		}
+		return cookies;
 	}
 
 	@Override
 	public void saveFromResponse(final HttpUrl httpUrl, final List<Cookie> list) {
-		this.cookieStore.add(httpUrl, list);
+		if(CollUtil.isEmpty(list)){
+			return;
+		}
+
+		for (final Cookie cookie : list) {
+			this.cookieStore.add(httpUrl.uri(), new OkCookie(cookie));
+		}
 	}
 }

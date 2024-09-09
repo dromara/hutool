@@ -20,7 +20,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -34,11 +33,12 @@ import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
-import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.ApacheHttpClientConfig;
+import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
+import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.proxy.HttpProxy;
@@ -60,7 +60,6 @@ import java.util.Map;
 public class HttpClient4Engine extends AbstractClientEngine {
 
 	private CloseableHttpClient engine;
-	private CookieStore cookieStore;
 
 	/**
 	 * 构造
@@ -69,15 +68,6 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(CloseableHttpClient.class);
-	}
-
-	/**
-	 * 获得Cookie存储器
-	 *
-	 * @return Cookie存储器
-	 */
-	public CookieStore getCookieStore() {
-		return this.cookieStore;
 	}
 
 	@Override
@@ -150,8 +140,8 @@ public class HttpClient4Engine extends AbstractClientEngine {
 
 		// Cookie管理
 		if(config.isUseCookieManager()){
-			this.cookieStore = new BasicCookieStore();
-			clientBuilder.setDefaultCookieStore(this.cookieStore);
+			this.cookieStore = new InMemoryCookieStore();
+			clientBuilder.setDefaultCookieStore(new HttpClient4CookieStore(this.cookieStore));
 		}
 
 		this.engine = clientBuilder.build();

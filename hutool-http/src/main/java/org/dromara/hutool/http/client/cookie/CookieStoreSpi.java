@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.client.engine.okhttp;
+package org.dromara.hutool.http.client.cookie;
 
-import okhttp3.Cookie;
-import okhttp3.HttpUrl;
-
+import java.net.URI;
 import java.util.List;
 
 /**
- * OkHttp3 CookieStore接口
+ * CookieStore接口
  *
  * @author Looly
  * @since 6.0.0
  */
-public interface OkCookieStore {
+public interface CookieStoreSpi {
+
+	/**
+	 * 获取所有Http URI
+	 *
+	 * @return 所有Http URI
+	 */
+	List<URI> getURIs();
 
 	/**
 	 * 添加cookie
@@ -35,7 +40,7 @@ public interface OkCookieStore {
 	 * @param httpUrl HTTP url 地址
 	 * @param cookie  cookie
 	 */
-	void add(HttpUrl httpUrl, Cookie cookie);
+	void add(URI httpUrl, CookieSpi cookie);
 
 	/**
 	 * 添加指定 http url cookie集合
@@ -43,7 +48,11 @@ public interface OkCookieStore {
 	 * @param httpUrl HTTP url 地址
 	 * @param cookies cookie列表
 	 */
-	void add(HttpUrl httpUrl, List<Cookie> cookies);
+	default void add(final URI httpUrl, final List<CookieSpi> cookies){
+		for (final CookieSpi cookie : cookies) {
+			add(httpUrl, cookie);
+		}
+	}
 
 	/**
 	 * 根据HttpUrl从缓存中读取cookie集合
@@ -51,14 +60,14 @@ public interface OkCookieStore {
 	 * @param httpUrl HTTP url 地址
 	 * @return cookie集合
 	 */
-	List<Cookie> get(HttpUrl httpUrl);
+	List<CookieSpi> get(URI httpUrl);
 
 	/**
 	 * 获取全部缓存cookie
 	 *
 	 * @return cookie集合
 	 */
-	List<Cookie> getCookies();
+	List<CookieSpi> getCookies();
 
 	/**
 	 * 移除指定http url cookie集合
@@ -67,12 +76,12 @@ public interface OkCookieStore {
 	 * @param cookie  cookie
 	 * @return 是否移除成功
 	 */
-	boolean remove(HttpUrl httpUrl, Cookie cookie);
+	boolean remove(URI httpUrl, CookieSpi cookie);
 
 	/**
 	 * 移除所有cookie
 	 *
 	 * @return 是否移除成功
 	 */
-	boolean removeAll();
+	boolean clear();
 }

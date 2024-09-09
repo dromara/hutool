@@ -19,7 +19,7 @@ package org.dromara.hutool.http.client.engine.jdk;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
-import org.dromara.hutool.http.client.cookie.ThreadLocalCookieStore;
+import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class JdkCookieManager implements Closeable {
 	 * 构造
 	 */
 	public JdkCookieManager() {
-		this(new CookieManager(new ThreadLocalCookieStore(), CookiePolicy.ACCEPT_ALL));
+		this(new CookieManager(new JdkCookieStore(new InMemoryCookieStore()), CookiePolicy.ACCEPT_ALL));
 	}
 
 	/**

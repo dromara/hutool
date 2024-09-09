@@ -16,9 +16,6 @@
 
 package org.dromara.hutool.http.client.cookie;
 
-import java.net.CookieManager;
-import java.net.CookieStore;
-import java.net.HttpCookie;
 import java.net.URI;
 import java.util.List;
 
@@ -28,15 +25,15 @@ import java.util.List;
  * 见：https://stackoverflow.com/questions/16305486/cookiemanager-for-multiple-threads
  *
  * @author looly
- * @since 4.1.18
+ * @since 6.0.0
  */
-public class ThreadLocalCookieStore implements CookieStore {
+public class ThreadLocalCookieStore implements CookieStoreSpi {
 
-	private final static ThreadLocal<CookieStore> STORES = new ThreadLocal<CookieStore>() {
+	private final static ThreadLocal<CookieStoreSpi> STORES = new ThreadLocal<CookieStoreSpi>() {
 		@Override
-		protected synchronized CookieStore initialValue() {
+		protected synchronized CookieStoreSpi initialValue() {
 			/* InMemoryCookieStore */
-			return (new CookieManager()).getCookieStore();
+			return new InMemoryCookieStore();
 		}
 	};
 
@@ -45,7 +42,7 @@ public class ThreadLocalCookieStore implements CookieStore {
 	 *
 	 * @return CookieStore
 	 */
-	public CookieStore getCookieStore() {
+	public CookieStoreSpi getCookieStore() {
 		return STORES.get();
 	}
 
@@ -60,32 +57,32 @@ public class ThreadLocalCookieStore implements CookieStore {
 	}
 
 	@Override
-	public void add(final URI uri, final HttpCookie cookie) {
-		getCookieStore().add(uri, cookie);
-	}
-
-	@Override
-	public List<HttpCookie> get(final URI uri) {
-		return getCookieStore().get(uri);
-	}
-
-	@Override
-	public List<HttpCookie> getCookies() {
-		return getCookieStore().getCookies();
-	}
-
-	@Override
 	public List<URI> getURIs() {
 		return getCookieStore().getURIs();
 	}
 
 	@Override
-	public boolean remove(final URI uri, final HttpCookie cookie) {
-		return getCookieStore().remove(uri, cookie);
+	public void add(final URI httpUrl, final CookieSpi cookie) {
+		getCookieStore().add(httpUrl, cookie);
 	}
 
 	@Override
-	public boolean removeAll() {
-		return getCookieStore().removeAll();
+	public List<CookieSpi> get(final URI httpUrl) {
+		return getCookieStore().get(httpUrl);
+	}
+
+	@Override
+	public List<CookieSpi> getCookies() {
+		return getCookieStore().getCookies();
+	}
+
+	@Override
+	public boolean remove(final URI httpUrl, final CookieSpi cookie) {
+		return getCookieStore().remove(httpUrl, cookie);
+	}
+
+	@Override
+	public boolean clear() {
+		return getCookieStore().clear();
 	}
 }

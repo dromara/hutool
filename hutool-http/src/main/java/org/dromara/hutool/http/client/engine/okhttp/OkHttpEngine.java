@@ -24,6 +24,7 @@ import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
+import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
@@ -43,7 +44,6 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpEngine extends AbstractClientEngine {
 
 	private OkHttpClient client;
-	private OkCookieStore cookieStore;
 
 	/**
 	 * 构造
@@ -52,15 +52,6 @@ public class OkHttpEngine extends AbstractClientEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(OkHttpClient.class);
-	}
-
-	/**
-	 * 获得Cookie存储器
-	 *
-	 * @return Cookie存储器
-	 */
-	public OkCookieStore getCookieStore() {
-		return this.cookieStore;
 	}
 
 	@Override
@@ -145,7 +136,7 @@ public class OkHttpEngine extends AbstractClientEngine {
 
 		// Cookie管理
 		if (this.config.isUseCookieManager()) {
-			this.cookieStore = new InMemoryOkCookieStore();
+			this.cookieStore = new InMemoryCookieStore();
 			builder.cookieJar(new CookieJarImpl(this.cookieStore));
 		}
 
