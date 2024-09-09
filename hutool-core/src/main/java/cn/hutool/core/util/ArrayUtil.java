@@ -1886,24 +1886,18 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return INDEX_NOT_FOUND;
 		}
 
-		final int lastEleIndex = lastIndexOf(array, subArray[subArray.length - 1], endInclude);
-		if (lastEleIndex < 0 || lastEleIndex  < subArray.length - 1) {
+		final int firstIndex = lastIndexOf(array, subArray[0], endInclude);
+		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
 			return INDEX_NOT_FOUND;
 		}
 
-		// 匹配字串后续字符
-		boolean isAllMatch = true;
-		for (int i = 0; i < subArray.length - 1; i++) {
-			if (ObjectUtil.notEqual(array[i + lastEleIndex - subArray.length + 1], subArray[i])) {
-				isAllMatch =false;
-				break;
+		for (int i = 0; i < subArray.length; i++) {
+			if (!ObjUtil.equals(array[i + firstIndex], subArray[i])) {
+				return lastIndexOfSub(array, firstIndex - 1, subArray);
 			}
 		}
-		if(isAllMatch){
-			return lastEleIndex - subArray.length + 1;
-		}
 
-		return lastIndexOfSub(array, lastEleIndex - 1, subArray);
+		return firstIndex;
 	}
 
 	// O(n)时间复杂度检查数组是否有序
