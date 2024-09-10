@@ -48,6 +48,11 @@ public class JdkUtil {
 	 */
 	public static final boolean IS_OPENJ9;
 
+	/**
+	 * 是否GraalVM Native Image环境
+	 */
+	public static final boolean IS_GRAALVM_NATIVE;
+
 	static {
 		// JVM版本
 		JVM_VERSION = _getJvmVersion();
@@ -58,6 +63,9 @@ public class JdkUtil {
 		final String jvmName = _getJvmName();
 		IS_ANDROID = jvmName.equals("Dalvik");
 		IS_OPENJ9 = jvmName.contains("OpenJ9");
+
+		// GraalVM
+		IS_GRAALVM_NATIVE = null != System.getProperty("org.graalvm.nativeimage.imagecode");
 	}
 
 	/**
