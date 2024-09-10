@@ -16,8 +16,9 @@
 
 package org.dromara.hutool.core.bean;
 
+import org.dromara.hutool.core.reflect.Invoker;
+
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public interface BeanDesc extends Serializable {
 	 * @param fieldName 字段名
 	 * @return Getter方法
 	 */
-	default Method getGetter(final String fieldName) {
+	default Invoker getGetter(final String fieldName) {
 		final PropDesc desc = getProp(fieldName);
 		return null == desc ? null : desc.getGetter();
 	}
@@ -73,7 +74,7 @@ public interface BeanDesc extends Serializable {
 	 * @param fieldName 字段名
 	 * @return Setter方法
 	 */
-	default Method getSetter(final String fieldName) {
+	default Invoker getSetter(final String fieldName) {
 		final PropDesc desc = getProp(fieldName);
 		return null == desc ? null : desc.getSetter();
 	}

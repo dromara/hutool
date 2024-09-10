@@ -24,6 +24,7 @@ import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassDescUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
+import org.dromara.hutool.core.reflect.method.MethodInvoker;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.io.Serializable;
@@ -171,9 +172,9 @@ public class LambdaUtil {
 	 * @param <R>       getter方法返回值类型
 	 * @return Obj::getXxx
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T, R> Function<T, R> buildGetter(final Class<T> clazz, final String fieldName) {
-		return LambdaFactory.build(Function.class, BeanUtil.getBeanDesc(clazz).getGetter(fieldName));
+		final MethodInvoker getter = (MethodInvoker) BeanUtil.getBeanDesc(clazz).getGetter(fieldName);
+		return buildGetter(getter.getMethod());
 	}
 
 	/**
@@ -205,9 +206,9 @@ public class LambdaUtil {
 	 * @param <P>       setter方法返回的值类型
 	 * @return Obj::setXxx
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T, P> BiConsumer<T, P> buildSetter(final Class<T> clazz, final String fieldName) {
-		return LambdaFactory.build(BiConsumer.class, BeanUtil.getBeanDesc(clazz).getSetter(fieldName));
+		final MethodInvoker setter = (MethodInvoker) BeanUtil.getBeanDesc(clazz).getSetter(fieldName);
+		return buildSetter(setter.getMethod());
 	}
 
 	/**

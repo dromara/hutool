@@ -19,6 +19,7 @@ package org.dromara.hutool.json.engine.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.engine.AbstractJSONEngine;
@@ -31,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Gson引擎实现
@@ -38,7 +40,7 @@ import java.util.Date;
  * @author Looly
  * @since 6.0.0
  */
-public class GsonEngine extends AbstractJSONEngine {
+public class GsonEngine extends AbstractJSONEngine implements Wrapper<Gson> {
 
 	private Gson gson;
 
@@ -49,6 +51,12 @@ public class GsonEngine extends AbstractJSONEngine {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(Gson.class);
+	}
+
+	@Override
+	public Gson getRaw() {
+		initEngine();
+		return this.gson;
 	}
 
 	@Override
@@ -106,7 +114,11 @@ public class GsonEngine extends AbstractJSONEngine {
 	 * @param dateFormat 日期格式
 	 */
 	private void registerDate(final GsonBuilder builder, final String dateFormat){
-		builder.registerTypeAdapter(Date.class, new DateSerDesc(dateFormat));
+		// java date
+		builder.registerTypeHierarchyAdapter(Date.class, new DateSerDesc(dateFormat));
+		builder.registerTypeHierarchyAdapter(TimeZone.class, TimeZoneSerDesc.INSTANCE);
+
+		// java.time
 		builder.registerTypeAdapter(LocalDateTime.class, new TemporalSerDesc(LocalDateTime.class, dateFormat));
 		builder.registerTypeAdapter(LocalDate.class, new TemporalSerDesc(LocalDate.class, dateFormat));
 		builder.registerTypeAdapter(LocalTime.class, new TemporalSerDesc(LocalTime.class, dateFormat));

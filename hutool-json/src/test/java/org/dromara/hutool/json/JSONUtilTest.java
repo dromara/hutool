@@ -53,29 +53,29 @@ public class JSONUtilTest {
 	void parseEmptyValue() {
 		// https://www.rfc-editor.org/rfc/rfc8259#section-7
 		// 未被包装的空串理解为null
-		Object parse = JSONUtil.parse("");
+		JSON parse = JSONUtil.parse("");
 		assertNull(parse);
 
 		parse = JSONUtil.parse("\"\"");
-		assertEquals("\"\"", parse);
+		assertEquals("\"\"", parse.toString());
 	}
 
 	@Test
 	public void parseValueTest() {
-		Object parse = JSONUtil.parse(123);
-		assertEquals(123, parse);
+		JSON parse = JSONUtil.parse(123);
+		assertEquals(123, ((JSONPrimitive)parse).getValue());
 
 		parse = JSONUtil.parse("\"abc\"");
-		assertEquals("\"abc\"", parse);
+		assertEquals("\"abc\"", parse.toString());
 
 		parse = JSONUtil.parse("\"\\\"bc\"");
-		assertEquals("\"\\\"bc\"", parse);
+		assertEquals("\"\\\"bc\"", parse.toString());
 
 		parse = JSONUtil.parse("true");
-		assertEquals(true, parse);
+		assertEquals(true, ((JSONPrimitive)parse).getValue());
 
 		parse = JSONUtil.parse("False");
-		assertEquals(false, parse);
+		assertEquals(false, ((JSONPrimitive)parse).getValue());
 
 		parse = JSONUtil.parse("null");
 		assertNull(parse);

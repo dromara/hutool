@@ -20,7 +20,7 @@ import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.*;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodInvoker;
 
 import java.beans.Transient;
 import java.lang.reflect.Field;
@@ -37,7 +37,7 @@ public class PropDesc {
 	/**
 	 * 字段
 	 */
-	private Field field;
+	private Invoker fieldInvoker;
 	/**
 	 * 字段名
 	 */
@@ -45,11 +45,11 @@ public class PropDesc {
 	/**
 	 * Getter方法
 	 */
-	protected Method getter;
+	protected Invoker getter;
 	/**
 	 * Setter方法
 	 */
-	protected Method setter;
+	protected Invoker setter;
 
 	/**
 	 * 构造<br>
@@ -61,21 +61,21 @@ public class PropDesc {
 	 */
 	public PropDesc(final Field field, final Method getter, final Method setter) {
 		this(FieldUtil.getFieldName(field), getter, setter);
-		this.field = field;
+		this.fieldInvoker = null == field ? null : FieldInvoker.of(field);
 	}
 
 	/**
 	 * 构造<br>
 	 * Getter和Setter方法设置为默认可访问
 	 *
-	 * @param fieldName  字段名
-	 * @param getter get方法
-	 * @param setter set方法
+	 * @param fieldName    字段名
+	 * @param getterMethod get方法
+	 * @param setterMethod set方法
 	 */
-	public PropDesc(final String fieldName, final Method getter, final Method setter) {
+	public PropDesc(final String fieldName, final Method getterMethod, final Method setterMethod) {
 		this.fieldName = fieldName;
-		this.getter = ReflectUtil.setAccessible(getter);
-		this.setter = ReflectUtil.setAccessible(setter);
+		this.getter = null == getterMethod ? null : MethodInvoker.of(getterMethod);
+		this.setter = null == setterMethod ? null : MethodInvoker.of(setterMethod);
 	}
 
 	/**
@@ -94,7 +94,11 @@ public class PropDesc {
 	 * @since 5.1.6
 	 */
 	public String getRawFieldName() {
-		return null == this.field ? null : this.field.getName();
+		if (null == this.fieldInvoker) {
+			return this.fieldName;
+		}
+
+		return this.fieldInvoker.getName();
 	}
 
 	/**
@@ -103,7 +107,10 @@ public class PropDesc {
 	 * @return 字段
 	 */
 	public Field getField() {
-		return this.field;
+		if (null != this.fieldInvoker && this.fieldInvoker instanceof FieldInvoker) {
+			return ((FieldInvoker) this.fieldInvoker).getField();
+		}
+		return null;
 	}
 
 	/**
@@ -113,8 +120,8 @@ public class PropDesc {
 	 * @return 字段类型
 	 */
 	public Type getFieldType() {
-		if (null != this.field) {
-			return TypeUtil.getType(this.field);
+		if (null != this.fieldInvoker) {
+			return this.fieldInvoker.getType();
 		}
 		return findPropType(getter, setter);
 	}
@@ -126,27 +133,27 @@ public class PropDesc {
 	 * @return 字段类型
 	 */
 	public Class<?> getFieldClass() {
-		if (null != this.field) {
-			return TypeUtil.getClass(this.field);
+		if (null != this.fieldInvoker) {
+			return this.fieldInvoker.getTypeClass();
 		}
 		return findPropClass(getter, setter);
 	}
 
 	/**
-	 * 获取Getter方法，可能为{@code null}
+	 * 获取Getter方法Invoker，可能为{@code null}
 	 *
-	 * @return Getter方法
+	 * @return Getter方法Invoker
 	 */
-	public Method getGetter() {
+	public Invoker getGetter() {
 		return this.getter;
 	}
 
 	/**
-	 * 获取Setter方法，可能为{@code null}
+	 * 获取Setter方法Invoker，可能为{@code null}
 	 *
-	 * @return {@link Method}Setter 方法对象
+	 * @return {@link Method}Setter 方法Invoker
 	 */
-	public Method getSetter() {
+	public Invoker getSetter() {
 		return this.setter;
 	}
 
@@ -158,18 +165,27 @@ public class PropDesc {
 	 * @since 5.4.2
 	 */
 	public boolean isReadable(final boolean checkTransient) {
-		// 检查是否有getter方法或是否为public修饰
-		if (null == this.getter && !ModifierUtil.isPublic(this.field)) {
-			return false;
+		Field field = null;
+		if (this.fieldInvoker instanceof FieldInvoker) {
+			field = ((FieldInvoker) this.fieldInvoker).getField();
+		}
+		Method getterMethod = null;
+		if (this.getter instanceof MethodInvoker) {
+			getterMethod = ((MethodInvoker) this.getter).getMethod();
 		}
 
 		// 检查transient关键字和@Transient注解
-		if (checkTransient && isTransientForGet()) {
+		if (checkTransient && isTransientForGet(field, getterMethod)) {
 			return false;
 		}
 
 		// 检查@PropIgnore注解
-		return !isIgnoreGet();
+		if (isIgnoreGet(field, getterMethod)) {
+			return false;
+		}
+
+		// 检查是否有getter方法或是否为public修饰
+		return null != getterMethod || ModifierUtil.isPublic(field);
 	}
 
 	/**
@@ -183,11 +199,9 @@ public class PropDesc {
 	 */
 	public Object getValue(final Object bean) {
 		if (null != this.getter) {
-			// issue#3671 JDK15+ 修改了lambda的策略，动态生成后在metaspace不会释放，导致资源占用高
-			//return LambdaUtil.buildGetter(this.getter).apply(bean);
-			return MethodUtil.invoke(bean, this.getter);
-		} else if (ModifierUtil.isPublic(this.field)) {
-			return FieldUtil.getFieldValue(bean, this.field);
+			return this.getter.invoke(bean);
+		} else if (null != this.fieldInvoker) {
+			return fieldInvoker.invoke(bean);
 		}
 
 		return null;
@@ -230,18 +244,27 @@ public class PropDesc {
 	 * @since 5.4.2
 	 */
 	public boolean isWritable(final boolean checkTransient) {
-		// 检查是否有getter方法或是否为public修饰
-		if (null == this.setter && !ModifierUtil.isPublic(this.field)) {
-			return false;
+		Field field = null;
+		if (this.fieldInvoker instanceof FieldInvoker) {
+			field = ((FieldInvoker) this.fieldInvoker).getField();
+		}
+		Method setterMethod = null;
+		if (this.setter instanceof MethodInvoker) {
+			setterMethod = ((MethodInvoker) this.setter).getMethod();
 		}
 
 		// 检查transient关键字和@Transient注解
-		if (checkTransient && isTransientForSet()) {
+		if (checkTransient && isTransientForSet(field, setterMethod)) {
 			return false;
 		}
 
 		// 检查@PropIgnore注解
-		return !isIgnoreSet();
+		if(isIgnoreSet(field, setterMethod)){
+			return false;
+		}
+
+		// 检查是否有setter方法或是否为public修饰
+		return null != setterMethod || ModifierUtil.isPublic(field);
 	}
 
 	/**
@@ -256,9 +279,9 @@ public class PropDesc {
 	 */
 	public PropDesc setValue(final Object bean, final Object value) {
 		if (null != this.setter) {
-			MethodUtil.invoke(bean, this.setter, value);
-		} else if (ModifierUtil.isPublic(this.field)) {
-			FieldUtil.setFieldValue(bean, this.field, value);
+			this.setter.invoke(bean, value);
+		} else if (null != this.fieldInvoker) {
+			fieldInvoker.invoke(bean, value);
 		}
 		return this;
 	}
@@ -325,29 +348,29 @@ public class PropDesc {
 	@Override
 	public String toString() {
 		return "PropDesc{" +
-			"field=" + field +
+			"field=" + fieldInvoker +
 			", fieldName=" + fieldName +
 			", getter=" + getter +
 			", setter=" + setter +
 			'}';
 	}
 
-	//------------------------------------------------------------------------------------ Private method start
+	// region ----- private methods
 
 	/**
 	 * 通过Getter和Setter方法中找到属性类型
 	 *
-	 * @param getter Getter方法
-	 * @param setter Setter方法
+	 * @param getterInvoker Getter方法Invoker
+	 * @param setterInvoker Setter方法Invoker
 	 * @return {@link Type}
 	 */
-	private Type findPropType(final Method getter, final Method setter) {
+	private Type findPropType(final Invoker getterInvoker, final Invoker setterInvoker) {
 		Type type = null;
-		if (null != getter) {
-			type = TypeUtil.getReturnType(getter);
+		if (null != getterInvoker) {
+			type = getterInvoker.getType();
 		}
-		if (null == type && null != setter) {
-			type = TypeUtil.getParamType(setter, 0);
+		if (null == type && null != setterInvoker) {
+			type = setterInvoker.getType();
 		}
 		return type;
 	}
@@ -355,34 +378,19 @@ public class PropDesc {
 	/**
 	 * 通过Getter和Setter方法中找到属性类型
 	 *
-	 * @param getter Getter方法
-	 * @param setter Setter方法
+	 * @param getterInvoker Getter方法Invoker
+	 * @param setterInvoker Setter方法Invoker
 	 * @return {@link Type}
 	 */
-	private Class<?> findPropClass(final Method getter, final Method setter) {
+	private Class<?> findPropClass(final Invoker getterInvoker, final Invoker setterInvoker) {
 		Class<?> type = null;
-		if (null != getter) {
-			type = TypeUtil.getReturnClass(getter);
+		if (null != getterInvoker) {
+			type = getterInvoker.getTypeClass();
 		}
-		if (null == type && null != setter) {
-			type = TypeUtil.getFirstParamClass(setter);
+		if (null == type && null != setterInvoker) {
+			type = setterInvoker.getTypeClass();
 		}
 		return type;
-	}
-
-	/**
-	 * 检查字段是否被忽略写，通过{@link PropIgnore} 注解完成，规则为：
-	 * <pre>
-	 *     1. 在字段上有{@link PropIgnore} 注解
-	 *     2. 在setXXX方法上有{@link PropIgnore} 注解
-	 * </pre>
-	 *
-	 * @return 是否忽略写
-	 * @since 5.4.2
-	 */
-	private boolean isIgnoreSet() {
-		return AnnotationUtil.hasAnnotation(this.field, PropIgnore.class)
-				|| AnnotationUtil.hasAnnotation(this.setter, PropIgnore.class);
 	}
 
 	/**
@@ -392,30 +400,48 @@ public class PropDesc {
 	 *     2. 在getXXX方法上有{@link PropIgnore} 注解
 	 * </pre>
 	 *
+	 * @param field        字段，可为{@code null}
+	 * @param getterMethod 读取方法，可为{@code null}
 	 * @return 是否忽略读
-	 * @since 5.4.2
 	 */
-	private boolean isIgnoreGet() {
-		return AnnotationUtil.hasAnnotation(this.field, PropIgnore.class)
-				|| AnnotationUtil.hasAnnotation(this.getter, PropIgnore.class);
+	private static boolean isIgnoreGet(final Field field, final Method getterMethod) {
+		return AnnotationUtil.hasAnnotation(field, PropIgnore.class)
+			|| AnnotationUtil.hasAnnotation(getterMethod, PropIgnore.class);
+	}
+
+	/**
+	 * 检查字段是否被忽略写，通过{@link PropIgnore} 注解完成，规则为：
+	 * <pre>
+	 *     1. 在字段上有{@link PropIgnore} 注解
+	 *     2. 在setXXX方法上有{@link PropIgnore} 注解
+	 * </pre>
+	 *
+	 * @param field        字段，可为{@code null}
+	 * @param setterMethod 写方法，可为{@code null}
+	 * @return 是否忽略写
+	 */
+	private static boolean isIgnoreSet(final Field field, final Method setterMethod) {
+		return AnnotationUtil.hasAnnotation(field, PropIgnore.class)
+			|| AnnotationUtil.hasAnnotation(setterMethod, PropIgnore.class);
 	}
 
 	/**
 	 * 字段和Getter方法是否为Transient关键字修饰的
 	 *
+	 * @param field        字段，可为{@code null}
+	 * @param getterMethod 读取方法，可为{@code null}
 	 * @return 是否为Transient关键字修饰的
-	 * @since 5.3.11
 	 */
-	private boolean isTransientForGet() {
-		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierType.TRANSIENT);
+	private static boolean isTransientForGet(final Field field, final Method getterMethod) {
+		boolean isTransient = ModifierUtil.hasModifier(field, ModifierType.TRANSIENT);
 
 		// 检查Getter方法
-		if (!isTransient && null != this.getter) {
-			isTransient = ModifierUtil.hasModifier(this.getter, ModifierType.TRANSIENT);
+		if (!isTransient && null != getterMethod) {
+			isTransient = ModifierUtil.hasModifier(getterMethod, ModifierType.TRANSIENT);
 
 			// 检查注解
 			if (!isTransient) {
-				isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
+				isTransient = AnnotationUtil.hasAnnotation(getterMethod, Transient.class);
 			}
 		}
 
@@ -425,23 +451,24 @@ public class PropDesc {
 	/**
 	 * 字段和Getter方法是否为Transient关键字修饰的
 	 *
+	 * @param field        字段，可为{@code null}
+	 * @param setterMethod 写方法，可为{@code null}
 	 * @return 是否为Transient关键字修饰的
-	 * @since 5.3.11
 	 */
-	private boolean isTransientForSet() {
-		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierType.TRANSIENT);
+	private static boolean isTransientForSet(final Field field, final Method setterMethod) {
+		boolean isTransient = ModifierUtil.hasModifier(field, ModifierType.TRANSIENT);
 
 		// 检查Getter方法
-		if (!isTransient && null != this.setter) {
-			isTransient = ModifierUtil.hasModifier(this.setter, ModifierType.TRANSIENT);
+		if (!isTransient && null != setterMethod) {
+			isTransient = ModifierUtil.hasModifier(setterMethod, ModifierType.TRANSIENT);
 
 			// 检查注解
 			if (!isTransient) {
-				isTransient = AnnotationUtil.hasAnnotation(this.setter, Transient.class);
+				isTransient = AnnotationUtil.hasAnnotation(setterMethod, Transient.class);
 			}
 		}
 
 		return isTransient;
 	}
-	//------------------------------------------------------------------------------------ Private method end
+	// endregion
 }

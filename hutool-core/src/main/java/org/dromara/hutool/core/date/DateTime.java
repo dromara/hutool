@@ -80,7 +80,7 @@ public class DateTime extends Date {
 	/**
 	 * 时区
 	 */
-	private TimeZone timeZone;
+	private transient TimeZone timeZone;
 
 	/**
 	 * 第一周最少天数

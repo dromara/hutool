@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -42,7 +43,7 @@ import java.io.Writer;
  *
  * @author Looly
  */
-public class JacksonEngine extends AbstractJSONEngine {
+public class JacksonEngine extends AbstractJSONEngine implements Wrapper<ObjectMapper> {
 
 	private ObjectMapper mapper;
 
@@ -60,7 +61,8 @@ public class JacksonEngine extends AbstractJSONEngine {
 	 *
 	 * @return {@link ObjectMapper}对象
 	 */
-	public ObjectMapper getMapper() {
+	@Override
+	public ObjectMapper getRaw() {
 		initEngine();
 		return mapper;
 	}

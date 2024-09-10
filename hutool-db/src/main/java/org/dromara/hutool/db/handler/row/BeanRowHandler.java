@@ -19,12 +19,11 @@ package org.dromara.hutool.db.handler.row;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
+import org.dromara.hutool.core.reflect.Invoker;
+import org.dromara.hutool.core.reflect.method.MethodInvoker;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.handler.ResultSetUtil;
 
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -63,7 +62,7 @@ public class BeanRowHandler<T> extends AbsRowHandler<T> {
 		final Map<String, PropDesc> propMap = BeanUtil.getBeanDesc(beanType).getPropMap(this.caseInsensitive);
 		String columnLabel;
 		PropDesc pd;
-		Method setter;
+		Invoker setter;
 		Object value;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);
@@ -74,8 +73,12 @@ public class BeanRowHandler<T> extends AbsRowHandler<T> {
 			}
 			setter = (null == pd) ? null : pd.getSetter();
 			if (null != setter) {
-				value = ResultSetUtil.getColumnValue(rs, i, meta.getColumnType(i), TypeUtil.getFirstParamType(setter));
-				MethodUtil.invokeWithCheck(bean, setter, value);
+				value = ResultSetUtil.getColumnValue(rs, i, meta.getColumnType(i), setter.getType());
+				if(setter instanceof MethodInvoker){
+					MethodInvoker.of(((MethodInvoker) setter).getMethod()).setCheckArgs(true).invoke(bean, value);
+				}else {
+					setter.invoke(bean, value);
+				}
 			}
 		}
 		return bean;

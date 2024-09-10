@@ -17,6 +17,8 @@
 package org.dromara.hutool.core.bean;
 
 import org.dromara.hutool.core.bean.path.AbstractBeanDesc;
+import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.reflect.method.MethodInvoker;
 import org.dromara.hutool.core.reflect.method.MethodNameUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
@@ -86,17 +88,17 @@ public class SimpleBeanDesc extends AbstractBeanDesc {
 			} else{
 				if(isSetter){
 					if(null == propDesc.setter ||
-						propDesc.setter.getParameterTypes()[0].isAssignableFrom(method.getParameterTypes()[0])){
+						propDesc.setter.getTypeClass().isAssignableFrom(method.getParameterTypes()[0])){
 						// 如果存在多个重载的setter方法，选择参数类型最匹配的
-						propDesc.setter = method;
+						propDesc.setter = MethodInvoker.of(method);
 					}
 				}else{
 					if(null == propDesc.getter ||
-						(BooleanUtil.isBoolean(propDesc.getter.getReturnType()) &&
+						(BooleanUtil.isBoolean(propDesc.getter.getTypeClass()) &&
 							BooleanUtil.isBoolean(method.getReturnType()) &&
 							methodName.startsWith(MethodNameUtil.IS_PREFIX))){
 						// 如果返回值为Boolean或boolean，isXXX优先于getXXX
-						propDesc.getter = method;
+						propDesc.getter = MethodInvoker.of(method);
 					}
 				}
 			}

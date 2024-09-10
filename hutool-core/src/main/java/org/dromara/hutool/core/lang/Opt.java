@@ -164,6 +164,19 @@ public class Opt<T> {
 	}
 
 	/**
+	 * 返回包裹里的元素，取不到则抛出异常
+	 *
+	 * @return 包裹里的元素
+	 * @throws NoSuchElementException 如果元素为空，则抛出此异常
+	 */
+	public T getOrThrow() throws NoSuchElementException {
+		if (this.value == null) {
+			throw new NoSuchElementException("No value present");
+		}
+		return this.value;
+	}
+
+	/**
 	 * 判断包裹里元素的值是否不存在，不存在为 {@code true}，否则为{@code false}
 	 *
 	 * @return 包裹里元素的值不存在 则为 {@code true}，否则为{@code false}

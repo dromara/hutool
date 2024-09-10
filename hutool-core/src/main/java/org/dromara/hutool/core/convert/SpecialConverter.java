@@ -94,6 +94,10 @@ public class SpecialConverter implements Converter, Serializable {
 		// // 空值转空Bean
 		converterSet.add(EmptyBeanConverter.INSTANCE);
 
+		// 日期相关
+		converterSet.add(TimeZoneConverter.INSTANCE);
+		converterSet.add(ZoneIdConverter.INSTANCE);
+
 		this.converterSet = converterSet;
 	}
 

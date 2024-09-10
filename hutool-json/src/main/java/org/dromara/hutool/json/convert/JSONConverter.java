@@ -29,7 +29,6 @@ import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONStringer;
@@ -63,6 +62,7 @@ public class JSONConverter implements Converter, Serializable {
 		final RegisterConverter converter = RegisterConverter.getInstance();
 		converter.register(JSONObject.class, INSTANCE);
 		converter.register(JSONArray.class, INSTANCE);
+		converter.register(JSONPrimitive.class, INSTANCE);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class JSONConverter implements Converter, Serializable {
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
-	public Object toJSON(Object obj) throws JSONException {
+	public JSON toJSON(Object obj) throws JSONException {
 		if (null == obj) {
 			return null;
 		}
@@ -148,10 +148,17 @@ public class JSONConverter implements Converter, Serializable {
 			obj = ((Opt<?>) obj).getOrNull();
 		}
 
+		if(obj instanceof JSON){
+			return (JSON) obj;
+		}
+
+		if (obj instanceof Number || obj instanceof Boolean) {
+			// RFC8259规范的原始类型数据
+			return new JSONPrimitive(obj, config);
+		}
+
 		final JSON json;
-		if (obj instanceof JSON || obj instanceof Number || obj instanceof Boolean) {
-			return obj;
-		} else if (obj instanceof CharSequence) {
+		if (obj instanceof CharSequence) {
 			return toJSON((CharSequence) obj);
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
@@ -173,7 +180,7 @@ public class JSONConverter implements Converter, Serializable {
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
-	public Object toJSON(final CharSequence str) throws JSONException {
+	public JSON toJSON(final CharSequence str) throws JSONException {
 		if (null == str) {
 			return null;
 		}
@@ -184,7 +191,7 @@ public class JSONConverter implements Converter, Serializable {
 			// 未被包装的空串理解为null
 			return null;
 		}
-		final char firstC = jsonStr.charAt(0);
+
 		// RFC8259，JSON字符串值、number, boolean, or null
 		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), config);
 		final Object value = jsonParser.nextValue();
@@ -192,17 +199,10 @@ public class JSONConverter implements Converter, Serializable {
 			// 对于用户提供的未转义字符串导致解析未结束，报错
 			throw new JSONException("JSON format error: {}", jsonStr);
 		}
-		switch (firstC) {
-			case '"':
-			case '\'':
-				return InternalJSONUtil.quote((CharSequence) value);
-			default:
-				if (ObjUtil.equals(jsonStr, value)) {
-					// 对于直接的字符串，如abc，按照字符串处理
-					return InternalJSONUtil.quote((CharSequence) value);
-				}
-				return value;
+		if(null == value || value instanceof JSON){
+			return (JSON) value;
 		}
+		return new JSONPrimitive(value, config);
 	}
 
 	// ----------------------------------------------------------- Private method start
@@ -220,16 +220,16 @@ public class JSONConverter implements Converter, Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	private <T> T toBean(final Type targetType, final JSON json) {
-
 		// 自定义对象反序列化
 		final JSONDeserializer<Object> deserializer = InternalJSONUtil.getDeserializer(targetType);
+
 		if (null != deserializer) {
 			return (T) deserializer.deserialize(json);
 		}
 
+		// 当目标类型不确定时，返回原JSON
 		final Class<T> rawType = (Class<T>) TypeUtil.getClass(targetType);
 		if (null == rawType) {
-			// 当目标类型不确定时，返回原JSON
 			return (T) json;
 			//throw new JSONException("Can not get class from type: {}", targetType);
 		}
@@ -239,21 +239,29 @@ public class JSONConverter implements Converter, Serializable {
 			return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>) json));
 		}
 
+		final Object value;
+		// JSON原始类型
+		if(json instanceof JSONPrimitive){
+			value = ((JSONPrimitive) json).getValue();
+		} else {
+			value = json;
+		}
+
 		// 标准转换器
-		final Converter converter = RegisterConverter.getInstance().getConverter(targetType, json, true);
+		final Converter converter = RegisterConverter.getInstance().getConverter(targetType, value, true);
 		if (null != converter) {
-			return (T) converter.convert(targetType, json);
+			return (T) converter.convert(targetType, value);
 		}
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		final T result = (T) SpecialConverter.getInstance().convert(targetType, rawType, json);
+		final T result = (T) SpecialConverter.getInstance().convert(targetType, rawType, value);
 		if (null != result) {
 			return result;
 		}
 
 		// 尝试转Bean
 		if (BeanUtil.isWritableBean(rawType)) {
-			return BeanCopier.of(json,
+			return BeanCopier.of(value,
 				ConstructorUtil.newInstanceIfPossible(rawType), targetType,
 				InternalJSONUtil.toCopyOptions(json.config())).copy();
 		}

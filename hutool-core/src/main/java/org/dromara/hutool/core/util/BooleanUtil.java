@@ -20,6 +20,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.lang.reflect.Type;
 import java.util.Set;
 
 /**
@@ -532,11 +533,11 @@ public class BooleanUtil {
 	/**
 	 * 给定类是否为Boolean或者boolean
 	 *
-	 * @param clazz 类
+	 * @param type 类
 	 * @return 是否为Boolean或者boolean
 	 * @since 4.5.2
 	 */
-	public static boolean isBoolean(final Class<?> clazz) {
-		return (clazz == Boolean.class || clazz == boolean.class);
+	public static boolean isBoolean(final Type type) {
+		return (type == Boolean.class || type == boolean.class);
 	}
 }

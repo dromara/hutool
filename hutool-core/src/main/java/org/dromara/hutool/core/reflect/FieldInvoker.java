@@ -22,6 +22,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 
 /**
  * 字段调用器<br>
@@ -30,7 +31,7 @@ import java.lang.reflect.Field;
  * <pre>{@code
  *   FieldInvoker.of(Field).invoke(obj);
  * }</pre>
- *
+ * <p>
  * 赋值字段值：
  * <pre>{@code
  *   FieldInvoker.of(Field).invoke(obj, value);
@@ -60,7 +61,32 @@ public class FieldInvoker implements Invoker {
 	 * @param field 字段
 	 */
 	public FieldInvoker(final Field field) {
-		this.field = Assert.notNull(field);;
+		this.field = Assert.notNull(field);
+		;
+	}
+
+	/**
+	 * 获取字段
+	 *
+	 * @return 字段
+	 */
+	public Field getField() {
+		return this.field;
+	}
+
+	@Override
+	public String getName() {
+		return this.field.getName();
+	}
+
+	@Override
+	public Type getType() {
+		return field.getGenericType();
+	}
+
+	@Override
+	public Class<?> getTypeClass() {
+		return field.getType();
 	}
 
 	/**
@@ -77,10 +103,10 @@ public class FieldInvoker implements Invoker {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T invoke(final Object target, final Object... args) {
-		if(ArrayUtil.isEmpty(args)){
+		if (ArrayUtil.isEmpty(args)) {
 			// 默认取值
 			return (T) invokeGet(target);
-		} else if(args.length == 1){
+		} else if (args.length == 1) {
 			invokeSet(target, args[0]);
 			return null;
 		}
@@ -91,7 +117,7 @@ public class FieldInvoker implements Invoker {
 	/**
 	 * 获取字段值
 	 *
-	 * @param obj   对象，static字段则此字段为null
+	 * @param obj 对象，static字段则此字段为null
 	 * @return 字段值
 	 * @throws HutoolException 包装IllegalAccessException异常
 	 */
@@ -130,19 +156,14 @@ public class FieldInvoker implements Invoker {
 		}
 	}
 
-	@Override
-	public Class<?> getType() {
-		return field.getType();
-	}
-
 	/**
 	 * 转换值类型
 	 *
 	 * @param value 值
 	 * @return 转换后的值
 	 */
-	private Object convertValue(final Object value){
-		if(null == converter){
+	private Object convertValue(final Object value) {
+		if (null == converter) {
 			return value;
 		}
 

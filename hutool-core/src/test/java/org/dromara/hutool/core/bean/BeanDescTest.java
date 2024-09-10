@@ -17,8 +17,11 @@
 package org.dromara.hutool.core.bean;
 
 import org.dromara.hutool.core.bean.path.AbstractBeanDesc;
+import org.dromara.hutool.core.reflect.method.MethodInvoker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Method;
 
 /**
  * {@link StrictBeanDesc} 单元测试类
@@ -38,8 +41,10 @@ public class BeanDescTest {
 		Assertions.assertEquals("age", desc.getProp("age").getFieldName());
 		Assertions.assertEquals("getAge", desc.getGetter("age").getName());
 		Assertions.assertEquals("setAge", desc.getSetter("age").getName());
-		Assertions.assertEquals(1, desc.getSetter("age").getParameterTypes().length);
-		Assertions.assertSame(int.class, desc.getSetter("age").getParameterTypes()[0]);
+
+		final MethodInvoker setter = (MethodInvoker) desc.getSetter("age");
+		Assertions.assertEquals(1, setter.getMethod().getParameterTypes().length);
+		Assertions.assertSame(int.class, setter.getMethod().getParameterTypes()[0]);
 
 	}
 
@@ -51,8 +56,11 @@ public class BeanDescTest {
 		Assertions.assertEquals("name", prop.getFieldName());
 		Assertions.assertEquals("getName", prop.getGetter().getName());
 		Assertions.assertEquals("setName", prop.getSetter().getName());
-		Assertions.assertEquals(1, prop.getSetter().getParameterTypes().length);
-		Assertions.assertSame(String.class, prop.getSetter().getParameterTypes()[0]);
+
+		final MethodInvoker setter = (MethodInvoker) desc.getSetter("name");
+		final Method setterMethod = setter.getMethod();
+		Assertions.assertEquals(1, setterMethod.getParameterTypes().length);
+		Assertions.assertSame(String.class, setterMethod.getParameterTypes()[0]);
 	}
 
 	@Test

@@ -18,12 +18,11 @@ package org.dromara.hutool.core.reflect.method;
 
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.reflect.ClassUtil;
-import org.dromara.hutool.core.reflect.Invoker;
-import org.dromara.hutool.core.reflect.ModifierUtil;
+import org.dromara.hutool.core.reflect.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 /**
  * 方法调用器，通过反射调用方法。
@@ -43,8 +42,10 @@ public class MethodInvoker implements Invoker {
 	}
 
 	private final Method method;
-	private final Class<?>[] paramTypes;
-	private final Class<?> type;
+	private final Type[] paramTypes;
+	private final Class<?>[] paramTypeClasses;
+	private final Type type;
+	private final Class<?> typeClass;
 	private boolean checkArgs;
 
 	/**
@@ -53,15 +54,51 @@ public class MethodInvoker implements Invoker {
 	 * @param method 方法
 	 */
 	public MethodInvoker(final Method method) {
-		this.method = method;
+		this.method = ReflectUtil.setAccessible(Assert.notNull(method));
 
-		this.paramTypes = method.getParameterTypes();
+		this.paramTypes = TypeUtil.getParamTypes(method);
+		this.paramTypeClasses = method.getParameterTypes();
 		if (paramTypes.length == 1) {
 			// setter方法读取参数类型
 			type = paramTypes[0];
+			typeClass = paramTypeClasses[0];
 		} else {
 			type = method.getReturnType();
+			typeClass = method.getReturnType();
 		}
+	}
+
+	/**
+	 * 获取方法
+	 *
+	 * @return 方法
+	 */
+	public Method getMethod() {
+		return this.method;
+	}
+
+	/**
+	 * 获取方法参数类型
+	 *
+	 * @return 方法参数类型
+	 */
+	public Type[] getParamTypes() {
+		return this.paramTypes;
+	}
+
+	@Override
+	public String getName() {
+		return this.method.getName();
+	}
+
+	@Override
+	public Type getType() {
+		return this.type;
+	}
+
+	@Override
+	public Class<?> getTypeClass() {
+		return this.typeClass;
 	}
 
 	/**
@@ -81,19 +118,21 @@ public class MethodInvoker implements Invoker {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T invoke(Object target, final Object... args) throws HutoolException{
-		if(this.checkArgs){
+	public <T> T invoke(Object target, final Object... args) throws HutoolException {
+		if (this.checkArgs) {
 			checkArgs(args);
 		}
 
 		final Method method = this.method;
 		// static方法调用则target为null
-		if(ModifierUtil.isStatic(method)){
+		if (ModifierUtil.isStatic(method)) {
 			target = null;
 		}
 		// 根据方法定义的参数类型，将用户传入的参数规整和转换
 		final Object[] actualArgs = MethodUtil.actualArgs(method, args);
 		try {
+			// issue#3671 JDK15+ 修改了lambda的策略，动态生成后在metaspace不会释放，导致资源占用高
+			//return (T) LambdaUtil.buildGetter(method).apply(target);
 			return MethodHandleUtil.invokeExact(target, method, actualArgs);
 		} catch (final Exception e) {
 			// 传统反射方式执行方法
@@ -108,18 +147,13 @@ public class MethodInvoker implements Invoker {
 	/**
 	 * 执行静态方法
 	 *
-	 * @param <T>    对象类型
-	 * @param args   参数对象
+	 * @param <T>  对象类型
+	 * @param args 参数对象
 	 * @return 结果
 	 * @throws HutoolException 多种异常包装
 	 */
 	public <T> T invokeStatic(final Object... args) throws HutoolException {
 		return invoke(null, args);
-	}
-
-	@Override
-	public Class<?> getType() {
-		return this.type;
 	}
 
 	/**
@@ -129,12 +163,12 @@ public class MethodInvoker implements Invoker {
 	 * @throws IllegalArgumentException 如果参数数组为空或长度为0，则抛出此异常。
 	 */
 	private void checkArgs(final Object[] args) {
-		final Class<?>[] paramTypes = this.paramTypes;
+		final Class<?>[] paramTypeClasses = this.paramTypeClasses;
 		if (null != args) {
-			Assert.isTrue(args.length == paramTypes.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, paramTypes.length);
+			Assert.isTrue(args.length == paramTypeClasses.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, paramTypeClasses.length);
 			Class<?> type;
 			for (int i = 0; i < args.length; i++) {
-				type = paramTypes[i];
+				type = paramTypeClasses[i];
 				if (type.isPrimitive() && null == args[i]) {
 					// 参数是原始类型，而传入参数为null时赋予默认值
 					args[i] = ClassUtil.getDefaultValue(type);

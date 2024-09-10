@@ -20,12 +20,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
+import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +61,8 @@ public class TypeUtil {
 				if (upperBounds.length == 1) {
 					return getClass(upperBounds[0]);
 				}
+			} else if(type instanceof GenericArrayType){
+				return Array.newInstance(getClass(((GenericArrayType)type).getGenericComponentType()), 0).getClass();
 			}
 		}
 		return null;

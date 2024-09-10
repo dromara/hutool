@@ -59,8 +59,8 @@ public class IssueI7M2GZTest {
 		entity.setList(list);
 
 		final String json = JSONUtil.toJsonStr(entity);
-		//Console.log(json);
 		final MyEntity<JSONBeanParserImpl> result = JSONUtil.toBean(json, new TypeReference<MyEntity<JSONBeanParserImpl>>() {});
+
 		Assertions.assertEquals("new Object", result.getList().get(0).getName());
 		Assertions.assertNotNull(result.getList().get(0).getParsed());
 		Assertions.assertEquals(Integer.valueOf(12), result.getList().get(0).getParsed());

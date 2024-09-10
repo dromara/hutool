@@ -16,36 +16,41 @@
 
 package org.dromara.hutool.json;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IssueI6LBZATest {
 	@Test
 	public void parseJSONStringTest() {
 		final String a = "\"a\"";
 		final Object parse = JSONUtil.parse(a);
-		Assertions.assertEquals(String.class, parse.getClass());
+		assertEquals(JSONPrimitive.class, parse.getClass());
+		assertEquals(a, parse.toString());
 	}
 
 	@Test
 	public void parseJSONStringTest2() {
 		final String a = "'a'";
 		final Object parse = JSONUtil.parse(a);
-		Assertions.assertEquals(String.class, parse.getClass());
+		assertEquals(JSONPrimitive.class, parse.getClass());
+		assertEquals("\"a\"", parse.toString());
 	}
 
 	@Test
 	public void parseJSONErrorTest() {
 		final String a = "a";
 		final Object parse = JSONUtil.parse(a);
-		Assertions.assertEquals(String.class, parse.getClass());
-		Assertions.assertEquals("\"a\"", parse);
+		assertEquals(JSONPrimitive.class, parse.getClass());
+		assertEquals("\"a\"", parse.toString());
 	}
 
 	@Test
 	public void parseJSONNumberTest() {
 		final String a = "123";
-		final Object parse = JSONUtil.parse(a);
-		Assertions.assertEquals(Integer.class, parse.getClass());
+		final JSON parse = JSONUtil.parse(a);
+		assertEquals(JSONPrimitive.class, parse.getClass());
+		assertEquals(123, ((JSONPrimitive)parse).getValue());
+		assertEquals(Integer.class, ((JSONPrimitive)parse).getValue().getClass());
 	}
 }

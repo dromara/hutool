@@ -16,7 +16,6 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -161,7 +160,7 @@ public class JSONUtil {
 	 * @param obj 对象
 	 * @return JSON
 	 */
-	public static Object parse(final Object obj) {
+	public static JSON parse(final Object obj) {
 		return parse(obj, null);
 	}
 
@@ -178,7 +177,7 @@ public class JSONUtil {
 	 * @param config JSON配置，{@code null}使用默认配置
 	 * @return JSON（JSONObject or JSONArray）
 	 */
-	public static Object parse(final Object obj, final JSONConfig config) {
+	public static JSON parse(final Object obj, final JSONConfig config) {
 		if (null == config) {
 			return JSONConverter.INSTANCE.toJSON(obj);
 		}
@@ -378,26 +377,21 @@ public class JSONUtil {
 	 * 转为实体类对象
 	 *
 	 * @param <T>    Bean类型
-	 * @param json   JSONObject
+	 * @param obj   JSONObject
 	 * @param config JSON配置
 	 * @param type   实体类对象类型
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(Object json, final JSONConfig config, Type type) {
-		if (null == json) {
+	public static <T> T toBean(final Object obj, final JSONConfig config, Type type) {
+		if (null == obj) {
 			return null;
 		}
-		json = parse(json, config);
-		if (json instanceof JSON) {
-			if (type instanceof TypeReference) {
-				type = ((TypeReference<?>) type).getType();
-			}
-			return ((JSON) json).toBean(type);
+		final JSON json = parse(obj, config);
+		if (type instanceof TypeReference) {
+			type = ((TypeReference<?>) type).getType();
 		}
-
-		//issue#I7CW27，其他类型使用默认转换
-		return ConvertUtil.convert(type, json);
+		return json.toBean(type);
 	}
 	// -------------------------------------------------------------------- toBean end
 

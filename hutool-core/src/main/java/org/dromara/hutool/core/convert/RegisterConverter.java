@@ -259,8 +259,6 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(AtomicLongArray.class, new AtomicLongArrayConverter());
 
 		// 其它类型
-		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
-		defaultConverterMap.put(ZoneId.class, new ZoneIdConverter());
 		defaultConverterMap.put(Locale.class, new LocaleConverter());
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
 		defaultConverterMap.put(Path.class, new PathConverter());

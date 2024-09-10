@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.TimeZone;
 
 public class JSONEngineTest {
 
@@ -41,6 +42,12 @@ public class JSONEngineTest {
 	@Test
 	void writeLocalDateFormatTest() {
 		Arrays.stream(engineNames).forEach(this::assertWriteLocalDateFormat);
+	}
+
+	@Test
+	void writeTimeZoneTest() {
+		// TODO Hutool无法序列化TimeZone等特殊对象
+		Arrays.stream(engineNames).forEach(this::assertWriteTimeZone);
 	}
 
 	private void assertWriteDateFormat(final String engineName) {
@@ -77,5 +84,17 @@ public class JSONEngineTest {
 		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
 		jsonString = engine.toJsonString(bean);
 		Assertions.assertEquals("{\"date1\":null,\"date2\":null}", jsonString);
+	}
+
+	private void assertWriteTimeZone(final String engineName) {
+		final TimeZone timeZone = TimeZone.getTimeZone("GMT+08:00");
+		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
+
+		String jsonString = engine.toJsonString(timeZone);
+		Assertions.assertEquals("\"GMT+08:00\"", jsonString);
+
+		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
+		jsonString = engine.toJsonString(timeZone);
+		Assertions.assertEquals("\"GMT+08:00\"", jsonString);
 	}
 }

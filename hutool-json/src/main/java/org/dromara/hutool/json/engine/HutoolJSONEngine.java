@@ -38,14 +38,14 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 	@Override
 	public void serialize(final Object bean, final Writer writer) {
 		initEngine();
-		final JSON json = (JSON) JSONUtil.parse(bean, this.hutoolSJONConfig);
+		final JSON json = JSONUtil.parse(bean, this.hutoolSJONConfig);
 		json.write(writer, ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false) ? 2 : 0, 0, null);
 	}
 
 	@Override
 	public <T> T deserialize(final Reader reader, final Object type) {
 		initEngine();
-		final JSON json = (JSON) JSONUtil.parse(reader, this.hutoolSJONConfig);
+		final JSON json = JSONUtil.parse(reader, this.hutoolSJONConfig);
 		return json.toBean((Type) type);
 	}
 
