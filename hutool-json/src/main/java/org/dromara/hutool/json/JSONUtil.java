@@ -23,17 +23,12 @@ import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.convert.JSONConverter;
-import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
-import org.dromara.hutool.json.serialize.JSONArraySerializer;
-import org.dromara.hutool.json.serialize.JSONDeserializer;
-import org.dromara.hutool.json.serialize.JSONObjectSerializer;
 import org.dromara.hutool.json.writer.GlobalValueWriters;
 import org.dromara.hutool.json.writer.JSONValueWriter;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -242,12 +237,8 @@ public class JSONUtil {
 	 * @param obj Bean对象
 	 * @return JSON字符串
 	 */
-	public static String toJsonPrettyStr(Object obj) {
-		obj = parse(obj);
-		if (obj instanceof JSON) {
-			return ((JSON) obj).toStringPretty();
-		}
-		return StrUtil.toStringOrNull(obj);
+	public static String toJsonPrettyStr(final Object obj) {
+		return parse(obj).toStringPretty();
 	}
 
 	/**
@@ -292,19 +283,9 @@ public class JSONUtil {
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
-	public static void toJsonStr(Object obj, final Writer writer) {
+	public static void toJsonStr(final Object obj, final Writer writer) {
 		if (null != obj) {
-			obj = parse(obj);
-			if (obj instanceof JSON) {
-				((JSON) obj).write(writer);
-			}
-
-			// 普通值
-			try {
-				writer.write(obj.toString());
-			} catch (final IOException e) {
-				throw new IORuntimeException(e);
-			}
+			parse(obj).write(writer);
 		}
 	}
 
@@ -554,41 +535,5 @@ public class JSONUtil {
 			return false;
 		}
 		return StrUtil.isWrap(StrUtil.trim(str), '[', ']');
-	}
-
-	/**
-	 * 加入自定义的序列化器
-	 *
-	 * @param type       对象类型
-	 * @param serializer 序列化器实现
-	 * @see GlobalSerializeMapping#putSerializer(Type, JSONObjectSerializer)
-	 * @since 6.0.0
-	 */
-	public static void putSerializer(final Type type, final JSONObjectSerializer<?> serializer) {
-		GlobalSerializeMapping.putSerializer(type, serializer);
-	}
-
-	/**
-	 * 加入自定义的序列化器
-	 *
-	 * @param type       对象类型
-	 * @param serializer 序列化器实现
-	 * @see GlobalSerializeMapping#putSerializer(Type, JSONArraySerializer)
-	 * @since 6.0.0
-	 */
-	public static void putSerializer(final Type type, final JSONArraySerializer<?> serializer) {
-		GlobalSerializeMapping.putSerializer(type, serializer);
-	}
-
-	/**
-	 * 加入自定义的反序列化器
-	 *
-	 * @param type         对象类型
-	 * @param deserializer 反序列化器实现
-	 * @see GlobalSerializeMapping#putDeserializer(Type, JSONDeserializer)
-	 * @since 4.6.5
-	 */
-	public static void putDeserializer(final Type type, final JSONDeserializer<?> deserializer) {
-		GlobalSerializeMapping.putDeserializer(type, deserializer);
 	}
 }

@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.serialize;
+package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.serializer.JSONContext;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.JSONSerializer;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,7 +43,7 @@ import java.time.temporal.TemporalAccessor;
  * @author looly
  * @since 5.7.22
  */
-public class TemporalAccessorSerializer implements JSONSerializer<JSONObject, TemporalAccessor>, JSONDeserializer<TemporalAccessor> {
+public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccessor>, JSONDeserializer<TemporalAccessor> {
 
 	private static final String YEAR_KEY = "year";
 	private static final String MONTH_KEY = "month";
@@ -61,7 +65,14 @@ public class TemporalAccessorSerializer implements JSONSerializer<JSONObject, Te
 	}
 
 	@Override
-	public void serialize(final JSONObject json, final TemporalAccessor bean) {
+	public JSON serialize(final TemporalAccessor bean, final JSONContext context) {
+		final JSONObject json;
+		final JSON contextJson = context.getContextJson();
+		if(contextJson instanceof JSONObject){
+			json = (JSONObject) contextJson;
+		}else {
+			json = new JSONObject(7F / 0.75F + 1F, context.config());
+		}
 		if (bean instanceof LocalDate) {
 			final LocalDate localDate = (LocalDate) bean;
 			json.set(YEAR_KEY, localDate.getYear());
@@ -83,12 +94,13 @@ public class TemporalAccessorSerializer implements JSONSerializer<JSONObject, Te
 			json.set(SECOND_KEY, localTime.getSecond());
 			json.set(NANO_KEY, localTime.getNano());
 		} else {
-			throw new JSONException("Unsupported type to JSON: {}", bean.getClass().getName());
+			throw new JSONException("Unsupported TemporalAccessor type to JSON: {}", bean.getClass().getName());
 		}
+		return json;
 	}
 
 	@Override
-	public TemporalAccessor deserialize(final JSON json) {
+	public TemporalAccessor deserialize(final JSON json, final Type deserializeType) {
 		final JSONObject jsonObject = (JSONObject) json;
 		if (LocalDate.class.equals(this.temporalAccessorClass) || LocalDateTime.class.equals(this.temporalAccessorClass)) {
 			// 年

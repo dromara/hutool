@@ -14,15 +14,34 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.serialize;
+package org.dromara.hutool.json.serializer;
 
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
 /**
- * 对象的序列化接口，用于将特定对象序列化为{@link JSONObject}
- * @param <V> 对象类型
+ * {@code JSONString}接口定义了一个{@code toJSONString()}<br>
+ * 实现此接口的类可以通过实现{@code toJSONString()}方法来改变转JSON字符串的方式。
  *
  * @author Looly
+ *
  */
 @FunctionalInterface
-public interface JSONObjectSerializer<V> extends JSONSerializer<JSONObject, V>{}
+public interface JSONStringer extends Wrapper<Object> {
+
+	/**
+	 * 自定义转JSON字符串的方法
+	 *
+	 * @return JSON字符串
+	 */
+	String toJSONString();
+
+	/**
+	 * 获取原始的对象，默认为this
+	 *
+	 * @return 原始对象
+	 */
+	@Override
+	default Object getRaw() {
+		return this;
+	}
+}

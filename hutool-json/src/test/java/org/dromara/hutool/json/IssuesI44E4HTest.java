@@ -16,11 +16,11 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
-import org.dromara.hutool.json.serialize.JSONDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.SerializerManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ public class IssuesI44E4HTest {
 
 	@Test
 	public void deserializerTest(){
-		GlobalSerializeMapping.putDeserializer(TestDto.class, (JSONDeserializer<TestDto>) json -> {
+		SerializerManager.getInstance().register(TestDto.class, (JSONDeserializer<TestDto>) (json, deserializeType) -> {
 			final TestDto testDto = new TestDto();
 			testDto.setMd(new AcBizModuleMd("name1", ((JSONObject)json).getStr("md")));
 			return testDto;

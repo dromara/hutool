@@ -16,16 +16,18 @@
 
 package org.dromara.hutool.json.mapper;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.JSONArray;
+import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
-import org.dromara.hutool.json.serialize.JSONSerializer;
+import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.SerializerManager;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -79,7 +81,7 @@ public class JSONArrayMapper {
 	 * @param jsonArray 目标{@link JSONArray}
 	 * @throws JSONException 非数组或集合
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings("unchecked")
 	public void mapTo(final JSONArray jsonArray) throws JSONException {
 		final Object source = this.source;
 		if (null == source) {
@@ -87,9 +89,9 @@ public class JSONArrayMapper {
 		}
 
 		// 自定义序列化
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
+		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(source.getClass());
 		if (null != serializer) {
-			serializer.serialize(jsonArray, source);
+			serializer.serialize(source, ()-> jsonArray);
 			return;
 		}
 

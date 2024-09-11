@@ -303,9 +303,26 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 *
 	 * @return Iterable
 	 * @since 4.0.12
+	 * @param <T> JSON类型
+	 * @param type JSON类型
 	 */
-	public Iterable<JSONObject> jsonIter() {
-		return new JSONObjectIter(iterator());
+	public <T extends JSON> Iterable<T> jsonIter(final Class<T> type) {
+		final Iterator<Object> iterator = iterator();
+		return () -> new Iterator<T>() {
+			@Override
+			public boolean hasNext() {
+				return iterator.hasNext();
+			}
+
+			@Override
+			public T next() {
+				return type.cast(iterator.next());
+			}
+			@Override
+			public void remove() {
+				iterator.remove();
+			}
+		};
 	}
 
 	@Override

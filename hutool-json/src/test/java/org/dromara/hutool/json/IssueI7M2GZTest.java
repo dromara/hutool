@@ -19,10 +19,11 @@ package org.dromara.hutool.json;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.dromara.hutool.core.reflect.TypeReference;
-import org.dromara.hutool.json.serialize.JSONDeserializer;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class IssueI7M2GZTest {
 		private Integer parsed;
 
 		@Override
-		public JSONBeanParserImpl deserialize(final JSON json) {
+		public JSONBeanParserImpl deserialize(final JSON json, final Type deserializeType) {
 			setName("new Object");
 			setParsed(12);
 			return this;

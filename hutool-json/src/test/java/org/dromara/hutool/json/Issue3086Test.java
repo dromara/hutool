@@ -18,7 +18,9 @@ package org.dromara.hutool.json;
 
 import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.json.serialize.JSONObjectSerializer;
+import org.dromara.hutool.json.serializer.JSONContext;
+import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.SerializerManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +33,7 @@ public class Issue3086Test {
 
 	@Test
 	public void serializeTest() {
-		JSONUtil.putSerializer(TestBean.class, new TestBean());
+		SerializerManager.getInstance().register(TestBean.class, new TestBean());
 
 		final List<SimpleGrantedAuthority> strings = ListUtil.of(
 			new SimpleGrantedAuthority("ROLE_admin"),
@@ -61,14 +63,19 @@ public class Issue3086Test {
 	}
 
 	@Data
-	static class TestBean implements JSONObjectSerializer<TestBean> {
+	static class TestBean implements JSONSerializer<TestBean> {
 		private Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
 		@Override
-		public void serialize(final JSONObject json, final TestBean testBean) {
-			final List<String> strings = testBean.getAuthorities()
+		public JSON serialize(final TestBean bean, final JSONContext context) {
+			final List<String> strings = bean.getAuthorities()
 				.stream().map(SimpleGrantedAuthority::getAuthority).collect(Collectors.toList());
-			json.set("authorities",strings);
+			JSONObject contextJson = (JSONObject) context.getContextJson();
+			if(null == contextJson){
+				contextJson = new JSONObject(context.config());
+			}
+			contextJson.set("authorities",strings);
+			return contextJson;
 		}
 	}
 }

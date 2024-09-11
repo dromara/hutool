@@ -21,7 +21,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.json.serialize.JSONStringer;
+import org.dromara.hutool.json.serializer.JSONStringer;
 import org.dromara.hutool.json.test.bean.Price;
 import org.dromara.hutool.json.test.bean.UserA;
 import org.dromara.hutool.json.test.bean.UserC;

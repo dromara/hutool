@@ -16,17 +16,21 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.json.serialize.JSONDeserializer;
-import org.dromara.hutool.json.serialize.JSONObjectSerializer;
 import lombok.Data;
+import org.dromara.hutool.json.serializer.JSONContext;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.SerializerManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Type;
 
 public class Issue2555Test {
 	@Test
 	public void serAndDeserTest(){
-		JSONUtil.putSerializer(MyType.class, new MySerializer());
-		JSONUtil.putDeserializer(MyType.class, new MyDeserializer());
+		SerializerManager.getInstance().register(MyType.class, new MySerializer());
+		SerializerManager.getInstance().register(MyType.class, new MyDeserializer());
 
 		final SimpleObj simpleObj = new SimpleObj();
 		final MyType child = new MyType();
@@ -50,16 +54,16 @@ public class Issue2555Test {
 		private MyType myType;
 	}
 
-	public static class MySerializer implements JSONObjectSerializer<MyType> {
+	public static class MySerializer implements JSONSerializer<MyType> {
 		@Override
-		public void serialize(final JSONObject json, final MyType bean) {
-			json.set("addr", bean.getAddress());
+		public JSON serialize(final MyType bean, final JSONContext context) {
+			return ((JSONObject)context.getContextJson()).set("addr", bean.getAddress());
 		}
 	}
 
 	public static class MyDeserializer implements JSONDeserializer<MyType> {
 		@Override
-		public MyType deserialize(final JSON json) {
+		public MyType deserialize(final JSON json, final Type deserializeType) {
 			final MyType myType = new MyType();
 			myType.setAddress(((JSONObject)json).getStr("addr"));
 			return myType;

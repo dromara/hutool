@@ -27,8 +27,8 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
-import org.dromara.hutool.json.serialize.JSONSerializer;
+import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.SerializerManager;
 import org.dromara.hutool.json.xml.JSONXMLParser;
 import org.dromara.hutool.json.xml.ParseConfig;
 
@@ -88,7 +88,7 @@ public class JSONObjectMapper {
 	 *
 	 * @param jsonObject 目标{@link JSONObject}
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings("rawtypes")
 	public void mapTo(final JSONObject jsonObject) {
 		final Object source = this.source;
 		if (null == source) {
@@ -96,9 +96,9 @@ public class JSONObjectMapper {
 		}
 
 		// 自定义序列化
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
+		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(source.getClass());
 		if (null != serializer) {
-			serializer.serialize(jsonObject, source);
+			serializer.serialize(source, () -> jsonObject);
 			return;
 		}
 

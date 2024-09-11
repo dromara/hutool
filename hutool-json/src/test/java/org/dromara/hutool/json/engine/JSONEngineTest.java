@@ -46,7 +46,6 @@ public class JSONEngineTest {
 
 	@Test
 	void writeTimeZoneTest() {
-		// TODO Hutool无法序列化TimeZone等特殊对象
 		Arrays.stream(engineNames).forEach(this::assertWriteTimeZone);
 	}
 

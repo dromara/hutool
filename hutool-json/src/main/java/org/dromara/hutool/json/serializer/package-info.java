@@ -28,4 +28,4 @@
  *     <li>反序列化（Deserialize）指：【JSON对象】 转换为 【Java对象】</li>
  * </ul>
  */
-package org.dromara.hutool.json.serialize;
+package org.dromara.hutool.json.serializer;

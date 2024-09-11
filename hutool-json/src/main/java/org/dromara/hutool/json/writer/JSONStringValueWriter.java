@@ -17,7 +17,7 @@
 package org.dromara.hutool.json.writer;
 
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.serialize.JSONStringer;
+import org.dromara.hutool.json.serializer.JSONStringer;
 
 /**
  * {@link JSONStringer}的值写出器

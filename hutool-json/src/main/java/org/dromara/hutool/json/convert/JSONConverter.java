@@ -32,8 +32,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serialize.JSONDeserializer;
-import org.dromara.hutool.json.serialize.JSONStringer;
+import org.dromara.hutool.json.serializer.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -139,6 +138,7 @@ public class JSONConverter implements Converter, Serializable {
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
+	@SuppressWarnings("unchecked")
 	public JSON toJSON(Object obj) throws JSONException {
 		if (null == obj) {
 			return null;
@@ -152,6 +152,22 @@ public class JSONConverter implements Converter, Serializable {
 
 		if(obj instanceof JSON){
 			return (JSON) obj;
+		}
+
+		// 自定义序列化
+		final JSONSerializer<Object> serializer =
+			(JSONSerializer<Object>) SerializerManager.getInstance().getSerializer(obj);
+		if (null != serializer) {
+			return serializer.serialize(obj, new JSONContext() {
+				@Override
+				public JSON getContextJson() {
+					return null;
+				}
+				@Override
+				public JSONConfig config() {
+					return JSONConverter.this.config;
+				}
+			});
 		}
 
 		if (obj instanceof Number || obj instanceof Boolean) {
@@ -223,10 +239,10 @@ public class JSONConverter implements Converter, Serializable {
 	@SuppressWarnings("unchecked")
 	private <T> T toBean(final Type targetType, final JSON json) {
 		// 自定义对象反序列化
-		final JSONDeserializer<Object> deserializer = InternalJSONUtil.getDeserializer(targetType);
+		final JSONDeserializer<?> deserializer = SerializerManager.getInstance().getDeserializer(targetType);
 
 		if (null != deserializer) {
-			return (T) deserializer.deserialize(json);
+			return (T) deserializer.deserialize(json, targetType);
 		}
 
 		// 当目标类型不确定时，返回原JSON

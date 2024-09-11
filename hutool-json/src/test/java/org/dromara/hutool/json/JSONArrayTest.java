@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.json;
 
+import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -25,7 +26,6 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.json.test.bean.Exam;
 import org.dromara.hutool.json.test.bean.JsonNode;
 import org.dromara.hutool.json.test.bean.KeyBean;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JSONArray单元测试
@@ -47,19 +50,19 @@ public class JSONArrayTest {
 		final JSONObject jsonObject = new JSONObject();
 
 		JSONArray jsonArray = new JSONArray(jsonObject, JSONConfig.of());
-		Assertions.assertEquals(new JSONArray(), jsonArray);
+		assertEquals(new JSONArray(), jsonArray);
 
 		jsonObject.set("key1", "value1");
 		jsonArray = new JSONArray(jsonObject, JSONConfig.of());
-		Assertions.assertEquals(1, jsonArray.size());
-		Assertions.assertEquals("[{\"key1\":\"value1\"}]", jsonArray.toString());
+		assertEquals(1, jsonArray.size());
+		assertEquals("[{\"key1\":\"value1\"}]", jsonArray.toString());
 	}
 
 	@Test
 	public void addNullTest() {
 		final List<String> aaa = ListUtil.view("aaa", null);
 		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa, JSONConfig.of().setIgnoreNullValue(false)));
-		Assertions.assertEquals("[\"aaa\",null]", jsonStr);
+		assertEquals("[\"aaa\",null]", jsonStr);
 	}
 
 	@Test
@@ -72,14 +75,14 @@ public class JSONArrayTest {
 		array.add("value2");
 		array.add("value3");
 
-		Assertions.assertEquals(array.get(0), "value1");
+		assertEquals(array.get(0), "value1");
 	}
 
 	@Test
 	public void parseTest() {
 		final String jsonStr = "[\"value1\", \"value2\", \"value3\"]";
 		final JSONArray array = JSONUtil.parseArray(jsonStr);
-		Assertions.assertEquals(array.get(0), "value1");
+		assertEquals(array.get(0), "value1");
 	}
 
 	@Test
@@ -90,7 +93,7 @@ public class JSONArrayTest {
 
 		// 不忽略null，则null的键值对被保留
 		jsonArray = JSONUtil.parseArray(jsonStr, JSONConfig.of().setIgnoreNullValue(false));
-		Assertions.assertTrue(jsonArray.getJSONObject(1).containsKey("result"));
+		assertTrue(jsonArray.getJSONObject(1).containsKey("result"));
 	}
 
 	@Test
@@ -99,7 +102,7 @@ public class JSONArrayTest {
 
 		final JSONObject obj0 = array.getJSONObject(0);
 		final Exam exam = JSONUtil.toBean(obj0, Exam.class);
-		Assertions.assertEquals("0", exam.getAnswerArray()[0].getSeq());
+		assertEquals("0", exam.getAnswerArray()[0].getSeq());
 	}
 
 	@Test
@@ -114,8 +117,8 @@ public class JSONArrayTest {
 		final ArrayList<KeyBean> list = ListUtil.of(b1, b2);
 
 		final JSONArray jsonArray = JSONUtil.parseArray(list);
-		Assertions.assertEquals("aValue1", jsonArray.getJSONObject(0).getStr("akey"));
-		Assertions.assertEquals("bValue2", jsonArray.getJSONObject(1).getStr("bkey"));
+		assertEquals("aValue1", jsonArray.getJSONObject(0).getStr("akey"));
+		assertEquals("bValue2", jsonArray.getJSONObject(1).getStr("bkey"));
 	}
 
 	@Test
@@ -138,11 +141,11 @@ public class JSONArrayTest {
 		Assertions.assertFalse(userList.isEmpty());
 		Assertions.assertSame(User.class, userList.get(0).getClass());
 
-		Assertions.assertEquals(Integer.valueOf(111), userList.get(0).getId());
-		Assertions.assertEquals(Integer.valueOf(112), userList.get(1).getId());
+		assertEquals(Integer.valueOf(111), userList.get(0).getId());
+		assertEquals(Integer.valueOf(112), userList.get(1).getId());
 
-		Assertions.assertEquals("test1", userList.get(0).getName());
-		Assertions.assertEquals("test2", userList.get(1).getName());
+		assertEquals("test1", userList.get(0).getName());
+		assertEquals("test2", userList.get(1).getName());
 	}
 
 	@Test
@@ -156,11 +159,11 @@ public class JSONArrayTest {
 		Assertions.assertFalse(list.isEmpty());
 		Assertions.assertSame(Dict.class, list.get(0).getClass());
 
-		Assertions.assertEquals(Integer.valueOf(111), list.get(0).getInt("id"));
-		Assertions.assertEquals(Integer.valueOf(112), list.get(1).getInt("id"));
+		assertEquals(Integer.valueOf(111), list.get(0).getInt("id"));
+		assertEquals(Integer.valueOf(112), list.get(1).getInt("id"));
 
-		Assertions.assertEquals("test1", list.get(0).getStr("name"));
-		Assertions.assertEquals("test2", list.get(1).getStr("name"));
+		assertEquals("test1", list.get(0).getStr("name"));
+		assertEquals("test2", list.get(1).getStr("name"));
 	}
 
 	@Test
@@ -184,8 +187,8 @@ public class JSONArrayTest {
 
 		final List<KeyBean> list = ja.toList(KeyBean.class);
 		Assertions.assertNull(list.get(0));
-		Assertions.assertEquals("avalue", list.get(1).getAkey());
-		Assertions.assertEquals("bvalue", list.get(1).getBkey());
+		assertEquals("avalue", list.get(1).getAkey());
+		assertEquals("bvalue", list.get(1).getBkey());
 	}
 
 	@Test
@@ -209,28 +212,28 @@ public class JSONArrayTest {
 		final JSONArray jsonArray = JSONUtil.parseArray(mapList);
 		final List<JsonNode> nodeList = jsonArray.toList(JsonNode.class);
 
-		Assertions.assertEquals(Long.valueOf(0L), nodeList.get(0).getId());
-		Assertions.assertEquals(Long.valueOf(1L), nodeList.get(1).getId());
-		Assertions.assertEquals(Long.valueOf(0L), nodeList.get(2).getId());
-		Assertions.assertEquals(Long.valueOf(0L), nodeList.get(3).getId());
+		assertEquals(Long.valueOf(0L), nodeList.get(0).getId());
+		assertEquals(Long.valueOf(1L), nodeList.get(1).getId());
+		assertEquals(Long.valueOf(0L), nodeList.get(2).getId());
+		assertEquals(Long.valueOf(0L), nodeList.get(3).getId());
 
-		Assertions.assertEquals(Integer.valueOf(0), nodeList.get(0).getParentId());
-		Assertions.assertEquals(Integer.valueOf(1), nodeList.get(1).getParentId());
-		Assertions.assertEquals(Integer.valueOf(0), nodeList.get(2).getParentId());
-		Assertions.assertEquals(Integer.valueOf(0), nodeList.get(3).getParentId());
+		assertEquals(Integer.valueOf(0), nodeList.get(0).getParentId());
+		assertEquals(Integer.valueOf(1), nodeList.get(1).getParentId());
+		assertEquals(Integer.valueOf(0), nodeList.get(2).getParentId());
+		assertEquals(Integer.valueOf(0), nodeList.get(3).getParentId());
 
-		Assertions.assertEquals("0", nodeList.get(0).getName());
-		Assertions.assertEquals("1", nodeList.get(1).getName());
-		Assertions.assertEquals("+0", nodeList.get(2).getName());
-		Assertions.assertEquals("-0", nodeList.get(3).getName());
+		assertEquals("0", nodeList.get(0).getName());
+		assertEquals("1", nodeList.get(1).getName());
+		assertEquals("+0", nodeList.get(2).getName());
+		assertEquals("-0", nodeList.get(3).getName());
 	}
 
 	@Test
 	public void getByPathTest() {
 		final String jsonStr = "[{\"id\": \"1\",\"name\": \"a\"},{\"id\": \"2\",\"name\": \"b\"}]";
 		final JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
-		Assertions.assertEquals("b", jsonArray.getByPath("[1].name"));
-		Assertions.assertEquals("b", JSONUtil.getByPath(jsonArray, "[1].name"));
+		assertEquals("b", jsonArray.getByPath("[1].name"));
+		assertEquals("b", JSONUtil.getByPath(jsonArray, "[1].name"));
 	}
 
 	@Test
@@ -238,12 +241,12 @@ public class JSONArrayTest {
 		JSONArray jsonArray = new JSONArray();
 		jsonArray.set(3, "test");
 		// 默认忽略null值，因此空位无值，只有一个值
-		Assertions.assertEquals(1, jsonArray.size());
+		assertEquals(1, jsonArray.size());
 
 		jsonArray = new JSONArray(JSONConfig.of().setIgnoreNullValue(false));
 		jsonArray.set(2, "test");
 		// 第三个位置插入值，0~2都是null
-		Assertions.assertEquals(3, jsonArray.size());
+		assertEquals(3, jsonArray.size());
 	}
 
 	// https://github.com/dromara/hutool/issues/1858
@@ -251,8 +254,8 @@ public class JSONArrayTest {
 	public void putTest2() {
 		final JSONArray jsonArray = new JSONArray();
 		jsonArray.put(0, 1);
-		Assertions.assertEquals(1, jsonArray.size());
-		Assertions.assertEquals(1, jsonArray.get(0));
+		assertEquals(1, jsonArray.size());
+		assertEquals(1, jsonArray.get(0));
 	}
 
 	private static Map<String, String> buildMap(final String id, final String parentId, final String name) {
@@ -278,7 +281,7 @@ public class JSONArrayTest {
 				.set(true);
 
 		final String s = json1.toJSONString(0, (pair) -> pair.getValue().equals("value2"));
-		Assertions.assertEquals("[\"value2\"]", s);
+		assertEquals("[\"value2\"]", s);
 	}
 
 	@Test
@@ -290,7 +293,7 @@ public class JSONArrayTest {
 				.set(true);
 
 		final String s = json1.toJSONString(0, (pair) -> !pair.getValue().equals("value2"));
-		Assertions.assertEquals("[\"value1\",\"value3\",true]", s);
+		assertEquals("[\"value1\",\"value3\",true]", s);
 	}
 
 	@Test
@@ -298,7 +301,7 @@ public class JSONArrayTest {
 		final JSONArray array = JSONUtil.ofArray(JSONConfig.of().setIgnoreNullValue(false));
 		array.set(null);
 
-		Assertions.assertEquals("[null]", array.toString());
+		assertEquals("[null]", array.toString());
 	}
 
 	@Test
@@ -306,8 +309,8 @@ public class JSONArrayTest {
 		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> mutable.get().toString().contains("111"));
-		Assertions.assertEquals(1, array.size());
-		Assertions.assertTrue(array.getJSONObject(0).containsKey("id"));
+		assertEquals(1, array.size());
+		assertTrue(array.getJSONObject(0).containsKey("id"));
 	}
 
 	@Test
@@ -322,8 +325,20 @@ public class JSONArrayTest {
 			mutable.set(o);
 			return true;
 		});
-		Assertions.assertEquals(2, array.size());
-		Assertions.assertTrue(array.getJSONObject(0).containsKey("id"));
-		Assertions.assertEquals("test1_edit", array.getJSONObject(0).get("name"));
+		assertEquals(2, array.size());
+		assertTrue(array.getJSONObject(0).containsKey("id"));
+		assertEquals("test1_edit", array.getJSONObject(0).get("name"));
+	}
+
+	@Test
+	void jsonIterTest() {
+		final JSONArray array = JSONUtil.ofArray();
+		array.add(JSONUtil.ofObj().set("name", "aaa"));
+		array.add(JSONUtil.ofObj().set("name", "bbb"));
+		array.add(JSONUtil.ofObj().set("name", "ccc"));
+
+		StringBuilder result = new StringBuilder();
+		array.jsonIter(JSONObject.class).forEach(result::append);
+		assertEquals("{\"name\":\"aaa\"}{\"name\":\"bbb\"}{\"name\":\"ccc\"}", result.toString());
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2024 Hutool Team and hutool.cn
+ * Copyright (c) 2024 Hutool Team and hutool.cn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.serialize;
-
-import org.dromara.hutool.json.JSONArray;
-
 /**
- * JSON列表的序列化接口，用于将特定对象序列化为{@link JSONArray}
- *
- * @param <V> 对象类型
+ * 默认实现的序列化和反序列化
  *
  * @author Looly
  */
-@FunctionalInterface
-public interface JSONArraySerializer<V> extends JSONSerializer<JSONArray, V>{}
+package org.dromara.hutool.json.serializer.impl;

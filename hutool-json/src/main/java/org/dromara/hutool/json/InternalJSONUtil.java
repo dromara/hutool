@@ -25,20 +25,15 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveLinkedMap;
 import org.dromara.hutool.core.map.CaseInsensitiveTreeMap;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
-import org.dromara.hutool.json.serialize.JSONDeserializer;
-import org.dromara.hutool.json.serialize.JSONStringer;
+import org.dromara.hutool.json.serializer.JSONStringer;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Predicate;
@@ -307,25 +302,6 @@ public final class InternalJSONUtil {
 			}
 		}
 		return rawHashMap;
-	}
-
-	/**
-	 * 根据目标类型，获取对应的{@link JSONDeserializer}，首先判断是否实现了{@link JSONDeserializer}接口<br>
-	 * 如果未实现从{@link GlobalSerializeMapping}中查找全局的{@link JSONDeserializer}，否则返回null
-	 *
-	 * @param targetType 目标类型
-	 * @param <T> 目标类型
-	 * @return {@link JSONDeserializer}
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> JSONDeserializer<T> getDeserializer(final Type targetType) {
-		final Class<T> rawType = (Class<T>) TypeUtil.getClass(targetType);
-		if (null != rawType && JSONDeserializer.class.isAssignableFrom(rawType)) {
-			return (JSONDeserializer<T>) ConstructorUtil.newInstanceIfPossible(rawType);
-		}
-
-		// 全局自定义反序列化（优先级低于实现JSONDeserializer接口）
-		return (JSONDeserializer<T>) GlobalSerializeMapping.getDeserializer(targetType);
 	}
 
 	// --------------------------------------------------------------------------------------------- Private method start

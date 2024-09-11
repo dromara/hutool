@@ -16,10 +16,12 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.json.serialize.JSONDeserializer;
 import lombok.Data;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Type;
 
 public class JSONDeserializerTest {
 
@@ -33,14 +35,14 @@ public class JSONDeserializerTest {
 	}
 
 	@Data
-	static class TestBean implements JSONDeserializer<Object> {
+	static class TestBean implements JSONDeserializer<TestBean> {
 
 		private String name;
 		private String address;
 
 		@Override
-		public Object deserialize(final JSON value) {
-			final JSONObject valueObj = (JSONObject) value;
+		public TestBean deserialize(final JSON json, final Type deserializeType) {
+			final JSONObject valueObj = (JSONObject) json;
 			this.name = valueObj.getStr("customName");
 			this.address = valueObj.getStr("customAddress");
 			return this;
