@@ -433,11 +433,11 @@ public class PropDesc {
 	 * @return 是否为Transient关键字修饰的
 	 */
 	private static boolean isTransientForGet(final Field field, final Method getterMethod) {
-		boolean isTransient = ModifierUtil.hasModifier(field, ModifierType.TRANSIENT);
+		boolean isTransient = ModifierUtil.hasAny(field, ModifierType.TRANSIENT);
 
 		// 检查Getter方法
 		if (!isTransient && null != getterMethod) {
-			isTransient = ModifierUtil.hasModifier(getterMethod, ModifierType.TRANSIENT);
+			isTransient = ModifierUtil.hasAny(getterMethod, ModifierType.TRANSIENT);
 
 			// 检查注解
 			if (!isTransient) {
@@ -456,11 +456,11 @@ public class PropDesc {
 	 * @return 是否为Transient关键字修饰的
 	 */
 	private static boolean isTransientForSet(final Field field, final Method setterMethod) {
-		boolean isTransient = ModifierUtil.hasModifier(field, ModifierType.TRANSIENT);
+		boolean isTransient = ModifierUtil.hasAny(field, ModifierType.TRANSIENT);
 
 		// 检查Getter方法
 		if (!isTransient && null != setterMethod) {
-			isTransient = ModifierUtil.hasModifier(setterMethod, ModifierType.TRANSIENT);
+			isTransient = ModifierUtil.hasAny(setterMethod, ModifierType.TRANSIENT);
 
 			// 检查注解
 			if (!isTransient) {

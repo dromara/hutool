@@ -31,13 +31,53 @@ import java.util.List;
 public class ModifierUtilTest {
 
 	@Test
-	public void hasModifierTest() throws NoSuchMethodException {
+	public void hasAnyTest() throws NoSuchMethodException {
 		final Method method = ModifierUtilTest.class.getDeclaredMethod("ddd");
-		Assertions.assertTrue(ModifierUtil.hasModifier(method, ModifierType.PRIVATE));
-		Assertions.assertTrue(ModifierUtil.hasModifier(method,
-				ModifierType.PRIVATE,
-				ModifierType.STATIC)
+		Assertions.assertTrue(ModifierUtil.hasAny(method,
+			ModifierType.PRIVATE));
+		Assertions.assertTrue(ModifierUtil.hasAny(method,
+			ModifierType.PRIVATE,
+			ModifierType.STATIC)
 		);
+		Assertions.assertTrue(ModifierUtil.hasAny(method,
+			ModifierType.PRIVATE,
+			ModifierType.ABSTRACT)
+		);
+	}
+
+	@Test
+	public void hasAllTest() throws NoSuchMethodException {
+		final Method method = ModifierUtilTest.class.getDeclaredMethod("ddd");
+		Assertions.assertTrue(ModifierUtil.hasAll(method,
+			ModifierType.PRIVATE));
+		Assertions.assertTrue(ModifierUtil.hasAll(method,
+			ModifierType.PRIVATE,
+			ModifierType.STATIC)
+		);
+		Assertions.assertFalse(ModifierUtil.hasAll(method,
+			ModifierType.PRIVATE,
+			// 不存在
+			ModifierType.ABSTRACT)
+		);
+	}
+
+	@Test
+	void issueIAQ2U0Test() throws NoSuchMethodException {
+		final Method method = ModifierUtilTest.class.getDeclaredMethod("ddd");
+
+		Assertions.assertTrue(ModifierUtil.hasAny(method,
+			ModifierType.PRIVATE,
+			ModifierType.STATIC,
+			// 不存在
+			ModifierType.TRANSIENT
+		));
+
+		Assertions.assertFalse(ModifierUtil.hasAll(method,
+			ModifierType.PRIVATE,
+			ModifierType.STATIC,
+			// 不存在
+			ModifierType.TRANSIENT
+		));
 	}
 
 	private static void ddd() {
@@ -56,12 +96,12 @@ public class ModifierUtilTest {
 	public void setFinalFieldValueTest() {
 		final String fieldName = "DIALECTS";
 		final List<Number> dialects =
-				Arrays.asList(
-						1,
-						2,
-						3,
-						99
-				);
+			Arrays.asList(
+				1,
+				2,
+				3,
+				99
+			);
 		final Field field = FieldUtil.getField(JdbcDialects.class, fieldName);
 		ModifierUtil.removeFinalModify(field);
 		FieldUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
@@ -72,6 +112,6 @@ public class ModifierUtilTest {
 	@SuppressWarnings("unused")
 	public static class JdbcDialects {
 		private static final List<Number> DIALECTS =
-				Arrays.asList(1L, 2L, 3L);
+			Arrays.asList(1L, 2L, 3L);
 	}
 }

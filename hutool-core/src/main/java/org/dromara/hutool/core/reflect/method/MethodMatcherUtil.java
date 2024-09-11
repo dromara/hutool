@@ -112,7 +112,7 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 */
 	public static Predicate<Method> forModifiers(final int... modifiers) {
-		return method -> ModifierUtil.hasAllModifier(method.getModifiers(), modifiers);
+		return method -> ModifierUtil.hasAll(method.getModifiers(), modifiers);
 	}
 
 	// endregion
