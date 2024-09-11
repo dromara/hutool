@@ -2,10 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.exceptions.UtilException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 
 /**
  * 修饰符工具类
@@ -93,10 +90,16 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
+	 * 类是否存在给定修饰符中的<b>任意一个</b><br>
+	 * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+	 * <ul>
+	 *     <li>public、static  返回{@code true}</li>
+	 *     <li>public、abstract返回{@code true}</li>
+	 *     <li>private、abstract返回{@code false}</li>
+	 * </ul>
 	 *
-	 * @param clazz         类
-	 * @param modifierTypes 修饰符枚举
+	 * @param clazz         类，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasModifier(Class<?> clazz, ModifierType... modifierTypes) {
@@ -107,10 +110,16 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
+	 * 构造是否存在给定修饰符中的<b>任意一个</b><br>
+	 * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+	 * <ul>
+	 *     <li>public、static  返回{@code true}</li>
+	 *     <li>public、abstract返回{@code true}</li>
+	 *     <li>private、abstract返回{@code false}</li>
+	 * </ul>
 	 *
-	 * @param constructor   构造方法
-	 * @param modifierTypes 修饰符枚举
+	 * @param constructor        构造，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasModifier(Constructor<?> constructor, ModifierType... modifierTypes) {
@@ -121,10 +130,16 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
+	 * 方法是否存在给定修饰符中的<b>任意一个</b><br>
+	 * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+	 * <ul>
+	 *     <li>public、static  返回{@code true}</li>
+	 *     <li>public、abstract返回{@code true}</li>
+	 *     <li>private、abstract返回{@code false}</li>
+	 * </ul>
 	 *
-	 * @param method        方法
-	 * @param modifierTypes 修饰符枚举
+	 * @param method        方法，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasModifier(Method method, ModifierType... modifierTypes) {
@@ -135,10 +150,16 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
+	 * 字段是否存在给定修饰符中的<b>任意一个</b><br>
+	 * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+	 * <ul>
+	 *     <li>public、static  返回{@code true}</li>
+	 *     <li>public、abstract返回{@code true}</li>
+	 *     <li>private、abstract返回{@code false}</li>
+	 * </ul>
 	 *
-	 * @param field         字段
-	 * @param modifierTypes 修饰符枚举
+	 * @param field        构造、字段或方法，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
 	public static boolean hasModifier(Field field, ModifierType... modifierTypes) {
@@ -147,6 +168,51 @@ public class ModifierUtil {
 		}
 		return 0 != (field.getModifiers() & modifiersToInt(modifierTypes));
 	}
+
+	// region ----- hasAll
+
+	/**
+	 * 类中是否同时存在<b>所有</b>给定修饰符<br>
+	 * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+	 * <ul>
+	 *     <li>public、static  返回{@code true}</li>
+	 *     <li>public、abstract返回{@code false}</li>
+	 *     <li>private、abstract返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param clazz         类，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+	 * @return 是否同时存在所有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+	 */
+	public static boolean hasAllModifiers(final Class<?> clazz, final ModifierType... modifierTypes) {
+		if (null == clazz || ArrayUtil.isEmpty(modifierTypes)) {
+			return false;
+		}
+		final int checkedModifiersInt = modifiersToInt(modifierTypes);
+		return checkedModifiersInt == (clazz.getModifiers() & checkedModifiersInt);
+	}
+
+	/**
+	 * 成员中是否同时存在<b>所有</b>给定修饰符<br>
+	 * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+	 * <ul>
+	 *     <li>public、static  返回{@code true}</li>
+	 *     <li>public、abstract返回{@code false}</li>
+	 *     <li>private、abstract返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param member        构造、字段或方法，如果为{@code null}返回{@code false}
+	 * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+	 * @return 是否同时存在所有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+	 */
+	public static boolean hasAllModifiers(final Member member, final ModifierType... modifierTypes) {
+		if (null == member || ArrayUtil.isEmpty(modifierTypes)) {
+			return false;
+		}
+		final int checkedModifiersInt = modifiersToInt(modifierTypes);
+		return checkedModifiersInt == (member.getModifiers() & checkedModifiersInt);
+	}
+	// endregion
 
 	/**
 	 * 是否是Public字段
@@ -273,7 +339,7 @@ public class ModifierUtil {
 	 *     <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
 	 *     <li> Literal String 类型(直接双引号字符串)</li>
 	 * </ul>
-	 * <h3>以下属性，可以通过反射修改：</h3>
+	 * <p>以下属性，可以通过反射修改：</p>
 	 * <ul>
 	 *     <li>基本类型的包装类 Byte、Character、Short、Long、Float、Double、Boolean</li>
 	 *     <li>字符串，通过 new String("")实例化</li>

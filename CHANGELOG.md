@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.33(2024-09-09)
+# 5.8.33(2024-09-11)
 
 ### 🐣新特性
 * 【core   】      SyncFinisher增加setExecutorService方法（issue#IANKQ1@Gitee）
@@ -10,6 +10,7 @@
 * 【core   】      用ArrayList重新实现权重随机类：WeightListRandom（pr#3720@Github）
 * 【crypto 】      SM2解密时，兼容GmSSL非压缩省略的04头的密文（issue#IAP1QJ@Gitee）
 * 【core   】      兼容NumberUtil.add方法传入整型自动类型转换为浮点类型的精度丢失问题（pr#3721@Github）
+* 【core   】      ModifierUtil明确注释，并增加hasAllModifiers方法（issue#IAQ2U0@Gitee）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）
