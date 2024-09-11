@@ -28,6 +28,11 @@ public class JSONObjectIter implements Iterable<JSONObject> {
 
 	Iterator<Object> iterator;
 
+	/**
+	 * 构造
+	 *
+	 * @param iterator 迭代器
+	 */
 	public JSONObjectIter(final Iterator<Object> iterator) {
 		this.iterator = iterator;
 	}

@@ -30,6 +30,7 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
+import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONStringer;

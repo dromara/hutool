@@ -18,6 +18,7 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
+import org.dromara.hutool.json.reader.JSONTokener;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

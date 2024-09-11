@@ -22,7 +22,8 @@ import java.util.*;
 
 /**
  * 全局自定义对象写出<br>
- * 用户通过此全局定义，可针对某些特殊对象
+ * 用户通过此全局定义，可针对某些特殊对象的写出<br>
+ * 对象定义JSONValueWriter后，JSON中将存储原始对象
  *
  * @author looly
  * @since 6.0.0

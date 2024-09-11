@@ -15,6 +15,17 @@
  */
 
 /**
- * JSON序列化和反序列化，提供对象和JSON之间的转换
+ * JSON序列化和反序列化，提供对象和JSON之间的转换，我们定义：
+ * 1. 对象定义：
+ * <ul>
+ *     <li>Java对象，可以是POJO（Java Bean），也可以是String、int、Map，List等。</li>
+ *     <li>JSON对象，只包含JSON接口实现：JSONObject、JSONArray、JSONPrimitive和{@code null}。</li>
+ * </ul>
+ *
+ * 2. 序列化定义：
+ * <ul>
+ *     <li>序列化（Serialize）    指：【Java对象】 转换为 【JSON对象】</li>
+ *     <li>反序列化（Deserialize）指：【JSON对象】 转换为 【Java对象】</li>
+ * </ul>
  */
 package org.dromara.hutool.json.serialize;

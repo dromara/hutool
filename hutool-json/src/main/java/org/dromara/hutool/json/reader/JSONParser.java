@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json;
+package org.dromara.hutool.json.reader;
 
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.json.*;
 
 import java.util.function.Predicate;
 
@@ -163,10 +164,10 @@ public class JSONParser {
 			for (; ; ) {
 				if (x.nextClean() == CharUtil.COMMA) {
 					x.back();
-					jsonArray.addRaw(null, predicate);
+					jsonArray.add(null, predicate);
 				} else {
 					x.back();
-					jsonArray.addRaw(nextValue(), predicate);
+					jsonArray.add(nextValue(), predicate);
 				}
 				switch (x.nextClean()) {
 					case CharUtil.COMMA:

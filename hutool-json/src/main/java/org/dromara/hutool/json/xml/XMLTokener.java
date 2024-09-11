@@ -18,9 +18,8 @@ package org.dromara.hutool.json.xml;
 
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.xml.XmlConstants;
-import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.JSONTokener;
+import org.dromara.hutool.json.reader.JSONTokener;
 
 /**
  * XML分析器，继承自JSONTokener，提供XML的语法分析

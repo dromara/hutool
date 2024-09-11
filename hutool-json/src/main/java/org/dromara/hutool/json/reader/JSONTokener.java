@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json;
+package org.dromara.hutool.json.reader;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.ReaderWrapper;
@@ -22,6 +22,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStream;
