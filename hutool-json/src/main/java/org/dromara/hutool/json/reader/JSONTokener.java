@@ -244,10 +244,53 @@ public class JSONTokener extends ReaderWrapper {
 		char c;
 		while (true) {
 			c = this.next();
-			if (c == 0 || c > ' ') {
+			if (c == EOF || c > ' ') {
 				return c;
 			}
 		}
+	}
+
+	/**
+	 * 读取下一个JSON中的key，支持不带引号的key
+	 *
+	 * @param c 当前字符
+	 * @return 键字符串
+	 * @throws JSONException 非引号包裹的字符串
+	 */
+	public String nextKey(final char c) throws JSONException {
+		final char prev = this.previous;
+		switch (c) {
+			case JSONTokener.EOF:
+				// 未关闭对象
+				throw syntaxError("A JSONObject text must end with '}'");
+			case CharUtil.DELIM_START:
+			case CharUtil.BRACKET_END:
+				if (prev == CharUtil.DELIM_START) {
+					// 不允许嵌套对象，如{{}}或{[]}
+					throw syntaxError("A JSONObject can not directly nest another JSONObject or JSONArray.");
+				}
+			case CharUtil.DOUBLE_QUOTES:
+			case CharUtil.SINGLE_QUOTE:
+				// 带有包装的key
+				return nextWrapString(c);
+			default:
+				// 兼容不严格的JSON，如key不被引号包围的情况
+				return nextUnwrapString(c);
+		}
+	}
+
+	/**
+	 * 获取下一个冒号，非冒号则抛出异常
+	 *
+	 * @throws JSONException 非冒号字符
+	 * @return 冒号字符
+	 */
+	public char nextColon() throws JSONException {
+		final char c = nextClean();
+		if (c != CharUtil.COLON) {
+			throw syntaxError("Expected a ':' after a key");
+		}
+		return c;
 	}
 
 	/**
@@ -265,7 +308,7 @@ public class JSONTokener extends ReaderWrapper {
 		switch (c) {
 			case CharUtil.DOUBLE_QUOTES:
 			case CharUtil.SINGLE_QUOTE:
-				return nextString(c);
+				return nextWrapString(c);
 		}
 
 		// 兼容不严格的JSON，如key不被双引号包围的情况
@@ -311,7 +354,7 @@ public class JSONTokener extends ReaderWrapper {
 	 * @return 截止到引号前的字符串
 	 * @throws JSONException 出现无结束的字符串时抛出此异常
 	 */
-	public String nextString(final char quote) throws JSONException {
+	public String nextWrapString(final char quote) throws JSONException {
 		char c;
 		final StringBuilder sb = new StringBuilder();
 		while (true) {

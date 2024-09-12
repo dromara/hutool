@@ -15,7 +15,7 @@
  */
 
 /**
- * JSON读取和解析
+ * JSON读取和解析，主要解析字符串、流等JSON字符串为{@link org.dromara.hutool.json.JSON}。
  *
  * @author Looly
  */

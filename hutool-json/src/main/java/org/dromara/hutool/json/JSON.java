@@ -29,7 +29,13 @@ import java.lang.reflect.Type;
 import java.util.function.Predicate;
 
 /**
- * JSON接口
+ * JSON树模型接口，表示树中的一个节点。实现包括：
+ * <ul>
+ *     <li>{@link JSONObject}表示键值对形式的节点</li>
+ *     <li>{@link JSONArray}表示列表形式的节点</li>
+ *     <li>{@link JSONPrimitive}表示数字、Boolean、字符串形式的节点</li>
+ *     <li>{@code null}表示空节点</li>
+ * </ul>
  *
  * @author Looly
  */

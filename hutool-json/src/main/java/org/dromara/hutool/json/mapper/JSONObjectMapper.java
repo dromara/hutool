@@ -25,7 +25,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.reader.JSONParser;
+import org.dromara.hutool.json.reader.OldJSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.SerializerManager;
@@ -111,9 +111,9 @@ public class JSONObjectMapper {
 		if (source instanceof JSONTokener) {
 			// JSONTokener
 			mapFromTokener((JSONTokener) source, jsonObject.config(), jsonObject);
-		}if (source instanceof JSONParser) {
+		}if (source instanceof OldJSONParser) {
 			// JSONParser
-			((JSONParser) source).parseTo(jsonObject, this.predicate);
+			((OldJSONParser) source).parseTo(jsonObject, this.predicate);
 		} else if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
@@ -191,7 +191,7 @@ public class JSONObjectMapper {
 	 * @param jsonObject {@link JSONObject}
 	 */
 	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONObject jsonObject) {
-		JSONParser.of(x, config).parseTo(jsonObject, this.predicate);
+		OldJSONParser.of(x, config).parseTo(jsonObject, this.predicate);
 	}
 
 	/**

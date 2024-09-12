@@ -24,7 +24,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.reader.JSONParser;
+import org.dromara.hutool.json.reader.OldJSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.SerializerManager;
@@ -98,8 +98,8 @@ public class JSONArrayMapper {
 
 		if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, JSONConfig.of(), jsonArray);
-		}if (source instanceof JSONParser) {
-			((JSONParser)source).parseTo(jsonArray, this.predicate);
+		}if (source instanceof OldJSONParser) {
+			((OldJSONParser)source).parseTo(jsonArray, this.predicate);
 		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray);
@@ -164,6 +164,6 @@ public class JSONArrayMapper {
 	 * @param jsonArray {@link JSONArray}
 	 */
 	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONArray jsonArray) {
-		JSONParser.of(x, config).parseTo(jsonArray, this.predicate);
+		OldJSONParser.of(x, config).parseTo(jsonArray, this.predicate);
 	}
 }
