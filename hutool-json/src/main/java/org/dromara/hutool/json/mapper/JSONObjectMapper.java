@@ -29,6 +29,7 @@ import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.SimpleJSONContext;
 import org.dromara.hutool.json.xml.JSONXMLParser;
 import org.dromara.hutool.json.xml.ParseConfig;
 
@@ -98,7 +99,7 @@ public class JSONObjectMapper {
 		// 自定义序列化
 		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(source.getClass());
 		if (null != serializer) {
-			serializer.serialize(source, () -> jsonObject);
+			serializer.serialize(source, new SimpleJSONContext(jsonObject));
 			return;
 		}
 

@@ -158,16 +158,7 @@ public class JSONConverter implements Converter, Serializable {
 		final JSONSerializer<Object> serializer =
 			(JSONSerializer<Object>) SerializerManager.getInstance().getSerializer(obj);
 		if (null != serializer) {
-			return serializer.serialize(obj, new JSONContext() {
-				@Override
-				public JSON getContextJson() {
-					return null;
-				}
-				@Override
-				public JSONConfig config() {
-					return JSONConverter.this.config;
-				}
-			});
+			return serializer.serialize(obj, new SimpleJSONContext(null, this.config));
 		}
 
 		if (obj instanceof Number || obj instanceof Boolean) {

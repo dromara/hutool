@@ -36,11 +36,6 @@ import java.util.function.Predicate;
 public class JSONParser {
 
 	/**
-	 * JSON配置
-	 */
-	private final JSONConfig config;
-
-	/**
 	 * 创建JSONParser
 	 *
 	 * @param tokener {@link JSONTokener}
@@ -51,6 +46,10 @@ public class JSONParser {
 		return new JSONParser(tokener, config);
 	}
 
+	/**
+	 * JSON配置
+	 */
+	private final JSONConfig config;
 	private final JSONTokener tokener;
 
 	/**
