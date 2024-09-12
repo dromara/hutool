@@ -25,7 +25,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.reader.OldJSONParser;
+import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.SerializerManager;
@@ -66,12 +66,12 @@ public class JSONObjectMapper {
 	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return ObjectMapper
 	 */
-	public static JSONObjectMapper of(final Object source, final Predicate<MutableEntry<String, Object>> predicate) {
+	public static JSONObjectMapper of(final Object source, final Predicate<MutableEntry<Object, Object>> predicate) {
 		return new JSONObjectMapper(source, predicate);
 	}
 
 	private final Object source;
-	private final Predicate<MutableEntry<String, Object>> predicate;
+	private final Predicate<MutableEntry<Object, Object>> predicate;
 
 	/**
 	 * 构造
@@ -79,7 +79,7 @@ public class JSONObjectMapper {
 	 * @param source    来源对象
 	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public JSONObjectMapper(final Object source, final Predicate<MutableEntry<String, Object>> predicate) {
+	public JSONObjectMapper(final Object source, final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}
@@ -111,9 +111,9 @@ public class JSONObjectMapper {
 		if (source instanceof JSONTokener) {
 			// JSONTokener
 			mapFromTokener((JSONTokener) source, jsonObject.config(), jsonObject);
-		}if (source instanceof OldJSONParser) {
+		}if (source instanceof JSONParser) {
 			// JSONParser
-			((OldJSONParser) source).parseTo(jsonObject, this.predicate);
+			((JSONParser) source).parseTo(jsonObject);
 		} else if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
@@ -180,7 +180,7 @@ public class JSONObjectMapper {
 			JSONXMLParser.of(ParseConfig.of(), this.predicate).parseJSONObject(jsonStr, jsonObject);
 			return;
 		}
-		mapFromTokener(new JSONTokener(StrUtil.trim(source)), jsonObject.config(), jsonObject);
+		mapFromTokener(new JSONTokener(source), jsonObject.config(), jsonObject);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class JSONObjectMapper {
 	 * @param jsonObject {@link JSONObject}
 	 */
 	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONObject jsonObject) {
-		OldJSONParser.of(x, config).parseTo(jsonObject, this.predicate);
+		JSONParser.of(x, config).setPredicate(this.predicate).parseTo(jsonObject);
 	}
 
 	/**

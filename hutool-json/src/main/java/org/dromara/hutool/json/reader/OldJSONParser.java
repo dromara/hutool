@@ -124,7 +124,7 @@ public class OldJSONParser {
 				throw tokener.syntaxError("Expected a ':' after a key");
 			}
 
-			jsonObject.set(key, nextValue(), predicate);
+			jsonObject.set(key, nextValue(), null);
 
 			// Pairs are separated by ','.
 

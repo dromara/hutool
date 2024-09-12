@@ -143,7 +143,7 @@ public final class InternalJSONUtil {
 	 * @param value      值
 	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
+	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
 		final String[] path = SplitUtil.splitToArray(ConvertUtil.toStr(key), StrUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;

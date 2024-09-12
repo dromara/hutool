@@ -152,7 +152,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 * @since 5.8.0
 	 */
-	public JSONObject(final Object source, final JSONConfig config, final Predicate<MutableEntry<String, Object>> predicate) {
+	public JSONObject(final Object source, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
 		this(DEFAULT_CAPACITY, config);
 		JSONObjectMapper.of(source, predicate).mapTo(this);
 	}
@@ -200,7 +200,16 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	@Override
 	public Object getObj(final String key, final Object defaultValue) {
-		return this.getOrDefault(key, defaultValue);
+		return getOrDefault(key, defaultValue);
+	}
+
+	@Override
+	public Object getOrDefault(final Object key, final Object defaultValue) {
+		Object value =  super.getOrDefault(key, defaultValue);
+		if(value instanceof JSONPrimitive){
+			value = ((JSONPrimitive) value).getValue();
+		}
+		return value;
 	}
 
 	/**
@@ -268,7 +277,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 * @since 5.8.0
 	 */
-	public JSONObject set(final String key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
+	public JSONObject set(final String key, final Object value, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
 		put(key, value, predicate, config().isCheckDuplicate());
 		return this;
 	}
@@ -284,7 +293,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	public JSONObject set(final String key, final Object value, final Predicate<MutableEntry<String, Object>> predicate, final boolean checkDuplicate) throws JSONException {
+	public JSONObject set(final String key, final Object value, final Predicate<MutableEntry<Object, Object>> predicate, final boolean checkDuplicate) throws JSONException {
 		put(key, value, predicate, checkDuplicate);
 		return this;
 	}
@@ -343,13 +352,13 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
 	 * @since 6.0.0
 	 */
-	public JSONObject append(String key, Object value, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
+	public JSONObject append(String key, Object value, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 		if (null != predicate) {
-			final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
+			final MutableEntry<Object, Object> pair = new MutableEntry<>(key, value);
 			if (predicate.test(pair)) {
 				// 使用修改后的键值对
-				key = pair.getKey();
+				key = (String) pair.getKey();
 				value = pair.getValue();
 			} else {
 				// 键值对被过滤
@@ -465,17 +474,17 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	private Object put(String key, Object value, final Predicate<MutableEntry<String, Object>> predicate, final boolean checkDuplicate) throws JSONException {
+	private Object put(String key, Object value, final Predicate<MutableEntry<Object, Object>> predicate, final boolean checkDuplicate) throws JSONException {
 		if (null == key) {
 			return null;
 		}
 
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 		if (null != predicate) {
-			final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
+			final MutableEntry<Object, Object> pair = new MutableEntry<>(key, value);
 			if (predicate.test(pair)) {
 				// 使用修改后的键值对
-				key = pair.getKey();
+				key = (String) pair.getKey();
 				value = pair.getValue();
 			} else {
 				// 键值对被过滤

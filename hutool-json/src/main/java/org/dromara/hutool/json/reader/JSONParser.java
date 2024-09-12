@@ -24,10 +24,12 @@ import java.util.function.Predicate;
 
 /**
  * JSON字符串解析器，实现：
- * <ul>
- *     <li>JSON字符串 --&gt; {@link JSONTokener} --&gt; {@link JSONObject}</li>
- *     <li>JSON字符串 --&gt; {@link JSONTokener} --&gt; {@link JSONArray}</li>
- * </ul>
+ * <pre>{@code
+ *            JSONTokener
+ *     字符串 -------------> JSONObject
+ *     字符串 -------------> JSONArray
+ *     字符串 -------------> JSONPrimitive
+ * }</pre>
  *
  * @author looly
  * @since 6.0.0
@@ -50,6 +52,10 @@ public class JSONParser {
 	 */
 	private final JSONConfig config;
 	private final JSONTokener tokener;
+	/**
+	 * 过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回<br>
+	 * entry中，key在JSONObject中为name，在JSONArray中为index
+	 */
 	private Predicate<MutableEntry<Object, Object>> predicate;
 
 	/**
@@ -73,18 +79,14 @@ public class JSONParser {
 	}
 
 	/**
-	 * 获取下一个值，可以是：
-	 * <pre>
-	 *     JSONObject
-	 *     JSONArray
-	 *     JSONPrimitive
-	 *     null
-	 * </pre>
+	 * 设置过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回
 	 *
-	 * @return JSON值
+	 * @param predicate 过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回
+	 * @return this
 	 */
-	public JSON nextValue() {
-		return nextValue(tokener.nextClean());
+	public JSONParser setPredicate(final Predicate<MutableEntry<Object, Object>> predicate) {
+		this.predicate = predicate;
+		return this;
 	}
 
 	/**
@@ -98,34 +100,80 @@ public class JSONParser {
 	 *
 	 * @return JSON值
 	 */
-	private JSON nextValue(final char c) {
-		switch (c) {
+	public JSON parse() {
+		return nextJSON(tokener.nextClean());
+	}
+
+	/**
+	 * 解析为JSONObject或JSONArray，解析值包括：
+	 * <pre>
+	 *     JSONObject
+	 *     JSONArray
+	 * </pre>
+	 *
+	 * @param json JSON对象或数组，用于存储解析结果
+	 */
+	public void parseTo(final JSON json) {
+		if(null == json){
+			return;
+		}
+		switch (tokener.nextClean()) {
 			case CharUtil.DELIM_START:
-				final JSONObject jsonObject = new JSONObject(tokener, config);
-				nextJSONObject(jsonObject);
-				return jsonObject;
+				nextTo((JSONObject) json);
+				break;
 			case CharUtil.BRACKET_START:
-				final JSONArray jsonArray = new JSONArray(tokener, config);
-				nextJSONArray(jsonArray);
-				return jsonArray;
+				nextTo((JSONArray) json);
+				break;
 			default:
-				return nextJSONPrimitive(c);
+				throw new JSONException("Unsupported: " + json.getClass());
 		}
 	}
 
 	/**
-	 * 解析为JSONObject
+	 * 获取下一个值，可以是：
+	 * <pre>
+	 *     JSONObject
+	 *     JSONArray
+	 *     JSONPrimitive
+	 *     null
+	 * </pre>
+	 *
+	 * @return JSON值
+	 */
+	private JSON nextJSON(final char firstChar) {
+		final JSON result;
+		switch (firstChar) {
+			case CharUtil.DELIM_START:
+				final JSONObject jsonObject = new JSONObject(config);
+				nextTo(jsonObject);
+				result = jsonObject;
+				break;
+			case CharUtil.BRACKET_START:
+				final JSONArray jsonArray = new JSONArray(config);
+				nextTo(jsonArray);
+				result = jsonArray;
+				break;
+			default:
+				result = nextJSONPrimitive(firstChar);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 解析下一个值为JSONObject，第一个字符必须读取完后再调用此方法
 	 *
 	 * @param jsonObject JSON对象
 	 */
-	private void nextJSONObject(final JSONObject jsonObject) {
+	private void nextTo(final JSONObject jsonObject) {
 		final JSONTokener tokener = this.tokener;
 
 		char c;
 		String key;
 		for (; ; ) {
 			c = tokener.nextClean();
-			if (c == CharUtil.DELIM_END) {// 对象结束
+			if (c == CharUtil.DELIM_END) {
+				// 对象结束
 				return;
 			} else {
 				key = tokener.nextKey(c);
@@ -135,7 +183,7 @@ public class JSONParser {
 			tokener.nextColon();
 
 			// 过滤并设置键值对
-			Object value = nextValue();
+			Object value = parse();
 			// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 			if (null != predicate) {
 				final MutableEntry<Object, Object> pair = new MutableEntry<>(key, value);
@@ -169,33 +217,32 @@ public class JSONParser {
 	}
 
 	/**
-	 * 解析为JSONArray
+	 * 解析下一个值为JSONArray，第一个字符必须读取完后再调用此方法
 	 *
 	 * @param jsonArray JSON数组
 	 */
-	private void nextJSONArray(final JSONArray jsonArray) {
+	private void nextTo(final JSONArray jsonArray) {
 		final JSONTokener tokener = this.tokener;
 		char c;
 		for (; ; ) {
 			c = tokener.nextClean();
-			switch (c) {
-				case CharUtil.BRACKET_END:
-					return;
-				case CharUtil.COMMA:
-					jsonArray.add(nextValue());
-				default:
-					Object value = CharUtil.COMMA == c ? nextValue() : nextValue(c);
-					if (null != predicate) {
-						// 使用过滤器
-						final MutableEntry<Object, Object> pair = MutableEntry.of(jsonArray.size(), value);
-						if (predicate.test(pair)) {
-							// 使用修改后的键值对
-							value = pair.getValue();
-							jsonArray.add(value);
-						}
-					}else {
+			if (c == CharUtil.BRACKET_END) {
+				// 数组结束
+				return;
+			} else {
+				// ,value or value
+				Object value = nextJSON(CharUtil.COMMA == c ? tokener.nextClean() : c);
+				if (null != predicate) {
+					// 使用过滤器
+					final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), value);
+					if (predicate.test(entry)) {
+						// 使用修改后的键值对
+						value = entry.getValue();
 						jsonArray.add(value);
 					}
+				} else {
+					jsonArray.add(value);
+				}
 			}
 		}
 	}
@@ -208,17 +255,17 @@ public class JSONParser {
 	 *     string
 	 * </pre>
 	 *
-	 * @param c 值类型
+	 * @param firstChar 第一个字符，引号或字母
 	 * @return JSONPrimitive或{@code null}
 	 */
-	private JSONPrimitive nextJSONPrimitive(final char c) {
-		switch (c) {
+	private JSONPrimitive nextJSONPrimitive(final char firstChar) {
+		switch (firstChar) {
 			case CharUtil.DOUBLE_QUOTES:
 			case CharUtil.SINGLE_QUOTE:
 				// 引号包围，表示字符串值
-				return new JSONPrimitive(tokener.nextWrapString(c));
+				return new JSONPrimitive(tokener.nextWrapString(firstChar));
 			default:
-				final Object value = InternalJSONUtil.parseValueFromString(tokener.nextUnwrapString(c));
+				final Object value = InternalJSONUtil.parseValueFromString(tokener.nextUnwrapString(firstChar));
 				// 非引号包围，可能为boolean、数字、null等
 				return null == value ? null : new JSONPrimitive(value);
 		}

@@ -29,10 +29,7 @@ import org.dromara.hutool.json.test.bean.KeyBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -322,7 +319,7 @@ public class JSONArrayTest {
 			if ("111".equals(o.getStr("id"))) {
 				o.set("name", "test1_edit");
 			}
-			mutable.set(o);
+			mutable.set(new AbstractMap.SimpleEntry<>(1, o));
 			return true;
 		});
 		assertEquals(2, array.size());

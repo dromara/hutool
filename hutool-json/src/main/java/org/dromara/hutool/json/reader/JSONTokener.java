@@ -129,6 +129,16 @@ public class JSONTokener extends ReaderWrapper {
 	}
 
 	/**
+	 * 检查是否到了结尾<br>
+	 * 如果读取完毕后还有未读的字符，报错
+	 */
+	public void checkEnd(){
+		if(EOF != nextClean()){
+			throw syntaxError("Unread data");
+		}
+	}
+
+	/**
 	 * 源字符串是否有更多的字符
 	 *
 	 * @return 如果未达到结尾返回true，否则false
@@ -244,7 +254,7 @@ public class JSONTokener extends ReaderWrapper {
 		char c;
 		while (true) {
 			c = this.next();
-			if (c == EOF || c > ' ') {
+			if (c == EOF || c > CharUtil.SPACE) {
 				return c;
 			}
 		}
@@ -258,14 +268,13 @@ public class JSONTokener extends ReaderWrapper {
 	 * @throws JSONException 非引号包裹的字符串
 	 */
 	public String nextKey(final char c) throws JSONException {
-		final char prev = this.previous;
 		switch (c) {
 			case JSONTokener.EOF:
 				// 未关闭对象
 				throw syntaxError("A JSONObject text must end with '}'");
 			case CharUtil.DELIM_START:
-			case CharUtil.BRACKET_END:
-				if (prev == CharUtil.DELIM_START) {
+			case CharUtil.BRACKET_START:
+				if (CharUtil.DELIM_START == this.previous) {
 					// 不允许嵌套对象，如{{}}或{[]}
 					throw syntaxError("A JSONObject can not directly nest another JSONObject or JSONArray.");
 				}

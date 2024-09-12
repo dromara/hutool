@@ -164,7 +164,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException 非数组或集合
 	 * @since 5.8.0
 	 */
-	public JSONArray(final Object object, final JSONConfig jsonConfig, final Predicate<Mutable<Object>> predicate) throws JSONException {
+	public JSONArray(final Object object, final JSONConfig jsonConfig, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
 		this(DEFAULT_CAPACITY, jsonConfig);
 		JSONArrayMapper.of(object, predicate).mapTo(this);
 	}
@@ -201,7 +201,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public Object get(final int index) {
-		return this.rawList.get(index);
+		Object value = this.rawList.get(index);
+		if(value instanceof JSONPrimitive){
+			value = ((JSONPrimitive) value).getValue();
+		}
+		return value;
 	}
 
 	@Override

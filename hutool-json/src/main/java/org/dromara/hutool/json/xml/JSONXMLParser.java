@@ -41,12 +41,12 @@ public class JSONXMLParser {
 	 * @param predicate   键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONXMLParser
 	 */
-	public static JSONXMLParser of(final ParseConfig parseConfig, final Predicate<MutableEntry<String, Object>> predicate) {
+	public static JSONXMLParser of(final ParseConfig parseConfig, final Predicate<MutableEntry<Object, Object>> predicate) {
 		return new JSONXMLParser(parseConfig, predicate);
 	}
 
 	private final ParseConfig parseConfig;
-	private final Predicate<MutableEntry<String, Object>> predicate;
+	private final Predicate<MutableEntry<Object, Object>> predicate;
 
 	/**
 	 * 构造
@@ -54,7 +54,7 @@ public class JSONXMLParser {
 	 * @param parseConfig 解析选项
 	 * @param predicate   键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public JSONXMLParser(final ParseConfig parseConfig, final Predicate<MutableEntry<String, Object>> predicate) {
+	public JSONXMLParser(final ParseConfig parseConfig, final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.parseConfig = parseConfig;
 		this.predicate = predicate;
 	}

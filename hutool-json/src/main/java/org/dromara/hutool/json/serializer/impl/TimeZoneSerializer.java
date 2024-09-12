@@ -44,9 +44,8 @@ public class TimeZoneSerializer implements MatcherJSONSerializer<TimeZone>, Matc
 		return TimeZone.class.isAssignableFrom(TypeUtil.getClass(deserializeType));
 	}
 
-	@SuppressWarnings("DataFlowIssue")
 	@Override
-	public boolean match(final TimeZone bean, final JSONContext context) {
+	public boolean match(final Object bean, final JSONContext context) {
 		return bean instanceof TimeZone;
 	}
 

@@ -30,7 +30,7 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.reader.OldJSONParser;
+import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.*;
 
@@ -202,16 +202,8 @@ public class JSONConverter implements Converter, Serializable {
 		}
 
 		// RFC8259，JSON字符串值、number, boolean, or null
-		final OldJSONParser jsonParser = OldJSONParser.of(new JSONTokener(jsonStr), config);
-		final Object value = jsonParser.nextValue();
-		if (jsonParser.getTokener().nextClean() != JSONTokener.EOF) {
-			// 对于用户提供的未转义字符串导致解析未结束，报错
-			throw new JSONException("JSON format error: {}", jsonStr);
-		}
-		if(null == value || value instanceof JSON){
-			return (JSON) value;
-		}
-		return new JSONPrimitive(value, config);
+		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), config);
+		return jsonParser.parse();
 	}
 
 	// ----------------------------------------------------------- Private method start

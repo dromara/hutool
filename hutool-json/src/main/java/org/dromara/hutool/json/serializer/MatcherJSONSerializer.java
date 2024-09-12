@@ -32,5 +32,5 @@ public interface MatcherJSONSerializer<V> extends JSONSerializer<V> {
 	 * @param context   JSON上下文
 	 * @return 是否匹配
 	 */
-	boolean match(V bean, JSONContext context);
+	boolean match(Object bean, JSONContext context);
 }

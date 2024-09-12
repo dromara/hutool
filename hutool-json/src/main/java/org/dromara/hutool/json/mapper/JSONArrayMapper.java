@@ -19,12 +19,12 @@ package org.dromara.hutool.json.mapper;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.mutable.Mutable;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.reader.OldJSONParser;
+import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.SerializerManager;
@@ -58,12 +58,12 @@ public class JSONArrayMapper {
 	 * @param predicate 值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤，，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return ObjectMapper
 	 */
-	public static JSONArrayMapper of(final Object source, final Predicate<Mutable<Object>> predicate) {
+	public static JSONArrayMapper of(final Object source, final Predicate<MutableEntry<Object, Object>> predicate) {
 		return new JSONArrayMapper(source, predicate);
 	}
 
 	private final Object source;
-	private final Predicate<Mutable<Object>> predicate;
+	private final Predicate<MutableEntry<Object, Object>> predicate;
 
 	/**
 	 * 构造
@@ -71,7 +71,7 @@ public class JSONArrayMapper {
 	 * @param source    来源对象
 	 * @param predicate 值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤，，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public JSONArrayMapper(final Object source, final Predicate<Mutable<Object>> predicate) {
+	public JSONArrayMapper(final Object source, final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}
@@ -82,7 +82,6 @@ public class JSONArrayMapper {
 	 * @param jsonArray 目标{@link JSONArray}
 	 * @throws JSONException 非数组或集合
 	 */
-	@SuppressWarnings("unchecked")
 	public void mapTo(final JSONArray jsonArray) throws JSONException {
 		final Object source = this.source;
 		if (null == source) {
@@ -98,8 +97,8 @@ public class JSONArrayMapper {
 
 		if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, JSONConfig.of(), jsonArray);
-		}if (source instanceof OldJSONParser) {
-			((OldJSONParser)source).parseTo(jsonArray, this.predicate);
+		}if (source instanceof JSONParser) {
+			((JSONParser)source).parseTo(jsonArray);
 		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray);
@@ -139,7 +138,16 @@ public class JSONArrayMapper {
 				next = iter.next();
 				// 检查循环引用
 				if (next != source) {
-					jsonArray.add(next, predicate);
+					if(null != this.predicate){
+						final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), next);
+						if (predicate.test(entry)) {
+							// 使用修改后的键值对
+							next = entry.getValue();
+							jsonArray.add(next);
+						}
+					}else {
+						jsonArray.add(next);
+					}
 				}
 			}
 		}
@@ -164,6 +172,6 @@ public class JSONArrayMapper {
 	 * @param jsonArray {@link JSONArray}
 	 */
 	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONArray jsonArray) {
-		OldJSONParser.of(x, config).parseTo(jsonArray, this.predicate);
+		JSONParser.of(x, config).setPredicate(this.predicate).parseTo(jsonArray);
 	}
 }

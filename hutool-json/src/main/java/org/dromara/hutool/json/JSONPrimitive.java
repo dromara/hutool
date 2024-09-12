@@ -24,6 +24,7 @@ import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.util.function.Predicate;
 
 /**
@@ -105,6 +106,11 @@ public class JSONPrimitive implements JSON {
 	@Override
 	public int size() {
 		return 1;
+	}
+
+	@Override
+	public <T> T convert(final Type targetType, final Object value, final T defaultValue) {
+		return JSON.super.convert(targetType, this.value, defaultValue);
 	}
 
 	@Override

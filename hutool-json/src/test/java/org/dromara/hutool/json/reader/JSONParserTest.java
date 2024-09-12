@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json;
+package org.dromara.hutool.json.reader;
 
-import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class IssueI9DX5HTest {
-
-	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+public class JSONParserTest {
 	@Test
-	void xmlToJSONTest() {
-		final String xml = "<GoodMsg>你好</GoodMsg>";
-		final JSONObject jsonObject = new JSONObject(xml, JSONConfig.of(), entry -> {
-			entry.setKey(StrUtil.toUnderlineCase((CharSequence) entry.getKey()));
-			return true;
-		});
+	void parseTest() {
+		final String jsonStr = " {\"a\": 1} ";
+		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), JSONConfig.of());
+		final JSON parse = jsonParser.parse();
+		Assertions.assertEquals("{\"a\":1}", parse.toString());
+	}
 
-		Assertions.assertEquals("{\"good_msg\":\"你好\"}", jsonObject.toString());
+	@Test
+	void nextToTest() {
+		final String jsonStr = "{\"a\": 1}";
+		JSONParser.of(new JSONTokener(jsonStr), JSONConfig.of()).parseTo(new JSONObject());
 	}
 }
