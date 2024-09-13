@@ -352,6 +352,20 @@ public class HttpConnection {
 	}
 
 	/**
+	 * 设置固定长度流模式，默认为0，表示不设置固定长度流模式，即默认为按需发送数据长度。<br>
+	 * 当发送大文件时，如果每次发送的数据长度不一致，可能造成接收方无法正常接收，此时可以设置固定长度流模式，此时发送的数据长度为contentLength，不足部分用0补齐。
+	 *
+	 * @param contentLength 固定长度
+	 * @return this
+	 */
+	public HttpConnection setFixedLengthStreamingMode(long contentLength){
+		if(contentLength > 0){
+			conn.setFixedLengthStreamingMode(contentLength);
+		}
+		return this;
+	}
+
+	/**
 	 * 采用流方式上传数据，无需本地缓存数据。<br>
 	 * HttpUrlConnection默认是将所有数据读到本地缓存，然后再发送给服务器，这样上传大文件时就会导致内存溢出。
 	 *

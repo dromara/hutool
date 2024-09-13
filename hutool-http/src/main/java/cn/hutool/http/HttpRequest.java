@@ -351,6 +351,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 设置固定长度流模式，默认为0，表示不设置固定长度流模式，即默认为按需发送数据长度。<br>
+	 * 当发送大文件时，如果每次发送的数据长度不一致，可能造成接收方无法正常接收，此时可以设置固定长度流模式，此时发送的数据长度为contentLength，不足部分用0补齐。
+	 *
+	 * @param contentLength 固定长度
+	 * @return this
+	 * @since 5.8.33
+	 */
+	public HttpRequest setFixedLengthStreamingMode(long contentLength){
+		this.httpConnection.setFixedLengthStreamingMode(contentLength);
+		return this;
+	}
+
+	/**
 	 * 设置请求方法
 	 *
 	 * @param method HTTP方法
