@@ -151,11 +151,9 @@ public class TemporalAccessorConverter extends AbstractConverter {
 			instant = formatter.parse(value, Instant::from);
 			zoneId = formatter.getZone();
 		} else {
-			final Date date = DateUtil.parse(value);
+			final DateTime date = DateUtil.parse(value);
 			instant = Objects.requireNonNull(date).toInstant();
-			if(date instanceof DateTime){
-				zoneId = ((DateTime) date).getZoneId();
-			}
+			zoneId = date.getZoneId();
 		}
 		return parseFromInstant(targetClass, instant, zoneId);
 	}

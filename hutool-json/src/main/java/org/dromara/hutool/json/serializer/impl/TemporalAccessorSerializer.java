@@ -16,11 +16,11 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
+import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.JSONSerializer;
@@ -101,6 +101,17 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 
 	@Override
 	public TemporalAccessor deserialize(final JSON json, final Type deserializeType) {
+		// JSONPrimitive
+		if(json instanceof JSONPrimitive){
+			final Object value = ((JSONPrimitive) json).getValue();
+			final TemporalAccessorConverter converter = new TemporalAccessorConverter(
+				Opt.ofNullable(json.config()).map(JSONConfig::getDateFormat).getOrNull());
+			return (TemporalAccessor) converter.convert(deserializeType, value);
+		}
+
+		// TODO JSONArray
+
+		// JSONObject
 		final JSONObject jsonObject = (JSONObject) json;
 		if (LocalDate.class.equals(this.temporalAccessorClass) || LocalDateTime.class.equals(this.temporalAccessorClass)) {
 			// 年

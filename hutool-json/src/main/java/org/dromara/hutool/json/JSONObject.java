@@ -204,8 +204,17 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	@Override
+	public Object get(final Object key) {
+		Object value = super.get(key);
+		if(value instanceof JSONPrimitive){
+			value = ((JSONPrimitive) value).getValue();
+		}
+		return value;
+	}
+
+	@Override
 	public Object getOrDefault(final Object key, final Object defaultValue) {
-		Object value =  super.getOrDefault(key, defaultValue);
+		Object value = super.getOrDefault(key, defaultValue);
 		if(value instanceof JSONPrimitive){
 			value = ((JSONPrimitive) value).getValue();
 		}

@@ -16,27 +16,21 @@
 
 package org.dromara.hutool.json;
 
+import lombok.Data;
 import org.dromara.hutool.core.annotation.Alias;
 import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.test.bean.JSONBean;
-import org.dromara.hutool.json.test.bean.ResultDto;
-import org.dromara.hutool.json.test.bean.Seq;
-import org.dromara.hutool.json.test.bean.TokenAuthResponse;
-import org.dromara.hutool.json.test.bean.TokenAuthWarp2;
-import org.dromara.hutool.json.test.bean.UserA;
-import org.dromara.hutool.json.test.bean.UserB;
-import org.dromara.hutool.json.test.bean.UserWithMap;
+import org.dromara.hutool.json.test.bean.*;
 import org.dromara.hutool.json.test.bean.report.CaseReport;
 import org.dromara.hutool.json.test.bean.report.StepReport;
 import org.dromara.hutool.json.test.bean.report.SuiteReport;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,12 +39,7 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * JSONObject单元测试
@@ -195,7 +184,7 @@ public class JSONObjectTest {
 		final String jsonStr = "{\"a\":\"<div>aaa</div>\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(jsonStr);
-		Assertions.assertEquals("<div>aaa</div>", json.get("a"));
+		Assertions.assertEquals("<div>aaa</div>", json.getObj("a"));
 		Assertions.assertEquals(jsonStr, json.toString());
 	}
 
@@ -752,7 +741,8 @@ public class JSONObjectTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> {
 			if("b".equals(pair.getKey())){
-				pair.setValue(pair.getValue() + "_edit");
+				final JSONPrimitive primitive = (JSONPrimitive) pair.getValue();
+				pair.setValue(primitive.getValue() + "_edit");
 			}
 			return true;
 		});

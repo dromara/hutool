@@ -18,10 +18,7 @@ package org.dromara.hutool.json.mapper;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONArray;
-import org.dromara.hutool.json.JSONConfig;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serializer.JSONStringer;
 import org.dromara.hutool.json.writer.GlobalValueWriters;
 
@@ -91,6 +88,10 @@ public class JSONValueMapper implements Serializable {
 			|| object instanceof CharSequence //
 			|| ObjUtil.isBasicType(object) //
 		) {
+			if(object instanceof JSONPrimitive){
+				return ((JSONPrimitive) object).getValue();
+			}
+
 			return object;
 		}
 

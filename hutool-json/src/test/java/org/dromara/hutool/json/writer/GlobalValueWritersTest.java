@@ -16,10 +16,10 @@
 
 package org.dromara.hutool.json.writer;
 
+import lombok.Data;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONUtil;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

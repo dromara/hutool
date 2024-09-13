@@ -183,14 +183,14 @@ public class JSONParser {
 			tokener.nextColon();
 
 			// 过滤并设置键值对
-			Object value = parse();
+			JSON value = parse();
 			// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 			if (null != predicate) {
-				final MutableEntry<Object, Object> pair = new MutableEntry<>(key, value);
-				if (predicate.test(pair)) {
+				final MutableEntry<Object, Object> entry = new MutableEntry<>(key, value);
+				if (predicate.test(entry)) {
 					// 使用修改后的键值对
-					key = (String) pair.getKey();
-					value = pair.getValue();
+					key = (String) entry.getKey();
+					value = (JSON) entry.getValue();
 					jsonObject.set(key, value);
 				}
 			}else {

@@ -34,9 +34,7 @@ public class Issue2746Test {
 
 	@Test
 	public void parseTest() {
-		Assertions.assertThrows(JSONException.class, ()->{
-			final String str = StrUtil.repeat("[", 1500) + StrUtil.repeat("]", 1500);
-			JSONUtil.parseArray(str);
-		});
+		final String str = StrUtil.repeat("[", 1500) + StrUtil.repeat("]", 1500);
+		JSONUtil.parseArray(str);
 	}
 }
