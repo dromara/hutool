@@ -16,10 +16,10 @@
 
 package org.dromara.hutool.core.lang;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.util.Map;
@@ -35,6 +35,7 @@ public class Assert {
 
 	private static final String TEMPLATE_VALUE_MUST_BE_BETWEEN_AND = "The value must be between {} and {}.";
 
+	// region ----- isTrue and isFalse
 
 	/**
 	 * 断言是否为真，如果为 {@code false} 抛出给定的异常<br>
@@ -135,6 +136,9 @@ public class Assert {
 	public static void isFalse(final boolean expression) throws IllegalArgumentException {
 		isFalse(expression, "[Assertion failed] - this expression must be false");
 	}
+	// endregion
+
+	// region ----- isNull or notNull
 
 	/**
 	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出指定类型异常
@@ -186,8 +190,6 @@ public class Assert {
 		isNull(object, "[Assertion failed] - the object argument must be null");
 	}
 
-	// ----------------------------------------------------------------------------------------------------------- Check not null
-
 	/**
 	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出指定类型异常
 	 * 并使用指定的函数获取错误信息返回
@@ -214,10 +216,10 @@ public class Assert {
 	}
 
 	/**
-	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
-	 * <pre class="code">
-	 * Assert.notNull(clazz, "The class must not be null");
-	 * </pre>
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException}
+	 * <pre>{@code
+	 *   Assert.notNull(clazz, "The class must not be null");
+	 * }</pre>
 	 *
 	 * @param <T>              被检查对象泛型类型
 	 * @param object           被检查对象
@@ -227,14 +229,17 @@ public class Assert {
 	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
 	public static <T> T notNull(final T object, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
-		return notNull(object, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+		if (null == object) {
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
+		}
+		return object;
 	}
 
 	/**
 	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常
-	 * <pre class="code">
-	 * Assert.notNull(clazz);
-	 * </pre>
+	 * <pre>{@code
+	 *   Assert.notNull(clazz);
+	 * }</pre>
 	 *
 	 * @param <T>    被检查对象类型
 	 * @param object 被检查对象
@@ -242,193 +247,14 @@ public class Assert {
 	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
 	public static <T> T notNull(final T object) throws IllegalArgumentException {
-		return notNull(object, "[Assertion failed] - this argument is required; it must not be null");
-	}
-
-	// ----------------------------------------------------------------------------------------------------------- Check empty
-
-	/**
-	 * 检查给定字符串是否为空，为空抛出自定义异常，并使用指定的函数获取错误信息返回。
-	 * <pre class="code">
-	 * Assert.notEmpty(name, ()-&gt;{
-	 *      // to query relation message
-	 *      return new IllegalArgumentException("relation message to return");
-	 *  });
-	 * </pre>
-	 *
-	 * @param <X>           异常类型
-	 * @param <T>           字符串类型
-	 * @param text          被检查字符串
-	 * @param errorSupplier 错误抛出异常附带的消息生产接口
-	 * @return 非空字符串
-	 * @throws X 被检查字符串为空抛出此异常
-	 * @see StrUtil#isNotEmpty(CharSequence)
-	 * @since 5.4.5
-	 */
-	public static <T extends CharSequence, X extends Throwable> T notEmpty(final T text, final Supplier<X> errorSupplier) throws X {
-		if (StrUtil.isEmpty(text)) {
-			throw errorSupplier.get();
+		if (null == object) {
+			throw new IllegalArgumentException("[Assertion failed] - this argument is required; it must not be null");
 		}
-		return text;
+		return object;
 	}
+	// endregion
 
-	/**
-	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
-	 *
-	 * <pre class="code">
-	 * Assert.notEmpty(name, "Name must not be empty");
-	 * </pre>
-	 *
-	 * @param <T>              字符串类型
-	 * @param text             被检查字符串
-	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
-	 * @param params           参数
-	 * @return 非空字符串
-	 * @throws IllegalArgumentException 被检查字符串为空
-	 * @see StrUtil#isNotEmpty(CharSequence)
-	 */
-	public static <T extends CharSequence> T notEmpty(final T text, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
-		return notEmpty(text, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
-	}
-
-	/**
-	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
-	 *
-	 * <pre class="code">
-	 * Assert.notEmpty(name);
-	 * </pre>
-	 *
-	 * @param <T>  字符串类型
-	 * @param text 被检查字符串
-	 * @return 被检查的字符串
-	 * @throws IllegalArgumentException 被检查字符串为空
-	 * @see StrUtil#isNotEmpty(CharSequence)
-	 */
-	public static <T extends CharSequence> T notEmpty(final T text) throws IllegalArgumentException {
-		return notEmpty(text, "[Assertion failed] - this String argument must have length; it must not be null or empty");
-	}
-
-	/**
-	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出自定义异常。
-	 * 并使用指定的函数获取错误信息返回
-	 * <pre class="code">
-	 * Assert.notBlank(name, ()-&gt;{
-	 *      // to query relation message
-	 *      return new IllegalArgumentException("relation message to return");
-	 *  });
-	 * </pre>
-	 *
-	 * @param <X>              异常类型
-	 * @param <T>              字符串类型
-	 * @param text             被检查字符串
-	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
-	 * @return 非空字符串
-	 * @throws X 被检查字符串为空白
-	 * @see StrUtil#isNotBlank(CharSequence)
-	 */
-	public static <T extends CharSequence, X extends Throwable> T notBlank(final T text, final Supplier<X> errorMsgSupplier) throws X {
-		if (StrUtil.isBlank(text)) {
-			throw errorMsgSupplier.get();
-		}
-		return text;
-	}
-
-	/**
-	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
-	 *
-	 * <pre class="code">
-	 * Assert.notBlank(name, "Name must not be blank");
-	 * </pre>
-	 *
-	 * @param <T>              字符串类型
-	 * @param text             被检查字符串
-	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
-	 * @param params           参数
-	 * @return 非空字符串
-	 * @throws IllegalArgumentException 被检查字符串为空白
-	 * @see StrUtil#isNotBlank(CharSequence)
-	 */
-	public static <T extends CharSequence> T notBlank(final T text, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
-		return notBlank(text, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
-	}
-
-	/**
-	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
-	 *
-	 * <pre class="code">
-	 * Assert.notBlank(name);
-	 * </pre>
-	 *
-	 * @param <T>  字符串类型
-	 * @param text 被检查字符串
-	 * @return 非空字符串
-	 * @throws IllegalArgumentException 被检查字符串为空白
-	 * @see StrUtil#isNotBlank(CharSequence)
-	 */
-	public static <T extends CharSequence> T notBlank(final T text) throws IllegalArgumentException {
-		return notBlank(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
-	}
-
-	/**
-	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串），并使用指定的函数获取错误信息返回<br>
-	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
-	 * <pre class="code">
-	 * Assert.notContain(name, "rod", ()-&gt;{
-	 *      // to query relation message
-	 *      return new IllegalArgumentException("relation message to return ");
-	 *  });
-	 * </pre>
-	 *
-	 * @param <T>           字符串类型
-	 * @param <X>           异常类型
-	 * @param textToSearch  被搜索的字符串
-	 * @param substring     被检查的子串
-	 * @param errorSupplier 错误抛出异常附带的消息生产接口
-	 * @return 被检查的子串
-	 * @throws X 非子串抛出异常
-	 * @see StrUtil#contains(CharSequence, CharSequence)
-	 * @since 5.4.5
-	 */
-	public static <T extends CharSequence, X extends Throwable> T notContain(final CharSequence textToSearch, final T substring, final Supplier<X> errorSupplier) throws X {
-		if (StrUtil.contains(textToSearch, substring)) {
-			throw errorSupplier.get();
-		}
-		return substring;
-	}
-
-	/**
-	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）<br>
-	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
-	 * <pre class="code">
-	 * Assert.notContain(name, "rod", "Name must not contain 'rod'");
-	 * </pre>
-	 *
-	 * @param textToSearch     被搜索的字符串
-	 * @param subString        被检查的子串
-	 * @param errorMsgTemplate 异常时的消息模板
-	 * @param params           参数列表
-	 * @return 被检查的子串
-	 * @throws IllegalArgumentException 非子串抛出异常
-	 */
-	public static String notContain(final String textToSearch, final String subString, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
-		return notContain(textToSearch, subString, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
-	}
-
-	/**
-	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串），即subString是否不是textToSearch的子串。<br>
-	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
-	 * <pre class="code">
-	 * Assert.notContain(name, "rod");
-	 * </pre>
-	 *
-	 * @param textToSearch 被搜索的字符串
-	 * @param subString    被检查的子串
-	 * @return 被检查的子串
-	 * @throws IllegalArgumentException 非子串抛出异常
-	 */
-	public static String notContain(final String textToSearch, final String subString) throws IllegalArgumentException {
-		return notContain(textToSearch, subString, "[Assertion failed] - this String argument must not contain the substring [{}]", subString);
-	}
+	// region ----- notEmpty and notBlank
 
 	/**
 	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
@@ -486,64 +312,6 @@ public class Assert {
 	 */
 	public static <T> T[] notEmpty(final T[] array) throws IllegalArgumentException {
 		return notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
-	}
-
-	/**
-	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
-	 * 并使用指定的函数获取错误信息返回
-	 * <pre class="code">
-	 * Assert.noNullElements(array, ()-&gt;{
-	 *      // to query relation message
-	 *      return new IllegalArgumentException("relation message to return ");
-	 *  });
-	 * </pre>
-	 *
-	 * @param <T>           数组元素类型
-	 * @param <X>           异常类型
-	 * @param array         被检查的数组
-	 * @param errorSupplier 错误抛出异常附带的消息生产接口
-	 * @return 被检查的数组
-	 * @throws X if the object array contains a {@code null} element
-	 * @see ArrayUtil#hasNull(Object[])
-	 * @since 5.4.5
-	 */
-	public static <T, X extends Throwable> T[] noNullElements(final T[] array, final Supplier<X> errorSupplier) throws X {
-		if (ArrayUtil.hasNull(array)) {
-			throw errorSupplier.get();
-		}
-		return array;
-	}
-
-	/**
-	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
-	 * <pre class="code">
-	 * Assert.noNullElements(array, "The array must not have null elements");
-	 * </pre>
-	 *
-	 * @param <T>              数组元素类型
-	 * @param array            被检查的数组
-	 * @param errorMsgTemplate 异常时的消息模板
-	 * @param params           参数列表
-	 * @return 被检查的数组
-	 * @throws IllegalArgumentException if the object array contains a {@code null} element
-	 */
-	public static <T> T[] noNullElements(final T[] array, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
-		return noNullElements(array, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
-	}
-
-	/**
-	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
-	 * <pre class="code">
-	 * Assert.noNullElements(array);
-	 * </pre>
-	 *
-	 * @param <T>   数组元素类型
-	 * @param array 被检查的数组
-	 * @return 被检查的数组
-	 * @throws IllegalArgumentException if the object array contains a {@code null} element
-	 */
-	public static <T> T[] noNullElements(final T[] array) throws IllegalArgumentException {
-		return noNullElements(array, "[Assertion failed] - this array must not contain any null elements");
 	}
 
 	/**
@@ -672,6 +440,255 @@ public class Assert {
 	}
 
 	/**
+	 * 检查给定字符串是否为空，为空抛出自定义异常，并使用指定的函数获取错误信息返回。
+	 * <pre class="code">
+	 * Assert.notEmpty(name, ()-&gt;{
+	 *      // to query relation message
+	 *      return new IllegalArgumentException("relation message to return");
+	 *  });
+	 * </pre>
+	 *
+	 * @param <X>           异常类型
+	 * @param <T>           字符串类型
+	 * @param text          被检查字符串
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @return 非空字符串
+	 * @throws X 被检查字符串为空抛出此异常
+	 * @see StrUtil#isNotEmpty(CharSequence)
+	 * @since 5.4.5
+	 */
+	public static <T extends CharSequence, X extends Throwable> T notEmpty(final T text, final Supplier<X> errorSupplier) throws X {
+		if (StrUtil.isEmpty(text)) {
+			throw errorSupplier.get();
+		}
+		return text;
+	}
+
+	/**
+	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
+	 *
+	 * <pre class="code">
+	 * Assert.notEmpty(name, "Name must not be empty");
+	 * </pre>
+	 *
+	 * @param <T>              字符串类型
+	 * @param text             被检查字符串
+	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
+	 * @param params           参数
+	 * @return 非空字符串
+	 * @throws IllegalArgumentException 被检查字符串为空
+	 * @see StrUtil#isNotEmpty(CharSequence)
+	 */
+	public static <T extends CharSequence> T notEmpty(final T text, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
+		return notEmpty(text, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	}
+
+	/**
+	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
+	 *
+	 * <pre class="code">
+	 * Assert.notEmpty(name);
+	 * </pre>
+	 *
+	 * @param <T>  字符串类型
+	 * @param text 被检查字符串
+	 * @return 被检查的字符串
+	 * @throws IllegalArgumentException 被检查字符串为空
+	 * @see StrUtil#isNotEmpty(CharSequence)
+	 */
+	public static <T extends CharSequence> T notEmpty(final T text) throws IllegalArgumentException {
+		return notEmpty(text, "[Assertion failed] - this String argument must have length; it must not be null or empty");
+	}
+
+	/**
+	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出自定义异常。
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.notBlank(name, ()-&gt;{
+	 *      // to query relation message
+	 *      return new IllegalArgumentException("relation message to return");
+	 *  });
+	 * </pre>
+	 *
+	 * @param <X>              异常类型
+	 * @param <T>              字符串类型
+	 * @param text             被检查字符串
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 非空字符串
+	 * @throws X 被检查字符串为空白
+	 * @see StrUtil#isNotBlank(CharSequence)
+	 */
+	public static <T extends CharSequence, X extends Throwable> T notBlank(final T text, final Supplier<X> errorMsgSupplier) throws X {
+		if (StrUtil.isBlank(text)) {
+			throw errorMsgSupplier.get();
+		}
+		return text;
+	}
+
+	/**
+	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
+	 *
+	 * <pre class="code">
+	 * Assert.notBlank(name, "Name must not be blank");
+	 * </pre>
+	 *
+	 * @param <T>              字符串类型
+	 * @param text             被检查字符串
+	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
+	 * @param params           参数
+	 * @return 非空字符串
+	 * @throws IllegalArgumentException 被检查字符串为空白
+	 * @see StrUtil#isNotBlank(CharSequence)
+	 */
+	public static <T extends CharSequence> T notBlank(final T text, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
+		return notBlank(text, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	}
+
+	/**
+	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
+	 *
+	 * <pre class="code">
+	 * Assert.notBlank(name);
+	 * </pre>
+	 *
+	 * @param <T>  字符串类型
+	 * @param text 被检查字符串
+	 * @return 非空字符串
+	 * @throws IllegalArgumentException 被检查字符串为空白
+	 * @see StrUtil#isNotBlank(CharSequence)
+	 */
+	public static <T extends CharSequence> T notBlank(final T text) throws IllegalArgumentException {
+		return notBlank(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
+	}
+	// endregion
+
+	// region ----- notContain
+	/**
+	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串），并使用指定的函数获取错误信息返回<br>
+	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
+	 * <pre class="code">
+	 * Assert.notContain(name, "rod", ()-&gt;{
+	 *      // to query relation message
+	 *      return new IllegalArgumentException("relation message to return ");
+	 *  });
+	 * </pre>
+	 *
+	 * @param <T>           字符串类型
+	 * @param <X>           异常类型
+	 * @param textToSearch  被搜索的字符串
+	 * @param substring     被检查的子串
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @return 被检查的子串
+	 * @throws X 非子串抛出异常
+	 * @see StrUtil#contains(CharSequence, CharSequence)
+	 * @since 5.4.5
+	 */
+	public static <T extends CharSequence, X extends Throwable> T notContain(final CharSequence textToSearch, final T substring, final Supplier<X> errorSupplier) throws X {
+		if (StrUtil.contains(textToSearch, substring)) {
+			throw errorSupplier.get();
+		}
+		return substring;
+	}
+
+	/**
+	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）<br>
+	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
+	 * <pre class="code">
+	 * Assert.notContain(name, "rod", "Name must not contain 'rod'");
+	 * </pre>
+	 *
+	 * @param textToSearch     被搜索的字符串
+	 * @param subString        被检查的子串
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params           参数列表
+	 * @return 被检查的子串
+	 * @throws IllegalArgumentException 非子串抛出异常
+	 */
+	public static String notContain(final String textToSearch, final String subString, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
+		return notContain(textToSearch, subString, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	}
+
+	/**
+	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串），即subString是否不是textToSearch的子串。<br>
+	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
+	 * <pre class="code">
+	 * Assert.notContain(name, "rod");
+	 * </pre>
+	 *
+	 * @param textToSearch 被搜索的字符串
+	 * @param subString    被检查的子串
+	 * @return 被检查的子串
+	 * @throws IllegalArgumentException 非子串抛出异常
+	 */
+	public static String notContain(final String textToSearch, final String subString) throws IllegalArgumentException {
+		return notContain(textToSearch, subString, "[Assertion failed] - this String argument must not contain the substring [{}]", subString);
+	}
+	// endregion
+
+	// region ----- noNullElements
+
+	/**
+	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.noNullElements(array, ()-&gt;{
+	 *      // to query relation message
+	 *      return new IllegalArgumentException("relation message to return ");
+	 *  });
+	 * </pre>
+	 *
+	 * @param <T>           数组元素类型
+	 * @param <X>           异常类型
+	 * @param array         被检查的数组
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @return 被检查的数组
+	 * @throws X if the object array contains a {@code null} element
+	 * @see ArrayUtil#hasNull(Object[])
+	 * @since 5.4.5
+	 */
+	public static <T, X extends Throwable> T[] noNullElements(final T[] array, final Supplier<X> errorSupplier) throws X {
+		if (ArrayUtil.hasNull(array)) {
+			throw errorSupplier.get();
+		}
+		return array;
+	}
+
+	/**
+	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
+	 * <pre class="code">
+	 * Assert.noNullElements(array, "The array must not have null elements");
+	 * </pre>
+	 *
+	 * @param <T>              数组元素类型
+	 * @param array            被检查的数组
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params           参数列表
+	 * @return 被检查的数组
+	 * @throws IllegalArgumentException if the object array contains a {@code null} element
+	 */
+	public static <T> T[] noNullElements(final T[] array, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
+		return noNullElements(array, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	}
+
+	/**
+	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
+	 * <pre class="code">
+	 * Assert.noNullElements(array);
+	 * </pre>
+	 *
+	 * @param <T>   数组元素类型
+	 * @param array 被检查的数组
+	 * @return 被检查的数组
+	 * @throws IllegalArgumentException if the object array contains a {@code null} element
+	 */
+	public static <T> T[] noNullElements(final T[] array) throws IllegalArgumentException {
+		return noNullElements(array, "[Assertion failed] - this array must not contain any null elements");
+	}
+	// endregion
+
+	// region ----- isInstanceOf and isAssignable
+
+	/**
 	 * 断言给定对象是否是给定类的实例
 	 * <pre class="code">
 	 * Assert.instanceOf(Foo.class, foo);
@@ -743,6 +760,9 @@ public class Assert {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
+	// endregion
+
+	// region ----- state
 
 	/**
 	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
@@ -793,7 +813,9 @@ public class Assert {
 	public static void state(final boolean expression) throws IllegalStateException {
 		state(expression, "[Assertion failed] - this state invariant must be true");
 	}
+	// endregion
 
+	// region ----- checkIndex
 	/**
 	 * 检查下标（数组、集合、字符串）是否符合要求，下标必须满足：
 	 *
@@ -834,6 +856,9 @@ public class Assert {
 		}
 		return index;
 	}
+	// endregion
+
+	// region ----- checkBetween
 
 	/**
 	 * 检查值是否在指定范围内
@@ -1001,6 +1026,10 @@ public class Assert {
 		return value;
 	}
 
+	// endregion
+
+	// region ----- equals and notEquals
+
 	/**
 	 * 断言两个对象是否不相等,如果两个对象相等 抛出IllegalArgumentException 异常
 	 * <pre class="code">
@@ -1045,7 +1074,6 @@ public class Assert {
 			throw errorSupplier.get();
 		}
 	}
-	// ----------------------------------------------------------------------------------------------------------- Check not equals
 
 	/**
 	 * 断言两个对象是否相等,如果两个对象不相等 抛出IllegalArgumentException 异常
@@ -1091,8 +1119,7 @@ public class Assert {
 			throw errorSupplier.get();
 		}
 	}
-
-	// ----------------------------------------------------------------------------------------------------------- Check is equals
+	// endregion
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------- Private method start
 

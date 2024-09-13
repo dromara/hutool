@@ -30,6 +30,7 @@ import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;
 import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.ConvertUtil;
+import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.func.SerConsumer3;
@@ -401,7 +402,7 @@ public class CollUtil {
 	 * @return 单差集
 	 */
 	public static <T> Collection<T> subtract(final Collection<T> coll1, final Collection<T> coll2) {
-		if(isEmpty(coll1) || isEmpty(coll2)){
+		if (isEmpty(coll1) || isEmpty(coll2)) {
 			return coll1;
 		}
 
@@ -530,7 +531,7 @@ public class CollUtil {
 		}
 
 		// Set直接判定
-		if(coll1 instanceof Set){
+		if (coll1 instanceof Set) {
 			return coll1.containsAll(coll2);
 		}
 
@@ -1571,8 +1572,24 @@ public class CollUtil {
 	 * @param elementType 元素类型，为空时，使用Object类型来接纳所有类型
 	 * @return 被加入集合
 	 */
+	public static <T> Collection<T> addAll(final Collection<T> collection, final Object value, final Type elementType) {
+		return addAll(collection, value, elementType, null);
+	}
+
+	/**
+	 * 将指定对象全部加入到集合中<br>
+	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
+	 * 如果为String，支持类似于[1,2,3,4] 或者 1,2,3,4 这种格式
+	 *
+	 * @param <T>         元素类型
+	 * @param collection  被加入的集合
+	 * @param value       对象，可能为Iterator、Iterable、Enumeration、Array，或者与集合元素类型一致
+	 * @param elementType 元素类型，为空时，使用Object类型来接纳所有类型
+	 * @param converter   自定义元素类型转换器，{@code null}表示使用默认转换器
+	 * @return 被加入集合
+	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> Collection<T> addAll(final Collection<T> collection, final Object value, Type elementType) {
+	public static <T> Collection<T> addAll(final Collection<T> collection, final Object value, Type elementType, final Converter converter) {
 		if (null == collection || null == value) {
 			return collection;
 		}
@@ -1595,7 +1612,7 @@ public class CollUtil {
 			iter = IterUtil.getIter(value);
 		}
 
-		final CompositeConverter convert = CompositeConverter.getInstance();
+		final Converter convert = ObjUtil.defaultIfNull(converter, CompositeConverter::getInstance);
 		while (iter.hasNext()) {
 			collection.add((T) convert.convert(elementType, iter.next()));
 		}
@@ -2316,12 +2333,12 @@ public class CollUtil {
 	 * </ul>
 	 *
 	 * @param subCollection 第一个Iterable对象，即子集合。
-	 * @param collection 第二个Iterable对象，可以为任何实现了Iterable接口的集合。
+	 * @param collection    第二个Iterable对象，可以为任何实现了Iterable接口的集合。
 	 * @return 如果subCollection是collection的子集合，则返回true；否则返回false。
 	 * @since 6.0.0
 	 */
 	public static boolean isSub(final Collection<?> subCollection, final Collection<?> collection) {
-		if(size(subCollection) > size(collection)){
+		if (size(subCollection) > size(collection)) {
 			return false;
 		}
 		return IterUtil.isSub(subCollection, collection);
@@ -2354,13 +2371,13 @@ public class CollUtil {
 	 *     <li>如果不忽略顺序，两个{@link Iterable}所有具有相同下标的元素皆满足{@link Objects#equals(Object, Object)}；</li>
 	 * </ul>
 	 *
-	 * @param coll1 集合1
-	 * @param coll2 集合2
+	 * @param coll1       集合1
+	 * @param coll2       集合2
 	 * @param ignoreOrder 是否忽略顺序
 	 * @return 是否相同
 	 */
 	public static boolean equals(final Collection<?> coll1, final Collection<?> coll2, final boolean ignoreOrder) {
-		if(size(coll1) != size(coll2)){
+		if (size(coll1) != size(coll2)) {
 			return false;
 		}
 

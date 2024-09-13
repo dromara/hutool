@@ -193,7 +193,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void toListWithErrorTest() {
-		Assertions.assertThrows(ConvertException.class, ()->{
+		Assertions.assertThrows(JSONException.class, ()->{
 			final String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
 			final JSONArray ja = JSONUtil.parseArray(json);
 

@@ -54,27 +54,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author looly
  * @since 6.0.0
  */
-public class RegisterConverter implements Converter, Serializable {
+public class RegisterConverter extends ConverterWithRoot implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 类级的内部类，也就是静态的成员式内部类，该内部类的实例与外部类的实例 没有绑定关系，而且只有被调用到才会装载，从而实现了延迟加载
-	 */
-	private static class SingletonHolder {
-		/**
-		 * 静态初始化器，由JVM来保证线程安全
-		 */
-		private static final RegisterConverter INSTANCE = new RegisterConverter();
-	}
-
-	/**
-	 * 获得单例的 RegisterConverter
-	 *
-	 * @return RegisterConverter
-	 */
-	public static RegisterConverter getInstance() {
-		return RegisterConverter.SingletonHolder.INSTANCE;
-	}
 
 	/**
 	 * 用户自定义类型转换器，存储自定义匹配规则的一类对象的转换器
@@ -88,13 +69,16 @@ public class RegisterConverter implements Converter, Serializable {
 	/**
 	 * 默认类型转换器
 	 */
-	private Map<Class<?>, Converter> defaultConverterMap;
+	private final Map<Class<?>, Converter> defaultConverterMap;
 
 	/**
 	 * 构造
+	 *
+	 * @param rootConverter 根转换器，用于子转换器转换
 	 */
-	public RegisterConverter() {
-		registerDefault();
+	public RegisterConverter(final Converter rootConverter) {
+		super(rootConverter);
+		this.defaultConverterMap = initDefault(rootConverter);
 	}
 
 	@Override
@@ -121,7 +105,7 @@ public class RegisterConverter implements Converter, Serializable {
 		Converter converter;
 		if (isCustomFirst) {
 			converter = this.getCustomConverter(type, value);
-			if(null == converter){
+			if (null == converter) {
 				converter = this.getCustomConverter(type);
 			}
 			if (null == converter) {
@@ -132,7 +116,7 @@ public class RegisterConverter implements Converter, Serializable {
 			if (null == converter) {
 				converter = this.getCustomConverter(type, value);
 			}
-			if(null == converter){
+			if (null == converter) {
 				converter = this.getCustomConverter(type);
 			}
 		}
@@ -179,7 +163,7 @@ public class RegisterConverter implements Converter, Serializable {
 	 *
 	 * @param type      转换的目标类型
 	 * @param converter 转换器
-	 * @return ConverterRegistry
+	 * @return this
 	 */
 	public RegisterConverter register(final Type type, final Converter converter) {
 		if (null == customConverterMap) {
@@ -197,7 +181,7 @@ public class RegisterConverter implements Converter, Serializable {
 	 * 登记自定义转换器，符合{@link MatcherConverter#match(Type, Class, Object)}则使用其转换器
 	 *
 	 * @param converter 转换器
-	 * @return ConverterRegistry
+	 * @return this
 	 */
 	public RegisterConverter register(final MatcherConverter converter) {
 		if (null == this.converterSet) {
@@ -212,65 +196,68 @@ public class RegisterConverter implements Converter, Serializable {
 	}
 
 	/**
-	 * 注册默认转换器
+	 * 初始化默认转换器
+	 *
+	 * @return 默认转换器
 	 */
-	private void registerDefault() {
-		final Map<Class<?>, Converter> defaultConverterMap = new SafeConcurrentHashMap<>(64);
+	private static Map<Class<?>, Converter> initDefault(final Converter rootConverter) {
+		final Map<Class<?>, Converter> converterMap = new SafeConcurrentHashMap<>(64);
 
 		// 包装类转换器
-		defaultConverterMap.put(Character.class, CharacterConverter.INSTANCE);
-		defaultConverterMap.put(Boolean.class, BooleanConverter.INSTANCE);
-		defaultConverterMap.put(AtomicBoolean.class, AtomicBooleanConverter.INSTANCE);// since 3.0.8
+		converterMap.put(Character.class, CharacterConverter.INSTANCE);
+		converterMap.put(Boolean.class, BooleanConverter.INSTANCE);
+		converterMap.put(AtomicBoolean.class, AtomicBooleanConverter.INSTANCE);// since 3.0.8
 		final StringConverter stringConverter = new StringConverter();
-		defaultConverterMap.put(CharSequence.class, stringConverter);
-		defaultConverterMap.put(String.class, stringConverter);
+		converterMap.put(CharSequence.class, stringConverter);
+		converterMap.put(String.class, stringConverter);
 
 		// URI and URL
-		defaultConverterMap.put(URI.class, new URIConverter());
-		defaultConverterMap.put(URL.class, new URLConverter());
+		converterMap.put(URI.class, new URIConverter());
+		converterMap.put(URL.class, new URLConverter());
 
 		// 日期时间
-		defaultConverterMap.put(Calendar.class, new CalendarConverter());
-		defaultConverterMap.put(XMLGregorianCalendar.class, new XMLGregorianCalendarConverter());
+		converterMap.put(Calendar.class, new CalendarConverter());
+		converterMap.put(XMLGregorianCalendar.class, new XMLGregorianCalendarConverter());
 
 		// 日期时间 JDK8+(since 5.0.0)
-		defaultConverterMap.put(TemporalAccessor.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(Instant.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(LocalDateTime.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(LocalDate.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(LocalTime.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(ZonedDateTime.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(OffsetDateTime.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(OffsetTime.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(DayOfWeek.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(Month.class, TemporalAccessorConverter.INSTANCE);
-		defaultConverterMap.put(MonthDay.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(TemporalAccessor.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(Instant.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(LocalDateTime.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(LocalDate.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(LocalTime.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(ZonedDateTime.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(OffsetDateTime.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(OffsetTime.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(DayOfWeek.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(Month.class, TemporalAccessorConverter.INSTANCE);
+		converterMap.put(MonthDay.class, TemporalAccessorConverter.INSTANCE);
 
-		defaultConverterMap.put(Period.class, new PeriodConverter());
-		defaultConverterMap.put(Duration.class, new DurationConverter());
+		converterMap.put(Period.class, new PeriodConverter());
+		converterMap.put(Duration.class, new DurationConverter());
 
 		// Reference
-		defaultConverterMap.put(WeakReference.class, ReferenceConverter.INSTANCE);// since 3.0.8
-		defaultConverterMap.put(SoftReference.class, ReferenceConverter.INSTANCE);// since 3.0.8
-		defaultConverterMap.put(AtomicReference.class, new AtomicReferenceConverter());// since 3.0.8
+		final ReferenceConverter referenceConverter = new ReferenceConverter(rootConverter);
+		converterMap.put(WeakReference.class, referenceConverter);// since 3.0.8
+		converterMap.put(SoftReference.class, referenceConverter);// since 3.0.8
+		converterMap.put(AtomicReference.class, new AtomicReferenceConverter(rootConverter));// since 3.0.8
 
 		//AtomicXXXArray，since 5.4.5
-		defaultConverterMap.put(AtomicIntegerArray.class, new AtomicIntegerArrayConverter());
-		defaultConverterMap.put(AtomicLongArray.class, new AtomicLongArrayConverter());
+		converterMap.put(AtomicIntegerArray.class, new AtomicIntegerArrayConverter());
+		converterMap.put(AtomicLongArray.class, new AtomicLongArrayConverter());
 
 		// 其它类型
-		defaultConverterMap.put(Locale.class, new LocaleConverter());
-		defaultConverterMap.put(Charset.class, new CharsetConverter());
-		defaultConverterMap.put(Path.class, new PathConverter());
-		defaultConverterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
-		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
-		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
-		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
-		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
-		defaultConverterMap.put(Pair.class, PairConverter.INSTANCE);// since 6.0.0
-		defaultConverterMap.put(Triple.class, TripleConverter.INSTANCE);// since 6.0.0
-		defaultConverterMap.put(Tuple.class, TupleConverter.INSTANCE);// since 6.0.0
+		converterMap.put(Locale.class, new LocaleConverter());
+		converterMap.put(Charset.class, new CharsetConverter());
+		converterMap.put(Path.class, new PathConverter());
+		converterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
+		converterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
+		converterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
+		converterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
+		converterMap.put(Opt.class, new OptConverter());// since 5.7.16
+		converterMap.put(Pair.class, new PairConverter(rootConverter));// since 6.0.0
+		converterMap.put(Triple.class, new TripleConverter(rootConverter));// since 6.0.0
+		converterMap.put(Tuple.class, TupleConverter.INSTANCE);// since 6.0.0
 
-		this.defaultConverterMap = defaultConverterMap;
+		return converterMap;
 	}
 }

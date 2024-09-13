@@ -29,6 +29,7 @@ import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
@@ -59,13 +60,6 @@ public class JSONConverter implements Converter, Serializable {
 	 */
 	public static final JSONConverter INSTANCE = new JSONConverter(null);
 
-	static {
-		final RegisterConverter converter = RegisterConverter.getInstance();
-		converter.register(JSONObject.class, INSTANCE);
-		converter.register(JSONArray.class, INSTANCE);
-		converter.register(JSONPrimitive.class, INSTANCE);
-	}
-
 	/**
 	 * 创建JSON转换器
 	 *
@@ -73,17 +67,25 @@ public class JSONConverter implements Converter, Serializable {
 	 * @return JSONConverter
 	 */
 	public static JSONConverter of(final JSONConfig config) {
-		return new JSONConverter(config);
+		final JSONConverter jsonConverter = new JSONConverter(config);
+		jsonConverter.registerConverter = new RegisterConverter(jsonConverter)
+			.register(JSONObject.class, INSTANCE)
+			.register(JSONArray.class, INSTANCE)
+			.register(JSONPrimitive.class, INSTANCE);
+		jsonConverter.specialConverter = new SpecialConverter(jsonConverter);
+		return jsonConverter;
 	}
 
 	private final JSONConfig config;
+	private RegisterConverter registerConverter;
+	private SpecialConverter specialConverter;
 
 	/**
 	 * 构造
 	 *
 	 * @param config JSON配置
 	 */
-	public JSONConverter(final JSONConfig config) {
+	private JSONConverter(final JSONConfig config) {
 		this.config = config;
 	}
 
@@ -150,7 +152,7 @@ public class JSONConverter implements Converter, Serializable {
 			obj = ((Opt<?>) obj).getOrNull();
 		}
 
-		if(obj instanceof JSON){
+		if (obj instanceof JSON) {
 			return (JSON) obj;
 		}
 
@@ -242,33 +244,41 @@ public class JSONConverter implements Converter, Serializable {
 
 		final Object value;
 		// JSON原始类型
-		if(json instanceof JSONPrimitive){
+		if (json instanceof JSONPrimitive) {
 			value = ((JSONPrimitive) json).getValue();
 		} else {
 			value = json;
 		}
 
-		// 标准转换器
-		final Converter converter = RegisterConverter.getInstance().getConverter(targetType, value, true);
-		if (null != converter) {
-			return (T) converter.convert(targetType, value);
-		}
+		final JSONConfig config = ObjUtil.defaultIfNull(json.config(), JSONConfig::of);
+		final boolean ignoreError = config.isIgnoreError();
+		try {
+			// 标准转换器
+			final Converter converter = registerConverter.getConverter(targetType, value, true);
+			if (null != converter) {
+				return (T) converter.convert(targetType, value);
+			}
 
-		// 特殊类型转换，包括Collection、Map、强转、Array等
-		final T result = (T) SpecialConverter.getInstance().convert(targetType, rawType, value);
-		if (null != result) {
-			return result;
+			// 特殊类型转换，包括Collection、Map、强转、Array等
+			final T result = (T) specialConverter.convert(targetType, rawType, value);
+			if (null != result) {
+				return result;
+			}
+		} catch (final ConvertException e) {
+			if (ignoreError) {
+				return null;
+			}
 		}
 
 		// 尝试转Bean
 		if (BeanUtil.isWritableBean(rawType)) {
 			return BeanCopier.of(value,
 				ConstructorUtil.newInstanceIfPossible(rawType), targetType,
-				InternalJSONUtil.toCopyOptions(json.config())).copy();
+				InternalJSONUtil.toCopyOptions(config)).copy();
 		}
 
 		// 跳过异常时返回null
-		if (json.config().isIgnoreError()) {
+		if (ignoreError) {
 			return null;
 		}
 

@@ -17,9 +17,9 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.convert.ConverterWithRoot;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
@@ -27,6 +27,7 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
 
@@ -41,12 +42,17 @@ import java.util.Map;
  *
  * @author looly
  */
-public class PairConverter implements Converter {
+public class PairConverter extends ConverterWithRoot implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 单例
+	 * 构造
+	 *
+	 * @param rootConverter 根转换器，用于转换Pair中的值
 	 */
-	public static final PairConverter INSTANCE = new PairConverter();
+	public PairConverter(final Converter rootConverter) {
+		super(rootConverter);
+	}
 
 	@Override
 	public Object convert(Type targetType, final Object value) throws ConvertException {
@@ -122,7 +128,7 @@ public class PairConverter implements Converter {
 	 * @return Pair
 	 */
 	@SuppressWarnings("rawtypes")
-	private static Pair<?, ?> mapToPair(final Type keyType, final Type valueType, final Map map) {
+	private Pair<?, ?> mapToPair(final Type keyType, final Type valueType, final Map map) {
 
 		final Object left;
 		final Object right;
@@ -136,10 +142,9 @@ public class PairConverter implements Converter {
 			right = map.get("right");
 		}
 
-		final CompositeConverter convert = CompositeConverter.getInstance();
 		return Pair.of(
-			TypeUtil.isUnknown(keyType) ? left : convert.convert(keyType, left),
-			TypeUtil.isUnknown(valueType) ? right : convert.convert(valueType, right)
+			TypeUtil.isUnknown(keyType) ? left : rootConverter.convert(keyType, left),
+			TypeUtil.isUnknown(valueType) ? right : rootConverter.convert(valueType, right)
 		);
 	}
 }

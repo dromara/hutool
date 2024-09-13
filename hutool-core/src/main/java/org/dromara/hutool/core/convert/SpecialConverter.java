@@ -17,6 +17,7 @@
 package org.dromara.hutool.core.convert;
 
 import org.dromara.hutool.core.convert.impl.*;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.stream.StreamUtil;
 
@@ -33,27 +34,8 @@ import java.util.Set;
  * @author Looly
  * @since 6.0.0
  */
-public class SpecialConverter implements Converter, Serializable {
+public class SpecialConverter extends ConverterWithRoot implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 类级的内部类，也就是静态的成员式内部类，该内部类的实例与外部类的实例 没有绑定关系，而且只有被调用到才会装载，从而实现了延迟加载
-	 */
-	private static class SingletonHolder {
-		/**
-		 * 静态初始化器，由JVM来保证线程安全
-		 */
-		private static final SpecialConverter INSTANCE = new SpecialConverter();
-	}
-
-	/**
-	 * 获得单例的 CustomConverter
-	 *
-	 * @return CustomConverter
-	 */
-	public static SpecialConverter getInstance() {
-		return SpecialConverter.SingletonHolder.INSTANCE;
-	}
 
 	/**
 	 * 类型转换器集合<br>
@@ -63,42 +45,12 @@ public class SpecialConverter implements Converter, Serializable {
 
 	/**
 	 * 构造
+	 *
+	 * @param rootConverter 父转换器
 	 */
-	private SpecialConverter() {
-		final Set<MatcherConverter> converterSet = new LinkedHashSet<>(64);
-
-		// 集合转换（含有泛型参数，不可以默认强转）
-		converterSet.add(CollectionConverter.INSTANCE);
-		// Map类型（含有泛型参数，不可以默认强转）
-		converterSet.add(MapConverter.INSTANCE);
-		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
-		converterSet.add(EntryConverter.INSTANCE);
-		// 默认强转
-		converterSet.add(CastConverter.INSTANCE);
-		// 日期、java.sql中的日期以及自定义日期统一处理
-		converterSet.add(DateConverter.INSTANCE);
-		// 原始类型转换
-		converterSet.add(PrimitiveConverter.INSTANCE);
-		// 数字类型转换
-		converterSet.add(NumberConverter.INSTANCE);
-		// 枚举转换
-		converterSet.add(EnumConverter.INSTANCE);
-		// 数组转换
-		converterSet.add(ArrayConverter.INSTANCE);
-		// Record
-		converterSet.add(RecordConverter.INSTANCE);
-		// Kotlin Bean
-		converterSet.add(KBeanConverter.INSTANCE);
-		// issue#I7FQ29 Class
-		converterSet.add(ClassConverter.INSTANCE);
-		// // 空值转空Bean
-		converterSet.add(EmptyBeanConverter.INSTANCE);
-
-		// 日期相关
-		converterSet.add(TimeZoneConverter.INSTANCE);
-		converterSet.add(ZoneIdConverter.INSTANCE);
-
-		this.converterSet = converterSet;
+	public SpecialConverter(final Converter rootConverter) {
+		super(rootConverter);
+		this.converterSet = initDefault(Assert.notNull(rootConverter));
 	}
 
 	@Override
@@ -140,5 +92,48 @@ public class SpecialConverter implements Converter, Serializable {
 	 */
 	private static Converter getConverterFromSet(final Set<? extends MatcherConverter> converterSet, final Type type, final Class<?> rawType, final Object value) {
 		return StreamUtil.of(converterSet).filter((predicate) -> predicate.match(type, rawType, value)).findFirst().orElse(null);
+	}
+
+	/**
+	 * 初始化默认转换器
+	 *
+	 * @param rootConverter 根转换器，用于递归子对象转换
+	 * @return 转换器集合
+	 */
+	private static Set<MatcherConverter> initDefault(final Converter rootConverter) {
+		final Set<MatcherConverter> converterSet = new LinkedHashSet<>(64);
+
+		// 集合转换（含有泛型参数，不可以默认强转）
+		converterSet.add(CollectionConverter.INSTANCE);
+		// Map类型（含有泛型参数，不可以默认强转）
+		converterSet.add(new MapConverter(rootConverter));
+		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
+		converterSet.add(new EntryConverter(rootConverter));
+		// 默认强转
+		converterSet.add(CastConverter.INSTANCE);
+		// 日期、java.sql中的日期以及自定义日期统一处理
+		converterSet.add(DateConverter.INSTANCE);
+		// 原始类型转换
+		converterSet.add(PrimitiveConverter.INSTANCE);
+		// 数字类型转换
+		converterSet.add(NumberConverter.INSTANCE);
+		// 枚举转换
+		converterSet.add(EnumConverter.INSTANCE);
+		// 数组转换
+		converterSet.add(ArrayConverter.INSTANCE);
+		// Record
+		converterSet.add(RecordConverter.INSTANCE);
+		// Kotlin Bean
+		converterSet.add(KBeanConverter.INSTANCE);
+		// issue#I7FQ29 Class
+		converterSet.add(ClassConverter.INSTANCE);
+		// // 空值转空Bean
+		converterSet.add(EmptyBeanConverter.INSTANCE);
+
+		// 日期相关
+		converterSet.add(TimeZoneConverter.INSTANCE);
+		converterSet.add(ZoneIdConverter.INSTANCE);
+
+		return converterSet;
 	}
 }

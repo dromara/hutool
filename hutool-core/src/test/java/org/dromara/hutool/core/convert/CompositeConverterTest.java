@@ -41,12 +41,6 @@ public class CompositeConverterTest {
 	public static class EmptyBean {}
 
 	@Test
-	public void getConverterTest() {
-		final Converter converter = CompositeConverter.getInstance().getConverter(CharSequence.class, null, false);
-		assertNotNull(converter);
-	}
-
-	@Test
 	public void customTest() {
 		final int a = 454553;
 		final CompositeConverter compositeConverter = CompositeConverter.getInstance();

@@ -17,8 +17,8 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.ConvertException;
+import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.map.MapUtil;
@@ -46,10 +46,16 @@ import java.util.Map;
 public class EntryConverter implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private final Converter convert;
+
 	/**
-	 * 单例
+	 * 构造
+	 *
+	 * @param converter 转换器，用于将Entry中key和value转换为指定类型的对象
 	 */
-	public static final EntryConverter INSTANCE = new EntryConverter();
+	public EntryConverter(final Converter converter) {
+		this.convert = converter;
+	}
 
 	@Override
 	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
@@ -132,7 +138,7 @@ public class EntryConverter implements MatcherConverter, Serializable {
 	 * @return Entry
 	 */
 	@SuppressWarnings("rawtypes")
-	private static Map.Entry<?, ?> mapToEntry(final Type targetType, final Type keyType, final Type valueType, final Map map) {
+	private Map.Entry<?, ?> mapToEntry(final Type targetType, final Type keyType, final Type valueType, final Map map) {
 
 		final Object key;
 		final Object value;
@@ -146,7 +152,6 @@ public class EntryConverter implements MatcherConverter, Serializable {
 			value = map.get("value");
 		}
 
-		final CompositeConverter convert = CompositeConverter.getInstance();
 		return (Map.Entry<?, ?>) ConstructorUtil.newInstance(TypeUtil.getClass(targetType),
 			TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key),
 			TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value)

@@ -17,9 +17,10 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.convert.CompositeConverter;
-import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -36,10 +37,16 @@ import java.lang.reflect.Type;
 public class ReferenceConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	private final Converter rootConverter;
+
 	/**
-	 * 单例
+	 * 构造
+	 *
+	 * @param rootConverter 根转换器，用于转换Reference泛型的类型
 	 */
-	public static ReferenceConverter INSTANCE = new ReferenceConverter();
+	public ReferenceConverter(final Converter rootConverter) {
+		this.rootConverter = Assert.notNull(rootConverter);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -49,7 +56,7 @@ public class ReferenceConverter extends AbstractConverter {
 		Object targetValue = null;
 		final Type paramType = TypeUtil.getTypeArgument(targetClass);
 		if(!TypeUtil.isUnknown(paramType)){
-			targetValue = CompositeConverter.getInstance().convert(paramType, value);
+			targetValue = rootConverter.convert(paramType, value);
 		}
 		if(null == targetValue){
 			targetValue = value;

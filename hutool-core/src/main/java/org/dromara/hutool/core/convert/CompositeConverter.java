@@ -23,6 +23,7 @@ import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ import java.util.Optional;
  *
  * @author Looly
  */
-public class CompositeConverter extends RegisterConverter {
+public class CompositeConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -46,7 +47,12 @@ public class CompositeConverter extends RegisterConverter {
 		/**
 		 * 静态初始化器，由JVM来保证线程安全
 		 */
-		private static final CompositeConverter INSTANCE = new CompositeConverter();
+		private static final CompositeConverter INSTANCE;
+		static {
+			INSTANCE = new CompositeConverter();
+			INSTANCE.registerConverter = new RegisterConverter(INSTANCE);
+			INSTANCE.specialConverter = new SpecialConverter(INSTANCE);
+		}
 	}
 
 	/**
@@ -58,11 +64,38 @@ public class CompositeConverter extends RegisterConverter {
 		return SingletonHolder.INSTANCE;
 	}
 
+	private RegisterConverter registerConverter;
+	private SpecialConverter specialConverter;
+
 	/**
 	 * 构造
 	 */
-	public CompositeConverter() {
-		super();
+	private CompositeConverter() {
+	}
+
+	/**
+	 * 登记自定义转换器，符合{@link MatcherConverter#match(Type, Class, Object)}则使用其转换器<br>
+	 * 注意：如果单例使用，此方法会影响全局
+	 *
+	 * @param converter 转换器
+	 * @return this
+	 */
+	public CompositeConverter register(final MatcherConverter converter) {
+		registerConverter.register(converter);
+		return this;
+	}
+
+	/**
+	 * 登记自定义转换器，登记的目标类型必须一致<br>
+	 * 注意：如果单例使用，此方法会影响全局
+	 *
+	 * @param type      转换的目标类型
+	 * @param converter 转换器
+	 * @return this
+	 */
+	public CompositeConverter register(final Type type, final Converter converter) {
+		registerConverter.register(type, converter);
+		return this;
 	}
 
 	/**
@@ -142,7 +175,7 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// 标准转换器
-		final Converter converter = getConverter(type, value, isCustomFirst);
+		final Converter converter = registerConverter.getConverter(type, value, isCustomFirst);
 		if (null != converter) {
 			return converter.convert(type, value, defaultValue);
 		}
@@ -157,7 +190,7 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		final T result = (T) SpecialConverter.getInstance().convert(type, rawType, value);
+		final T result = (T) specialConverter.convert(type, rawType, value);
 		if (null != result) {
 			return result;
 		}

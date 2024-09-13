@@ -74,8 +74,6 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 		return new JdkHttpConnection(url, proxy);
 	}
 
-	// region --------------------------------------------------------------- Constructor
-
 	/**
 	 * 构造HttpConnection
 	 *
@@ -92,9 +90,7 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 		this.conn.setDoInput(true);
 	}
 
-	// endregion --------------------------------------------------------------- Constructor
-
-	// region --------------------------------------------------------------- Getters And Setters
+	// region ----- Getters And Setters
 
 	/**
 	 * 获取请求方法,GET/POST
@@ -279,9 +275,9 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 		return this;
 	}
 
-	// endregion --------------------------------------------------------------- Getters And Setters
+	// endregion ----- Getters And Setters
 
-	// region ---------------------------------------------------------------- Headers
+	// region ------ Headers
 
 	/**
 	 * 设置请求头<br>
@@ -327,7 +323,7 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 		return this.conn.getHeaderFields();
 	}
 
-	// endregion---------------------------------------------------------------- Headers
+	// endregion------ Headers
 
 	/**
 	 * 连接

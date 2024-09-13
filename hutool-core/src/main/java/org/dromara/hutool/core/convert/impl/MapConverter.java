@@ -17,9 +17,7 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.convert.CompositeConverter;
-import org.dromara.hutool.core.convert.ConvertException;
-import org.dromara.hutool.core.convert.MatcherConverter;
+import org.dromara.hutool.core.convert.*;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
@@ -40,13 +38,22 @@ import java.util.Objects;
  * @author Looly
  * @since 3.0.8
  */
-public class MapConverter implements MatcherConverter, Serializable {
+public class MapConverter extends ConverterWithRoot implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例
 	 */
-	public static MapConverter INSTANCE = new MapConverter();
+	public static final MapConverter INSTANCE = new MapConverter(CompositeConverter.getInstance());
+
+	/**
+	 * 构造
+	 *
+	 * @param rootConverter 根转换器，用于转换Map中键值对中的值，非{@code null}
+	 */
+	public MapConverter(final Converter rootConverter) {
+		super(rootConverter);
+	}
 
 	@Override
 	public boolean match(final Type targetType, final Class<?> rawType, final Object value) {
@@ -111,10 +118,9 @@ public class MapConverter implements MatcherConverter, Serializable {
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void convertMapToMap(final Type keyType, final Type valueType, final Map<?, ?> srcMap, final Map targetMap) {
-		final CompositeConverter convert = CompositeConverter.getInstance();
 		srcMap.forEach((key, value) -> targetMap.put(
-			TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key),
-			TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value)
+			TypeUtil.isUnknown(keyType) ? key : rootConverter.convert(keyType, key),
+			TypeUtil.isUnknown(valueType) ? value : rootConverter.convert(valueType, value)
 		));
 	}
 }

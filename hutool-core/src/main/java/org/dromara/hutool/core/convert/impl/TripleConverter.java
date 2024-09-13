@@ -17,13 +17,14 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.convert.ConverterWithRoot;
 import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
 
@@ -36,12 +37,17 @@ import java.util.Map;
  * @author looly
  * @since 6.0.0
  */
-public class TripleConverter implements Converter {
+public class TripleConverter extends ConverterWithRoot implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 单例
+	 * 构造
+	 *
+	 * @param rootConverter 根转换器，用于转换无法被识别的对象
 	 */
-	public static final TripleConverter INSTANCE = new TripleConverter();
+	public TripleConverter(final Converter rootConverter) {
+		super(rootConverter);
+	}
 
 	@Override
 	public Object convert(Type targetType, final Object value) throws ConvertException {
@@ -69,9 +75,9 @@ public class TripleConverter implements Converter {
 	public Triple<?, ?, ?> convert(final Type leftType, final Type middleType, final Type rightType, final Object value)
 		throws ConvertException {
 		Map map = null;
-		if(value instanceof Map){
+		if (value instanceof Map) {
 			map = (Map) value;
-		}else if (BeanUtil.isReadableBean(value.getClass())) {
+		} else if (BeanUtil.isReadableBean(value.getClass())) {
 			// 一次性只读场景，包装为Map效率更高
 			map = BeanUtil.toBeanMap(value);
 		}
@@ -92,17 +98,16 @@ public class TripleConverter implements Converter {
 	 * @return Entry
 	 */
 	@SuppressWarnings("rawtypes")
-	private static Triple<?, ?, ?> mapToTriple(final Type leftType, final Type middleType, final Type rightType, final Map map) {
+	private Triple<?, ?, ?> mapToTriple(final Type leftType, final Type middleType, final Type rightType, final Map map) {
 
 		final Object left = map.get("left");
 		final Object middle = map.get("middle");
 		final Object right = map.get("right");
 
-		final CompositeConverter convert = CompositeConverter.getInstance();
 		return Triple.of(
-			TypeUtil.isUnknown(leftType) ? left : convert.convert(leftType, left),
-			TypeUtil.isUnknown(middleType) ? middle : convert.convert(middleType, middle),
-			TypeUtil.isUnknown(rightType) ? right : convert.convert(rightType, right)
+			TypeUtil.isUnknown(leftType) ? left : rootConverter.convert(leftType, left),
+			TypeUtil.isUnknown(middleType) ? middle : rootConverter.convert(middleType, middle),
+			TypeUtil.isUnknown(rightType) ? right : rootConverter.convert(rightType, right)
 		);
 	}
 }
