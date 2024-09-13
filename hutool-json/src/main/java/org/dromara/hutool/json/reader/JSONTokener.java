@@ -134,7 +134,7 @@ public class JSONTokener extends ReaderWrapper {
 	 */
 	public void checkEnd(){
 		if(EOF != nextClean()){
-			throw syntaxError("Unread data");
+			throw syntaxError("Invalid JSON, Unread data after end.");
 		}
 	}
 

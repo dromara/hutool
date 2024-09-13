@@ -101,7 +101,9 @@ public class JSONParser {
 	 * @return JSON值
 	 */
 	public JSON parse() {
-		return nextJSON(tokener.nextClean());
+		final JSON json = nextJSON(tokener.nextClean());
+		tokener.checkEnd();
+		return json;
 	}
 
 	/**
@@ -183,15 +185,14 @@ public class JSONParser {
 			tokener.nextColon();
 
 			// 过滤并设置键值对
-			JSON value = parse();
+			final JSON value = nextJSON(tokener.nextClean());
 			// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 			if (null != predicate) {
 				final MutableEntry<Object, Object> entry = new MutableEntry<>(key, value);
 				if (predicate.test(entry)) {
 					// 使用修改后的键值对
 					key = (String) entry.getKey();
-					value = (JSON) entry.getValue();
-					jsonObject.set(key, value);
+					jsonObject.set(key, entry.getValue());
 				}
 			}else {
 				jsonObject.set(key, value);
