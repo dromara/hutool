@@ -19,8 +19,7 @@ package org.dromara.hutool.json.mapper;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.serializer.JSONStringer;
-import org.dromara.hutool.json.writer.GlobalValueWriters;
+import org.dromara.hutool.json.writer.ValueWriterManager;
 
 import java.io.Serializable;
 
@@ -82,9 +81,8 @@ public class JSONValueMapper implements Serializable {
 		// null、JSON、字符串和自定义对象原样存储
 		if (null == object
 			// 当用户自定义了对象的字符串表示形式，则保留这个对象
-			|| null != GlobalValueWriters.get(object)
+			|| null != ValueWriterManager.getInstance().get(object)
 			|| object instanceof JSON //
-			|| object instanceof JSONStringer //
 			|| object instanceof CharSequence //
 			|| ObjUtil.isBasicType(object) //
 		) {
@@ -103,7 +101,7 @@ public class JSONValueMapper implements Serializable {
 			}
 
 			// 默认按照JSONObject对待
-			return new JSONObject(object, jsonConfig);
+			return new OldJSONObject(object, jsonConfig);
 		} catch (final Exception exception) {
 			return null;
 		}

@@ -18,9 +18,9 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.json.writer.GlobalValueWriters;
-import org.dromara.hutool.json.writer.JSONValueWriter;
 import org.dromara.hutool.json.writer.JSONWriter;
+import org.dromara.hutool.json.writer.ValueWriter;
+import org.dromara.hutool.json.writer.ValueWriterManager;
 
 import java.io.StringWriter;
 import java.io.Writer;
@@ -119,7 +119,7 @@ public class JSONPrimitive implements JSON {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config);
 
 		// 自定义规则
-		final JSONValueWriter valueWriter = GlobalValueWriters.get(value);
+		final ValueWriter valueWriter = ValueWriterManager.getInstance().get(value);
 		if (null != valueWriter) {
 			valueWriter.write(jsonWriter, value);
 			return writer;

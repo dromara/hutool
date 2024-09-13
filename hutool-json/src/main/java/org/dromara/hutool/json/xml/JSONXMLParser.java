@@ -22,7 +22,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.xml.XmlConstants;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.OldJSONObject;
 
 import java.util.function.Predicate;
 
@@ -67,7 +67,7 @@ public class JSONXMLParser {
 	 * @param jo          JSONObject
 	 * @throws JSONException 解析异常
 	 */
-	public void parseJSONObject(final String xmlStr, final JSONObject jo) throws JSONException {
+	public void parseJSONObject(final String xmlStr, final OldJSONObject jo) throws JSONException {
 		final XMLTokener x = new XMLTokener(xmlStr);
 		while (x.more() && x.skipPast("<")) {
 			parse(x, jo, null, 0);
@@ -78,16 +78,16 @@ public class JSONXMLParser {
 	 * 扫描XML内容，并解析到JSONObject中。
 	 *
 	 * @param x                   {@link XMLTokener}
-	 * @param context             {@link JSONObject}
+	 * @param context             {@link OldJSONObject}
 	 * @param name                标签名，null表示从根标签开始解析
 	 * @param currentNestingDepth 当前层级
 	 * @return {@code true}表示解析完成
 	 * @throws JSONException JSON异常
 	 */
-	private boolean parse(final XMLTokener x, final JSONObject context, final String name, final int currentNestingDepth) throws JSONException {
+	private boolean parse(final XMLTokener x, final OldJSONObject context, final String name, final int currentNestingDepth) throws JSONException {
 		final char c;
 		int i;
-		final JSONObject jsonobject;
+		final OldJSONObject jsonobject;
 		String string;
 		final String tagName;
 		Object token;
@@ -156,7 +156,7 @@ public class JSONXMLParser {
 		} else {
 			tagName = (String) token;
 			token = null;
-			jsonobject = new JSONObject();
+			jsonobject = new OldJSONObject();
 			final boolean keepStrings = parseConfig.isKeepStrings();
 			for (; ; ) {
 				if (token == null) {

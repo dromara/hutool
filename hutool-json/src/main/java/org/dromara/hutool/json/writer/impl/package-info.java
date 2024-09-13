@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2024 Hutool Team and hutool.cn
+ * Copyright (c) 2024 Hutool Team and hutool.cn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,9 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.writer;
-
 /**
- * {@link Class}类型的值写出器
+ * {@link org.dromara.hutool.json.writer.ValueWriter} 实现
  *
- * @author looly
- * @since 6.0.0
+ * @author Looly
  */
-public class ClassValueWriter implements JSONValueWriter {
-	/**
-	 * 单例对象
-	 */
-	public static final ClassValueWriter INSTANCE = new ClassValueWriter();
-
-	@Override
-	public boolean test(final Object value) {
-		return value instanceof Class;
-	}
-
-	@Override
-	public void write(final JSONWriter writer, final Object value) {
-		writer.writeQuoteStrValue(((Class<?>) value).getName());
-	}
-}
+package org.dromara.hutool.json.writer.impl;

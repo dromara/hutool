@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.writer;
+package org.dromara.hutool.json.writer.impl;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.json.writer.JSONWriter;
+import org.dromara.hutool.json.writer.ValueWriter;
 
 import java.sql.SQLException;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,7 +43,7 @@ import java.util.Optional;
  * @author looly
  * @since 6.0.0
  */
-public class JdkValueWriter implements JSONValueWriter {
+public class JdkValueWriter implements ValueWriter {
 	/**
 	 * 单例对象
 	 */
@@ -53,8 +58,14 @@ public class JdkValueWriter implements JSONValueWriter {
 			return true;
 		}
 
-		// 可转换为JSONObject和JSONArray的对象
-		if (value instanceof Map
+		// 自定义写出的跳过
+		if (value instanceof Number
+			|| value instanceof Date
+			|| value instanceof Calendar
+			|| value instanceof TemporalAccessor
+			|| value instanceof Boolean
+			// 可转换为JSONObject和JSONArray的对象
+			|| value instanceof Map
 			|| value instanceof Map.Entry
 			|| value instanceof Iterable
 			|| ArrayUtil.isArray(value)
@@ -69,6 +80,12 @@ public class JdkValueWriter implements JSONValueWriter {
 
 	@Override
 	public void write(final JSONWriter writer, final Object value) {
-		writer.writeQuoteStrValue(value.toString());
+		final String valueStr;
+		if(value instanceof Class<?>){
+			valueStr = ((Class<?>) value).getName();
+		}else{
+			valueStr = value.toString();
+		}
+		writer.writeQuoteStrValue(valueStr);
 	}
 }

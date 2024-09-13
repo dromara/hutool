@@ -18,7 +18,6 @@ package org.dromara.hutool.json;
 
 import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.reflect.TypeReference;
@@ -47,7 +46,7 @@ public class JSONArrayTest {
 	@Test()
 	public void createJSONArrayFromJSONObjectTest() {
 		// JSONObject实现了Iterable接口，可以转换为JSONArray
-		final JSONObject jsonObject = new JSONObject();
+		final OldJSONObject jsonObject = new OldJSONObject();
 
 		JSONArray jsonArray = new JSONArray(jsonObject, JSONConfig.of());
 		assertEquals(new JSONArray(), jsonArray);
@@ -100,7 +99,7 @@ public class JSONArrayTest {
 	public void readJSONArrayFromFileTest() {
 		final JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.UTF_8);
 
-		final JSONObject obj0 = array.getJSONObject(0);
+		final OldJSONObject obj0 = array.getJSONObject(0);
 		final Exam exam = JSONUtil.toBean(obj0, Exam.class);
 		assertEquals("0", exam.getAnswerArray()[0].getSeq());
 	}
@@ -319,7 +318,7 @@ public class JSONArrayTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> {
 			if(mutable.getKey() instanceof Integer){
-				final JSONObject o = (JSONObject) mutable.getValue();
+				final OldJSONObject o = (OldJSONObject) mutable.getValue();
 				if ("111".equals(o.getStr("id"))) {
 					o.set("name", "test1_edit");
 				}
@@ -339,7 +338,7 @@ public class JSONArrayTest {
 		array.add(JSONUtil.ofObj().set("name", "ccc"));
 
 		StringBuilder result = new StringBuilder();
-		array.jsonIter(JSONObject.class).forEach(result::append);
+		array.jsonIter(OldJSONObject.class).forEach(result::append);
 		assertEquals("{\"name\":\"aaa\"}{\"name\":\"bbb\"}{\"name\":\"ccc\"}", result.toString());
 	}
 }

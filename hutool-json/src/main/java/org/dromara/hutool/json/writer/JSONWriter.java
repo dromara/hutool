@@ -316,7 +316,7 @@ public class JSONWriter extends Writer {
 		final int indent = indentFactor + this.indent;
 
 		// 自定义规则
-		final JSONValueWriter valueWriter = GlobalValueWriters.get(value);
+		final ValueWriter valueWriter = ValueWriterManager.getInstance().get(value);
 		if(null != valueWriter){
 			valueWriter.write(this, value);
 			return this;

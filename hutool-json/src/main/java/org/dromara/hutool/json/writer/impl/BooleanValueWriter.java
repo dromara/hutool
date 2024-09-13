@@ -14,34 +14,30 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.serializer;
+package org.dromara.hutool.json.writer.impl;
 
-import org.dromara.hutool.core.lang.wrapper.Wrapper;
+import org.dromara.hutool.json.writer.JSONWriter;
+import org.dromara.hutool.json.writer.ValueWriter;
 
 /**
- * {@code JSONString}接口定义了一个{@code toJSONString()}<br>
- * 实现此接口的类可以通过实现{@code toJSONString()}方法来改变转JSON字符串的方式。
+ * Boolean类型的值写出器
  *
- * @author Looly
- *
+ * @author looly
+ * @since 6.0.0
  */
-@FunctionalInterface
-public interface JSONStringer extends Wrapper<Object> {
-
+public class BooleanValueWriter implements ValueWriter {
 	/**
-	 * 自定义转JSON字符串的方法
-	 *
-	 * @return JSON字符串
+	 * 单例对象
 	 */
-	String toJSONString();
+	public static final BooleanValueWriter INSTANCE = new BooleanValueWriter();
 
-	/**
-	 * 获取原始的对象，默认为this
-	 *
-	 * @return 原始对象
-	 */
 	@Override
-	default Object getRaw() {
-		return this;
+	public boolean test(final Object bool) {
+		return bool instanceof Boolean;
+	}
+
+	@Override
+	public void write(final JSONWriter writer, final Object bool) {
+		writer.writeRaw(bool.toString());
 	}
 }

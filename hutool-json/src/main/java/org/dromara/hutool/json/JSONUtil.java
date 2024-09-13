@@ -23,9 +23,9 @@ import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.convert.JSONConverter;
-import org.dromara.hutool.json.writer.GlobalValueWriters;
-import org.dromara.hutool.json.writer.JSONValueWriter;
 import org.dromara.hutool.json.writer.JSONWriter;
+import org.dromara.hutool.json.writer.ValueWriter;
+import org.dromara.hutool.json.writer.ValueWriterManager;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
 import java.io.File;
@@ -49,8 +49,8 @@ public class JSONUtil {
 	 *
 	 * @return JSONObject
 	 */
-	public static JSONObject ofObj() {
-		return new JSONObject();
+	public static OldJSONObject ofObj() {
+		return new OldJSONObject();
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 5.2.5
 	 */
-	public static JSONObject ofObj(final JSONConfig config) {
-		return new JSONObject(config);
+	public static OldJSONObject ofObj(final JSONConfig config) {
+		return new OldJSONObject(config);
 	}
 
 	/**
@@ -91,8 +91,8 @@ public class JSONUtil {
 	 * @param obj Bean对象或者Map
 	 * @return JSONObject
 	 */
-	public static JSONObject parseObj(final Object obj) {
-		return new JSONObject(obj);
+	public static OldJSONObject parseObj(final Object obj) {
+		return new OldJSONObject(obj);
 	}
 
 	/**
@@ -104,8 +104,8 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 5.3.1
 	 */
-	public static JSONObject parseObj(final Object obj, final JSONConfig config) {
-		return new JSONObject(obj, config);
+	public static OldJSONObject parseObj(final Object obj, final JSONConfig config) {
+		return new OldJSONObject(obj, config);
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 3.0.9
 	 */
-	public static JSONObject parseObj(final Object obj, final boolean ignoreNullValue) {
-		return new JSONObject(obj, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
+	public static OldJSONObject parseObj(final Object obj, final boolean ignoreNullValue) {
+		return new OldJSONObject(obj, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class JSONUtil {
 	 * @param xmlStr XML字符串
 	 * @return JSONObject
 	 */
-	public static JSONObject parseFromXml(final String xmlStr) {
+	public static OldJSONObject parseFromXml(final String xmlStr) {
 		return JSONXMLUtil.toJSONObject(xmlStr);
 	}
 	// -------------------------------------------------------------------- Parse end
@@ -212,7 +212,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @throws IORuntimeException IO异常
 	 */
-	public static JSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
+	public static OldJSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
 		return FileUtil.read(file, charset, JSONUtil::parseObj);
 	}
 
@@ -261,7 +261,7 @@ public class JSONUtil {
 	 */
 	public static String toJsonStr(final Object obj, final JSONConfig jsonConfig) {
 		// 自定义规则，优先级高于全局规则
-		final JSONValueWriter valueWriter = GlobalValueWriters.get(obj);
+		final ValueWriter valueWriter = ValueWriterManager.getInstance().get(obj);
 		if (null != valueWriter) {
 			final StringWriter stringWriter = new StringWriter();
 			final JSONWriter jsonWriter = JSONWriter.of(stringWriter, 0, 0, null);
@@ -307,7 +307,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 4.0.8
 	 */
-	public static JSONObject xmlToJson(final String xml) {
+	public static OldJSONObject xmlToJson(final String xml) {
 		return JSONXMLUtil.toJSONObject(xml);
 	}
 	// -------------------------------------------------------------------- toString end
@@ -480,7 +480,7 @@ public class JSONUtil {
 	 * <ul>
 	 *     <li>null</li>
 	 *     <li>{@link JSONArray#isEmpty()}</li>
-	 *     <li>{@link JSONObject#isEmpty()}</li>
+	 *     <li>{@link OldJSONObject#isEmpty()}</li>
 	 * </ul>
 	 *
 	 * @param json JSONObject或JSONArray
@@ -490,8 +490,8 @@ public class JSONUtil {
 		if (null == json) {
 			return true;
 		}
-		if (json instanceof JSONObject) {
-			return ((JSONObject) json).isEmpty();
+		if (json instanceof OldJSONObject) {
+			return ((OldJSONObject) json).isEmpty();
 		} else if (json instanceof JSONArray) {
 			return ((JSONArray) json).isEmpty();
 		}

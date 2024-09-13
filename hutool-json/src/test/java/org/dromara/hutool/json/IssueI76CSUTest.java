@@ -26,7 +26,7 @@ public class IssueI76CSUTest {
 	@Test
 	void parseTest() {
 		final String str = "{ \"card\": true, \"content\": \"【标题】\n摘要\", \"time\": 1678434181000}";
-		final JSONObject entries = JSONUtil.parseObj(str);
+		final OldJSONObject entries = JSONUtil.parseObj(str);
 		Assertions.assertEquals("【标题】\n摘要", entries.getStr("content"));
 	}
 }

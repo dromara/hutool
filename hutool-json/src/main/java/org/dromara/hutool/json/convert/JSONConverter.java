@@ -69,7 +69,7 @@ public class JSONConverter implements Converter, Serializable {
 	public static JSONConverter of(final JSONConfig config) {
 		final JSONConverter jsonConverter = new JSONConverter(config);
 		jsonConverter.registerConverter = new RegisterConverter(jsonConverter)
-			.register(JSONObject.class, INSTANCE)
+			.register(OldJSONObject.class, INSTANCE)
 			.register(JSONArray.class, INSTANCE)
 			.register(JSONPrimitive.class, INSTANCE);
 		jsonConverter.specialConverter = new SpecialConverter(jsonConverter);
@@ -93,10 +93,6 @@ public class JSONConverter implements Converter, Serializable {
 	public Object convert(Type targetType, Object value) throws ConvertException {
 		if (null == value) {
 			return null;
-		}
-		if (value instanceof JSONStringer) {
-			// 被JSONString包装的对象，获取其原始类型
-			value = ((JSONStringer) value).getRaw();
 		}
 
 		// JSON转对象
@@ -173,11 +169,11 @@ public class JSONConverter implements Converter, Serializable {
 			return toJSON((CharSequence) obj);
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
-			json = new JSONObject(obj, config);
+			json = new OldJSONObject(obj, config);
 		} else if (obj instanceof Iterable || obj instanceof Iterator || ArrayUtil.isArray(obj)) {// 列表
 			json = new JSONArray(obj, config);
 		} else {// 对象
-			json = new JSONObject(obj, config);
+			json = new OldJSONObject(obj, config);
 		}
 
 		return json;

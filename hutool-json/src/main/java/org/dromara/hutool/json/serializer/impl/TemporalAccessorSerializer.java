@@ -66,12 +66,12 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 
 	@Override
 	public JSON serialize(final TemporalAccessor bean, final JSONContext context) {
-		final JSONObject json;
+		final OldJSONObject json;
 		final JSON contextJson = context.getContextJson();
-		if(contextJson instanceof JSONObject){
-			json = (JSONObject) contextJson;
+		if(contextJson instanceof OldJSONObject){
+			json = (OldJSONObject) contextJson;
 		}else {
-			json = new JSONObject(7F / 0.75F + 1F, context.config());
+			json = new OldJSONObject(7F / 0.75F + 1F, context.config());
 		}
 		if (bean instanceof LocalDate) {
 			final LocalDate localDate = (LocalDate) bean;
@@ -112,7 +112,7 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 		// TODO JSONArray
 
 		// JSONObject
-		final JSONObject jsonObject = (JSONObject) json;
+		final OldJSONObject jsonObject = (OldJSONObject) json;
 		if (LocalDate.class.equals(this.temporalAccessorClass) || LocalDateTime.class.equals(this.temporalAccessorClass)) {
 			// 年
 			final Integer year = jsonObject.getInt(YEAR_KEY);

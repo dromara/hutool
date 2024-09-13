@@ -26,7 +26,7 @@ public class IssueI9DX5HTest {
 	@Test
 	void xmlToJSONTest() {
 		final String xml = "<GoodMsg>你好</GoodMsg>";
-		final JSONObject jsonObject = new JSONObject(xml, JSONConfig.of(), entry -> {
+		final OldJSONObject jsonObject = new OldJSONObject(xml, JSONConfig.of(), entry -> {
 			entry.setKey(StrUtil.toUnderlineCase((CharSequence) entry.getKey()));
 			return true;
 		});

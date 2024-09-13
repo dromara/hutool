@@ -92,21 +92,21 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 
 	/**
 	 * 获得JSONObject对象<br>
-	 * 如果值为其它类型对象，尝试转换为{@link JSONObject}返回，否则抛出异常
+	 * 如果值为其它类型对象，尝试转换为{@link OldJSONObject}返回，否则抛出异常
 	 *
 	 * @param key KEY
 	 * @return JSONObject对象，如果值为{@code null}，返回{@code null}，非JSONObject类型，尝试转换，转换失败抛出异常
 	 */
-	default JSONObject getJSONObject(final K key) {
+	default OldJSONObject getJSONObject(final K key) {
 		final Object object = this.getObj(key);
 		if (ObjUtil.isNull(object)) {
 			return null;
 		}
 
 		if (object instanceof JSON) {
-			return (JSONObject) object;
+			return (OldJSONObject) object;
 		}
-		return new JSONObject(object, config());
+		return new OldJSONObject(object, config());
 	}
 
 	/**
@@ -120,7 +120,7 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 	 * @since 3.1.1
 	 */
 	default <T> T getBean(final K key, final Class<T> beanType) {
-		final JSONObject obj = getJSONObject(key);
+		final OldJSONObject obj = getJSONObject(key);
 		return (null == obj) ? null : obj.toBean(beanType);
 	}
 

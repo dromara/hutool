@@ -42,7 +42,7 @@ public class Issue2131Test {
 		Stream.of(apple, pear).forEach(collections::add);
 
 		final String jsonStr = JSONUtil.toJsonStr(goodsResponse);
-		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(jsonStr);
 
 		final GoodsResponse result = jsonObject.toBean(GoodsResponse.class);
 		Assertions.assertEquals(0, result.getCollections().size());

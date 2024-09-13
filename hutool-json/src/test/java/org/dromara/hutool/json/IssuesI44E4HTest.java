@@ -33,7 +33,7 @@ public class IssuesI44E4HTest {
 	public void deserializerTest(){
 		SerializerManager.getInstance().register(TestDto.class, (JSONDeserializer<TestDto>) (json, deserializeType) -> {
 			final TestDto testDto = new TestDto();
-			testDto.setMd(new AcBizModuleMd("name1", ((JSONObject)json).getStr("md")));
+			testDto.setMd(new AcBizModuleMd("name1", ((OldJSONObject)json).getStr("md")));
 			return testDto;
 		});
 

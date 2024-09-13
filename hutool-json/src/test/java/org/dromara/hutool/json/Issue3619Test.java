@@ -24,7 +24,7 @@ public class Issue3619Test {
 	public void parseObjTest() {
 		final String json = "{\"@timestamp\":\"2024-06-14T00:02:06.438Z\",\"@version\":\"1\",\"int_arr\":[-4]}";
 		final JSONConfig jsonConfig = JSONConfig.of().setKeyComparator(String.CASE_INSENSITIVE_ORDER);
-		final JSONObject jsonObject = JSONUtil.parseObj(json, jsonConfig);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(json, jsonConfig);
 
 		final String jsonStr = jsonObject.toJSONString(0, pair -> {
 			final Object key = pair.getKey();

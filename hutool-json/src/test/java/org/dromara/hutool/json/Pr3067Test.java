@@ -28,7 +28,7 @@ public class Pr3067Test {
 
 	@Test
 	public void getListByPathTest1() {
-		final JSONObject json = JSONUtil.parseObj(ResourceUtil.readUtf8Str("test_json_path_001.json"));
+		final OldJSONObject json = JSONUtil.parseObj(ResourceUtil.readUtf8Str("test_json_path_001.json"));
 		final List<TestUser> resultList = json.getByPath("testUserList[1].testArray",
 			new TypeReference<List<TestUser>>() {});
 

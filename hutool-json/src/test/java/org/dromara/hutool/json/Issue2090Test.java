@@ -35,7 +35,7 @@ public class Issue2090Test {
 		final TestBean test = new TestBean();
 		test.setLocalDate(LocalDate.now());
 
-		final JSONObject json = JSONUtil.parseObj(test);
+		final OldJSONObject json = JSONUtil.parseObj(test);
 		final TestBean test1 = json.toBean(TestBean.class);
 		Assertions.assertEquals(test, test1);
 	}
@@ -43,14 +43,14 @@ public class Issue2090Test {
 	@Test
 	public void parseLocalDateTest(){
 		final LocalDate localDate = LocalDate.now();
-		final JSONObject jsonObject = JSONUtil.parseObj(localDate);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(localDate);
 		Assertions.assertNotNull(jsonObject.toString());
 	}
 
 	@Test
 	public void toBeanLocalDateTest(){
 		final LocalDate d = LocalDate.now();
-		final JSONObject obj = JSONUtil.parseObj(d);
+		final OldJSONObject obj = JSONUtil.parseObj(d);
 		final LocalDate d2 = obj.toBean(LocalDate.class);
 		Assertions.assertEquals(d, d2);
 	}
@@ -58,7 +58,7 @@ public class Issue2090Test {
 	@Test
 	public void toBeanLocalDateTimeTest(){
 		final LocalDateTime d = LocalDateTime.now();
-		final JSONObject obj = JSONUtil.parseObj(d);
+		final OldJSONObject obj = JSONUtil.parseObj(d);
 		final LocalDateTime d2 = obj.toBean(LocalDateTime.class);
 		Assertions.assertEquals(d, d2);
 	}
@@ -66,14 +66,14 @@ public class Issue2090Test {
 	@Test
 	public void toBeanLocalTimeTest(){
 		final LocalTime d = LocalTime.now();
-		final JSONObject obj = JSONUtil.parseObj(d);
+		final OldJSONObject obj = JSONUtil.parseObj(d);
 		final LocalTime d2 = obj.toBean(LocalTime.class);
 		Assertions.assertEquals(d, d2);
 	}
 
 	@Test
 	public void monthTest(){
-		final JSONObject jsonObject = new JSONObject();
+		final OldJSONObject jsonObject = new OldJSONObject();
 		jsonObject.set("month", Month.JANUARY);
 		Assertions.assertEquals("{\"month\":1}", jsonObject.toString());
 	}

@@ -47,7 +47,7 @@ public class ParseBeanTest {
 		final A a = new A();
 		a.setBs(ListUtil.of(b1, b2));
 
-		final JSONObject json = JSONUtil.parseObj(a);
+		final OldJSONObject json = JSONUtil.parseObj(a);
 		final A a1 = JSONUtil.toBean(json, A.class);
 		Assertions.assertEquals(json.toString(), JSONUtil.toJsonStr(a1));
 	}

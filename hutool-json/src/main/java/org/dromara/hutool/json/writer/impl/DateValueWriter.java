@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.writer;
+package org.dromara.hutool.json.writer.impl;
 
 import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.date.DateUtil;
@@ -22,6 +22,8 @@ import org.dromara.hutool.core.date.TemporalAccessorUtil;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
+import org.dromara.hutool.json.writer.JSONWriter;
+import org.dromara.hutool.json.writer.ValueWriter;
 
 import java.time.MonthDay;
 import java.time.temporal.TemporalAccessor;
@@ -35,7 +37,7 @@ import java.util.Date;
  * @author looly
  * @since 6.0.0
  */
-public class DateValueWriter implements JSONValueWriter {
+public class DateValueWriter implements ValueWriter {
 	/**
 	 * 单例对象
 	 */

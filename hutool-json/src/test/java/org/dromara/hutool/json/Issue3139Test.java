@@ -33,7 +33,7 @@ public class Issue3139Test {
 			"  </c>\n" +
 			"</r>";
 
-		final JSONObject jsonObject = XmlUtil.xmlToBean(XmlUtil.parseXml(xml).getDocumentElement(), JSONObject.class);
+		final OldJSONObject jsonObject = XmlUtil.xmlToBean(XmlUtil.parseXml(xml).getDocumentElement(), OldJSONObject.class);
 		final R bean = jsonObject.toBean(R.class);
 		Assertions.assertNotNull(bean);
 

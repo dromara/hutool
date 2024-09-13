@@ -33,7 +33,7 @@ public class IssueI7VM64Test {
 		final HashMap<String, Object> map = new HashMap<>();
 		map.put("a", "1");
 
-		final JSONObject jsonObject = new JSONObject();
+		final OldJSONObject jsonObject = new OldJSONObject();
 		jsonObject.put("c", map);
 		map.put("b", 2);
 

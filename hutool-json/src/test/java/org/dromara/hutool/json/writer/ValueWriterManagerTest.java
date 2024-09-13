@@ -24,11 +24,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GlobalValueWritersTest {
+public class ValueWriterManagerTest {
 
 	@BeforeEach
 	public void init(){
-		GlobalValueWriters.add(new JSONValueWriter() {
+		ValueWriterManager.getInstance().register(new ValueWriter() {
 			@Override
 			public void write(final JSONWriter writer, final Object value) {
 				writer.writeRaw(String.valueOf(((CustomSubBean)value).getId()));

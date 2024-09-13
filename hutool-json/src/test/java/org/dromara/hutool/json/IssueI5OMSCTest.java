@@ -28,7 +28,7 @@ public class IssueI5OMSCTest {
 
 	@Test
 	public void filterTest(){
-		final JSONObject json = JSONUtil.parseObj(ResourceUtil.readUtf8Str("issueI5OMSC.json"));
+		final OldJSONObject json = JSONUtil.parseObj(ResourceUtil.readUtf8Str("issueI5OMSC.json"));
 
 		final String s = json.toJSONString(0, (entry) -> {
 			final Object key = entry.getKey();

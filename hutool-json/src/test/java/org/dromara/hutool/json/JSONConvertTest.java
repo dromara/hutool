@@ -70,10 +70,10 @@ public class JSONConvertTest {
 		tempMap.put("userInfoDict", userInfoDict);
 		tempMap.put("toSendManIdCard", 1);
 
-		final JSONObject obj = JSONUtil.parseObj(tempMap);
+		final OldJSONObject obj = JSONUtil.parseObj(tempMap);
 		Assertions.assertEquals(new Integer(1), obj.getInt("toSendManIdCard"));
 
-		final JSONObject examInfoDictsJson = obj.getJSONObject("userInfoDict");
+		final OldJSONObject examInfoDictsJson = obj.getJSONObject("userInfoDict");
 		Assertions.assertEquals(new Integer(1), examInfoDictsJson.getInt("id"));
 		Assertions.assertEquals("质量过关", examInfoDictsJson.getStr("realName"));
 
@@ -90,7 +90,7 @@ public class JSONConvertTest {
 				+ "      {\n" + "        \"id\": 3,\n" + "        \"answerIs\": 0,\n" + "        \"examType\": 1\n" + "      }\n" + "    ],\n" //
 				+ "    \"photoPath\": \"yx.mm.com\"\n" + "  },\n" + "  \"toSendManIdCard\": 1\n" + "}";
 
-		final JSONObject jsonObject = JSONUtil.parseObj(examJson).getJSONObject("examInfoDicts");
+		final OldJSONObject jsonObject = JSONUtil.parseObj(examJson).getJSONObject("examInfoDicts");
 		final UserInfoDict userInfoDict = jsonObject.toBean(UserInfoDict.class);
 
 		Assertions.assertEquals(userInfoDict.getId(), new Integer(1));
@@ -99,7 +99,7 @@ public class JSONConvertTest {
 		//============
 
 		final String jsonStr = "{\"id\":null,\"examInfoDict\":[{\"answerIs\":1, \"id\":null}]}";//JSONUtil.toJsonStr(userInfoDict1);
-		final JSONObject jsonObject2 = JSONUtil.parseObj(jsonStr);//.getJSONObject("examInfoDicts");
+		final OldJSONObject jsonObject2 = JSONUtil.parseObj(jsonStr);//.getJSONObject("examInfoDicts");
 		final UserInfoDict userInfoDict2 = jsonObject2.toBean(UserInfoDict.class);
 		Assertions.assertNull(userInfoDict2.getId());
 	}
@@ -110,7 +110,7 @@ public class JSONConvertTest {
 	@Test
 	public void testJson2Bean2() {
 		final String jsonStr = ResourceUtil.readUtf8Str("evaluation.json");
-		final JSONObject obj = JSONUtil.parseObj(jsonStr);
+		final OldJSONObject obj = JSONUtil.parseObj(jsonStr);
 		final PerfectEvaluationProductResVo vo = obj.toBean(PerfectEvaluationProductResVo.class);
 
 		Assertions.assertEquals(obj.getStr("HA001"), vo.getHA001());

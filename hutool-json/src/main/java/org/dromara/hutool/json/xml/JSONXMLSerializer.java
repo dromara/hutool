@@ -22,7 +22,7 @@ import org.dromara.hutool.core.text.escape.EscapeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.OldJSONObject;
 
 /**
  * JSON转XML字符串工具
@@ -70,13 +70,13 @@ public class JSONXMLSerializer {
 		}
 
 		final StringBuilder sb = new StringBuilder();
-		if (object instanceof JSONObject) {
+		if (object instanceof OldJSONObject) {
 
 			// Emit <tagName>
 			appendTag(sb, tagName, false);
 
 			// Loop thru the keys.
-			((JSONObject) object).forEach((key, value) -> {
+			((OldJSONObject) object).forEach((key, value) -> {
 				if (ArrayUtil.isArray(value)) {
 					value = new JSONArray(value);
 				}

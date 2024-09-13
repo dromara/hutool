@@ -56,9 +56,9 @@ public class CompositeConverter implements Converter, Serializable {
 	}
 
 	/**
-	 * 获得单例的 ConverterRegistry
+	 * 获得单例的 CompositeConverter
 	 *
-	 * @return ConverterRegistry
+	 * @return CompositeConverter
 	 */
 	public static CompositeConverter getInstance() {
 		return SingletonHolder.INSTANCE;

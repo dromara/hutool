@@ -23,7 +23,6 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -52,7 +51,7 @@ public class JSONObjectTest {
 	public void toStringTest() {
 		final String str = "{\"code\": 500, \"data\":null}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject jsonObject = new JSONObject(str);
+		final OldJSONObject jsonObject = new OldJSONObject(str);
 		Assertions.assertEquals("{\"code\":500,\"data\":null}", jsonObject.toString());
 		jsonObject.config().setIgnoreNullValue(true);
 		Assertions.assertEquals("{\"code\":500}", jsonObject.toString());
@@ -62,7 +61,7 @@ public class JSONObjectTest {
 	public void toStringTest2() {
 		final String str = "{\"test\":\"关于开展2018年度“文明集体”、“文明职工”评选表彰活动的通知\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(str);
+		final OldJSONObject json = new OldJSONObject(str);
 		Assertions.assertEquals(str, json.toString());
 	}
 
@@ -71,7 +70,7 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toStringTest3() {
-		final JSONObject json = Objects.requireNonNull(JSONUtil.ofObj()//
+		final OldJSONObject json = Objects.requireNonNull(JSONUtil.ofObj()//
 						.set("dateTime", DateUtil.parse("2019-05-02 22:12:01")))//
 				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assertions.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
@@ -79,7 +78,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void toStringWithDateTest() {
-		JSONObject json = JSONUtil.ofObj().set("date", DateUtil.parse("2019-05-08 19:18:21"));
+		OldJSONObject json = JSONUtil.ofObj().set("date", DateUtil.parse("2019-05-08 19:18:21"));
 		assert json != null;
 		Assertions.assertEquals("{\"date\":1557314301000}", json.toString());
 
@@ -90,13 +89,13 @@ public class JSONObjectTest {
 
 	@Test
 	public void putAllTest() {
-		final JSONObject json1 = JSONUtil.ofObj()
+		final OldJSONObject json1 = JSONUtil.ofObj()
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
 				.set("d", true);
 
-		final JSONObject json2 = JSONUtil.ofObj()
+		final OldJSONObject json2 = JSONUtil.ofObj()
 				.set("a", "value21")
 				.set("b", "value22");
 
@@ -111,7 +110,7 @@ public class JSONObjectTest {
 	@Test
 	public void parseStringTest() {
 		final String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
-		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(jsonStr);
 		Assertions.assertEquals(jsonObject.get("a"), "value1");
 		Assertions.assertEquals(jsonObject.get("b"), "value2");
 		Assertions.assertEquals(jsonObject.get("c"), "value3");
@@ -125,7 +124,7 @@ public class JSONObjectTest {
 	public void parseStringTest2() {
 		final String jsonStr = "{\"file_name\":\"RMM20180127009_731.000\",\"error_data\":\"201121151350701001252500000032 18973908335 18973908335 13601893517 201711211700152017112115135420171121 6594000000010100000000000000000000000043190101701001910072 100001100 \",\"error_code\":\"F140\",\"error_info\":\"最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”\",\"app_name\":\"inter-pre-check\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(jsonStr);
+		final OldJSONObject json = new OldJSONObject(jsonStr);
 		Assertions.assertEquals("F140", json.getStr("error_code"));
 		Assertions.assertEquals("最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”", json.getStr("error_info"));
 	}
@@ -134,7 +133,7 @@ public class JSONObjectTest {
 	public void parseStringTest3() {
 		final String jsonStr = "{\"test\":\"体”、“文\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(jsonStr);
+		final OldJSONObject json = new OldJSONObject(jsonStr);
 		Assertions.assertEquals("体”、“文", json.getStr("test"));
 	}
 
@@ -142,7 +141,7 @@ public class JSONObjectTest {
 	public void parseStringTest4() {
 		final String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(jsonStr);
+		final OldJSONObject json = new OldJSONObject(jsonStr);
 		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
 		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
@@ -151,7 +150,7 @@ public class JSONObjectTest {
 	public void parseBytesTest() {
 		final String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(jsonStr.getBytes(StandardCharsets.UTF_8));
+		final OldJSONObject json = new OldJSONObject(jsonStr.getBytes(StandardCharsets.UTF_8));
 		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
 		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
@@ -162,7 +161,7 @@ public class JSONObjectTest {
 		final StringReader stringReader = new StringReader(jsonStr);
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(stringReader);
+		final OldJSONObject json = new OldJSONObject(stringReader);
 		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
 		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
@@ -173,7 +172,7 @@ public class JSONObjectTest {
 		final ByteArrayInputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(in);
+		final OldJSONObject json = new OldJSONObject(in);
 		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
 		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
@@ -183,15 +182,15 @@ public class JSONObjectTest {
 		//在5.3.2之前，</div>中的/会被转义，修复此bug的单元测试
 		final String jsonStr = "{\"a\":\"<div>aaa</div>\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject json = new JSONObject(jsonStr);
+		final OldJSONObject json = new OldJSONObject(jsonStr);
 		Assertions.assertEquals("<div>aaa</div>", json.getObj("a"));
 		Assertions.assertEquals(jsonStr, json.toString());
 	}
 
 	@Test
 	public void toBeanTest() {
-		final JSONObject subJson = JSONUtil.ofObj().set("value1", "strValue1").set("value2", "234");
-		final JSONObject json = JSONUtil.ofObj(JSONConfig.of().setIgnoreError(true)).set("strValue", "strTest").set("intValue", 123)
+		final OldJSONObject subJson = JSONUtil.ofObj().set("value1", "strValue1").set("value2", "234");
+		final OldJSONObject json = JSONUtil.ofObj(JSONConfig.of().setIgnoreError(true)).set("strValue", "strTest").set("intValue", 123)
 				// 测试空字符串转对象
 				.set("doubleValue", "")
 				.set("beanValue", subJson)
@@ -210,7 +209,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void toBeanNullStrTest() {
-		final JSONObject json = JSONUtil.ofObj(JSONConfig.of().setIgnoreError(true))//
+		final OldJSONObject json = JSONUtil.ofObj(JSONConfig.of().setIgnoreError(true))//
 				.set("strValue", "null")//
 				.set("intValue", 123)//
 				// 子对象对应"null"字符串，如果忽略错误，跳过，否则抛出转换异常
@@ -232,7 +231,7 @@ public class JSONObjectTest {
 		userA.setDate(new Date());
 		userA.setSqs(ListUtil.of(new Seq("seq1"), new Seq("seq2")));
 
-		final JSONObject json = JSONUtil.parseObj(userA);
+		final OldJSONObject json = JSONUtil.parseObj(userA);
 		final UserA userA2 = json.toBean(UserA.class);
 		// 测试数组
 		Assertions.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
@@ -258,7 +257,7 @@ public class JSONObjectTest {
 	@Test
 	public void toBeanTest5() {
 		final String readUtf8Str = ResourceUtil.readUtf8Str("suiteReport.json");
-		final JSONObject json = JSONUtil.parseObj(readUtf8Str);
+		final OldJSONObject json = JSONUtil.parseObj(readUtf8Str);
 		final SuiteReport bean = json.toBean(SuiteReport.class);
 
 		// 第一层
@@ -277,7 +276,7 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toBeanTest6() {
-		final JSONObject json = JSONUtil.ofObj()
+		final OldJSONObject json = JSONUtil.ofObj()
 				.set("targetUrl", "http://test.com")
 				.set("success", "true")
 				.set("result", JSONUtil.ofObj()
@@ -314,7 +313,7 @@ public class JSONObjectTest {
 		userA.setDate(new Date());
 		userA.setSqs(ListUtil.of(new Seq(null), new Seq("seq2")));
 
-		final JSONObject json = JSONUtil.parseObj(userA, false);
+		final OldJSONObject json = JSONUtil.parseObj(userA, false);
 
 		Assertions.assertTrue(json.containsKey("a"));
 		Assertions.assertTrue(json.getJSONArray("sqs").getJSONObject(0).containsKey("seq"));
@@ -329,7 +328,7 @@ public class JSONObjectTest {
 		bean.setStrValue("strTest");
 		bean.setTestEnum(TestEnum.TYPE_B);
 
-		final JSONObject json = JSONUtil.parseObj(bean, false);
+		final OldJSONObject json = JSONUtil.parseObj(bean, false);
 		// 枚举转换检查，更新：枚举原样保存，在writer时调用toString。
 		Assertions.assertEquals(TestEnum.TYPE_B, json.get("testEnum"));
 
@@ -339,7 +338,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void parseBeanTest3() {
-		final JSONObject json = JSONUtil.ofObj()
+		final OldJSONObject json = JSONUtil.ofObj()
 				.set("code", 22)
 				.set("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
 
@@ -356,7 +355,7 @@ public class JSONObjectTest {
 		userA.setName("nameTest");
 		userA.setDate(new Date());
 
-		final JSONObject userAJson = JSONUtil.parseObj(userA);
+		final OldJSONObject userAJson = JSONUtil.parseObj(userA);
 		final UserB userB = JSONUtil.toBean(userAJson, UserB.class);
 
 		Assertions.assertEquals(userA.getName(), userB.getName());
@@ -370,7 +369,7 @@ public class JSONObjectTest {
 		userA.setName("nameTest");
 		userA.setDate(DateUtil.parse("2018-10-25"));
 
-		final JSONObject userAJson = JSONUtil.parseObj(userA);
+		final OldJSONObject userAJson = JSONUtil.parseObj(userA);
 		// 自定义日期格式
 		userAJson.setDateFormat("yyyy-MM-dd");
 
@@ -380,7 +379,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void beanTransTest3() {
-		final JSONObject userAJson = JSONUtil.ofObj()
+		final OldJSONObject userAJson = JSONUtil.ofObj()
 				.set("a", "AValue")
 				.set("name", "nameValue")
 				.set("date", "08:00:00");
@@ -395,10 +394,10 @@ public class JSONObjectTest {
 		userA.setName("nameTest");
 		userA.setDate(new Date());
 
-		final JSONObject userAJson = JSONUtil.parseObj(userA);
+		final OldJSONObject userAJson = JSONUtil.parseObj(userA);
 		Assertions.assertFalse(userAJson.containsKey("a"));
 
-		final JSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA, false);
+		final OldJSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA, false);
 		Assertions.assertTrue(userAJsonWithNullValue.containsKey("a"));
 		Assertions.assertTrue(userAJsonWithNullValue.containsKey("sqs"));
 	}
@@ -406,7 +405,7 @@ public class JSONObjectTest {
 	@Test
 	public void specialCharTest() {
 		final String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
-		final JSONObject obj = JSONUtil.parseObj(json);
+		final OldJSONObject obj = JSONUtil.parseObj(json);
 		Assertions.assertEquals("[abc]\\b\\u2001", obj.getStrEscaped("pattern"));
 		Assertions.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStrEscaped("pattern2Json"));
 	}
@@ -414,7 +413,7 @@ public class JSONObjectTest {
 	@Test
 	public void getStrTest() {
 		final String json = "{\"name\": \"yyb\\nbbb\"}";
-		final JSONObject jsonObject = JSONUtil.parseObj(json);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(json);
 
 		// 没有转义按照默认规则显示
 		Assertions.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
@@ -431,11 +430,11 @@ public class JSONObjectTest {
 		beanWithAlias.setValue1("张三");
 		beanWithAlias.setValue2(35);
 
-		final JSONObject jsonObject = JSONUtil.parseObj(beanWithAlias);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(beanWithAlias);
 		Assertions.assertEquals("张三", jsonObject.getStr("name"));
 		Assertions.assertEquals(new Integer(35), jsonObject.getInt("age"));
 
-		final JSONObject json = JSONUtil.ofObj()
+		final OldJSONObject json = JSONUtil.ofObj()
 				.set("name", "张三")
 				.set("age", 35);
 		final BeanWithAlias bean = JSONUtil.toBean(Objects.requireNonNull(json).toString(), BeanWithAlias.class);
@@ -448,7 +447,7 @@ public class JSONObjectTest {
 		final JSONConfig jsonConfig = JSONConfig.of();
 		jsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		final JSONObject json = new JSONObject(jsonConfig);
+		final OldJSONObject json = new OldJSONObject(jsonConfig);
 		json.append("date", DateUtil.parse("2020-06-05 11:16:11"));
 		json.append("bbb", "222");
 		json.append("aaa", "123");
@@ -461,7 +460,7 @@ public class JSONObjectTest {
 		jsonConfig.setDateFormat("yyyy#MM#dd");
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
-		final JSONObject json = new JSONObject(jsonConfig);
+		final OldJSONObject json = new OldJSONObject(jsonConfig);
 		json.set("date", date);
 		json.set("bbb", "222");
 		json.set("aaa", "123");
@@ -471,7 +470,7 @@ public class JSONObjectTest {
 		Assertions.assertEquals(jsonStr, json.toString());
 
 		// 解析测试
-		final JSONObject parse = JSONUtil.parseObj(jsonStr, jsonConfig);
+		final OldJSONObject parse = JSONUtil.parseObj(jsonStr, jsonConfig);
 		Assertions.assertEquals(DateUtil.beginOfDay(date), parse.getDate("date"));
 	}
 
@@ -481,13 +480,13 @@ public class JSONObjectTest {
 		final JSONConfig jsonConfig = JSONConfig.of().setDateFormat("#sss");
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
-		final JSONObject json = new JSONObject(jsonConfig);
+		final OldJSONObject json = new OldJSONObject(jsonConfig);
 		json.set("date", date);
 
 		Assertions.assertEquals("{\"date\":1591326971}", json.toString());
 
 		// 解析测试
-		final JSONObject parse = JSONUtil.parseObj(json.toString(), jsonConfig);
+		final OldJSONObject parse = JSONUtil.parseObj(json.toString(), jsonConfig);
 		Assertions.assertEquals(date, DateUtil.date(parse.getDate("date")));
 	}
 
@@ -497,7 +496,7 @@ public class JSONObjectTest {
 		jsonConfig.setDateFormat("#sss");
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
-		final JSONObject json = new JSONObject(jsonConfig);
+		final OldJSONObject json = new OldJSONObject(jsonConfig);
 		json.set("date", date);
 		json.set("bbb", "222");
 		json.set("aaa", "123");
@@ -507,14 +506,14 @@ public class JSONObjectTest {
 		Assertions.assertEquals(jsonStr, json.toString());
 
 		// 解析测试
-		final JSONObject parse = JSONUtil.parseObj(jsonStr, jsonConfig);
+		final OldJSONObject parse = JSONUtil.parseObj(jsonStr, jsonConfig);
 		Assertions.assertEquals(date, parse.getDate("date"));
 	}
 
 	@Test
 	public void getTimestampTest() {
 		final String timeStr = "1970-01-01 00:00:00";
-		final JSONObject jsonObject = JSONUtil.ofObj().set("time", timeStr);
+		final OldJSONObject jsonObject = JSONUtil.ofObj().set("time", timeStr);
 		final Timestamp time = jsonObject.get("time", Timestamp.class);
 		Assertions.assertEquals("1970-01-01 00:00:00.0", time.toString());
 	}
@@ -560,7 +559,7 @@ public class JSONObjectTest {
 	@Test
 	public void parseBeanSameNameTest() {
 		final SameNameBean sameNameBean = new SameNameBean();
-		final JSONObject parse = JSONUtil.parseObj(sameNameBean);
+		final OldJSONObject parse = JSONUtil.parseObj(sameNameBean);
 		Assertions.assertEquals("123", parse.getStr("username"));
 		Assertions.assertEquals("abc", parse.getStr("userName"));
 
@@ -600,7 +599,7 @@ public class JSONObjectTest {
 		final Set<Map.Entry<String, String>> entries = of.entrySet();
 		final Map.Entry<String, String> next = entries.iterator().next();
 
-		final JSONObject jsonObject = JSONUtil.parseObj(next);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(next);
 		Assertions.assertEquals("{\"test\":\"testValue\"}", jsonObject.toString());
 	}
 
@@ -608,7 +607,7 @@ public class JSONObjectTest {
 	public void createJSONObjectTest() {
 		Assertions.assertThrows(JSONException.class, ()->{
 			// 集合类不支持转为JSONObject
-			new JSONObject(new JSONArray(), JSONConfig.of());
+			new OldJSONObject(new JSONArray(), JSONConfig.of());
 		});
 	}
 
@@ -623,7 +622,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void appendTest() {
-		final JSONObject jsonObject = JSONUtil.ofObj().append("key1", "value1");
+		final OldJSONObject jsonObject = JSONUtil.ofObj().append("key1", "value1");
 		Assertions.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
 
 		jsonObject.append("key1", "value2");
@@ -635,7 +634,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void putByPathTest() {
-		final JSONObject json = new JSONObject();
+		final OldJSONObject json = new OldJSONObject();
 		json.putByPath("aa.bb", "BB");
 		Assertions.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
 	}
@@ -656,7 +655,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void filterIncludeTest() {
-		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
+		final OldJSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -668,7 +667,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void filterExcludeTest() {
-		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
+		final OldJSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -680,7 +679,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void editTest() {
-		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
+		final OldJSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -700,7 +699,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void toUnderLineCaseTest() {
-		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
+		final OldJSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("aKey", "value1")
 				.set("bJob", "value2")
 				.set("cGood", "value3")
@@ -715,7 +714,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void nullToEmptyTest() {
-		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of().setIgnoreNullValue(false))
+		final OldJSONObject json1 = JSONUtil.ofObj(JSONConfig.of().setIgnoreNullValue(false))
 				.set("a", null)
 				.set("b", "value2");
 
@@ -730,7 +729,7 @@ public class JSONObjectTest {
 	public void parseFilterTest() {
 		final String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> "b".equals(pair.getKey()));
+		final OldJSONObject jsonObject = new OldJSONObject(jsonStr, null, (pair)-> "b".equals(pair.getKey()));
 		Assertions.assertEquals(1, jsonObject.size());
 		Assertions.assertEquals("value2", jsonObject.get("b"));
 	}
@@ -739,7 +738,7 @@ public class JSONObjectTest {
 	public void parseFilterEditTest() {
 		final String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> {
+		final OldJSONObject jsonObject = new OldJSONObject(jsonStr, null, (pair)-> {
 			if("b".equals(pair.getKey())){
 				final JSONPrimitive primitive = (JSONPrimitive) pair.getValue();
 				pair.setValue(primitive.getValue() + "_edit");

@@ -17,7 +17,7 @@
 package org.dromara.hutool.json.xml;
 
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.OldJSONObject;
 
 /**
  * 提供静态方法在XML和JSONObject之间转换
@@ -37,7 +37,7 @@ public class JSONXMLUtil {
 	 * @return A JSONObject containing the structured data from the XML string.
 	 * @throws JSONException Thrown if there is an errors while parsing the string
 	 */
-	public static JSONObject toJSONObject(final String string) throws JSONException {
+	public static OldJSONObject toJSONObject(final String string) throws JSONException {
 		return toJSONObject(string, ParseConfig.of());
 	}
 
@@ -52,8 +52,8 @@ public class JSONXMLUtil {
 	 * @return A JSONObject containing the structured data from the XML string.
 	 * @throws JSONException Thrown if there is an errors while parsing the string
 	 */
-	public static JSONObject toJSONObject(final String string, final ParseConfig parseConfig) throws JSONException {
-		return toJSONObject(string, new JSONObject(), parseConfig);
+	public static OldJSONObject toJSONObject(final String string, final ParseConfig parseConfig) throws JSONException {
+		return toJSONObject(string, new OldJSONObject(), parseConfig);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class JSONXMLUtil {
 	 * @throws JSONException 解析异常
 	 * @since 5.3.1
 	 */
-	public static JSONObject toJSONObject(final String xmlStr, final JSONObject jo, final ParseConfig parseConfig) throws JSONException {
+	public static OldJSONObject toJSONObject(final String xmlStr, final OldJSONObject jo, final ParseConfig parseConfig) throws JSONException {
 		JSONXMLParser.of(parseConfig, null).parseJSONObject(xmlStr, jo);
 		return jo;
 	}

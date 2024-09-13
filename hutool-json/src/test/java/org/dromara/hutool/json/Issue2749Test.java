@@ -43,7 +43,7 @@ public class Issue2749Test {
 		final String jsonStr = JSONUtil.toJsonStr(map);
 
 		@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-		final JSONObject jsonObject = new JSONObject(jsonStr);
+		final OldJSONObject jsonObject = new OldJSONObject(jsonStr);
 		Assertions.assertNotNull(jsonObject);
 
 		// 栈溢出

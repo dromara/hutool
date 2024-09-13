@@ -161,7 +161,7 @@ public class SerializerManager {
 	 * @param bean 对象
 	 * @return JSONSerializer
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings({"rawtypes"})
 	public JSONSerializer<?> getSerializer(final Object bean) {
 		for (final MatcherJSONSerializer serializer : this.serializerSet) {
 			if (serializer.match(bean, null)) {
@@ -254,17 +254,18 @@ public class SerializerManager {
 	 * 注册默认的序列化器和反序列化器
 	 */
 	private static void registerDefault() {
-		SingletonHolder.INSTANCE.register(LocalDate.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalDate.class));
-		SingletonHolder.INSTANCE.register(LocalDate.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalDate.class));
+		final SerializerManager manager = SingletonHolder.INSTANCE;
+		manager.register(LocalDate.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalDate.class));
+		manager.register(LocalDate.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalDate.class));
 
-		SingletonHolder.INSTANCE.register(LocalTime.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalTime.class));
-		SingletonHolder.INSTANCE.register(LocalTime.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalTime.class));
+		manager.register(LocalTime.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalTime.class));
+		manager.register(LocalTime.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalTime.class));
 
-		SingletonHolder.INSTANCE.register(LocalDateTime.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalDateTime.class));
-		SingletonHolder.INSTANCE.register(LocalDateTime.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalDateTime.class));
+		manager.register(LocalDateTime.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalDateTime.class));
+		manager.register(LocalDateTime.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalDateTime.class));
 
-		SingletonHolder.INSTANCE.register((MatcherJSONSerializer<TimeZone>) TimeZoneSerializer.INSTANCE);
-		SingletonHolder.INSTANCE.register((MatcherJSONDeserializer<TimeZone>) TimeZoneSerializer.INSTANCE);
+		manager.register((MatcherJSONSerializer<TimeZone>) TimeZoneSerializer.INSTANCE);
+		manager.register((MatcherJSONDeserializer<TimeZone>) TimeZoneSerializer.INSTANCE);
 	}
 	// endregion
 }

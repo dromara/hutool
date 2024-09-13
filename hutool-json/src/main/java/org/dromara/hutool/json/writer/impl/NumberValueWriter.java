@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.writer;
+package org.dromara.hutool.json.writer.impl;
 
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
+import org.dromara.hutool.json.writer.JSONWriter;
+import org.dromara.hutool.json.writer.NumberWriteMode;
+import org.dromara.hutool.json.writer.ValueWriter;
 
 /**
  * 数字类型的值写出器
@@ -26,7 +29,7 @@ import org.dromara.hutool.json.JSONException;
  * @author looly
  * @since 6.0.0
  */
-public class NumberValueWriter implements JSONValueWriter {
+public class NumberValueWriter implements ValueWriter {
 
 	/**
 	 * JS中表示的数字最大值

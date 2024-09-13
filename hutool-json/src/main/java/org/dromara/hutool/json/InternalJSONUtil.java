@@ -28,8 +28,8 @@ import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serializer.JSONStringer;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -94,10 +94,8 @@ public final class InternalJSONUtil {
 	/**
 	 * 值转为String，用于JSON中。规则为：
 	 * <ul>
-	 *     <li>对象如果实现了{@link JSONStringer}接口，调用{@link JSONStringer#toJSONString()}方法</li>
-	 *     <li>对象如果实现了{@link JSONStringer}接口，调用{@link JSONStringer#toJSONString()}方法</li>
 	 *     <li>对象如果是数组或Collection，包装为{@link JSONArray}</li>
-	 *     <li>对象如果是Map，包装为{@link JSONObject}</li>
+	 *     <li>对象如果是Map，包装为{@link OldJSONObject}</li>
 	 *     <li>对象如果是数字，使用{@link NumberUtil#toStr(Number)}转换为字符串</li>
 	 *     <li>其他情况调用toString并使用双引号包装</li>
 	 * </ul>
@@ -110,19 +108,13 @@ public final class InternalJSONUtil {
 		if (value == null) {
 			return StrUtil.NULL;
 		}
-		if (value instanceof JSONStringer) {
-			try {
-				return ((JSONStringer) value).toJSONString();
-			} catch (final Exception e) {
-				throw new JSONException(e);
-			}
-		} else if (value instanceof Number) {
+		if (value instanceof Number) {
 			return NumberUtil.toStr((Number) value);
-		} else if (value instanceof Boolean || value instanceof JSONObject || value instanceof JSONArray) {
+		} else if (value instanceof Boolean || value instanceof OldJSONObject || value instanceof JSONArray) {
 			return value.toString();
 		} else if (value instanceof Map) {
 			final Map<?, ?> map = (Map<?, ?>) value;
-			return new JSONObject(map).toString();
+			return new OldJSONObject(map).toString();
 		} else if (value instanceof Collection) {
 			final Collection<?> coll = (Collection<?>) value;
 			return new JSONArray(coll).toString();
@@ -143,15 +135,15 @@ public final class InternalJSONUtil {
 	 * @param value      值
 	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
+	public static void propertyPut(final OldJSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
 		final String[] path = SplitUtil.splitToArray(ConvertUtil.toStr(key), StrUtil.DOT);
 		final int last = path.length - 1;
-		JSONObject target = jsonObject;
+		OldJSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {
 			final String segment = path[i];
-			JSONObject nextTarget = target.getJSONObject(segment);
+			OldJSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
-				nextTarget = new JSONObject(target.config());
+				nextTarget = new OldJSONObject(target.config());
 				target.set(segment, nextTarget, predicate);
 			}
 			target = nextTarget;
@@ -282,13 +274,40 @@ public final class InternalJSONUtil {
 	 * @param config   JSON配置项，{@code null}则使用默认配置
 	 * @return Map
 	 */
-	static Map<String, Object> createRawMap(final int capacity, JSONConfig config) {
+	@Deprecated
+	static Map<String, Object> createRawMapOld(final int capacity, JSONConfig config) {
 		final Map<String, Object> rawHashMap;
 		if (null == config) {
 			config = JSONConfig.of();
 		}
 		final Comparator<String> keyComparator = config.getKeyComparator();
 		if (config.isIgnoreCase()) {
+			if (null != keyComparator) {
+				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
+			} else {
+				rawHashMap = new CaseInsensitiveLinkedMap<>(capacity);
+			}
+		} else {
+			if (null != keyComparator) {
+				rawHashMap = new TreeMap<>(keyComparator);
+			} else {
+				rawHashMap = new LinkedHashMap<>(capacity);
+			}
+		}
+		return rawHashMap;
+	}
+
+	/**
+	 * 根据配置创建对应的原始Map
+	 *
+	 * @param capacity 初始大小
+	 * @param config   JSON配置项，{@code null}则使用默认配置
+	 * @return Map
+	 */
+	static Map<String, JSON> createRawMap(final int capacity, final JSONConfig config) {
+		final Map<String, JSON> rawHashMap;
+		final Comparator<String> keyComparator = ObjUtil.apply(config, JSONConfig::getKeyComparator);
+		if (null != config && config.isIgnoreCase()) {
 			if (null != keyComparator) {
 				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
 			} else {

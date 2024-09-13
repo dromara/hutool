@@ -20,8 +20,6 @@ import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.json.serializer.JSONStringer;
 import org.dromara.hutool.json.test.bean.Price;
 import org.dromara.hutool.json.test.bean.UserA;
 import org.dromara.hutool.json.test.bean.UserC;
@@ -126,7 +124,7 @@ public class JSONUtilTest {
 	@Test
 	public void parseNumberToJSONObjectTest() {
 		assertThrows(JSONException.class, () -> {
-			final JSONObject json = JSONUtil.parseObj(123L);
+			final OldJSONObject json = JSONUtil.parseObj(123L);
 			Assertions.assertNotNull(json);
 		});
 	}
@@ -136,8 +134,8 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberToJSONObjectTest2() {
-		final JSONObject json = JSONUtil.parseObj(123L, JSONConfig.of().setIgnoreError(true));
-		assertEquals(new JSONObject(), json);
+		final OldJSONObject json = JSONUtil.parseObj(123L, JSONConfig.of().setIgnoreError(true));
+		assertEquals(new OldJSONObject(), json);
 	}
 
 	@Test
@@ -171,7 +169,7 @@ public class JSONUtilTest {
 		data.put("model", model);
 		data.put("model2", model);
 
-		final JSONObject jsonObject = JSONUtil.parseObj(data);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(data);
 
 		Assertions.assertTrue(jsonObject.containsKey("model"));
 		assertEquals(1, jsonObject.getJSONObject("model").getInt("type").intValue());
@@ -182,7 +180,7 @@ public class JSONUtilTest {
 	@Test
 	public void toJsonStrTest3() {
 		// 验证某个字段为JSON字符串时转义是否规范
-		final JSONObject object = new JSONObject(JSONConfig.of().setIgnoreError(true));
+		final OldJSONObject object = new OldJSONObject(JSONConfig.of().setIgnoreError(true));
 		object.set("name", "123123");
 		object.set("value", "\\");
 		object.set("value2", "</");
@@ -190,11 +188,11 @@ public class JSONUtilTest {
 		final HashMap<String, String> map = MapUtil.newHashMap();
 		map.put("user", object.toString());
 
-		final JSONObject json = JSONUtil.parseObj(map);
+		final OldJSONObject json = JSONUtil.parseObj(map);
 		assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json.get("user"));
 		assertEquals("{\"user\":\"{\\\"name\\\":\\\"123123\\\",\\\"value\\\":\\\"\\\\\\\\\\\",\\\"value2\\\":\\\"</\\\"}\"}", json.toString());
 
-		final JSONObject json2 = JSONUtil.parseObj(json.toString());
+		final OldJSONObject json2 = JSONUtil.parseObj(json.toString());
 		assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json2.get("user"));
 	}
 
@@ -232,7 +230,7 @@ public class JSONUtilTest {
 		final UserC user = JSONUtil.toBean(json, UserC.class);
 		Assertions.assertNotNull(user.getProp());
 		final String prop = user.getProp();
-		final JSONObject propJson = JSONUtil.parseObj(prop);
+		final OldJSONObject propJson = JSONUtil.parseObj(prop);
 		assertEquals("男", propJson.getStr("gender"));
 		assertEquals(18, propJson.getInt("age").intValue());
 		// Assertions.assertEquals("{\"age\":18,\"gender\":\"男\"}", user.getProp());
@@ -241,21 +239,21 @@ public class JSONUtilTest {
 	@Test
 	public void getStrTest() {
 		final String html = "{\"name\":\"Something must have been changed since you leave\"}";
-		final JSONObject jsonObject = JSONUtil.parseObj(html);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(html);
 		assertEquals("Something must have been changed since you leave", jsonObject.getStr("name"));
 	}
 
 	@Test
 	public void getStrTest2() {
 		final String html = "{\"name\":\"Something\\u00a0must have been changed since you leave\"}";
-		final JSONObject jsonObject = JSONUtil.parseObj(html);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(html);
 		assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStrEscaped("name"));
 	}
 
 	@Test
 	public void parseFromXmlTest() {
 		final String s = "<sfzh>640102197312070614</sfzh><sfz>640102197312070614X</sfz><name>aa</name><gender>1</gender>";
-		final JSONObject json = JSONUtil.parseFromXml(s);
+		final OldJSONObject json = JSONUtil.parseFromXml(s);
 		assertEquals(640102197312070614L, json.get("sfzh"));
 		assertEquals("640102197312070614X", json.get("sfz"));
 		assertEquals("aa", json.get("name"));
@@ -265,28 +263,20 @@ public class JSONUtilTest {
 	@Test
 	public void doubleTest() {
 		final String json = "{\"test\": 12.00}";
-		final JSONObject jsonObject = JSONUtil.parseObj(json);
+		final OldJSONObject jsonObject = JSONUtil.parseObj(json);
 		//noinspection BigDecimalMethodWithoutRoundingCalled
 		assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
 	}
 
 	@Test
-	public void customValueTest() {
-		final JSONObject jsonObject = JSONUtil.ofObj()
-			.set("test2", (JSONStringer) () -> NumberUtil.format("#.0", 12.00D));
-
-		assertEquals("{\"test2\":12.0}", jsonObject.toString());
-	}
-
-	@Test
 	public void setStripTrailingZerosTest() {
 		// 默认去除多余的0
-		final JSONObject jsonObjectDefault = JSONUtil.ofObj()
+		final OldJSONObject jsonObjectDefault = JSONUtil.ofObj()
 			.set("test2", 12.00D);
 		assertEquals("{\"test2\":12}", jsonObjectDefault.toString());
 
 		// 不去除多余的0
-		final JSONObject jsonObject = JSONUtil.ofObj(JSONConfig.of().setStripTrailingZeros(false))
+		final OldJSONObject jsonObject = JSONUtil.ofObj(JSONConfig.of().setStripTrailingZeros(false))
 			.set("test2", 12.00D);
 		assertEquals("{\"test2\":12.0}", jsonObject.toString());
 
@@ -298,7 +288,7 @@ public class JSONUtilTest {
 	@Test
 	public void parseObjTest() {
 		// 测试转义
-		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
+		final OldJSONObject jsonObject = JSONUtil.parseObj("{\n" +
 			"    \"test\": \"\\\\地库地库\",\n" +
 			"}");
 
@@ -309,7 +299,7 @@ public class JSONUtilTest {
 	public void sqlExceptionTest() {
 		//https://github.com/dromara/hutool/issues/1399
 		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
-		final JSONObject set = JSONUtil.ofObj().set("test", new SQLException("test"));
+		final OldJSONObject set = JSONUtil.ofObj().set("test", new SQLException("test"));
 		assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
 	}
 
@@ -322,7 +312,7 @@ public class JSONUtilTest {
 
 	@Test
 	public void toXmlTest() {
-		final JSONObject obj = JSONUtil.ofObj();
+		final OldJSONObject obj = JSONUtil.ofObj();
 		obj.set("key1", "v1")
 			.set("key2", ListUtil.view("a", "b", "c"));
 		final String xmlStr = JSONUtil.toXmlStr(obj);
