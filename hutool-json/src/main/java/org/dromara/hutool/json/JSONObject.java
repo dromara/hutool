@@ -22,9 +22,6 @@ import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.writer.JSONWriter;
 
-import java.io.Writer;
-import java.util.function.Predicate;
-
 public class JSONObject extends MapWrapper<String, JSON> implements JSON{
 
 	/**
@@ -71,12 +68,9 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON{
 	}
 
 	@Override
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
-		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
-			.beginObj();
-		this.forEach((key, value) -> jsonWriter.writeField(new MutableEntry<>(key, value), predicate));
-		jsonWriter.end();
-		// 此处不关闭Writer，考虑writer后续还需要填内容
-		return writer;
+	public void write(final JSONWriter writer) throws JSONException {
+		writer.beginObj();
+		this.forEach((key, value) -> writer.writeField(new MutableEntry<>(key, value)));
+		writer.end();
 	}
 }

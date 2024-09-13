@@ -17,15 +17,11 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.writer.ValueWriter;
 import org.dromara.hutool.json.writer.ValueWriterManager;
 
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Type;
-import java.util.function.Predicate;
 
 /**
  * JSON原始类型数据封装，根据RFC8259规范，JSONPrimitive只包含以下类型：
@@ -114,25 +110,22 @@ public class JSONPrimitive implements JSON {
 	}
 
 	@Override
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
-		final Object value = this.value;
-		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config);
-
+	public void write(final JSONWriter writer) throws JSONException {
 		// 自定义规则
 		final ValueWriter valueWriter = ValueWriterManager.getInstance().get(value);
 		if (null != valueWriter) {
-			valueWriter.write(jsonWriter, value);
-			return writer;
+			valueWriter.write(writer, value);
+			return;
 		}
 
 		// 默认包装字符串
-		jsonWriter.writeQuoteStrValue(value.toString());
-		return writer;
+		writer.writeQuoteStrValue(value.toString());
 	}
 
 	@Override
 	public String toString() {
-		final StringWriter sw = new StringWriter();
-		return this.write(sw, 0, 0, null).toString();
+		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), 0, 0, this.config);
+		write(jsonWriter);
+		return jsonWriter.toString();
 	}
 }

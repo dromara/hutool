@@ -29,8 +29,6 @@ import org.dromara.hutool.json.mapper.JSONObjectMapper;
 import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
-import java.io.StringWriter;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -436,32 +434,17 @@ public class OldJSONObject extends MapWrapper<String, Object> implements JSON, J
 	 * @since 5.7.15
 	 */
 	public String toJSONString(final int indentFactor, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final StringWriter sw = new StringWriter();
-		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0, predicate).toString();
-		}
+		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, config).setPredicate(predicate);
+		write(jsonWriter);
+		return jsonWriter.toString();
 	}
 
-	/**
-	 * 将JSON内容写入Writer<br>
-	 * 支持过滤器，即选择哪些字段或值不写出
-	 *
-	 * @param writer       writer
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @param predicate    过滤器，同时可以修改编辑键和值
-	 * @return Writer
-	 * @throws JSONException JSON相关异常
-	 * @since 5.7.15
-	 */
 	@Override
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
-		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
-			.beginObj();
-		this.forEach((key, value) -> jsonWriter.writeField(new MutableEntry<>(key, value), predicate));
-		jsonWriter.end();
-		// 此处不关闭Writer，考虑writer后续还需要填内容
-		return writer;
+	public void write(final JSONWriter writer) throws JSONException {
+		final JSONWriter copyWriter = writer.copyOf();
+		copyWriter.beginObj();
+		this.forEach((key, value) -> copyWriter.writeField(new MutableEntry<>(key, value)));
+		copyWriter.end();
 	}
 
 	@Override

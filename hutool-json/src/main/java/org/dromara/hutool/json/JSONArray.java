@@ -29,8 +29,6 @@ import org.dromara.hutool.json.mapper.JSONArrayMapper;
 import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -564,20 +562,17 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @since 5.7.15
 	 */
 	public String toJSONString(final int indentFactor, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final StringWriter sw = new StringWriter();
-		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0, predicate).toString();
-		}
+		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, this.config).setPredicate(predicate);
+		this.write(jsonWriter);
+		return jsonWriter.toString();
 	}
 
 	@Override
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
-		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config).beginArray();
-
-		CollUtil.forEach(this, (value, index) -> jsonWriter.writeField(new MutableEntry<>(index, value), predicate));
-		jsonWriter.end();
-		// 此处不关闭Writer，考虑writer后续还需要填内容
-		return writer;
+	public void write(final JSONWriter writer) throws JSONException {
+		final JSONWriter copyWriter = writer.copyOf();
+		copyWriter.beginArray();
+		CollUtil.forEach(this, (value, index) -> copyWriter.writeField(new MutableEntry<>(index, value)));
+		copyWriter.end();
 	}
 
 	@Override

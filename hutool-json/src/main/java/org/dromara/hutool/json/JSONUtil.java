@@ -285,7 +285,7 @@ public class JSONUtil {
 	 */
 	public static void toJsonStr(final Object obj, final Writer writer) {
 		if (null != obj) {
-			parse(obj).write(writer);
+			parse(obj).write(JSONWriter.of(writer, 0, 0, null));
 		}
 	}
 

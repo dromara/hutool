@@ -25,6 +25,8 @@ import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.function.Predicate;
@@ -36,24 +38,40 @@ import java.util.function.Predicate;
  * @author looly
  * @since 5.7.3
  */
-public class JSONWriter extends Writer {
+public class JSONWriter implements Appendable, Flushable, Closeable {
+
+	/**
+	 * 创建JSONWriter
+	 *
+	 * @param appendable   {@link Appendable}
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent       本级别缩进量
+	 * @param config       JSON选项
+	 * @return JSONWriter
+	 */
+	public static JSONWriter of(final Appendable appendable, final int indentFactor, final int indent,
+								final JSONConfig config) {
+		return new JSONWriter(appendable, indentFactor, indent, config);
+	}
+
+	/**
+	 * Writer
+	 */
+	private final Appendable appendable;
+	/**
+	 * JSON选项
+	 */
+	private final JSONConfig config;
 
 	/**
 	 * 缩进因子，定义每一级别增加的缩进量
 	 */
 	private final int indentFactor;
 	/**
-	 * 本级别缩进量
+	 * 键值对过滤器，用于修改键值对
 	 */
-	private final int indent;
-	/**
-	 * Writer
-	 */
-	private final Writer writer;
-	/**
-	 * JSON选项
-	 */
-	private final JSONConfig config;
+	private Predicate<MutableEntry<Object, Object>> predicate;
+
 
 	/**
 	 * 写出当前值是否需要分隔符
@@ -63,33 +81,35 @@ public class JSONWriter extends Writer {
 	 * 是否为JSONArray模式
 	 */
 	private boolean arrayMode;
-
 	/**
-	 * 创建JSONWriter
-	 *
-	 * @param writer       {@link Writer}
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @param config       JSON选项
-	 * @return JSONWriter
+	 * 本级别缩进量
 	 */
-	public static JSONWriter of(final Writer writer, final int indentFactor, final int indent, final JSONConfig config) {
-		return new JSONWriter(writer, indentFactor, indent, config);
-	}
+	private int indent;
 
 	/**
 	 * 构造
 	 *
-	 * @param writer       {@link Writer}
+	 * @param appendable   {@link Appendable}
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       本级别缩进量
 	 * @param config       JSON选项
 	 */
-	public JSONWriter(final Writer writer, final int indentFactor, final int indent, final JSONConfig config) {
-		this.writer = writer;
+	public JSONWriter(final Appendable appendable, final int indentFactor, final int indent, final JSONConfig config) {
+		this.appendable = appendable;
 		this.indentFactor = indentFactor;
 		this.indent = indent;
-		this.config = ObjUtil.defaultIfNull(config, JSONConfig.of());
+		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
+	}
+
+	/**
+	 * 设置键值对过滤器，用于修改键值对
+	 *
+	 * @param predicate 键值对过滤器，用于修改键值对
+	 * @return this
+	 */
+	public JSONWriter setPredicate(final Predicate<MutableEntry<Object, Object>> predicate) {
+		this.predicate = predicate;
+		return this;
 	}
 
 	/**
@@ -102,13 +122,25 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
+	 * 复制当前对象，用于修改配置后写出
+	 * @return JSONWriter
+	 */
+	@SuppressWarnings("resource")
+	public JSONWriter copyOf() {
+		return new JSONWriter(this.appendable, this.indentFactor, this.indent, this.config)
+			.setPredicate(this.predicate);
+	}
+
+	/**
 	 * JSONObject写出开始，默认写出"{"
 	 *
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public JSONWriter beginObj() {
-		//noinspection resource
-		writeRaw(CharUtil.DELIM_START);
+		append(CharUtil.DELIM_START);
+		arrayMode = false;
+		needSeparator = false;
 		return this;
 	}
 
@@ -117,10 +149,11 @@ public class JSONWriter extends Writer {
 	 *
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public JSONWriter beginArray() {
-		//noinspection resource
-		writeRaw(CharUtil.BRACKET_START);
+		append(CharUtil.BRACKET_START);
 		arrayMode = true;
+		needSeparator = false;
 		return this;
 	}
 
@@ -129,12 +162,11 @@ public class JSONWriter extends Writer {
 	 *
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public JSONWriter end() {
 		// 换行缩进
-		//noinspection resource
 		writeLF().writeSpace(indent);
-		//noinspection resource
-		writeRaw(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
+		append(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
 		flush();
 		arrayMode = false;
 		// 当前对象或数组结束，当新的
@@ -147,12 +179,11 @@ public class JSONWriter extends Writer {
 	 * 在{@link #arrayMode} 为 {@code true} 时，key是数字，此时不写出键，只写值
 	 *
 	 * @param pair      键值对
-	 * @param predicate 过滤修改器
 	 * @return this
 	 * @since 6.0.0
 	 */
-	@SuppressWarnings({"UnusedReturnValue", "resource"})
-	public JSONWriter writeField(final MutableEntry<Object, Object> pair, final Predicate<MutableEntry<Object, Object>> predicate) {
+	@SuppressWarnings("resource")
+	public JSONWriter writeField(final MutableEntry<Object, Object> pair) {
 		if (null == pair.getValue() && config.isIgnoreNullValue()) {
 			return this;
 		}
@@ -169,7 +200,7 @@ public class JSONWriter extends Writer {
 			writeKey(StrUtil.toString(pair.getKey()));
 		}
 
-		return writeValueDirect(pair.getValue(), predicate);
+		return writeValueDirect(pair.getValue());
 	}
 
 	/**
@@ -178,35 +209,36 @@ public class JSONWriter extends Writer {
 	 * @param key 键名
 	 * @return this
 	 */
-	@SuppressWarnings({"resource", "UnusedReturnValue"})
+	@SuppressWarnings("resource")
 	public JSONWriter writeKey(final String key) {
 		if (needSeparator) {
-			//noinspection resource
-			writeRaw(CharUtil.COMMA);
+			append(CharUtil.COMMA);
 		}
 		// 换行缩进
 		writeLF().writeSpace(indentFactor + indent);
 		return writeRaw(InternalJSONUtil.quote(key));
 	}
 
-	@SuppressWarnings({"SpellCheckingInspection", "NullableProblems"})
-	@Override
-	public void write(final char[] cbuf, final int off, final int len) throws IOException {
-		this.writer.write(cbuf, off, len);
-	}
-
 	@Override
 	public void flush() {
-		try {
-			this.writer.flush();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
+		if (this.appendable instanceof Flushable) {
+			try {
+				((Flushable) this.appendable).flush();
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
 		}
 	}
 
 	@Override
 	public void close() throws IOException {
-		this.writer.close();
+		if (this.appendable instanceof AutoCloseable) {
+			try {
+				((AutoCloseable) this.appendable).close();
+			} catch (final Exception e) {
+				throw new IOException(e);
+			}
+		}
 	}
 
 	/**
@@ -218,7 +250,7 @@ public class JSONWriter extends Writer {
 	 * @param csq 字符串
 	 */
 	public void writeQuoteStrValue(final String csq) {
-		InternalJSONUtil.quote(csq, writer);
+		InternalJSONUtil.quote(csq, this.appendable);
 	}
 
 	/**
@@ -230,7 +262,7 @@ public class JSONWriter extends Writer {
 		if (indentFactor > 0) {
 			for (int i = 0; i < count; i++) {
 				//noinspection resource
-				writeRaw(CharUtil.SPACE);
+				append(CharUtil.SPACE);
 			}
 		}
 	}
@@ -243,7 +275,7 @@ public class JSONWriter extends Writer {
 	public JSONWriter writeLF() {
 		if (indentFactor > 0) {
 			//noinspection resource
-			writeRaw(CharUtil.LF);
+			append(CharUtil.LF);
 		}
 		return this;
 	}
@@ -256,26 +288,46 @@ public class JSONWriter extends Writer {
 	 */
 	public JSONWriter writeRaw(final String csq) {
 		try {
-			writer.append(csq);
+			this.appendable.append(csq);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
 	}
 
-	/**
-	 * 写入原始字符值，不做任何处理
-	 *
-	 * @param c 字符
-	 * @return this
-	 */
-	public JSONWriter writeRaw(final char c) {
+	@Override
+	public JSONWriter append(final char c) throws IORuntimeException {
 		try {
-			writer.write(c);
+			this.appendable.append(c);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
+	}
+
+	@Override
+	public JSONWriter append(final CharSequence csq) throws IORuntimeException {
+		try {
+			this.appendable.append(csq);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return this;
+	}
+
+	@Override
+	public JSONWriter append(final CharSequence csq, final int start, final int end) throws IORuntimeException {
+		try {
+			this.appendable.append(csq, start, end);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return this.appendable.toString();
 	}
 
 	// ------------------------------------------------------------------------------ Private methods
@@ -284,40 +336,36 @@ public class JSONWriter extends Writer {
 	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
 	 *
 	 * @param value     值
-	 * @param predicate 过滤修改器
 	 * @return this
 	 */
-	private JSONWriter writeValueDirect(final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
+	private JSONWriter writeValueDirect(final Object value) {
 		if (arrayMode) {
 			if (needSeparator) {
 				//noinspection resource
-				writeRaw(CharUtil.COMMA);
+				append(CharUtil.COMMA);
 			}
 			// 换行缩进
 			//noinspection resource
 			writeLF().writeSpace(indentFactor + indent);
 		} else {
 			//noinspection resource
-			writeRaw(CharUtil.COLON).writeSpace(1);
+			append(CharUtil.COLON).writeSpace(1);
 		}
 		needSeparator = true;
-		return writeObjValue(value, predicate);
+		return writeObjValue(value);
 	}
 
 	/**
 	 * 写出JSON的值，根据值类型不同，输出不同内容
 	 *
 	 * @param value     值
-	 * @param predicate 过滤修改器
 	 * @return this
 	 */
 	@SuppressWarnings("resource")
-	private JSONWriter writeObjValue(final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final int indent = indentFactor + this.indent;
-
+	private JSONWriter writeObjValue(final Object value) {
 		// 自定义规则
 		final ValueWriter valueWriter = ValueWriterManager.getInstance().get(value);
-		if(null != valueWriter){
+		if (null != valueWriter) {
 			valueWriter.write(this, value);
 			return this;
 		}
@@ -325,8 +373,8 @@ public class JSONWriter extends Writer {
 		// 默认规则
 		if (value == null) {
 			writeRaw(StrUtil.NULL);
-		}else if (value instanceof JSON) {
-			((JSON) value).write(writer, indentFactor, indent, predicate);
+		} else if (value instanceof JSON) {
+			((JSON) value).write(this);
 		} else {
 			writeQuoteStrValue(value.toString());
 		}

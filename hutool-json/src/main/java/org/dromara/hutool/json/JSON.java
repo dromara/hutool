@@ -19,14 +19,11 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
-import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Type;
-import java.util.function.Predicate;
 
 /**
  * JSON树模型接口，表示树中的一个节点。实现包括：
@@ -155,20 +152,9 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @throws JSONException 包含非法数抛出此异常
 	 */
 	default String toJSONString(final int indentFactor) throws JSONException {
-		final StringWriter sw = new StringWriter();
-		return this.write(sw, indentFactor, 0, null).toString();
-	}
-
-	/**
-	 * 将JSON内容写入Writer，无缩进<br>
-	 * Warning: This method assumes that the data structure is acyclical.
-	 *
-	 * @param writer Writer
-	 * @return Writer
-	 * @throws JSONException JSON相关异常
-	 */
-	default Writer write(final Writer writer) throws JSONException {
-		return this.write(writer, 0, 0, null);
+		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, config());
+		this.write(jsonWriter);
+		return jsonWriter.toString();
 	}
 
 	/**
@@ -176,13 +162,9 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * Warning: This method assumes that the data structure is acyclical.
 	 *
 	 * @param writer       writer
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @param predicate    过滤器，可以修改值，key（index）无法修改，{@link Predicate#test(Object)}为{@code true}保留
-	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 */
-	Writer write(Writer writer, int indentFactor, int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException;
+	void write(JSONWriter writer) throws JSONException;
 
 	/**
 	 * 转为实体类对象

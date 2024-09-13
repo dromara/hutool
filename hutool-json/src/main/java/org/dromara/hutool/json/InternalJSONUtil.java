@@ -32,8 +32,6 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.reader.JSONTokener;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Predicate;
@@ -210,7 +208,7 @@ public final class InternalJSONUtil {
 	 * @since 3.3.1
 	 */
 	public static String quote(final CharSequence string, final boolean isWrap) {
-		return quote(string, new StringWriter(), isWrap).toString();
+		return quote(string, new StringBuilder(), isWrap).toString();
 	}
 
 	/**
@@ -219,11 +217,11 @@ public final class InternalJSONUtil {
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
 	 * @param str    字符串
-	 * @param writer Writer
+	 * @param appendable {@link Appendable}
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void quote(final CharSequence str, final Writer writer) throws IORuntimeException {
-		quote(str, writer, true);
+	public static void quote(final CharSequence str, final Appendable appendable) throws IORuntimeException {
+		quote(str, appendable, true);
 	}
 
 	/**
@@ -232,15 +230,15 @@ public final class InternalJSONUtil {
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
 	 * @param str    字符串
-	 * @param writer Writer
+	 * @param appendable {@link Appendable}
 	 * @param isWrap 是否使用双引号包装字符串
 	 * @return Writer
 	 * @throws IORuntimeException IO异常
 	 * @since 3.3.1
 	 */
-	public static Writer quote(final CharSequence str, final Writer writer, final boolean isWrap) throws IORuntimeException {
+	public static Appendable quote(final CharSequence str, final Appendable appendable, final boolean isWrap) throws IORuntimeException {
 		try {
-			return _quote(str, writer, isWrap);
+			return _quote(str, appendable, isWrap);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -337,10 +335,10 @@ public final class InternalJSONUtil {
 	 * @throws IOException IO异常
 	 * @since 3.3.1
 	 */
-	private static Writer _quote(final CharSequence str, final Writer writer, final boolean isWrap) throws IOException {
+	private static Appendable _quote(final CharSequence str, final Appendable writer, final boolean isWrap) throws IOException {
 		if (StrUtil.isEmpty(str)) {
 			if (isWrap) {
-				writer.write("\"\"");
+				writer.append("\"\"");
 			}
 			return writer;
 		}
@@ -348,22 +346,22 @@ public final class InternalJSONUtil {
 		char c; // 当前字符
 		final int len = str.length();
 		if (isWrap) {
-			writer.write('"');
+			writer.append('"');
 		}
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
 			switch (c) {
 				case '\\':
 				case '"':
-					writer.write("\\");
-					writer.write(c);
+					writer.append("\\");
+					writer.append(c);
 					break;
 				default:
-					writer.write(escape(c));
+					writer.append(escape(c));
 			}
 		}
 		if (isWrap) {
-			writer.write('"');
+			writer.append('"');
 		}
 		return writer;
 	}

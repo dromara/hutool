@@ -20,6 +20,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONUtil;
+import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Reader;
 import java.io.Writer;
@@ -39,7 +40,11 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 	public void serialize(final Object bean, final Writer writer) {
 		initEngine();
 		final JSON json = JSONUtil.parse(bean, this.hutoolSJONConfig);
-		json.write(writer, ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false) ? 2 : 0, 0, null);
+		final JSONWriter jsonWriter = JSONWriter.of(writer,
+			ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false) ? 2 : 0,
+			0,
+			this.hutoolSJONConfig);
+		json.write(jsonWriter);
 	}
 
 	@Override
