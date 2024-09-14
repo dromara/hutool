@@ -238,6 +238,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 重定向次数计数器，内部使用
 	 */
 	private int redirectCount;
+	/**
+	 * 固定长度，用于设置HttpURLConnection.setFixedLengthStreamingMode，默认为0，表示使用默认值，默认值由HttpURLConnection内部决定，通常为0
+	 */
+	private long fixedContentLength;
 
 	/**
 	 * 构造，URL编码默认使用UTF-8
@@ -358,8 +362,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.8.33
 	 */
-	public HttpRequest setFixedLengthStreamingMode(long contentLength){
-		this.httpConnection.setFixedLengthStreamingMode(contentLength);
+	public HttpRequest setFixedContentLength(long contentLength) {
+		this.fixedContentLength = contentLength;
 		return this;
 	}
 
@@ -878,7 +882,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * 自动重定向时是否处理cookie
-	 * @param followRedirectsCookie  自动重定向时是否处理cookie
+	 *
+	 * @param followRedirectsCookie 自动重定向时是否处理cookie
 	 * @return this
 	 */
 	public HttpRequest setFollowRedirectsCookie(boolean followRedirectsCookie) {
@@ -1228,19 +1233,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		this.httpConnection = HttpConnection
-				// issue#I50NHQ
-				// 在生成正式URL前，设置自定义编码
-				.create(this.url.setCharset(this.charset).toURL(this.urlHandler), config.proxy)//
-				.setConnectTimeout(config.connectionTimeout)//
-				.setReadTimeout(config.readTimeout)//
-				.setMethod(this.method)//
-				.setHttpsInfo(config.hostnameVerifier, config.ssf)//
-				// 关闭JDK自动转发，采用手动转发方式
-				.setInstanceFollowRedirects(false)
-				// 流方式上传数据
-				.setChunkedStreamingMode(config.blockSize)
-				// 覆盖默认Header
-				.header(this.headers, false);
+			// issue#I50NHQ
+			// 在生成正式URL前，设置自定义编码
+			.create(this.url.setCharset(this.charset).toURL(this.urlHandler), config.proxy)//
+			.setConnectTimeout(config.connectionTimeout)//
+			.setReadTimeout(config.readTimeout)//
+			.setMethod(this.method)//
+			.setHttpsInfo(config.hostnameVerifier, config.ssf)//
+			// 关闭JDK自动转发，采用手动转发方式
+			.setInstanceFollowRedirects(false)
+			// 流方式上传数据
+			.setChunkedStreamingMode(config.blockSize)
+			// issue#3462 自定义body长度
+			.setFixedLengthStreamingMode(this.fixedContentLength)
+			// 覆盖默认Header
+			.header(this.headers, false);
 
 		if (null != this.cookie) {
 			// 当用户自定义Cookie时，全局Cookie自动失效
@@ -1321,7 +1328,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 							query = null;
 						}
 						redirectUrl = UrlBuilder.of(this.url.getScheme(), this.url.getHost(), this.url.getPort()
-								, location, query, null, this.charset);
+							, location, query, null, this.charset);
 					} else {
 						redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
 					}
@@ -1337,7 +1344,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 						redirectCount++;
 						// 重定向可选是否走过滤器
 						return doExecute(isAsync, config.interceptorOnRedirect ? config.requestInterceptors : null,
-								config.interceptorOnRedirect ? config.responseInterceptors : null);
+							config.interceptorOnRedirect ? config.responseInterceptors : null);
 					}
 				}
 			}
@@ -1353,9 +1360,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private void send() throws IORuntimeException {
 		try {
 			if (Method.POST.equals(this.method) //
-					|| Method.PUT.equals(this.method) //
-					|| Method.DELETE.equals(this.method) //
-					|| this.isRest) {
+				|| Method.PUT.equals(this.method) //
+				|| Method.DELETE.equals(this.method) //
+				|| this.isRest) {
 				if (isMultipart()) {
 					sendMultipart(); // 文件上传表单
 				} else {
@@ -1392,7 +1399,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @return body
 	 */
-	private RequestBody createBody(){
+	private RequestBody createBody() {
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
 		if (null != this.body) {
 			return ResourceBody.create(this.body);
@@ -1410,9 +1417,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private void sendMultipart() throws IOException {
 		final RequestBody body;
 		// issue#3158，当用户自定义为multipart同时传入body，则不做单独处理
-		if(null == form && null != this.body) {
+		if (null == form && null != this.body) {
 			body = ResourceBody.create(this.body);
-		}else{
+		} else {
 			final MultipartBody multipartBody = MultipartBody.create(this.form, this.charset);
 			//设置表单类型为Multipart（文件上传）
 			this.httpConnection.header(Header.CONTENT_TYPE, multipartBody.getContentType(), true);
@@ -1431,8 +1438,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private boolean isIgnoreResponseBody() {
 		return Method.HEAD == this.method //
-				|| Method.CONNECT == this.method //
-				|| Method.TRACE == this.method;
+			|| Method.CONNECT == this.method //
+			|| Method.TRACE == this.method;
 	}
 
 	/**
@@ -1453,7 +1460,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		final String contentType = header(Header.CONTENT_TYPE);
 		return StrUtil.isNotEmpty(contentType) &&
-				contentType.startsWith(ContentType.MULTIPART.getValue());
+			contentType.startsWith(ContentType.MULTIPART.getValue());
 	}
 
 	/**
