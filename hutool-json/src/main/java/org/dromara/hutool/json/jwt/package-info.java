@@ -15,6 +15,9 @@
  */
 
 /**
- * JSON Web Token (JWT)封装
+ * JSON Web Token (JWT)封装<br>
+ * 规范见：https://datatracker.ietf.org/doc/html/rfc7519
+ *
+ * @author Looly
  */
 package org.dromara.hutool.json.jwt;

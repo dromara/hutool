@@ -333,18 +333,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @return JWT字符串
 	 */
 	public String sign() {
-		return sign(true);
-	}
-
-	/**
-	 * 签名生成JWT字符串
-	 *
-	 * @param addTypeIfNot 如果'typ'头不存在，是否赋值默认值
-	 * @return JWT字符串
-	 * @since 5.8.24
-	 */
-	public String sign(final boolean addTypeIfNot) {
-		return sign(this.signer, addTypeIfNot);
+		return sign(this.signer);
 	}
 
 	/**
@@ -359,20 +348,11 @@ public class JWT implements RegisteredPayload<JWT> {
 	 *     <li>当用户未定义"alg"时，根据传入的{@link JWTSigner}对象类型，赋值对应ID</li>
 	 * </ul>
 	 *
-	 * @param signer       自定义JWT签名器，非空
-	 * @param addTypeIfNot 如果'typ'头不存在，是否赋值默认值
+	 * @param signer 自定义JWT签名器，非空
 	 * @return JWT字符串
 	 */
-	public String sign(final JWTSigner signer, final boolean addTypeIfNot) {
+	public String sign(final JWTSigner signer) {
 		Assert.notNull(signer, () -> new JWTException("No Signer provided!"));
-
-		// 检查tye信息
-		if (addTypeIfNot) {
-			final String type = (String) this.header.getClaim(JWTHeader.TYPE);
-			if (StrUtil.isBlank(type)) {
-				this.header.setClaim(JWTHeader.TYPE, "JWT");
-			}
-		}
 
 		// 检查头信息中是否有算法信息
 		final String algorithm = (String) this.header.getClaim(JWTHeader.ALGORITHM);

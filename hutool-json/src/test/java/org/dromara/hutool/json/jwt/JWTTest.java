@@ -185,7 +185,7 @@ public class JWTTest {
 		final Map<String, Object> map = new HashMap<>();
 		map.put("test2", 22222222222222L);
 		final JWTSigner jwtSigner = JWTSignerUtil.createSigner(AlgorithmUtil.getAlgorithm("HS256"), Base64.getDecoder().decode("abcdefghijklmn"));
-		final String sign = JWT.of().addPayloads(map).sign(jwtSigner, true);
+		final String sign = JWT.of().addPayloads(map).sign(jwtSigner);
 		final Object test2 = JWT.of(sign).getPayload().getClaim("test2");
 		Assertions.assertEquals(Long.class, test2.getClass());
 	}
