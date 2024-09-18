@@ -454,7 +454,6 @@ public class BeanUtil {
 	 * @param ignoreProperties 不拷贝的的属性列表
 	 * @return 目标对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T copyProperties(final Object source, final Class<T> tClass, final String... ignoreProperties) {
 		if (null == source) {
 			return null;
@@ -462,7 +461,7 @@ public class BeanUtil {
 		if (RecordUtil.isRecord(tClass)) {
 			// issue#I7EO3U
 			// 转换record时，ignoreProperties无效
-			return (T) RecordConverter.INSTANCE.convert(tClass, source);
+			return RecordConverter.INSTANCE.convert(tClass, source);
 		}
 		final T target = ConstructorUtil.newInstanceIfPossible(tClass);
 		return copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));

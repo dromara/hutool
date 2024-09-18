@@ -16,14 +16,11 @@
 
 package org.dromara.hutool.json.convert;
 
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
 import org.dromara.hutool.core.convert.*;
 import org.dromara.hutool.core.convert.impl.DateConverter;
 import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
-import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
@@ -31,19 +28,16 @@ import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
-import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.SerializerManager;
-import org.dromara.hutool.json.serializer.SimpleJSONContext;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Optional;
 
 /**
  * JSON转换器，实现Object对象转换为{@link JSON}，支持的对象：
@@ -139,47 +133,12 @@ public class JSONConverter implements Converter, Serializable {
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
-	@SuppressWarnings("unchecked")
-	public JSON toJSON(Object obj) throws JSONException {
+	public JSON toJSON(final Object obj) throws JSONException {
 		if (null == obj) {
 			return null;
 		}
 
-		if (obj instanceof Optional) {
-			obj = ((Optional<?>) obj).orElse(null);
-		} else if (obj instanceof Opt) {
-			obj = ((Opt<?>) obj).getOrNull();
-		}
-
-		if (obj instanceof JSON) {
-			return (JSON) obj;
-		}
-
-		// 自定义序列化
-		final JSONSerializer<Object> serializer =
-			(JSONSerializer<Object>) SerializerManager.getInstance().getSerializer(obj);
-		if (null != serializer) {
-			return serializer.serialize(obj, new SimpleJSONContext(null, this.config));
-		}
-
-		if (obj instanceof Number || obj instanceof Boolean) {
-			// RFC8259规范的原始类型数据
-			return new JSONPrimitive(obj, config);
-		}
-
-		final JSON json;
-		if (obj instanceof CharSequence) {
-			return toJSON((CharSequence) obj);
-		} else if (obj instanceof MapWrapper) {
-			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
-			json = JSONUtil.parseObj(obj, config);
-		} else if (obj instanceof Iterable || obj instanceof Iterator || ArrayUtil.isArray(obj)) {// 列表
-			json = JSONUtil.parseArray(obj, config);
-		} else {// 对象
-			json = JSONUtil.parseObj(obj, config);
-		}
-
-		return json;
+		return JSONValueMapper.of(config, null).map(obj);
 	}
 
 	/**
@@ -231,7 +190,7 @@ public class JSONConverter implements Converter, Serializable {
 
 		// 当目标类型不确定时，返回原JSON
 		final Class<T> rawType = (Class<T>) TypeUtil.getClass(targetType);
-		if (null == rawType) {
+		if (null == rawType || rawType.isInstance(json)) {
 			return (T) json;
 			//throw new JSONException("Can not get class from type: {}", targetType);
 		}

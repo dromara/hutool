@@ -87,7 +87,7 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 		if (object instanceof JSON) {
 			return (JSONArray) object;
 		}
-		return new JSONArray(object, config());
+		return JSONUtil.parseArray(object, config());
 	}
 
 	/**

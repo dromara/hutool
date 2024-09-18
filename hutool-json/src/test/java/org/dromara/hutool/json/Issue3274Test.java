@@ -51,7 +51,7 @@ public class Issue3274Test {
 
 		Gender(final String enum_name, final String en_Us, final String zh_CN) {
 			this.enum_name = enum_name;
-			this.display = new JSONArray("[{\"lang\": \"en-US\",\"value\": \"" + en_Us + "\"},{\"lang\": \"zh-CN\",\"value\": \"" + zh_CN + "\"}]");
+			this.display = JSONUtil.parseArray("[{\"lang\": \"en-US\",\"value\": \"" + en_Us + "\"},{\"lang\": \"zh-CN\",\"value\": \"" + zh_CN + "\"}]");
 		}
 	}
 }

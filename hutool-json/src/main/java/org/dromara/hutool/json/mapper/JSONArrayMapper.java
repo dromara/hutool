@@ -20,15 +20,11 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serializer.JSONSerializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
-import org.dromara.hutool.json.serializer.SimpleJSONContext;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -50,7 +46,7 @@ import java.util.function.Predicate;
  * @author looly
  * @since 6.0.0
  */
-public class JSONArrayMapper {
+class JSONArrayMapper {
 	/**
 	 * 创建ArrayMapper
 	 *
@@ -88,20 +84,10 @@ public class JSONArrayMapper {
 			return;
 		}
 
-		// 自定义序列化
-		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(source.getClass());
-		if (null != serializer) {
-			serializer.serialize(source, new SimpleJSONContext(jsonArray));
-			return;
-		}
-
 		if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, JSONConfig.of(), jsonArray);
 		}if (source instanceof JSONParser) {
 			((JSONParser)source).parseTo(jsonArray);
-		} else if (source instanceof CharSequence) {
-			// JSON字符串
-			mapFromStr((CharSequence) source, jsonArray);
 		} else if (source instanceof Reader) {
 			mapFromTokener(new JSONTokener((Reader) source), jsonArray.config(), jsonArray);
 		} else if (source instanceof InputStream) {
@@ -114,7 +100,7 @@ public class JSONArrayMapper {
 				// https://github.com/dromara/hutool/issues/2369
 				// 非标准的二进制流，则按照普通数组对待
 				for (final byte b : bytesSource) {
-					jsonArray.add(b);
+					jsonArray.set(b);
 				}
 			}
 		} else {
@@ -143,25 +129,13 @@ public class JSONArrayMapper {
 						if (predicate.test(entry)) {
 							// 使用修改后的键值对
 							next = entry.getValue();
-							jsonArray.add(next);
+							jsonArray.set(next);
 						}
 					}else {
-						jsonArray.add(next);
+						jsonArray.set(next);
 					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param source    JSON字符串
-	 * @param jsonArray {@link JSONArray}
-	 */
-	private void mapFromStr(final CharSequence source, final JSONArray jsonArray) {
-		if (null != source) {
-			mapFromTokener(new JSONTokener(StrUtil.trim(source)), jsonArray.config(), jsonArray);
 		}
 	}
 

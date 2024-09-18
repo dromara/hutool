@@ -23,8 +23,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.convert.JSONConverter;
-import org.dromara.hutool.json.mapper.JSONObjectMapper;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.writer.ValueWriter;
 import org.dromara.hutool.json.writer.ValueWriterManager;
@@ -46,6 +45,7 @@ import java.util.function.Predicate;
 public class JSONUtil {
 
 	// region ----- of
+
 	/**
 	 * 创建JSONObject
 	 *
@@ -88,6 +88,7 @@ public class JSONUtil {
 	// endregion
 
 	// region ----- parse
+
 	/**
 	 * JSON字符串转JSONObject对象<br>
 	 * 此方法会忽略空值，但是对JSON字符串不影响
@@ -97,18 +98,6 @@ public class JSONUtil {
 	 */
 	public static JSONObject parseObj(final Object obj) {
 		return parseObj(obj, JSONConfig.of(), null);
-	}
-
-	/**
-	 * JSON字符串转JSONObject对象
-	 *
-	 * @param obj             Bean对象或者Map
-	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
-	 * @return JSONObject
-	 * @since 3.0.9
-	 */
-	public static JSONObject parseObj(final Object obj, final boolean ignoreNullValue) {
-		return parseObj(obj, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
@@ -133,9 +122,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 */
 	public static JSONObject parseObj(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final JSONObject jsonObject = new JSONObject(config);
-		JSONObjectMapper.of(obj, predicate).mapTo(jsonObject);
-		return jsonObject;
+		return (JSONObject) parse(obj, config, predicate);
 	}
 
 	/**
@@ -146,7 +133,7 @@ public class JSONUtil {
 	 * @since 3.0.8
 	 */
 	public static JSONArray parseArray(final Object arrayOrCollection) {
-		return new JSONArray(arrayOrCollection);
+		return parseArray(arrayOrCollection, null);
 	}
 
 	/**
@@ -158,7 +145,20 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config) {
-		return new JSONArray(arrayOrCollection, config);
+		return parseArray(arrayOrCollection, config, null);
+	}
+
+	/**
+	 * JSON字符串转JSONArray
+	 *
+	 * @param arrayOrCollection 数组或集合对象
+	 * @param config            JSON配置
+	 * @param predicate index和值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @return JSONArray
+	 * @since 5.3.1
+	 */
+	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		return (JSONArray) parse(arrayOrCollection, config, predicate);
 	}
 
 	/**
@@ -186,15 +186,34 @@ public class JSONUtil {
 	 *     <li>Bean对象：转为JSONObject</li>
 	 * </ul>
 	 *
-	 * @param obj    对象
-	 * @param config JSON配置，{@code null}使用默认配置
+	 * @param obj       对象
+	 * @param config    JSON配置，{@code null}使用默认配置
 	 * @return JSON（JSONObject or JSONArray）
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config) {
-		if (null == config) {
-			return JSONConverter.INSTANCE.toJSON(obj);
+		return parse(obj, config, null);
+	}
+
+	/**
+	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
+	 * 支持的对象：
+	 * <ul>
+	 *     <li>String: 转换为相应的对象</li>
+	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
+	 *     <li>Bean对象：转为JSONObject</li>
+	 * </ul>
+	 *
+	 * @param obj       对象
+	 * @param config    JSON配置，{@code null}使用默认配置
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @return JSON（JSONObject or JSONArray）
+	 */
+	public static JSON parse(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		final JSONValueMapper jsonValueMapper = JSONValueMapper.of(config, predicate);
+		if (obj instanceof CharSequence) {
+			return jsonValueMapper.map((CharSequence) obj);
 		}
-		return JSONConverter.of(config).toJSON(obj);
+		return jsonValueMapper.map(obj);
 	}
 
 	/**
@@ -219,7 +238,7 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSON readJSON(final File file, final Charset charset) throws IORuntimeException {
-		return (JSON) FileUtil.read(file, charset, JSONUtil::parse);
+		return FileUtil.read(file, charset, JSONUtil::parse);
 	}
 
 	/**

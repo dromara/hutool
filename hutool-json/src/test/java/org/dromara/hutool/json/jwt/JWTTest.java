@@ -16,13 +16,16 @@
 
 package org.dromara.hutool.json.jwt;
 
+import lombok.Data;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.reflect.TypeReference;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.json.jwt.signers.AlgorithmUtil;
 import org.dromara.hutool.json.jwt.signers.JWTSigner;
 import org.dromara.hutool.json.jwt.signers.JWTSignerUtil;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -132,12 +135,12 @@ public class JWTTest {
 		final List<Integer> list = Arrays.asList(1, 2, 3);
 		final Integer num = 18;
 		final String username = "takaki";
-		final HashMap<String, String> map = new HashMap<>();
+		final Map<String, String> map = new HashMap<>();
 		map.put("test1", "1");
 		map.put("test2", "2");
+
 		final Map<String, Object> payload = new HashMap<String, Object>() {
 			private static final long serialVersionUID = 1L;
-
 			{
 				put("username", username);
 				put("bean", bean);
@@ -155,17 +158,20 @@ public class JWTTest {
 		final Date dateRes = jwt.getPayload("date", Date.class);
 		final List<?> listRes = jwt.getPayload("list", List.class);
 		final Integer numRes = jwt.getPayload("number", Integer.class);
-		final HashMap<?, ?> mapRes = jwt.getPayload("map", HashMap.class);
+		final Map<String, String> mapRes = jwt.getPayload("map", new TypeReference<Map<String, String>>(){});
 
 		Assertions.assertEquals(bean, beanRes);
 		Assertions.assertEquals(numRes, num);
 		Assertions.assertEquals(username, strRes);
-		Assertions.assertEquals(list, listRes);
+		Assertions.assertEquals(
+			StrUtil.wrap(CollUtil.join(list, ","), "[", "]"),
+			listRes.toString());
 
 		final String formattedDate = DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
 		final String formattedRes = DateUtil.format(dateRes, "yyyy-MM-dd HH:mm:ss");
 		Assertions.assertEquals(formattedDate, formattedRes);
-		Assertions.assertEquals(map, mapRes);
+		Assertions.assertEquals(map.get("test1"), mapRes.get("test1"));
+		Assertions.assertEquals(map.get("test2"), mapRes.get("test2"));
 	}
 
 	@Test()

@@ -18,10 +18,23 @@ package org.dromara.hutool.json.mapper;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.exception.ExceptionUtil;
+import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.map.MapWrapper;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.reader.JSONParser;
+import org.dromara.hutool.json.reader.JSONTokener;
+import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.SimpleJSONContext;
 import org.dromara.hutool.json.writer.ValueWriterManager;
+import org.dromara.hutool.json.xml.JSONXMLParser;
+import org.dromara.hutool.json.xml.ParseConfig;
 
 import java.io.Serializable;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * 对象和JSON值映射器，用于转换对象为JSON对象中的值<br>
@@ -45,22 +58,45 @@ public class JSONValueMapper implements Serializable {
 	/**
 	 * 创建ObjectMapper
 	 *
-	 * @param jsonConfig    来源对象
+	 * @param jsonConfig 来源对象
+	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return ObjectMapper
 	 */
-	public static JSONValueMapper of(final JSONConfig jsonConfig) {
-		return new JSONValueMapper(jsonConfig);
+	public static JSONValueMapper of(final JSONConfig jsonConfig, final Predicate<MutableEntry<Object, Object>> predicate) {
+		return new JSONValueMapper(jsonConfig, predicate);
 	}
 
 	private final JSONConfig jsonConfig;
+	private final Predicate<MutableEntry<Object, Object>> predicate;
 
 	/**
 	 * 构造
 	 *
-	 * @param jsonConfig    JSON配置
+	 * @param jsonConfig JSON配置
+	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public JSONValueMapper(final JSONConfig jsonConfig) {
+	public JSONValueMapper(final JSONConfig jsonConfig, final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.jsonConfig = jsonConfig;
+		this.predicate = predicate;
+	}
+
+	/**
+	 * 解析JSON字符串或XML字符串为JSON结构
+	 *
+	 * @param source JSON字符串或XML字符串
+	 * @return JSON对象
+	 */
+	public JSON map(final CharSequence source) {
+		final String jsonStr = StrUtil.trim(source);
+		if (StrUtil.startWith(jsonStr, '<')) {
+			// 可能为XML
+			final JSONObject jsonObject = new JSONObject(jsonConfig);
+			JSONXMLParser.of(ParseConfig.of(), this.predicate).parseJSONObject(jsonStr, jsonObject);
+			return jsonObject;
+		}
+		return JSONParser.of(new JSONTokener(source), jsonConfig)
+			.setPredicate(this.predicate)
+			.parse();
 	}
 
 	/**
@@ -74,38 +110,52 @@ public class JSONValueMapper implements Serializable {
 	 * <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
 	 * </ul>
 	 *
-	 * @param object     被映射的对象
+	 * @param obj 被映射的对象
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	public JSON map(final Object object) {
-		if(null == object || object instanceof JSON){
-			return (JSON) object;
+	public JSON map(Object obj) {
+		if (null == obj) {
+			return null;
 		}
 
-		if(null != ValueWriterManager.getInstance().get(object)){
-			return new JSONPrimitive(object, jsonConfig);
+		if (obj instanceof Optional) {
+			obj = ((Optional<?>) obj).orElse(null);
+		} else if (obj instanceof Opt) {
+			obj = ((Opt<?>) obj).getOrNull();
 		}
 
-//		if (object instanceof CharSequence
-//			|| ObjUtil.isBasicType(object)) {
-//			return new JSONPrimitive(object, jsonConfig);
-//		}
+		if (obj instanceof JSON) {
+			return (JSON) obj;
+		}
+
+		// 自定义序列化
+		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(obj);
+		if (null != serializer) {
+			return serializer.serialize(obj, new SimpleJSONContext(null, this.jsonConfig));
+		}
+
+		// 原始类型
+		if (null != ValueWriterManager.getInstance().get(obj)) {
+			return new JSONPrimitive(obj, jsonConfig);
+		}
 
 		// 特定对象转换
 		try {
 			// JSONArray
-			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
+			if (// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
+				!(obj instanceof MapWrapper) &&
+					(obj instanceof Iterable || ArrayUtil.isArray(obj))) {
 				final JSONArray jsonArray = new JSONArray(jsonConfig);
-				JSONArrayMapper.of(object, null).mapTo(jsonArray);
+				JSONArrayMapper.of(obj, predicate).mapTo(jsonArray);
 				return jsonArray;
 			}
 
 			// 默认按照JSONObject对待
 			final JSONObject jsonObject = new JSONObject(jsonConfig);
-			JSONObjectMapper.of(object, null).mapTo(jsonObject);
+			JSONObjectMapper.of(obj, predicate).mapTo(jsonObject);
 			return jsonObject;
 		} catch (final Exception exception) {
-			if(jsonConfig.isIgnoreError()){
+			if (jsonConfig.isIgnoreError()) {
 				return null;
 			}
 			throw ExceptionUtil.wrap(exception, JSONException.class);

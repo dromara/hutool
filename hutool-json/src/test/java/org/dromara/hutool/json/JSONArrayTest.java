@@ -48,11 +48,11 @@ public class JSONArrayTest {
 		// JSONObject实现了Iterable接口，可以转换为JSONArray
 		final JSONObject jsonObject = new JSONObject();
 
-		JSONArray jsonArray = new JSONArray(jsonObject, JSONConfig.of());
+		JSONArray jsonArray = JSONUtil.parseArray(jsonObject, JSONConfig.of());
 		assertEquals(new JSONArray(), jsonArray);
 
 		jsonObject.set("key1", "value1");
-		jsonArray = new JSONArray(jsonObject, JSONConfig.of());
+		jsonArray = JSONUtil.parseArray(jsonObject, JSONConfig.of());
 		assertEquals(1, jsonArray.size());
 		assertEquals("[{\"key1\":\"value1\"}]", jsonArray.toString());
 	}
@@ -70,9 +70,9 @@ public class JSONArrayTest {
 		final JSONArray array = JSONUtil.ofArray();
 		// 方法2
 		// JSONArray array = new JSONArray();
-		array.add("value1");
-		array.add("value2");
-		array.add("value3");
+		array.set("value1");
+		array.set("value2");
+		array.set("value3");
 
 		assertEquals(array.get(0), "value1");
 	}
@@ -238,12 +238,12 @@ public class JSONArrayTest {
 	@Test
 	public void putToIndexTest() {
 		JSONArray jsonArray = new JSONArray();
-		jsonArray.set(3, "test");
+		jsonArray.setValue(3, "test");
 		// 默认忽略null值，因此空位无值，只有一个值
 		assertEquals(1, jsonArray.size());
 
 		jsonArray = new JSONArray(JSONConfig.of().setIgnoreNullValue(false));
-		jsonArray.set(2, "test");
+		jsonArray.setValue(2, "test");
 		// 第三个位置插入值，0~2都是null
 		assertEquals(3, jsonArray.size());
 	}
@@ -252,7 +252,7 @@ public class JSONArrayTest {
 	@Test
 	public void putTest2() {
 		final JSONArray jsonArray = new JSONArray();
-		jsonArray.put(0, 1);
+		jsonArray.setValue(0, 1);
 		assertEquals(1, jsonArray.size());
 		assertEquals(1, jsonArray.get(0));
 	}
@@ -307,7 +307,7 @@ public class JSONArrayTest {
 	public void parseFilterTest() {
 		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> mutable.get().toString().contains("111"));
+		final JSONArray array = JSONUtil.parseArray(jsonArr, null, (mutable) -> mutable.get().toString().contains("111"));
 		assertEquals(1, array.size());
 		assertTrue(array.getJSONObject(0).containsKey("id"));
 	}
@@ -316,7 +316,7 @@ public class JSONArrayTest {
 	public void parseFilterEditTest() {
 		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> {
+		final JSONArray array = JSONUtil.parseArray(jsonArr, null, (mutable) -> {
 			if(mutable.getKey() instanceof Integer){
 				final JSONObject o = (JSONObject) mutable.getValue();
 				if ("111".equals(o.getStr("id"))) {

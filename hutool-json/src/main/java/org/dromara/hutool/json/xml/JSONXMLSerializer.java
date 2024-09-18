@@ -23,6 +23,7 @@ import org.dromara.hutool.core.text.escape.EscapeUtil;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 
 /**
  * JSON转XML字符串工具
@@ -78,7 +79,7 @@ public class JSONXMLSerializer {
 			// Loop thru the keys.
 			((JSONObject) object).forEach((key, value) -> {
 				if (ArrayUtil.isArray(value)) {
-					value = new JSONArray(value);
+					value = JSONUtil.parseArray(value);
 				}
 
 				// Emit content in body
@@ -119,7 +120,7 @@ public class JSONXMLSerializer {
 		}
 
 		if (ArrayUtil.isArray(object)) {
-			object = new JSONArray(object);
+			object = JSONUtil.parseArray(object);
 		}
 
 		if (object instanceof JSONArray) {

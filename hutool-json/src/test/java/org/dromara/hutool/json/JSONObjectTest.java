@@ -313,7 +313,7 @@ public class JSONObjectTest {
 		userA.setDate(new Date());
 		userA.setSqs(ListUtil.of(new Seq(null), new Seq("seq2")));
 
-		final JSONObject json = JSONUtil.parseObj(userA, false);
+		final JSONObject json = JSONUtil.parseObj(userA, JSONConfig.of().setIgnoreNullValue(false));
 
 		Assertions.assertTrue(json.containsKey("a"));
 		Assertions.assertTrue(json.getJSONArray("sqs").getJSONObject(0).containsKey("seq"));
@@ -328,7 +328,8 @@ public class JSONObjectTest {
 		bean.setStrValue("strTest");
 		bean.setTestEnum(TestEnum.TYPE_B);
 
-		final JSONObject json = JSONUtil.parseObj(bean, false);
+		final JSONObject json = JSONUtil.parseObj(bean,
+			JSONConfig.of().setIgnoreNullValue(false));
 		// 枚举转换检查，更新：枚举原样保存，在writer时调用toString。
 		Assertions.assertEquals(TestEnum.TYPE_B, json.getObj("testEnum"));
 
@@ -396,7 +397,8 @@ public class JSONObjectTest {
 		final JSONObject userAJson = JSONUtil.parseObj(userA);
 		Assertions.assertFalse(userAJson.containsKey("a"));
 
-		final JSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA, false);
+		final JSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA,
+			JSONConfig.of().setIgnoreNullValue(false));
 		Assertions.assertTrue(userAJsonWithNullValue.containsKey("a"));
 		Assertions.assertTrue(userAJsonWithNullValue.containsKey("sqs"));
 	}

@@ -1955,7 +1955,7 @@ public class CollUtil {
 	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
 	 * @since 5.4.7
 	 */
-	public static <T> void forEach(final Iterable<T> iterable, final SerBiConsumer<T, Integer> consumer) {
+	public static <T> void forEach(final Iterable<T> iterable, final SerBiConsumer<Integer, T> consumer) {
 		if (iterable == null) {
 			return;
 		}
@@ -1969,13 +1969,13 @@ public class CollUtil {
 	 * @param iterator {@link Iterator}
 	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(final Iterator<T> iterator, final SerBiConsumer<T, Integer> consumer) {
+	public static <T> void forEach(final Iterator<T> iterator, final SerBiConsumer<Integer, T> consumer) {
 		if (iterator == null) {
 			return;
 		}
 		int index = 0;
 		while (iterator.hasNext()) {
-			consumer.accept(iterator.next(), index);
+			consumer.accept(index, iterator.next());
 			index++;
 		}
 	}
@@ -1987,13 +1987,13 @@ public class CollUtil {
 	 * @param enumeration {@link Enumeration}
 	 * @param consumer    {@link SerBiConsumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(final Enumeration<T> enumeration, final SerBiConsumer<T, Integer> consumer) {
+	public static <T> void forEach(final Enumeration<T> enumeration, final SerBiConsumer<Integer, T> consumer) {
 		if (enumeration == null) {
 			return;
 		}
 		int index = 0;
 		while (enumeration.hasMoreElements()) {
-			consumer.accept(enumeration.nextElement(), index);
+			consumer.accept(index, enumeration.nextElement());
 			index++;
 		}
 	}
@@ -2007,13 +2007,13 @@ public class CollUtil {
 	 * @param map        {@link Map}
 	 * @param kvConsumer {@link SerConsumer3} 遍历的每条数据处理器
 	 */
-	public static <K, V> void forEach(final Map<K, V> map, final SerConsumer3<K, V, Integer> kvConsumer) {
+	public static <K, V> void forEach(final Map<K, V> map, final SerConsumer3<Integer, K, V> kvConsumer) {
 		if (map == null) {
 			return;
 		}
 		int index = 0;
 		for (final Entry<K, V> entry : map.entrySet()) {
-			kvConsumer.accept(entry.getKey(), entry.getValue(), index);
+			kvConsumer.accept(index, entry.getKey(), entry.getValue());
 			index++;
 		}
 	}

@@ -95,11 +95,11 @@ public class ConvertToArrayTest {
 
 		//数组转数组测试
 		final int[] a = new int[]{1,2,3,4};
-		final long[] result = (long[]) CompositeConverter.getInstance().convert(long[].class, a);
+		final long[] result = CompositeConverter.getInstance().convert(long[].class, a);
 		Assertions.assertArrayEquals(new long[]{1L, 2L, 3L, 4L}, result);
 
 		//数组转数组测试
-		final byte[] resultBytes = (byte[]) CompositeConverter.getInstance().convert(byte[].class, a);
+		final byte[] resultBytes = CompositeConverter.getInstance().convert(byte[].class, a);
 		Assertions.assertArrayEquals(new byte[]{1, 2, 3, 4}, resultBytes);
 
 		//字符串转数组

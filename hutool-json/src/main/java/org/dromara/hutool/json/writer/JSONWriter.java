@@ -122,16 +122,6 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	}
 
 	/**
-	 * 复制当前对象，用于修改配置后写出
-	 * @return JSONWriter
-	 */
-	@SuppressWarnings("resource")
-	public JSONWriter copyOfSub() {
-		return new JSONWriter(this.appendable, this.indentFactor, this.indent + indentFactor, this.config)
-			.setPredicate(this.predicate);
-	}
-
-	/**
 	 * JSONObject写出开始，默认写出"{"
 	 *
 	 * @return this
@@ -141,6 +131,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 		append(CharUtil.DELIM_START);
 		arrayMode = false;
 		needSeparator = false;
+		indent += indentFactor;
 		return this;
 	}
 
@@ -154,6 +145,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 		append(CharUtil.BRACKET_START);
 		arrayMode = true;
 		needSeparator = false;
+		indent += indentFactor;
 		return this;
 	}
 
@@ -164,6 +156,8 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 */
 	@SuppressWarnings("resource")
 	public JSONWriter end() {
+		// 结束子缩进
+		indent -= indentFactor;
 		// 换行缩进
 		writeLF().writeSpace(indent);
 		append(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
@@ -215,7 +209,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 			append(CharUtil.COMMA);
 		}
 		// 换行缩进
-		writeLF().writeSpace(indentFactor + indent);
+		writeLF().writeSpace(indent);
 		return writeRaw(InternalJSONUtil.quote(key));
 	}
 
@@ -346,7 +340,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 			}
 			// 换行缩进
 			//noinspection resource
-			writeLF().writeSpace(indentFactor + indent);
+			writeLF().writeSpace(indent);
 		} else {
 			//noinspection resource
 			append(CharUtil.COLON).writeSpace(1);

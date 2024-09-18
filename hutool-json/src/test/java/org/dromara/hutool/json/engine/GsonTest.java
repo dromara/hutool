@@ -16,11 +16,14 @@
 
 package org.dromara.hutool.json.engine;
 
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 public class GsonTest {
 	/**
@@ -54,4 +57,11 @@ public class GsonTest {
 		Assertions.assertEquals("{\"date\":\"2024-01-01 00:00:00\"}", engine.toJsonString(bean));
 	}
 
+	@Test
+	void arrayToStringTest() {
+		final ArrayList<Integer> integers = ListUtil.of(1, 2, 3);
+		final JSONEngine engine = JSONEngineFactory.createEngine("gson");
+		final String jsonString = engine.toJsonString(integers);
+		Assertions.assertEquals("[1,2,3]", jsonString);
+	}
 }

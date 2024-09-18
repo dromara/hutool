@@ -37,6 +37,7 @@ public class TransientTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = JSONUtil.parseObj(detailBill,
 				JSONConfig.of().setTransientSupport(false));
+
 		Assertions.assertEquals("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 

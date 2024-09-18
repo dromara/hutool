@@ -27,11 +27,6 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serializer.JSONSerializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
-import org.dromara.hutool.json.serializer.SimpleJSONContext;
-import org.dromara.hutool.json.xml.JSONXMLParser;
-import org.dromara.hutool.json.xml.ParseConfig;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -55,9 +50,8 @@ import java.util.function.Predicate;
  * </ul>
  *
  * @author looly
- * @since 5.8.0
  */
-public class JSONObjectMapper {
+class JSONObjectMapper {
 
 	/**
 	 * 创建ObjectMapper
@@ -96,13 +90,6 @@ public class JSONObjectMapper {
 			return;
 		}
 
-		// 自定义序列化
-		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(source.getClass());
-		if (null != serializer) {
-			serializer.serialize(source, new SimpleJSONContext(jsonObject));
-			return;
-		}
-
 		if (source instanceof JSONArray) {
 			// 不支持集合类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
@@ -122,9 +109,6 @@ public class JSONObjectMapper {
 		} else if (source instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) source;
 			jsonObject.set(ConvertUtil.toStr(entry.getKey()), entry.getValue());
-		} else if (source instanceof CharSequence) {
-			// 可能为JSON字符串
-			mapFromStr((CharSequence) source, jsonObject);
 		} else if (source instanceof Reader) {
 			mapFromTokener(new JSONTokener((Reader) source), jsonObject.config(), jsonObject);
 		} else if (source instanceof InputStream) {
@@ -163,23 +147,6 @@ public class JSONObjectMapper {
 				InternalJSONUtil.propertyPut(jsonObject, key, bundle.getString(key));
 			}
 		}
-	}
-
-	/**
-	 * 从字符串转换
-	 *
-	 * @param source     JSON字符串
-	 * @param jsonObject {@link JSONObject}
-	 */
-	private void mapFromStr(final CharSequence source, final JSONObject jsonObject) {
-		final String jsonStr = StrUtil.trim(source);
-		if (StrUtil.startWith(jsonStr, '<')) {
-			// 可能为XML
-			//JSONXMLUtil.toJSONObject(jsonStr, jsonObject, ParseConfig.of());
-			JSONXMLParser.of(ParseConfig.of(), this.predicate).parseJSONObject(jsonStr, jsonObject);
-			return;
-		}
-		mapFromTokener(new JSONTokener(source), jsonObject.config(), jsonObject);
 	}
 
 	/**

@@ -30,6 +30,7 @@ import org.dromara.hutool.json.jwt.signers.JWTSigner;
 import org.dromara.hutool.json.jwt.signers.JWTSignerUtil;
 import org.dromara.hutool.json.jwt.signers.NoneJWTSigner;
 
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyPair;
@@ -299,7 +300,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @throws ValidateException 传入的类型不匹配payload类型
 	 * @since 6.0.0
 	 */
-	public <T> T getPayload(final String propertyName, final Class<T> propertyType) {
+	public <T> T getPayload(final String propertyName, final Type propertyType) {
 		return getPayload().getClaimsJson().get(propertyName, propertyType);
 	}
 

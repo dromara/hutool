@@ -232,13 +232,13 @@ public class JSONParser {
 				return;
 			} else {
 				// ,value or value
-				Object value = nextJSON(CharUtil.COMMA == c ? tokener.nextClean() : c);
+				JSON value = nextJSON(CharUtil.COMMA == c ? tokener.nextClean() : c);
 				if (null != predicate) {
 					// 使用过滤器
 					final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), value);
 					if (predicate.test(entry)) {
 						// 使用修改后的键值对
-						value = entry.getValue();
+						value = (JSON) entry.getValue();
 						jsonArray.add(value);
 					}
 				} else {

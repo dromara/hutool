@@ -31,7 +31,7 @@ public class EntryConvertTest {
 		final KVBean kvBean = new KVBean();
 		kvBean.setKey("a");
 		kvBean.setValue(1);
-		final AbstractMap.SimpleEntry<?, ?> entry = (AbstractMap.SimpleEntry<?, ?>) CompositeConverter.getInstance()
+		final AbstractMap.SimpleEntry<?, ?> entry = CompositeConverter.getInstance()
 			.convert(AbstractMap.SimpleEntry.class, kvBean);
 
 		Assertions.assertEquals("a", entry.getKey());
@@ -42,7 +42,7 @@ public class EntryConvertTest {
 	void beanToEntryTest2() {
 		final SingleBean bean = new SingleBean();
 		bean.setA("1");
-		final AbstractMap.SimpleEntry<?, ?> entry = (AbstractMap.SimpleEntry<?, ?>) CompositeConverter.getInstance()
+		final AbstractMap.SimpleEntry<?, ?> entry = CompositeConverter.getInstance()
 			.convert(AbstractMap.SimpleEntry.class, bean);
 
 		Assertions.assertEquals("a", entry.getKey());
@@ -53,7 +53,7 @@ public class EntryConvertTest {
 	void mapToEntryTest() {
 		final Map<String, Integer> bean = new HashMap<>();
 		bean.put("a", 1);
-		final AbstractMap.SimpleEntry<?, ?> entry = (AbstractMap.SimpleEntry<?, ?>) CompositeConverter.getInstance()
+		final AbstractMap.SimpleEntry<?, ?> entry = CompositeConverter.getInstance()
 			.convert(AbstractMap.SimpleEntry.class, bean);
 
 		Assertions.assertEquals("a", entry.getKey());
@@ -63,7 +63,7 @@ public class EntryConvertTest {
 	@Test
 	void strToEntryTest() {
 		final String bean = "a=1";
-		final AbstractMap.SimpleEntry<?, ?> entry = (AbstractMap.SimpleEntry<?, ?>) CompositeConverter.getInstance()
+		final AbstractMap.SimpleEntry<?, ?> entry = CompositeConverter.getInstance()
 			.convert(AbstractMap.SimpleEntry.class, bean);
 
 		Assertions.assertEquals("a", entry.getKey());
@@ -73,7 +73,7 @@ public class EntryConvertTest {
 	@Test
 	void strToEntryTest2() {
 		final String bean = "a:1";
-		final AbstractMap.SimpleEntry<?, ?> entry = (AbstractMap.SimpleEntry<?, ?>) CompositeConverter.getInstance()
+		final AbstractMap.SimpleEntry<?, ?> entry = CompositeConverter.getInstance()
 			.convert(AbstractMap.SimpleEntry.class, bean);
 
 		Assertions.assertEquals("a", entry.getKey());
@@ -83,7 +83,7 @@ public class EntryConvertTest {
 	@Test
 	void strToEntryTest3() {
 		final String bean = "a,1";
-		final AbstractMap.SimpleEntry<?, ?> entry = (AbstractMap.SimpleEntry<?, ?>) CompositeConverter.getInstance()
+		final AbstractMap.SimpleEntry<?, ?> entry = CompositeConverter.getInstance()
 			.convert(AbstractMap.SimpleEntry.class, bean);
 
 		Assertions.assertEquals("a", entry.getKey());

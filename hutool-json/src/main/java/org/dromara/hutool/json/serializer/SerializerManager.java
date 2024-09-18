@@ -161,11 +161,11 @@ public class SerializerManager {
 	 * @param bean 对象
 	 * @return JSONSerializer
 	 */
-	@SuppressWarnings({"rawtypes"})
-	public JSONSerializer<?> getSerializer(final Object bean) {
-		for (final MatcherJSONSerializer serializer : this.serializerSet) {
+	@SuppressWarnings({"unchecked"})
+	public JSONSerializer<Object> getSerializer(final Object bean) {
+		for (final MatcherJSONSerializer<?> serializer : this.serializerSet) {
 			if (serializer.match(bean, null)) {
-				return serializer;
+				return (JSONSerializer<Object>) serializer;
 			}
 		}
 		return null;

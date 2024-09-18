@@ -113,9 +113,9 @@ public final class InternalJSONUtil {
 			return JSONUtil.parseObj(map).toString();
 		} else if (value instanceof Collection) {
 			final Collection<?> coll = (Collection<?>) value;
-			return new JSONArray(coll).toString();
+			return JSONUtil.parseArray(coll).toString();
 		} else if (ArrayUtil.isArray(value)) {
-			return new JSONArray(value).toString();
+			return JSONUtil.parseArray(value).toString();
 		} else {
 			return quote(value.toString());
 		}

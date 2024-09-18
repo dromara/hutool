@@ -131,28 +131,28 @@ public class ConvertTest {
 		final String a = " 34232";
 		final Integer aInteger = ConvertUtil.toInt(a);
 		assertEquals(Integer.valueOf(34232), aInteger);
-		final int aInt = (int) CompositeConverter.getInstance().convert(int.class, a);
+		final int aInt = CompositeConverter.getInstance().convert(int.class, a);
 		assertEquals(34232, aInt);
 
 		// 带小数测试
 		final String b = " 34232.00";
 		final Integer bInteger = ConvertUtil.toInt(b);
 		assertEquals(Integer.valueOf(34232), bInteger);
-		final int bInt = (int) CompositeConverter.getInstance().convert(int.class, b);
+		final int bInt = CompositeConverter.getInstance().convert(int.class, b);
 		assertEquals(34232, bInt);
 
 		// boolean测试
 		final boolean c = true;
 		final Integer cInteger = ConvertUtil.toInt(c);
 		assertEquals(Integer.valueOf(1), cInteger);
-		final int cInt = (int) CompositeConverter.getInstance().convert(int.class, c);
+		final int cInt = CompositeConverter.getInstance().convert(int.class, c);
 		assertEquals(1, cInt);
 
 		// boolean测试
 		final String d = "08";
 		final Integer dInteger = ConvertUtil.toInt(d);
 		assertEquals(Integer.valueOf(8), dInteger);
-		final int dInt = (int) CompositeConverter.getInstance().convert(int.class, d);
+		final int dInt = CompositeConverter.getInstance().convert(int.class, d);
 		assertEquals(8, dInt);
 	}
 
@@ -176,28 +176,28 @@ public class ConvertTest {
 		final String a = " 342324545435435";
 		final Long aLong = ConvertUtil.toLong(a);
 		assertEquals(Long.valueOf(342324545435435L), aLong);
-		final long aLong2 = (long) CompositeConverter.getInstance().convert(long.class, a);
+		final long aLong2 = CompositeConverter.getInstance().convert(long.class, a);
 		assertEquals(342324545435435L, aLong2);
 
 		// 带小数测试
 		final String b = " 342324545435435.245435435";
 		final Long bLong = ConvertUtil.toLong(b);
 		assertEquals(Long.valueOf(342324545435435L), bLong);
-		final long bLong2 = (long) CompositeConverter.getInstance().convert(long.class, b);
+		final long bLong2 = CompositeConverter.getInstance().convert(long.class, b);
 		assertEquals(342324545435435L, bLong2);
 
 		// boolean测试
 		final boolean c = true;
 		final Long cLong = ConvertUtil.toLong(c);
 		assertEquals(Long.valueOf(1), cLong);
-		final long cLong2 = (long) CompositeConverter.getInstance().convert(long.class, c);
+		final long cLong2 = CompositeConverter.getInstance().convert(long.class, c);
 		assertEquals(1, cLong2);
 
 		// boolean测试
 		final String d = "08";
 		final Long dLong = ConvertUtil.toLong(d);
 		assertEquals(Long.valueOf(8), dLong);
-		final long dLong2 = (long) CompositeConverter.getInstance().convert(long.class, d);
+		final long dLong2 = CompositeConverter.getInstance().convert(long.class, d);
 		assertEquals(8, dLong2);
 	}
 

@@ -321,7 +321,7 @@ public class CollUtilTest {
 
 		final String[] result = new String[1];
 		final String a = "a";
-		CollUtil.forEach(map, (key, value, index) -> {
+		CollUtil.forEach(map, (index, key, value) -> {
 			if (a.equals(key)) {
 				result[0] = value;
 			}
