@@ -30,7 +30,7 @@ public class Issue1200Test {
 
 	@Test
 	public void toBeanTest() {
-		final OldJSONObject jsonObject = JSONUtil.parseObj(
+		final JSONObject jsonObject = JSONUtil.parseObj(
 			ResourceUtil.readUtf8Str("issue1200.json"),
 			JSONConfig.of().setIgnoreError(true));
 

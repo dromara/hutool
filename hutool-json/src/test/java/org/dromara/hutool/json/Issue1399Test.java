@@ -28,7 +28,7 @@ import java.sql.SQLException;
 public class Issue1399Test {
 	@Test
 	void sqlExceptionTest() {
-		final OldJSONObject set = JSONUtil.ofObj().set("error", new SQLException("test"));
+		final JSONObject set = JSONUtil.ofObj().set("error", new SQLException("test"));
 		Assertions.assertEquals("{\"error\":\"java.sql.SQLException: test\"}", set.toString());
 	}
 }

@@ -19,8 +19,10 @@ package org.dromara.hutool.core.convert.impl;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.convert.ConverterWithRoot;
 import org.dromara.hutool.core.convert.MatcherConverter;
 import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
@@ -43,10 +45,8 @@ import java.util.Map;
  *
  * @author looly
  */
-public class EntryConverter implements MatcherConverter, Serializable {
+public class EntryConverter extends ConverterWithRoot implements MatcherConverter, Serializable {
 	private static final long serialVersionUID = 1L;
-
-	private final Converter convert;
 
 	/**
 	 * 构造
@@ -54,7 +54,7 @@ public class EntryConverter implements MatcherConverter, Serializable {
 	 * @param converter 转换器，用于将Entry中key和value转换为指定类型的对象
 	 */
 	public EntryConverter(final Converter converter) {
-		this.convert = converter;
+		super(converter);
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class EntryConverter implements MatcherConverter, Serializable {
 	private Map.Entry<?, ?> mapToEntry(final Type targetType, final Type keyType, final Type valueType, final Map map) {
 
 		final Object key;
-		final Object value;
+		Object value;
 		if (1 == map.size()) {
 			final Map.Entry entry = (Map.Entry) map.entrySet().iterator().next();
 			key = entry.getKey();
@@ -152,9 +152,13 @@ public class EntryConverter implements MatcherConverter, Serializable {
 			value = map.get("value");
 		}
 
+		if(value instanceof Wrapper){
+			value = ((Wrapper) value).getRaw();
+		}
+
 		return (Map.Entry<?, ?>) ConstructorUtil.newInstance(TypeUtil.getClass(targetType),
-			TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key),
-			TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value)
+			TypeUtil.isUnknown(keyType) ? key : rootConverter.convert(keyType, key),
+			TypeUtil.isUnknown(valueType) ? value : rootConverter.convert(valueType, value)
 		);
 	}
 }

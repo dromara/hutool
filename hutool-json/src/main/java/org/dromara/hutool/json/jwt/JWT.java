@@ -24,7 +24,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.json.OldJSONObject;
+import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.jwt.signers.AlgorithmUtil;
 import org.dromara.hutool.json.jwt.signers.JWTSigner;
 import org.dromara.hutool.json.jwt.signers.JWTSignerUtil;
@@ -203,7 +203,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 *
 	 * @return 头信息
 	 */
-	public OldJSONObject getHeaders() {
+	public JSONObject getHeaders() {
 		return this.header.getClaimsJson();
 	}
 
@@ -265,7 +265,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 *
 	 * @return 载荷信息
 	 */
-	public OldJSONObject getPayloads() {
+	public JSONObject getPayloads() {
 		return this.payload.getClaimsJson();
 	}
 

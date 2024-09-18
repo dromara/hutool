@@ -126,8 +126,8 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 * @return JSONWriter
 	 */
 	@SuppressWarnings("resource")
-	public JSONWriter copyOf() {
-		return new JSONWriter(this.appendable, this.indentFactor, this.indent, this.config)
+	public JSONWriter copyOfSub() {
+		return new JSONWriter(this.appendable, this.indentFactor, this.indent + indentFactor, this.config)
 			.setPredicate(this.predicate);
 	}
 

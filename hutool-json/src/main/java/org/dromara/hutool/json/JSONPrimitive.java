@@ -17,11 +17,14 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.writer.ValueWriter;
 import org.dromara.hutool.json.writer.ValueWriterManager;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * JSON原始类型数据封装，根据RFC8259规范，JSONPrimitive只包含以下类型：
@@ -34,7 +37,7 @@ import java.lang.reflect.Type;
  * @author Looly
  * @since 6.0.0
  */
-public class JSONPrimitive implements JSON {
+public class JSONPrimitive implements Wrapper<Object>, JSON {
 	private static final long serialVersionUID = -2026215279191790345L;
 
 	private Object value;
@@ -72,6 +75,11 @@ public class JSONPrimitive implements JSON {
 		return this.value;
 	}
 
+	@Override
+	public Object getRaw() {
+		return this.value;
+	}
+
 	/**
 	 * 设置值
 	 *
@@ -97,6 +105,46 @@ public class JSONPrimitive implements JSON {
 	JSONPrimitive setConfig(final JSONConfig config) {
 		this.config = config;
 		return this;
+	}
+
+	/**
+	 * 是否为数字类型
+	 *
+	 * @return 是否为数字类型
+	 */
+	public boolean isNumber() {
+		return value instanceof Number;
+	}
+
+	/**
+	 * 自增，仅支持数字类型，包括：
+	 * <ul>
+	 *     <li>{@link Integer}</li>
+	 *     <li>{@link Long}</li>
+	 *     <li>{@link Double}</li>
+	 *     <li>{@link Float}</li>
+	 *     <li>{@link BigInteger}</li>
+	 *     <li>{@link BigDecimal}</li>
+	 * </ul>
+	 *
+	 * @throws JSONException 非数字类型
+	 */
+	public void increment(){
+		if (value instanceof BigInteger) {
+			value = ((BigInteger) value).add(BigInteger.ONE);
+		} else if (value instanceof BigDecimal) {
+			value = ((BigDecimal) value).add(BigDecimal.ONE);
+		} else if (value instanceof Integer) {
+			value = (Integer) value + 1;
+		} else if (value instanceof Long) {
+			value = (Long) value + 1;
+		} else if (value instanceof Double) {
+			value = (Double) value + 1;
+		} else if (value instanceof Float) {
+			value = (Float) value + 1;
+		} else {
+			throw new JSONException("Unable to increment {} type: {}", value, value.getClass());
+		}
 	}
 
 	@Override

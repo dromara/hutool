@@ -19,10 +19,12 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.convert.JSONConverter;
+import org.dromara.hutool.json.mapper.JSONObjectMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.writer.ValueWriter;
 import org.dromara.hutool.json.writer.ValueWriterManager;
@@ -34,6 +36,7 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * JSON工具类
@@ -42,15 +45,14 @@ import java.util.List;
  */
 public class JSONUtil {
 
-	// -------------------------------------------------------------------- Pause start
-
+	// region ----- of
 	/**
 	 * 创建JSONObject
 	 *
 	 * @return JSONObject
 	 */
-	public static OldJSONObject ofObj() {
-		return new OldJSONObject();
+	public static JSONObject ofObj() {
+		return new JSONObject();
 	}
 
 	/**
@@ -60,8 +62,8 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 5.2.5
 	 */
-	public static OldJSONObject ofObj(final JSONConfig config) {
-		return new OldJSONObject(config);
+	public static JSONObject ofObj(final JSONConfig config) {
+		return new JSONObject(config);
 	}
 
 	/**
@@ -83,7 +85,9 @@ public class JSONUtil {
 	public static JSONArray ofArray(final JSONConfig config) {
 		return new JSONArray(config);
 	}
+	// endregion
 
+	// region ----- parse
 	/**
 	 * JSON字符串转JSONObject对象<br>
 	 * 此方法会忽略空值，但是对JSON字符串不影响
@@ -91,21 +95,8 @@ public class JSONUtil {
 	 * @param obj Bean对象或者Map
 	 * @return JSONObject
 	 */
-	public static OldJSONObject parseObj(final Object obj) {
-		return new OldJSONObject(obj);
-	}
-
-	/**
-	 * JSON字符串转JSONObject对象<br>
-	 * 此方法会忽略空值，但是对JSON字符串不影响
-	 *
-	 * @param obj    Bean对象或者Map
-	 * @param config JSON配置
-	 * @return JSONObject
-	 * @since 5.3.1
-	 */
-	public static OldJSONObject parseObj(final Object obj, final JSONConfig config) {
-		return new OldJSONObject(obj, config);
+	public static JSONObject parseObj(final Object obj) {
+		return parseObj(obj, JSONConfig.of(), null);
 	}
 
 	/**
@@ -116,8 +107,35 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 3.0.9
 	 */
-	public static OldJSONObject parseObj(final Object obj, final boolean ignoreNullValue) {
-		return new OldJSONObject(obj, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
+	public static JSONObject parseObj(final Object obj, final boolean ignoreNullValue) {
+		return parseObj(obj, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
+	}
+
+	/**
+	 * JSON字符串转JSONObject对象<br>
+	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 *
+	 * @param obj    Bean对象或者Map
+	 * @param config JSON配置
+	 * @return JSONObject
+	 */
+	public static JSONObject parseObj(final Object obj, final JSONConfig config) {
+		return parseObj(obj, config, null);
+	}
+
+	/**
+	 * JSON字符串转JSONObject对象<br>
+	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 *
+	 * @param obj       Bean对象或者Map
+	 * @param config    JSON配置
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @return JSONObject
+	 */
+	public static JSONObject parseObj(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		final JSONObject jsonObject = new JSONObject(config);
+		JSONObjectMapper.of(obj, predicate).mapTo(jsonObject);
+		return jsonObject;
 	}
 
 	/**
@@ -185,10 +203,10 @@ public class JSONUtil {
 	 * @param xmlStr XML字符串
 	 * @return JSONObject
 	 */
-	public static OldJSONObject parseFromXml(final String xmlStr) {
+	public static JSONObject parseFromXml(final String xmlStr) {
 		return JSONXMLUtil.toJSONObject(xmlStr);
 	}
-	// -------------------------------------------------------------------- Parse end
+	// endregion
 
 	// -------------------------------------------------------------------- Read start
 
@@ -212,7 +230,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @throws IORuntimeException IO异常
 	 */
-	public static OldJSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
+	public static JSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
 		return FileUtil.read(file, charset, JSONUtil::parseObj);
 	}
 
@@ -307,12 +325,13 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 4.0.8
 	 */
-	public static OldJSONObject xmlToJson(final String xml) {
+	public static JSONObject xmlToJson(final String xml) {
 		return JSONXMLUtil.toJSONObject(xml);
 	}
 	// -------------------------------------------------------------------- toString end
 
 	// -------------------------------------------------------------------- toBean start
+
 	/**
 	 * 转为实体类对象
 	 *
@@ -324,7 +343,7 @@ public class JSONUtil {
 	 */
 	public static <T> T toBean(final Object json, final Class<T> clazz) {
 		Assert.notNull(clazz);
-		return toBean(json, (Type)clazz);
+		return toBean(json, (Type) clazz);
 	}
 
 	/**
@@ -358,7 +377,7 @@ public class JSONUtil {
 	 * 转为实体类对象
 	 *
 	 * @param <T>    Bean类型
-	 * @param obj   JSONObject
+	 * @param obj    JSONObject
 	 * @param config JSON配置
 	 * @param type   实体类对象类型
 	 * @return 实体类对象
@@ -479,8 +498,7 @@ public class JSONUtil {
 	 * JSON对象是否为空，以下情况返回true<br>
 	 * <ul>
 	 *     <li>null</li>
-	 *     <li>{@link JSONArray#isEmpty()}</li>
-	 *     <li>{@link OldJSONObject#isEmpty()}</li>
+	 *     <li>{@link JSON#isEmpty()}</li>
 	 * </ul>
 	 *
 	 * @param json JSONObject或JSONArray
@@ -490,12 +508,7 @@ public class JSONUtil {
 		if (null == json) {
 			return true;
 		}
-		if (json instanceof OldJSONObject) {
-			return ((OldJSONObject) json).isEmpty();
-		} else if (json instanceof JSONArray) {
-			return ((JSONArray) json).isEmpty();
-		}
-		return false;
+		return json.isEmpty();
 	}
 
 	/**

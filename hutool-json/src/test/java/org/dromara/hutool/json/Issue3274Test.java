@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class Issue3274Test {
 	@Test
 	public void toBeanTest() {
-		final OldJSONObject entries = new OldJSONObject("{\n" +
+		final JSONObject entries = JSONUtil.parseObj("{\n" +
 			"    \n" +
 			"    \"age\": 36,\n" +
 			"    \"gender\": \"\",\n" +

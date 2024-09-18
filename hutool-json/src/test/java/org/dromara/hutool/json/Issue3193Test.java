@@ -23,7 +23,7 @@ public class Issue3193Test {
 	@Test
 	void parseTest() {
 		final String jsonStr = "{\"desc\":\"测试数据\\\\\"}";
-		final OldJSONObject parse = JSONUtil.parseObj(jsonStr);
+		final JSONObject parse = JSONUtil.parseObj(jsonStr);
 		Assertions.assertEquals("测试数据\\", parse.getStr("desc"));
 	}
 }

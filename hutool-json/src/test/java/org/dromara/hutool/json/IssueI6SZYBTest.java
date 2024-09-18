@@ -25,12 +25,11 @@ import java.util.AbstractMap;
 
 public class IssueI6SZYBTest {
 
-	@SuppressWarnings("unchecked")
 	@Test
 	void mutableEntryTest() {
 		final MutableEntry<String, String> entry = MutableEntry.of("a", "b");
 		final String jsonStr = JSONUtil.toJsonStr(entry);
-		final MutableEntry<String, String> entry2 = JSONUtil.toBean(jsonStr, MutableEntry.class);
+		final MutableEntry<String, String> entry2 = JSONUtil.toBean(jsonStr, new TypeReference<MutableEntry<String, String>>() {});
 
 		Assertions.assertEquals(entry, entry2);
 	}
@@ -45,22 +44,21 @@ public class IssueI6SZYBTest {
 		Assertions.assertEquals(entry, entry2);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	void simpleEntryTest() {
 		final AbstractMap.SimpleEntry<String, String> entry = new AbstractMap.SimpleEntry<>("a", "b");
 		final String jsonStr = JSONUtil.toJsonStr(entry);
-		final AbstractMap.SimpleEntry<String, String> entry2 = JSONUtil.toBean(jsonStr, AbstractMap.SimpleEntry.class);
+		final AbstractMap.SimpleEntry<String, String> entry2 = JSONUtil.toBean(jsonStr, new TypeReference<AbstractMap.SimpleEntry<String, String>>() {});
 
 		Assertions.assertEquals(entry, entry2);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	void simpleEntryTest2() {
 		final AbstractMap.SimpleEntry<String, String> entry = new AbstractMap.SimpleEntry<>("a", "b");
 		final String jsonStr = JSONUtil.toJsonStr(entry);
-		final MutableEntry<String, String> entry2 = JSONUtil.toBean(jsonStr, MutableEntry.class);
+		final MutableEntry<String, String> entry2 = JSONUtil.toBean(jsonStr, new TypeReference<MutableEntry<String, String>>() {});
+
 
 		Assertions.assertEquals(entry, entry2);
 	}

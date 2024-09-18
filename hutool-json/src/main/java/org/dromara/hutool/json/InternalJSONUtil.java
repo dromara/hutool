@@ -21,7 +21,6 @@ import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveLinkedMap;
 import org.dromara.hutool.core.map.CaseInsensitiveTreeMap;
 import org.dromara.hutool.core.math.NumberUtil;
@@ -34,7 +33,6 @@ import org.dromara.hutool.json.reader.JSONTokener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -93,7 +91,7 @@ public final class InternalJSONUtil {
 	 * 值转为String，用于JSON中。规则为：
 	 * <ul>
 	 *     <li>对象如果是数组或Collection，包装为{@link JSONArray}</li>
-	 *     <li>对象如果是Map，包装为{@link OldJSONObject}</li>
+	 *     <li>对象如果是Map，包装为{@link JSONObject}</li>
 	 *     <li>对象如果是数字，使用{@link NumberUtil#toStr(Number)}转换为字符串</li>
 	 *     <li>其他情况调用toString并使用双引号包装</li>
 	 * </ul>
@@ -108,11 +106,11 @@ public final class InternalJSONUtil {
 		}
 		if (value instanceof Number) {
 			return NumberUtil.toStr((Number) value);
-		} else if (value instanceof Boolean || value instanceof OldJSONObject || value instanceof JSONArray) {
+		} else if (value instanceof Boolean || value instanceof JSONObject || value instanceof JSONArray) {
 			return value.toString();
 		} else if (value instanceof Map) {
 			final Map<?, ?> map = (Map<?, ?>) value;
-			return new OldJSONObject(map).toString();
+			return JSONUtil.parseObj(map).toString();
 		} else if (value instanceof Collection) {
 			final Collection<?> coll = (Collection<?>) value;
 			return new JSONArray(coll).toString();
@@ -131,22 +129,21 @@ public final class InternalJSONUtil {
 	 * @param jsonObject JSONObject
 	 * @param key        键
 	 * @param value      值
-	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public static void propertyPut(final OldJSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
+	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value) {
 		final String[] path = SplitUtil.splitToArray(ConvertUtil.toStr(key), StrUtil.DOT);
 		final int last = path.length - 1;
-		OldJSONObject target = jsonObject;
+		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {
 			final String segment = path[i];
-			OldJSONObject nextTarget = target.getJSONObject(segment);
+			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
-				nextTarget = new OldJSONObject(target.config());
-				target.set(segment, nextTarget, predicate);
+				nextTarget = new JSONObject(target.config());
+				target.set(segment, nextTarget);
 			}
 			target = nextTarget;
 		}
-		target.set(path[last], value, predicate);
+		target.set(path[last], value);
 	}
 
 	/**
@@ -263,36 +260,6 @@ public final class InternalJSONUtil {
 			builder.append(escape(c));
 		}
 		return builder.toString();
-	}
-
-	/**
-	 * 根据配置创建对应的原始Map
-	 *
-	 * @param capacity 初始大小
-	 * @param config   JSON配置项，{@code null}则使用默认配置
-	 * @return Map
-	 */
-	@Deprecated
-	static Map<String, Object> createRawMapOld(final int capacity, JSONConfig config) {
-		final Map<String, Object> rawHashMap;
-		if (null == config) {
-			config = JSONConfig.of();
-		}
-		final Comparator<String> keyComparator = config.getKeyComparator();
-		if (config.isIgnoreCase()) {
-			if (null != keyComparator) {
-				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
-			} else {
-				rawHashMap = new CaseInsensitiveLinkedMap<>(capacity);
-			}
-		} else {
-			if (null != keyComparator) {
-				rawHashMap = new TreeMap<>(keyComparator);
-			} else {
-				rawHashMap = new LinkedHashMap<>(capacity);
-			}
-		}
-		return rawHashMap;
 	}
 
 	/**

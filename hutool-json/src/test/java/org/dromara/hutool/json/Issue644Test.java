@@ -33,7 +33,7 @@ public class Issue644Test {
 		final BeanWithDate beanWithDate = new BeanWithDate();
 		beanWithDate.setDate(LocalDateTime.now());
 
-		final OldJSONObject jsonObject = JSONUtil.parseObj(beanWithDate);
+		final JSONObject jsonObject = JSONUtil.parseObj(beanWithDate);
 
 		BeanWithDate beanWithDate2 = JSONUtil.toBean(jsonObject, BeanWithDate.class);
 		Assertions.assertEquals(TimeUtil.formatNormal(beanWithDate.getDate()),

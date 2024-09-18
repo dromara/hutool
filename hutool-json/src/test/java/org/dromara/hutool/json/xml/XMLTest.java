@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.json.xml;
 
-import org.dromara.hutool.json.OldJSONObject;
+import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class XMLTest {
 
 	@Test
 	public void toXmlTest(){
-		final OldJSONObject put = JSONUtil.ofObj()
+		final JSONObject put = JSONUtil.ofObj()
 				.set("aaa", "你好")
 				.set("键2", "test");
 		final String s = JSONUtil.toXmlStr(put);
@@ -35,7 +35,7 @@ public class XMLTest {
 	@Test
 	public void escapeTest(){
 		final String xml = "<a>•</a>";
-		final OldJSONObject jsonObject = JSONXMLUtil.toJSONObject(xml);
+		final JSONObject jsonObject = JSONXMLUtil.toJSONObject(xml);
 
 		Assertions.assertEquals("{\"a\":\"•\"}", jsonObject.toString());
 
@@ -45,7 +45,7 @@ public class XMLTest {
 
 	@Test
 	public void xmlContentTest(){
-		final OldJSONObject jsonObject = JSONUtil.ofObj().set("content","123456");
+		final JSONObject jsonObject = JSONUtil.ofObj().set("content","123456");
 
 		String xml = JSONXMLUtil.toXml(jsonObject);
 		Assertions.assertEquals("123456", xml);

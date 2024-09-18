@@ -30,7 +30,7 @@ public class IssueI6YN2ATest {
 	public void toBeanTest() {
 		final String str = "{\"conditions\":{\"user\":\"test\",\"sex\":\"男\"}," +
 			"\"headers\":{\"name\":\"姓名\",\"age\":\"年龄\",\"email\":\"邮箱\",\"number\":\"号码\",\"pwd\":\"密码\"}}";
-		final OldJSONObject jsonObject = JSONUtil.parseObj(str);
+		final JSONObject jsonObject = JSONUtil.parseObj(str);
 
 		final PageQuery<User> bean = jsonObject.toBean(new TypeReference<PageQuery<User>>() {});
 		Assertions.assertEquals("{name=姓名, age=年龄, email=邮箱, number=号码, pwd=密码}", bean.headers.toString());

@@ -33,8 +33,8 @@ public class IssueI7VM64Test {
 		final HashMap<String, Object> map = new HashMap<>();
 		map.put("a", "1");
 
-		final OldJSONObject jsonObject = new OldJSONObject();
-		jsonObject.put("c", map);
+		final JSONObject jsonObject = new JSONObject();
+		jsonObject.set("c", map);
 		map.put("b", 2);
 
 		//Console.log("Hutool JSON: " + jsonObject);

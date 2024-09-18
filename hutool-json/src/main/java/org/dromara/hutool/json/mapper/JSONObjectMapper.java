@@ -85,12 +85,12 @@ public class JSONObjectMapper {
 	}
 
 	/**
-	 * 将给定对象转换为{@link OldJSONObject}
+	 * 将给定对象转换为{@link JSONObject}
 	 *
-	 * @param jsonObject 目标{@link OldJSONObject}
+	 * @param jsonObject 目标{@link JSONObject}
 	 */
 	@SuppressWarnings("rawtypes")
-	public void mapTo(final OldJSONObject jsonObject) {
+	public void mapTo(final JSONObject jsonObject) {
 		final Object source = this.source;
 		if (null == source) {
 			return;
@@ -117,11 +117,11 @@ public class JSONObjectMapper {
 		} else if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				jsonObject.set(ConvertUtil.toStr(e.getKey()), e.getValue(), predicate, false);
+				jsonObject.set(ConvertUtil.toStr(e.getKey()), e.getValue());
 			}
 		} else if (source instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) source;
-			jsonObject.set(ConvertUtil.toStr(entry.getKey()), entry.getValue(), predicate, false);
+			jsonObject.set(ConvertUtil.toStr(entry.getKey()), entry.getValue());
 		} else if (source instanceof CharSequence) {
 			// 可能为JSON字符串
 			mapFromStr((CharSequence) source, jsonObject);
@@ -153,15 +153,14 @@ public class JSONObjectMapper {
 	 * 从{@link ResourceBundle}转换
 	 *
 	 * @param bundle     ResourceBundle
-	 * @param jsonObject {@link OldJSONObject}
-	 * @since 5.3.1
+	 * @param jsonObject {@link JSONObject}
 	 */
-	private void mapFromResourceBundle(final ResourceBundle bundle, final OldJSONObject jsonObject) {
+	private void mapFromResourceBundle(final ResourceBundle bundle, final JSONObject jsonObject) {
 		final Enumeration<String> keys = bundle.getKeys();
 		while (keys.hasMoreElements()) {
 			final String key = keys.nextElement();
 			if (key != null) {
-				InternalJSONUtil.propertyPut(jsonObject, key, bundle.getString(key), this.predicate);
+				InternalJSONUtil.propertyPut(jsonObject, key, bundle.getString(key));
 			}
 		}
 	}
@@ -170,9 +169,9 @@ public class JSONObjectMapper {
 	 * 从字符串转换
 	 *
 	 * @param source     JSON字符串
-	 * @param jsonObject {@link OldJSONObject}
+	 * @param jsonObject {@link JSONObject}
 	 */
-	private void mapFromStr(final CharSequence source, final OldJSONObject jsonObject) {
+	private void mapFromStr(final CharSequence source, final JSONObject jsonObject) {
 		final String jsonStr = StrUtil.trim(source);
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
@@ -188,9 +187,9 @@ public class JSONObjectMapper {
 	 *
 	 * @param x          JSONTokener
 	 * @param config     JSON配置
-	 * @param jsonObject {@link OldJSONObject}
+	 * @param jsonObject {@link JSONObject}
 	 */
-	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final OldJSONObject jsonObject) {
+	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONObject jsonObject) {
 		JSONParser.of(x, config).setPredicate(this.predicate).parseTo(jsonObject);
 	}
 
@@ -198,9 +197,9 @@ public class JSONObjectMapper {
 	 * 从Record转换
 	 *
 	 * @param record     Record对象
-	 * @param jsonObject {@link OldJSONObject}
+	 * @param jsonObject {@link JSONObject}
 	 */
-	private void mapFromRecord(final Object record, final OldJSONObject jsonObject) {
+	private void mapFromRecord(final Object record, final JSONObject jsonObject) {
 		final Map.Entry<String, Type>[] components = RecordUtil.getRecordComponents(record.getClass());
 
 		String key;
@@ -214,9 +213,9 @@ public class JSONObjectMapper {
 	 * 从Bean转换
 	 *
 	 * @param bean       Bean对象
-	 * @param jsonObject {@link OldJSONObject}
+	 * @param jsonObject {@link JSONObject}
 	 */
-	private void mapFromBean(final Object bean, final OldJSONObject jsonObject) {
+	private void mapFromBean(final Object bean, final JSONObject jsonObject) {
 		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.config());
 		if (null != this.predicate) {
 			copyOptions.setFieldEditor((entry -> this.predicate.test(

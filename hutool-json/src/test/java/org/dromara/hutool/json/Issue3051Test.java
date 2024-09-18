@@ -24,7 +24,7 @@ public class Issue3051Test {
 
 	@Test
 	public void parseTest() {
-		final OldJSONObject jsonObject = JSONUtil.parseObj(new EmptyBean(),
+		final JSONObject jsonObject = JSONUtil.parseObj(new EmptyBean(),
 			JSONConfig.of().setIgnoreError(true));
 
 		Assertions.assertEquals("{}", jsonObject.toString());
@@ -33,7 +33,7 @@ public class Issue3051Test {
 	@Test
 	public void parseTest2() {
 		Assertions.assertThrows(JSONException.class, ()->{
-			final OldJSONObject jsonObject = JSONUtil.parseObj(new EmptyBean());
+			final JSONObject jsonObject = JSONUtil.parseObj(new EmptyBean());
 			Assertions.assertEquals("{}", jsonObject.toString());
 		});
 	}

@@ -23,7 +23,7 @@ public class IssueIAP4GMTest {
 	@Test
 	void parse() {
 		final String res = "{\"uid\":\"asdf\\n\"}";
-		final OldJSONObject entries = JSONUtil.parseObj(res);
+		final JSONObject entries = JSONUtil.parseObj(res);
 		Assertions.assertEquals("asdf\n", entries.getStr("uid"));
 	}
 }

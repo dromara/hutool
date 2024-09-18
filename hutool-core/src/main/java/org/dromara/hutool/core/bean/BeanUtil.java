@@ -199,7 +199,7 @@ public class BeanUtil {
 		// 先尝试直接获取属性
 		if (bean instanceof Map) {
 			final Map<?, ?> map = (Map<?, ?>) bean;
-			if(map.containsKey(expression)){
+			if (map.containsKey(expression)) {
 				return (T) map.get(expression);
 			}
 		}
@@ -309,6 +309,7 @@ public class BeanUtil {
 
 	/**
 	 * 将Bean包装为Map形式
+	 *
 	 * @param bean Bean
 	 * @return {@link BeanMap}
 	 * @since 6.0.0
@@ -391,6 +392,7 @@ public class BeanUtil {
 	 * 3. 自定义字段前缀或后缀等等
 	 * </pre>
 	 *
+	 * @param <V>             Map中值类型
 	 * @param bean            bean对象
 	 * @param targetMap       目标的Map
 	 * @param ignoreNullValue 是否忽略值为空的字段
@@ -398,10 +400,10 @@ public class BeanUtil {
 	 * @return Map
 	 * @since 4.0.5
 	 */
-	public static Map<String, Object> beanToMap(final Object bean,
-												final Map<String, Object> targetMap,
-												final boolean ignoreNullValue,
-												final UnaryOperator<MutableEntry<Object, Object>> keyEditor) {
+	public static <V> Map<String, V> beanToMap(final Object bean,
+											   final Map<String, V> targetMap,
+											   final boolean ignoreNullValue,
+											   final UnaryOperator<MutableEntry<Object, Object>> keyEditor) {
 		if (null == bean) {
 			return null;
 		}
@@ -425,13 +427,14 @@ public class BeanUtil {
 	 * ...
 	 * </pre>
 	 *
+	 * @param <V>         Map中值类型
 	 * @param bean        bean对象
 	 * @param targetMap   目标的Map
 	 * @param copyOptions 拷贝选项
 	 * @return Map
 	 * @since 5.7.15
 	 */
-	public static Map<String, Object> beanToMap(final Object bean, final Map<String, Object> targetMap, final CopyOptions copyOptions) {
+	public static <V> Map<String, V> beanToMap(final Object bean, final Map<String, V> targetMap, final CopyOptions copyOptions) {
 		if (null == bean) {
 			return null;
 		}

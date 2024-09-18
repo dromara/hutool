@@ -21,7 +21,7 @@ import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.json.JSONConfig;
-import org.dromara.hutool.json.OldJSONObject;
+import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class Claims implements Serializable {
 	// 时间使用秒级时间戳表示
 	private final JSONConfig CONFIG = JSONConfig.of().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
 
-	private OldJSONObject claimJSON;
+	private JSONObject claimJSON;
 
 	/**
 	 * 增加Claims属性，如果属性值为{@code null}，则移除这个属性
@@ -86,7 +86,7 @@ public class Claims implements Serializable {
 	 *
 	 * @return JSON字符串
 	 */
-	public OldJSONObject getClaimsJson() {
+	public JSONObject getClaimsJson() {
 		init();
 		return this.claimJSON;
 	}
@@ -109,7 +109,7 @@ public class Claims implements Serializable {
 
 	private void init(){
 		if(null == this.claimJSON){
-			this.claimJSON = new OldJSONObject(CONFIG);
+			this.claimJSON = new JSONObject(CONFIG);
 		}
 	}
 }

@@ -32,7 +32,7 @@ public class CustomSerializeTest {
 	public void init() {
 		SerializerManager.getInstance().register(CustomBean.class,
 			(JSONSerializer<CustomBean>) (bean, context) ->
-				((OldJSONObject)context.getContextJson()).set("customName", bean.name));
+				((JSONObject)context.getContextJson()).set("customName", bean.name));
 	}
 
 	@Test
@@ -40,7 +40,7 @@ public class CustomSerializeTest {
 		final CustomBean customBean = new CustomBean();
 		customBean.name = "testName";
 
-		final OldJSONObject obj = JSONUtil.parseObj(customBean);
+		final JSONObject obj = JSONUtil.parseObj(customBean);
 		Assertions.assertEquals("testName", obj.getStr("customName"));
 	}
 
@@ -49,7 +49,7 @@ public class CustomSerializeTest {
 		final CustomBean customBean = new CustomBean();
 		customBean.name = "testName";
 
-		final OldJSONObject obj = JSONUtil.ofObj().set("customBean", customBean);
+		final JSONObject obj = JSONUtil.ofObj().set("customBean", customBean);
 		Assertions.assertEquals("testName", obj.getJSONObject("customBean").getStr("customName"));
 	}
 
@@ -57,7 +57,7 @@ public class CustomSerializeTest {
 	public void deserializeTest() {
 		SerializerManager.getInstance().register(CustomBean.class, (JSONDeserializer<CustomBean>) (json, deserializeType) -> {
 			final CustomBean customBean = new CustomBean();
-			customBean.name = ((OldJSONObject) json).getStr("customName");
+			customBean.name = ((JSONObject) json).getStr("customName");
 			return customBean;
 		});
 

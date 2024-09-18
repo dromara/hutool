@@ -19,16 +19,18 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.function.Predicate;
 
 /**
  * JSON树模型接口，表示树中的一个节点。实现包括：
  * <ul>
- *     <li>{@link OldJSONObject}表示键值对形式的节点</li>
+ *     <li>{@link JSONObject}表示键值对形式的节点</li>
  *     <li>{@link JSONArray}表示列表形式的节点</li>
  *     <li>{@link JSONPrimitive}表示数字、Boolean、字符串形式的节点</li>
  *     <li>{@code null}表示空节点</li>
@@ -52,6 +54,15 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @return 大小
 	 */
 	int size();
+
+	/**
+	 * 判断JSON是否为空，即大小为0
+	 *
+	 * @return 是否为空
+	 */
+	default boolean isEmpty() {
+		return 0 == size();
+	}
 
 	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>
@@ -152,7 +163,19 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @throws JSONException 包含非法数抛出此异常
 	 */
 	default String toJSONString(final int indentFactor) throws JSONException {
-		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, config());
+		return toJSONString(indentFactor, null);
+	}
+
+	/**
+	 * 格式化输出JSON字符串
+	 *
+	 * @param indentFactor 每层缩进空格数
+	 * @param predicate    过滤器，用于过滤不需要的键值对
+	 * @return JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
+	 */
+	default String toJSONString(final int indentFactor, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
+		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, config()).setPredicate(predicate);
 		this.write(jsonWriter);
 		return jsonWriter.toString();
 	}
@@ -161,7 +184,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * 将JSON内容写入Writer<br>
 	 * Warning: This method assumes that the data structure is acyclical.
 	 *
-	 * @param writer       writer
+	 * @param writer writer
 	 * @throws JSONException JSON相关异常
 	 */
 	void write(JSONWriter writer) throws JSONException;

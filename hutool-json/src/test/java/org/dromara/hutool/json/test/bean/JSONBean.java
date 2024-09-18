@@ -16,11 +16,11 @@
 
 package org.dromara.hutool.json.test.bean;
 
-import org.dromara.hutool.json.OldJSONObject;
 import lombok.Data;
+import org.dromara.hutool.json.JSONObject;
 
 @Data
 public class JSONBean {
 	private int code;
-	private OldJSONObject data;
+	private JSONObject data;
 }

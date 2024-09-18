@@ -18,11 +18,11 @@ package org.dromara.hutool.json.xml;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.text.CharUtil;
-import org.dromara.hutool.core.text.escape.EscapeUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.text.escape.EscapeUtil;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONException;
-import org.dromara.hutool.json.OldJSONObject;
+import org.dromara.hutool.json.JSONObject;
 
 /**
  * JSON转XML字符串工具
@@ -70,13 +70,13 @@ public class JSONXMLSerializer {
 		}
 
 		final StringBuilder sb = new StringBuilder();
-		if (object instanceof OldJSONObject) {
+		if (object instanceof JSONObject) {
 
 			// Emit <tagName>
 			appendTag(sb, tagName, false);
 
 			// Loop thru the keys.
-			((OldJSONObject) object).forEach((key, value) -> {
+			((JSONObject) object).forEach((key, value) -> {
 				if (ArrayUtil.isArray(value)) {
 					value = new JSONArray(value);
 				}

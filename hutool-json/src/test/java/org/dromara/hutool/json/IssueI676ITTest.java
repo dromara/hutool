@@ -28,7 +28,7 @@ import javax.xml.xpath.XPathConstants;
 public class IssueI676ITTest {
 	@Test
 	public void parseXMLTest() {
-		final OldJSONObject jsonObject = JSONUtil.parseObj(ResourceUtil.readUtf8Str("issueI676IT.json"));
+		final JSONObject jsonObject = JSONUtil.parseObj(ResourceUtil.readUtf8Str("issueI676IT.json"));
 		final String xmlStr = JSONXMLSerializer.toXml(jsonObject, null, (String) null);
 		final String content = String.valueOf(XPathUtil.getByXPath("/page/orderItems[1]/content", XmlUtil.readXml(xmlStr), XPathConstants.STRING));
 		Assertions.assertEquals(content, "bar1");

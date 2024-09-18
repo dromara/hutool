@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 public class IssueI59LW4Test {
 	@Test
 	public void bytesTest(){
-		final OldJSONObject jsonObject = JSONUtil.ofObj().set("bytes", new byte[]{1});
+		final JSONObject jsonObject = JSONUtil.ofObj().set("bytes", new byte[]{1});
 		Assertions.assertEquals("{\"bytes\":[1]}", jsonObject.toString());
 
 		final byte[] bytes = jsonObject.getBytes("bytes");

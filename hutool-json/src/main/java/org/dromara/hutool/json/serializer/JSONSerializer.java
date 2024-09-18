@@ -17,7 +17,7 @@
 package org.dromara.hutool.json.serializer;
 
 import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.OldJSONObject;
+import org.dromara.hutool.json.JSONObject;
 
 /**
  * 序列化接口，通过实现此接口，实现自定义的对象转换为JSON的操作
@@ -33,7 +33,7 @@ public interface JSONSerializer<V> {
 	 * <ul>
 	 *     <li>如果为原始类型，可以转为{@link org.dromara.hutool.json.JSONPrimitive}</li>
 	 *     <li>如果是集合或数组类，可以转为{@link org.dromara.hutool.json.JSONArray}</li>
-	 *     <li>如果是Bean或键值对类型，可以转为{@link OldJSONObject}</li>
+	 *     <li>如果是Bean或键值对类型，可以转为{@link JSONObject}</li>
 	 * </ul>
 	 *
 	 * @param bean    指定类型对象

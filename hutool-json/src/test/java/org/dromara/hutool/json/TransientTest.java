@@ -35,7 +35,7 @@ public class TransientTest {
 		detailBill.setBizNo("bizNo");
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final OldJSONObject jsonObject = new OldJSONObject(detailBill,
+		final JSONObject jsonObject = JSONUtil.parseObj(detailBill,
 				JSONConfig.of().setTransientSupport(false));
 		Assertions.assertEquals("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
@@ -47,7 +47,7 @@ public class TransientTest {
 		detailBill.setBizNo("bizNo");
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		final OldJSONObject jsonObject = new OldJSONObject(detailBill,
+		final JSONObject jsonObject = JSONUtil.parseObj(detailBill,
 				JSONConfig.of().setTransientSupport(true));
 		Assertions.assertEquals("{\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
@@ -58,7 +58,7 @@ public class TransientTest {
 		detailBill.setId("3243");
 		detailBill.setBizNo("bizNo");
 
-		final OldJSONObject jsonObject = new OldJSONObject(detailBill,
+		final JSONObject jsonObject = JSONUtil.parseObj(detailBill,
 				JSONConfig.of().setTransientSupport(false));
 
 		final Bill bill = jsonObject.toBean(Bill.class);
@@ -72,7 +72,7 @@ public class TransientTest {
 		detailBill.setId("3243");
 		detailBill.setBizNo("bizNo");
 
-		final OldJSONObject jsonObject = new OldJSONObject(detailBill,
+		final JSONObject jsonObject = JSONUtil.parseObj(detailBill,
 				JSONConfig.of().setTransientSupport(true));
 
 		final Bill bill = jsonObject.toBean(Bill.class);

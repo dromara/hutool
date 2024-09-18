@@ -31,7 +31,7 @@ public class IssueI9HQQETest {
 		final JSONConfig jsonConfig = new JSONConfig();
 		jsonConfig.setDateFormat("dd/MM/yyyy");
 
-		final OldJSONObject entries = JSONUtil.parseObj(json, jsonConfig);
+		final JSONObject entries = JSONUtil.parseObj(json, jsonConfig);
 
 		final MMHBo mmh = entries.toBean(MMHBo.class);
 		Assertions.assertNotNull(mmh.getCurrentDate());

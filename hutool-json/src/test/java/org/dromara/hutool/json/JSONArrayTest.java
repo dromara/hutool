@@ -46,7 +46,7 @@ public class JSONArrayTest {
 	@Test()
 	public void createJSONArrayFromJSONObjectTest() {
 		// JSONObject实现了Iterable接口，可以转换为JSONArray
-		final OldJSONObject jsonObject = new OldJSONObject();
+		final JSONObject jsonObject = new JSONObject();
 
 		JSONArray jsonArray = new JSONArray(jsonObject, JSONConfig.of());
 		assertEquals(new JSONArray(), jsonArray);
@@ -99,7 +99,7 @@ public class JSONArrayTest {
 	public void readJSONArrayFromFileTest() {
 		final JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.UTF_8);
 
-		final OldJSONObject obj0 = array.getJSONObject(0);
+		final JSONObject obj0 = array.getJSONObject(0);
 		final Exam exam = JSONUtil.toBean(obj0, Exam.class);
 		assertEquals("0", exam.getAnswerArray()[0].getSeq());
 	}
@@ -318,7 +318,7 @@ public class JSONArrayTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> {
 			if(mutable.getKey() instanceof Integer){
-				final OldJSONObject o = (OldJSONObject) mutable.getValue();
+				final JSONObject o = (JSONObject) mutable.getValue();
 				if ("111".equals(o.getStr("id"))) {
 					o.set("name", "test1_edit");
 				}
@@ -327,7 +327,7 @@ public class JSONArrayTest {
 		});
 		assertEquals(2, array.size());
 		assertTrue(array.getJSONObject(0).containsKey("id"));
-		assertEquals("test1_edit", array.getJSONObject(0).get("name"));
+		assertEquals("test1_edit", array.getJSONObject(0).getObj("name"));
 	}
 
 	@Test
@@ -337,8 +337,8 @@ public class JSONArrayTest {
 		array.add(JSONUtil.ofObj().set("name", "bbb"));
 		array.add(JSONUtil.ofObj().set("name", "ccc"));
 
-		StringBuilder result = new StringBuilder();
-		array.jsonIter(OldJSONObject.class).forEach(result::append);
+		final StringBuilder result = new StringBuilder();
+		array.jsonIter(JSONObject.class).forEach(result::append);
 		assertEquals("{\"name\":\"aaa\"}{\"name\":\"bbb\"}{\"name\":\"ccc\"}", result.toString());
 	}
 }

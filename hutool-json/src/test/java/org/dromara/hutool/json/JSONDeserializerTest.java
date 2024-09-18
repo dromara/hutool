@@ -42,7 +42,7 @@ public class JSONDeserializerTest {
 
 		@Override
 		public TestBean deserialize(final JSON json, final Type deserializeType) {
-			final OldJSONObject valueObj = (OldJSONObject) json;
+			final JSONObject valueObj = (JSONObject) json;
 			this.name = valueObj.getStr("customName");
 			this.address = valueObj.getStr("customAddress");
 			return this;

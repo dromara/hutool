@@ -33,7 +33,10 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
-import org.dromara.hutool.json.serializer.*;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.SimpleJSONContext;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -69,7 +72,7 @@ public class JSONConverter implements Converter, Serializable {
 	public static JSONConverter of(final JSONConfig config) {
 		final JSONConverter jsonConverter = new JSONConverter(config);
 		jsonConverter.registerConverter = new RegisterConverter(jsonConverter)
-			.register(OldJSONObject.class, INSTANCE)
+			.register(JSONObject.class, INSTANCE)
 			.register(JSONArray.class, INSTANCE)
 			.register(JSONPrimitive.class, INSTANCE);
 		jsonConverter.specialConverter = new SpecialConverter(jsonConverter);
@@ -90,7 +93,7 @@ public class JSONConverter implements Converter, Serializable {
 	}
 
 	@Override
-	public Object convert(Type targetType, Object value) throws ConvertException {
+	public Object convert(Type targetType, final Object value) throws ConvertException {
 		if (null == value) {
 			return null;
 		}
@@ -169,11 +172,11 @@ public class JSONConverter implements Converter, Serializable {
 			return toJSON((CharSequence) obj);
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
-			json = new OldJSONObject(obj, config);
+			json = JSONUtil.parseObj(obj, config);
 		} else if (obj instanceof Iterable || obj instanceof Iterator || ArrayUtil.isArray(obj)) {// 列表
-			json = new JSONArray(obj, config);
+			json = JSONUtil.parseArray(obj, config);
 		} else {// 对象
-			json = new OldJSONObject(obj, config);
+			json = JSONUtil.parseObj(obj, config);
 		}
 
 		return json;

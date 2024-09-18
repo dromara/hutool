@@ -57,7 +57,7 @@ public class Issue2555Test {
 	public static class MySerializer implements JSONSerializer<MyType> {
 		@Override
 		public JSON serialize(final MyType bean, final JSONContext context) {
-			return ((OldJSONObject)context.getContextJson()).set("addr", bean.getAddress());
+			return ((JSONObject)context.getContextJson()).set("addr", bean.getAddress());
 		}
 	}
 
@@ -65,7 +65,7 @@ public class Issue2555Test {
 		@Override
 		public MyType deserialize(final JSON json, final Type deserializeType) {
 			final MyType myType = new MyType();
-			myType.setAddress(((OldJSONObject)json).getStr("addr"));
+			myType.setAddress(((JSONObject)json).getStr("addr"));
 			return myType;
 		}
 	}

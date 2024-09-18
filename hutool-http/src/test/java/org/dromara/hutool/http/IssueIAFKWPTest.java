@@ -19,7 +19,7 @@ package org.dromara.hutool.http;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.net.url.UrlQuery;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.json.OldJSONObject;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +30,8 @@ public class IssueIAFKWPTest {
 
 	@Test
 	void urlWithFormTest() {
-		final OldJSONObject obj = new OldJSONObject();
-		obj.put("fields", ListUtil.of("1", "2", "good"));
+		final JSONObject obj = new JSONObject();
+		obj.set("fields", ListUtil.of("1", "2", "good"));
 
 		final Map<String, Object> params = new HashMap<>();
 		params.put("query", obj.toString());

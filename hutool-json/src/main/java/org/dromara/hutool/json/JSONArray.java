@@ -257,11 +257,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return A JSONObject，无名或值返回null
 	 * @throws JSONException 如果任何一个名为null
 	 */
-	public OldJSONObject toJSONObject(final JSONArray names) throws JSONException {
+	public JSONObject toJSONObject(final JSONArray names) throws JSONException {
 		if (names == null || names.size() == 0 || this.size() == 0) {
 			return null;
 		}
-		final OldJSONObject jo = new OldJSONObject(this.config);
+		final JSONObject jo = new JSONObject(this.config);
 		for (int i = 0; i < names.size(); i += 1) {
 			jo.set(names.getStr(i), this.getObj(i));
 		}
@@ -569,7 +569,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public void write(final JSONWriter writer) throws JSONException {
-		final JSONWriter copyWriter = writer.copyOf();
+		final JSONWriter copyWriter = writer.copyOfSub();
 		copyWriter.beginArray();
 		CollUtil.forEach(this, (value, index) -> copyWriter.writeField(new MutableEntry<>(index, value)));
 		copyWriter.end();

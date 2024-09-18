@@ -33,7 +33,7 @@ public class JWTUtil {
 	 * @param key     HS256(HmacSHA256)密钥
 	 * @return JWT Token
 	 */
-	public static String createToken(final Map<String, Object> payload, final byte[] key) {
+	public static String createToken(final Map<String, ?> payload, final byte[] key) {
 		return createToken(MapUtil.of(JWTHeader.TYPE, "JWT"), payload, key);
 	}
 
@@ -45,7 +45,7 @@ public class JWTUtil {
 	 * @param key     HS256(HmacSHA256)密钥
 	 * @return JWT Token
 	 */
-	public static String createToken(final Map<String, Object> headers, final Map<String, Object> payload, final byte[] key) {
+	public static String createToken(final Map<String, ?> headers, final Map<String, ?> payload, final byte[] key) {
 		return JWT.of()
 				.addHeaders(headers)
 				.addPayloads(payload)

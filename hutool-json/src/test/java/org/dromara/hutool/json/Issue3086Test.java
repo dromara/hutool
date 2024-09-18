@@ -70,9 +70,9 @@ public class Issue3086Test {
 		public JSON serialize(final TestBean bean, final JSONContext context) {
 			final List<String> strings = bean.getAuthorities()
 				.stream().map(SimpleGrantedAuthority::getAuthority).collect(Collectors.toList());
-			OldJSONObject contextJson = (OldJSONObject) context.getContextJson();
+			JSONObject contextJson = (JSONObject) context.getContextJson();
 			if(null == contextJson){
-				contextJson = new OldJSONObject(context.config());
+				contextJson = new JSONObject(context.config());
 			}
 			contextJson.set("authorities",strings);
 			return contextJson;

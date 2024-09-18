@@ -71,7 +71,7 @@ public class Issue1101Test {
 				"\t\"type\": 0\n" +
 				"}";
 
-		final OldJSONObject jsonObject = JSONUtil.parseObj(json);
+		final JSONObject jsonObject = JSONUtil.parseObj(json);
 
 		final TreeNode treeNode = JSONUtil.toBean(jsonObject, TreeNode.class);
 		Assertions.assertEquals(2, treeNode.getChildren().size());

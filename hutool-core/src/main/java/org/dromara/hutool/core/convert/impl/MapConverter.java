@@ -82,8 +82,7 @@ public class MapConverter extends ConverterWithRoot implements MatcherConverter,
 	 * @throws ConvertException 转换异常或不支持的类型
 	 */
 	@SuppressWarnings("rawtypes")
-	public Map<?, ?> convert(final Type targetType, final Type keyType, final Type valueType, final Object value)
-		throws ConvertException{
+	public Map<?, ?> convert(final Type targetType, final Type keyType, final Type valueType, final Object value) throws ConvertException{
 		Map map;
 		if (value instanceof Map) {
 			final Class<?> valueClass = value.getClass();

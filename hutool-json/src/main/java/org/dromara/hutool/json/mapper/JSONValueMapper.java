@@ -17,7 +17,7 @@
 package org.dromara.hutool.json.mapper;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.writer.ValueWriterManager;
 
@@ -77,33 +77,38 @@ public class JSONValueMapper implements Serializable {
 	 * @param object     被映射的对象
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	public Object map(final Object object) {
-		// null、JSON、字符串和自定义对象原样存储
-		if (null == object
-			// 当用户自定义了对象的字符串表示形式，则保留这个对象
-			|| null != ValueWriterManager.getInstance().get(object)
-			|| object instanceof JSON //
-			|| object instanceof CharSequence //
-			|| ObjUtil.isBasicType(object) //
-		) {
-			if(object instanceof JSONPrimitive){
-				return ((JSONPrimitive) object).getValue();
-			}
-
-			return object;
+	public JSON map(final Object object) {
+		if(null == object || object instanceof JSON){
+			return (JSON) object;
 		}
+
+		if(null != ValueWriterManager.getInstance().get(object)){
+			return new JSONPrimitive(object, jsonConfig);
+		}
+
+//		if (object instanceof CharSequence
+//			|| ObjUtil.isBasicType(object)) {
+//			return new JSONPrimitive(object, jsonConfig);
+//		}
 
 		// 特定对象转换
 		try {
 			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
-				return new JSONArray(object, jsonConfig);
+				final JSONArray jsonArray = new JSONArray(jsonConfig);
+				JSONArrayMapper.of(object, null).mapTo(jsonArray);
+				return jsonArray;
 			}
 
 			// 默认按照JSONObject对待
-			return new OldJSONObject(object, jsonConfig);
+			final JSONObject jsonObject = new JSONObject(jsonConfig);
+			JSONObjectMapper.of(object, null).mapTo(jsonObject);
+			return jsonObject;
 		} catch (final Exception exception) {
-			return null;
+			if(jsonConfig.isIgnoreError()){
+				return null;
+			}
+			throw ExceptionUtil.wrap(exception, JSONException.class);
 		}
 	}
 }

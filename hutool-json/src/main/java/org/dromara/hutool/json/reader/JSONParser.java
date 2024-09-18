@@ -121,7 +121,7 @@ public class JSONParser {
 		}
 		switch (tokener.nextClean()) {
 			case CharUtil.DELIM_START:
-				nextTo((OldJSONObject) json);
+				nextTo((JSONObject) json);
 				break;
 			case CharUtil.BRACKET_START:
 				nextTo((JSONArray) json);
@@ -146,7 +146,7 @@ public class JSONParser {
 		final JSON result;
 		switch (firstChar) {
 			case CharUtil.DELIM_START:
-				final OldJSONObject jsonObject = new OldJSONObject(config);
+				final JSONObject jsonObject = new JSONObject(config);
 				nextTo(jsonObject);
 				result = jsonObject;
 				break;
@@ -167,7 +167,7 @@ public class JSONParser {
 	 *
 	 * @param jsonObject JSON对象
 	 */
-	private void nextTo(final OldJSONObject jsonObject) {
+	private void nextTo(final JSONObject jsonObject) {
 		final JSONTokener tokener = this.tokener;
 
 		char c;

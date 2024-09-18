@@ -34,7 +34,7 @@ public class IssueI5DHK2Test {
 				"    }]\n" +
 				"}";
 
-		final OldJSONObject json = JSONUtil.parseObj(jsonStr);
+		final JSONObject json = JSONUtil.parseObj(jsonStr);
 		final String exployerName = json
 				.getJSONArray("punished_parties")
 				.getJSONObject(0)

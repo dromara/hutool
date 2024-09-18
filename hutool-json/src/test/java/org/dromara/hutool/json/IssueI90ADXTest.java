@@ -30,7 +30,7 @@ public class IssueI90ADXTest {
 		final TestBean testBean = new TestBean();
 		testBean.name = "aaaa";
 
-		final OldJSONObject json = JSONUtil.parseObj(testBean);
+		final JSONObject json = JSONUtil.parseObj(testBean);
 		Assertions.assertEquals("{\"name\":\"aaaa\"}", json.toString());
 	}
 

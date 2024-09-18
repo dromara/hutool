@@ -25,7 +25,7 @@ public class Issue2507Test {
 	@Test
 	public void xmlToJsonTest(){
 		final String xml = "<MsgInfo> <Msg> <![CDATA[<msg><body><row action=\"select\"><DIET>低盐饮食[嘱托]]><![CDATA[]</DIET></row></body></msg>]]> </Msg> <Msg> <![CDATA[<msg><body><row action=\"select\"><DIET>流质饮食</DIET></row></body></msg>]]> </Msg> </MsgInfo>";
-		final OldJSONObject jsonObject = JSONUtil.xmlToJson(xml);
+		final JSONObject jsonObject = JSONUtil.xmlToJson(xml);
 
 		assertEquals("{\"MsgInfo\":{\"Msg\":[\"<msg><body><row action=\\\"select\\\"><DIET>低盐饮食[嘱托\",\"]</DIET></row></body></msg>\",\"<msg><body><row action=\\\"select\\\"><DIET>流质饮食</DIET></row></body></msg>\"]}}"
 			, jsonObject.toString());

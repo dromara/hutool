@@ -26,7 +26,7 @@ public class JSONWriterTest {
 
 	@Test
 	public void writeDateTest() {
-		final OldJSONObject jsonObject = JSONUtil.ofObj(JSONConfig.of().setDateFormat("yyyy-MM-dd"))
+		final JSONObject jsonObject = JSONUtil.ofObj(JSONConfig.of().setDateFormat("yyyy-MM-dd"))
 				.set("date", DateUtil.parse("2022-09-30"));
 
 		// 日期原样写入
@@ -37,7 +37,7 @@ public class JSONWriterTest {
 		Assertions.assertEquals("{\"date\":\"2022-09-30\"}", jsonObject.toString());
 
 		// 自定义日期格式解析生效
-		final OldJSONObject parse = JSONUtil.parseObj(jsonObject.toString(), JSONConfig.of().setDateFormat("yyyy-MM-dd"));
-		Assertions.assertEquals(String.class, parse.get("date").getClass());
+		final JSONObject parse = JSONUtil.parseObj(jsonObject.toString(), JSONConfig.of().setDateFormat("yyyy-MM-dd"));
+		Assertions.assertEquals(String.class, parse.getObj("date").getClass());
 	}
 }

@@ -32,7 +32,7 @@ public class Issue2572Test {
 	public void putDayOfWeekTest(){
 		final Set<DayOfWeek> weeks = new HashSet<>();
 		weeks.add(DayOfWeek.MONDAY);
-		final OldJSONObject obj = new OldJSONObject();
+		final JSONObject obj = new JSONObject();
 		obj.set("weeks", weeks);
 		Assertions.assertEquals("{\"weeks\":[1]}", obj.toString());
 
@@ -45,7 +45,7 @@ public class Issue2572Test {
 	public void putMonthTest(){
 		final Set<Month> months = new HashSet<>();
 		months.add(Month.DECEMBER);
-		final OldJSONObject obj = new OldJSONObject();
+		final JSONObject obj = new JSONObject();
 		obj.set("months", months);
 		Assertions.assertEquals("{\"months\":[12]}", obj.toString());
 
@@ -58,7 +58,7 @@ public class Issue2572Test {
 	public void putMonthDayTest(){
 		final Set<MonthDay> monthDays = new HashSet<>();
 		monthDays.add(MonthDay.of(Month.DECEMBER, 1));
-		final OldJSONObject obj = new OldJSONObject();
+		final JSONObject obj = new JSONObject();
 		obj.set("monthDays", monthDays);
 		Assertions.assertEquals("{\"monthDays\":[\"--12-01\"]}", obj.toString());
 
