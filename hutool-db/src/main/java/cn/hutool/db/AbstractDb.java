@@ -58,6 +58,16 @@ public abstract class AbstractDb implements Serializable {
 	// ------------------------------------------------------- Constructor end
 
 	/**
+	 * 获得数据源
+	 *
+	 * @return 数据源
+	 * @since 5.8.33
+	 */
+	public DataSource getDs() {
+		return ds;
+	}
+
+	/**
 	 * 获得链接。根据实现不同，可以自定义获取连接的方式
 	 *
 	 * @return {@link Connection}
