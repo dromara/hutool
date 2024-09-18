@@ -20,7 +20,6 @@ import org.dromara.hutool.core.bean.BeanDesc;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
-import org.dromara.hutool.core.convert.ConvertUtil;
 
 import java.lang.reflect.Type;
 
@@ -61,7 +60,7 @@ public class BeanValueProvider implements ValueProvider<String> {
 	public Object value(final String key, final Type valueType) {
 		final PropDesc prop = beanDesc.getProp(key);
 		if (null != prop) {
-			return ConvertUtil.convert(valueType, prop.getValue(bean));
+			return prop.getValue(bean, valueType, false);
 		}
 		return null;
 	}

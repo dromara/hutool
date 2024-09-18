@@ -72,7 +72,7 @@ public class BeanMap implements Map<String, Object> {
 	@Override
 	public boolean containsValue(final Object value) {
 		for (final PropDesc propDesc : this.propDescMap.values()) {
-			if (ObjUtil.equals(propDesc.getValue(bean), value)) {
+			if (ObjUtil.equals(propDesc.getValue(bean, false), value)) {
 				return true;
 			}
 		}
@@ -83,7 +83,7 @@ public class BeanMap implements Map<String, Object> {
 	public Object get(final Object key) {
 		final PropDesc propDesc = this.propDescMap.get(key);
 		if (null != propDesc) {
-			return propDesc.getValue(bean);
+			return propDesc.getValue(bean, false);
 		}
 		return null;
 	}
@@ -102,7 +102,7 @@ public class BeanMap implements Map<String, Object> {
 	public Object put(final String key, final Object value) {
 		final PropDesc propDesc = this.propDescMap.get(key);
 		if (null != propDesc) {
-			final Object oldValue = propDesc.getValue(bean);
+			final Object oldValue = propDesc.getValue(bean, false);
 			propDesc.setValue(bean, value);
 			return oldValue;
 		}
@@ -143,7 +143,7 @@ public class BeanMap implements Map<String, Object> {
 	public Collection<Object> values() {
 		final List<Object> list = new ArrayList<>(size());
 		for (final PropDesc propDesc : this.propDescMap.values()) {
-			list.add(propDesc.getValue(bean));
+			list.add(propDesc.getValue(bean, false));
 		}
 		return list;
 	}
@@ -151,7 +151,7 @@ public class BeanMap implements Map<String, Object> {
 	@Override
 	public Set<Entry<String, Object>> entrySet() {
 		final HashSet<Entry<String, Object>> set = new HashSet<>(size(), 1);
-		this.propDescMap.forEach((key, propDesc) -> set.add(new AbstractMap.SimpleEntry<>(key, propDesc.getValue(bean))));
+		this.propDescMap.forEach((key, propDesc) -> set.add(new AbstractMap.SimpleEntry<>(key, propDesc.getValue(bean, false))));
 		return set;
 	}
 }

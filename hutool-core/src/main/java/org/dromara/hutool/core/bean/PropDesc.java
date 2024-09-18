@@ -158,7 +158,7 @@ public class PropDesc {
 	}
 
 	/**
-	 * 检查属性是否可读（即是否可以通过{@link #getValue(Object)}获取到值）
+	 * 检查属性是否可读（即是否可以通过{@link #getValue(Object, boolean)}获取到值）
 	 *
 	 * @param checkTransient 是否检查Transient关键字或注解
 	 * @return 是否可读
@@ -194,14 +194,21 @@ public class PropDesc {
 	 * 此方法不检查任何注解，使用前需调用 {@link #isReadable(boolean)} 检查是否可读
 	 *
 	 * @param bean Bean对象
+	 * @param ignoreError 是否忽略读取错误
 	 * @return 字段值
 	 * @since 4.0.5
 	 */
-	public Object getValue(final Object bean) {
-		if (null != this.getter) {
-			return this.getter.invoke(bean);
-		} else if (null != this.fieldInvoker) {
-			return fieldInvoker.invoke(bean);
+	public Object getValue(final Object bean, final boolean ignoreError) {
+		try{
+			if (null != this.getter) {
+				return this.getter.invoke(bean);
+			} else if (null != this.fieldInvoker) {
+				return fieldInvoker.invoke(bean);
+			}
+		} catch (final Exception e) {
+			if (!ignoreError) {
+				throw new BeanException(e, "Get value of [{}] error!", getFieldName());
+			}
 		}
 
 		return null;
@@ -218,14 +225,7 @@ public class PropDesc {
 	 * @since 5.4.2
 	 */
 	public Object getValue(final Object bean, final Type targetType, final boolean ignoreError) {
-		Object result = null;
-		try {
-			result = getValue(bean);
-		} catch (final Exception e) {
-			if (!ignoreError) {
-				throw new BeanException(e, "Get value of [{}] error!", getFieldName());
-			}
-		}
+		final Object result = getValue(bean, ignoreError);
 
 		if (null != result && null != targetType) {
 			// 尝试将结果转换为目标类型，如果转换失败，返回null，即跳过此属性值。
@@ -237,7 +237,7 @@ public class PropDesc {
 	}
 
 	/**
-	 * 检查属性是否可读（即是否可以通过{@link #getValue(Object)}获取到值）
+	 * 检查属性是否可读（即是否可以通过{@link #getValue(Object, boolean)}获取到值）
 	 *
 	 * @param checkTransient 是否检查Transient关键字或注解
 	 * @return 是否可读
@@ -318,7 +318,7 @@ public class PropDesc {
 
 		// issue#I4JQ1N@Gitee
 		// 非覆盖模式下，如果目标值存在，则跳过
-		if (!override && null != getValue(bean)) {
+		if (!override && null != getValue(bean, ignoreError)) {
 			return this;
 		}
 

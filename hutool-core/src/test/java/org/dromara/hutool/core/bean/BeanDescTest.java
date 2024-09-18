@@ -97,7 +97,7 @@ public class BeanDescTest {
 		desc.getProp("name").setValue(user, "张三");
 		Assertions.assertEquals("张三", user.getName());
 
-		final Object value = desc.getProp("name").getValue(user);
+		final Object value = desc.getProp("name").getValue(user, false);
 		Assertions.assertEquals("张三", value);
 	}
 
@@ -108,12 +108,12 @@ public class BeanDescTest {
 		final User user = new User();
 		desc.getProp("name").setValue(user, "张三");
 		Assertions.assertEquals("张三", user.getName());
-		Object value = desc.getProp("name").getValue(user);
+		Object value = desc.getProp("name").getValue(user, false);
 		Assertions.assertEquals("张三", value);
 
 		desc.getProp("admin").setValue(user, true);
 		Assertions.assertTrue(user.isAdmin());
-		value = desc.getProp("admin").getValue(user);
+		value = desc.getProp("admin").getValue(user, false);
 		Assertions.assertEquals(true, value);
 	}
 

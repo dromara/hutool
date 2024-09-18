@@ -137,7 +137,7 @@ public class DynaBean implements Cloneable, Serializable {
 				return null;
 				//throw new BeanException("No public field or get method for {}", fieldName);
 			}
-			return (T) prop.getValue(bean);
+			return (T) prop.getValue(bean, false);
 		}
 	}
 

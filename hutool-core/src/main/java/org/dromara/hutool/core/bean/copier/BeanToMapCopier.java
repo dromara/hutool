@@ -54,6 +54,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map copy() {
+		final CopyOptions copyOptions = this.copyOptions;
 		Class<?> actualEditable = source.getClass();
 		if (null != copyOptions.editable) {
 			// 检查限制类是否为target的父类或接口
@@ -70,7 +71,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 			}
 
 			// 检查源对象属性是否过滤属性
-			Object sValue = sDesc.getValue(this.source);
+			Object sValue = sDesc.getValue(this.source, copyOptions.ignoreError);
 			if (!copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
 				return;
 			}
@@ -91,7 +92,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 			final Type[] typeArguments = TypeUtil.getTypeArguments(this.targetType);
 			if(null != typeArguments && typeArguments.length > 1){
 				//sValue = Convert.convertWithCheck(typeArguments[1], sValue, null, this.copyOptions.ignoreError);
-				sValue = this.copyOptions.convertField(typeArguments[1], sValue);
+				sValue = copyOptions.convertField(typeArguments[1], sValue);
 			}
 
 			// 目标赋值
