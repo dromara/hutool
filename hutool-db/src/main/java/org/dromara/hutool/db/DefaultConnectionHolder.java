@@ -38,6 +38,15 @@ public class DefaultConnectionHolder implements ConnectionHolder {
 		this.ds = ds;
 	}
 
+	/**
+	 * 获得数据源
+	 *
+	 * @return 数据源
+	 */
+	public DataSource getDs() {
+		return this.ds;
+	}
+
 	@Override
 	public Connection getConnection() throws DbException {
 		try {
