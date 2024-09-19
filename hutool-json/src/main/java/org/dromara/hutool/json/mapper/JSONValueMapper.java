@@ -83,6 +83,19 @@ public class JSONValueMapper implements Serializable {
 	}
 
 	/**
+	 * 将JSONObject转换为JSONArray
+	 *
+	 * @param jsonObject JSONObject
+	 * @return JSONArray
+	 */
+	public JSONArray mapFromJSONObject(final JSONObject jsonObject){
+		final JSONArray array = new JSONArray(jsonConfig);
+		JSONArrayMapper.of(jsonObject, this.predicate)
+			.mapTo(array);
+		return array;
+	}
+
+	/**
 	 * 解析JSON字符串或XML字符串为JSON结构
 	 *
 	 * @param source JSON字符串或XML字符串
@@ -145,8 +158,6 @@ public class JSONValueMapper implements Serializable {
 		if (null != serializer) {
 			return serializer.serialize(obj, new SimpleJSONContext(null, this.jsonConfig));
 		}
-
-		// read
 
 		// 原始类型
 		if (null != ValueWriterManager.getInstance().get(obj)) {

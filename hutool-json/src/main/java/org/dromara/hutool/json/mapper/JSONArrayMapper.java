@@ -26,17 +26,12 @@ import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
 /**
  * 对象和JSONArray映射器，用于转换对象为JSONArray，支持：
  * <ul>
- *     <li>CharSequence 转 JSONArray，使用JSONTokener解析</li>
- *     <li>{@link Reader} 转 JSONArray，使用JSONTokener解析</li>
- *     <li>{@link InputStream} 转 JSONArray，使用JSONTokener解析</li>
  *     <li>JSONTokener 转 JSONArray，直接解析</li>
  *     <li>Iterable 转 JSONArray</li>
  *     <li>Iterator 转 JSONArray</li>

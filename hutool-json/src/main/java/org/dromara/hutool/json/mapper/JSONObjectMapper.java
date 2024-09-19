@@ -24,12 +24,13 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.InternalJSONUtil;
+import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONException;
+import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 
-import java.io.InputStream;
-import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.Enumeration;
 import java.util.Map;
@@ -41,9 +42,6 @@ import java.util.function.Predicate;
  * <ul>
  *     <li>Map 转 JSONObject，将键值对加入JSON对象</li>
  *     <li>Map.Entry 转 JSONObject</li>
- *     <li>CharSequence 转 JSONObject，使用JSONTokener解析</li>
- *     <li>{@link Reader} 转 JSONObject，使用JSONTokener解析</li>
- *     <li>{@link InputStream} 转 JSONObject，使用JSONTokener解析</li>
  *     <li>JSONTokener 转 JSONObject，直接解析</li>
  *     <li>ResourceBundle 转 JSONObject</li>
  *     <li>Bean 转 JSONObject，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
@@ -88,11 +86,6 @@ class JSONObjectMapper {
 		final Object source = this.source;
 		if (null == source) {
 			return;
-		}
-
-		if (source instanceof JSONArray) {
-			// 不支持集合类型转换为JSONObject
-			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
 
 		if (source instanceof Map) {

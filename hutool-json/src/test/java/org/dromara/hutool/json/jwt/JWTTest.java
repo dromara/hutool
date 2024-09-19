@@ -17,11 +17,9 @@
 package org.dromara.hutool.json.jwt;
 
 import lombok.Data;
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.json.jwt.signers.AlgorithmUtil;
 import org.dromara.hutool.json.jwt.signers.JWTSigner;
@@ -163,9 +161,7 @@ public class JWTTest {
 		Assertions.assertEquals(bean, beanRes);
 		Assertions.assertEquals(numRes, num);
 		Assertions.assertEquals(username, strRes);
-		Assertions.assertEquals(
-			StrUtil.wrap(CollUtil.join(list, ","), "[", "]"),
-			listRes.toString());
+		Assertions.assertEquals(list, listRes);
 
 		final String formattedDate = DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
 		final String formattedRes = DateUtil.format(dateRes, "yyyy-MM-dd HH:mm:ss");

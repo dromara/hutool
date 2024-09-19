@@ -188,7 +188,7 @@ public class JSONConverter implements Converter, Serializable {
 
 		// 当目标类型不确定时，返回原JSON
 		final Class<T> rawType = (Class<T>) TypeUtil.getClass(targetType);
-		if (null == rawType || rawType.isInstance(json)) {
+		if (null == rawType || JSON.class.isAssignableFrom(rawType)) {
 			return (T) json;
 			//throw new JSONException("Can not get class from type: {}", targetType);
 		}
@@ -238,14 +238,14 @@ public class JSONConverter implements Converter, Serializable {
 			json.getClass().getName(), json, targetType.getTypeName());
 	}
 
-	private Object toDateWithFormat(final Class<?> targetClass, final Object value) {
+	private Object toDateWithFormat(final Class<?> targetDateClass, final Object value) {
 		// 日期转换，支持自定义日期格式
 		final String format = config.getDateFormat();
 		if (StrUtil.isNotBlank(format)) {
-			if (Date.class.isAssignableFrom(targetClass)) {
-				return new DateConverter(format).convert(targetClass, value);
+			if (Date.class.isAssignableFrom(targetDateClass)) {
+				return new DateConverter(format).convert(targetDateClass, value);
 			} else {
-				return new TemporalAccessorConverter(format).convert(targetClass, value);
+				return new TemporalAccessorConverter(format).convert(targetDateClass, value);
 			}
 		}
 		return null;

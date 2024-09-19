@@ -158,6 +158,10 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		if(arrayOrCollection instanceof JSONObject){
+			final JSONValueMapper jsonValueMapper = JSONValueMapper.of(config, predicate);
+			return jsonValueMapper.mapFromJSONObject((JSONObject) arrayOrCollection);
+		}
 		return (JSONArray) parse(arrayOrCollection, config, predicate);
 	}
 
