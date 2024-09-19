@@ -24,10 +24,10 @@ import java.lang.reflect.Type;
  * 在Bean注入过程中，Bean获得字段名，通过外部方式根据这个字段名查找相应的字段值，然后注入Bean<br>
  *
  * @author Looly
- * @param <T> KEY类型，一般情况下为 {@link String}
+ * @param <K> KEY类型，一般情况下为 {@link String}
  *
  */
-public interface ValueProvider<T>{
+public interface ValueProvider<K>{
 
 	/**
 	 * 获取值<br>
@@ -37,7 +37,7 @@ public interface ValueProvider<T>{
 	 * @param valueType 被注入的值的类型
 	 * @return 对应参数名的值
 	 */
-	Object value(T key, Type valueType);
+	Object value(K key, Type valueType);
 
 	/**
 	 * 是否包含指定KEY，如果不包含则忽略注入<br>
@@ -46,5 +46,5 @@ public interface ValueProvider<T>{
 	 * @param key Bean对象中参数名
 	 * @return 是否包含指定KEY
 	 */
-	boolean containsKey(T key);
+	boolean containsKey(K key);
 }

@@ -740,11 +740,17 @@ public class CollUtil {
 	 *
 	 * @param <T>            集合元素类型，rawtype 如 ArrayList.class, EnumSet.class ...
 	 * @param collectionType 集合类型
+	 * @param elementType    集合元素类，只用于EnumSet创建，如果创建EnumSet，则此参数必须非空
 	 * @return 集合类型对应的实例
 	 * @since 3.0.8
 	 */
-	public static <T> Collection<T> create(final Class<?> collectionType) {
-		return create(collectionType, null);
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <T> Collection<T> create(final Class<?> collectionType, final Class<T> elementType) {
+		if (collectionType.isAssignableFrom(EnumSet.class)) {
+			return (Collection<T>) EnumSet.noneOf((Class<Enum>) Assert.notNull(elementType));
+		}
+
+		return create(collectionType);
 	}
 
 	/**
@@ -752,12 +758,11 @@ public class CollUtil {
 	 *
 	 * @param <T>            集合元素类型，rawtype 如 ArrayList.class, EnumSet.class ...
 	 * @param collectionType 集合类型
-	 * @param elementType    集合元素类，只用于EnumSet创建，如果创建EnumSet，则此参数必须非空
 	 * @return 集合类型对应的实例
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> Collection<T> create(final Class<?> collectionType, final Class<T> elementType) {
+	@SuppressWarnings({"unchecked"})
+	public static <T> Collection<T> create(final Class<?> collectionType) {
 		final Collection<T> list;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
 			// 抽象集合默认使用ArrayList
@@ -777,8 +782,6 @@ public class CollUtil {
 				}
 				return CompareUtil.compare(o1.toString(), o2.toString());
 			});
-		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
-			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) Assert.notNull(elementType));
 		}
 
 		// List

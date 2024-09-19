@@ -106,28 +106,38 @@ class JSONArrayMapper {
 				return;
 			}
 
-			Object next;
-			while (iter.hasNext()) {
-				next = iter.next();
-				// 检查循环引用
-				if (next != source) {
-					if(null != this.predicate){
-						final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), next);
-						if (predicate.test(entry)) {
-							// 使用修改后的键值对
-							next = entry.getValue();
-							jsonArray.set(next);
-						}
-					}else {
+			mapFromIterator(iter, jsonArray);
+		}
+	}
+
+	/**
+	 * 从Iterator中读取数据，并添加到JSONArray中
+	 *
+	 * @param iter      {@link Iterator}
+	 * @param jsonArray {@link JSONArray}
+	 */
+	private void mapFromIterator(final Iterator<?> iter, final JSONArray jsonArray) {
+		Object next;
+		while (iter.hasNext()) {
+			next = iter.next();
+			// 检查循环引用
+			if (next != source) {
+				if (null != this.predicate) {
+					final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), next);
+					if (predicate.test(entry)) {
+						// 使用修改后的键值对
+						next = entry.getValue();
 						jsonArray.set(next);
 					}
+				} else {
+					jsonArray.set(next);
 				}
 			}
 		}
 	}
 
 	/**
-	 * 初始化
+	 * 从JSONTokener中读取数据，并添加到JSONArray中
 	 *
 	 * @param x         {@link JSONTokener}
 	 * @param jsonArray {@link JSONArray}

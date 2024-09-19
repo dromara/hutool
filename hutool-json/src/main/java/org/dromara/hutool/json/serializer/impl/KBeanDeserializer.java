@@ -32,12 +32,12 @@ import java.lang.reflect.Type;
  * @author looly
  * @since 6.0.0
  */
-public class KotlinDeserializer implements MatcherJSONDeserializer<Object> {
+public class KBeanDeserializer implements MatcherJSONDeserializer<Object> {
 
 	/**
 	 * 单例
 	 */
-	public static final MatcherJSONDeserializer<?> INSTANCE = new KotlinDeserializer();
+	public static final MatcherJSONDeserializer<?> INSTANCE = new KBeanDeserializer();
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {

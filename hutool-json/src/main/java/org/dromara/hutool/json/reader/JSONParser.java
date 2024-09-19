@@ -264,11 +264,11 @@ public class JSONParser {
 			case CharUtil.DOUBLE_QUOTES:
 			case CharUtil.SINGLE_QUOTE:
 				// 引号包围，表示字符串值
-				return new JSONPrimitive(tokener.nextWrapString(firstChar));
+				return new JSONPrimitive(tokener.nextWrapString(firstChar), config);
 			default:
 				final Object value = InternalJSONUtil.parseValueFromString(tokener.nextUnwrapString(firstChar));
 				// 非引号包围，可能为boolean、数字、null等
-				return null == value ? null : new JSONPrimitive(value);
+				return null == value ? null : new JSONPrimitive(value, config);
 		}
 	}
 }

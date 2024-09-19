@@ -38,7 +38,7 @@ import java.util.function.Predicate;
  *
  * @author Looly
  */
-public interface JSON extends Converter, Cloneable, Serializable {
+public interface JSON extends Converter, Serializable {
 
 	/**
 	 * 获取JSON配置

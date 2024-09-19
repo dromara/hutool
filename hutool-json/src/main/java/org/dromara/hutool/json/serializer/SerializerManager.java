@@ -23,9 +23,7 @@ import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.serializer.impl.KotlinDeserializer;
-import org.dromara.hutool.json.serializer.impl.TemporalAccessorSerializer;
-import org.dromara.hutool.json.serializer.impl.TimeZoneSerializer;
+import org.dromara.hutool.json.serializer.impl.*;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -313,7 +311,11 @@ public class SerializerManager {
 		manager.register((MatcherJSONDeserializer<TimeZone>) TimeZoneSerializer.INSTANCE);
 
 		// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
-		manager.register(KotlinDeserializer.INSTANCE);
+		manager.register(KBeanDeserializer.INSTANCE);
+		manager.register(CollectionDeserializer.INSTANCE);
+		manager.register(MapDeserializer.INSTANCE);
+		manager.register(EntryDeserializer.INSTANCE);
+		manager.register(RecordDeserializer.INSTANCE);
 	}
 	// endregion
 }

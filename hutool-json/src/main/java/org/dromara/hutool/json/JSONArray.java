@@ -50,7 +50,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	/**
 	 * 配置项
 	 */
-	private JSONConfig config;
+	private final JSONConfig config;
 
 	// region ----- Constructors
 
@@ -313,12 +313,5 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		writer.beginArray();
 		CollUtil.forEach(this, (index, value) -> writer.writeField(new MutableEntry<>(index, value)));
 		writer.endArray();
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		final JSONArray clone = (JSONArray) super.clone();
-		clone.config = this.config;
-		return clone;
 	}
 }

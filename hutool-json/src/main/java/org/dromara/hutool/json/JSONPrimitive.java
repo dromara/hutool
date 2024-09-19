@@ -49,15 +49,6 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 	/**
 	 * 构造
 	 *
-	 * @param value 值
-	 */
-	public JSONPrimitive(final Object value) {
-		this(value, null);
-	}
-
-	/**
-	 * 构造
-	 *
 	 * @param value  值
 	 * @param config 配置项
 	 */
@@ -114,6 +105,24 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 	 */
 	public boolean isNumber() {
 		return value instanceof Number;
+	}
+
+	/**
+	 * 是否为布尔类型
+	 *
+	 * @return 是否为布尔类型
+	 */
+	public boolean isBoolean() {
+		return value instanceof Boolean;
+	}
+
+	/**
+	 * 是否为字符串类型
+	 *
+	 * @return 是否为字符串类型
+	 */
+	public boolean isString() {
+		return value instanceof String;
 	}
 
 	/**
