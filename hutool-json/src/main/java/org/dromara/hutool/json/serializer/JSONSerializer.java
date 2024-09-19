@@ -20,7 +20,8 @@ import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONObject;
 
 /**
- * 序列化接口，通过实现此接口，实现自定义的对象转换为JSON的操作
+ * 序列化接口，通过实现此接口，实现自定义的对象转换为JSON的操作<br>
+ * 序列化主要作用于Java对象转为JSON时
  *
  * @param <V> 对象类型
  * @author Looly

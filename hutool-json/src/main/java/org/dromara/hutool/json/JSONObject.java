@@ -90,7 +90,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	public void write(final JSONWriter writer) throws JSONException {
 		writer.beginObj();
 		this.forEach((key, value) -> writer.writeField(new MutableEntry<>(key, value)));
-		writer.end();
+		writer.endObj();
 	}
 
 	// region ----- get

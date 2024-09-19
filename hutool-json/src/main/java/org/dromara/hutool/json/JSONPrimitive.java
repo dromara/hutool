@@ -29,9 +29,9 @@ import java.math.BigInteger;
 /**
  * JSON原始类型数据封装，根据RFC8259规范，JSONPrimitive只包含以下类型：
  * <ul>
- *     <li>number</li>
- *     <li>string</li>
- *     <li>null</li>
+ *     <li>Number</li>
+ *     <li>boolean</li>
+ *     <li>String</li>
  * </ul>
  *
  * @author Looly

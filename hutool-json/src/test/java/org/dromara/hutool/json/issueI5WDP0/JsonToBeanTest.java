@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 public class JsonToBeanTest {
 
 	@Test
-	void toBeanTest() {
+	void toKotlinBeanTest() {
 		final String jsonStr = "{\"code\": \"201\", \"status\": \"ok\"}";
 		final ERPProduct bean = JSONUtil.toBean(jsonStr, ERPProduct.class);
 		Assertions.assertNotNull(bean);

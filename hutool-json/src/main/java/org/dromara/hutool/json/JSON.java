@@ -85,8 +85,8 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @see BeanPath#getValue(Object)
 	 * @since 4.0.6
 	 */
-	default Object getByPath(final String expression) {
-		return BeanPath.of(expression).getValue(this);
+	default JSON getByPath(final String expression) {
+		return (JSON) BeanPath.of(expression).getValue(this);
 	}
 
 	/**

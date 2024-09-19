@@ -16,9 +16,11 @@
 
 package org.dromara.hutool.core.bean.copier;
 
+import org.dromara.hutool.core.bean.BeanException;
 import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -63,8 +65,21 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 			actualEditable = copyOptions.editable;
 		}
 		final Map<String, PropDesc> targetPropDescMap = getBeanDesc(actualEditable).getPropMap(copyOptions.ignoreCase);
+		if(MapUtil.isEmpty(targetPropDescMap)){
+			if(copyOptions.ignoreError){
+				return target;
+			}
+			throw new BeanException("No properties for target: {}", actualEditable);
+		}
 
 		final Map<String, PropDesc> sourcePropDescMap = getBeanDesc(source.getClass()).getPropMap(copyOptions.ignoreCase);
+		if(MapUtil.isEmpty(sourcePropDescMap)){
+			if(copyOptions.ignoreError){
+				return target;
+			}
+			throw new BeanException("No properties for source: {}", source.getClass());
+		}
+
 		sourcePropDescMap.forEach((sFieldName, sDesc) -> {
 			if (null == sFieldName || !sDesc.isReadable(copyOptions.transientSupport)) {
 				// 字段空或不可读，跳过

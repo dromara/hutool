@@ -18,9 +18,9 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.lang.Console;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Predicate多层过滤
@@ -30,7 +30,6 @@ public class IssueI5OMSCTest {
 	@Test
 	public void filterTest(){
 		final JSONObject json = JSONUtil.parseObj(ResourceUtil.readUtf8Str("issueI5OMSC.json"));
-		Console.log(json.toStringPretty());
 
 		final String s = json.toJSONString(0, (entry) -> {
 			final Object key = entry.getKey();
@@ -39,6 +38,6 @@ public class IssueI5OMSCTest {
 			}
 			return true;
 		});
-		Assertions.assertEquals("{\"store\":{\"bicycle\":{\"color\":\"red\"},\"book\":[{\"author\":\"Evelyn Waugh\"},{\"author\":\"Evelyn Waugh02\"}]}}", s);
+		assertEquals("{\"store\":{\"bicycle\":{\"color\":\"red\"},\"book\":[{\"author\":\"Evelyn Waugh\"},{\"author\":\"Evelyn Waugh02\"}]}}", s);
 	}
 }

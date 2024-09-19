@@ -100,7 +100,7 @@ public class ValueWriterManager {
 	private static void registerDefault() {
 		final ValueWriterManager manager = SingletonHolder.INSTANCE;
 		// JDK对象最后判断
-		// manager.register(JdkValueWriter.INSTANCE);
+		manager.register(JdkValueWriter.INSTANCE);
 		manager.register(NumberValueWriter.INSTANCE);
 		manager.register(DateValueWriter.INSTANCE);
 		manager.register(BooleanValueWriter.INSTANCE);

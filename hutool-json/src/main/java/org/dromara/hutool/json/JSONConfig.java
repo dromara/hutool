@@ -50,7 +50,12 @@ public class JSONConfig implements Serializable {
 	 */
 	private String dateFormat;
 	/**
-	 * 是否忽略null值
+	 * 是否忽略null值<br>
+	 * 此选项主要作用于两个阶段：
+	 * <ol>
+	 *     <li>Java对象或JSON字符串转为JSON时</li>
+	 *     <li>JSON写出或转为JSON字符串时</li>
+	 * </ol>
 	 */
 	private boolean ignoreNullValue = true;
 	/**
@@ -188,7 +193,12 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 设置是否忽略null值
+	 * 设置是否忽略null值<br>
+	 * 此选项主要作用于两个阶段：
+	 * <ol>
+	 *     <li>Java对象或JSON字符串转为JSON时</li>
+	 *     <li>JSON写出或转为JSON字符串时</li>
+	 * </ol>
 	 *
 	 * @param ignoreNullValue 是否忽略null值
 	 * @return this

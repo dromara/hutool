@@ -31,7 +31,8 @@ import java.lang.reflect.Type;
 public interface MatcherJSONDeserializer<V> extends JSONDeserializer<V> {
 
 	/**
-	 * 匹配反序列化器是否匹配
+	 * 匹配反序列化器是否匹配<br>
+	 * 根据JSON的内容、类型，和目标类型，精准匹配反序列化器
 	 *
 	 * @param json            JSON对象
 	 * @param deserializeType 反序列化类型

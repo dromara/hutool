@@ -91,7 +91,7 @@ public class BeanConverter implements Converter, Serializable {
 	private Object convertInternal(final Type targetType, final Class<?> targetClass, final Object value) {
 		if (value instanceof Map ||
 				value instanceof ValueProvider ||
-				BeanUtil.isWritableBean(value.getClass())) {
+				BeanUtil.isReadableBean(value.getClass())) {
 			if (value instanceof Map && targetClass.isInterface()) {
 				// 将Map动态代理为Bean
 				return MapProxy.of((Map<?, ?>) value).toProxyBean(targetClass);

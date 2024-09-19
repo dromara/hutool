@@ -18,7 +18,6 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,7 @@ public class JSONTokenerTest {
 	void parseTest() {
 		final JSONObject jsonObject = JSONUtil.parseObj(ResourceUtil.getUtf8Reader("issue1200.json"));
 		assertNotNull(jsonObject);
-		Console.log(jsonObject.toStringPretty());
+		//Console.log(jsonObject.toStringPretty());
 	}
 
 	@Test

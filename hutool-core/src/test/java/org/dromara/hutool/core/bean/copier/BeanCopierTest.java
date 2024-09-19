@@ -101,4 +101,11 @@ public class BeanCopierTest {
 		Assertions.assertEquals("abc", b.getValue());
 	}
 
+	@Test
+	void stringToBeanTest() {
+		final String str = "null";
+		final BeanCopier<A> copier = BeanCopier.of(str, new A(), CopyOptions.of());
+		final A copy = copier.copy();
+		Assertions.assertNull(copy.value);
+	}
 }

@@ -78,10 +78,6 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 */
 	private boolean needSeparator;
 	/**
-	 * 是否为JSONArray模式
-	 */
-	private boolean arrayMode;
-	/**
 	 * 本级别缩进量
 	 */
 	private int indent;
@@ -129,10 +125,18 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	@SuppressWarnings("resource")
 	public JSONWriter beginObj() {
 		append(CharUtil.DELIM_START);
-		arrayMode = false;
 		needSeparator = false;
 		indent += indentFactor;
 		return this;
+	}
+
+	/**
+	 * 结束JSON对象，默认根据开始的类型，补充"}"
+	 *
+	 * @return this
+	 */
+	public JSONWriter endObj() {
+		return end(false);
 	}
 
 	/**
@@ -143,36 +147,24 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	@SuppressWarnings("resource")
 	public JSONWriter beginArray() {
 		append(CharUtil.BRACKET_START);
-		arrayMode = true;
 		needSeparator = false;
 		indent += indentFactor;
 		return this;
 	}
 
 	/**
-	 * 结束，默认根据开始的类型，补充"}"或"]"
+	 * 结束JSON数组，默认根据开始的类型，补充"]"
 	 *
 	 * @return this
 	 */
-	@SuppressWarnings("resource")
-	public JSONWriter end() {
-		// 结束子缩进
-		indent -= indentFactor;
-		// 换行缩进
-		writeLF().writeSpace(indent);
-		append(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
-		flush();
-		arrayMode = false;
-		// 当前对象或数组结束，当新的
-		needSeparator = true;
-		return this;
+	public JSONWriter endArray() {
+		return end(true);
 	}
 
 	/**
 	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容<br>
-	 * 在{@link #arrayMode} 为 {@code true} 时，key是数字，此时不写出键，只写值
 	 *
-	 * @param pair      键值对
+	 * @param pair 键值对
 	 * @return this
 	 * @since 6.0.0
 	 */
@@ -189,12 +181,15 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 			}
 		}
 
-		if (!arrayMode) {
-			// JSONObject模式，写出键，否则只输出值
-			writeKey(StrUtil.toString(pair.getKey()));
+		final Object key = pair.getKey();
+		if (key instanceof Integer) {
+			// 数组模式，只写出值
+			return writeValueDirect(pair.getValue(), true);
 		}
 
-		return writeValueDirect(pair.getValue());
+		// 键值对模式
+		writeKey(StrUtil.toString(key));
+		return writeValueDirect(pair.getValue(), false);
 	}
 
 	/**
@@ -327,12 +322,32 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	// ------------------------------------------------------------------------------ Private methods
 
 	/**
+	 * 结束，默认根据开始的类型，补充"}"或"]"
+	 *
+	 * @param arrayMode 数组模式，true表示数组模式，false表示对象模式
+	 * @return this
+	 */
+	@SuppressWarnings("resource")
+	private JSONWriter end(final boolean arrayMode) {
+		// 结束子缩进
+		indent -= indentFactor;
+		// 换行缩进
+		writeLF().writeSpace(indent);
+		append(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
+		flush();
+		// 当前对象或数组结束，当新的
+		needSeparator = true;
+		return this;
+	}
+
+	/**
 	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
 	 *
 	 * @param value     值
+	 * @param arrayMode 是否数组模式
 	 * @return this
 	 */
-	private JSONWriter writeValueDirect(final Object value) {
+	private JSONWriter writeValueDirect(final Object value, final boolean arrayMode) {
 		if (arrayMode) {
 			if (needSeparator) {
 				//noinspection resource
@@ -352,7 +367,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	/**
 	 * 写出JSON的值，根据值类型不同，输出不同内容
 	 *
-	 * @param value     值
+	 * @param value 值
 	 * @return this
 	 */
 	@SuppressWarnings("resource")

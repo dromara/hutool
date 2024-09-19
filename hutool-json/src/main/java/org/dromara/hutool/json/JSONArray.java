@@ -312,7 +312,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	public void write(final JSONWriter writer) throws JSONException {
 		writer.beginArray();
 		CollUtil.forEach(this, (index, value) -> writer.writeField(new MutableEntry<>(index, value)));
-		writer.end();
+		writer.endArray();
 	}
 
 	@Override

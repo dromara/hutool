@@ -95,13 +95,7 @@ class JSONObjectMapper {
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
 
-		if (source instanceof JSONTokener) {
-			// JSONTokener
-			mapFromTokener((JSONTokener) source, jsonObject.config(), jsonObject);
-		}if (source instanceof JSONParser) {
-			// JSONParser
-			((JSONParser) source).parseTo(jsonObject);
-		} else if (source instanceof Map) {
+		if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 				jsonObject.set(ConvertUtil.toStr(e.getKey()), e.getValue());
@@ -109,10 +103,6 @@ class JSONObjectMapper {
 		} else if (source instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) source;
 			jsonObject.set(ConvertUtil.toStr(entry.getKey()), entry.getValue());
-		} else if (source instanceof Reader) {
-			mapFromTokener(new JSONTokener((Reader) source), jsonObject.config(), jsonObject);
-		} else if (source instanceof InputStream) {
-			mapFromTokener(new JSONTokener((InputStream) source), jsonObject.config(), jsonObject);
 		} else if (source instanceof byte[]) {
 			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source)), jsonObject.config(), jsonObject);
 		} else if (source instanceof ResourceBundle) {

@@ -461,8 +461,12 @@ public class JSONUtil {
 	 * @return 对象
 	 * @see JSON#getByPath(String)
 	 */
-	public static Object getByPath(final JSON json, final String expression) {
-		return getByPath(json, expression, null);
+	public static JSON getByPath(final JSON json, final String expression) {
+		if ((null == json || StrUtil.isBlank(expression))) {
+			return null;
+		}
+
+		return json.getByPath(expression);
 	}
 
 	/**

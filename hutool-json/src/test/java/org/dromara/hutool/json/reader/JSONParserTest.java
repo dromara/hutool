@@ -16,7 +16,9 @@
 
 package org.dromara.hutool.json.reader;
 
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -35,5 +37,15 @@ public class JSONParserTest {
 	void nextToTest() {
 		final String jsonStr = "{\"a\": 1}";
 		JSONParser.of(new JSONTokener(jsonStr), JSONConfig.of()).parseTo(new JSONObject());
+	}
+
+	@Test
+	void parseArrayTest() {
+		final String jsonStr = "[{},2,3]";
+		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), JSONConfig.of());
+		final JSONArray jsonArray = new JSONArray();
+		jsonParser.parseTo(jsonArray);
+
+		Console.log(jsonArray);
 	}
 }

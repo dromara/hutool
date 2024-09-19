@@ -21,7 +21,7 @@ import org.dromara.hutool.json.JSON;
 import java.lang.reflect.Type;
 
 /**
- * JSON自定义反序列化接口，实现{@link JSON} to Bean，使用方式为：
+ * JSON自定义反序列化接口，实现{@link JSON} to Bean，主要作用于JSON转为Java对象时，使用方式为：
  * <ul>
  *     <li>定义好反序列化规则，关联指定类型与转换器实现反序列化。</li>
  *     <li>使Bean实现此接口，调用{@link #deserialize(JSON, Type)}解析字段，返回this即可。</li>

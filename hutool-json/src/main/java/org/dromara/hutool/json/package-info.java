@@ -15,10 +15,13 @@
  */
 
 /**
- * JSON（JavaScript Object Notation JavaScript对象表示法）封装，包含以下组件：
+ * JSON（JavaScript Object Notation JavaScript对象表示法）封装<br>
+ * 规范见：https://www.rfc-editor.org/rfc/rfc8259
+ * 包含以下组件：
  * <ul>
- *     <li>JSONObject：使用键值对表示的数据类型，使用"{}"包围</li>
- *     <li>JSONArray：使用列表表示的数据类型，使用"[]"包围</li>
+ *     <li>JSONObject：   使用键值对表示的数据类型，使用"{}"包围</li>
+ *     <li>JSONArray：    使用列表表示的数据类型，使用"[]"包围</li>
+ *     <li>JSONPrimitive：表示boolean、String、Number等原始类型</li>
  * </ul>
  * JSON封装主要包括JSON表示和JSON转换：
  *

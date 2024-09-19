@@ -26,7 +26,8 @@ package org.dromara.hutool.json.serializer;
 public interface MatcherJSONSerializer<V> extends JSONSerializer<V> {
 
 	/**
-	 * 判断是否匹配
+	 * 判断是否匹配<br>
+	 * 根据Java对象内容、类型等信息，配合当前JSON所处位置判断是否匹配，用于决定是否执行序列化
 	 *
 	 * @param bean      对象
 	 * @param context   JSON上下文

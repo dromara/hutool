@@ -17,6 +17,7 @@
 package org.dromara.hutool.json;
 
 import lombok.Data;
+import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,7 @@ public class Issue3504Test {
 		jsonBean.setName("test");
 		jsonBean.setClasses(new Class[]{String.class});
 		final String huToolJsonStr = JSONUtil.toJsonStr(jsonBean);
+		Console.log(huToolJsonStr);
 		final JsonBean bean = JSONUtil.toBean(huToolJsonStr, JsonBean.class);
 		Assertions.assertNotNull(bean);
 		Assertions.assertEquals("test", bean.getName());

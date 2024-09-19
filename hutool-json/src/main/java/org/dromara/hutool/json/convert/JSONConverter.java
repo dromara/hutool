@@ -24,7 +24,6 @@ import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
@@ -182,8 +181,7 @@ public class JSONConverter implements Converter, Serializable {
 	@SuppressWarnings("unchecked")
 	private <T> T toBean(final Type targetType, final JSON json) {
 		// 自定义对象反序列化
-		final JSONDeserializer<?> deserializer = SerializerManager.getInstance().getDeserializer(targetType);
-
+		final JSONDeserializer<?> deserializer = SerializerManager.getInstance().getDeserializer(json, targetType);
 		if (null != deserializer) {
 			return (T) deserializer.deserialize(json, targetType);
 		}
@@ -193,11 +191,6 @@ public class JSONConverter implements Converter, Serializable {
 		if (null == rawType || rawType.isInstance(json)) {
 			return (T) json;
 			//throw new JSONException("Can not get class from type: {}", targetType);
-		}
-
-		// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
-		if (KClassUtil.isKotlinClass(rawType) && json instanceof JSONGetter) {
-			return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>) json));
 		}
 
 		final Object value;
@@ -229,7 +222,7 @@ public class JSONConverter implements Converter, Serializable {
 		}
 
 		// 尝试转Bean
-		if (BeanUtil.isWritableBean(rawType)) {
+		if (!(json instanceof JSONPrimitive) && BeanUtil.isWritableBean(rawType)) {
 			return BeanCopier.of(value,
 				ConstructorUtil.newInstanceIfPossible(rawType), targetType,
 				InternalJSONUtil.toCopyOptions(config)).copy();

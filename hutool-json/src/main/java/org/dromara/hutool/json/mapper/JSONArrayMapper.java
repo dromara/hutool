@@ -84,15 +84,7 @@ class JSONArrayMapper {
 			return;
 		}
 
-		if (source instanceof JSONTokener) {
-			mapFromTokener((JSONTokener) source, JSONConfig.of(), jsonArray);
-		}if (source instanceof JSONParser) {
-			((JSONParser)source).parseTo(jsonArray);
-		} else if (source instanceof Reader) {
-			mapFromTokener(new JSONTokener((Reader) source), jsonArray.config(), jsonArray);
-		} else if (source instanceof InputStream) {
-			mapFromTokener(new JSONTokener((InputStream) source), jsonArray.config(), jsonArray);
-		} else if (source instanceof byte[]) {
+		if (source instanceof byte[]) {
 			final byte[] bytesSource = (byte[]) source;
 			if ('[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]) {
 				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource)), jsonArray.config(), jsonArray);

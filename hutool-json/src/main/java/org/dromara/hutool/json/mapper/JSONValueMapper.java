@@ -32,6 +32,8 @@ import org.dromara.hutool.json.writer.ValueWriterManager;
 import org.dromara.hutool.json.xml.JSONXMLParser;
 import org.dromara.hutool.json.xml.ParseConfig;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -94,9 +96,8 @@ public class JSONValueMapper implements Serializable {
 			JSONXMLParser.of(ParseConfig.of(), this.predicate).parseJSONObject(jsonStr, jsonObject);
 			return jsonObject;
 		}
-		return JSONParser.of(new JSONTokener(source), jsonConfig)
-			.setPredicate(this.predicate)
-			.parse();
+
+		return mapFromTokener(new JSONTokener(source));
 	}
 
 	/**
@@ -128,11 +129,24 @@ public class JSONValueMapper implements Serializable {
 			return (JSON) obj;
 		}
 
+		// 读取JSON流
+		if(obj instanceof JSONTokener){
+			return mapFromTokener((JSONTokener) obj);
+		}else if(obj instanceof JSONParser){
+			return ((JSONParser)obj).parse();
+		} else if (obj instanceof Reader) {
+			return mapFromTokener(new JSONTokener((Reader) obj));
+		} else if (obj instanceof InputStream) {
+			return mapFromTokener(new JSONTokener((InputStream) obj));
+		}
+
 		// 自定义序列化
 		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(obj);
 		if (null != serializer) {
 			return serializer.serialize(obj, new SimpleJSONContext(null, this.jsonConfig));
 		}
+
+		// read
 
 		// 原始类型
 		if (null != ValueWriterManager.getInstance().get(obj)) {
@@ -160,5 +174,15 @@ public class JSONValueMapper implements Serializable {
 			}
 			throw ExceptionUtil.wrap(exception, JSONException.class);
 		}
+	}
+
+	/**
+	 * 从{@link JSONTokener} 中读取JSON字符串，并转换为JSON
+	 *
+	 * @param tokener {@link JSONTokener}
+	 * @return JSON
+	 */
+	private JSON mapFromTokener(final JSONTokener tokener) {
+		return JSONParser.of(tokener, jsonConfig).setPredicate(this.predicate).parse();
 	}
 }

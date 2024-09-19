@@ -16,11 +16,14 @@
 
 package org.dromara.hutool.json.serializer;
 
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.serializer.impl.KotlinDeserializer;
 import org.dromara.hutool.json.serializer.impl.TemporalAccessorSerializer;
 import org.dromara.hutool.json.serializer.impl.TimeZoneSerializer;
 
@@ -33,7 +36,19 @@ import java.util.Set;
 import java.util.TimeZone;
 
 /**
- * JSON序列化和反序列化管理器，用于管理JSON序列化器，注册和注销自定义序列化器和反序列化器。
+ * JSON序列化和反序列化管理器，用于管理JSON序列化器，注册和注销自定义序列化器和反序列化器。<br>
+ * 此管理器管理着两种类型的序列化器和反序列化器：
+ * <ul>
+ *     <li>类型精准匹配方式。通过Java对象类型匹配，只会匹配查找的类型，而不匹配子类。可以调用{@link #register(Type, JSONSerializer)} 和 {@link #register(Type, JSONDeserializer)}注册。</li>
+ *     <li>匹配器（Matcher）方式。通过判断序列化和反序列化器中match方法，找到自定义的序列化和反序列化器，可以调用{@link #register(MatcherJSONSerializer)} 和 {@link #register(MatcherJSONDeserializer)}注册。</li>
+ * </ul>
+ *
+ * 管理器的使用分为三种方式：
+ * <ul>
+ *     <li>全局模式：  使用{@link SerializerManager#getInstance()}调用单例，全局可用。</li>
+ *     <li>实例模式：  使用{@link SerializerManager#of()}创建实例，局部可用。</li>
+ *     <li>自定义模式：使用{@code new SerializerManager()}创建实例，不加载默认的转换器。</li>
+ * </ul>
  *
  * @author looly
  * @since 6.0.0
@@ -48,7 +63,7 @@ public class SerializerManager {
 		 */
 		private static final SerializerManager INSTANCE = new SerializerManager();
 		static {
-			registerDefault();
+			registerDefault(INSTANCE);
 		}
 	}
 
@@ -59,6 +74,17 @@ public class SerializerManager {
 	 */
 	public static SerializerManager getInstance() {
 		return SerializerManager.SingletonHolder.INSTANCE;
+	}
+
+	/**
+	 * 创建SerializerManager，附带默认的序列化器和反序列化器
+	 *
+	 * @return SerializerManager
+	 */
+	public static SerializerManager of() {
+		final SerializerManager serializerManager = new SerializerManager();
+		registerDefault(serializerManager);
+		return serializerManager;
 	}
 
 	/**
@@ -162,10 +188,12 @@ public class SerializerManager {
 	 * @return JSONSerializer
 	 */
 	@SuppressWarnings({"unchecked"})
-	public JSONSerializer<Object> getSerializer(final Object bean) {
-		for (final MatcherJSONSerializer<?> serializer : this.serializerSet) {
-			if (serializer.match(bean, null)) {
-				return (JSONSerializer<Object>) serializer;
+	public MatcherJSONSerializer<Object> getSerializer(final Object bean) {
+		if(CollUtil.isNotEmpty(this.serializerSet)){
+			for (final MatcherJSONSerializer<?> serializer : this.serializerSet) {
+				if (serializer.match(bean, null)) {
+					return (MatcherJSONSerializer<Object>) serializer;
+				}
 			}
 		}
 		return null;
@@ -179,20 +207,21 @@ public class SerializerManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONSerializer<Object> getSerializer(final Type type) {
-		if(null == type){
+		if(null == type || CollUtil.isEmpty(this.serializerMap)){
 			return null;
 		}
-		return (JSONSerializer<Object>) getSerializerMap().get(type);
+		return (JSONSerializer<Object>) this.serializerMap.get(type);
 	}
 
 	/**
 	 * 获取匹配器对应的反序列化器
 	 *
+	 * @param json JSON
 	 * @param type 类型
 	 * @return JSONDeserializer
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONDeserializer<Object> getDeserializer(final Type type) {
+	public JSONDeserializer<Object> getDeserializer(final JSON json, final Type type) {
 		final Class<?> rawType = TypeUtil.getClass(type);
 		if(null == rawType){
 			return null;
@@ -201,7 +230,23 @@ public class SerializerManager {
 			return (JSONDeserializer<Object>) ConstructorUtil.newInstanceIfPossible(rawType);
 		}
 
-		return (JSONDeserializer<Object>) getDeserializerMap().get(type);
+		if(CollUtil.isNotEmpty(this.deserializerMap)){
+			final JSONDeserializer<?> jsonDeserializer = this.deserializerMap.get(type);
+			if(null != jsonDeserializer){
+				return (JSONDeserializer<Object>) jsonDeserializer;
+			}
+		}
+
+		// Matcher
+		if(CollUtil.isNotEmpty(this.deserializerSet)){
+			for (final MatcherJSONDeserializer<?> deserializer : this.deserializerSet) {
+				if (deserializer.match(json, type)) {
+					return (JSONDeserializer<Object>) deserializer;
+				}
+			}
+		}
+
+		return null;
 	}
 	// endregion
 
@@ -252,9 +297,9 @@ public class SerializerManager {
 
 	/**
 	 * 注册默认的序列化器和反序列化器
+	 * @param manager {@code SerializerManager}
 	 */
-	private static void registerDefault() {
-		final SerializerManager manager = SingletonHolder.INSTANCE;
+	private static void registerDefault(final SerializerManager manager) {
 		manager.register(LocalDate.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalDate.class));
 		manager.register(LocalDate.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalDate.class));
 
@@ -266,6 +311,9 @@ public class SerializerManager {
 
 		manager.register((MatcherJSONSerializer<TimeZone>) TimeZoneSerializer.INSTANCE);
 		manager.register((MatcherJSONDeserializer<TimeZone>) TimeZoneSerializer.INSTANCE);
+
+		// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
+		manager.register(KotlinDeserializer.INSTANCE);
 	}
 	// endregion
 }
