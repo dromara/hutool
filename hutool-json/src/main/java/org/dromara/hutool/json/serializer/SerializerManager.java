@@ -312,7 +312,9 @@ public class SerializerManager {
 
 		// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
 		manager.register(KBeanDeserializer.INSTANCE);
+
 		manager.register(CollectionDeserializer.INSTANCE);
+		manager.register(ArrayDeserializer.INSTANCE);
 		manager.register(MapDeserializer.INSTANCE);
 		manager.register(EntryDeserializer.INSTANCE);
 		manager.register(RecordDeserializer.INSTANCE);

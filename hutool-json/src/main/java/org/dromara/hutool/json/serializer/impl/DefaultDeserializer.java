@@ -16,9 +16,14 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
+import org.dromara.hutool.core.bean.copier.ValueProviderToBeanCopier;
+import org.dromara.hutool.core.convert.CompositeConverter;
+import org.dromara.hutool.core.lang.copier.Copier;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.JSONObjectValueProvider;
 
 import java.lang.reflect.Type;
 
@@ -33,7 +38,7 @@ public class DefaultDeserializer implements JSONDeserializer<Object> {
 	public Object deserialize(final JSON json, final Type deserializeType) {
 		// 当目标类型不确定时，返回原JSON
 		final Class<?> rawType = TypeUtil.getClass(deserializeType);
-		if (null == rawType || JSON.class.isAssignableFrom(rawType)) {
+		if (null == rawType || rawType == json.getClass()) {
 			return json;
 		}
 
@@ -47,15 +52,51 @@ public class DefaultDeserializer implements JSONDeserializer<Object> {
 		throw new JSONException("Unsupported JSON type: {}", json.getClass());
 	}
 
+	/**
+	 * 从JSONObject反序列化
+	 *
+	 * @param json          JSONObject
+	 * @param deserializeType 目标类型
+	 * @param rawType         目标类型
+	 * @return 反序列化后的对象
+	 */
 	private Object fromJSONObject(final JSONObject json, final Type deserializeType, final Class<?> rawType) {
-		return json;
+		// 转为POJO
+		final Copier<Object> copier = new ValueProviderToBeanCopier<>(
+			new JSONObjectValueProvider(json),
+			ConstructorUtil.newInstanceIfPossible(rawType),
+			deserializeType,
+			InternalJSONUtil.toCopyOptions(json.config())
+		);
+		return copier.copy();
 	}
 
+	/**
+	 * 从JSONArray反序列化
+	 *
+	 * @param json          JSONArray
+	 * @param deserializeType 目标类型
+	 * @param rawType         目标类型
+	 * @return 反序列化后的对象
+	 */
 	private Object fromJSONArray(final JSONArray json, final Type deserializeType, final Class<?> rawType) {
 		return json;
 	}
 
+	/**
+	 * 从JSONPrimitive反序列化
+	 *
+	 * @param json          JSONPrimitive
+	 * @param deserializeType 目标类型
+	 * @param rawType         目标类型
+	 * @return 反序列化后的对象
+	 */
 	private Object fromJSONPrimitive(final JSONPrimitive json, final Type deserializeType, final Class<?> rawType) {
-		return json;
+		final Object value = json.getValue();
+		if (null != value && rawType.isAssignableFrom(value.getClass())) {
+			return value;
+		}
+
+		return CompositeConverter.getInstance().convert(deserializeType, value);
 	}
 }

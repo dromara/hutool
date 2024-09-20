@@ -16,78 +16,77 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.Map;
 
 /**
- * 集合类型反序列化器
+ * Map.Entry反序列化器，用于将JSON对象转换为Map.Entry对象。
  *
  * @author looly
  * @since 6.0.0
  */
-public class CollectionDeserializer implements MatcherJSONDeserializer<Collection<?>> {
+public class ArrayDeserializer implements MatcherJSONDeserializer<Object> {
 
 	/**
 	 * 单例
 	 */
-	public static final CollectionDeserializer INSTANCE = new CollectionDeserializer();
+	public static final ArrayDeserializer INSTANCE = new ArrayDeserializer();
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
 		if (json instanceof JSONArray || json instanceof JSONObject) {
-			final Class<?> rawType = TypeUtil.getClass(deserializeType);
-			return Collection.class.isAssignableFrom(rawType);
+			return TypeUtil.getClass(deserializeType).isArray();
 		}
 		return false;
 	}
 
 	@Override
-	public Collection<?> deserialize(final JSON json, final Type deserializeType) {
-		final Class<?> rawType = TypeUtil.getClass(deserializeType);
-		final Type elementType = TypeUtil.getTypeArgument(deserializeType);
-		final Collection<?> result = CollUtil.create(rawType, TypeUtil.getClass(elementType));
-
-
+	public Object deserialize(final JSON json, final Type deserializeType) {
+		final int size = json.size();
+		final Class<?> componentType = TypeUtil.getClass(deserializeType).getComponentType();
+		final Object result = Array.newInstance(componentType, size);
 		if (json instanceof JSONObject) {
-			fill((JSONObject) json, result, elementType);
+			fill((JSONObject) json, result, componentType);
 		} else {
-			fill((JSONArray) json, result, elementType);
+			fill((JSONArray) json, result, componentType);
 		}
-
 		return result;
 	}
 
 	/**
-	 * 将JSONObject转换为集合
+	 * 将JSONObject填充到数组
 	 *
-	 * @param json        JSONObject
-	 * @param result      结果集合
-	 * @param elementType 元素类型
+	 * @param json          JSONObject
+	 * @param result        结果集合
+	 * @param componentType 元素类型
 	 */
-	private void fill(final JSONObject json, final Collection<?> result, final Type elementType) {
+	private void fill(final JSONObject json, final Object result, final Type componentType) {
+		int i = 0;
 		for (final Map.Entry<String, JSON> entry : json) {
-			result.add(entry.getValue().toBean(elementType));
+			Array.set(result, i, entry.getValue().toBean(componentType));
+			i++;
 		}
 	}
 
 	/**
-	 * 将JSONArray转换为集合
+	 * 将JSONObject填充到数组
 	 *
-	 * @param json        JSONArray
-	 * @param result      结果集合
-	 * @param elementType 元素类型
+	 * @param json          JSONObject
+	 * @param result        结果集合
+	 * @param componentType 元素类型
 	 */
-	private void fill(final JSONArray json, final Collection<?> result, final Type elementType) {
+	private void fill(final JSONArray json, final Object result, final Type componentType) {
+		int i = 0;
 		for (final JSON element : json) {
-			result.add(element.toBean(elementType));
+			Array.set(result, i, element.toBean(componentType));
+			i++;
 		}
 	}
 }
