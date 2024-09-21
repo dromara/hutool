@@ -746,7 +746,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> Collection<T> create(final Class<?> collectionType, final Class<T> elementType) {
-		if (collectionType.isAssignableFrom(EnumSet.class)) {
+		if (EnumSet.class.isAssignableFrom(collectionType)) {
 			return (Collection<T>) EnumSet.noneOf((Class<Enum>) Assert.notNull(elementType));
 		}
 

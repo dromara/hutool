@@ -73,8 +73,9 @@ public class RomanNumberFormatter {
 		int prevValue = 0;
 		int currValue;
 
-		for (int i = roman.length() - 1; i >= 0; i--) {
-			final char c = roman.charAt(i);
+		final char[] charArray = roman.toCharArray();
+		for (int i = charArray.length - 1; i >= 0; i--) {
+			final char c = charArray[i];
 			switch (c) {
 				case 'I':
 					currValue = 1;
