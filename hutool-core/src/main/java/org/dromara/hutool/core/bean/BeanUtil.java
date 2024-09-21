@@ -683,6 +683,10 @@ public class BeanUtil {
 		if (null == clazz) {
 			return false;
 		}
+		if(clazz == String.class){
+			// String中有getter方法，但为字符串，不是Bean
+			return false;
+		}
 		return hasGetter(clazz) || hasPublicField(clazz);
 	}
 
