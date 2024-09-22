@@ -107,20 +107,8 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	}
 
 	@Override
-	public JSON get(final int index) {
-		return this.raw.get(index);
-	}
-
-	@Override
-	public Object getObj(final Integer index, final Object defaultValue) {
-		final Object value;
-		final JSON json = get(index);
-		if(json instanceof JSONPrimitive){
-			value = ((JSONPrimitive) json).getValue();
-		}else {
-			value = json;
-		}
-		return ObjUtil.defaultIfNull(value, defaultValue);
+	public JSON getJSON(final Integer key) {
+		return this.raw.get(key);
 	}
 
 	/**
@@ -158,39 +146,6 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	@Override
 	public Iterator<JSON> iterator() {
 		return raw.iterator();
-	}
-
-	/**
-	 * 当此JSON列表的每个元素都是一个JSONObject时，可以调用此方法返回一个Iterable，便于使用foreach语法遍历
-	 *
-	 * @return Iterable
-	 * @since 4.0.12
-	 * @param <T> JSON类型
-	 * @param type JSON类型
-	 */
-	public <T extends JSON> Iterable<T> jsonIter(final Class<T> type) {
-		final Iterator<JSON> iterator = iterator();
-		return () -> new Iterator<T>() {
-			@Override
-			public boolean hasNext() {
-				return iterator.hasNext();
-			}
-
-			@Override
-			public T next() {
-				return type.cast(iterator.next());
-			}
-			@Override
-			public void remove() {
-				iterator.remove();
-			}
-		};
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked"})
-	public <T> T[] toArray(final T[] a) {
-		return (T[]) ArrayConverter.INSTANCE.convert(a.getClass().getComponentType(), this);
 	}
 
 	@Override
@@ -262,6 +217,12 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 			this.add(element);
 		}
 
+	}
+
+	@Override
+	@SuppressWarnings({"unchecked"})
+	public <T> T[] toArray(final T[] a) {
+		return (T[]) ArrayConverter.INSTANCE.convert(a.getClass().getComponentType(), this);
 	}
 
 	/**

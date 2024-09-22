@@ -340,7 +340,7 @@ public class JSONArrayTest {
 		array.add(JSONUtil.ofObj().set("name", "ccc"));
 
 		final StringBuilder result = new StringBuilder();
-		array.jsonIter(JSONObject.class).forEach(result::append);
+		array.forEach(result::append);
 		assertEquals("{\"name\":\"aaa\"}{\"name\":\"bbb\"}{\"name\":\"ccc\"}", result.toString());
 	}
 }

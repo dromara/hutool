@@ -16,11 +16,8 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.lang.getter.TypeGetter;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.serializer.JSONDeserializer;
-import org.dromara.hutool.json.serializer.TypeAdapterManager;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -48,7 +45,7 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 	 * @return true 无此key或值为{@code null}返回{@code false}，其它返回{@code true}
 	 */
 	default boolean isNull(final K key) {
-		return ObjUtil.isNull(this.getObj(key));
+		return ObjUtil.isNull(this.getJSON(key));
 	}
 
 	/**
@@ -82,15 +79,16 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 	 * @return JSONArray对象，如果值为{@code null}，返回{@code null}，非JSONArray类型，尝试转换，转换失败抛出异常
 	 */
 	default JSONArray getJSONArray(final K key) {
-		final Object object = this.getObj(key);
-		if (ObjUtil.isNull(object)) {
+		final JSON json = getJSON(key);
+		if (null == json) {
 			return null;
 		}
 
-		if (object instanceof JSON) {
-			return (JSONArray) object;
+		if (json instanceof JSONObject) {
+			return JSONUtil.parseArray(json, config());
 		}
-		return JSONUtil.parseArray(object, config());
+
+		return json.asJSONArray();
 	}
 
 	/**
@@ -101,35 +99,12 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 	 * @return JSONObject对象，如果值为{@code null}，返回{@code null}，非JSONObject类型，尝试转换，转换失败抛出异常
 	 */
 	default JSONObject getJSONObject(final K key) {
-		final Object obj = getObj(key);
-		if(null == obj){
+		final JSON json = getJSON(key);
+		if (null == json) {
 			return null;
 		}
 
-		if(obj instanceof JSONObject){
-			return (JSONObject) obj;
-		}
-
-		throw new JSONException("JSONObject expected, but " + obj.getClass());
-	}
-
-	/**
-	 * 从JSON中直接获取Bean对象<br>
-	 * 先获取JSONObject对象，然后转为Bean对象
-	 *
-	 * @param <T>      Bean类型
-	 * @param key      KEY
-	 * @param beanType Bean类型
-	 * @return Bean对象，如果值为null或者非JSONObject类型，返回null
-	 * @since 3.1.1
-	 */
-	@SuppressWarnings("unchecked")
-	default <T> T getBean(final K key, final Class<T> beanType) {
-		final Object obj = getObj(key);
-		if(null == obj || beanType.isInstance(obj)){
-			return (T) obj;
-		}
-		return ((JSON)obj).toBean(beanType);
+		return json.asJSONObject();
 	}
 
 	/**
@@ -147,24 +122,34 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 		return (null == jsonArray) ? null : jsonArray.toList(beanType);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+	default Object getObj(final K key, final Object defaultValue) {
+		final Object value;
+		final JSON json = getJSON(key);
+		if (json instanceof JSONPrimitive) {
+			value = ((JSONPrimitive) json).getValue();
+		} else {
+			value = json;
+		}
+		return ObjUtil.defaultIfNull(value, defaultValue);
+	}
+
 	@Override
 	default <T> T get(final K key, final Type type, final T defaultValue) {
-		Object value = this.getObj(key);
+		final JSON value = getJSON(key);
 		if (ObjUtil.isNull(value)) {
 			return defaultValue;
 		}
 
-		if(value instanceof JSON){
-			final JSONDeserializer<Object> deserializer = TypeAdapterManager.getInstance().getDeserializer((JSON) value, type);
-			if(null == deserializer){
-				throw new JSONException("No deserializer for type: " + type);
-			}
-			value = deserializer.deserialize((JSON) value, type);
-			return null == value ? defaultValue : (T) value;
-		}
-
-		// JSONPrimitive中的值
-		return CompositeConverter.getInstance().convert(type, value, defaultValue);
+		return ObjUtil.defaultIfNull(value.toBean(type), defaultValue);
 	}
+
+	/**
+	 * 获取JSON对象<br>
+	 * 在JSON树模型中，JSON的节点都以JSON格式存储，所有get方法都基于此方法
+	 *
+	 * @param key KEY
+	 * @return JSON对象
+	 */
+	JSON getJSON(final K key);
 }

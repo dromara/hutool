@@ -123,10 +123,9 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	}
 
 	@Override
-	public JSON get(final Object key) {
-		return super.get(key);
+	public JSON getJSON(final String key) {
+		return get(key);
 	}
-
 	// endregion
 
 	// region ----- set
