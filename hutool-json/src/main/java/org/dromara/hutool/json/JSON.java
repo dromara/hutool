@@ -18,6 +18,7 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.dromara.hutool.json.writer.JSONWriter;
@@ -231,10 +232,29 @@ public interface JSON extends Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> T toBean(final Type type) {
+		if(null == type || Object.class == type){
+			if(this instanceof JSONPrimitive){
+				return (T) ((JSONPrimitive) this).getValue();
+			}
+			return (T) this;
+		}
+
 		final JSONDeserializer<Object> deserializer = TypeAdapterManager.getInstance().getDeserializer(this, type);
+		final boolean ignoreError = ObjUtil.defaultIfNull(config(), JSONConfig::isIgnoreError, false);
 		if(null == deserializer){
+			if(ignoreError){
+				return null;
+			}
 			throw new JSONException("No deserializer for type: " + type);
 		}
-		return (T) deserializer.deserialize(this, type);
+
+		try{
+			return (T) deserializer.deserialize(this, type);
+		} catch (final Exception e){
+			if(ignoreError){
+				return null;
+			}
+			throw e;
+		}
 	}
 }

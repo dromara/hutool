@@ -16,7 +16,6 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
-import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
@@ -40,58 +39,21 @@ public class DefaultDeserializer implements JSONDeserializer<Object> {
 	public Object deserialize(final JSON json, final Type deserializeType) {
 		// 当目标类型不确定时，返回原JSON
 		final Class<?> rawType = TypeUtil.getClass(deserializeType);
-		if (null == rawType || rawType == json.getClass()) {
+		if (null == rawType || Object.class == rawType || rawType == json.getClass()) {
 			return json;
 		}
 
-		if (json instanceof JSONObject) {
-			return fromJSONObject((JSONObject) json, deserializeType, rawType);
-		} else if (json instanceof JSONArray) {
-			return fromJSONArray((JSONArray) json, deserializeType, rawType);
-		} else if (json instanceof JSONPrimitive) {
-			return fromJSONPrimitive((JSONPrimitive) json, deserializeType, rawType);
-		}
-		throw new JSONException("Unsupported JSON type: {}", json.getClass());
-	}
-
-	/**
-	 * 从JSONObject反序列化
-	 *
-	 * @param json          JSONObject
-	 * @param deserializeType 目标类型
-	 * @param rawType         目标类型
-	 * @return 反序列化后的对象
-	 */
-	private Object fromJSONObject(final JSONObject json, final Type deserializeType, final Class<?> rawType) {
-		throw new JSONException("Unsupported JSONObject to {}", rawType);
-	}
-
-	/**
-	 * 从JSONArray反序列化
-	 *
-	 * @param json          JSONArray
-	 * @param deserializeType 目标类型
-	 * @param rawType         目标类型
-	 * @return 反序列化后的对象
-	 */
-	private Object fromJSONArray(final JSONArray json, final Type deserializeType, final Class<?> rawType) {
-		throw new JSONException("Unsupported JSONArray to {}", rawType);
-	}
-
-	/**
-	 * 从JSONPrimitive反序列化
-	 *
-	 * @param json          JSONPrimitive
-	 * @param deserializeType 目标类型
-	 * @param rawType         目标类型
-	 * @return 反序列化后的对象
-	 */
-	private Object fromJSONPrimitive(final JSONPrimitive json, final Type deserializeType, final Class<?> rawType) {
-		final Object value = json.getValue();
-		if (null != value && rawType.isAssignableFrom(value.getClass())) {
-			return value;
+		// JSON类型之间互转
+		if(json instanceof JSONPrimitive && JSON.class.isAssignableFrom(rawType)){
+			final Object value = json.asJSONPrimitive().getValue();
+			if(value instanceof CharSequence){
+				// JSON字符串转JSON
+				return JSONUtil.parse(value, json.config());
+			}
+		} else if(json instanceof JSONObject && JSONArray.class == rawType){
+			return JSONUtil.parseArray(json, json.config());
 		}
 
-		return CompositeConverter.getInstance().convert(deserializeType, value);
+		throw new JSONException("Unsupported type {} to {}", json.getClass(), deserializeType.getTypeName());
 	}
 }

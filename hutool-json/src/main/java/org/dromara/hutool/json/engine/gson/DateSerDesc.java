@@ -30,7 +30,7 @@ import java.util.Date;
  * @author Looly
  * @since 6.0.0
  */
-public class DateSerDesc implements GsonSerDesc<Date> {
+public class DateSerDesc implements GsonTypeAdapter<Date> {
 
 	/**
 	 * 默认日期格式化描述，默认为null，表示使用时间戳

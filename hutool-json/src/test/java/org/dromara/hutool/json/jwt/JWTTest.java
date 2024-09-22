@@ -161,7 +161,7 @@ public class JWTTest {
 		Assertions.assertEquals(bean, beanRes);
 		Assertions.assertEquals(numRes, num);
 		Assertions.assertEquals(username, strRes);
-		Assertions.assertEquals(list, listRes);
+		Assertions.assertEquals(list.toString(), listRes.toString());
 
 		final String formattedDate = DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
 		final String formattedRes = DateUtil.format(dateRes, "yyyy-MM-dd HH:mm:ss");

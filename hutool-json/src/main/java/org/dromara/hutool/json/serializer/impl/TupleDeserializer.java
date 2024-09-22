@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json;
+package org.dromara.hutool.json.serializer.impl;
 
-import lombok.Data;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.dromara.hutool.core.lang.tuple.Tuple;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
 
-import java.time.LocalDateTime;
+import java.lang.reflect.Type;
 
 /**
- * 测试带毫秒的日期转换
+ * 多元组Tuple反序列化器
+ *
+ * @author Looly
+ * @since 6.0.0
  */
-public class IssueI3BS4STest {
+public class TupleDeserializer implements JSONDeserializer<Tuple> {
 
-	@Test
-	public void toBeanTest(){
-		final String jsonStr = "{date: '2021-03-17T06:31:33.99'}";
-		final Bean1 bean1 = JSONUtil.parseObj(jsonStr).toBean(Bean1.class);
-		Assertions.assertEquals("2021-03-17T06:31:33.990", bean1.getDate().toString());
-	}
+	/**
+	 * 单例
+	 */
+	public static final TupleDeserializer INSTANCE = new TupleDeserializer();
 
-	@Data
-	public static class Bean1{
-		private LocalDateTime date;
+	@Override
+	public Tuple deserialize(final JSON json, final Type deserializeType) {
+		return Tuple.of(json.toBean(Object[].class));
 	}
 }

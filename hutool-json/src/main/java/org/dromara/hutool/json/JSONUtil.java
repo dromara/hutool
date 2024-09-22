@@ -27,6 +27,7 @@ import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -118,7 +119,10 @@ public class JSONUtil {
 	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONObject
 	 */
-	public static JSONObject parseObj(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+	public static JSONObject parseObj(Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		if(obj instanceof byte[]){
+			obj = new ByteArrayInputStream((byte[]) obj);
+		}
 		return (JSONObject) parse(obj, config, predicate);
 	}
 

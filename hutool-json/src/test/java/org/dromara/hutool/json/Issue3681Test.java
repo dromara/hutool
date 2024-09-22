@@ -30,7 +30,7 @@ public class Issue3681Test {
 		Assertions.assertEquals("\"abc\"", abc);
 
 		abc = JSONUtil.toJsonStr(Optional.of("123"));
-		Assertions.assertEquals("123", abc);
+		Assertions.assertEquals("\"123\"", abc);
 	}
 
 	@Test
@@ -45,6 +45,6 @@ public class Issue3681Test {
 		Assertions.assertEquals("\"abc\"", abc);
 
 		abc = JSONUtil.toJsonStr(Opt.of("123"));
-		Assertions.assertEquals("123", abc);
+		Assertions.assertEquals("\"123\"", abc);
 	}
 }

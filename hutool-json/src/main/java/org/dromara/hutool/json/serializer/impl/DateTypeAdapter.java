@@ -18,6 +18,7 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.convert.impl.DateConverter;
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
@@ -55,12 +56,20 @@ public class DateTypeAdapter implements MatcherJSONSerializer<Date>, MatcherJSON
 
 	@Override
 	public JSON serialize(final Date bean, final JSONContext context) {
-		final JSONConfig config = ObjUtil.apply(context, JSONContext::config);
+		final JSONConfig config = context.config();
 		final String format = ObjUtil.apply(config, JSONConfig::getDateFormat);
-		return new JSONPrimitive(
-			null == format
-				? bean.getTime()
-				: DateUtil.format(bean, format), config);
+
+		final Object value;
+		// 默认为时间戳
+		if(null == format || GlobalCustomFormat.FORMAT_MILLISECONDS.equals(format)){
+			value = bean.getTime();
+		} else if(GlobalCustomFormat.FORMAT_SECONDS.equals(format)){
+			value = Math.floorDiv(bean.getTime(), 1000L);
+		} else {
+			value = DateUtil.format(bean, format);
+		}
+
+		return new JSONPrimitive(value, config);
 	}
 
 	@Override

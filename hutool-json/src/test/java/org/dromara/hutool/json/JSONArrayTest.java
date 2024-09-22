@@ -281,7 +281,7 @@ public class JSONArrayTest {
 				.set("value3")
 				.set(true);
 
-		final String s = json1.toJSONString(0, (pair) -> pair.getValue().equals("value2"));
+		final String s = json1.toJSONString(0, (pair) -> ((JSONPrimitive)pair.getValue()).getValue().equals("value2"));
 		assertEquals("[\"value2\"]", s);
 	}
 
@@ -293,7 +293,7 @@ public class JSONArrayTest {
 				.set("value3")
 				.set(true);
 
-		final String s = json1.toJSONString(0, (pair) -> !pair.getValue().equals("value2"));
+		final String s = json1.toJSONString(0, (pair) -> !((JSONPrimitive)pair.getValue()).getValue().equals("value2"));
 		assertEquals("[\"value1\",\"value3\",true]", s);
 	}
 

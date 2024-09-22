@@ -17,20 +17,20 @@
 package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
+import org.dromara.hutool.core.date.TimeUtil;
+import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.time.temporal.TemporalAccessor;
 
 /**
@@ -70,13 +70,70 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 
 	@Override
 	public JSON serialize(final TemporalAccessor bean, final JSONContext context) {
-		final JSONObject json;
+		final JSONConfig config = context.config();
+
 		final JSON contextJson = context.getContextJson();
 		if(contextJson instanceof JSONObject){
-			json = (JSONObject) contextJson;
-		}else {
-			json = new JSONObject((int) (7F / 0.75F + 1F), context.config());
+			toJSONObject(bean, contextJson.asJSONObject());
+			return contextJson;
 		}
+
+		if (bean instanceof Month) {
+			return new JSONPrimitive(((Month) bean).getValue(), config);
+		} else if (bean instanceof DayOfWeek) {
+			return new JSONPrimitive(((DayOfWeek) bean).getValue(), config);
+		} else if (bean instanceof MonthDay) {
+			return new JSONPrimitive(((MonthDay) bean).toString(), config);
+		}
+
+		final String format = ObjUtil.apply(config, JSONConfig::getDateFormat);
+
+		final Object value;
+		// 默认为时间戳
+		if (null == format || GlobalCustomFormat.FORMAT_MILLISECONDS.equals(format)) {
+			value = TimeUtil.toEpochMilli(bean);
+		} else if (GlobalCustomFormat.FORMAT_SECONDS.equals(format)) {
+			value = Math.floorDiv(TimeUtil.toEpochMilli(bean), 1000L);
+		} else {
+			value = TimeUtil.format(bean, format);
+		}
+
+		return new JSONPrimitive(value, config);
+	}
+
+	@Override
+	public TemporalAccessor deserialize(final JSON json, final Type deserializeType) {
+		// JSONPrimitive
+		if (json instanceof JSONPrimitive) {
+			final Object value = ((JSONPrimitive) json).getValue();
+			final TemporalAccessorConverter converter = new TemporalAccessorConverter(
+				Opt.ofNullable(json.config()).map(JSONConfig::getDateFormat).getOrNull());
+			return (TemporalAccessor) converter.convert(deserializeType, value);
+		}
+
+		final Class<?> temporalAccessorClass = TypeUtil.getClass(deserializeType);
+		if (json instanceof JSONObject) {
+			return fromJSONObject(temporalAccessorClass, json.asJSONObject());
+		}
+
+		if (Month.class.equals(temporalAccessorClass)) {
+			return Month.of((Integer) json.asJSONPrimitive().getValue());
+		} else if (DayOfWeek.class.equals(temporalAccessorClass)) {
+			return DayOfWeek.of((Integer) json.asJSONPrimitive().getValue());
+		} else if (MonthDay.class.equals(temporalAccessorClass)) {
+			return MonthDay.parse((CharSequence) json.asJSONPrimitive().getValue());
+		}
+
+		throw new JSONException("Unsupported type from JSON {} to {}", json, deserializeType);
+	}
+
+	/**
+	 * 将{@link TemporalAccessor}转换为JSONObject
+	 *
+	 * @param bean      {@link TemporalAccessor}
+	 * @param json JSONObject
+	 */
+	private static void toJSONObject(final TemporalAccessor bean, final JSONObject json) {
 		if (bean instanceof LocalDate) {
 			final LocalDate localDate = (LocalDate) bean;
 			json.set(YEAR_KEY, localDate.getYear());
@@ -97,27 +154,18 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 			json.set(MINUTE_KEY, localTime.getMinute());
 			json.set(SECOND_KEY, localTime.getSecond());
 			json.set(NANO_KEY, localTime.getNano());
-		} else {
-			throw new JSONException("Unsupported TemporalAccessor type to JSON: {}", bean.getClass().getName());
 		}
-		return json;
+		throw new JSONException("Unsupported type {}.", bean.getClass().getName());
 	}
 
-	@Override
-	public TemporalAccessor deserialize(final JSON json, final Type deserializeType) {
-		// JSONPrimitive
-		if(json instanceof JSONPrimitive){
-			final Object value = ((JSONPrimitive) json).getValue();
-			final TemporalAccessorConverter converter = new TemporalAccessorConverter(
-				Opt.ofNullable(json.config()).map(JSONConfig::getDateFormat).getOrNull());
-			return (TemporalAccessor) converter.convert(deserializeType, value);
-		}
-
-		// TODO JSONArray
-
-		final Class<?> temporalAccessorClass = TypeUtil.getClass(deserializeType);
-		// JSONObject
-		final JSONObject jsonObject = (JSONObject) json;
+	/**
+	 * 从JSONObject中获取时间信息，转换为{@link TemporalAccessor}
+	 *
+	 * @param temporalAccessorClass 目标时间类型
+	 * @param jsonObject            JSONObject
+	 * @return {@link TemporalAccessor}
+	 */
+	private static TemporalAccessor fromJSONObject(final Class<?> temporalAccessorClass, final JSONObject jsonObject) {
 		if (LocalDate.class.equals(temporalAccessorClass) || LocalDateTime.class.equals(temporalAccessorClass)) {
 			// 年
 			final Integer year = jsonObject.getInt(YEAR_KEY);
@@ -160,6 +208,6 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 				jsonObject.getInt(NANO_KEY));
 		}
 
-		throw new JSONException("Unsupported type from JSON: {}", deserializeType);
+		throw new JSONException("Unsupported type from JSON {} to {}", jsonObject, temporalAccessorClass);
 	}
 }

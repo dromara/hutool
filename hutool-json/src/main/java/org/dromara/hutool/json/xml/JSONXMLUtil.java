@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.json.xml;
 
+import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
 
@@ -75,36 +76,36 @@ public class JSONXMLUtil {
 	/**
 	 * 转换JSONObject为XML
 	 *
-	 * @param object JSON对象或数组
+	 * @param json JSON对象或数组
 	 * @return XML字符串
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(final Object object) throws JSONException {
-		return toXml(object, null);
+	public static String toXml(final JSON json) throws JSONException {
+		return toXml(json, null);
 	}
 
 	/**
 	 * 转换JSONObject为XML
 	 *
-	 * @param object  JSON对象或数组
+	 * @param json  JSON对象或数组
 	 * @param tagName 可选标签名称，名称为空时忽略标签
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(final Object object, final String tagName) throws JSONException {
-		return toXml(object, tagName, "content");
+	public static String toXml(final JSON json, final String tagName) throws JSONException {
+		return toXml(json, tagName, "content");
 	}
 
 	/**
 	 * 转换JSONObject为XML
 	 *
-	 * @param object      JSON对象或数组
+	 * @param json      JSON对象或数组
 	 * @param tagName     可选标签名称，名称为空时忽略标签
 	 * @param contentKeys 标识为内容的key,遇到此key直接解析内容而不增加对应名称标签
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(final Object object, final String tagName, final String... contentKeys) throws JSONException {
-		return JSONXMLSerializer.toXml(object, tagName, contentKeys);
+	public static String toXml(final JSON json, final String tagName, final String... contentKeys) throws JSONException {
+		return JSONXMLSerializer.toXml(json, tagName, contentKeys);
 	}
 }

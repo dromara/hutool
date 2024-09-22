@@ -16,11 +16,15 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
+import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
@@ -32,12 +36,17 @@ import java.util.Map;
  * @author looly
  * @since 6.0.0
  */
-public class ArrayDeserializer implements MatcherJSONDeserializer<Object> {
+public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJSONDeserializer<Object> {
 
 	/**
 	 * 单例
 	 */
-	public static final ArrayDeserializer INSTANCE = new ArrayDeserializer();
+	public static final ArrayTypeAdapter INSTANCE = new ArrayTypeAdapter();
+
+	@Override
+	public boolean match(final Object bean, final JSONContext context) {
+		return ArrayUtil.isArray(bean);
+	}
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
@@ -45,6 +54,11 @@ public class ArrayDeserializer implements MatcherJSONDeserializer<Object> {
 			return TypeUtil.getClass(deserializeType).isArray();
 		}
 		return false;
+	}
+
+	@Override
+	public JSON serialize(final Object bean, final JSONContext context) {
+		return IterTypeAdapter.INSTANCE.serialize(new ArrayIter<>(bean), context);
 	}
 
 	@Override

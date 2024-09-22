@@ -102,7 +102,7 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberToJSONArrayTest() {
-		assertThrows(JSONException.class, () -> {
+		assertThrows(ClassCastException.class, () -> {
 			final JSONArray json = JSONUtil.parseArray(123L);
 			Assertions.assertNotNull(json);
 		});

@@ -19,6 +19,7 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.writer.NumberWriteMode;
 
@@ -51,7 +52,22 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 	 * @return 是否为JSONPrimitive类型
 	 */
 	public static boolean isTypeForJSONPrimitive(final Object value) {
-		return value instanceof Boolean || value instanceof Number || value instanceof String;
+		return value instanceof Boolean
+			|| value instanceof Number
+			|| value instanceof Character
+			|| value instanceof String;
+	}
+
+	/**
+	 * 判断给定类是否可以转为JSONPrimitive类型
+	 *
+	 * @param type 值
+	 * @return 是否为JSONPrimitive类型
+	 */
+	public static boolean isTypeForJSONPrimitive(final Class<?> type) {
+		return ClassUtil.isBasicType(type)
+			|| Number.class.isAssignableFrom(type)
+			|| String.class == type;
 	}
 
 	private Object value;

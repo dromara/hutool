@@ -30,7 +30,7 @@ import java.time.temporal.TemporalAccessor;
  * @author Looly
  * @since 6.0.0
  */
-public class TemporalSerDesc implements GsonSerDesc<TemporalAccessor> {
+public class TemporalGsonTypeAdapter implements GsonTypeAdapter<TemporalAccessor> {
 
 	private final Class<? extends TemporalAccessor> type;
 	private final String dateFormat;
@@ -41,7 +41,7 @@ public class TemporalSerDesc implements GsonSerDesc<TemporalAccessor> {
 	 * @param type       时间类型
 	 * @param dateFormat 日期格式
 	 */
-	public TemporalSerDesc(final Class<? extends TemporalAccessor> type, final String dateFormat) {
+	public TemporalGsonTypeAdapter(final Class<? extends TemporalAccessor> type, final String dateFormat) {
 		this.type = type;
 		this.dateFormat = dateFormat;
 	}

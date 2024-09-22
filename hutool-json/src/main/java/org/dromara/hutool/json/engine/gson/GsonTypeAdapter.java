@@ -16,31 +16,15 @@
 
 package org.dromara.hutool.json.engine.gson;
 
-import com.google.gson.*;
-
-import java.lang.reflect.Type;
-import java.util.TimeZone;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonSerializer;
 
 /**
- * 时区序列化描述
+ * Gson序列化描述接口，用于自定义序列化和反序列化
  *
+ * @param <T> 序列化对象类型
  * @author Looly
  * @since 6.0.0
  */
-public class TimeZoneSerDesc implements GsonSerDesc<TimeZone>{
-
-	/**
-	 * 默认时区格式化描述
-	 */
-	public static final TimeZoneSerDesc INSTANCE = new TimeZoneSerDesc();
-
-	@Override
-	public JsonElement serialize(final TimeZone src, final Type typeOfSrc, final JsonSerializationContext context) {
-		return new JsonPrimitive(src.getID());
-	}
-
-	@Override
-	public TimeZone deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-		return TimeZone.getTimeZone(json.getAsString());
-	}
+public interface GsonTypeAdapter<T> extends JsonSerializer<T>, JsonDeserializer<T> {
 }

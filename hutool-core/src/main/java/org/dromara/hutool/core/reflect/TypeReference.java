@@ -22,10 +22,10 @@ import java.lang.reflect.Type;
  * Type类型参考<br>
  * 通过构建一个类型参考子类，可以获取其泛型参数中的Type类型。例如：
  *
- * <pre>
- * TypeReference&lt;List&lt;String&gt;&gt; list = new TypeReference&lt;List&lt;String&gt;&gt;() {};
- * Type t = tr.getType();
- * </pre>
+ * <pre>{@code
+ *   TypeReference<List<String>> list = new TypeReference<List<String>>() {};
+ *   Type t = tr.getType();
+ * }</pre>
  *
  * 此类无法应用于通配符泛型参数（wildcard parameters），比如：{@code Class<?>} 或者 {@code List? extends CharSequence>}
  *

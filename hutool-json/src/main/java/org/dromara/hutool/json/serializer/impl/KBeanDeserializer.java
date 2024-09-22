@@ -20,7 +20,8 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONGetter;
-import org.dromara.hutool.json.convert.JSONGetterValueProvider;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.convert.JSONObjectValueProvider;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 
 import java.lang.reflect.Type;
@@ -46,10 +47,9 @@ public class KBeanDeserializer implements MatcherJSONDeserializer<Object> {
 			&& KClassUtil.isKotlinClass(rawType);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object deserialize(final JSON json, final Type deserializeType) {
 		final Class<?> rawType = TypeUtil.getClass(deserializeType);
-		return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>) json));
+		return KClassUtil.newInstance(rawType, new JSONObjectValueProvider((JSONObject) json));
 	}
 }

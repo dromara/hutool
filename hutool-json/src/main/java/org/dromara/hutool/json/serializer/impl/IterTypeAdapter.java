@@ -18,39 +18,66 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
+import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
- * 集合类型反序列化器
+ * Iterator序列化器，将{@link Iterable}或{@link Iterator}转换为JSONArray
  *
- * @author looly
- * @since 6.0.0
+ * @author Looly
  */
-public class CollectionDeserializer implements MatcherJSONDeserializer<Collection<?>> {
+public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJSONDeserializer<Object> {
 
 	/**
 	 * 单例
 	 */
-	public static final CollectionDeserializer INSTANCE = new CollectionDeserializer();
+	public static final IterTypeAdapter INSTANCE = new IterTypeAdapter();
+
+	@Override
+	public boolean match(final Object bean, final JSONContext context) {
+		return bean instanceof Iterable || bean instanceof Iterator;
+	}
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
 		if (json instanceof JSONArray || json instanceof JSONObject) {
 			final Class<?> rawType = TypeUtil.getClass(deserializeType);
+			// 反序列化只支持到集合
 			return Collection.class.isAssignableFrom(rawType);
 		}
 		return false;
 	}
 
 	@Override
-	public Collection<?> deserialize(final JSON json, final Type deserializeType) {
+	public JSON serialize(final Object bean, final JSONContext context) {
+		final Iterator<?> iter;
+		if (bean instanceof Iterator<?>) {// Iterator
+			iter = ((Iterator<?>) bean);
+		} else {// Iterable
+			iter = ((Iterable<?>) bean).iterator();
+		}
+
+		JSONArray json = (JSONArray) context.getContextJson();
+		if(null == json){
+			json = JSONUtil.ofArray(ObjUtil.apply(context, JSONContext::config));
+		}
+		mapFromIterator(bean, iter, json);
+		return json;
+	}
+
+	@Override
+	public Object deserialize(final JSON json, final Type deserializeType) {
 		final Class<?> rawType = TypeUtil.getClass(deserializeType);
 		final Type elementType = TypeUtil.getTypeArgument(deserializeType);
 		final Collection<?> result = CollUtil.create(rawType, TypeUtil.getClass(elementType));
@@ -63,6 +90,23 @@ public class CollectionDeserializer implements MatcherJSONDeserializer<Collectio
 		}
 
 		return result;
+	}
+
+	/**
+	 * 从Iterator中读取数据，并添加到JSONArray中
+	 *
+	 * @param iter      {@link Iterator}
+	 * @param jsonArray {@link JSONArray}
+	 */
+	private void mapFromIterator(final Object source, final Iterator<?> iter, final JSONArray jsonArray) {
+		Object next;
+		while (iter.hasNext()) {
+			next = iter.next();
+			// 检查循环引用
+			if (next != source) {
+				jsonArray.set(next);
+			}
+		}
 	}
 
 	/**

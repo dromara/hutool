@@ -20,10 +20,10 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.escape.EscapeUtil;
+import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.JSONUtil;
 
 /**
  * JSON转XML字符串工具
@@ -36,65 +36,61 @@ public class JSONXMLSerializer {
 	 * 转换JSONObject为XML
 	 * Convert a JSONObject into a well-formed, element-normal XML string.
 	 *
-	 * @param object A JSONObject.
+	 * @param json A JSONObject.
 	 * @return A string.
 	 * @throws JSONException Thrown if there is an error parsing the string
 	 */
-	public static String toXml(final Object object) throws JSONException {
-		return toXml(object, null);
+	public static String toXml(final JSON json) throws JSONException {
+		return toXml(json, null);
 	}
 
 	/**
 	 * 转换JSONObject为XML
 	 *
-	 * @param object  JSON对象或数组
+	 * @param json  JSON对象或数组
 	 * @param tagName 可选标签名称，名称为空时忽略标签
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(final Object object, final String tagName) throws JSONException {
-		return toXml(object, tagName, "content");
+	public static String toXml(final JSON json, final String tagName) throws JSONException {
+		return toXml(json, tagName, "content");
 	}
 
 	/**
 	 * 转换JSONObject为XML
 	 *
-	 * @param object      JSON对象或数组
+	 * @param json      JSON对象或数组
 	 * @param tagName     可选标签名称，名称为空时忽略标签
 	 * @param contentKeys 标识为内容的key,遇到此key直接解析内容而不增加对应名称标签
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(Object object, final String tagName, final String... contentKeys) throws JSONException {
-		if (null == object) {
+	public static String toXml(JSON json, final String tagName, final String... contentKeys) throws JSONException {
+		if (null == json) {
 			return null;
 		}
 
 		final StringBuilder sb = new StringBuilder();
-		if (object instanceof JSONObject) {
+		if (json instanceof JSONObject) {
 
 			// Emit <tagName>
 			appendTag(sb, tagName, false);
 
 			// Loop thru the keys.
-			((JSONObject) object).forEach((key, value) -> {
-				if (ArrayUtil.isArray(value)) {
-					value = JSONUtil.parseArray(value);
-				}
-
+			json.asJSONObject().forEach((key, value) -> {
 				// Emit content in body
 				if (ArrayUtil.contains(contentKeys, key)) {
 					if (value instanceof JSONArray) {
 						int i = 0;
-						for (final Object val : (JSONArray) value) {
+						for (final JSON val : (JSONArray) value) {
 							if (i > 0) {
 								sb.append(CharUtil.LF);
 							}
-							sb.append(EscapeUtil.escapeXml(val.toString()));
+							sb.append(EscapeUtil.escapeXml(val.toBean(String.class)));
 							i++;
 						}
 					} else {
-						sb.append(EscapeUtil.escapeXml(value.toString()));
+						sb.append(EscapeUtil.escapeXml(value.toBean(String.class)));
 					}
 
 					// Emit an array of similar keys
@@ -102,7 +98,7 @@ public class JSONXMLSerializer {
 				} else if (StrUtil.isEmptyIfStr(value)) {
 					sb.append(wrapWithTag(null, key));
 				} else if (value instanceof JSONArray) {
-					for (final Object val : (JSONArray) value) {
+					for (final JSON val : (JSONArray) value) {
 						if (val instanceof JSONArray) {
 							sb.append(wrapWithTag(toXml(val, null, contentKeys), key));
 						} else {
@@ -119,12 +115,8 @@ public class JSONXMLSerializer {
 			return sb.toString();
 		}
 
-		if (ArrayUtil.isArray(object)) {
-			object = JSONUtil.parseArray(object);
-		}
-
-		if (object instanceof JSONArray) {
-			for (final Object val : (JSONArray) object) {
+		if (json instanceof JSONArray) {
+			for (final JSON val : (JSONArray) json) {
 				// XML does not have good support for arrays. If an array
 				// appears in a place where XML is lacking, synthesize an
 				// <array> element.
@@ -133,7 +125,7 @@ public class JSONXMLSerializer {
 			return sb.toString();
 		}
 
-		return wrapWithTag(EscapeUtil.escapeXml(object.toString()), tagName);
+		return wrapWithTag(EscapeUtil.escapeXml(json.toBean(String.class)), tagName);
 	}
 
 	/**

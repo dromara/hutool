@@ -29,6 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DefaultRegexDateParserTest {
 
 	@Test
+	void parseYearMonthDaySplitByDashedWithTTest() {
+		assertParse("2021-03-17 06:31:33", "2021-03-17T06:31:33");
+		assertParse("2021-03-17 06:31:33", "2021-03-17T06:31:33.999");
+		assertParse("2021-03-17 06:31:33", "2021-03-17T06:31:33.9999");
+	}
+
+	@Test
 	void parseYearMonthDaySplitByDashedTest() {
 		assertParse("2013-02-03 00:00:00", "2013-Feb-03");
 		assertParse("2013-02-03 00:00:00", "2013-02-03");

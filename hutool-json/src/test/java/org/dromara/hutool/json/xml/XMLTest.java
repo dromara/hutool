@@ -39,7 +39,7 @@ public class XMLTest {
 
 		Assertions.assertEquals("{\"a\":\"•\"}", jsonObject.toString());
 
-		final String xml2 = JSONXMLUtil.toXml(JSONUtil.parseObj(jsonObject));
+		final String xml2 = JSONXMLUtil.toXml(jsonObject);
 		Assertions.assertEquals(xml, xml2);
 	}
 
@@ -51,6 +51,13 @@ public class XMLTest {
 		Assertions.assertEquals("123456", xml);
 
 		xml = JSONXMLUtil.toXml(jsonObject, null, new String[0]);
+		Assertions.assertEquals("<content>123456</content>", xml);
+	}
+
+	@Test
+	public void xmlContentTest2(){
+		final JSONObject jsonObject = JSONUtil.ofObj().set("content","123456");
+		final String xml = JSONXMLUtil.toXml(jsonObject, null, new String[0]);
 		Assertions.assertEquals("<content>123456</content>", xml);
 	}
 }

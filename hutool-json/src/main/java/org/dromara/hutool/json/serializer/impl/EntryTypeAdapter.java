@@ -17,27 +17,36 @@
 package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.convert.CompositeConverter;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
+import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Map.Entry反序列化器，用于将JSON对象转换为Map.Entry对象。
+ * Map.Entry序列化和反序列化器，用于将JSON对象和Map.Entry对象互转。
  *
  * @author looly
  * @since 6.0.0
  */
-public class EntryDeserializer implements MatcherJSONDeserializer<Map.Entry<?, ?>> {
+public class EntryTypeAdapter implements MatcherJSONSerializer<Map.Entry<?, ?>>, MatcherJSONDeserializer<Map.Entry<?, ?>> {
 
 	/**
 	 * 单例
 	 */
-	public static final EntryDeserializer INSTANCE = new EntryDeserializer();
+	public static final EntryTypeAdapter INSTANCE = new EntryTypeAdapter();
+
+	@Override
+	public boolean match(final Object bean, final JSONContext context) {
+		return bean instanceof Map.Entry;
+	}
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
@@ -46,6 +55,19 @@ public class EntryDeserializer implements MatcherJSONDeserializer<Map.Entry<?, ?
 			return Map.Entry.class.isAssignableFrom(rawType);
 		}
 		return false;
+	}
+
+	@Override
+	public JSON serialize(final Map.Entry<?, ?> bean, final JSONContext context) {
+		final JSONObject result;
+		final JSON contextJson = context.getContextJson();
+		if(contextJson instanceof JSONObject){
+			result = contextJson.asJSONObject();
+		}else{
+			result = JSONUtil.ofObj(context.config());
+		}
+		result.set(ConvertUtil.toStr(bean.getKey()), bean.getValue());
+		return result;
 	}
 
 	@Override

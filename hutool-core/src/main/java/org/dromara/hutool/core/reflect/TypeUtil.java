@@ -45,29 +45,32 @@ public class TypeUtil {
 	 * @return 原始类，如果无法获取原始类，返回{@code null}
 	 */
 	public static Class<?> getClass(final Type type) {
-		if (null != type) {
-			if (type instanceof Class) {
-				return (Class<?>) type;
-			} else if (type instanceof ParameterizedType) {
-				return (Class<?>) ((ParameterizedType) type).getRawType();
-			} else if (type instanceof TypeVariable) {
-				//return (Class<?>) ((TypeVariable<?>) type).getBounds()[0];
-				final Type[] bounds = ((TypeVariable<?>) type).getBounds();
-				if (bounds.length == 1) {
-					return getClass(bounds[0]);
-				}
-			} else if (type instanceof WildcardType) {
-				final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
-				if (upperBounds.length == 1) {
-					return getClass(upperBounds[0]);
-				}
-			} else if(type instanceof GenericArrayType){
-				return Array.newInstance(getClass(((GenericArrayType)type).getGenericComponentType()), 0).getClass();
-			} else if(type instanceof TypeReference){
-				return getClass(((TypeReference<?>)type).getType());
-			}
+		if (null == type) {
+			return null;
 		}
-		return null;
+
+		if (type instanceof Class) {
+			return (Class<?>) type;
+		} else if (type instanceof ParameterizedType) {
+			return (Class<?>) ((ParameterizedType) type).getRawType();
+		} else if (type instanceof TypeVariable) {
+			//return (Class<?>) ((TypeVariable<?>) type).getBounds()[0];
+			final Type[] bounds = ((TypeVariable<?>) type).getBounds();
+			if (bounds.length == 1) {
+				return getClass(bounds[0]);
+			}
+		} else if (type instanceof WildcardType) {
+			final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
+			if (upperBounds.length == 1) {
+				return getClass(upperBounds[0]);
+			}
+		} else if (type instanceof GenericArrayType) {
+			return Array.newInstance(getClass(((GenericArrayType) type).getGenericComponentType()), 0).getClass();
+		} else if (type instanceof TypeReference) {
+			return getClass(((TypeReference<?>) type).getType());
+		}
+
+		throw new IllegalArgumentException("Unsupported Type: " + type.getClass().getName());
 	}
 
 	/**
@@ -107,7 +110,7 @@ public class TypeUtil {
 		return null == field ? null : field.getType();
 	}
 
-	// ----------------------------------------------------------------------------------- Param Type
+	// region ----- Param Type
 
 	/**
 	 * 获取方法的第一个参数类型<br>
@@ -190,8 +193,9 @@ public class TypeUtil {
 	public static Class<?>[] getParamClasses(final Method method) {
 		return null == method ? null : method.getParameterTypes();
 	}
+	// endregion
 
-	// ----------------------------------------------------------------------------------- Return Type
+	// region ----- Return Type
 
 	/**
 	 * 获取方法的返回值类型<br>
@@ -218,8 +222,9 @@ public class TypeUtil {
 	public static Class<?> getReturnClass(final Method method) {
 		return null == method ? null : method.getReturnType();
 	}
+	// endregion
 
-	// ----------------------------------------------------------------------------------- Type Argument
+	// region ----- Type Argument
 
 	/**
 	 * 获得给定类的第一个泛型参数
@@ -267,6 +272,7 @@ public class TypeUtil {
 		final ParameterizedType parameterizedType = toParameterizedType(type);
 		return (null == parameterizedType) ? null : parameterizedType.getActualTypeArguments();
 	}
+	// endregion
 
 	/**
 	 * 将{@link Type} 转换为{@link ParameterizedType}<br>
@@ -347,7 +353,7 @@ public class TypeUtil {
 		if (ArrayUtil.isNotEmpty(genericInterfaces)) {
 			for (final Type genericInterface : genericInterfaces) {
 				final ParameterizedType parameterizedType = toParameterizedType(genericInterface);
-				if(null != parameterizedType){
+				if (null != parameterizedType) {
 					result.add(parameterizedType);
 				}
 			}
@@ -383,20 +389,7 @@ public class TypeUtil {
 		return false;
 	}
 
-	/**
-	 * 获取泛型变量和泛型实际类型的对应关系Map，例如：
-	 *
-	 * <pre>
-	 *     T    org.dromara.hutool.test.User
-	 *     E    java.lang.Integer
-	 * </pre>
-	 *
-	 * @param clazz 被解析的包含泛型参数的类
-	 * @return 泛型对应关系Map
-	 */
-	public static Map<Type, Type> getTypeMap(final Class<?> clazz) {
-		return ActualTypeMapperPool.get(clazz);
-	}
+	// region ----- Actual type
 
 	/**
 	 * 获得泛型字段对应的泛型实际类型，如果此变量没有对应的实际类型，返回null
@@ -417,7 +410,7 @@ public class TypeUtil {
 	 * 此方法可以处理：
 	 *
 	 * <pre>
-	 *     1. 泛型化对象，类似于Map&lt;User, Key&lt;Long&gt;&gt;
+	 *     1. 泛型化对象，类似于{@code Map<User, Key<Long>>}
 	 *     2. 泛型变量，类似于T
 	 * </pre>
 	 *
@@ -431,8 +424,7 @@ public class TypeUtil {
 		}
 
 		if (typeVariable instanceof TypeVariable) {
-			// TODO TypeReference无效
-			return ActualTypeMapperPool.getActualType(type, (TypeVariable<?>) typeVariable);
+			return getActualType(type, (TypeVariable<?>) typeVariable);
 		}
 
 		// 没有需要替换的泛型变量，原样输出
@@ -440,8 +432,22 @@ public class TypeUtil {
 	}
 
 	/**
+	 * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回typeVariable
+	 *
+	 * @param type         类
+	 * @param typeVariable 泛型变量
+	 * @return 实际类型，可能为Class等
+	 */
+	public static Type getActualType(final Type type, final TypeVariable<?> typeVariable) {
+		return ObjUtil.defaultIfNull(ActualTypeMapperPool.getActualType(type, typeVariable), typeVariable);
+	}
+
+	/**
 	 * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回null
-	 * 此方法可以处理复杂的泛型化对象，类似于Map&lt;User, Key&lt;Long&gt;&gt;
+	 * 此方法可以处理复杂的泛型化对象，类似于：
+	 * <pre>{@code
+	 *   Map<User, Key<Long>>
+	 * }</pre>
 	 *
 	 * @param type              类
 	 * @param parameterizedType 泛型变量，例如List&lt;T&gt;等
@@ -473,4 +479,20 @@ public class TypeUtil {
 	public static Type[] getActualTypes(final Type type, final Type... typeVariables) {
 		return ActualTypeMapperPool.getActualTypes(type, typeVariables);
 	}
+
+	/**
+	 * 获取泛型变量和泛型实际类型的对应关系Map，例如：
+	 *
+	 * <pre>
+	 *     T    org.dromara.hutool.test.User
+	 *     E    java.lang.Integer
+	 * </pre>
+	 *
+	 * @param clazz 被解析的包含泛型参数的类
+	 * @return 泛型对应关系Map
+	 */
+	public static Map<Type, Type> getTypeMap(final Class<?> clazz) {
+		return ActualTypeMapperPool.get(clazz);
+	}
+	// endregion
 }

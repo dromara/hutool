@@ -17,28 +17,38 @@
 package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.convert.CompositeConverter;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
+import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Map反序列化器，用于将JSON对象转换为Map对象。
+ * Map类型适配器器，用于将JSON对象和Map对象互转。
  *
  * @author looly
  * @since 6.0.0
  */
-public class MapDeserializer implements MatcherJSONDeserializer<Map<?, ?>> {
+public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, MatcherJSONDeserializer<Map<?, ?>> {
 
 	/**
 	 * 单例
 	 */
-	public static final MapDeserializer INSTANCE = new MapDeserializer();
+	public static final MapTypeAdapter INSTANCE = new MapTypeAdapter();
+
+	@Override
+	public boolean match(final Object bean, final JSONContext context) {
+		return bean instanceof Map;
+	}
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
@@ -47,6 +57,19 @@ public class MapDeserializer implements MatcherJSONDeserializer<Map<?, ?>> {
 			return Map.class.isAssignableFrom(rawType);
 		}
 		return false;
+	}
+
+	@Override
+	public JSON serialize(final Map<?, ?> bean, final JSONContext context) {
+		final JSON contextJson = context.getContextJson();
+		final JSONObject result = contextJson instanceof JSONObject ?
+			(JSONObject) contextJson : JSONUtil.ofObj(context.config());
+
+		// 注入键值对
+		for (final Map.Entry<?, ?> e : bean.entrySet()) {
+			result.set(ConvertUtil.toStr(e.getKey()), e.getValue());
+		}
+		return result;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -60,7 +83,7 @@ public class MapDeserializer implements MatcherJSONDeserializer<Map<?, ?>> {
 			map.put(
 				// key类型为String转目标类型，使用标准转换器
 				CompositeConverter.getInstance().convert(keyType, entry.getKey()),
-				entry.getValue().toBean(valueType)
+				ObjUtil.apply(entry.getValue(), (value)-> value.toBean(valueType))
 			);
 		}
 		return map;

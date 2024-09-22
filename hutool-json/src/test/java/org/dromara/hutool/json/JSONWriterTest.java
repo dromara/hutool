@@ -31,7 +31,7 @@ public class JSONWriterTest {
 
 		// 日期原样写入
 		final Date date = jsonObject.getDate("date");
-		Assertions.assertEquals("2022-09-30 00:00:00", date.toString());
+		Assertions.assertEquals("2022-09-30 00:00:00", DateUtil.date(date).toString());
 
 		// 自定义日期格式生效
 		Assertions.assertEquals("{\"date\":\"2022-09-30\"}", jsonObject.toString());

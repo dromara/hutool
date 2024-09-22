@@ -22,6 +22,7 @@ import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -113,7 +114,7 @@ public class JSONObjectTest {
 	@Test
 	public void parseStringTest() {
 		final String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
-		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
+		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr, JSONConfig.of().setIgnoreNullValue(false));
 		assertEquals(jsonObject.getObj("a"), "value1");
 		assertEquals(jsonObject.getObj("b"), "value2");
 		assertEquals(jsonObject.getObj("c"), "value3");
@@ -227,6 +228,13 @@ public class JSONObjectTest {
 	}
 
 	@Test
+	void addListTest(){
+		final JSONObject json = JSONUtil.ofObj();
+		json.set("list", ListUtil.of(1, 2, 3));
+		Assertions.assertEquals("{\"list\":[1,2,3]}", json.toString());
+	}
+
+	@Test
 	public void toBeanTest2() {
 		final UserA userA = new UserA();
 		userA.setA("A user");
@@ -245,7 +253,7 @@ public class JSONObjectTest {
 	@Test
 	public void toBeanWithNullTest() {
 		final String jsonStr = "{'data':{'userName':'ak','password': null}}";
-		final UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
+		final UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr, JSONConfig.of().setIgnoreNullValue(false)), UserWithMap.class);
 		Assertions.assertTrue(user.getData().containsKey("password"));
 	}
 
@@ -323,7 +331,7 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void parseBeanTest2() {
+	public void parseBeanWithNumberListEnumTest() {
 		final TestBean bean = new TestBean();
 		bean.setDoubleValue(111.1);
 		bean.setIntValue(123);
@@ -333,8 +341,10 @@ public class JSONObjectTest {
 
 		final JSONObject json = JSONUtil.parseObj(bean,
 			JSONConfig.of().setIgnoreNullValue(false));
-		// 枚举转换检查，更新：枚举原样保存，在writer时调用toString。
-		assertEquals(TestEnum.TYPE_B, json.getObj("testEnum"));
+
+		assertEquals(111.1, json.getObj("doubleValue"));
+		// 枚举转换检查，默认序列化枚举为其name
+		assertEquals(TestEnum.TYPE_B.name(), json.getObj("testEnum"));
 
 		final TestBean bean2 = json.toBean(TestBean.class);
 		assertEquals(bean.toString(), bean2.toString());
@@ -479,9 +489,9 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void setDateFormatTest3() {
+	public void setDateFormatSecondsTest() {
 		// 自定义格式为只有秒的时间戳，一般用于JWT
-		final JSONConfig jsonConfig = JSONConfig.of().setDateFormat("#sss");
+		final JSONConfig jsonConfig = JSONConfig.of().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
 		final JSONObject json = new JSONObject(jsonConfig);
@@ -497,7 +507,7 @@ public class JSONObjectTest {
 	@Test
 	public void setCustomDateFormatTest() {
 		final JSONConfig jsonConfig = JSONConfig.of();
-		jsonConfig.setDateFormat("#sss");
+		jsonConfig.setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
 		final JSONObject json = new JSONObject(jsonConfig);
@@ -609,7 +619,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void createJSONObjectTest() {
-		Assertions.assertThrows(JSONException.class, ()->{
+		Assertions.assertThrows(ClassCastException.class, ()->{
 			// 集合类不支持转为JSONObject
 			JSONUtil.parseObj(new JSONArray(), JSONConfig.of());
 		});
@@ -692,7 +702,8 @@ public class JSONObjectTest {
 		final String s = json1.toJSONString(0, (pair) -> {
 			if ("b".equals(pair.getKey())) {
 				// 修改值为新值
-				pair.setValue(pair.getValue() + "_edit");
+				final JSONPrimitive value = (JSONPrimitive) pair.getValue();
+				pair.setValue(value.getValue() + "_edit");
 				return true;
 			}
 			// 除了"b"，其他都去掉

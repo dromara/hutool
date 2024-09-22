@@ -20,10 +20,7 @@ import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 
 /**
  * <a href="https://github.com/dromara/hutool/issues/2090">https://github.com/dromara/hutool/issues/2090</a>
@@ -76,6 +73,23 @@ public class Issue2090Test {
 		final JSONObject jsonObject = new JSONObject();
 		jsonObject.set("month", Month.JANUARY);
 		Assertions.assertEquals("{\"month\":1}", jsonObject.toString());
+
+		final JSON parse = JSONUtil.parse(Month.JANUARY);
+		Assertions.assertInstanceOf(JSONPrimitive.class, parse);
+		Assertions.assertTrue(((JSONPrimitive) parse).isNumber());
+		Assertions.assertEquals("1", parse.toString());
+	}
+
+	@Test
+	public void weekTest(){
+		final JSONObject jsonObject = new JSONObject();
+		jsonObject.set("week", DayOfWeek.SUNDAY);
+		Assertions.assertEquals("{\"week\":7}", jsonObject.toString());
+
+		final JSON parse = JSONUtil.parse(DayOfWeek.SUNDAY);
+		Assertions.assertInstanceOf(JSONPrimitive.class, parse);
+		Assertions.assertTrue(((JSONPrimitive) parse).isNumber());
+		Assertions.assertEquals("7", parse.toString());
 	}
 
 	@Data

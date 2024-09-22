@@ -16,8 +16,6 @@
 
 package org.dromara.hutool.json.mapper;
 
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.json.JSONArray;
@@ -26,7 +24,6 @@ import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 
-import java.util.Iterator;
 import java.util.function.Predicate;
 
 /**
@@ -90,50 +87,9 @@ class JSONArrayMapper {
 					jsonArray.set(b);
 				}
 			}
-		} else {
-			final Iterator<?> iter;
-			if (ArrayUtil.isArray(source)) {// 数组
-				iter = new ArrayIter<>(source);
-			} else if (source instanceof Iterator<?>) {// Iterator
-				iter = ((Iterator<?>) source);
-			} else if (source instanceof Iterable<?>) {// Iterable
-				iter = ((Iterable<?>) source).iterator();
-			} else {
-				if (!jsonArray.config().isIgnoreError()) {
-					throw new JSONException("Unsupported [{}] to JSONArray", source.getClass());
-				}
-				// 如果用户选择跳过异常，则跳过此值转换
-				return;
-			}
-
-			mapFromIterator(iter, jsonArray);
 		}
-	}
 
-	/**
-	 * 从Iterator中读取数据，并添加到JSONArray中
-	 *
-	 * @param iter      {@link Iterator}
-	 * @param jsonArray {@link JSONArray}
-	 */
-	private void mapFromIterator(final Iterator<?> iter, final JSONArray jsonArray) {
-		Object next;
-		while (iter.hasNext()) {
-			next = iter.next();
-			// 检查循环引用
-			if (next != source) {
-				if (null != this.predicate) {
-					final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), next);
-					if (predicate.test(entry)) {
-						// 使用修改后的键值对
-						next = entry.getValue();
-						jsonArray.set(next);
-					}
-				} else {
-					jsonArray.set(next);
-				}
-			}
-		}
+		throw new JSONException("Unsupported [{}] to JSONArray", source.getClass());
 	}
 
 	/**

@@ -16,14 +16,8 @@
 
 package org.dromara.hutool.json.mapper;
 
-import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.bean.RecordUtil;
-import org.dromara.hutool.core.bean.copier.CopyOptions;
-import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
@@ -31,9 +25,7 @@ import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 
-import java.lang.reflect.Type;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -81,32 +73,17 @@ class JSONObjectMapper {
 	 *
 	 * @param jsonObject 目标{@link JSONObject}
 	 */
-	@SuppressWarnings("rawtypes")
 	public void mapTo(final JSONObject jsonObject) {
 		final Object source = this.source;
 		if (null == source) {
 			return;
 		}
 
-		if (source instanceof Map) {
-			// Map
-			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				jsonObject.set(ConvertUtil.toStr(e.getKey()), e.getValue());
-			}
-		} else if (source instanceof Map.Entry) {
-			final Map.Entry entry = (Map.Entry) source;
-			jsonObject.set(ConvertUtil.toStr(entry.getKey()), entry.getValue());
-		} else if (source instanceof byte[]) {
+		if (source instanceof byte[]) {
 			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source)), jsonObject.config(), jsonObject);
 		} else if (source instanceof ResourceBundle) {
 			// ResourceBundle
 			mapFromResourceBundle((ResourceBundle) source, jsonObject);
-		} else if (RecordUtil.isRecord(source.getClass())) {
-			// since 6.0.0
-			mapFromRecord(source, jsonObject);
-		} else if (BeanUtil.isReadableBean(source.getClass())) {
-			// 普通Bean
-			mapFromBean(source, jsonObject);
 		} else {
 			if (!jsonObject.config().isIgnoreError()) {
 				// 不支持对象类型转换为JSONObject
@@ -141,37 +118,5 @@ class JSONObjectMapper {
 	 */
 	private void mapFromTokener(final JSONTokener x, final JSONConfig config, final JSONObject jsonObject) {
 		JSONParser.of(x, config).setPredicate(this.predicate).parseTo(jsonObject);
-	}
-
-	/**
-	 * 从Record转换
-	 *
-	 * @param record     Record对象
-	 * @param jsonObject {@link JSONObject}
-	 */
-	private void mapFromRecord(final Object record, final JSONObject jsonObject) {
-		final Map.Entry<String, Type>[] components = RecordUtil.getRecordComponents(record.getClass());
-
-		String key;
-		for (final Map.Entry<String, Type> entry : components) {
-			key = entry.getKey();
-			jsonObject.set(key, MethodUtil.invoke(record, key));
-		}
-	}
-
-	/**
-	 * 从Bean转换
-	 *
-	 * @param bean       Bean对象
-	 * @param jsonObject {@link JSONObject}
-	 */
-	private void mapFromBean(final Object bean, final JSONObject jsonObject) {
-		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.config());
-		if (null != this.predicate) {
-			copyOptions.setFieldEditor((entry -> this.predicate.test(
-				MutableEntry.of(StrUtil.toStringOrNull(entry.getKey()), entry.getValue())) ?
-				entry : null));
-		}
-		BeanUtil.beanToMap(bean, jsonObject, copyOptions);
 	}
 }

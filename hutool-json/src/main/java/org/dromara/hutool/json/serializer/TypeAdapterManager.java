@@ -17,10 +17,11 @@
 package org.dromara.hutool.json.serializer;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.lang.tuple.Triple;
+import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
@@ -28,6 +29,8 @@ import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.serializer.impl.*;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,11 +60,7 @@ public class TypeAdapterManager {
 		/**
 		 * 静态初始化器，由JVM来保证线程安全
 		 */
-		private static final TypeAdapterManager INSTANCE = new TypeAdapterManager();
-
-		static {
-			registerDefault(INSTANCE);
-		}
+		private static final TypeAdapterManager INSTANCE = registerDefault(new TypeAdapterManager());
 	}
 
 	/**
@@ -79,9 +78,7 @@ public class TypeAdapterManager {
 	 * @return SerializerManager
 	 */
 	public static TypeAdapterManager of() {
-		final TypeAdapterManager typeAdapterManager = new TypeAdapterManager();
-		registerDefault(typeAdapterManager);
-		return typeAdapterManager;
+		return registerDefault(new TypeAdapterManager());
 	}
 
 	/**
@@ -168,20 +165,31 @@ public class TypeAdapterManager {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public JSONSerializer<Object> getSerializer(final Object bean, final Type type) {
-		JSONSerializer<Object> result = null;
-		if (null != type && MapUtil.isNotEmpty(this.serializerMap)) {
-			result = (JSONSerializer<Object>) this.serializerMap.get(type);
+		final Class<?> rawType = TypeUtil.getClass(type);
+		if (null == rawType) {
+			return null;
+		}
+		if (JSONSerializer.class.isAssignableFrom(rawType)) {
+			return (JSONSerializer<Object>) ConstructorUtil.newInstanceIfPossible(rawType);
 		}
 
-		if (null == result && CollUtil.isNotEmpty(this.serializerSet)) {
+		if (MapUtil.isNotEmpty(this.serializerMap)) {
+			final JSONSerializer<?> result = this.serializerMap.get(rawType);
+			if(null != result){
+				return (JSONSerializer<Object>) result;
+			}
+		}
+
+		// Matcher
+		if (CollUtil.isNotEmpty(this.serializerSet)) {
 			for (final MatcherJSONSerializer<?> serializer : this.serializerSet) {
 				if (serializer.match(bean, null)) {
-					result = (MatcherJSONSerializer<Object>) serializer;
-					break;
+					return (MatcherJSONSerializer<Object>) serializer;
 				}
 			}
 		}
-		return result;
+
+		throw new JSONException("No serializer for type: " + type);
 	}
 
 	/**
@@ -201,8 +209,8 @@ public class TypeAdapterManager {
 			return (JSONDeserializer<Object>) ConstructorUtil.newInstanceIfPossible(rawType);
 		}
 
-		if (CollUtil.isNotEmpty(this.deserializerMap)) {
-			final JSONDeserializer<?> jsonDeserializer = this.deserializerMap.get(type);
+		if (MapUtil.isNotEmpty(this.deserializerMap)) {
+			final JSONDeserializer<?> jsonDeserializer = this.deserializerMap.get(rawType);
 			if (null != jsonDeserializer) {
 				return (JSONDeserializer<Object>) jsonDeserializer;
 			}
@@ -226,7 +234,7 @@ public class TypeAdapterManager {
 		if (null == this.serializerSet) {
 			synchronized (this) {
 				if (null == this.serializerSet) {
-					this.serializerSet = new ConcurrentHashSet<>();
+					this.serializerSet = new LinkedHashSet<>();
 				}
 			}
 		}
@@ -237,7 +245,7 @@ public class TypeAdapterManager {
 		if (null == this.serializerMap) {
 			synchronized (this) {
 				if (null == this.serializerMap) {
-					this.serializerMap = new SafeConcurrentHashMap<>();
+					this.serializerMap = new HashMap<>();
 				}
 			}
 		}
@@ -248,7 +256,7 @@ public class TypeAdapterManager {
 		if (null == this.deserializerSet) {
 			synchronized (this) {
 				if (null == this.deserializerSet) {
-					this.deserializerSet = new ConcurrentHashSet<>();
+					this.deserializerSet = new LinkedHashSet<>();
 				}
 			}
 		}
@@ -259,7 +267,7 @@ public class TypeAdapterManager {
 		if (null == this.deserializerMap) {
 			synchronized (this) {
 				if (null == this.deserializerMap) {
-					this.deserializerMap = new SafeConcurrentHashMap<>();
+					this.deserializerMap = new HashMap<>();
 				}
 			}
 		}
@@ -271,24 +279,35 @@ public class TypeAdapterManager {
 	 * 注册默认的序列化器和反序列化器
 	 *
 	 * @param manager {@code SerializerManager}
+	 * @return TypeAdapterManager
 	 */
-	private static void registerDefault(final TypeAdapterManager manager) {
-		// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
+	private static TypeAdapterManager registerDefault(final TypeAdapterManager manager) {
+
+		// 自定义序列化器
+
+		// 自定义反序列化器
 		manager.register(KBeanDeserializer.INSTANCE);
-		manager.register(CollectionDeserializer.INSTANCE);
-		manager.register(ArrayDeserializer.INSTANCE);
-		manager.register(MapDeserializer.INSTANCE);
-		manager.register(EntryDeserializer.INSTANCE);
 		manager.register(RecordDeserializer.INSTANCE);
+		manager.register(Triple.class, TripleDeserializer.INSTANCE);
+		manager.register(Pair.class, PairDeserializer.INSTANCE);
+		manager.register(Tuple.class, TupleDeserializer.INSTANCE);
 
-
+		// 自定义类型适配器
+		manager.register(JSONPrimitiveTypeAdapter.INSTANCE);
+		manager.register(CharSequenceTypeAdapter.INSTANCE);
 		manager.register(DateTypeAdapter.INSTANCE);
 		manager.register(CalendarTypeAdapter.INSTANCE);
 		manager.register(TemporalTypeAdapter.INSTANCE);
 		manager.register(TimeZoneTypeAdapter.INSTANCE);
 		manager.register(EnumTypeAdapter.INSTANCE);
 		manager.register(ThrowableTypeAdapter.INSTANCE);
+		manager.register(EntryTypeAdapter.INSTANCE);
+		manager.register(MapTypeAdapter.INSTANCE);
+		manager.register(IterTypeAdapter.INSTANCE);
+		manager.register(ArrayTypeAdapter.INSTANCE);
 		// 最低优先级
 		manager.register(BeanTypeAdapter.INSTANCE);
+
+		return manager;
 	}
 }

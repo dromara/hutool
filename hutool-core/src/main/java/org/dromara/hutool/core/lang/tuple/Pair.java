@@ -96,6 +96,7 @@ public class Pair<L, R> implements Serializable, Cloneable {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
+
 		final Pair<?, ?> pair = (Pair<?, ?>) o;
 		return Objects.equals(left, pair.left) && Objects.equals(right, pair.right);
 	}

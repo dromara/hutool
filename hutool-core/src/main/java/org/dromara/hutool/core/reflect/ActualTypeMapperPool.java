@@ -92,7 +92,7 @@ public class ActualTypeMapperPool {
 	}
 
 	/**
-	 * 创建类中所有的泛型变量和泛型实际类型的对应关系Map
+	 * 创建类中所有的泛型变量和泛型实际类型的对应关系Map<br>
 	 *
 	 * @param type 被解析的包含泛型参数的类
 	 * @return 泛型对应关系Map
