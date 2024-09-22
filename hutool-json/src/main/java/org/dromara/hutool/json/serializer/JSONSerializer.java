@@ -27,7 +27,7 @@ import org.dromara.hutool.json.JSONObject;
  * @author Looly
  */
 @FunctionalInterface
-public interface JSONSerializer<V> {
+public interface JSONSerializer<V> extends TypeAdapter{
 
 	/**
 	 * 序列化实现，通过实现此方法，将指定类型的对象转换为{@link JSON}对象,可以：

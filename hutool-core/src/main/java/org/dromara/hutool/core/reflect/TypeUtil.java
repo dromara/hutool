@@ -63,6 +63,8 @@ public class TypeUtil {
 				}
 			} else if(type instanceof GenericArrayType){
 				return Array.newInstance(getClass(((GenericArrayType)type).getGenericComponentType()), 0).getClass();
+			} else if(type instanceof TypeReference){
+				return getClass(((TypeReference<?>)type).getType());
 			}
 		}
 		return null;
@@ -429,6 +431,7 @@ public class TypeUtil {
 		}
 
 		if (typeVariable instanceof TypeVariable) {
+			// TODO TypeReference无效
 			return ActualTypeMapperPool.getActualType(type, (TypeVariable<?>) typeVariable);
 		}
 

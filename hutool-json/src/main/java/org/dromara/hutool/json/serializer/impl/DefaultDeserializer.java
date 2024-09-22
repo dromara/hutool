@@ -16,14 +16,10 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
-import org.dromara.hutool.core.bean.copier.ValueProviderToBeanCopier;
 import org.dromara.hutool.core.convert.CompositeConverter;
-import org.dromara.hutool.core.lang.copier.Copier;
-import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
-import org.dromara.hutool.json.serializer.JSONObjectValueProvider;
 
 import java.lang.reflect.Type;
 
@@ -34,6 +30,12 @@ import java.lang.reflect.Type;
  * @since 6.0.0
  */
 public class DefaultDeserializer implements JSONDeserializer<Object> {
+
+	/**
+	 * 单例
+	 */
+	public static final DefaultDeserializer INSTANCE = new DefaultDeserializer();
+
 	@Override
 	public Object deserialize(final JSON json, final Type deserializeType) {
 		// 当目标类型不确定时，返回原JSON
@@ -61,14 +63,7 @@ public class DefaultDeserializer implements JSONDeserializer<Object> {
 	 * @return 反序列化后的对象
 	 */
 	private Object fromJSONObject(final JSONObject json, final Type deserializeType, final Class<?> rawType) {
-		// 转为POJO
-		final Copier<Object> copier = new ValueProviderToBeanCopier<>(
-			new JSONObjectValueProvider(json),
-			ConstructorUtil.newInstanceIfPossible(rawType),
-			deserializeType,
-			InternalJSONUtil.toCopyOptions(json.config())
-		);
-		return copier.copy();
+		throw new JSONException("Unsupported JSONObject to {}", rawType);
 	}
 
 	/**
@@ -80,7 +75,7 @@ public class DefaultDeserializer implements JSONDeserializer<Object> {
 	 * @return 反序列化后的对象
 	 */
 	private Object fromJSONArray(final JSONArray json, final Type deserializeType, final Class<?> rawType) {
-		return json;
+		throw new JSONException("Unsupported JSONArray to {}", rawType);
 	}
 
 	/**

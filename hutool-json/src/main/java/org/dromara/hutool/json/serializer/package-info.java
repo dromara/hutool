@@ -27,5 +27,16 @@
  *     <li>序列化（Serialize）    指：【Java对象】 转换为 【JSON对象】</li>
  *     <li>反序列化（Deserialize）指：【JSON对象】 转换为 【Java对象】</li>
  * </ul>
+ *
+ * 3. JSON序列化实现：
+ * <ul>
+ *     <li>TypeAdapter：类型适配器，标记序列化或反序列化</li>
+ *     <li>JSONSerializer：JSON序列化接口，用于自定义序列化</li>
+ *     <li>JSONDeserializer：JSON反序列化接口，用于自定义反序列化</li>
+ * </ul>
+ *
+ * 4. JSON序列化管理：<br>
+ * TypeAdapterManager用于管理定义的序列化和反序列化器
+ *
  */
 package org.dromara.hutool.json.serializer;

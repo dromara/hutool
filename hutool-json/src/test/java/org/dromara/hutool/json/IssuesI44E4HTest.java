@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ public class IssuesI44E4HTest {
 
 	@Test
 	public void deserializerTest(){
-		SerializerManager.getInstance().register(TestDto.class, (JSONDeserializer<TestDto>) (json, deserializeType) -> {
+		TypeAdapterManager.getInstance().register(TestDto.class, (JSONDeserializer<TestDto>) (json, deserializeType) -> {
 			final TestDto testDto = new TestDto();
 			testDto.setMd(new AcBizModuleMd("name1", ((JSONObject)json).getStr("md")));
 			return testDto;

@@ -20,7 +20,7 @@ import lombok.Data;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.JSONSerializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +29,8 @@ import java.lang.reflect.Type;
 public class Issue2555Test {
 	@Test
 	public void serAndDeserTest(){
-		SerializerManager.getInstance().register(MyType.class, new MySerializer());
-		SerializerManager.getInstance().register(MyType.class, new MyDeserializer());
+		TypeAdapterManager.getInstance().register(MyType.class, new MySerializer());
+		TypeAdapterManager.getInstance().register(MyType.class, new MyDeserializer());
 
 		final SimpleObj simpleObj = new SimpleObj();
 		final MyType child = new MyType();

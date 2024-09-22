@@ -20,10 +20,11 @@ import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serializer.JSONContext;
-import org.dromara.hutool.json.serializer.JSONDeserializer;
-import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -41,9 +42,8 @@ import java.time.temporal.TemporalAccessor;
  * </ul>
  *
  * @author looly
- * @since 5.7.22
  */
-public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccessor>, JSONDeserializer<TemporalAccessor> {
+public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccessor>, MatcherJSONDeserializer<TemporalAccessor> {
 
 	private static final String YEAR_KEY = "year";
 	private static final String MONTH_KEY = "month";
@@ -53,15 +53,19 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 	private static final String SECOND_KEY = "second";
 	private static final String NANO_KEY = "nano";
 
-	private final Class<? extends TemporalAccessor> temporalAccessorClass;
-
 	/**
-	 * 构造
-	 *
-	 * @param temporalAccessorClass TemporalAccessor实现类型
+	 * 单例
 	 */
-	public TemporalAccessorSerializer(final Class<? extends TemporalAccessor> temporalAccessorClass) {
-		this.temporalAccessorClass = temporalAccessorClass;
+	public static final TemporalTypeAdapter INSTANCE = new TemporalTypeAdapter();
+
+	@Override
+	public boolean match(final JSON json, final Type deserializeType) {
+		return TemporalAccessor.class.isAssignableFrom(TypeUtil.getClass(deserializeType));
+	}
+
+	@Override
+	public boolean match(final Object bean, final JSONContext context) {
+		return bean instanceof TemporalAccessor;
 	}
 
 	@Override
@@ -111,9 +115,10 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 
 		// TODO JSONArray
 
+		final Class<?> temporalAccessorClass = TypeUtil.getClass(deserializeType);
 		// JSONObject
 		final JSONObject jsonObject = (JSONObject) json;
-		if (LocalDate.class.equals(this.temporalAccessorClass) || LocalDateTime.class.equals(this.temporalAccessorClass)) {
+		if (LocalDate.class.equals(temporalAccessorClass) || LocalDateTime.class.equals(temporalAccessorClass)) {
 			// 年
 			final Integer year = jsonObject.getInt(YEAR_KEY);
 			Assert.notNull(year, "Field 'year' must be not null");
@@ -135,7 +140,7 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 			}
 
 			final LocalDate localDate = LocalDate.of(year, month, day);
-			if (LocalDate.class.equals(this.temporalAccessorClass)) {
+			if (LocalDate.class.equals(temporalAccessorClass)) {
 				return localDate;
 			}
 
@@ -147,7 +152,7 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 				jsonObject.getInt(NANO_KEY, 0));
 
 			return LocalDateTime.of(localDate, localTime);
-		} else if (LocalTime.class.equals(this.temporalAccessorClass)) {
+		} else if (LocalTime.class.equals(temporalAccessorClass)) {
 			return LocalTime.of(
 				jsonObject.getInt(HOUR_KEY),
 				jsonObject.getInt(MINUTE_KEY),
@@ -155,6 +160,6 @@ public class TemporalAccessorSerializer implements JSONSerializer<TemporalAccess
 				jsonObject.getInt(NANO_KEY));
 		}
 
-		throw new JSONException("Unsupported type from JSON: {}", this.temporalAccessorClass);
+		throw new JSONException("Unsupported type from JSON: {}", deserializeType);
 	}
 }

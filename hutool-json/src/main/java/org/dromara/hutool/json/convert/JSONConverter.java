@@ -31,7 +31,7 @@ import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -181,7 +181,7 @@ public class JSONConverter implements Converter, Serializable {
 	@SuppressWarnings("unchecked")
 	private <T> T toBean(final Type targetType, final JSON json) {
 		// 自定义对象反序列化
-		final JSONDeserializer<?> deserializer = SerializerManager.getInstance().getDeserializer(json, targetType);
+		final JSONDeserializer<?> deserializer = TypeAdapterManager.getInstance().getDeserializer(json, targetType);
 		if (null != deserializer) {
 			return (T) deserializer.deserialize(json, targetType);
 		}

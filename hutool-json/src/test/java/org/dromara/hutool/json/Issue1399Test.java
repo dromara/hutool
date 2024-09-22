@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.json;
 
+import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,12 +24,25 @@ import java.sql.SQLException;
 
 /**
  * https://github.com/dromara/hutool/issues/1399<br>
- * 异常SQLException实现了Iterable导致被识别为列表，可能造成死循环，此处按照字符串处理
+ * Throwable的默认序列化策略
  */
 public class Issue1399Test {
 	@Test
 	void sqlExceptionTest() {
 		final JSONObject set = JSONUtil.ofObj().set("error", new SQLException("test"));
-		Assertions.assertEquals("{\"error\":\"java.sql.SQLException: test\"}", set.toString());
+
+		final String jsonStr = set.toString();
+		Assertions.assertEquals("{\"error\":\"java.sql.SQLException: test\"}", jsonStr);
+
+		final ErrorBean bean = set.toBean(ErrorBean.class);
+		Assertions.assertNotNull(bean);
+		Assertions.assertNotNull(bean.getError());
+		Assertions.assertEquals(SQLException.class, bean.getError().getClass());
+		Assertions.assertEquals("test", bean.getError().getMessage());
+	}
+
+	@Data
+	private static class ErrorBean {
+		private SQLException error;
 	}
 }

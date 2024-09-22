@@ -17,6 +17,8 @@
 package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.util.EnumUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONPrimitive;
 import org.dromara.hutool.json.serializer.JSONContext;
@@ -24,38 +26,38 @@ import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
-import java.util.TimeZone;
 
 /**
- * 时区序列化器
+ * 枚举类型适配器，将枚举转换为字符串，反序列化时将字符串转为枚举对象
  *
- * @author looly
- * @since 6.0.0
+ * @author Looly
  */
-public class TimeZoneSerializer implements MatcherJSONSerializer<TimeZone>, MatcherJSONDeserializer<TimeZone> {
+public class EnumTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJSONDeserializer<Object> {
 
 	/**
 	 * 单例
 	 */
-	public static final TimeZoneSerializer INSTANCE = new TimeZoneSerializer();
-
-	@Override
-	public boolean match(final JSON json, final Type deserializeType) {
-		return TimeZone.class.isAssignableFrom(TypeUtil.getClass(deserializeType));
-	}
+	public static final EnumTypeAdapter INSTANCE = new EnumTypeAdapter();
 
 	@Override
 	public boolean match(final Object bean, final JSONContext context) {
-		return bean instanceof TimeZone;
+		return EnumUtil.isEnum(bean);
 	}
 
 	@Override
-	public JSON serialize(final TimeZone bean, final JSONContext context) {
-		return new JSONPrimitive(bean.getID(), context.config());
+	public boolean match(final JSON json, final Type deserializeType) {
+		return EnumUtil.isEnum(deserializeType);
 	}
 
 	@Override
-	public TimeZone deserialize(final JSON json, final Type deserializeType) {
-		return TimeZone.getTimeZone(json.toString());
+	public JSON serialize(final Object bean, final JSONContext context) {
+		return new JSONPrimitive(((Enum<?>) bean).name(),
+			ObjUtil.apply(context, JSONContext::config));
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	@Override
+	public Object deserialize(final JSON json, final Type deserializeType) {
+		return EnumUtil.fromString((Class) TypeUtil.getClass(deserializeType), (String) json.asJSONPrimitive().getValue());
 	}
 }

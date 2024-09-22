@@ -16,10 +16,11 @@
 
 package org.dromara.hutool.core.util;
 
-import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
-import org.dromara.hutool.core.reflect.TypeUtil;
 import lombok.Data;
+import org.dromara.hutool.core.reflect.FieldUtil;
+import org.dromara.hutool.core.reflect.TypeReference;
+import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,8 +28,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TypeUtilTest {
+
+	@Test
+	void getMapClassTest() {
+		final Class<?> aClass = TypeUtil.getClass(new TypeReference<Map<String, String>>() {});
+		Assertions.assertEquals(Map.class, aClass);
+	}
 
 	@Test
 	public void getEleTypeTest() {

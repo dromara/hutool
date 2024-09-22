@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.json.serializer;
 
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 
@@ -40,6 +41,6 @@ public interface JSONContext {
 	 * @return JSON配置
 	 */
 	default JSONConfig config() {
-		return getContextJson().config();
+		return ObjUtil.apply(getContextJson(), JSON::config);
 	}
 }

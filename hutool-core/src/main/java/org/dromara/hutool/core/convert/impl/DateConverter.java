@@ -57,7 +57,7 @@ public class DateConverter extends AbstractConverter implements MatcherConverter
 	/**
 	 * 构造
 	 *
-	 * @param format 日期格式
+	 * @param format 日期格式，{@code null}表示无格式定义
 	 */
 	public DateConverter(final String format) {
 		this.format = format;

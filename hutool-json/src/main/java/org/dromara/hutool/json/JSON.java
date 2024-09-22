@@ -17,10 +17,9 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.bean.path.BeanPath;
-import org.dromara.hutool.core.convert.ConvertException;
-import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Serializable;
@@ -38,7 +37,7 @@ import java.util.function.Predicate;
  *
  * @author Looly
  */
-public interface JSON extends Converter, Serializable {
+public interface JSON extends Serializable {
 
 	/**
 	 * 获取JSON配置
@@ -62,6 +61,33 @@ public interface JSON extends Converter, Serializable {
 	 */
 	default boolean isEmpty() {
 		return 0 == size();
+	}
+
+	/**
+	 * 转为JSONObject
+	 *
+	 * @return JSONObject
+	 */
+	default JSONObject asJSONObject() {
+		return (JSONObject) this;
+	}
+
+	/**
+	 * 转为JSONArray
+	 *
+	 * @return JSONArray
+	 */
+	default JSONArray asJSONArray() {
+		return (JSONArray) this;
+	}
+
+	/**
+	 * 转为JSONPrimitive
+	 *
+	 * @return JSONPrimitive
+	 */
+	default JSONPrimitive asJSONPrimitive() {
+		return (JSONPrimitive) this;
 	}
 
 	/**
@@ -141,7 +167,13 @@ public interface JSON extends Converter, Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> T getByPath(final String expression, final Type resultType) {
-		return (T) config().getConverter().convert(resultType, getByPath(expression));
+		final JSON json = getByPath(expression);
+		if (null == json) {
+			return null;
+		}
+
+		final JSONDeserializer<Object> deserializer = TypeAdapterManager.getInstance().getDeserializer(json, resultType);
+		return (T) deserializer.deserialize(json, resultType);
 	}
 
 	/**
@@ -199,11 +231,10 @@ public interface JSON extends Converter, Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> T toBean(final Type type) {
-		return (T) convert(type, this);
-	}
-
-	@Override
-	default Object convert(final Type targetType, final Object value) throws ConvertException {
-		return ObjUtil.defaultIfNull(config(), JSONConfig::of).getConverter().convert(targetType, value);
+		final JSONDeserializer<Object> deserializer = TypeAdapterManager.getInstance().getDeserializer(this, type);
+		if(null == deserializer){
+			throw new JSONException("No deserializer for type: " + type);
+		}
+		return (T) deserializer.deserialize(this, type);
 	}
 }

@@ -16,39 +16,46 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
-import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONPrimitive;
+import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
+import java.util.TimeZone;
 
 /**
- * Record反序列化器，用于将JSON对象转换为Record类型对象。
+ * 时区类型适配器
  *
  * @author looly
  * @since 6.0.0
  */
-public class RecordDeserializer implements MatcherJSONDeserializer<Object> {
+public class TimeZoneTypeAdapter implements MatcherJSONSerializer<TimeZone>, MatcherJSONDeserializer<TimeZone> {
 
 	/**
 	 * 单例
 	 */
-	public static final RecordDeserializer INSTANCE = new RecordDeserializer();
+	public static final TimeZoneTypeAdapter INSTANCE = new TimeZoneTypeAdapter();
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
-		if(json instanceof JSONObject){
-			final Class<?> rawType = TypeUtil.getClass(deserializeType);
-			return RecordUtil.isRecord(rawType);
-		}
-		return false;
+		return TimeZone.class.isAssignableFrom(TypeUtil.getClass(deserializeType));
 	}
 
 	@Override
-	public Object deserialize(final JSON json, final Type deserializeType) {
-		return RecordUtil.newInstance(TypeUtil.getClass(deserializeType),
-			new JSONObjectValueProvider((JSONObject) json));
+	public boolean match(final Object bean, final JSONContext context) {
+		return bean instanceof TimeZone;
+	}
+
+	@Override
+	public JSON serialize(final TimeZone bean, final JSONContext context) {
+		return new JSONPrimitive(bean.getID(), context.config());
+	}
+
+	@Override
+	public TimeZone deserialize(final JSON json, final Type deserializeType) {
+		return TimeZone.getTimeZone(json.toString());
 	}
 }

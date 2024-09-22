@@ -25,12 +25,9 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
-import org.dromara.hutool.json.writer.ValueWriter;
-import org.dromara.hutool.json.writer.ValueWriterManager;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -301,16 +298,6 @@ public class JSONUtil {
 	 * @since 5.7.12
 	 */
 	public static String toJsonStr(final Object obj, final JSONConfig jsonConfig) {
-		// 自定义规则，优先级高于全局规则
-		final ValueWriter valueWriter = ValueWriterManager.getInstance().get(obj);
-		if (null != valueWriter) {
-			final StringWriter stringWriter = new StringWriter();
-			final JSONWriter jsonWriter = JSONWriter.of(stringWriter, 0, 0, null);
-			// 用户对象自定义实现了JSONValueWriter接口，理解为需要自定义输出
-			valueWriter.write(jsonWriter, obj);
-			return stringWriter.toString();
-		}
-
 		if (null == obj) {
 			return null;
 		}

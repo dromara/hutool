@@ -31,7 +31,7 @@ import java.lang.reflect.Type;
  * @author Looly
  */
 @FunctionalInterface
-public interface JSONDeserializer<V> {
+public interface JSONDeserializer<V> extends TypeAdapter{
 
 	/**
 	 * 反序列化，通过实现此方法，自定义实现JSON转换为指定类型的逻辑<br>

@@ -372,13 +372,6 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 */
 	@SuppressWarnings("resource")
 	private JSONWriter writeObjValue(final Object value) {
-		// 自定义规则
-		final ValueWriter valueWriter = ValueWriterManager.getInstance().get(value);
-		if (null != valueWriter) {
-			valueWriter.write(this, value);
-			return this;
-		}
-
 		// 默认规则
 		if (value == null) {
 			writeRaw(StrUtil.NULL);

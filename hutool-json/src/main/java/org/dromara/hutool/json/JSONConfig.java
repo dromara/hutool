@@ -17,8 +17,6 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.comparator.CompareUtil;
-import org.dromara.hutool.core.convert.Converter;
-import org.dromara.hutool.json.convert.JSONConverter;
 import org.dromara.hutool.json.writer.NumberWriteMode;
 
 import java.io.Serializable;
@@ -70,10 +68,6 @@ public class JSONConfig implements Serializable {
 	 * 是否检查重复key
 	 */
 	private boolean checkDuplicate;
-	/**
-	 * 自定义的类型转换器，用于在getXXX操作中自动转换类型
-	 */
-	private Converter converter = JSONConverter.of(this);
 	/**
 	 * Number写出模式
 	 */
@@ -272,24 +266,6 @@ public class JSONConfig implements Serializable {
 	public JSONConfig setCheckDuplicate(final boolean checkDuplicate) {
 		this.checkDuplicate = checkDuplicate;
 		return this;
-	}
-
-	/**
-	 * 获取自定义的类型转换器，用于在序列化、反序列化操作中实现对象类型转换
-	 *
-	 * @return 转换器
-	 */
-	public Converter getConverter() {
-		return converter;
-	}
-
-	/**
-	 * 设置自定义的类型转换器，用于在序列化、反序列化操作中实现对象类型转换
-	 *
-	 * @param converter 转换器
-	 */
-	public void setConverter(final Converter converter) {
-		this.converter = converter;
 	}
 
 	/**

@@ -16,8 +16,11 @@
 
 package org.dromara.hutool.json;
 
+import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.lang.getter.TypeGetter;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -144,13 +147,24 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 		return (null == jsonArray) ? null : jsonArray.toList(beanType);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	default <T> T get(final K key, final Type type, final T defaultValue) {
-		final Object value = this.getObj(key);
+		Object value = this.getObj(key);
 		if (ObjUtil.isNull(value)) {
 			return defaultValue;
 		}
 
-		return get(key, type, config().getConverter(), defaultValue);
+		if(value instanceof JSON){
+			final JSONDeserializer<Object> deserializer = TypeAdapterManager.getInstance().getDeserializer((JSON) value, type);
+			if(null == deserializer){
+				throw new JSONException("No deserializer for type: " + type);
+			}
+			value = deserializer.deserialize((JSON) value, type);
+			return null == value ? defaultValue : (T) value;
+		}
+
+		// JSONPrimitive中的值
+		return CompositeConverter.getInstance().convert(type, value, defaultValue);
 	}
 }

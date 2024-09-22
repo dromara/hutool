@@ -28,6 +28,7 @@ import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.reader.JSONTokener;
 
 import java.io.IOException;
@@ -178,8 +179,7 @@ public final class InternalJSONUtil {
 				.setIgnoreError(config.isIgnoreError())
 				.setIgnoreNullValue(config.isIgnoreNullValue())
 				.setTransientSupport(config.isTransientSupport())
-				// 使用JSON转换器
-				.setConverter(config.getConverter());
+			.setConverter((targetType, value) -> JSONValueMapper.of(config, null).map(value));
 	}
 
 	/**

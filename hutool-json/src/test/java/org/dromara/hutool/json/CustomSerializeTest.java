@@ -19,7 +19,7 @@ package org.dromara.hutool.json;
 import lombok.ToString;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.JSONSerializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class CustomSerializeTest {
 
 	@BeforeEach
 	public void init() {
-		SerializerManager.getInstance().register(CustomBean.class,
+		TypeAdapterManager.getInstance().register(CustomBean.class,
 			(JSONSerializer<CustomBean>) (bean, context) ->
 				((JSONObject)context.getContextJson()).set("customName", bean.name));
 	}
@@ -55,7 +55,7 @@ public class CustomSerializeTest {
 
 	@Test
 	public void deserializeTest() {
-		SerializerManager.getInstance().register(CustomBean.class, (JSONDeserializer<CustomBean>) (json, deserializeType) -> {
+		TypeAdapterManager.getInstance().register(CustomBean.class, (JSONDeserializer<CustomBean>) (json, deserializeType) -> {
 			final CustomBean customBean = new CustomBean();
 			customBean.name = ((JSONObject) json).getStr("customName");
 			return customBean;

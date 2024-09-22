@@ -20,7 +20,7 @@ import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.JSONSerializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ public class Issue3086Test {
 
 	@Test
 	public void serializeTest() {
-		SerializerManager.getInstance().register(TestBean.class, new TestBean());
+		TypeAdapterManager.getInstance().register(TestBean.class, new TestBean());
 
 		final List<SimpleGrantedAuthority> strings = ListUtil.of(
 			new SimpleGrantedAuthority("ROLE_admin"),

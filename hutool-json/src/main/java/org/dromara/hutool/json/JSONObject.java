@@ -25,6 +25,7 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.util.Arrays;
@@ -52,6 +53,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * 配置项
 	 */
 	private final JSONConfig config;
+	private final JSONValueMapper mapper;
 
 	/**
 	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY有序
@@ -79,6 +81,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	public JSONObject(final int capacity, final JSONConfig config) {
 		super(InternalJSONUtil.createRawMap(capacity, config));
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
+		this.mapper = JSONValueMapper.of(config, null);
 	}
 
 	@Override
@@ -218,7 +221,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject set(final String key, final Object value) throws JSONException {
-		this.put(key, this.config.getConverter().convert(JSON.class, value));
+		this.put(key, this.mapper.map(value));
 		return this;
 	}
 

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+package org.dromara.hutool.json.serializer;
+
 /**
- * {@link org.dromara.hutool.json.writer.ValueWriter} 实现
+ * JSON类型适配器，实现此接口即同时实现对象的序列化和反序列化
  *
  * @author Looly
  */
-package org.dromara.hutool.json.writer.impl;
+public interface TypeAdapter{}

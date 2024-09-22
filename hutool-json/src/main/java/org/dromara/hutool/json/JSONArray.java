@@ -23,6 +23,7 @@ import org.dromara.hutool.core.convert.impl.ArrayConverter;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.util.*;
@@ -51,6 +52,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * 配置项
 	 */
 	private final JSONConfig config;
+	private final JSONValueMapper mapper;
 
 	// region ----- Constructors
 
@@ -95,6 +97,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	public JSONArray(final int initialCapacity, final JSONConfig config) {
 		super(new ArrayList<>(initialCapacity));
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
+		this.mapper = JSONValueMapper.of(config, null);
 	}
 	// endregion
 
@@ -129,7 +132,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @since 5.2.5
 	 */
 	public JSONArray set(final Object value) {
-		this.add(config.getConverter().convert(JSON.class, value));
+		this.add(mapper.map(value));
 		return this;
 	}
 
@@ -213,7 +216,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return 替换的值，即之前的值
 	 */
 	public JSON setValue(final int index, final Object element) {
-		return set(index, config.getConverter().convert(JSON.class, element));
+		return set(index, mapper.map(element));
 	}
 
 	/**

@@ -17,18 +17,17 @@
 package org.dromara.hutool.json.mapper;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONSerializer;
-import org.dromara.hutool.json.serializer.SerializerManager;
 import org.dromara.hutool.json.serializer.SimpleJSONContext;
-import org.dromara.hutool.json.writer.ValueWriterManager;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.dromara.hutool.json.xml.JSONXMLParser;
 import org.dromara.hutool.json.xml.ParseConfig;
 
@@ -78,7 +77,7 @@ public class JSONValueMapper implements Serializable {
 	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 */
 	public JSONValueMapper(final JSONConfig jsonConfig, final Predicate<MutableEntry<Object, Object>> predicate) {
-		this.jsonConfig = jsonConfig;
+		this.jsonConfig = ObjUtil.defaultIfNull(jsonConfig, JSONConfig::of);
 		this.predicate = predicate;
 	}
 
@@ -154,13 +153,14 @@ public class JSONValueMapper implements Serializable {
 		}
 
 		// 自定义序列化
-		final JSONSerializer<Object> serializer = SerializerManager.getInstance().getSerializer(obj);
+		final JSONSerializer<Object> serializer = TypeAdapterManager.getInstance()
+			.getSerializer(obj, obj.getClass());
 		if (null != serializer) {
 			return serializer.serialize(obj, new SimpleJSONContext(null, this.jsonConfig));
 		}
 
 		// 原始类型
-		if (null != ValueWriterManager.getInstance().get(obj)) {
+		if (JSONPrimitive.isTypeForJSONPrimitive(obj)) {
 			return new JSONPrimitive(obj, jsonConfig);
 		}
 
@@ -183,7 +183,7 @@ public class JSONValueMapper implements Serializable {
 			if (jsonConfig.isIgnoreError()) {
 				return null;
 			}
-			throw ExceptionUtil.wrap(exception, JSONException.class);
+			throw exception instanceof JSONException ? (JSONException) exception : new JSONException(exception);
 		}
 	}
 

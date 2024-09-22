@@ -17,19 +17,30 @@
 package org.dromara.hutool.json;
 
 import lombok.Data;
-import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.serializer.JSONContext;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.JSONSerializer;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class Issue3504Test {
 	@Test
 	public void test3504() {
+		// 考虑到安全性，Class默认不支持序列化和反序列化，需要自行注册
+		TypeAdapterManager.getInstance().register(Class.class,
+			(JSONSerializer<Class<?>>) (bean, context) -> new JSONPrimitive(bean.getName(), ObjUtil.apply(context, JSONContext::config)));
+		TypeAdapterManager.getInstance().register(Class.class,
+			(JSONDeserializer<Class<?>>) (json, deserializeType) -> ClassUtil.forName((String)json.asJSONPrimitive().getValue(), true, null));
+
 		final JsonBean jsonBean = new JsonBean();
 		jsonBean.setName("test");
 		jsonBean.setClasses(new Class[]{String.class});
-		final String huToolJsonStr = JSONUtil.toJsonStr(jsonBean);
-		Console.log(huToolJsonStr);
-		final JsonBean bean = JSONUtil.toBean(huToolJsonStr, JsonBean.class);
+
+		final String jsonStr = JSONUtil.toJsonStr(jsonBean);
+		final JsonBean bean = JSONUtil.toBean(jsonStr, JsonBean.class);
 		Assertions.assertNotNull(bean);
 		Assertions.assertEquals("test", bean.getName());
 	}

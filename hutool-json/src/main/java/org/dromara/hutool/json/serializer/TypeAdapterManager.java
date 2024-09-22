@@ -19,39 +19,37 @@ package org.dromara.hutool.json.serializer;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.set.ConcurrentHashSet;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.serializer.impl.*;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * JSON序列化和反序列化管理器，用于管理JSON序列化器，注册和注销自定义序列化器和反序列化器。<br>
  * 此管理器管理着两种类型的序列化器和反序列化器：
  * <ul>
- *     <li>类型精准匹配方式。通过Java对象类型匹配，只会匹配查找的类型，而不匹配子类。可以调用{@link #register(Type, JSONSerializer)} 和 {@link #register(Type, JSONDeserializer)}注册。</li>
- *     <li>匹配器（Matcher）方式。通过判断序列化和反序列化器中match方法，找到自定义的序列化和反序列化器，可以调用{@link #register(MatcherJSONSerializer)} 和 {@link #register(MatcherJSONDeserializer)}注册。</li>
+ *     <li>类型精准匹配方式。通过Java对象类型匹配，只会匹配查找的类型，而不匹配子类。可以调用{@link #register(Type, TypeAdapter)}注册。</li>
+ *     <li>匹配器（Matcher）方式。通过判断序列化和反序列化器中match方法，找到自定义的序列化和反序列化器，可以调用{@link #register(TypeAdapter)}注册。</li>
  * </ul>
- *
+ * <p>
  * 管理器的使用分为三种方式：
  * <ul>
- *     <li>全局模式：  使用{@link SerializerManager#getInstance()}调用单例，全局可用。</li>
- *     <li>实例模式：  使用{@link SerializerManager#of()}创建实例，局部可用。</li>
+ *     <li>全局模式：  使用{@link TypeAdapterManager#getInstance()}调用单例，全局可用。</li>
+ *     <li>实例模式：  使用{@link TypeAdapterManager#of()}创建实例，局部可用。</li>
  *     <li>自定义模式：使用{@code new SerializerManager()}创建实例，不加载默认的转换器。</li>
  * </ul>
  *
  * @author looly
  * @since 6.0.0
  */
-public class SerializerManager {
+public class TypeAdapterManager {
 	/**
 	 * 类级的内部类，也就是静态的成员式内部类，该内部类的实例与外部类的实例 没有绑定关系，而且只有被调用到才会装载，从而实现了延迟加载
 	 */
@@ -59,7 +57,8 @@ public class SerializerManager {
 		/**
 		 * 静态初始化器，由JVM来保证线程安全
 		 */
-		private static final SerializerManager INSTANCE = new SerializerManager();
+		private static final TypeAdapterManager INSTANCE = new TypeAdapterManager();
+
 		static {
 			registerDefault(INSTANCE);
 		}
@@ -70,8 +69,8 @@ public class SerializerManager {
 	 *
 	 * @return SerializerManager
 	 */
-	public static SerializerManager getInstance() {
-		return SerializerManager.SingletonHolder.INSTANCE;
+	public static TypeAdapterManager getInstance() {
+		return SingletonHolder.INSTANCE;
 	}
 
 	/**
@@ -79,10 +78,10 @@ public class SerializerManager {
 	 *
 	 * @return SerializerManager
 	 */
-	public static SerializerManager of() {
-		final SerializerManager serializerManager = new SerializerManager();
-		registerDefault(serializerManager);
-		return serializerManager;
+	public static TypeAdapterManager of() {
+		final TypeAdapterManager typeAdapterManager = new TypeAdapterManager();
+		registerDefault(typeAdapterManager);
+		return typeAdapterManager;
 	}
 
 	/**
@@ -107,73 +106,54 @@ public class SerializerManager {
 	/**
 	 * 构造
 	 */
-	public SerializerManager() {
+	public TypeAdapterManager() {
 	}
 
 	// region ----- register
 
 	/**
-	 * 注册自定义序列化器，用于自定义对象序列化<br>
-	 * 当按照匹配规则匹配时，使用对应的序列化器进行序列化
+	 * 注册自定义类型适配器，用于自定义对象序列化和反序列化<br>
+	 * 提供的适配器必须为实现{@link MatcherJSONSerializer}或{@link MatcherJSONDeserializer}接口<br>
+	 * 当两个接口都实现时，同时注册序列化和反序列化器
 	 *
-	 * @param serializer 自定义序列化器
+	 * @param typeAdapter 自定义类型适配器
 	 * @return this
 	 */
-	public SerializerManager register(final MatcherJSONSerializer<?> serializer) {
-		if (null != serializer) {
-			getSerializerSet().add(serializer);
+	public TypeAdapterManager register(final TypeAdapter typeAdapter) {
+		Assert.notNull(typeAdapter, "typeAdapter must be not null!");
+		if(typeAdapter instanceof MatcherJSONSerializer || typeAdapter instanceof MatcherJSONDeserializer){
+			if(typeAdapter instanceof MatcherJSONSerializer){
+				getSerializerSet().add((MatcherJSONSerializer<?>) typeAdapter);
+			}
+			if(typeAdapter instanceof MatcherJSONDeserializer){
+				getDeserializerSet().add((MatcherJSONDeserializer<?>) typeAdapter);
+			}
+			return this;
 		}
-		return this;
+
+		throw new JSONException("Adapter: {} is not MatcherJSONSerializer or MatcherJSONDeserializer", typeAdapter.getClass());
 	}
 
 	/**
-	 * 注册自定义序列化器，用于自定义对象序列化<br>
-	 * 当类型精准匹配时，使用对应的序列化器进行序列化
+	 * 注册自定义类型适配器，用于自定义对象序列化和反序列化
 	 *
 	 * @param type       类型
-	 * @param serializer 自定义序列化器，{@code null}表示移除
+	 * @param typeAdapter 自定义序列化器，{@code null}表示移除
 	 * @return this
 	 */
-	public SerializerManager register(final Type type, final JSONSerializer<?> serializer) {
+	public TypeAdapterManager register(final Type type, final TypeAdapter typeAdapter) {
 		Assert.notNull(type);
-		if (null == serializer) {
-			getSerializerMap().remove(type);
-		} else {
-			getSerializerMap().put(type, serializer);
+		if(typeAdapter instanceof JSONSerializer || typeAdapter instanceof JSONDeserializer){
+			if(typeAdapter instanceof JSONSerializer){
+				getSerializerMap().put(type, (JSONSerializer<?>) typeAdapter);
+			}
+			if(typeAdapter instanceof JSONDeserializer){
+				getDeserializerMap().put(type, (JSONDeserializer<?>) typeAdapter);
+			}
+			return this;
 		}
-		return this;
-	}
 
-	/**
-	 * 注册自定义反序列化器，用于自定义对象反序列化<br>
-	 * 当按照匹配规则匹配时，使用对应的反序列化器进行反序列化
-	 *
-	 * @param deserializer 自定义反序列化器
-	 * @return this
-	 */
-	public SerializerManager register(final MatcherJSONDeserializer<?> deserializer) {
-		if (null != deserializer) {
-			getDeserializerSet().add(deserializer);
-		}
-		return this;
-	}
-
-	/**
-	 * 注册自定义反序列化器，用于自定义对象反序列化<br>
-	 * 当类型精准匹配时，使用对应的反序列化器进行反序列化
-	 *
-	 * @param type         类型，{@code null}表示
-	 * @param deserializer 自定义反序列化器，{@code null}表示移除
-	 * @return this
-	 */
-	public SerializerManager register(final Type type, final JSONDeserializer<?> deserializer) {
-		Assert.notNull(type);
-		if (null == deserializer) {
-			getDeserializerMap().remove(type);
-		} else {
-			getDeserializerMap().put(type, deserializer);
-		}
-		return this;
+		throw new JSONException("Adapter: {} is not JSONSerializer or JSONDeserializer", typeAdapter.getClass());
 	}
 	// endregion
 
@@ -183,60 +163,53 @@ public class SerializerManager {
 	 * 获取匹配器对应的序列化器
 	 *
 	 * @param bean 对象
-	 * @return JSONSerializer
-	 */
-	@SuppressWarnings({"unchecked"})
-	public MatcherJSONSerializer<Object> getSerializer(final Object bean) {
-		if(CollUtil.isNotEmpty(this.serializerSet)){
-			for (final MatcherJSONSerializer<?> serializer : this.serializerSet) {
-				if (serializer.match(bean, null)) {
-					return (MatcherJSONSerializer<Object>) serializer;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 获取匹配器对应的序列化器
-	 *
 	 * @param type 类型
 	 * @return JSONSerializer
 	 */
-	@SuppressWarnings("unchecked")
-	public JSONSerializer<Object> getSerializer(final Type type) {
-		if(null == type || CollUtil.isEmpty(this.serializerMap)){
-			return null;
+	@SuppressWarnings({"unchecked"})
+	public JSONSerializer<Object> getSerializer(final Object bean, final Type type) {
+		JSONSerializer<Object> result = null;
+		if (null != type && MapUtil.isNotEmpty(this.serializerMap)) {
+			result = (JSONSerializer<Object>) this.serializerMap.get(type);
 		}
-		return (JSONSerializer<Object>) this.serializerMap.get(type);
+
+		if (null == result && CollUtil.isNotEmpty(this.serializerSet)) {
+			for (final MatcherJSONSerializer<?> serializer : this.serializerSet) {
+				if (serializer.match(bean, null)) {
+					result = (MatcherJSONSerializer<Object>) serializer;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
 	 * 获取匹配器对应的反序列化器
 	 *
-	 * @param json JSON
-	 * @param type 类型
-	 * @return JSONDeserializer
+	 * @param json JSON, 单独查找强类型匹配传{@code null}
+	 * @param type 类型, 单独查匹配器传{@code null}
+	 * @return JSONDeserializer，始终非空
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONDeserializer<Object> getDeserializer(final JSON json, final Type type) {
 		final Class<?> rawType = TypeUtil.getClass(type);
-		if(null == rawType){
+		if (null == rawType) {
 			return null;
 		}
 		if (JSONDeserializer.class.isAssignableFrom(rawType)) {
 			return (JSONDeserializer<Object>) ConstructorUtil.newInstanceIfPossible(rawType);
 		}
 
-		if(CollUtil.isNotEmpty(this.deserializerMap)){
+		if (CollUtil.isNotEmpty(this.deserializerMap)) {
 			final JSONDeserializer<?> jsonDeserializer = this.deserializerMap.get(type);
-			if(null != jsonDeserializer){
+			if (null != jsonDeserializer) {
 				return (JSONDeserializer<Object>) jsonDeserializer;
 			}
 		}
 
 		// Matcher
-		if(CollUtil.isNotEmpty(this.deserializerSet)){
+		if (CollUtil.isNotEmpty(this.deserializerSet)) {
 			for (final MatcherJSONDeserializer<?> deserializer : this.deserializerSet) {
 				if (deserializer.match(json, type)) {
 					return (JSONDeserializer<Object>) deserializer;
@@ -244,7 +217,7 @@ public class SerializerManager {
 			}
 		}
 
-		return null;
+		return DefaultDeserializer.INSTANCE;
 	}
 	// endregion
 
@@ -292,32 +265,30 @@ public class SerializerManager {
 		}
 		return this.deserializerMap;
 	}
+	// endregion
 
 	/**
 	 * 注册默认的序列化器和反序列化器
+	 *
 	 * @param manager {@code SerializerManager}
 	 */
-	private static void registerDefault(final SerializerManager manager) {
-		manager.register(LocalDate.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalDate.class));
-		manager.register(LocalDate.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalDate.class));
-
-		manager.register(LocalTime.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalTime.class));
-		manager.register(LocalTime.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalTime.class));
-
-		manager.register(LocalDateTime.class, (JSONSerializer<?>) new TemporalAccessorSerializer(LocalDateTime.class));
-		manager.register(LocalDateTime.class, (JSONDeserializer<?>) new TemporalAccessorSerializer(LocalDateTime.class));
-
-		manager.register((MatcherJSONSerializer<TimeZone>) TimeZoneSerializer.INSTANCE);
-		manager.register((MatcherJSONDeserializer<TimeZone>) TimeZoneSerializer.INSTANCE);
-
+	private static void registerDefault(final TypeAdapterManager manager) {
 		// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
 		manager.register(KBeanDeserializer.INSTANCE);
-
 		manager.register(CollectionDeserializer.INSTANCE);
 		manager.register(ArrayDeserializer.INSTANCE);
 		manager.register(MapDeserializer.INSTANCE);
 		manager.register(EntryDeserializer.INSTANCE);
 		manager.register(RecordDeserializer.INSTANCE);
+
+
+		manager.register(DateTypeAdapter.INSTANCE);
+		manager.register(CalendarTypeAdapter.INSTANCE);
+		manager.register(TemporalTypeAdapter.INSTANCE);
+		manager.register(TimeZoneTypeAdapter.INSTANCE);
+		manager.register(EnumTypeAdapter.INSTANCE);
+		manager.register(ThrowableTypeAdapter.INSTANCE);
+		// 最低优先级
+		manager.register(BeanTypeAdapter.INSTANCE);
 	}
-	// endregion
 }

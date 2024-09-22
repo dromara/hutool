@@ -17,14 +17,16 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
+import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -40,11 +42,11 @@ public class EnumUtil {
 	/**
 	 * 指定类是否为Enum类
 	 *
-	 * @param clazz 类
+	 * @param type 类
 	 * @return 是否为Enum类
 	 */
-	public static boolean isEnum(final Class<?> clazz) {
-		return Assert.notNull(clazz).isEnum();
+	public static boolean isEnum(final Type type) {
+		return Assert.notNull(TypeUtil.getClass(type)).isEnum();
 	}
 
 	/**
