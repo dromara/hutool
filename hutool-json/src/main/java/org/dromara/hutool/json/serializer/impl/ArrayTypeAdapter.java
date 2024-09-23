@@ -67,9 +67,19 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 
 	@Override
 	public Object deserialize(final JSON json, final Type deserializeType) {
-		final int size = json.size();
 		final Class<?> componentType = TypeUtil.getClass(deserializeType).getComponentType();
-		final Object result = Array.newInstance(componentType, size);
+		return deserialize(json, componentType);
+	}
+
+	/**
+	 * 反序列化
+	 *
+	 * @param json          JSON对象
+	 * @param componentType 组件类型
+	 * @return 数组
+	 */
+	public Object deserialize(final JSON json, final Class<?> componentType) {
+		final Object result = Array.newInstance(componentType, json.size());
 		if (json instanceof JSONObject) {
 			fill((JSONObject) json, result, componentType);
 		} else {
@@ -87,10 +97,12 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 	 */
 	private JSON serializeBytes(final byte[] bytes, final JSONContext context) {
 		final JSONConfig config = context.config();
-		switch (bytes[0]) {
-			case '{':
-			case '[':
-				return JSONParser.of(new JSONTokener(IoUtil.toStream(bytes)), config).parse();
+		if(ArrayUtil.isNotEmpty(bytes)){
+			switch (bytes[0]) {
+				case '{':
+				case '[':
+					return JSONParser.of(new JSONTokener(IoUtil.toStream(bytes)), config).parse();
+			}
 		}
 
 		// https://github.com/dromara/hutool/issues/2369

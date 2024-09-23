@@ -73,6 +73,7 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 		// 如果上下文为JSONObject，转为键值对形式
 		final JSON contextJson = context.getContextJson();
 		if (contextJson instanceof JSONObject) {
+			// 用户只有明确需要转为JSONObject时才进行转换
 			toJSONObject(bean, contextJson.asJSONObject());
 			return contextJson;
 		}
@@ -153,8 +154,9 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 			json.set(MINUTE_KEY, localTime.getMinute());
 			json.set(SECOND_KEY, localTime.getSecond());
 			json.set(NANO_KEY, localTime.getNano());
+		} else{
+			throw new JSONException("Unsupported type: {}", bean.getClass().getName());
 		}
-		throw new JSONException("Unsupported type {}.", bean.getClass().getName());
 	}
 
 	/**

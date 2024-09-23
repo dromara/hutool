@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
+import org.dromara.hutool.core.bean.BeanDesc;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.BeanToMapCopier;
 import org.dromara.hutool.core.bean.copier.ValueProviderToBeanCopier;
@@ -25,11 +26,12 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.support.JSONObjectValueProvider;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
+import org.dromara.hutool.json.support.JSONObjectValueProvider;
 
 import java.lang.reflect.Type;
 
@@ -49,13 +51,23 @@ public class BeanTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 	@Override
 	public boolean match(final Object bean, final JSONContext context) {
 		final JSON contextJson = ObjUtil.apply(context, JSONContext::getContextJson);
-		return BeanUtil.isReadableBean(bean.getClass())
+		final BeanDesc beanDesc = BeanUtil.getBeanDesc(bean.getClass());
+		if(beanDesc.isEmpty()){
+			// 空Bean按照Bean对待
+			return true;
+		}
+
+		final boolean isTransparent = ObjUtil.defaultIfNull(
+			ObjUtil.apply(contextJson, JSON::config), JSONConfig::isTransientSupport, true);
+		return beanDesc.isReadable(isTransparent)
 			&& (null == contextJson || contextJson instanceof JSONObject);
 	}
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
-		return json instanceof JSONObject && BeanUtil.isWritableBean(TypeUtil.getClass(deserializeType));
+		return json instanceof JSONObject &&
+			// 空对象转目标对象不限制目标是否可写
+			(json.isEmpty() || BeanUtil.isWritableBean(TypeUtil.getClass(deserializeType)));
 	}
 
 	@Override
@@ -72,9 +84,14 @@ public class BeanTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 
 	@Override
 	public Object deserialize(final JSON json, final Type deserializeType) {
+		final Object target = ConstructorUtil.newInstanceIfPossible(TypeUtil.getClass(deserializeType));
+		if(json.isEmpty()){
+			//issue#3649，对于空对象转目标对象，直接实例化一个空对象
+			return target;
+		}
 		final Copier<Object> copier = new ValueProviderToBeanCopier<>(
 			new JSONObjectValueProvider((JSONObject) json),
-			ConstructorUtil.newInstanceIfPossible(TypeUtil.getClass(deserializeType)),
+			target,
 			deserializeType,
 			InternalJSONUtil.toCopyOptions(json.config())
 		);

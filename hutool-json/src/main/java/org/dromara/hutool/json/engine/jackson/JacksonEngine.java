@@ -116,6 +116,9 @@ public class JacksonEngine extends AbstractJSONEngine implements Wrapper<ObjectM
 			// 允许没有引号的字段名(非标准)
 			JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES
 		);
+		mapper.disable(
+			// 空Bean默认转为{}
+			SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
 		// 支持Java8+日期格式
 		registerModule(mapper, "com.fasterxml.jackson.datatype.jsr310.JavaTimeModule");

@@ -311,7 +311,11 @@ public class TypeUtil {
 	 * @return {@link ParameterizedType}
 	 * @since 4.5.2
 	 */
-	public static ParameterizedType toParameterizedType(final Type type, final int interfaceIndex) {
+	public static ParameterizedType toParameterizedType(Type type, final int interfaceIndex) {
+		if(type instanceof TypeReference){
+			type = ((TypeReference<?>) type).getType();
+		}
+
 		if (type instanceof ParameterizedType) {
 			return (ParameterizedType) type;
 		}

@@ -189,7 +189,8 @@ public class TypeAdapterManager {
 			}
 		}
 
-		throw new JSONException("No serializer for type: " + type);
+		// 此处返回null，错误处理在mapper中
+		return null;
 	}
 
 	/**

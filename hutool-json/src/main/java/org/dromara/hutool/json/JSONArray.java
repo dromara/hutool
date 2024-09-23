@@ -18,12 +18,12 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListWrapper;
-import org.dromara.hutool.core.convert.ConvertUtil;
-import org.dromara.hutool.core.convert.impl.ArrayConverter;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.serializer.JSONMapper;
+import org.dromara.hutool.json.serializer.impl.ArrayTypeAdapter;
+import org.dromara.hutool.json.serializer.impl.IterTypeAdapter;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.util.*;
@@ -222,7 +222,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	@Override
 	@SuppressWarnings({"unchecked"})
 	public <T> T[] toArray(final T[] a) {
-		return (T[]) ArrayConverter.INSTANCE.convert(a.getClass().getComponentType(), this);
+		return (T[]) ArrayTypeAdapter.INSTANCE.deserialize(this, a.getClass().getComponentType());
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return 实体类对象
 	 */
 	public Object toArray(final Class<?> arrayClass) {
-		return ArrayConverter.INSTANCE.convert(arrayClass, this);
+		return ArrayTypeAdapter.INSTANCE.deserialize(this, arrayClass.getComponentType());
 	}
 
 	/**
@@ -243,8 +243,9 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return {@link ArrayList}
 	 * @since 3.0.8
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> List<T> toList(final Class<T> elementType) {
-		return ConvertUtil.toList(elementType, this);
+		return (List<T>) IterTypeAdapter.INSTANCE.deserialize(this, ArrayList.class, elementType);
 	}
 
 	/**

@@ -18,9 +18,7 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.JSONMapper;
-import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.dromara.hutool.json.support.JSONNodeBeanFactory;
 import org.dromara.hutool.json.writer.JSONWriter;
 
@@ -107,11 +105,70 @@ public interface JSON extends Serializable {
 	 * persons[3]
 	 * person.friends[5].name
 	 * </pre>
+	 * <p>
+	 * 获取表达式对应值后转换为对应类型的值
 	 *
+	 * @param <T>        返回值类型
 	 * @param expression 表达式
 	 * @return 对象
 	 * @see BeanPath#getValue(Object)
-	 * @since 4.0.6
+	 */
+	default <T> T getObjByPath(final String expression) {
+		return getByPath(expression, Object.class);
+	}
+
+	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * <p>
+	 * 表达式栗子：
+	 *
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * <p>
+	 * 获取表达式对应值后转换为对应类型的值
+	 *
+	 * @param <T>        返回值类型
+	 * @param expression 表达式
+	 * @param resultType 返回值类型
+	 * @return 对象
+	 * @see BeanPath#getValue(Object)
+	 */
+	default <T> T getByPath(final String expression, final Type resultType) {
+		final JSON json = getByPath(expression);
+		if (null == json) {
+			return null;
+		}
+
+		return JSONMapper.of(config(), null).toBean(json, resultType);
+	}
+
+	/**
+	 * 通过表达式获取JSON中嵌套的JSON对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * <p>
+	 * 表达式栗子：
+	 *
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 *
+	 * @param expression 表达式
+	 * @return JSON对象
+	 * @see BeanPath#getValue(Object)
 	 */
 	default JSON getByPath(final String expression) {
 		return (JSON) BeanPath.of(expression).getValue(this);
@@ -140,42 +197,6 @@ public interface JSON extends Serializable {
 	 */
 	default void putByPath(final String expression, final Object value) {
 		BeanPath.of(expression, new JSONNodeBeanFactory(config())).setValue(this, value);
-	}
-
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * <p>
-	 * 表达式栗子：
-	 *
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * <p>
-	 * 获取表达式对应值后转换为对应类型的值
-	 *
-	 * @param <T>        返回值类型
-	 * @param expression 表达式
-	 * @param resultType 返回值类型
-	 * @return 对象
-	 * @see BeanPath#getValue(Object)
-	 * @since 4.0.6
-	 */
-	@SuppressWarnings("unchecked")
-	default <T> T getByPath(final String expression, final Type resultType) {
-		final JSON json = getByPath(expression);
-		if (null == json) {
-			return null;
-		}
-
-		final JSONDeserializer<Object> deserializer = TypeAdapterManager.getInstance().getDeserializer(json, resultType);
-		return (T) deserializer.deserialize(json, resultType);
 	}
 
 	/**

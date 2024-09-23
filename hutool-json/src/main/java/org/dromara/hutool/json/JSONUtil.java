@@ -161,47 +161,57 @@ public class JSONUtil {
 		if (obj instanceof byte[]) {
 			obj = new ByteArrayInputStream((byte[]) obj);
 		}
-		return (JSONObject) parse(obj, config, predicate);
+
+		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
+		if (obj instanceof CharSequence) {
+			return (JSONObject) jsonMapper.map((CharSequence) obj);
+		}
+		return jsonMapper.mapObj(obj);
 	}
 
 	/**
 	 * JSON字符串转JSONArray
 	 *
-	 * @param arrayOrCollection 数组或集合对象
+	 * @param obj 数组或集合对象或字符串等
 	 * @return JSONArray
 	 * @since 3.0.8
 	 */
-	public static JSONArray parseArray(final Object arrayOrCollection) {
-		return parseArray(arrayOrCollection, null);
+	public static JSONArray parseArray(final Object obj) {
+		return parseArray(obj, null);
 	}
 
 	/**
 	 * JSON字符串转JSONArray
 	 *
-	 * @param arrayOrCollection 数组或集合对象
+	 * @param obj 数组或集合对象
 	 * @param config            JSON配置
 	 * @return JSONArray
 	 * @since 5.3.1
 	 */
-	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config) {
-		return parseArray(arrayOrCollection, config, null);
+	public static JSONArray parseArray(final Object obj, final JSONConfig config) {
+		return parseArray(obj, config, null);
 	}
 
 	/**
 	 * JSON字符串转JSONArray
 	 *
-	 * @param arrayOrCollection 数组或集合对象
+	 * @param obj 数组或集合对象
 	 * @param config            JSON配置
 	 * @param predicate         index和值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONArray
 	 * @since 5.3.1
 	 */
-	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		if (arrayOrCollection instanceof JSONObject) {
+	public static JSONArray parseArray(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		if (obj instanceof JSONObject) {
 			final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
-			return jsonMapper.mapFromJSONObject((JSONObject) arrayOrCollection);
+			return jsonMapper.mapFromJSONObject((JSONObject) obj);
 		}
-		return (JSONArray) parse(arrayOrCollection, config, predicate);
+
+		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
+		if (obj instanceof CharSequence) {
+			return (JSONArray) jsonMapper.map((CharSequence) obj);
+		}
+		return jsonMapper.mapArray(obj);
 	}
 
 	/**
@@ -270,7 +280,7 @@ public class JSONUtil {
 	}
 	// endregion
 
-	// -------------------------------------------------------------------- Read start
+	// region ----- read
 
 	/**
 	 * 读取JSON
@@ -307,9 +317,9 @@ public class JSONUtil {
 	public static JSONArray readJSONArray(final File file, final Charset charset) throws IORuntimeException {
 		return FileUtil.read(file, charset, JSONUtil::parseArray);
 	}
-	// -------------------------------------------------------------------- Read end
+	// endregion
 
-	// -------------------------------------------------------------------- toString start
+	// region ----- toJsonStr
 
 	/**
 	 * 转换为格式化后的JSON字符串
@@ -380,9 +390,9 @@ public class JSONUtil {
 	public static JSONObject xmlToJson(final String xml) {
 		return JSONXMLUtil.toJSONObject(xml);
 	}
-	// -------------------------------------------------------------------- toString end
+	// endregion
 
-	// -------------------------------------------------------------------- toBean start
+	// region ----- toBean
 
 	/**
 	 * 转为实体类对象
@@ -396,20 +406,6 @@ public class JSONUtil {
 	public static <T> T toBean(final Object json, final Class<T> clazz) {
 		Assert.notNull(clazz);
 		return toBean(json, (Type) clazz);
-	}
-
-	/**
-	 * 转为实体类对象
-	 *
-	 * @param <T>           Bean类型
-	 * @param json          JSONObject
-	 * @param typeReference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
-	 * @return 实体类对象
-	 * @since 4.6.2
-	 */
-	public static <T> T toBean(final Object json, final TypeReference<T> typeReference) {
-		Assert.notNull(typeReference);
-		return toBean(json, typeReference.getType());
 	}
 
 	/**
@@ -445,8 +441,9 @@ public class JSONUtil {
 		}
 		return json.toBean(type);
 	}
-	// -------------------------------------------------------------------- toBean end
+	// endregion
 
+	// region ----- toList
 	/**
 	 * 将JSONArray字符串转换为Bean的List，默认为ArrayList
 	 *
@@ -472,6 +469,9 @@ public class JSONUtil {
 	public static <T> List<T> toList(final JSONArray jsonArray, final Class<T> elementType) {
 		return null == jsonArray ? null : jsonArray.toList(elementType);
 	}
+	// endregion
+
+	// region ----- getByPath
 
 	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>
@@ -489,17 +489,45 @@ public class JSONUtil {
 	 * person.friends[5].name
 	 * </pre>
 	 *
+	 * @param <T>        值类型
 	 * @param json       {@link JSON}
 	 * @param expression 表达式
 	 * @return 对象
 	 * @see JSON#getByPath(String)
 	 */
-	public static JSON getByPath(final JSON json, final String expression) {
+	public static <T> T getObjByPath(final JSON json, final String expression) {
+		return getByPath(json, expression, Object.class);
+	}
+
+	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * <p>
+	 * 表达式栗子：
+	 *
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 *
+	 * @param <T>        值类型
+	 * @param json       {@link JSON}
+	 * @param expression 表达式
+	 * @param type       结果类型
+	 * @return 对象
+	 * @see JSON#getByPath(String)
+	 */
+	public static <T> T getByPath(final JSON json, final String expression, final Type type) {
 		if ((null == json || StrUtil.isBlank(expression))) {
 			return null;
 		}
 
-		return json.getByPath(expression);
+		return json.getByPath(expression, type);
 	}
 
 	/**
@@ -540,6 +568,36 @@ public class JSONUtil {
 	}
 
 	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * <p>
+	 * 表达式栗子：
+	 *
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 *
+	 * @param json       {@link JSON}
+	 * @param expression 表达式
+	 * @return 对象
+	 * @see JSON#getByPath(String)
+	 */
+	public static JSON getByPath(final JSON json, final String expression) {
+		if ((null == json || StrUtil.isBlank(expression))) {
+			return null;
+		}
+
+		return json.getByPath(expression);
+	}
+	// endregion
+
+	/**
 	 * 格式化JSON字符串，此方法并不严格检查JSON的格式正确与否
 	 *
 	 * @param jsonStr JSON字符串
@@ -567,6 +625,7 @@ public class JSONUtil {
 		return json.isEmpty();
 	}
 
+	// region ----- isType
 	/**
 	 * 是否为JSON类型字符串，首尾都为大括号或中括号判定为JSON字符串
 	 *
@@ -605,4 +664,5 @@ public class JSONUtil {
 		}
 		return StrUtil.isWrap(StrUtil.trim(str), '[', ']');
 	}
+	// endregion
 }

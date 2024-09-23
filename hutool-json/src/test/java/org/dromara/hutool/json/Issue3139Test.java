@@ -17,7 +17,9 @@
 package org.dromara.hutool.json;
 
 import lombok.Data;
-import org.dromara.hutool.core.xml.XmlUtil;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,8 +35,21 @@ public class Issue3139Test {
 			"  </c>\n" +
 			"</r>";
 
-		final JSONObject jsonObject = XmlUtil.xmlToBean(XmlUtil.parseXml(xml).getDocumentElement(), JSONObject.class);
-		final R bean = jsonObject.toBean(R.class);
+		final JSONObject jsonObject = JSONUtil.parseObj(xml);
+		Assertions.assertEquals("{\"r\":{\"c\":{\"s\":1,\"p\":\"str\"}}}", jsonObject.toString());
+
+		final JSONObject r = jsonObject.getJSONObject("r");
+		Assertions.assertEquals("{\"c\":{\"s\":1,\"p\":\"str\"}}", r.toString());
+
+		// R中的c为List，但是JSON中为JSONObject，默认会遍历键值对，此处需要自定义序列化
+		TypeAdapterManager.getInstance().register(R.class, (JSONDeserializer<R>) (json, deserializeType) -> {
+			final R r1 = new R();
+			// c作为一个独立对象放入List中
+			r1.setC(ListUtil.of((C) json.asJSONObject().get("c", C.class)));
+			return r1;
+		});
+
+		final R bean = r.toBean(R.class);
 		Assertions.assertNotNull(bean);
 
 		final List<C> c = bean.getC();

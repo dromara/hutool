@@ -22,14 +22,25 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 public class Issue2377Test {
+
+	@Test
+	void toListTest() {
+		final String jsonStr = "[1,[10,11], \"报表.xlsx\"]";
+		final JSONArray array = JSONUtil.parseArray(jsonStr);
+		final List<Object> paramList = JSONUtil.toList(array, Object.class);
+		Assertions.assertEquals(JSONArray.class, paramList.get(1).getClass());
+	}
+
 	@Test
 	public void bytesTest() {
 		final Object[] paramArray = new Object[]{1, new byte[]{10, 11}, "报表.xlsx"};
 		final String paramsStr = JSONUtil.toJsonStr(paramArray);
 		Assertions.assertEquals("[1,[10,11],\"报表.xlsx\"]", paramsStr);
 
-		final List<Object> paramList = JSONUtil.toList(paramsStr, Object.class);
+		final JSONArray array = JSONUtil.parseArray(paramsStr);
+		final List<Object> paramList = JSONUtil.toList(array, Object.class);
 
+		Assertions.assertEquals(JSONArray.class, paramList.get(1).getClass());
 		final String paramBytesStr = JSONUtil.toJsonStr(paramList.get(1));
 		Assertions.assertEquals("[10,11]", paramBytesStr);
 

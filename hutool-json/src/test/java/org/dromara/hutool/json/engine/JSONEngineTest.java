@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.json.engine;
 
+import lombok.Data;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
@@ -47,6 +48,11 @@ public class JSONEngineTest {
 	@Test
 	void writeTimeZoneTest() {
 		Arrays.stream(engineNames).forEach(this::assertWriteTimeZone);
+	}
+
+	@Test
+	void writeEmptyBeanTest() {
+		Arrays.stream(engineNames).forEach(this::assertEmptyBeanToJson);
 	}
 
 	private void assertWriteDateFormat(final String engineName) {
@@ -95,5 +101,16 @@ public class JSONEngineTest {
 		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
 		jsonString = engine.toJsonString(timeZone);
 		Assertions.assertEquals("\"GMT+08:00\"", jsonString);
+	}
+
+	private void assertEmptyBeanToJson(final String engineName){
+		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
+		final String jsonString = engine.toJsonString(new EmptyBean());
+		Assertions.assertEquals("{}", jsonString);
+	}
+
+	@Data
+	private static class EmptyBean{
+
 	}
 }

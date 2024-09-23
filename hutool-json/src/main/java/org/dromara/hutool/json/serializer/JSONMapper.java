@@ -109,7 +109,7 @@ public class JSONMapper implements Serializable {
 			if (json instanceof JSONPrimitive) {
 				return (T) ((JSONPrimitive) json).getValue();
 			}
-			return (T) this;
+			return (T) json;
 		}
 
 		JSONDeserializer<Object> deserializer = null;
@@ -149,7 +149,7 @@ public class JSONMapper implements Serializable {
 	public JSONArray mapFromJSONObject(final JSONObject jsonObject) {
 		final JSONArray array = JSONUtil.ofArray(jsonConfig);
 		for (final Map.Entry<String, JSON> entry : jsonObject) {
-			array.add(entry.getValue());
+			array.set(entry);
 		}
 		return array;
 	}
@@ -163,6 +163,11 @@ public class JSONMapper implements Serializable {
 	 */
 	public JSON map(final CharSequence source) {
 		final String jsonStr = StrUtil.trim(source);
+		if(StrUtil.isEmpty(jsonStr)){
+			// https://www.rfc-editor.org/rfc/rfc8259#section-7
+			// 未被包装的空串理解为null
+			return null;
+		}
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
 			final JSONObject jsonObject = JSONUtil.ofObj(jsonConfig);
@@ -177,17 +182,65 @@ public class JSONMapper implements Serializable {
 	 * 在需要的时候转换映射对象<br>
 	 * 包装包括：
 	 * <ul>
-	 * <li>array or collection =》 JSONArray</li>
-	 * <li>map =》 JSONObject</li>
-	 * <li>standard property (Double, String, et al) =》 原对象</li>
-	 * <li>来自于java包 =》 字符串</li>
-	 * <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
+	 *   <li>array or collection =》 JSONArray</li>
+	 *   <li>map =》 JSONObject</li>
+	 *   <li>standard property (Double, String, et al) =》 原对象</li>
+	 *   <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
 	 * </ul>
 	 *
 	 * @param obj 被映射的对象
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	public JSON map(Object obj) {
+	public JSON map(final Object obj) {
+		return mapTo(obj, null);
+	}
+
+	/**
+	 * 在需要的时候转换映射对象<br>
+	 * 包装包括：
+	 * <ul>
+	 *   <li>map =》 JSONObject</li>
+	 *   <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
+	 * </ul>
+	 *
+	 * @param obj 被映射的对象
+	 * @return 映射后的值，null表示此值需被忽略
+	 */
+	public JSONObject mapObj(final Object obj) {
+		return mapTo(obj, JSONUtil.ofObj(jsonConfig));
+	}
+
+	/**
+	 * 在需要的时候转换映射对象<br>
+	 * 包装包括：
+	 * <ul>
+	 *   <li>array or collection =》 JSONArray</li>
+	 * </ul>
+	 *
+	 * @param obj 被映射的对象
+	 * @return 映射后的值，null表示此值需被忽略
+	 */
+	public JSONArray mapArray(final Object obj) {
+		return mapTo(obj, JSONUtil.ofArray(jsonConfig));
+	}
+
+	/**
+	 * 在需要的时候转换映射对象<br>
+	 * 包装包括：
+	 * <ul>
+	 *   <li>array or collection =》 JSONArray</li>
+	 *   <li>map =》 JSONObject</li>
+	 *   <li>standard property (Double, String, et al) =》 原对象</li>
+	 *   <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
+	 * </ul>
+	 *
+	 * @param obj  被映射的对象
+	 * @param json 被映射的到的对象，{@code null}表示自动识别
+	 * @param <T>  JSON类型
+	 * @return 映射后的值，null表示此值需被忽略
+	 */
+	@SuppressWarnings({"ReassignedVariable", "unchecked"})
+	private <T extends JSON> T mapTo(Object obj, final T json) {
 		if (null == obj) {
 			return null;
 		}
@@ -204,8 +257,15 @@ public class JSONMapper implements Serializable {
 			}
 		}
 
+		// JSON对象如果与预期结果类型一致，则直接返回
 		if (obj instanceof JSON) {
-			return (JSON) obj;
+			if (null != json) {
+				if (obj.getClass() == json.getClass()) {
+					return (T) obj;
+				}
+			} else {
+				return (T) obj;
+			}
 		}
 
 		final Class<?> clazz = obj.getClass();
@@ -226,14 +286,25 @@ public class JSONMapper implements Serializable {
 			throw new JSONException("No deserializer for type: " + obj.getClass());
 		}
 
+		final JSON result;
 		try {
-			return serializer.serialize(obj, new SimpleJSONContext(null, this.jsonConfig));
+			result = serializer.serialize(obj, new SimpleJSONContext(json, this.jsonConfig));
 		} catch (final Exception e) {
 			if (ignoreError) {
 				return null;
 			}
 			throw e;
 		}
+
+		if(null == json || result.getClass() == json.getClass()){
+			return (T) result;
+		}
+
+		if(ignoreError){
+			return null;
+		}
+		throw new JSONException("JSON type not match, expect: {}, actual: {}",
+			json.getClass().getName(), result.getClass().getName());
 	}
 
 	/**

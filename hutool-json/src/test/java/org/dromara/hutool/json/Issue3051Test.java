@@ -24,6 +24,8 @@ public class Issue3051Test {
 
 	@Test
 	public void parseTest() {
+		// 空Bean按照Bean对待，转为空对象
+		// 逻辑见：BeanTypeAdapter
 		final JSONObject jsonObject = JSONUtil.parseObj(new EmptyBean(),
 			JSONConfig.of().setIgnoreError(true));
 
@@ -32,10 +34,8 @@ public class Issue3051Test {
 
 	@Test
 	public void parseTest2() {
-		Assertions.assertThrows(JSONException.class, ()->{
-			final JSONObject jsonObject = JSONUtil.parseObj(new EmptyBean());
-			Assertions.assertEquals("{}", jsonObject.toString());
-		});
+		final JSONObject jsonObject = JSONUtil.parseObj(new EmptyBean());
+		Assertions.assertEquals("{}", jsonObject.toString());
 	}
 
 	@Data

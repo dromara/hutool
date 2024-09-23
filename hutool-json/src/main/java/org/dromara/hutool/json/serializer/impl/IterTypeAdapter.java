@@ -29,7 +29,6 @@ import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Iterator序列化器，将{@link Iterable}或{@link Iterator}转换为JSONArray
@@ -45,7 +44,7 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 
 	@Override
 	public boolean match(final Object bean, final JSONContext context) {
-		if(bean instanceof MapWrapper){
+		if (bean instanceof MapWrapper) {
 			return false;
 		}
 		return bean instanceof Iterable || bean instanceof Iterator;
@@ -77,10 +76,21 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 
 	@Override
 	public Object deserialize(final JSON json, final Type deserializeType) {
-		final Class<?> rawType = TypeUtil.getClass(deserializeType);
+		final Class<?> collectionClass = TypeUtil.getClass(deserializeType);
 		final Type elementType = TypeUtil.getTypeArgument(deserializeType);
-		final Collection<?> result = CollUtil.create(rawType, TypeUtil.getClass(elementType));
+		return deserialize(json, collectionClass, elementType);
+	}
 
+	/**
+	 * 反序列化
+	 *
+	 * @param json            JSON
+	 * @param collectionClass 集合类型
+	 * @param elementType     元素类型
+	 * @return 反序列化后的集合对象
+	 */
+	public Object deserialize(final JSON json, final Class<?> collectionClass, final Type elementType) {
+		final Collection<?> result = CollUtil.create(collectionClass, TypeUtil.getClass(elementType));
 
 		if (json instanceof JSONObject) {
 			fill((JSONObject) json, result, elementType);
@@ -116,9 +126,9 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 	 * @param elementType 元素类型
 	 */
 	private void fill(final JSONObject json, final Collection<?> result, final Type elementType) {
-		for (final Map.Entry<String, JSON> entry : json) {
-			result.add(entry.getValue().toBean(elementType));
-		}
+		json.forEach((key, value)->{
+			result.add(null == value ? null : value.toBean(elementType));
+		});
 	}
 
 	/**
@@ -129,8 +139,8 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 	 * @param elementType 元素类型
 	 */
 	private void fill(final JSONArray json, final Collection<?> result, final Type elementType) {
-		for (final JSON element : json) {
-			result.add(element.toBean(elementType));
-		}
+		json.forEach((element)->{
+			result.add(null == element ? null : element.toBean(elementType));
+		});
 	}
 }

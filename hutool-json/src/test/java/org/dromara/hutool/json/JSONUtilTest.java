@@ -102,20 +102,25 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberToJSONArrayTest() {
-		assertThrows(ClassCastException.class, () -> {
+		assertThrows(JSONException.class, () -> {
 			final JSONArray json = JSONUtil.parseArray(123L);
 			Assertions.assertNotNull(json);
 		});
 	}
 
 	/**
-	 * 数字解析为JSONArray报错
+	 * 数字解析为JSONArray报错，忽略错误则返回null
 	 */
 	@Test
 	public void parseNumberToJSONArrayTest2() {
+		Assertions.assertThrows(JSONException.class, ()->{
+			JSONUtil.parseArray(123L,
+				JSONConfig.of().setIgnoreError(false));
+		});
+
 		final JSONArray json = JSONUtil.parseArray(123L,
 			JSONConfig.of().setIgnoreError(true));
-		Assertions.assertNotNull(json);
+		Assertions.assertNull(json);
 	}
 
 	/**
@@ -135,7 +140,7 @@ public class JSONUtilTest {
 	@Test
 	public void parseNumberToJSONObjectTest2() {
 		final JSONObject json = JSONUtil.parseObj(123L, JSONConfig.of().setIgnoreError(true));
-		assertEquals(new JSONObject(), json);
+		assertNull(json);
 	}
 
 	@Test
@@ -341,7 +346,7 @@ public class JSONUtilTest {
 	public void testArrayEntity() {
 		final String jsonStr = JSONUtil.toJsonStr(new ArrayEntity());
 		// a为空的bytes数组，按照空的流对待
-		assertEquals("{\"b\":[0],\"c\":[],\"d\":[],\"e\":[]}", jsonStr);
+		assertEquals("{\"a\":[],\"b\":[0],\"c\":[],\"d\":[],\"e\":[]}", jsonStr);
 	}
 
 	@Data

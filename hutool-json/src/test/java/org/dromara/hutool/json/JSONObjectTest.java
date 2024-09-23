@@ -619,7 +619,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void createJSONObjectTest() {
-		Assertions.assertThrows(ClassCastException.class, ()->{
+		Assertions.assertThrows(JSONException.class, ()->{
 			// 集合类不支持转为JSONObject
 			JSONUtil.parseObj(new JSONArray(), JSONConfig.of());
 		});

@@ -39,6 +39,54 @@ public interface BeanDesc extends Serializable {
 	Map<String, PropDesc> getPropMap(final boolean ignoreCase);
 
 	/**
+	 * 获取Bean属性数量
+	 *
+	 * @return 字段数量
+	 */
+	default int size(){
+		return getPropMap(false).size();
+	}
+
+	/**
+	 * 是否为空
+	 *
+	 * @return 是否为空
+	 */
+	default boolean isEmpty(){
+		return size() == 0;
+	}
+
+	/**
+	 * 是否有可读字段，即有getter方法或public字段
+	 *
+	 * @param checkTransient 是否检查transient字段，true表示检查，false表示不检查
+	 * @return 是否有可读字段
+	 */
+	default boolean isReadable(final boolean checkTransient){
+		for (final Map.Entry<String, PropDesc> entry : getPropMap(false).entrySet()) {
+			if (entry.getValue().isReadable(checkTransient)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 是否有可写字段，即有setter方法或public字段
+	 *
+	 * @param checkTransient 是否检查transient字段，true表示检查，false表示不检查
+	 * @return 是否有可写字段
+	 */
+	default boolean isWritable(final boolean checkTransient){
+		for (final Map.Entry<String, PropDesc> entry : getPropMap(false).entrySet()) {
+			if (entry.getValue().isWritable(checkTransient)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * 获取字段属性列表
 	 *
 	 * @return {@link PropDesc} 列表

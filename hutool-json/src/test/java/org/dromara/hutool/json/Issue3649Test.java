@@ -20,13 +20,25 @@ import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class Issue3649Test {
 	@Test
 	void toEmptyBeanTest() {
+		//issue#3649，对于空对象转目标对象，直接实例化一个空对象
+		// 逻辑见：BeanTypeAdapter
 		final Object bean = JSONUtil.toBean("{}", JSONConfig.of().setIgnoreError(false), EmptyBean.class);
 		Assertions.assertEquals(new EmptyBean(), bean);
 	}
 
+	@Test
+	void toEmptyListTest() {
+		final List<?> bean = JSONUtil.toBean("[]", JSONConfig.of().setIgnoreError(false), List.class);
+		Assertions.assertNotNull(bean);
+		Assertions.assertTrue(bean.isEmpty());
+	}
+
 	@Data
-	public static class EmptyBean {}
+	public static class EmptyBean {
+	}
 }

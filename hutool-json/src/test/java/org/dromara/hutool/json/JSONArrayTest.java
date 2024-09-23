@@ -172,7 +172,11 @@ public class JSONArrayTest {
 		final JSONArray array = JSONUtil.parseArray(jsonStr);
 
 		//noinspection SuspiciousToArrayCall
-		final Exam[] list = array.toArray(new Exam[0]);
+		Exam[] list = array.toArray(new Exam[0]);
+		Assertions.assertNotEquals(0, list.length);
+		Assertions.assertSame(Exam.class, list[0].getClass());
+
+		list = (Exam[]) array.toArray(Exam[].class);
 		Assertions.assertNotEquals(0, list.length);
 		Assertions.assertSame(Exam.class, list[0].getClass());
 	}
@@ -233,8 +237,8 @@ public class JSONArrayTest {
 	public void getByPathTest() {
 		final String jsonStr = "[{\"id\": \"1\",\"name\": \"a\"},{\"id\": \"2\",\"name\": \"b\"}]";
 		final JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
-		assertEquals("b", jsonArray.getByPath("[1].name"));
-		assertEquals("b", JSONUtil.getByPath(jsonArray, "[1].name"));
+		assertEquals("b", jsonArray.getByPath("[1].name", Object.class));
+		assertEquals("b", JSONUtil.getObjByPath(jsonArray, "[1].name"));
 	}
 
 	@Test
@@ -256,7 +260,7 @@ public class JSONArrayTest {
 		final JSONArray jsonArray = new JSONArray();
 		jsonArray.setValue(0, 1);
 		assertEquals(1, jsonArray.size());
-		assertEquals(1, jsonArray.get(0));
+		assertEquals(1, jsonArray.getObj(0));
 	}
 
 	private static Map<String, String> buildMap(final String id, final String parentId, final String name) {
