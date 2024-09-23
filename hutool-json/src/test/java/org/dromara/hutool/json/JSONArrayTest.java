@@ -197,14 +197,12 @@ public class JSONArrayTest {
 
 	@Test
 	public void toListWithErrorTest() {
-//		Assertions.assertThrows(JSONException.class, ()->{
-//		});
-		final String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
-		final JSONArray ja = JSONUtil.parseArray(json);
-
-		final Object bean = ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
-
-		Console.log(bean);
+		Assertions.assertThrows(JSONException.class, ()->{
+			final String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
+			final JSONArray ja = JSONUtil.parseArray(json);
+			final Object bean = ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
+			Console.log(bean);
+		});
 	}
 
 	@Test
