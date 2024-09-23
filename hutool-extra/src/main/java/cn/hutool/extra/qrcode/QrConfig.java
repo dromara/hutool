@@ -53,6 +53,8 @@ public class QrConfig {
 	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
 	/** 二维码中的Logo */
 	protected Image img;
+	/** 二维码中的Logo圆角弧度 */
+	protected double round = 0.3;
 	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
 	protected int ratio = 6;
 	/**
@@ -340,6 +342,26 @@ public class QrConfig {
 	 */
 	public QrConfig setRatio(int ratio) {
 		this.ratio = ratio;
+		return this;
+	}
+
+	/**
+	 * 获取二维码中的Logo圆角弧度
+	 *
+	 * @return 二维码中的Logo圆角弧度
+	 */
+	public double getRound() {
+		return round;
+	}
+
+	/**
+	 * 设置二维码中的Logo圆角弧度
+	 *
+	 * @param round 二维码中的Logo圆角弧度
+	 * @return this;
+	 */
+	public QrConfig setRound(double round) {
+		this.round = round;
 		return this;
 	}
 

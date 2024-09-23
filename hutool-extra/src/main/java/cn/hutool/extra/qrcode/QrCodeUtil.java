@@ -380,7 +380,7 @@ public class QrCodeUtil {
 			}
 
 			Img.from(image).pressImage(//
-					Img.from(logoImg).round(0.3).getImg(), // 圆角
+					Img.from(logoImg).round(config.round).getImg(), // 圆角
 					new Rectangle(width, height), //
 					1//
 			);
