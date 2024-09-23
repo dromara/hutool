@@ -48,15 +48,7 @@ public class ResourceBundleSerializer implements MatcherJSONSerializer<ResourceB
 
 	@Override
 	public JSON serialize(final ResourceBundle bean, final JSONContext context) {
-		final JSONObject result;
-
-		final JSON json = context.getContextJson();
-		if (json instanceof JSONObject) {
-			result = (JSONObject) json;
-		} else {
-			result = JSONUtil.ofObj(context.config());
-		}
-
+		final JSONObject result = context.getOrCreateObj();
 		mapFromResourceBundle(bean, result);
 		return result;
 	}

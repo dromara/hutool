@@ -21,7 +21,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.serializer.TypeAdapterManager;
-import org.dromara.hutool.json.support.JSONNodeBeanCreator;
+import org.dromara.hutool.json.support.JSONNodeBeanFactory;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Serializable;
@@ -139,7 +139,7 @@ public interface JSON extends Serializable {
 	 * @param value      值
 	 */
 	default void putByPath(final String expression, final Object value) {
-		BeanPath.of(expression).setBeanCreator(new JSONNodeBeanCreator(config())).setValue(this, value);
+		BeanPath.of(expression, new JSONNodeBeanFactory(config())).setValue(this, value);
 	}
 
 	/**

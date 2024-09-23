@@ -28,7 +28,7 @@ import java.util.function.Function;
  * 此类用于解决在JDK8中调用{@link ConcurrentHashMap#computeIfAbsent(Object, Function)}可能造成的死循环问题。<br>
  * 见：issues#2349<br>
  * <p>
- * 相关bug见：@see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
+ * 相关bug见：https://bugs.openjdk.java.net/browse/JDK-8161372
  *
  * @param <K> 键类型
  * @param <V> 值类型

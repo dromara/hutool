@@ -329,7 +329,7 @@ public class ConvertTest {
 
 	@Test
 	public void toClassTest(){
-		final Class<?> convert = ConvertUtil.convert(Class.class, "org.dromara.hutool.core.support.ConvertTest.Product");
+		final Class<?> convert = ConvertUtil.convert(Class.class, "org.dromara.hutool.core.convert.ConvertTest.Product");
 		Assertions.assertSame(Product.class, convert);
 	}
 

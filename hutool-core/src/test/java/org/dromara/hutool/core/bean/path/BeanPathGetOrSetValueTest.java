@@ -70,14 +70,14 @@ public class BeanPathGetOrSetValueTest {
 
 	@Test
 	public void getValueTest() {
-		final BeanPath pattern = new BeanPath("$.userInfo.examInfoDict[0].id");
+		final BeanPath<Object> pattern = BeanPath.of("$.userInfo.examInfoDict[0].id");
 		final Object result = pattern.getValue(tempMap);
 		Assertions.assertEquals(1, result);
 	}
 
 	@Test
 	public void setValueTest() {
-		final BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
+		final BeanPath<Object> pattern = BeanPath.of("userInfo.examInfoDict[0].id");
 		pattern.setValue(tempMap, 2);
 		final Object result = pattern.getValue(tempMap);
 		Assertions.assertEquals(2, result);
@@ -85,7 +85,7 @@ public class BeanPathGetOrSetValueTest {
 
 	@Test
 	public void getMapTest () {
-		final BeanPath pattern = new BeanPath("userInfo[id, photoPath]");
+		final BeanPath<Object> pattern = BeanPath.of("userInfo[id, photoPath]");
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> result = (Map<String, Object>)pattern.getValue(tempMap);
 		Assertions.assertEquals(1, result.get("id"));
@@ -98,7 +98,7 @@ public class BeanPathGetOrSetValueTest {
 		dataMap.put("aa", "value0");
 		dataMap.put("aa.bb.cc", "value111111");//     key   是类名 格式 带 ' . '
 
-		final BeanPath pattern = new BeanPath("'aa.bb.cc'");
+		final BeanPath<Object> pattern = BeanPath.of("'aa.bb.cc'");
 		Assertions.assertEquals("value111111", pattern.getValue(dataMap));
 	}
 
@@ -106,7 +106,7 @@ public class BeanPathGetOrSetValueTest {
 	public void issue2362Test() {
 		final Map<String, Object> map = new HashMap<>();
 
-		BeanPath beanPath = BeanPath.of("list[0].name");
+		BeanPath<Object> beanPath = BeanPath.of("list[0].name");
 		beanPath.setValue(map, "张三");
 		Assertions.assertEquals("{list=[{name=张三}]}", map.toString());
 
@@ -125,7 +125,7 @@ public class BeanPathGetOrSetValueTest {
 	public void putTest() {
 		final Map<String, Object> map = new HashMap<>();
 
-		final BeanPath beanPath = BeanPath.of("list[1].name");
+		final BeanPath<Object> beanPath = BeanPath.of("list[1].name");
 		beanPath.setValue(map, "张三");
 		Assertions.assertEquals("{list=[null, {name=张三}]}", map.toString());
 	}

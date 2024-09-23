@@ -95,13 +95,7 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 
 		// https://github.com/dromara/hutool/issues/2369
 		// 非标准的二进制流，则按照普通数组对待
-		final JSONArray result;
-		final JSON contextJson = context.getContextJson();
-		if (contextJson instanceof JSONArray) {
-			result = (JSONArray) contextJson;
-		} else {
-			result = JSONUtil.ofArray(config);
-		}
+		final JSONArray result = context.getOrCreateArray();
 		for (final byte b : bytes) {
 			result.set(b);
 		}

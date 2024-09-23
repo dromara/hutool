@@ -19,11 +19,9 @@ package org.dromara.hutool.json.serializer.impl;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.JSONUtil;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
@@ -72,10 +70,7 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 			iter = ((Iterable<?>) bean).iterator();
 		}
 
-		JSONArray json = (JSONArray) context.getContextJson();
-		if(null == json){
-			json = JSONUtil.ofArray(ObjUtil.apply(context, JSONContext::config));
-		}
+		final JSONArray json = context.getOrCreateArray();
 		mapFromIterator(bean, iter, json);
 		return json;
 	}

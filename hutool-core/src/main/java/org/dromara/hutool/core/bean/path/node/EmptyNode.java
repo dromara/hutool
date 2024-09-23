@@ -27,15 +27,4 @@ public class EmptyNode implements Node {
 	 * 单例
 	 */
 	public static EmptyNode INSTANCE = new EmptyNode();
-
-	@Override
-	public Object getValue(final Object bean) {
-		return null;
-	}
-
-	@Override
-	public Object setValue(final Object bean, final Object value) {
-		// do nothing
-		return bean;
-	}
 }

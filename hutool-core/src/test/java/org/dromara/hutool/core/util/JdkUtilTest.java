@@ -17,7 +17,6 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.util.JdkUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

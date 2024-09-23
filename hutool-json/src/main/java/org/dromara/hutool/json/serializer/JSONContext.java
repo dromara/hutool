@@ -17,8 +17,7 @@
 package org.dromara.hutool.json.serializer;
 
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.*;
 
 /**
  * JSON序列化上下文，用于获取当前JSON对象，以便在序列化过程中获取配置信息
@@ -42,5 +41,46 @@ public interface JSONContext {
 	 */
 	default JSONConfig config() {
 		return ObjUtil.apply(getContextJson(), JSON::config);
+	}
+
+	/**
+	 * 获取当前JSON对象，如果为非JSONObject，则创建一个JSONObject对象
+	 *
+	 * @return JSON对象
+	 */
+	default JSONObject getOrCreateObj() {
+		final JSON contextJson = getContextJson();
+		if (contextJson instanceof JSONObject) {
+			return (JSONObject) contextJson;
+		}
+
+		return JSONUtil.ofObj(config());
+	}
+
+	/**
+	 * 获取当前JSON对象，如果为非JSONArray，则创建一个JSONArray对象
+	 *
+	 * @return JSON对象
+	 */
+	default JSONArray getOrCreateArray() {
+		final JSON contextJson = getContextJson();
+		if (contextJson instanceof JSONArray) {
+			return (JSONArray) contextJson;
+		}
+		return JSONUtil.ofArray(config());
+	}
+
+	/**
+	 * 获取当前JSON对象，如果为非JSONPrimitive，则创建一个JSONPrimitive对象
+	 *
+	 * @param value 值
+	 * @return JSON对象
+	 */
+	default JSONPrimitive getOrCreatePrimitive(final Object value) {
+		final JSON contextJson = getContextJson();
+		if (contextJson instanceof JSONPrimitive) {
+			return ((JSONPrimitive) contextJson).setValue(value);
+		}
+		return JSONUtil.ofPrimitive(value, config());
 	}
 }

@@ -23,7 +23,7 @@ public class BeanPathTest {
 
 	@Test
 	void parseDotTest() {
-		BeanPath beanPath = new BeanPath("userInfo.examInfoDict[0].id");
+		BeanPath<Object> beanPath = BeanPath.of("userInfo.examInfoDict[0].id");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("examInfoDict[0].id", beanPath.getChild());
 
@@ -42,7 +42,7 @@ public class BeanPathTest {
 
 	@Test
 	void parseDotWithQuoteTest() {
-		BeanPath beanPath = new BeanPath("'userInfo'.examInfoDict[0].'id'");
+		BeanPath<Object> beanPath = BeanPath.of("'userInfo'.examInfoDict[0].'id'");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("examInfoDict[0].'id'", beanPath.getChild());
 
@@ -61,7 +61,7 @@ public class BeanPathTest {
 
 	@Test
 	void parseDotWithQuoteTest2() {
-		BeanPath beanPath = new BeanPath("userInfo.'examInfoDict'[0].id");
+		BeanPath<Object> beanPath = BeanPath.of("userInfo.'examInfoDict'[0].id");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("'examInfoDict'[0].id", beanPath.getChild());
 
@@ -80,7 +80,7 @@ public class BeanPathTest {
 
 	@Test
 	void parseBucketTest() {
-		BeanPath beanPath = new BeanPath("[userInfo][examInfoDict][0][id]");
+		BeanPath<Object> beanPath = BeanPath.of("[userInfo][examInfoDict][0][id]");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("[examInfoDict][0][id]", beanPath.getChild());
 
@@ -99,7 +99,7 @@ public class BeanPathTest {
 
 	@Test
 	void parseBucketWithQuoteTest() {
-		BeanPath beanPath = new BeanPath("['userInfo']['examInfoDict'][0][id]");
+		BeanPath<Object> beanPath = BeanPath.of("['userInfo']['examInfoDict'][0][id]");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("['examInfoDict'][0][id]", beanPath.getChild());
 
@@ -118,7 +118,7 @@ public class BeanPathTest {
 
 	@Test
 	void parseBucketWithQuoteTest2() {
-		BeanPath beanPath = new BeanPath("[userInfo][examInfoDict][0]['id']");
+		BeanPath<Object> beanPath = BeanPath.of("[userInfo][examInfoDict][0]['id']");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("[examInfoDict][0]['id']", beanPath.getChild());
 
@@ -137,7 +137,7 @@ public class BeanPathTest {
 
 	@Test
 	void rangePathTest() {
-		BeanPath beanPath = new BeanPath("[userInfo][2:3]");
+		BeanPath<Object> beanPath = BeanPath.of("[userInfo][2:3]");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("[2:3]", beanPath.getChild());
 
@@ -148,7 +148,7 @@ public class BeanPathTest {
 
 	@Test
 	void listPathTest() {
-		BeanPath beanPath = new BeanPath("[userInfo][1,2,3]");
+		BeanPath<Object> beanPath = BeanPath.of("[userInfo][1,2,3]");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("[1,2,3]", beanPath.getChild());
 
@@ -159,7 +159,7 @@ public class BeanPathTest {
 
 	@Test
 	void listKeysPathTest() {
-		BeanPath beanPath = new BeanPath("[userInfo]['a', 'b', 'c']");
+		BeanPath<Object> beanPath = BeanPath.of("[userInfo]['a', 'b', 'c']");
 		Assertions.assertEquals("userInfo", beanPath.getNode().toString());
 		Assertions.assertEquals("['a', 'b', 'c']", beanPath.getChild());
 

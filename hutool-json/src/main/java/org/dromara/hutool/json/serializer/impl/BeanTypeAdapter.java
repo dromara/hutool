@@ -60,10 +60,7 @@ public class BeanTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 
 	@Override
 	public JSON serialize(final Object bean, final JSONContext context) {
-		JSONObject contextJson = (JSONObject) ObjUtil.apply(context, JSONContext::getContextJson);
-		if(null == contextJson){
-			contextJson = new JSONObject(context.config());
-		}
+		final JSONObject contextJson = context.getOrCreateObj();
 
 		final BeanToMapCopier copier = new BeanToMapCopier(
 			bean,

@@ -58,13 +58,7 @@ public class JSONPrimitiveTypeAdapter implements MatcherJSONSerializer<Object>, 
 			bean = bean.toString();
 		}
 
-		final JSONPrimitive json = (JSONPrimitive) context.getContextJson();
-		if (null != json) {
-			json.setValue(bean);
-			return json;
-		}
-
-		return new JSONPrimitive(bean, context.config());
+		return context.getOrCreatePrimitive(bean);
 	}
 
 	@Override

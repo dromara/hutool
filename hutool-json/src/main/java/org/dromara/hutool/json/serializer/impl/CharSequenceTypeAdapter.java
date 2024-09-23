@@ -57,10 +57,7 @@ public class CharSequenceTypeAdapter implements MatcherJSONSerializer<CharSequen
 		final String jsonStr = StrUtil.trim(bean);
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
-			JSONObject jsonObject = (JSONObject) context.getContextJson();
-			if(null == jsonObject){
-				jsonObject = JSONUtil.ofObj(context.config());
-			}
+			final JSONObject jsonObject = context.getOrCreateObj();
 			JSONXMLParser.of(ParseConfig.of(), null).parseJSONObject(jsonStr, jsonObject);
 			return jsonObject;
 		}

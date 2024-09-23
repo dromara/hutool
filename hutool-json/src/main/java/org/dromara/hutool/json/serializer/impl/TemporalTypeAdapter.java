@@ -70,23 +70,22 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 
 	@Override
 	public JSON serialize(final TemporalAccessor bean, final JSONContext context) {
-		final JSONConfig config = context.config();
-
+		// 如果上下文为JSONObject，转为键值对形式
 		final JSON contextJson = context.getContextJson();
-		if(contextJson instanceof JSONObject){
+		if (contextJson instanceof JSONObject) {
 			toJSONObject(bean, contextJson.asJSONObject());
 			return contextJson;
 		}
 
 		if (bean instanceof Month) {
-			return new JSONPrimitive(((Month) bean).getValue(), config);
+			return context.getOrCreatePrimitive(((Month) bean).getValue());
 		} else if (bean instanceof DayOfWeek) {
-			return new JSONPrimitive(((DayOfWeek) bean).getValue(), config);
+			return context.getOrCreatePrimitive(((DayOfWeek) bean).getValue());
 		} else if (bean instanceof MonthDay) {
-			return new JSONPrimitive(((MonthDay) bean).toString(), config);
+			return context.getOrCreatePrimitive(((MonthDay) bean).toString());
 		}
 
-		final String format = ObjUtil.apply(config, JSONConfig::getDateFormat);
+		final String format = ObjUtil.apply(context.config(), JSONConfig::getDateFormat);
 
 		final Object value;
 		// 默认为时间戳
@@ -98,7 +97,7 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 			value = TimeUtil.format(bean, format);
 		}
 
-		return new JSONPrimitive(value, config);
+		return context.getOrCreatePrimitive(value);
 	}
 
 	@Override
@@ -130,7 +129,7 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 	/**
 	 * 将{@link TemporalAccessor}转换为JSONObject
 	 *
-	 * @param bean      {@link TemporalAccessor}
+	 * @param bean {@link TemporalAccessor}
 	 * @param json JSONObject
 	 */
 	private static void toJSONObject(final TemporalAccessor bean, final JSONObject json) {

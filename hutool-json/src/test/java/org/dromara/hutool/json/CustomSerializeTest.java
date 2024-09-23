@@ -33,10 +33,7 @@ public class CustomSerializeTest {
 	public void init() {
 		TypeAdapterManager.getInstance().register(CustomBean.class,
 			(JSONSerializer<CustomBean>) (bean, context) ->{
-				JSONObject contextJson = (JSONObject) context.getContextJson();
-				if(null == contextJson){
-					contextJson = JSONUtil.ofObj(context.config());
-				}
+				final JSONObject contextJson = context.getOrCreateObj();
 				return contextJson.set("customName", bean.name);
 			});
 	}

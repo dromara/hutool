@@ -16,12 +16,14 @@
 
 package org.dromara.hutool.core.lang;
 
+import lombok.Data;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.thread.ThreadUtil;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.time.Duration;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,8 +32,13 @@ import java.util.concurrent.TimeUnit;
 
 public class SingletonTest {
 
+	/**
+	 * JDK8下，使用了SafeConcurrentHashMap，为了解决JDK-8161372问题<br>
+	 * 但是会导致可能的对象多次创建，此处屏蔽JDK8的测试
+	 */
 	@SuppressWarnings("resource")
 	@Test
+	@DisabledOnJre(JRE.JAVA_8)
 	public void getTest(){
 		// 此测试中使用1000个线程获取单例对象，其间对象只被创建一次
 		ThreadUtil.concurrencyTest(1000, ()-> Singleton.get(TestBean.class));

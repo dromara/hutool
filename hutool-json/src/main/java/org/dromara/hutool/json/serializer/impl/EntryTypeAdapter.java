@@ -22,7 +22,6 @@ import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.JSONUtil;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
@@ -59,15 +58,8 @@ public class EntryTypeAdapter implements MatcherJSONSerializer<Map.Entry<?, ?>>,
 
 	@Override
 	public JSON serialize(final Map.Entry<?, ?> bean, final JSONContext context) {
-		final JSONObject result;
-		final JSON contextJson = context.getContextJson();
-		if(contextJson instanceof JSONObject){
-			result = contextJson.asJSONObject();
-		}else{
-			result = JSONUtil.ofObj(context.config());
-		}
-		result.set(ConvertUtil.toStr(bean.getKey()), bean.getValue());
-		return result;
+		return context.getOrCreateObj()
+			.set(ConvertUtil.toStr(bean.getKey()), bean.getValue());
 	}
 
 	@Override

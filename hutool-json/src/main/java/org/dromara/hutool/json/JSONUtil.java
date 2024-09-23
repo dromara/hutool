@@ -84,6 +84,43 @@ public class JSONUtil {
 	public static JSONArray ofArray(final JSONConfig config) {
 		return new JSONArray(config);
 	}
+
+	/**
+	 * 创建JSONPrimitive对象，用于创建非JSON对象，例如：
+	 * <pre>{@code
+	 *   JSONUtil.ofPrimitive(1);
+	 *   JSONUtil.ofPrimitive(1L);
+	 *   JSONUtil.ofPrimitive(1.0);
+	 *   JSONUtil.ofPrimitive(true);
+	 *   JSONUtil.ofPrimitive("str");
+	 * }</pre>
+	 *
+	 * @param value 值
+	 * @return JSONPrimitive对象
+	 * @since 6.0.0
+	 */
+	public static JSONPrimitive ofPrimitive(final Object value) {
+		return ofPrimitive(value, JSONConfig.of());
+	}
+
+	/**
+	 * 创建JSONPrimitive对象，用于创建非JSON对象，例如：
+	 * <pre>{@code
+	 *   JSONUtil.ofPrimitive(1, config);
+	 *   JSONUtil.ofPrimitive(1L, config);
+	 *   JSONUtil.ofPrimitive(1.0, config);
+	 *   JSONUtil.ofPrimitive(true, config);
+	 *   JSONUtil.ofPrimitive("str", config);
+	 * }</pre>
+	 *
+	 * @param value  值
+	 * @param config 配置
+	 * @return JSONPrimitive对象
+	 * @since 6.0.0
+	 */
+	public static JSONPrimitive ofPrimitive(final Object value, final JSONConfig config) {
+		return new JSONPrimitive(value, config);
+	}
 	// endregion
 
 	// region ----- parse
@@ -121,7 +158,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 */
 	public static JSONObject parseObj(Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		if(obj instanceof byte[]){
+		if (obj instanceof byte[]) {
 			obj = new ByteArrayInputStream((byte[]) obj);
 		}
 		return (JSONObject) parse(obj, config, predicate);
@@ -155,12 +192,12 @@ public class JSONUtil {
 	 *
 	 * @param arrayOrCollection 数组或集合对象
 	 * @param config            JSON配置
-	 * @param predicate index和值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @param predicate         index和值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONArray
 	 * @since 5.3.1
 	 */
 	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		if(arrayOrCollection instanceof JSONObject){
+		if (arrayOrCollection instanceof JSONObject) {
 			final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
 			return jsonMapper.mapFromJSONObject((JSONObject) arrayOrCollection);
 		}
@@ -192,8 +229,8 @@ public class JSONUtil {
 	 *     <li>Bean对象：转为JSONObject</li>
 	 * </ul>
 	 *
-	 * @param obj       对象
-	 * @param config    JSON配置，{@code null}使用默认配置
+	 * @param obj    对象
+	 * @param config JSON配置，{@code null}使用默认配置
 	 * @return JSON（JSONObject or JSONArray）
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config) {

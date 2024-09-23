@@ -16,12 +16,9 @@
 
 package org.dromara.hutool.core.bean.path.node;
 
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -51,20 +48,31 @@ public class RangeNode implements Node {
 		this.step = step;
 	}
 
-	@Override
-	public Object getValue(final Object bean) {
-		if (bean instanceof Collection) {
-			return CollUtil.sub((Collection<?>) bean, this.start, this.end, this.step);
-		} else if (ArrayUtil.isArray(bean)) {
-			return ArrayUtil.sub(bean, this.start, this.end, this.step);
-		}
-
-		throw new UnsupportedOperationException("Can not get range value for: " + bean.getClass());
+	/**
+	 * 获取起始值
+	 *
+	 * @return 起始值
+	 */
+	public int getStart() {
+		return start;
 	}
 
-	@Override
-	public Object setValue(final Object bean, final Object value) {
-		throw new UnsupportedOperationException("Can not set value with step name.");
+	/**
+	 * 获取结束值
+	 *
+	 * @return 结束值
+	 */
+	public int getEnd() {
+		return end;
+	}
+
+	/**
+	 * 获取步进值
+	 *
+	 * @return 步进值
+	 */
+	public int getStep() {
+		return step;
 	}
 
 	@Override

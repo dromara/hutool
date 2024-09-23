@@ -16,10 +16,7 @@
 
 package org.dromara.hutool.core.bean.path.node;
 
-import org.dromara.hutool.core.bean.DynaBean;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.reflect.ClassUtil;
-import org.dromara.hutool.core.text.StrUtil;
 
 /**
  * 处理名称节点或序号节点，如：
@@ -59,27 +56,6 @@ public class NameNode implements Node {
 	 */
 	public boolean isNumber() {
 		return NumberUtil.isInteger(name);
-	}
-
-	@Override
-	public Object getValue(final Object bean) {
-		if(null == bean){
-			return null;
-		}
-		if ("$".equals(name)) {
-			return bean;
-		}
-		Object value = DynaBean.of(bean).get(this.name);
-		if(null == value && StrUtil.lowerFirst(ClassUtil.getClassName(bean, true)).equals(this.name)){
-			// 如果bean类名与属性名相同，则返回bean本身
-			value = bean;
-		}
-		return value;
-	}
-
-	@Override
-	public Object setValue(final Object bean, final Object value) {
-		return DynaBean.of(bean).set(this.name, value).getBean();
 	}
 
 	@Override

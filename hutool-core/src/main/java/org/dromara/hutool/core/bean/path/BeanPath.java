@@ -42,10 +42,11 @@ import java.util.Iterator;
  * ['person']['friends'][5]['name']
  * </pre>
  *
+ * @param <T> Bean类型
  * @author Looly
  * @since 6.0.0
  */
-public class BeanPath implements Iterator<BeanPath> {
+public class BeanPath<T> implements Iterator<BeanPath<T>> {
 
 	/**
 	 * 表达式边界符号数组
@@ -58,21 +59,34 @@ public class BeanPath implements Iterator<BeanPath> {
 	 * @param expression 表达式
 	 * @return BeanPath
 	 */
-	public static BeanPath of(final String expression) {
-		return new BeanPath(expression);
+	public static BeanPath<Object> of(final String expression) {
+		return new BeanPath<>(expression, DefaultNodeBeanFactory.INSTANCE);
+	}
+
+	/**
+	 * 创建Bean路径
+	 *
+	 * @param expression  表达式
+	 * @param beanFactory NodeBean工厂，用于Bean的值创建、获取和设置
+	 * @param <T>         Bean类型
+	 * @return BeanPath
+	 */
+	public static <T> BeanPath<T> of(final String expression, final NodeBeanFactory<T> beanFactory) {
+		return new BeanPath<>(expression, beanFactory);
 	}
 
 	private final Node node;
 	private final String child;
-	private NodeBeanCreator beanCreator;
+	private final NodeBeanFactory<T> beanFactory;
 
 	/**
 	 * 构造
 	 *
-	 * @param expression 表达式
+	 * @param expression  表达式
+	 * @param beanFactory NodeBean工厂，用于Bean的值创建、获取和设置
 	 */
-	public BeanPath(final String expression) {
-		this.beanCreator = DefaultNodeBeanCreator.INSTANCE;
+	public BeanPath(final String expression, final NodeBeanFactory<T> beanFactory) {
+		this.beanFactory = beanFactory;
 		final int length = expression.length();
 		final StringBuilder builder = new StringBuilder();
 
@@ -128,17 +142,6 @@ public class BeanPath implements Iterator<BeanPath> {
 	}
 
 	/**
-	 * 设置Bean创建器，用于创建Bean对象，默认为{@link DefaultNodeBeanCreator}
-	 *
-	 * @param beanCreator Bean创建器
-	 * @return this
-	 */
-	public BeanPath setBeanCreator(final NodeBeanCreator beanCreator) {
-		this.beanCreator = beanCreator;
-		return this;
-	}
-
-	/**
 	 * 获取节点
 	 *
 	 * @return 节点
@@ -162,8 +165,8 @@ public class BeanPath implements Iterator<BeanPath> {
 	}
 
 	@Override
-	public BeanPath next() {
-		return new BeanPath(this.child);
+	public BeanPath<T> next() {
+		return new BeanPath<>(this.child, this.beanFactory);
 	}
 
 	/**
@@ -172,15 +175,16 @@ public class BeanPath implements Iterator<BeanPath> {
 	 * @param bean Bean对象
 	 * @return 路径对应的值
 	 */
-	public Object getValue(final Object bean) {
-		final Object value = this.node.getValue(bean);
-		if(null == value){
+	@SuppressWarnings("unchecked")
+	public Object getValue(final T bean) {
+		final Object value = beanFactory.getValue(bean, this);
+		if (null == value) {
 			return null;
 		}
 		if (!hasNext()) {
 			return value;
 		}
-		return next().getValue(value);
+		return next().getValue((T) value);
 	}
 
 	/**
@@ -190,25 +194,27 @@ public class BeanPath implements Iterator<BeanPath> {
 	 * @param value 设置的值
 	 * @return bean。如果在原Bean对象基础上设置值，返回原Bean，否则返回新的Bean
 	 */
-	public Object setValue(final Object bean, final Object value) {
+	@SuppressWarnings({"ReassignedVariable", "unchecked"})
+	public Object setValue(final T bean, final Object value) {
+		final NodeBeanFactory<T> beanFactory = this.beanFactory;
 		if (!hasNext()) {
 			// 根节点，直接赋值
-			return this.node.setValue(bean, value);
+			return beanFactory.setValue(bean, value, this);
 		}
 
-		final BeanPath childBeanPath = next();
-		Object subBean = this.node.getValue(bean);
+		final BeanPath<T> childBeanPath = next();
+		Object subBean = beanFactory.getValue(bean, this);
 		if (null == subBean) {
-			subBean = beanCreator.create(bean, this);
-			this.node.setValue(bean, subBean);
+			subBean = beanFactory.create(bean, this);
+			beanFactory.setValue(bean, subBean, this);
 			// 如果自定义put方法修改了value，返回修改后的value，避免值丢失
-			subBean = this.node.getValue(bean);
+			subBean = beanFactory.getValue(bean, this);
 		}
 		// 递归逐层查找子节点，赋值
-		final Object newSubBean = childBeanPath.setValue(subBean, value);
-		if(newSubBean != subBean){
+		final Object newSubBean = childBeanPath.setValue((T) subBean, value);
+		if (newSubBean != subBean) {
 			//对于数组对象，set新值后，会返回新的数组，此时将新对象再加入父bean中，覆盖旧数组
-			this.node.setValue(bean, newSubBean);
+			beanFactory.setValue(bean, newSubBean, this);
 		}
 		return bean;
 	}
