@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.33(2024-09-18)
+# 5.8.33(2024-09-23)
 
 ### 🐣新特性
 * 【core   】      SyncFinisher增加setExecutorService方法（issue#IANKQ1@Gitee）
@@ -13,6 +13,7 @@
 * 【core   】      ModifierUtil明确注释，并增加hasAllModifiers方法（issue#IAQ2U0@Gitee）
 * 【http   】      HttpRequest增加setFixedContentLength方法（issue#3462@Github）
 * 【db     】      AbstractDb增加getDs方法（issue#IARKZL@Gitee）
+* 【db     】      QrCodeUtil添加二维码logo支持配置圆角（pr#3747@Github）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）
