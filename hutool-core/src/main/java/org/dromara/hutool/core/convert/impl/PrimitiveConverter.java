@@ -76,7 +76,7 @@ public class PrimitiveConverter extends AbstractConverter implements MatcherConv
 		}
 
 		if(null == result){
-			throw new ConvertException("Can not convert {} to {}", value, primitiveClass);
+			throw new ConvertException("Can not support {} to {}", value, primitiveClass);
 		}
 
 		return result;

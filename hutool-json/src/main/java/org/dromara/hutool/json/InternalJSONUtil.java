@@ -16,24 +16,23 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.codec.binary.HexUtil;
-import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.map.CaseInsensitiveLinkedMap;
 import org.dromara.hutool.core.map.CaseInsensitiveTreeMap;
-import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.mapper.JSONValueMapper;
+import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.reader.JSONTokener;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -89,65 +88,6 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 值转为String，用于JSON中。规则为：
-	 * <ul>
-	 *     <li>对象如果是数组或Collection，包装为{@link JSONArray}</li>
-	 *     <li>对象如果是Map，包装为{@link JSONObject}</li>
-	 *     <li>对象如果是数字，使用{@link NumberUtil#toStr(Number)}转换为字符串</li>
-	 *     <li>其他情况调用toString并使用双引号包装</li>
-	 * </ul>
-	 *
-	 * @param value 需要转为字符串的对象
-	 * @return 字符串
-	 * @throws JSONException If the value is or contains an invalid number.
-	 */
-	static String valueToString(final Object value) throws JSONException {
-		if (value == null) {
-			return StrUtil.NULL;
-		}
-		if (value instanceof Number) {
-			return NumberUtil.toStr((Number) value);
-		} else if (value instanceof Boolean || value instanceof JSONObject || value instanceof JSONArray) {
-			return value.toString();
-		} else if (value instanceof Map) {
-			final Map<?, ?> map = (Map<?, ?>) value;
-			return JSONUtil.parseObj(map).toString();
-		} else if (value instanceof Collection) {
-			final Collection<?> coll = (Collection<?>) value;
-			return JSONUtil.parseArray(coll).toString();
-		} else if (ArrayUtil.isArray(value)) {
-			return JSONUtil.parseArray(value).toString();
-		} else {
-			return quote(value.toString());
-		}
-	}
-
-	/**
-	 * 将Property的键转化为JSON形式<br>
-	 * 用于识别类似于：org.dromara.hutool.json这类用点隔开的键<br>
-	 * 注意：不允许重复键
-	 *
-	 * @param jsonObject JSONObject
-	 * @param key        键
-	 * @param value      值
-	 */
-	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value) {
-		final String[] path = SplitUtil.splitToArray(ConvertUtil.toStr(key), StrUtil.DOT);
-		final int last = path.length - 1;
-		JSONObject target = jsonObject;
-		for (int i = 0; i < last; i += 1) {
-			final String segment = path[i];
-			JSONObject nextTarget = target.getJSONObject(segment);
-			if (nextTarget == null) {
-				nextTarget = new JSONObject(target.config());
-				target.set(segment, nextTarget);
-			}
-			target = nextTarget;
-		}
-		target.set(path[last], value);
-	}
-
-	/**
 	 * 默认情况下是否忽略null值的策略选择，以下对象不忽略null值，其它对象忽略：
 	 *
 	 * <pre>
@@ -179,7 +119,7 @@ public final class InternalJSONUtil {
 				.setIgnoreError(config.isIgnoreError())
 				.setIgnoreNullValue(config.isIgnoreNullValue())
 				.setTransientSupport(config.isTransientSupport())
-			.setConverter((targetType, value) -> JSONValueMapper.of(config, null).map(value));
+			.setConverter((targetType, value) -> JSONMapper.of(config, null).map(value));
 	}
 
 	/**

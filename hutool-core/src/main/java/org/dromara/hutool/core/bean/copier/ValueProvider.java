@@ -31,7 +31,7 @@ public interface ValueProvider<K>{
 
 	/**
 	 * 获取值<br>
-	 * 返回值一般需要匹配被注入类型，如果不匹配会调用默认转换 Convert#convert(Type, Object)实现转换
+	 * 返回值一般需要匹配被注入类型，如果不匹配会调用默认转换 Convert#support(Type, Object)实现转换
 	 *
 	 * @param key Bean对象中参数名
 	 * @param valueType 被注入的值的类型

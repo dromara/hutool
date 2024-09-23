@@ -18,9 +18,10 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
+import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.serializer.TypeAdapterManager;
+import org.dromara.hutool.json.support.JSONNodeBeanCreator;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Serializable;
@@ -138,7 +139,7 @@ public interface JSON extends Serializable {
 	 * @param value      值
 	 */
 	default void putByPath(final String expression, final Object value) {
-		BeanPath.of(expression).setValue(this, value);
+		BeanPath.of(expression).setBeanCreator(new JSONNodeBeanCreator(config())).setValue(this, value);
 	}
 
 	/**
@@ -228,33 +229,8 @@ public interface JSON extends Serializable {
 	 * @param <T>  Bean类型
 	 * @param type {@link Type}
 	 * @return 实体类对象
-	 * @since 4.3.2
 	 */
-	@SuppressWarnings("unchecked")
 	default <T> T toBean(final Type type) {
-		if(null == type || Object.class == type){
-			if(this instanceof JSONPrimitive){
-				return (T) ((JSONPrimitive) this).getValue();
-			}
-			return (T) this;
-		}
-
-		final JSONDeserializer<Object> deserializer = TypeAdapterManager.getInstance().getDeserializer(this, type);
-		final boolean ignoreError = ObjUtil.defaultIfNull(config(), JSONConfig::isIgnoreError, false);
-		if(null == deserializer){
-			if(ignoreError){
-				return null;
-			}
-			throw new JSONException("No deserializer for type: " + type);
-		}
-
-		try{
-			return (T) deserializer.deserialize(this, type);
-		} catch (final Exception e){
-			if(ignoreError){
-				return null;
-			}
-			throw e;
-		}
+		return JSONMapper.of(config(), null).toBean(this, type);
 	}
 }

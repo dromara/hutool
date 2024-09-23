@@ -45,7 +45,7 @@ public abstract class AbstractConverter implements Converter, Serializable {
 			return null;
 		}
 		if (TypeUtil.isUnknown(targetType)) {
-			throw new ConvertException("Unsupported convert to unKnown type: {}", targetType);
+			throw new ConvertException("Unsupported support to unKnown type: {}", targetType);
 		}
 
 		final Class<?> targetClass = TypeUtil.getClass(targetType);

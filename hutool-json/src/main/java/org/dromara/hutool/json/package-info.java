@@ -26,9 +26,9 @@
  * JSON封装主要包括JSON表示和JSON转换：
  *
  * <pre>{@code
- *               <--JSONConverter--              <---JSONParser----
- *     Java对象  <=================>   JSON对象   <=================>    JSON字符串
- *               ------mapper----->              ---JSONWriter---->
+ *               <-----JSONMapper-----              <---JSONParser----
+ *     Java对象  <====================>   JSON对象   <=================>    JSON字符串
+ *               -----JSONMapper----->              ---JSONWriter---->
  * }</pre>
  *
  * 当然，为了高效转换，如果没有自定义需求，Java对象可以不通过JSON对象与JSON字符串转换：

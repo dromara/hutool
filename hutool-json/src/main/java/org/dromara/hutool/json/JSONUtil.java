@@ -23,7 +23,8 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.mapper.JSONValueMapper;
+import org.dromara.hutool.json.serializer.JSONMapper;
+import org.dromara.hutool.json.support.JSONStrFormatter;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
@@ -160,8 +161,8 @@ public class JSONUtil {
 	 */
 	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
 		if(arrayOrCollection instanceof JSONObject){
-			final JSONValueMapper jsonValueMapper = JSONValueMapper.of(config, predicate);
-			return jsonValueMapper.mapFromJSONObject((JSONObject) arrayOrCollection);
+			final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
+			return jsonMapper.mapFromJSONObject((JSONObject) arrayOrCollection);
 		}
 		return (JSONArray) parse(arrayOrCollection, config, predicate);
 	}
@@ -214,11 +215,11 @@ public class JSONUtil {
 	 * @return JSON（JSONObject or JSONArray）
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final JSONValueMapper jsonValueMapper = JSONValueMapper.of(config, predicate);
+		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
 		if (obj instanceof CharSequence) {
-			return jsonValueMapper.map((CharSequence) obj);
+			return jsonMapper.map((CharSequence) obj);
 		}
-		return jsonValueMapper.map(obj);
+		return jsonMapper.map(obj);
 	}
 
 	/**

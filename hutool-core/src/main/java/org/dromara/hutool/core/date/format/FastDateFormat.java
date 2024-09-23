@@ -408,7 +408,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 		return printer.getMaxLengthEstimate();
 	}
 
-	// convert DateTimeFormatter
+	// support DateTimeFormatter
 	// -----------------------------------------------------------------------
 
 	/**

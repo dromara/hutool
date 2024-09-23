@@ -15,11 +15,9 @@
  */
 
 /**
- * Bean和JSON之间的映射封装，包括：
- * <ul>
- *     <li>JSONObjectMapper: 转换对象为JSONObject</li>
- *     <li>JSONArrayMapper:  转换对象为JSONArray</li>
- *     <li>JSONValueMapper:  转换对象为JSON值</li>
- * </ul>
+ * JSON的支持类，如用于转换和BeanPath操作的对象，还有用于格式化的对象等
+ *
+ * @author Looly
+ * @since 6.0.0
  */
-package org.dromara.hutool.json.mapper;
+package org.dromara.hutool.json.support;

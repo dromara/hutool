@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.convert;
+package org.dromara.hutool.json.support;
 
 import org.dromara.hutool.core.bean.copier.ValueProvider;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONObject;
 
 import java.lang.reflect.Type;
 
 /**
- * JSONObject值提供者，用于将JSONObject中的值注入Bean
+ * JSONObject值提供者，用于将JSONObject中的值注入Bean<br>
+ * 兼容下划线模式的JSON转换为驼峰模式
  *
  * @author Looly
  * @since 6.0.0
@@ -42,16 +44,19 @@ public class JSONObjectValueProvider implements ValueProvider<String> {
 	}
 
 	@Override
-	public Object value(final String key, final Type valueType) {
-		final JSON value = jsonObject.get(key);
-		if (null == value) {
-			return null;
-		}
-		return value.toBean(valueType);
+	public boolean containsKey(final String key) {
+		return jsonObject.containsKey(key) || jsonObject.containsKey(StrUtil.toUnderlineCase(key));
 	}
 
 	@Override
-	public boolean containsKey(final String key) {
-		return jsonObject.containsKey(key);
+	public Object value(final String key, final Type valueType) {
+		JSON value = jsonObject.get(key);
+		if (null == value) {
+			value = jsonObject.get(StrUtil.toUnderlineCase(key));
+			if(null == value){
+				return null;
+			}
+		}
+		return value.toBean(valueType);
 	}
 }

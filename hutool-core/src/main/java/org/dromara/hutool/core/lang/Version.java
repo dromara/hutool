@@ -266,7 +266,7 @@ public class Version implements Comparable<Version>, Serializable {
 				}
 				return c;
 			}
-			// Types differ, so convert number to string form
+			// Types differ, so support number to string form
 			final int c = o1.toString().compareTo(o2.toString());
 			if (c == 0){
 				continue;

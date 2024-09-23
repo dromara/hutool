@@ -219,7 +219,7 @@ public class ByteUtilTest {
 		final byte[] bytes = new byte[]{(byte) 0xFF, (byte) 0xFE, (byte) 0x01, (byte) 0x00};
 		final int expectedValue = 130815;
 		final int actualValue = ByteUtil.toInt(bytes, 0, ByteOrder.LITTLE_ENDIAN);
-		assertEquals(expectedValue, actualValue, "Failed to convert bytes to int using LITTLE_ENDIAN");
+		assertEquals(expectedValue, actualValue, "Failed to support bytes to int using LITTLE_ENDIAN");
 	}
 
 	@Test
@@ -228,6 +228,6 @@ public class ByteUtilTest {
 		final byte[] bytes = new byte[]{(byte) 0xFF, (byte) 0xFE, (byte) 0x01, (byte) 0x00};
 		final int expectedValue = -130816;
 		final int actualValue = ByteUtil.toInt(bytes, 0, ByteOrder.BIG_ENDIAN);
-		assertEquals(expectedValue, actualValue, "Failed to convert bytes to int using BIG_ENDIAN");
+		assertEquals(expectedValue, actualValue, "Failed to support bytes to int using BIG_ENDIAN");
 	}
 }

@@ -16,6 +16,9 @@
 
 package org.dromara.hutool.core.bean;
 
+import org.dromara.hutool.core.annotation.AnnotationUtil;
+import org.dromara.hutool.core.annotation.ReadableBean;
+import org.dromara.hutool.core.annotation.WritableBean;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
@@ -687,6 +690,11 @@ public class BeanUtil {
 			// String中有getter方法，但为字符串，不是Bean
 			return false;
 		}
+
+		if(AnnotationUtil.hasAnnotation(clazz, ReadableBean.class)){
+			return true;
+		}
+
 		return hasGetter(clazz) || hasPublicField(clazz);
 	}
 
@@ -710,6 +718,10 @@ public class BeanUtil {
 		// issue#I9VTZG，排除定义setXXX的预定义类
 		if (Dict.class == clazz) {
 			return false;
+		}
+
+		if(AnnotationUtil.hasAnnotation(clazz, WritableBean.class)){
+			return true;
 		}
 
 		return hasSetter(clazz) || hasPublicField(clazz);

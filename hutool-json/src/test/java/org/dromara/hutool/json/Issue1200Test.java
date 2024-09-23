@@ -35,7 +35,12 @@ public class Issue1200Test {
 			JSONConfig.of().setIgnoreError(true));
 
 		final ResultBean resultBean = jsonObject.toBean(ResultBean.class);
-		Assertions.assertNull(resultBean.getItems().get(0).get(0));
+		// json对象转ItemsBean，但是字段对应不上，保留空对象
+		Assertions.assertNull(resultBean.getItems().get(0).get(0).get(0).getDetail());
+
+		// 字符串转对象，失败，为null
+		Assertions.assertNull(resultBean.getItems().get(0).get(0).get(1));
+		Assertions.assertNull(resultBean.getItems().get(0).get(0).get(2));
 	}
 
 	@Data

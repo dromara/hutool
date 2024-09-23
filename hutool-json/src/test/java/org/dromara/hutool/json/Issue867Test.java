@@ -21,14 +21,18 @@ import org.dromara.hutool.core.annotation.Alias;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 兼容下划线模式的JSON转换为驼峰模式<br>
+ * 逻辑见：JSONObjectValueProvider
+ */
 public class Issue867Test {
 
 	@Test
-	public void toBeanTest(){
+	public void toBeanTest() {
 		final String jsonStr = "{\"abc_1d\":\"123\",\"abc_d\":\"456\",\"abc_de\":\"789\"}";
 		final JSONObject json = JSONUtil.parseObj(jsonStr);
 		//Console.log(json);
-		final Test02 bean = JSONUtil.toBean(json,Test02.class);
+		final Test02 bean = JSONUtil.toBean(json, Test02.class);
 		Assertions.assertEquals("123", bean.getAbc1d());
 		Assertions.assertEquals("456", bean.getAbcD());
 		Assertions.assertEquals("789", bean.getAbcDe());

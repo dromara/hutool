@@ -23,7 +23,7 @@ import org.dromara.hutool.core.convert.impl.ArrayConverter;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.mapper.JSONValueMapper;
+import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.util.*;
@@ -52,7 +52,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * 配置项
 	 */
 	private final JSONConfig config;
-	private final JSONValueMapper mapper;
+	private final JSONMapper mapper;
 
 	// region ----- Constructors
 
@@ -97,7 +97,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	public JSONArray(final int initialCapacity, final JSONConfig config) {
 		super(new ArrayList<>(initialCapacity));
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
-		this.mapper = JSONValueMapper.of(config, null);
+		this.mapper = JSONMapper.of(config, null);
 	}
 	// endregion
 

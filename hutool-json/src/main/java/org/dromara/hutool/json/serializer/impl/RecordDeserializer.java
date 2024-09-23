@@ -20,7 +20,7 @@ import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.convert.JSONObjectValueProvider;
+import org.dromara.hutool.json.support.JSONObjectValueProvider;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 
 import java.lang.reflect.Type;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2024 Hutool Team and hutool.cn
+ * Copyright (c) 2024 Hutool Team and hutool.cn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
+package org.dromara.hutool.core.annotation;
+
+import java.lang.annotation.*;
+
 /**
- * JSON中对象、值类型转换封装
+ * 标记可读Bean<br>
+ * 即包含有可读字段的Bean使用此注解标记，如含有public的字段或getter方法
  *
- * @author Looly
+ * @author looly
  * @since 6.0.0
  */
-package org.dromara.hutool.json.convert;
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface ReadableBean {
+}

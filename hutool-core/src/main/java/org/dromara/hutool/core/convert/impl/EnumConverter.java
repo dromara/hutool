@@ -67,7 +67,7 @@ public class EnumConverter extends AbstractConverter implements MatcherConverter
 			return enumValue;
 		}
 
-		throw new ConvertException("Can not convert {} to {}", value, targetClass);
+		throw new ConvertException("Can not support {} to {}", value, targetClass);
 	}
 
 	/**

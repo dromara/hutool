@@ -564,7 +564,7 @@ public class ImgUtil {
 	}
 	// endregion
 
-	// region ----- convert
+	// region ----- support
 
 	/**
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG

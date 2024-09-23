@@ -35,6 +35,15 @@ public class NameNode implements Node {
 	private final String name;
 
 	/**
+	 * 获取节点名
+	 *
+	 * @return 节点名
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
 	 * 构造
 	 *
 	 * @param name 节点名

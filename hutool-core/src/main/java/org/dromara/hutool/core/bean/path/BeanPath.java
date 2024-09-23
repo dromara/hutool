@@ -17,14 +17,11 @@
 package org.dromara.hutool.core.bean.path;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.bean.path.node.NameNode;
 import org.dromara.hutool.core.bean.path.node.Node;
 import org.dromara.hutool.core.bean.path.node.NodeFactory;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -67,6 +64,7 @@ public class BeanPath implements Iterator<BeanPath> {
 
 	private final Node node;
 	private final String child;
+	private NodeBeanCreator beanCreator;
 
 	/**
 	 * 构造
@@ -74,6 +72,7 @@ public class BeanPath implements Iterator<BeanPath> {
 	 * @param expression 表达式
 	 */
 	public BeanPath(final String expression) {
+		this.beanCreator = DefaultNodeBeanCreator.INSTANCE;
 		final int length = expression.length();
 		final StringBuilder builder = new StringBuilder();
 
@@ -126,6 +125,17 @@ public class BeanPath implements Iterator<BeanPath> {
 			this.node = NodeFactory.createNode(builder.toString());
 			this.child = null;
 		}
+	}
+
+	/**
+	 * 设置Bean创建器，用于创建Bean对象，默认为{@link DefaultNodeBeanCreator}
+	 *
+	 * @param beanCreator Bean创建器
+	 * @return this
+	 */
+	public BeanPath setBeanCreator(final NodeBeanCreator beanCreator) {
+		this.beanCreator = beanCreator;
+		return this;
 	}
 
 	/**
@@ -189,7 +199,7 @@ public class BeanPath implements Iterator<BeanPath> {
 		final BeanPath childBeanPath = next();
 		Object subBean = this.node.getValue(bean);
 		if (null == subBean) {
-			subBean = isListNode(childBeanPath.node) ? new ArrayList<>() : new HashMap<>();
+			subBean = beanCreator.create(bean, this);
 			this.node.setValue(bean, subBean);
 			// 如果自定义put方法修改了value，返回修改后的value，避免值丢失
 			subBean = this.node.getValue(bean);
@@ -209,18 +219,5 @@ public class BeanPath implements Iterator<BeanPath> {
 			"node=" + node +
 			", child='" + child + '\'' +
 			'}';
-	}
-
-	/**
-	 * 子节点值是否为列表
-	 *
-	 * @param node 节点
-	 * @return 是否为列表
-	 */
-	private static boolean isListNode(final Node node) {
-		if (node instanceof NameNode) {
-			return ((NameNode) node).isNumber();
-		}
-		return false;
 	}
 }

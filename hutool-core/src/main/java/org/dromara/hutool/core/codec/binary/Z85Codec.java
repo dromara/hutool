@@ -67,7 +67,7 @@ public class Z85Codec implements Encoder<byte[], String>, Decoder<String, byte[]
 		// Support inputs that are not divisible by 4 with no remainder.
 		final int padding = 4 - (remainder == 0 ? 4 : remainder);
 
-		// SPEC: 4 octets convert into 5 printable characters.
+		// SPEC: 4 octets support into 5 printable characters.
 		// char.length = length + 1/4 length == 5/4 length.
 		final char[] chars = new char[length + (length >>> 2) + (remainder == 0 ? 0 : 1)];
 		int idx = 0;

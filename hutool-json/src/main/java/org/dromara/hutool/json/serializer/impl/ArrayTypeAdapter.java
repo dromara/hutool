@@ -18,10 +18,11 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONArray;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.reader.JSONParser;
+import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
@@ -58,6 +59,9 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 
 	@Override
 	public JSON serialize(final Object bean, final JSONContext context) {
+		if (bean instanceof byte[]) {
+			return serializeBytes((byte[]) bean, context);
+		}
 		return IterTypeAdapter.INSTANCE.serialize(new ArrayIter<>(bean), context);
 	}
 
@@ -70,6 +74,36 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 			fill((JSONObject) json, result, componentType);
 		} else {
 			fill((JSONArray) json, result, componentType);
+		}
+		return result;
+	}
+
+	/**
+	 * 序列化二进制流为JSON
+	 *
+	 * @param bytes   二进制流
+	 * @param context JSON上下文
+	 * @return JSONArray
+	 */
+	private JSON serializeBytes(final byte[] bytes, final JSONContext context) {
+		final JSONConfig config = context.config();
+		switch (bytes[0]) {
+			case '{':
+			case '[':
+				return JSONParser.of(new JSONTokener(IoUtil.toStream(bytes)), config).parse();
+		}
+
+		// https://github.com/dromara/hutool/issues/2369
+		// 非标准的二进制流，则按照普通数组对待
+		final JSONArray result;
+		final JSON contextJson = context.getContextJson();
+		if (contextJson instanceof JSONArray) {
+			result = (JSONArray) contextJson;
+		} else {
+			result = JSONUtil.ofArray(config);
+		}
+		for (final byte b : bytes) {
+			result.set(b);
 		}
 		return result;
 	}

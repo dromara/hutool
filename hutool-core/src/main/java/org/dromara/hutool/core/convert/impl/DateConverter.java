@@ -108,7 +108,7 @@ public class DateConverter extends AbstractConverter implements MatcherConverter
 			}
 		}
 
-		throw new ConvertException("Can not convert {}:[{}] to {}", value.getClass().getName(), value, targetClass.getName());
+		throw new ConvertException("Can not support {}:[{}] to {}", value.getClass().getName(), value, targetClass.getName());
 	}
 
 	/**

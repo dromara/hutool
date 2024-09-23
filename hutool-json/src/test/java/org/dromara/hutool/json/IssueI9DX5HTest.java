@@ -17,7 +17,7 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.mapper.JSONValueMapper;
+import org.dromara.hutool.json.serializer.JSONMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ public class IssueI9DX5HTest {
 	@Test
 	void xmlToJSONTest() {
 		final String xml = "<GoodMsg>你好</GoodMsg>";
-		final JSONValueMapper mapper = JSONValueMapper.of(JSONConfig.of(), entry -> {
+		final JSONMapper mapper = JSONMapper.of(JSONConfig.of(), entry -> {
 			entry.setKey(StrUtil.toUnderlineCase((CharSequence) entry.getKey()));
 			return true;
 		});

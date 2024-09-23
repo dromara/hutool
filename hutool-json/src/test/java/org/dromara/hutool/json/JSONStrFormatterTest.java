@@ -17,6 +17,7 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.json.support.JSONStrFormatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

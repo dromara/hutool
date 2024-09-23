@@ -135,7 +135,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 				// 对于空格单独处理
 				rewrittenPath.append('+');
 			} else {
-				// convert to external encoding before hex conversion
+				// support to external encoding before hex conversion
 				try {
 					writer.write(c);
 					writer.flush();

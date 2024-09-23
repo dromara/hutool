@@ -284,6 +284,8 @@ public class TypeAdapterManager {
 	private static TypeAdapterManager registerDefault(final TypeAdapterManager manager) {
 
 		// 自定义序列化器
+		manager.register(ResourceBundleSerializer.INSTANCE);
+		manager.register(TokenerSerializer.INSTANCE);
 
 		// 自定义反序列化器
 		manager.register(KBeanDeserializer.INSTANCE);

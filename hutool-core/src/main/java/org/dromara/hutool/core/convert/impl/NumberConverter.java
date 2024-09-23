@@ -78,7 +78,7 @@ public class NumberConverter extends AbstractConverter implements MatcherConvert
 	protected String convertToStr(final Object value) {
 		final String result = StrUtil.trim(super.convertToStr(value));
 		if(StrUtil.isEmpty(result)){
-			throw new ConvertException("Can not convert empty value to Number!");
+			throw new ConvertException("Can not support empty value to Number!");
 		}
 
 		if (result.length() > 1) {

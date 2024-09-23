@@ -505,7 +505,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 		return IntStream.range(0, separators.length)
 				.mapToObj(idx -> (separators[idx]))
 				.filter(valid::contains)
-				// ugly way to convert back to char[]
+				// ugly way to support back to char[]
 				.map(c -> Character.toString(c))
 				.collect(Collectors.joining())
 				.toCharArray();

@@ -17,6 +17,7 @@
 package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
@@ -46,6 +47,9 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 
 	@Override
 	public boolean match(final Object bean, final JSONContext context) {
+		if(bean instanceof MapWrapper){
+			return false;
+		}
 		return bean instanceof Iterable || bean instanceof Iterator;
 	}
 
