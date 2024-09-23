@@ -64,21 +64,21 @@ public class TypeAdapterManager {
 	}
 
 	/**
-	 * 获得单例的 SerializerManager
+	 * 获得单例的 TypeAdapterManager
 	 *
-	 * @return SerializerManager
+	 * @return TypeAdapterManager
 	 */
 	public static TypeAdapterManager getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
 	/**
-	 * 创建SerializerManager，附带默认的序列化器和反序列化器
+	 * 创建空的TypeAdapterManager
 	 *
-	 * @return SerializerManager
+	 * @return TypeAdapterManager
 	 */
 	public static TypeAdapterManager of() {
-		return registerDefault(new TypeAdapterManager());
+		return new TypeAdapterManager();
 	}
 
 	/**
