@@ -17,7 +17,6 @@
 package org.dromara.hutool.json;
 
 import lombok.ToString;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.TypeAdapterManager;
@@ -44,7 +43,6 @@ public class CustomSerializeTest {
 		customBean.name = "testName";
 
 		final JSONObject obj = JSONUtil.parseObj(customBean);
-		Console.log(obj);
 		Assertions.assertEquals("testName", obj.getStr("customName"));
 	}
 

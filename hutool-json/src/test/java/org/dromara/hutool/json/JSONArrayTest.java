@@ -19,7 +19,6 @@ package org.dromara.hutool.json;
 import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -200,8 +199,7 @@ public class JSONArrayTest {
 		Assertions.assertThrows(JSONException.class, ()->{
 			final String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
 			final JSONArray ja = JSONUtil.parseArray(json);
-			final Object bean = ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
-			Console.log(bean);
+			ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
 		});
 	}
 
