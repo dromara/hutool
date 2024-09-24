@@ -16,7 +16,6 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.bean.BeanUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ public class IssueI3EGJPTest {
 		final JSONObject paramJson = new JSONObject();
 		paramJson.set("is_booleana", "1");
 		paramJson.set("is_booleanb", true);
-		final ConvertDO convertDO = BeanUtil.toBean(paramJson, ConvertDO.class);
+		final ConvertDO convertDO = paramJson.toBean(ConvertDO.class);
 
 		Assertions.assertTrue(convertDO.isBooleana());
 		Assertions.assertTrue(convertDO.getIsBooleanb());

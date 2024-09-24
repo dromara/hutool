@@ -65,7 +65,6 @@ public class JSONPrimitiveTypeAdapter implements MatcherJSONSerializer<Object>, 
 	public Object deserialize(final JSON json, final Type deserializeType) {
 		final Object value = json.asJSONPrimitive().getValue();
 
-
 		if (null != value && TypeUtil.getClass(deserializeType).isAssignableFrom(value.getClass())) {
 			return value;
 		}
