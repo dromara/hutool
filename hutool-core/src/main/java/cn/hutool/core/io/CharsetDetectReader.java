@@ -91,6 +91,8 @@ public class CharsetDetectReader extends Reader {
     public void close() throws IOException {
         if (isr != null) {
             isr.close();
+        } else {
+            in.close();
         }
     }
 }
