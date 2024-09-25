@@ -196,4 +196,13 @@ public class SystemUtil {
 	public static String getTmpDirPath() {
 		return get("java.io.tmpdir");
 	}
+
+	/**
+	 * 获取工作目录路径（绝对路径）
+	 *
+	 * @return 工作目录路径
+	 */
+	public static String getUserDirPath() {
+		return get("user.dir");
+	}
 }
