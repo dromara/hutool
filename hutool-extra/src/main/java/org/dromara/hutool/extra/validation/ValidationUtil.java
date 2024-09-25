@@ -19,6 +19,7 @@ package org.dromara.hutool.extra.validation;
 import org.dromara.hutool.core.collection.CollUtil;
 
 import jakarta.validation.*;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Set;
 
@@ -74,11 +75,15 @@ public class ValidationUtil {
 	 * @throws ValidationException 校验不通过，则报 ValidationException 异常，调用者进行捕获，直接响应给前端用户
 	 */
 	public static void validateAndThrowFirst(final Object object, final Class<?>... groups)
-			throws ValidationException {
+		throws ValidationException {
 		final Set<ConstraintViolation<Object>> constraintViolations = validate(object, groups);
 		if (CollUtil.isNotEmpty(constraintViolations)) {
 			final ConstraintViolation<Object> constraint = constraintViolations.iterator().next();
-			throw new ValidationException(constraint.getMessage());
+			if (StrUtil.contains(constraint.getMessageTemplate(), "jakarta.validation.constraints")) {
+				throw new ValidationException(constraint.getPropertyPath() + constraint.getMessage());
+			} else {
+				throw new ValidationException(constraint.getMessage());
+			}
 		}
 	}
 
