@@ -20,6 +20,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.net.url.UrlQuery;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ public class IssueIAFKWPTest {
 
 	@Test
 	void urlWithFormTest() {
-		final JSONObject obj = new JSONObject();
+		final JSONObject obj = JSONUtil.ofObj();
 		obj.set("fields", ListUtil.of("1", "2", "good"));
 
 		final Map<String, Object> params = new HashMap<>();

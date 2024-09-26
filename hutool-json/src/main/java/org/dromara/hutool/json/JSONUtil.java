@@ -23,12 +23,10 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.support.JSONStrFormatter;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -149,24 +147,15 @@ public class JSONUtil {
 	}
 
 	/**
-	 * JSON字符串转JSONObject对象<br>
-	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 * 对象转JSONObject对象
 	 *
 	 * @param obj       Bean对象或者Map
 	 * @param config    JSON配置
 	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONObject
 	 */
-	public static JSONObject parseObj(Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		if (obj instanceof byte[]) {
-			obj = new ByteArrayInputStream((byte[]) obj);
-		}
-
-		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
-		if (obj instanceof CharSequence) {
-			return (JSONObject) jsonMapper.map((CharSequence) obj);
-		}
-		return jsonMapper.mapObj(obj);
+	public static JSONObject parseObj(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		return JSONFactory.of(config, predicate).parseObj(obj);
 	}
 
 	/**
@@ -174,7 +163,6 @@ public class JSONUtil {
 	 *
 	 * @param obj 数组或集合对象或字符串等
 	 * @return JSONArray
-	 * @since 3.0.8
 	 */
 	public static JSONArray parseArray(final Object obj) {
 		return parseArray(obj, null);
@@ -193,7 +181,7 @@ public class JSONUtil {
 	}
 
 	/**
-	 * JSON字符串转JSONArray
+	 * 对象转JSONArray
 	 *
 	 * @param obj 数组或集合对象
 	 * @param config            JSON配置
@@ -202,16 +190,7 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONArray parseArray(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		if (obj instanceof JSONObject) {
-			final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
-			return jsonMapper.mapFromJSONObject((JSONObject) obj);
-		}
-
-		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
-		if (obj instanceof CharSequence) {
-			return (JSONArray) jsonMapper.map((CharSequence) obj);
-		}
-		return jsonMapper.mapArray(obj);
+		return JSONFactory.of(config, predicate).parseArray(obj);
 	}
 
 	/**
@@ -262,11 +241,7 @@ public class JSONUtil {
 	 * @return JSON（JSONObject or JSONArray）
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
-		if (obj instanceof CharSequence) {
-			return jsonMapper.map((CharSequence) obj);
-		}
-		return jsonMapper.map(obj);
+		return JSONFactory.of(config, predicate).parse(obj);
 	}
 
 	/**

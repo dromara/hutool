@@ -35,18 +35,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * JSON序列化和反序列化管理器，用于管理JSON序列化器，注册和注销自定义序列化器和反序列化器。<br>
+ * JSON适配器（序列化和反序列化）管理器，用于管理JSON序列化器，注册和注销自定义序列化器和反序列化器。<br>
  * 此管理器管理着两种类型的序列化器和反序列化器：
  * <ul>
  *     <li>类型精准匹配方式。通过Java对象类型匹配，只会匹配查找的类型，而不匹配子类。可以调用{@link #register(Type, TypeAdapter)}注册。</li>
  *     <li>匹配器（Matcher）方式。通过判断序列化和反序列化器中match方法，找到自定义的序列化和反序列化器，可以调用{@link #register(TypeAdapter)}注册。</li>
  * </ul>
  * <p>
- * 管理器的使用分为三种方式：
+ * 管理器的使用分为两种方式：
  * <ul>
  *     <li>全局模式：  使用{@link TypeAdapterManager#getInstance()}调用单例，全局可用。</li>
- *     <li>实例模式：  使用{@link TypeAdapterManager#of()}创建实例，局部可用。</li>
- *     <li>自定义模式：使用{@code new SerializerManager()}创建实例，不加载默认的转换器。</li>
+ *     <li>实例模式：  使用{@link TypeAdapterManager#of()}创建实例，局部可用，不加载默认的转换器。</li>
  * </ul>
  *
  * @author looly
@@ -285,8 +284,9 @@ public class TypeAdapterManager {
 	private static TypeAdapterManager registerDefault(final TypeAdapterManager manager) {
 
 		// 自定义序列化器
-		manager.register(ResourceBundleSerializer.INSTANCE);
+		manager.register(ResourceSerializer.INSTANCE);
 		manager.register(TokenerSerializer.INSTANCE);
+		manager.register(ResourceBundleSerializer.INSTANCE);
 
 		// 自定义反序列化器
 		manager.register(KBeanDeserializer.INSTANCE);

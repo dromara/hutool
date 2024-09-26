@@ -18,6 +18,7 @@ package org.dromara.hutool.json.serializer;
 
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
@@ -104,7 +105,11 @@ public class JSONMapper implements Serializable {
 	 * @return 实体类对象
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T toBean(final JSON json, final Type type) {
+	public <T> T toBean(final JSON json, Type type) {
+		if (type instanceof TypeReference) {
+			type = ((TypeReference<?>) type).getType();
+		}
+
 		if (null == type || Object.class == type) {
 			if (json instanceof JSONPrimitive) {
 				return (T) ((JSONPrimitive) json).getValue();

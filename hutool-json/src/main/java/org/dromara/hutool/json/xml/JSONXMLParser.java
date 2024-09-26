@@ -23,6 +23,7 @@ import org.dromara.hutool.core.xml.XmlConstants;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 
 import java.util.function.Predicate;
 
@@ -156,7 +157,7 @@ public class JSONXMLParser {
 		} else {
 			tagName = (String) token;
 			token = null;
-			jsonobject = new JSONObject();
+			jsonobject = JSONUtil.ofObj(context.config());
 			final boolean keepStrings = parseConfig.isKeepStrings();
 			for (; ; ) {
 				if (token == null) {
