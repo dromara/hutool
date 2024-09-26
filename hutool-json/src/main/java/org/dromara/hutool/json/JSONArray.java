@@ -27,7 +27,6 @@ import org.dromara.hutool.json.serializer.impl.IterTypeAdapter;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * JSON数组<br>
@@ -256,21 +255,6 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	@Override
 	public String toString() {
 		return this.toJSONString(0);
-	}
-
-	/**
-	 * 返回JSON字符串<br>
-	 * 支持过滤器，即选择哪些字段或值不写出
-	 *
-	 * @param indentFactor 每层缩进空格数
-	 * @param predicate    过滤器，可以修改值，key（index）无法修改，{@link Predicate#test(Object)}为{@code true}保留
-	 * @return JSON字符串
-	 * @since 5.7.15
-	 */
-	public String toJSONString(final int indentFactor, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, this.config).setPredicate(predicate);
-		this.write(jsonWriter);
-		return jsonWriter.toString();
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class JSONMapper implements Serializable {
 	private static final long serialVersionUID = -6714488573738940582L;
 
 	/**
-	 * 创建ObjectMapper
+	 * 创建JSONMapper
 	 *
 	 * @param jsonConfig 来源对象
 	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留

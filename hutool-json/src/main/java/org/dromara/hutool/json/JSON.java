@@ -214,17 +214,6 @@ public interface JSON extends Serializable {
 	 * 格式化输出JSON字符串
 	 *
 	 * @param indentFactor 每层缩进空格数
-	 * @return JSON字符串
-	 * @throws JSONException 包含非法数抛出此异常
-	 */
-	default String toJSONString(final int indentFactor) throws JSONException {
-		return toJSONString(indentFactor, null);
-	}
-
-	/**
-	 * 格式化输出JSON字符串
-	 *
-	 * @param indentFactor 每层缩进空格数
 	 * @param predicate    过滤器，用于过滤不需要的键值对
 	 * @return JSON字符串
 	 * @throws JSONException 包含非法数抛出此异常
@@ -233,6 +222,17 @@ public interface JSON extends Serializable {
 		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, config()).setPredicate(predicate);
 		this.write(jsonWriter);
 		return jsonWriter.toString();
+	}
+
+	/**
+	 * 格式化输出JSON字符串
+	 *
+	 * @param indentFactor 每层缩进空格数
+	 * @return JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
+	 */
+	default String toJSONString(final int indentFactor) throws JSONException {
+		return toJSONString(indentFactor, null);
 	}
 
 	/**
