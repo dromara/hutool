@@ -51,7 +51,7 @@ public class JSONArrayTest {
 		JSONArray jsonArray = JSONUtil.parseArray(jsonObject, JSONConfig.of());
 		assertEquals(new JSONArray(), jsonArray);
 
-		jsonObject.set("key1", "value1");
+		jsonObject.putObj("key1", "value1");
 		jsonArray = JSONUtil.parseArray(jsonObject, JSONConfig.of());
 		assertEquals(1, jsonArray.size());
 		assertEquals("[{\"key1\":\"value1\"}]", jsonArray.toString());
@@ -70,9 +70,9 @@ public class JSONArrayTest {
 		final JSONArray array = JSONUtil.ofArray();
 		// 方法2
 		// JSONArray array = new JSONArray();
-		array.set("value1");
-		array.set("value2");
-		array.set("value3");
+		array.addObj("value1");
+		array.addObj("value2");
+		array.addObj("value3");
 
 		assertEquals(array.getObj(0), "value1");
 	}
@@ -240,12 +240,12 @@ public class JSONArrayTest {
 	@Test
 	public void putToIndexTest() {
 		JSONArray jsonArray = new JSONArray();
-		jsonArray.setValue(3, "test");
+		jsonArray.setObj(3, "test");
 		// 默认忽略null值，因此空位无值，只有一个值
 		assertEquals(1, jsonArray.size());
 
 		jsonArray = new JSONArray(JSONConfig.of().setIgnoreNullValue(false));
-		jsonArray.setValue(2, "test");
+		jsonArray.setObj(2, "test");
 		// 第三个位置插入值，0~2都是null
 		assertEquals(3, jsonArray.size());
 	}
@@ -254,7 +254,7 @@ public class JSONArrayTest {
 	@Test
 	public void putTest2() {
 		final JSONArray jsonArray = new JSONArray();
-		jsonArray.setValue(0, 1);
+		jsonArray.setObj(0, 1);
 		assertEquals(1, jsonArray.size());
 		assertEquals(1, jsonArray.getObj(0));
 	}
@@ -276,10 +276,10 @@ public class JSONArrayTest {
 	@Test
 	public void filterIncludeTest() {
 		final JSONArray json1 = JSONUtil.ofArray()
-				.set("value1")
-				.set("value2")
-				.set("value3")
-				.set(true);
+				.addObj("value1")
+				.addObj("value2")
+				.addObj("value3")
+				.addObj(true);
 
 		final String s = json1.toJSONString(0, (pair) -> ((JSONPrimitive)pair.getValue()).getValue().equals("value2"));
 		assertEquals("[\"value2\"]", s);
@@ -288,10 +288,10 @@ public class JSONArrayTest {
 	@Test
 	public void filterExcludeTest() {
 		final JSONArray json1 = JSONUtil.ofArray()
-				.set("value1")
-				.set("value2")
-				.set("value3")
-				.set(true);
+				.addObj("value1")
+				.addObj("value2")
+				.addObj("value3")
+				.addObj(true);
 
 		final String s = json1.toJSONString(0, (pair) -> !((JSONPrimitive)pair.getValue()).getValue().equals("value2"));
 		assertEquals("[\"value1\",\"value3\",true]", s);
@@ -300,7 +300,7 @@ public class JSONArrayTest {
 	@Test
 	public void putNullTest() {
 		final JSONArray array = JSONUtil.ofArray(JSONConfig.of().setIgnoreNullValue(false));
-		array.set(null);
+		array.addObj(null);
 
 		assertEquals("[null]", array.toString());
 	}
@@ -322,7 +322,7 @@ public class JSONArrayTest {
 			if(mutable.getKey() instanceof Integer){
 				final JSONObject o = (JSONObject) mutable.getValue();
 				if ("111".equals(o.getStr("id"))) {
-					o.set("name", "test1_edit");
+					o.putObj("name", "test1_edit");
 				}
 			}
 			return true;
@@ -335,9 +335,9 @@ public class JSONArrayTest {
 	@Test
 	void jsonIterTest() {
 		final JSONArray array = JSONUtil.ofArray();
-		array.add(JSONUtil.ofObj().set("name", "aaa"));
-		array.add(JSONUtil.ofObj().set("name", "bbb"));
-		array.add(JSONUtil.ofObj().set("name", "ccc"));
+		array.add(JSONUtil.ofObj().putObj("name", "aaa"));
+		array.add(JSONUtil.ofObj().putObj("name", "bbb"));
+		array.add(JSONUtil.ofObj().putObj("name", "ccc"));
 
 		final StringBuilder result = new StringBuilder();
 		array.forEach(result::append);

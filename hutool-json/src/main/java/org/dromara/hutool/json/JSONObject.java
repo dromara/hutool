@@ -143,7 +143,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	}
 	// endregion
 
-	// region ----- set
+	// region ----- put
 	/**
 	 * 对值加一，如果值不存在，赋值1，如果为数字类型，做加一操作
 	 *
@@ -154,7 +154,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	public JSONObject increment(final String key) throws JSONException {
 		final JSON json = this.get(key);
 		if(null == json){
-			return set(key, 1);
+			return putObj(key, 1);
 		}
 
 		if(json instanceof JSONPrimitive){
@@ -185,11 +185,11 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	public JSONObject append(final String key, final Object value) throws JSONException {
 		final Object object = this.getObj(key);
 		if (object == null) {
-			this.set(key, value);
+			this.putObj(key, value);
 		} else if (object instanceof JSONArray) {
-			((JSONArray) object).set(value);
+			((JSONArray) object).addObj(value);
 		} else {
-			this.set(key, factory.ofArray().set(object).set(value));
+			this.putObj(key, factory.ofArray().addObj(object).addObj(value));
 		}
 		return this;
 	}
@@ -205,8 +205,8 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @param fields lambda,不能为空
 	 * @return this
 	 */
-	public JSONObject setFields(final SerSupplier<?>... fields) {
-		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.get()));
+	public JSONObject putFields(final SerSupplier<?>... fields) {
+		Arrays.stream(fields).forEach(f -> putObj(LambdaUtil.getFieldName(f), f.get()));
 		return this;
 	}
 
@@ -217,10 +217,10 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
-	public JSONObject setAll(final Map<?, ?> map) {
+	public JSONObject putAllObj(final Map<?, ?> map) {
 		if(MapUtil.isNotEmpty(map)){
 			for (final Entry<?, ?> entry : map.entrySet()) {
-				this.set(StrUtil.toStringOrNull(entry.getKey()), entry.getValue());
+				this.putObj(StrUtil.toStringOrNull(entry.getKey()), entry.getValue());
 			}
 		}
 		return this;
@@ -234,7 +234,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
-	public JSONObject set(final String key, final Object value) throws JSONException {
+	public JSONObject putObj(final String key, final Object value) throws JSONException {
 		this.put(key, factory.getMapper().map(value));
 		return this;
 	}

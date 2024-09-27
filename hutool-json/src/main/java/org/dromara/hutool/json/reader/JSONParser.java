@@ -165,20 +165,8 @@ public class JSONParser {
 			// The key is followed by ':'.
 			tokener.nextColon();
 
-			// 过滤并设置键值对
-			final JSON value = nextJSON(tokener.nextClean());
-			// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
-			final Predicate<MutableEntry<Object, Object>> predicate = factory.getPredicate();
-			if (null != predicate) {
-				final MutableEntry<Object, Object> entry = new MutableEntry<>(key, value);
-				if (predicate.test(entry)) {
-					// 使用修改后的键值对
-					key = (String) entry.getKey();
-					jsonObject.set(key, entry.getValue());
-				}
-			} else {
-				jsonObject.set(key, value);
-			}
+			// 过滤并设置键值对，通过MutablePair实现过滤、修改键值对等
+			set(jsonObject, key, nextJSON(tokener.nextClean()));
 
 			// Pairs are separated by ',' or ';'
 			switch (tokener.nextClean()) {
@@ -200,6 +188,27 @@ public class JSONParser {
 	}
 
 	/**
+	 * 设置键值对，通过前置过滤器过滤、修改键值对等
+	 *
+	 * @param jsonObject JSON对象
+	 * @param key 键
+	 * @param value 值
+	 */
+	private void set(final JSONObject jsonObject, final String key, final JSON value){
+		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		final Predicate<MutableEntry<Object, Object>> predicate = factory.getPredicate();
+		if (null != predicate) {
+			final MutableEntry<Object, Object> entry = new MutableEntry<>(key, value);
+			if (predicate.test(entry)) {
+				// 使用修改后的键值对
+				jsonObject.putObj((String) entry.getKey(), entry.getValue());
+			}
+		} else {
+			jsonObject.put(key, value);
+		}
+	}
+
+	/**
 	 * 解析下一个值为JSONArray，第一个字符必须读取完后再调用此方法
 	 *
 	 * @param jsonArray JSON数组
@@ -214,20 +223,28 @@ public class JSONParser {
 				return;
 			} else {
 				// ,value or value
-				JSON value = nextJSON(CharUtil.COMMA == c ? tokener.nextClean() : c);
-				final Predicate<MutableEntry<Object, Object>> predicate = factory.getPredicate();
-				if (null != predicate) {
-					// 使用过滤器
-					final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), value);
-					if (predicate.test(entry)) {
-						// 使用修改后的键值对
-						value = (JSON) entry.getValue();
-						jsonArray.add(value);
-					}
-				} else {
-					jsonArray.add(value);
-				}
+				set(jsonArray, nextJSON(CharUtil.COMMA == c ? tokener.nextClean() : c));
 			}
+		}
+	}
+
+	/**
+	 * 设置数组元素，通过前置过滤器过滤、修改键值对等
+	 *
+	 * @param jsonArray JSON数组
+	 * @param value 值
+	 */
+	private void set(final JSONArray jsonArray, final JSON value) {
+		final Predicate<MutableEntry<Object, Object>> predicate = factory.getPredicate();
+		if (null != predicate) {
+			// 使用过滤器
+			final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), value);
+			if (predicate.test(entry)) {
+				// 使用修改后的键值对，用户修改后可能不是JSON，此处使用set，调用mapper转换
+				jsonArray.setObj((Integer) entry.getKey(), entry.getValue());
+			}
+		} else {
+			jsonArray.add(value);
 		}
 	}
 

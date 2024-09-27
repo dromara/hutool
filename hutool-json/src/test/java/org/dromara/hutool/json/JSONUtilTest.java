@@ -186,9 +186,9 @@ public class JSONUtilTest {
 	public void toJsonStrTest3() {
 		// 验证某个字段为JSON字符串时转义是否规范
 		final JSONObject object = new JSONObject(JSONConfig.of().setIgnoreError(true));
-		object.set("name", "123123");
-		object.set("value", "\\");
-		object.set("value2", "</");
+		object.putObj("name", "123123");
+		object.putObj("value", "\\");
+		object.putObj("value2", "</");
 
 		final HashMap<String, String> map = MapUtil.newHashMap();
 		map.put("user", object.toString());
@@ -277,12 +277,12 @@ public class JSONUtilTest {
 	public void setStripTrailingZerosTest() {
 		// 默认去除多余的0
 		final JSONObject jsonObjectDefault = JSONUtil.ofObj()
-			.set("test2", 12.00D);
+			.putObj("test2", 12.00D);
 		assertEquals("{\"test2\":12}", jsonObjectDefault.toString());
 
 		// 不去除多余的0
 		final JSONObject jsonObject = JSONUtil.ofObj(JSONConfig.of().setStripTrailingZeros(false))
-			.set("test2", 12.00D);
+			.putObj("test2", 12.00D);
 		assertEquals("{\"test2\":12.0}", jsonObject.toString());
 
 		// 去除多余的0
@@ -304,7 +304,7 @@ public class JSONUtilTest {
 	public void sqlExceptionTest() {
 		//https://github.com/dromara/hutool/issues/1399
 		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
-		final JSONObject set = JSONUtil.ofObj().set("test", new SQLException("test"));
+		final JSONObject set = JSONUtil.ofObj().putObj("test", new SQLException("test"));
 		assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
 	}
 
@@ -318,8 +318,8 @@ public class JSONUtilTest {
 	@Test
 	public void toXmlTest() {
 		final JSONObject obj = JSONUtil.ofObj();
-		obj.set("key1", "v1")
-			.set("key2", ListUtil.view("a", "b", "c"));
+		obj.putObj("key1", "v1")
+			.putObj("key2", ListUtil.view("a", "b", "c"));
 		final String xmlStr = JSONUtil.toXmlStr(obj);
 		assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}

@@ -44,9 +44,9 @@ public class SimpleServerTest {
 			// 返回JSON数据测试
 			.addAction("/restTest", (request, response) -> {
 				final String res = JSONUtil.ofObj()
-					.set("id", 1)
-					.set("method", request.getMethod())
-					.set("request", request.getBody())
+					.putObj("id", 1)
+					.putObj("method", request.getMethod())
+					.putObj("request", request.getBody())
 					.toStringPretty();
 				response.write(res, ContentType.JSON.toString());
 			})

@@ -118,9 +118,8 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 *
 	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
-	 * @since 5.2.5
 	 */
-	public JSONArray set(final Object value) {
+	public JSONArray addObj(final Object value) {
 		this.add(this.factory.getMapper().map(value));
 		return this;
 	}
@@ -138,7 +137,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		}
 		final JSONObject jo = this.factory.ofObj();
 		for (int i = 0; i < names.size(); i += 1) {
-			jo.set(names.getStr(i), this.getObj(i));
+			jo.putObj(names.getStr(i), this.getObj(i));
 		}
 		return jo;
 	}
@@ -169,10 +168,11 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 *
 	 * @param index   位置
 	 * @param element 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return 替换的值，即之前的值
+	 * @return this
 	 */
-	public JSON setValue(final int index, final Object element) {
-		return set(index, this.factory.getMapper().map(element));
+	public JSONArray setObj(final int index, final Object element) {
+		set(index, this.factory.getMapper().map(element));
+		return this;
 	}
 
 	/**
@@ -184,15 +184,30 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 */
 	@Override
 	public JSON set(final int index, final JSON element) {
-		// 越界则追加到指定位置
-		if (index >= size()) {
-			add(index, element);
-			return null;
-		}
 		if (null == element && config().isIgnoreNullValue()) {
 			return null;
 		}
+
+		// 越界则追加到指定位置
+		final int size = size();
+		if(index == size){
+			add(element);
+			return null;
+		}
+		if (index > size) {
+			add(index, element);
+			return null;
+		}
+
 		return this.raw.set(index, element);
+	}
+
+	@Override
+	public boolean add(final JSON element) {
+		if (null == element && config().isIgnoreNullValue()) {
+			return false;
+		}
+		return super.add(element);
 	}
 
 	@Override

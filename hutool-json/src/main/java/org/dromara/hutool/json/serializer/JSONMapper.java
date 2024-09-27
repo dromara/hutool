@@ -147,7 +147,7 @@ public class JSONMapper implements Serializable {
 	public JSONArray mapFromJSONObject(final JSONObject jsonObject) {
 		final JSONArray array = factory.ofArray();
 		for (final Map.Entry<String, JSON> entry : jsonObject) {
-			array.set(entry);
+			array.addObj(entry);
 		}
 		return array;
 	}

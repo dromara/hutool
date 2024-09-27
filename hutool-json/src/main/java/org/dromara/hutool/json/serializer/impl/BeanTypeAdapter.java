@@ -18,7 +18,6 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.bean.BeanDesc;
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.bean.copier.BeanToMapCopier;
 import org.dromara.hutool.core.bean.copier.ValueProviderToBeanCopier;
 import org.dromara.hutool.core.lang.copier.Copier;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
@@ -31,6 +30,7 @@ import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
+import org.dromara.hutool.json.support.BeanToJSONCopier;
 import org.dromara.hutool.json.support.JSONObjectValueProvider;
 
 import java.lang.reflect.Type;
@@ -72,14 +72,9 @@ public class BeanTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 
 	@Override
 	public JSON serialize(final Object bean, final JSONContext context) {
-		final JSONObject contextJson = context.getOrCreateObj();
-
-		final BeanToMapCopier copier = new BeanToMapCopier(
-			bean,
-			contextJson,
-			JSONObject.class, InternalJSONUtil.toCopyOptions(context.config())
-		);
-		return (JSON) copier.copy();
+		final BeanToJSONCopier copier = new BeanToJSONCopier(
+			bean, context.getOrCreateObj(), context.getFactory());
+		return copier.copy();
 	}
 
 	@Override

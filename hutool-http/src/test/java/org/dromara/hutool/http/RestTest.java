@@ -38,8 +38,8 @@ public class RestTest {
 		final Request request = Request.of("http://localhost:8090/rest/restTest/")
 				.method(Method.POST)
 				.body(JSONUtil.ofObj()
-						.set("aaa", "aaaValue")
-						.set("键2", "值2").toString());
+						.putObj("aaa", "aaaValue")
+						.putObj("键2", "值2").toString());
 		Assertions.assertEquals("application/json;charset=UTF-8", request.header(HeaderName.CONTENT_TYPE));
 	}
 
@@ -50,8 +50,8 @@ public class RestTest {
 		final Request request = Request.of("http://localhost:8090/rest/restTest/")
 				.method(Method.POST)
 				.body(JSONUtil.ofObj()
-						.set("aaa", "aaaValue")
-						.set("键2", "值2").toString());
+						.putObj("aaa", "aaaValue")
+						.putObj("键2", "值2").toString());
 		Console.log(request.send().body());
 	}
 
@@ -59,8 +59,8 @@ public class RestTest {
 	@Disabled
 	public void postTest2() {
 		final String result = HttpUtil.post("http://localhost:8090/rest/restTest/", JSONUtil.ofObj()//
-				.set("aaa", "aaaValue")
-				.set("键2", "值2").toString());
+				.putObj("aaa", "aaaValue")
+				.putObj("键2", "值2").toString());
 		Console.log(result);
 	}
 
@@ -70,8 +70,8 @@ public class RestTest {
 		final Request request = Request.of("http://localhost:8888/restTest")//
 				.header(HeaderName.CONTENT_TYPE, "application/json")
 				.body(JSONUtil.ofObj()
-						.set("aaa", "aaaValue")
-						.set("键2", "值2").toString());
+						.putObj("aaa", "aaaValue")
+						.putObj("键2", "值2").toString());
 		//noinspection resource
 		Console.log(request.send().body());
 	}

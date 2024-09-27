@@ -25,8 +25,8 @@ public class IssueI3EGJPTest {
 	@Test
 	public void hutoolMapToBean() {
 		final JSONObject paramJson = new JSONObject();
-		paramJson.set("is_booleana", "1");
-		paramJson.set("is_booleanb", true);
+		paramJson.putObj("is_booleana", "1");
+		paramJson.putObj("is_booleanb", true);
 		final ConvertDO convertDO = paramJson.toBean(ConvertDO.class);
 
 		Assertions.assertTrue(convertDO.isBooleana());

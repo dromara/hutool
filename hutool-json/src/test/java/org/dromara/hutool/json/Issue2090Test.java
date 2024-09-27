@@ -71,7 +71,7 @@ public class Issue2090Test {
 	@Test
 	public void monthTest(){
 		final JSONObject jsonObject = new JSONObject();
-		jsonObject.set("month", Month.JANUARY);
+		jsonObject.putObj("month", Month.JANUARY);
 		Assertions.assertEquals("{\"month\":1}", jsonObject.toString());
 
 		final JSON parse = JSONUtil.parse(Month.JANUARY);
@@ -83,7 +83,7 @@ public class Issue2090Test {
 	@Test
 	public void weekTest(){
 		final JSONObject jsonObject = new JSONObject();
-		jsonObject.set("week", DayOfWeek.SUNDAY);
+		jsonObject.putObj("week", DayOfWeek.SUNDAY);
 		Assertions.assertEquals("{\"week\":7}", jsonObject.toString());
 
 		final JSON parse = JSONUtil.parse(DayOfWeek.SUNDAY);

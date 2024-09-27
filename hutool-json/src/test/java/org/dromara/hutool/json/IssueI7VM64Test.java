@@ -34,7 +34,7 @@ public class IssueI7VM64Test {
 		map.put("a", "1");
 
 		final JSONObject jsonObject = new JSONObject();
-		jsonObject.set("c", map);
+		jsonObject.putObj("c", map);
 		map.put("b", 2);
 
 		//Console.log("Hutool JSON: " + jsonObject);

@@ -136,24 +136,24 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 	private static void toJSONObject(final TemporalAccessor bean, final JSONObject json) {
 		if (bean instanceof LocalDate) {
 			final LocalDate localDate = (LocalDate) bean;
-			json.set(YEAR_KEY, localDate.getYear());
-			json.set(MONTH_KEY, localDate.getMonthValue());
-			json.set(DAY_KEY, localDate.getDayOfMonth());
+			json.putObj(YEAR_KEY, localDate.getYear());
+			json.putObj(MONTH_KEY, localDate.getMonthValue());
+			json.putObj(DAY_KEY, localDate.getDayOfMonth());
 		} else if (bean instanceof LocalDateTime) {
 			final LocalDateTime localDateTime = (LocalDateTime) bean;
-			json.set(YEAR_KEY, localDateTime.getYear());
-			json.set(MONTH_KEY, localDateTime.getMonthValue());
-			json.set(DAY_KEY, localDateTime.getDayOfMonth());
-			json.set(HOUR_KEY, localDateTime.getHour());
-			json.set(MINUTE_KEY, localDateTime.getMinute());
-			json.set(SECOND_KEY, localDateTime.getSecond());
-			json.set(NANO_KEY, localDateTime.getNano());
+			json.putObj(YEAR_KEY, localDateTime.getYear());
+			json.putObj(MONTH_KEY, localDateTime.getMonthValue());
+			json.putObj(DAY_KEY, localDateTime.getDayOfMonth());
+			json.putObj(HOUR_KEY, localDateTime.getHour());
+			json.putObj(MINUTE_KEY, localDateTime.getMinute());
+			json.putObj(SECOND_KEY, localDateTime.getSecond());
+			json.putObj(NANO_KEY, localDateTime.getNano());
 		} else if (bean instanceof LocalTime) {
 			final LocalTime localTime = (LocalTime) bean;
-			json.set(HOUR_KEY, localTime.getHour());
-			json.set(MINUTE_KEY, localTime.getMinute());
-			json.set(SECOND_KEY, localTime.getSecond());
-			json.set(NANO_KEY, localTime.getNano());
+			json.putObj(HOUR_KEY, localTime.getHour());
+			json.putObj(MINUTE_KEY, localTime.getMinute());
+			json.putObj(SECOND_KEY, localTime.getSecond());
+			json.putObj(NANO_KEY, localTime.getNano());
 		} else{
 			throw new JSONException("Unsupported type: {}", bean.getClass().getName());
 		}

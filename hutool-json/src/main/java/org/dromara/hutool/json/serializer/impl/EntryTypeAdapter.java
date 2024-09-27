@@ -59,7 +59,7 @@ public class EntryTypeAdapter implements MatcherJSONSerializer<Map.Entry<?, ?>>,
 	@Override
 	public JSON serialize(final Map.Entry<?, ?> bean, final JSONContext context) {
 		return context.getOrCreateObj()
-			.set(ConvertUtil.toStr(bean.getKey()), bean.getValue());
+			.putObj(ConvertUtil.toStr(bean.getKey()), bean.getValue());
 	}
 
 	@Override

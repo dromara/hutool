@@ -33,7 +33,7 @@ public class Issue2572Test {
 		final Set<DayOfWeek> weeks = new HashSet<>();
 		weeks.add(DayOfWeek.MONDAY);
 		final JSONObject obj = new JSONObject();
-		obj.set("weeks", weeks);
+		obj.putObj("weeks", weeks);
 		Assertions.assertEquals("{\"weeks\":[1]}", obj.toString());
 
 		final Map<String, Set<DayOfWeek>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<DayOfWeek>>>() {
@@ -46,7 +46,7 @@ public class Issue2572Test {
 		final Set<Month> months = new HashSet<>();
 		months.add(Month.DECEMBER);
 		final JSONObject obj = new JSONObject();
-		obj.set("months", months);
+		obj.putObj("months", months);
 		Assertions.assertEquals("{\"months\":[12]}", obj.toString());
 
 		final Map<String, Set<Month>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<Month>>>() {
@@ -59,7 +59,7 @@ public class Issue2572Test {
 		final Set<MonthDay> monthDays = new HashSet<>();
 		monthDays.add(MonthDay.of(Month.DECEMBER, 1));
 		final JSONObject obj = new JSONObject();
-		obj.set("monthDays", monthDays);
+		obj.putObj("monthDays", monthDays);
 		Assertions.assertEquals("{\"monthDays\":[\"--12-01\"]}", obj.toString());
 
 		final Map<String, Set<MonthDay>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<MonthDay>>>() {

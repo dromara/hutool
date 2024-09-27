@@ -27,6 +27,7 @@ import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Type;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -66,7 +67,9 @@ public class JSONFactory {
 
 	private final JSONConfig config;
 	/**
-	 * 过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回<br>
+	 * 过滤器，用于过滤或修改键值对<br>
+	 * {@link Predicate#test(Object)} 返回{@code true}表示接受，{@code false}表示忽略<br>
+	 * 同时{@link MutableEntry}为可变键值对，在判断逻辑中可同时修改键和值，修改后返回{@code true}<br>
 	 * entry中，key在JSONObject中为name，在JSONArray中为index
 	 */
 	private final Predicate<MutableEntry<Object, Object>> predicate;
@@ -84,7 +87,7 @@ public class JSONFactory {
 	}
 
 	/**
-	 * 获取配置项
+	 * 获取配置项，始终非空
 	 *
 	 * @return 配置项
 	 */
@@ -93,12 +96,35 @@ public class JSONFactory {
 	}
 
 	/**
-	 * 获取键值对过滤器
+	 * 获取键值对过滤器<br>
+	 * {@link Predicate#test(Object)} 返回{@code true}表示接受，{@code false}表示忽略<br>
+	 * 同时{@link MutableEntry}为可变键值对，在判断逻辑中可同时修改键和值，修改后返回{@code true}<br>
+	 * entry中，key在JSONObject中为name，在JSONArray中为index
 	 *
 	 * @return 键值对过滤器
 	 */
 	public Predicate<MutableEntry<Object, Object>> getPredicate() {
 		return this.predicate;
+	}
+
+	/**
+	 * 执行键值对过滤，如果提供的键值对执行{@link Predicate#test(Object)}返回{@code false}，则忽略此键值对；<br>
+	 * 如果处理后返回{@code true}表示接受，调用{@link Consumer#accept(Object)}执行逻辑。<br>
+	 * 如果用户未定义{@link #predicate}，则接受所有键值对。
+	 *
+	 * @param entry    键值对
+	 * @param consumer 键值对处理逻辑，如果处理后返回{@code true}表示接受，{@code false}表示忽略
+	 */
+	public void doPredicate(final MutableEntry<Object, Object> entry,
+							final Consumer<MutableEntry<Object, Object>> consumer) {
+		final Predicate<MutableEntry<Object, Object>> predicate = this.predicate;
+		if (null != predicate && !predicate.test(entry)) {
+			// 过滤键值对
+			return;
+		}
+
+		// 键值对处理
+		consumer.accept(entry);
 	}
 
 	/**
@@ -154,7 +180,7 @@ public class JSONFactory {
 	 * @param tokener {@link JSONTokener}
 	 * @return {@link JSONParser}
 	 */
-	public JSONParser ofParser(final JSONTokener tokener){
+	public JSONParser ofParser(final JSONTokener tokener) {
 		return JSONParser.of(tokener, this);
 	}
 

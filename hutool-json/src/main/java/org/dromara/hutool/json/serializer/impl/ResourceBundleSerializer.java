@@ -87,10 +87,10 @@ public class ResourceBundleSerializer implements MatcherJSONSerializer<ResourceB
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
 				nextTarget = JSONUtil.ofObj(target.config());
-				target.set(segment, nextTarget);
+				target.putObj(segment, nextTarget);
 			}
 			target = nextTarget;
 		}
-		target.set(path[last], value);
+		target.putObj(path[last], value);
 	}
 }

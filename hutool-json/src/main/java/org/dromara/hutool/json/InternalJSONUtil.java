@@ -24,7 +24,6 @@ import org.dromara.hutool.core.map.CaseInsensitiveTreeMap;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONMapper;
 
 import java.io.IOException;
@@ -102,25 +101,6 @@ public final class InternalJSONUtil {
 		// 无法解析的超大数字，直接返回字符串
 		// "xxx"这种直接字符串形式的值，直接返回
 		return string;
-	}
-
-	/**
-	 * 默认情况下是否忽略null值的策略选择，以下对象不忽略null值，其它对象忽略：
-	 *
-	 * <pre>
-	 *     1. CharSequence
-	 *     2. JSONTokener
-	 *     3. Map
-	 * </pre>
-	 *
-	 * @param obj 需要检查的对象
-	 * @return 是否忽略null值
-	 * @since 4.3.1
-	 */
-	static boolean defaultIgnoreNullValue(final Object obj) {
-		return (!(obj instanceof CharSequence))//
-			&& (!(obj instanceof JSONTokener))//
-			&& (!(obj instanceof Map));
 	}
 
 	/**
