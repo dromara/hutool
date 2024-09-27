@@ -16,7 +16,6 @@
 
 package org.dromara.hutool.json.serializer;
 
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
 
 /**
@@ -36,12 +35,19 @@ public interface JSONContext {
 	JSON getContextJson();
 
 	/**
+	 * 获取JSON工厂
+	 *
+	 * @return JSON工厂
+	 */
+	JSONFactory getFactory();
+
+	/**
 	 * 获取JSON配置
 	 *
 	 * @return JSON配置
 	 */
 	default JSONConfig config() {
-		return ObjUtil.apply(getContextJson(), JSON::config);
+		return getFactory().getConfig();
 	}
 
 	/**
@@ -55,7 +61,7 @@ public interface JSONContext {
 			return (JSONObject) contextJson;
 		}
 
-		return JSONUtil.ofObj(config());
+		return getFactory().ofObj();
 	}
 
 	/**
@@ -68,7 +74,7 @@ public interface JSONContext {
 		if (contextJson instanceof JSONArray) {
 			return (JSONArray) contextJson;
 		}
-		return JSONUtil.ofArray(config());
+		return getFactory().ofArray();
 	}
 
 	/**
@@ -82,6 +88,6 @@ public interface JSONContext {
 		if (contextJson instanceof JSONPrimitive) {
 			return ((JSONPrimitive) contextJson).setValue(value);
 		}
-		return JSONUtil.ofPrimitive(value, config());
+		return getFactory().ofPrimitive(value);
 	}
 }

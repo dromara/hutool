@@ -201,6 +201,11 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return toJSONString(0);
+	}
+
 	/**
 	 * 写出数字，根据{@link JSONConfig#isStripTrailingZeros()} 配置不同，写出不同数字<br>
 	 * 主要针对Double型是否去掉小数点后多余的0<br>

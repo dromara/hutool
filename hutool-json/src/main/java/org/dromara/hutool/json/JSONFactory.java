@@ -155,7 +155,7 @@ public class JSONFactory {
 	 * @return {@link JSONParser}
 	 */
 	public JSONParser ofParser(final JSONTokener tokener){
-		return JSONParser.of(tokener, this.config).setPredicate(this.predicate);
+		return JSONParser.of(tokener, this);
 	}
 
 	/**

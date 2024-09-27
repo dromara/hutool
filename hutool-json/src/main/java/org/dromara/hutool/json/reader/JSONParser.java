@@ -40,33 +40,25 @@ public class JSONParser {
 	 * 创建JSONParser
 	 *
 	 * @param tokener {@link JSONTokener}
-	 * @param config  JSON配置
+	 * @param factory  JSON工厂
 	 * @return JSONParser
 	 */
-	public static JSONParser of(final JSONTokener tokener, final JSONConfig config) {
-		return new JSONParser(tokener, config);
+	public static JSONParser of(final JSONTokener tokener, final JSONFactory factory) {
+		return new JSONParser(tokener, factory);
 	}
 
-	/**
-	 * JSON配置
-	 */
-	private final JSONConfig config;
 	private final JSONTokener tokener;
-	/**
-	 * 过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回<br>
-	 * entry中，key在JSONObject中为name，在JSONArray中为index
-	 */
-	private Predicate<MutableEntry<Object, Object>> predicate;
+	private final JSONFactory factory;
 
 	/**
 	 * 构造
 	 *
 	 * @param tokener {@link JSONTokener}
-	 * @param config  JSON配置
+	 * @param factory  JSON工厂
 	 */
-	public JSONParser(final JSONTokener tokener, final JSONConfig config) {
+	public JSONParser(final JSONTokener tokener, final JSONFactory factory) {
 		this.tokener = tokener;
-		this.config = config;
+		this.factory = factory;
 	}
 
 	/**
@@ -76,17 +68,6 @@ public class JSONParser {
 	 */
 	public JSONTokener getTokener() {
 		return this.tokener;
-	}
-
-	/**
-	 * 设置过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回
-	 *
-	 * @param predicate 过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回
-	 * @return this
-	 */
-	public JSONParser setPredicate(final Predicate<MutableEntry<Object, Object>> predicate) {
-		this.predicate = predicate;
-		return this;
 	}
 
 	/**
@@ -116,7 +97,7 @@ public class JSONParser {
 	 * @param json JSON对象或数组，用于存储解析结果
 	 */
 	public void parseTo(final JSON json) {
-		if(null == json){
+		if (null == json) {
 			return;
 		}
 		switch (tokener.nextClean()) {
@@ -146,12 +127,12 @@ public class JSONParser {
 		final JSON result;
 		switch (firstChar) {
 			case CharUtil.DELIM_START:
-				final JSONObject jsonObject = new JSONObject(config);
+				final JSONObject jsonObject = factory.ofObj();
 				nextTo(jsonObject);
 				result = jsonObject;
 				break;
 			case CharUtil.BRACKET_START:
-				final JSONArray jsonArray = new JSONArray(config);
+				final JSONArray jsonArray = factory.ofArray();
 				nextTo(jsonArray);
 				result = jsonArray;
 				break;
@@ -187,6 +168,7 @@ public class JSONParser {
 			// 过滤并设置键值对
 			final JSON value = nextJSON(tokener.nextClean());
 			// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+			final Predicate<MutableEntry<Object, Object>> predicate = factory.getPredicate();
 			if (null != predicate) {
 				final MutableEntry<Object, Object> entry = new MutableEntry<>(key, value);
 				if (predicate.test(entry)) {
@@ -194,7 +176,7 @@ public class JSONParser {
 					key = (String) entry.getKey();
 					jsonObject.set(key, entry.getValue());
 				}
-			}else {
+			} else {
 				jsonObject.set(key, value);
 			}
 
@@ -233,6 +215,7 @@ public class JSONParser {
 			} else {
 				// ,value or value
 				JSON value = nextJSON(CharUtil.COMMA == c ? tokener.nextClean() : c);
+				final Predicate<MutableEntry<Object, Object>> predicate = factory.getPredicate();
 				if (null != predicate) {
 					// 使用过滤器
 					final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), value);
@@ -264,11 +247,72 @@ public class JSONParser {
 			case CharUtil.DOUBLE_QUOTES:
 			case CharUtil.SINGLE_QUOTE:
 				// 引号包围，表示字符串值
-				return new JSONPrimitive(tokener.nextWrapString(firstChar), config);
+				return factory.ofPrimitive(tokener.nextWrapString(firstChar));
+			case 't':
+			case 'T':
+				checkTrue(tokener.next(3));
+				return factory.ofPrimitive(true);
+			case 'f':
+			case 'F':
+				checkFalse(tokener.next(4));
+				return factory.ofPrimitive(false);
+			case 'n':
+			case 'N':
+				checkNull(tokener.next(3));
+				return null;
 			default:
-				final Object value = InternalJSONUtil.parseValueFromString(tokener.nextUnwrapString(firstChar));
-				// 非引号包围，可能为boolean、数字、null等
-				return null == value ? null : new JSONPrimitive(value, config);
+				final Object value = InternalJSONUtil.parseNumberOrString(tokener.nextUnwrapString(firstChar));
+				// 非引号包围，可能为数字、null等
+				return null == value ? null : factory.ofPrimitive(value);
 		}
+	}
+
+	/**
+	 * 检查是否为true的rue部分
+	 *
+	 * @param next 值
+	 */
+	private void checkTrue(final char[] next) {
+		if ((next[0] == 'r' || next[0] == 'R') &&
+			(next[1] == 'u' || next[1] == 'U') &&
+			(next[2] == 'e' || next[2] == 'E')
+		) {
+			return;
+		}
+
+		throw tokener.syntaxError("Expected true but : t" + String.valueOf(next));
+	}
+
+	/**
+	 * 检查是否为false的alse部分
+	 *
+	 * @param next 值
+	 */
+	private void checkFalse(final char[] next) {
+		if ((next[0] == 'a' || next[0] == 'A') &&
+			(next[1] == 'l' || next[1] == 'L') &&
+			(next[2] == 's' || next[2] == 'S') &&
+			(next[3] == 'e' || next[3] == 'E')
+		) {
+			return;
+		}
+
+		throw tokener.syntaxError("Expected false but : f" + String.valueOf(next));
+	}
+
+	/**
+	 * 检查是否为null的ull部分
+	 *
+	 * @param next 值
+	 */
+	private void checkNull(final char[] next) {
+		if ((next[0] == 'u' || next[0] == 'U') &&
+			(next[1] == 'l' || next[1] == 'L') &&
+			(next[2] == 'l' || next[2] == 'L')
+		) {
+			return;
+		}
+
+		throw tokener.syntaxError("Expected null but : n" + String.valueOf(next));
 	}
 }

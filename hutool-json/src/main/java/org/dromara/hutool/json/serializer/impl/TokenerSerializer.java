@@ -17,7 +17,7 @@
 package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONFactory;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONContext;
@@ -49,13 +49,13 @@ public class TokenerSerializer implements MatcherJSONSerializer<Object> {
 	public JSON serialize(final Object bean, final JSONContext context) {
 		// 读取JSON流
 		if (bean instanceof JSONTokener) {
-			return mapFromTokener((JSONTokener) bean, context.config());
+			return mapFromTokener((JSONTokener) bean, context.getFactory());
 		} else if (bean instanceof JSONParser) {
 			return ((JSONParser) bean).parse();
 		} else if (bean instanceof Reader) {
-			return mapFromTokener(new JSONTokener((Reader) bean), context.config());
+			return mapFromTokener(new JSONTokener((Reader) bean), context.getFactory());
 		} else if (bean instanceof InputStream) {
-			return mapFromTokener(new JSONTokener((InputStream) bean), context.config());
+			return mapFromTokener(new JSONTokener((InputStream) bean), context.getFactory());
 		}
 
 		throw new IllegalArgumentException("Unsupported source: " + bean);
@@ -67,7 +67,7 @@ public class TokenerSerializer implements MatcherJSONSerializer<Object> {
 	 * @param tokener {@link JSONTokener}
 	 * @return JSON
 	 */
-	private JSON mapFromTokener(final JSONTokener tokener, final JSONConfig config) {
-		return JSONParser.of(tokener, config).setPredicate(null).parse();
+	private JSON mapFromTokener(final JSONTokener tokener, final JSONFactory factory) {
+		return factory.ofParser(tokener).parse();
 	}
 }

@@ -62,6 +62,22 @@ public final class InternalJSONUtil {
 			return Boolean.FALSE;
 		}
 
+		return parseNumberOrString(string);
+	}
+
+	/**
+	 * 尝试转换字符串为number or null，无法转换返回String<br>
+	 * 此方法用于解析JSON字符串时，将字符串中的值转换为JSON值对象
+	 *
+	 * @param string A String.
+	 * @return A simple JSON value.
+	 */
+	public static Object parseNumberOrString(final String string) {
+		// null处理
+		if (StrUtil.isEmpty(string)) {
+			return null;
+		}
+
 		// Number处理
 		final char b = string.charAt(0);
 		if ((b >= '0' && b <= '9') || b == '-') {
@@ -83,7 +99,8 @@ public final class InternalJSONUtil {
 			}
 		}
 
-		// 其它情况返回原String值下
+		// 无法解析的超大数字，直接返回字符串
+		// "xxx"这种直接字符串形式的值，直接返回
 		return string;
 	}
 

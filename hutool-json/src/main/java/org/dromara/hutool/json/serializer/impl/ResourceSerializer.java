@@ -18,7 +18,7 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONFactory;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONContext;
@@ -44,7 +44,7 @@ public class ResourceSerializer implements MatcherJSONSerializer<Resource> {
 
 	@Override
 	public JSON serialize(final Resource bean, final JSONContext context) {
-		return mapFromTokener(new JSONTokener(bean.getStream()), context.config());
+		return context.getFactory().ofParser(new JSONTokener(bean.getStream())).parse();
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class ResourceSerializer implements MatcherJSONSerializer<Resource> {
 	 * @param tokener {@link JSONTokener}
 	 * @return JSON
 	 */
-	private JSON mapFromTokener(final JSONTokener tokener, final JSONConfig config) {
-		return JSONParser.of(tokener, config).setPredicate(null).parse();
+	private JSON mapFromTokener(final JSONTokener tokener, final JSONFactory factory) {
+		return JSONParser.of(tokener, factory).parse();
 	}
 }

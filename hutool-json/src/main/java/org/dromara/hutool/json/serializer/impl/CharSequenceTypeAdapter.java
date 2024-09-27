@@ -18,8 +18,9 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.reader.JSONParser;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONPrimitive;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
@@ -62,7 +63,7 @@ public class CharSequenceTypeAdapter implements MatcherJSONSerializer<CharSequen
 			return jsonObject;
 		}
 
-		return mapFromTokener(new JSONTokener(jsonStr), context.config());
+		return context.getFactory().ofParser(new JSONTokener(jsonStr)).parse();
 	}
 
 	@Override
@@ -71,15 +72,5 @@ public class CharSequenceTypeAdapter implements MatcherJSONSerializer<CharSequen
 			return ((JSONPrimitive) json).getValue().toString();
 		}
 		return json.toString();
-	}
-
-	/**
-	 * 从{@link JSONTokener} 中读取JSON字符串，并转换为JSON
-	 *
-	 * @param tokener {@link JSONTokener}
-	 * @return JSON
-	 */
-	private JSON mapFromTokener(final JSONTokener tokener, final JSONConfig config) {
-		return JSONParser.of(tokener, config).setPredicate(null).parse();
 	}
 }

@@ -286,7 +286,7 @@ public class JSONMapper implements Serializable {
 
 		final JSON result;
 		try {
-			result = serializer.serialize(obj, new SimpleJSONContext(json, this.factory.getConfig()));
+			result = serializer.serialize(obj, new SimpleJSONContext(json, this.factory));
 		} catch (final Exception e) {
 			if (ignoreError) {
 				return null;

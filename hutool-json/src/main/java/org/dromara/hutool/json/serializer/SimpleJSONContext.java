@@ -16,9 +16,8 @@
 
 package org.dromara.hutool.json.serializer;
 
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.json.JSON;
-import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONFactory;
 
 /**
  * 简单的JSON上下文，用于在JSON序列化时提供配置项
@@ -28,36 +27,27 @@ import org.dromara.hutool.json.JSONConfig;
  */
 public class SimpleJSONContext implements JSONContext {
 
-	private final JSON json;
-	private final JSONConfig config;
+	private final JSON contextJson;
+	private final JSONFactory factory;
 
 	/**
 	 * 构造
 	 *
-	 * @param json JSON对象
+	 * @param contextJson   JSON对象
+	 * @param factory 配置项
 	 */
-	public SimpleJSONContext(final JSON json) {
-		this(Assert.notNull(json), json.config());
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param json   JSON对象
-	 * @param config 配置项
-	 */
-	public SimpleJSONContext(final JSON json, final JSONConfig config) {
-		this.json = json;
-		this.config = config;
+	public SimpleJSONContext(final JSON contextJson, final JSONFactory factory) {
+		this.contextJson = contextJson;
+		this.factory = factory;
 	}
 
 	@Override
 	public JSON getContextJson() {
-		return this.json;
+		return this.contextJson;
 	}
 
 	@Override
-	public JSONConfig config() {
-		return this.config;
+	public JSONFactory getFactory() {
+		return factory;
 	}
 }

@@ -20,8 +20,9 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.reader.JSONParser;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONArray;
+import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
@@ -96,12 +97,11 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 	 * @return JSONArray
 	 */
 	private JSON serializeBytes(final byte[] bytes, final JSONContext context) {
-		final JSONConfig config = context.config();
 		if(ArrayUtil.isNotEmpty(bytes)){
 			switch (bytes[0]) {
 				case '{':
 				case '[':
-					return JSONParser.of(new JSONTokener(IoUtil.toStream(bytes)), config).parse();
+					return context.getFactory().ofParser(new JSONTokener(IoUtil.toStream(bytes))).parse();
 			}
 		}
 
