@@ -20,7 +20,6 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.support.JSONStrFormatter;
@@ -409,11 +408,7 @@ public class JSONUtil {
 		if (null == obj) {
 			return null;
 		}
-		final JSON json = parse(obj, config);
-		if (type instanceof TypeReference) {
-			type = ((TypeReference<?>) type).getType();
-		}
-		return json.toBean(type);
+		return parse(obj, config).toBean(type);
 	}
 	// endregion
 
