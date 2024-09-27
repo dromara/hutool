@@ -102,6 +102,12 @@ public class DateUtil extends CalendarUtil {
 		}
 		return new DateTime(date);
 	}
+	public static DateTime dateNew4(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return new DateTime(date);
+	}
 
 	/**
 	 * Long类型时间转为{@link DateTime}<br>
