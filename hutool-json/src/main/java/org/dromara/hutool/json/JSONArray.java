@@ -20,8 +20,6 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListWrapper;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.serializer.impl.ArrayTypeAdapter;
 import org.dromara.hutool.json.serializer.impl.IterTypeAdapter;
 import org.dromara.hutool.json.writer.JSONWriter;
@@ -47,11 +45,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 */
 	public static final int DEFAULT_CAPACITY = 10;
 
-	/**
-	 * 配置项
-	 */
-	private final JSONConfig config;
-	private final JSONMapper mapper;
+	private final JSONFactory factory;
 
 	// region ----- Constructors
 
@@ -68,10 +62,9 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * 默认使用{@link ArrayList} 实现
 	 *
 	 * @param initialCapacity 初始大小
-	 * @since 3.2.2
 	 */
 	public JSONArray(final int initialCapacity) {
-		this(initialCapacity, JSONConfig.of());
+		this(initialCapacity, JSONFactory.getInstance());
 	}
 
 	/**
@@ -91,18 +84,27 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 *
 	 * @param initialCapacity 初始大小
 	 * @param config          JSON配置项
-	 * @since 4.1.19
 	 */
 	public JSONArray(final int initialCapacity, final JSONConfig config) {
+		this(initialCapacity, JSONFactory.of(config, null));
+	}
+
+	/**
+	 * 构造<br>
+	 * 默认使用{@link ArrayList} 实现
+	 *
+	 * @param initialCapacity 初始大小
+	 * @param factory         JSON工厂
+	 */
+	public JSONArray(final int initialCapacity, final JSONFactory factory) {
 		super(new ArrayList<>(initialCapacity));
-		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
-		this.mapper = JSONMapper.of(config, null);
+		this.factory = factory;
 	}
 	// endregion
 
 	@Override
 	public JSONConfig config() {
-		return this.config;
+		return factory.getConfig();
 	}
 
 	@Override
@@ -119,7 +121,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @since 5.2.5
 	 */
 	public JSONArray set(final Object value) {
-		this.add(mapper.map(value));
+		this.add(this.factory.getMapper().map(value));
 		return this;
 	}
 
@@ -134,7 +136,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		if (names == null || names.size() == 0 || this.size() == 0) {
 			return null;
 		}
-		final JSONObject jo = new JSONObject(this.config);
+		final JSONObject jo = this.factory.ofObj();
 		for (int i = 0; i < names.size(); i += 1) {
 			jo.set(names.getStr(i), this.getObj(i));
 		}
@@ -154,7 +156,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		}
 		final List<JSON> list = new ArrayList<>(c.size());
 		for (final JSON json : c) {
-			if (null == json && config.isIgnoreNullValue()) {
+			if (null == json && config().isIgnoreNullValue()) {
 				continue;
 			}
 			list.add(json);
@@ -170,7 +172,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return 替换的值，即之前的值
 	 */
 	public JSON setValue(final int index, final Object element) {
-		return set(index, mapper.map(element));
+		return set(index, this.factory.getMapper().map(element));
 	}
 
 	/**
@@ -187,7 +189,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 			add(index, element);
 			return null;
 		}
-		if (null == element && config.isIgnoreNullValue()) {
+		if (null == element && config().isIgnoreNullValue()) {
 			return null;
 		}
 		return this.raw.set(index, element);
@@ -195,7 +197,8 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 
 	@Override
 	public void add(int index, final JSON element) {
-		if (null == element && config.isIgnoreNullValue()) {
+		final boolean ignoreNullValue = config().isIgnoreNullValue();
+		if (null == element && ignoreNullValue) {
 			return;
 		}
 		if (index < this.size()) {
@@ -205,7 +208,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 			this.raw.add(index, element);
 		} else {
 			// issue#3286, 如果用户指定的index太大，容易造成Java heap space错误。
-			if (!config.isIgnoreNullValue()) {
+			if (!ignoreNullValue) {
 				// issue#3286, 增加安全检查，最多增加10倍
 				Validator.checkIndexLimit(index, (this.size() + 1) * 10);
 				while (index != this.size()) {

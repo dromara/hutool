@@ -45,13 +45,33 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 *
 	 * @param appendable   {@link Appendable}
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
 	 * @param config       JSON选项
+	 * @param predicate    predicate    字段过滤器
 	 * @return JSONWriter
 	 */
-	public static JSONWriter of(final Appendable appendable, final int indentFactor, final int indent,
-								final JSONConfig config) {
-		return new JSONWriter(appendable, indentFactor, indent, config);
+	public static JSONWriter of(final Appendable appendable,
+								final int indentFactor,
+								final JSONConfig config,
+								final Predicate<MutableEntry<Object, Object>> predicate) {
+		return of(appendable, indentFactor, 0, config, predicate);
+	}
+
+	/**
+	 * 创建JSONWriter
+	 *
+	 * @param appendable   {@link Appendable}
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent       本级别缩进量
+	 * @param config       JSON选项
+	 * @param predicate    predicate    字段过滤器
+	 * @return JSONWriter
+	 */
+	public static JSONWriter of(final Appendable appendable,
+								final int indentFactor,
+								final int indent,
+								final JSONConfig config,
+								final Predicate<MutableEntry<Object, Object>> predicate) {
+		return new JSONWriter(appendable, indentFactor, indent, config, predicate);
 	}
 
 	/**
@@ -70,7 +90,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	/**
 	 * 键值对过滤器，用于修改键值对
 	 */
-	private Predicate<MutableEntry<Object, Object>> predicate;
+	private final Predicate<MutableEntry<Object, Object>> predicate;
 
 
 	/**
@@ -89,23 +109,18 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       本级别缩进量
 	 * @param config       JSON选项
+	 * @param predicate    字段过滤器
 	 */
-	public JSONWriter(final Appendable appendable, final int indentFactor, final int indent, final JSONConfig config) {
+	public JSONWriter(final Appendable appendable,
+					  final int indentFactor,
+					  final int indent,
+					  final JSONConfig config,
+					  final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.appendable = appendable;
 		this.indentFactor = indentFactor;
 		this.indent = indent;
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
-	}
-
-	/**
-	 * 设置键值对过滤器，用于修改键值对
-	 *
-	 * @param predicate 键值对过滤器，用于修改键值对
-	 * @return this
-	 */
-	public JSONWriter setPredicate(final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.predicate = predicate;
-		return this;
 	}
 
 	/**

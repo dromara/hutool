@@ -16,11 +16,10 @@
 
 package org.dromara.hutool.json.engine;
 
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONFactory;
 import org.dromara.hutool.json.JSONUtil;
-import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Reader;
 import java.io.Writer;
@@ -34,34 +33,30 @@ import java.lang.reflect.Type;
  */
 public class HutoolJSONEngine extends AbstractJSONEngine {
 
-	private JSONConfig hutoolSJONConfig;
+	private JSONFactory jsonFactory;
 
 	@Override
 	public void serialize(final Object bean, final Writer writer) {
 		initEngine();
-		final JSON json = JSONUtil.parse(bean, this.hutoolSJONConfig);
-		final JSONWriter jsonWriter = JSONWriter.of(writer,
-			ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false) ? 2 : 0,
-			0,
-			this.hutoolSJONConfig);
-		json.write(jsonWriter);
+		final JSON json = jsonFactory.parse(bean);
+		json.write(jsonFactory.ofWriter(writer, this.config.isPrettyPrint()));
 	}
 
 	@Override
 	public <T> T deserialize(final Reader reader, final Object type) {
 		initEngine();
-		final JSON json = JSONUtil.parse(reader, this.hutoolSJONConfig);
+		final JSON json = jsonFactory.parse(reader);
 		return json.toBean((Type) type);
 	}
 
 	@Override
 	protected void reset() {
-		hutoolSJONConfig = null;
+		jsonFactory = null;
 	}
 
 	@Override
 	protected void initEngine() {
-		if(null != hutoolSJONConfig){
+		if(null != jsonFactory){
 			return;
 		}
 
@@ -72,6 +67,6 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 			hutoolSJONConfig.setIgnoreNullValue(this.config.isIgnoreNullValue());
 		}
 
-		this.hutoolSJONConfig = hutoolSJONConfig;
+		this.jsonFactory = JSONFactory.of(hutoolSJONConfig, null);
 	}
 }

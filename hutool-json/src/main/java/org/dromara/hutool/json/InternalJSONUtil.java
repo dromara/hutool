@@ -24,8 +24,8 @@ import org.dromara.hutool.core.map.CaseInsensitiveTreeMap;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.reader.JSONTokener;
+import org.dromara.hutool.json.serializer.JSONMapper;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -102,8 +102,8 @@ public final class InternalJSONUtil {
 	 */
 	static boolean defaultIgnoreNullValue(final Object obj) {
 		return (!(obj instanceof CharSequence))//
-				&& (!(obj instanceof JSONTokener))//
-				&& (!(obj instanceof Map));
+			&& (!(obj instanceof JSONTokener))//
+			&& (!(obj instanceof Map));
 	}
 
 	/**
@@ -114,12 +114,13 @@ public final class InternalJSONUtil {
 	 * @since 5.8.0
 	 */
 	public static CopyOptions toCopyOptions(final JSONConfig config) {
+		final JSONMapper mapper = JSONFactory.of(config, null).getMapper();
 		return CopyOptions.of()
-				.setIgnoreCase(config.isIgnoreCase())
-				.setIgnoreError(config.isIgnoreError())
-				.setIgnoreNullValue(config.isIgnoreNullValue())
-				.setTransientSupport(config.isTransientSupport())
-			.setConverter((targetType, value) -> JSONMapper.of(config, null).map(value));
+			.setIgnoreCase(config.isIgnoreCase())
+			.setIgnoreError(config.isIgnoreError())
+			.setIgnoreNullValue(config.isIgnoreNullValue())
+			.setTransientSupport(config.isTransientSupport())
+			.setConverter((targetType, value) -> mapper.map(value));
 	}
 
 	/**
@@ -153,7 +154,7 @@ public final class InternalJSONUtil {
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
-	 * @param str    字符串
+	 * @param str        字符串
 	 * @param appendable {@link Appendable}
 	 * @throws IORuntimeException IO异常
 	 */
@@ -166,9 +167,9 @@ public final class InternalJSONUtil {
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
-	 * @param str    字符串
+	 * @param str        字符串
 	 * @param appendable {@link Appendable}
-	 * @param isWrap 是否使用双引号包装字符串
+	 * @param isWrap     是否使用双引号包装字符串
 	 * @return Writer
 	 * @throws IORuntimeException IO异常
 	 * @since 3.3.1
@@ -206,13 +207,16 @@ public final class InternalJSONUtil {
 	 * 根据配置创建对应的原始Map
 	 *
 	 * @param capacity 初始大小
-	 * @param config   JSON配置项，{@code null}则使用默认配置
+	 * @param factory  JSON工厂，{@code null}则使用默认配置
 	 * @return Map
 	 */
-	static Map<String, JSON> createRawMap(final int capacity, final JSONConfig config) {
-		final Map<String, JSON> rawHashMap;
+	static Map<String, JSON> createRawMap(final int capacity, final JSONFactory factory) {
+		final JSONConfig config = ObjUtil.apply(factory, JSONFactory::getConfig);
+		final boolean ignoreCase = ObjUtil.defaultIfNull(config, JSONConfig::isIgnoreCase, false);
 		final Comparator<String> keyComparator = ObjUtil.apply(config, JSONConfig::getKeyComparator);
-		if (null != config && config.isIgnoreCase()) {
+
+		final Map<String, JSON> rawHashMap;
+		if (ignoreCase) {
 			if (null != keyComparator) {
 				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
 			} else {
@@ -295,10 +299,10 @@ public final class InternalJSONUtil {
 				return "\\r";
 			default:
 				if (c < CharUtil.SPACE || //
-						(c >= '\u0080' && c <= '\u00a0') || //
-						(c >= '\u2000' && c <= '\u2010') || //
-						(c >= '\u2028' && c <= '\u202F') || //
-						(c >= '\u2066' && c <= '\u206F')//
+					(c >= '\u0080' && c <= '\u00a0') || //
+					(c >= '\u2000' && c <= '\u2010') || //
+					(c >= '\u2028' && c <= '\u202F') || //
+					(c >= '\u2066' && c <= '\u206F')//
 				) {
 					return HexUtil.toUnicodeHex(c);
 				} else {

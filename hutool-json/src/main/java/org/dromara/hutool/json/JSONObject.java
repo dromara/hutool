@@ -25,7 +25,6 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.serializer.JSONMapper;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.util.Arrays;
@@ -49,17 +48,23 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 */
 	public static final int DEFAULT_CAPACITY = MapUtil.DEFAULT_INITIAL_CAPACITY;
 
-	/**
-	 * 配置项
-	 */
-	private final JSONConfig config;
-	private final JSONMapper mapper;
+	private final JSONFactory factory;
 
+	// region ----- 构造
 	/**
 	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY有序
 	 */
 	public JSONObject() {
-		this(JSONConfig.of());
+		this(DEFAULT_CAPACITY);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param capacity 初始大小
+	 */
+	public JSONObject(final int capacity) {
+		this(capacity, JSONFactory.getInstance());
 	}
 
 	/**
@@ -79,14 +84,24 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @param config   JSON配置项，{@code null}则使用默认配置
 	 */
 	public JSONObject(final int capacity, final JSONConfig config) {
-		super(InternalJSONUtil.createRawMap(capacity, config));
-		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
-		this.mapper = JSONMapper.of(config, null);
+		this(capacity, JSONFactory.of(config, null));
 	}
+
+	/**
+	 * 构造
+	 *
+	 * @param capacity 初始大小
+	 * @param factory  JSON工厂类
+	 */
+	public JSONObject(final int capacity, final JSONFactory factory) {
+		super(InternalJSONUtil.createRawMap(capacity, factory));
+		this.factory = factory;
+	}
+	// endregion
 
 	@Override
 	public JSONConfig config() {
-		return this.config;
+		return this.factory.getConfig();
 	}
 
 	@Override
@@ -174,7 +189,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 		} else if (object instanceof JSONArray) {
 			((JSONArray) object).set(value);
 		} else {
-			this.set(key, JSONUtil.ofArray(this.config).set(object).set(value));
+			this.set(key, factory.ofArray().set(object).set(value));
 		}
 		return this;
 	}
@@ -220,7 +235,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject set(final String key, final Object value) throws JSONException {
-		this.put(key, this.mapper.map(value));
+		this.put(key, factory.getMapper().map(value));
 		return this;
 	}
 
@@ -238,11 +253,11 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 			return null;
 		}
 
-		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
+		final boolean ignoreNullValue = config().isIgnoreNullValue();
 		if (null == value && ignoreNullValue) {
 			// 忽略值模式下如果值为空清除key
 			return this.remove(key);
-		} else if (this.config.isCheckDuplicate() && containsKey(key)) {
+		} else if (config().isCheckDuplicate() && containsKey(key)) {
 			throw new JSONException("Duplicate key \"{}\"", key);
 		}
 		return super.put(key, value);

@@ -39,17 +39,30 @@ public class Slf4jLog extends AbstractLog {
 	private final boolean isLocationAwareLogger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Slf4jLog(final Logger logger) {
-		this.logger = logger;
-		this.isLocationAwareLogger = (logger instanceof LocationAwareLogger);
-	}
 
+	/**
+	 * 构造
+	 * @param clazz 日志所在类，用于获取打印时的类名
+	 */
 	public Slf4jLog(final Class<?> clazz) {
 		this(getSlf4jLogger(clazz));
 	}
 
+	/**
+	 * 构造
+	 * @param name 打印的类名
+	 */
 	public Slf4jLog(final String name) {
 		this(LoggerFactory.getLogger(name));
+	}
+
+	/**
+	 * 构造
+	 * @param logger {@link Logger} 日志实现
+	 */
+	public Slf4jLog(final Logger logger) {
+		this.logger = logger;
+		this.isLocationAwareLogger = (logger instanceof LocationAwareLogger);
 	}
 
 	@Override

@@ -16,9 +16,14 @@
 
 package org.dromara.hutool.json;
 
+import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.reader.JSONParser;
+import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONMapper;
+import org.dromara.hutool.json.support.JSONNodeBeanFactory;
+import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Type;
@@ -33,6 +38,22 @@ import java.util.function.Predicate;
 public class JSONFactory {
 
 	/**
+	 * 单例
+	 */
+	private static class InstanceHolder {
+		public static final JSONFactory INSTANCE = of(JSONConfig.of(), null);
+	}
+
+	/**
+	 * 获取单例
+	 *
+	 * @return 单例
+	 */
+	public static JSONFactory getInstance() {
+		return InstanceHolder.INSTANCE;
+	}
+
+	/**
 	 * 创建JSON工厂
 	 *
 	 * @param config    JSON配置
@@ -44,8 +65,12 @@ public class JSONFactory {
 	}
 
 	private final JSONConfig config;
+	/**
+	 * 过滤器，用于过滤或修改键值对，返回null表示忽略此键值对，返回非null表示修改后返回<br>
+	 * entry中，key在JSONObject中为name，在JSONArray中为index
+	 */
 	private final Predicate<MutableEntry<Object, Object>> predicate;
-	private final JSONMapper mapper;
+	private volatile JSONMapper mapper;
 
 	/**
 	 * 构造
@@ -56,16 +81,41 @@ public class JSONFactory {
 	public JSONFactory(final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
 		this.predicate = predicate;
-		this.mapper = JSONMapper.of(config, predicate);
 	}
 
 	/**
-	 * 获取{@link JSONMapper}
+	 * 获取配置项
+	 *
+	 * @return 配置项
+	 */
+	public JSONConfig getConfig() {
+		return this.config;
+	}
+
+	/**
+	 * 获取键值对过滤器
+	 *
+	 * @return 键值对过滤器
+	 */
+	public Predicate<MutableEntry<Object, Object>> getPredicate() {
+		return this.predicate;
+	}
+
+	/**
+	 * 获取{@link JSONMapper}，用于实现Bean和JSON的转换<br>
+	 * 此方法使用双重检查锁实现懒加载模式，只有mapper被使用时才初始化
 	 *
 	 * @return {@link JSONMapper}
 	 */
 	public JSONMapper getMapper() {
-		return mapper;
+		if (null == this.mapper) {
+			synchronized (this) {
+				if (null == this.mapper) {
+					this.mapper = JSONMapper.of(this);
+				}
+			}
+		}
+		return this.mapper;
 	}
 
 	// region ----- of
@@ -76,7 +126,7 @@ public class JSONFactory {
 	 * @return JSONObject
 	 */
 	public JSONObject ofObj() {
-		return new JSONObject(this.config);
+		return new JSONObject(JSONObject.DEFAULT_CAPACITY, this);
 	}
 
 	/**
@@ -85,7 +135,7 @@ public class JSONFactory {
 	 * @return JSONArray
 	 */
 	public JSONArray ofArray() {
-		return new JSONArray(this.config);
+		return new JSONArray(JSONArray.DEFAULT_CAPACITY, this);
 	}
 
 	/**
@@ -95,7 +145,59 @@ public class JSONFactory {
 	 * @return JSONPrimitive
 	 */
 	public JSONPrimitive ofPrimitive(final Object value) {
-		return new JSONPrimitive(value, this.config);
+		return new JSONPrimitive(value, this);
+	}
+
+	/**
+	 * 创建{@link JSONParser}，用于JSON解析
+	 *
+	 * @param tokener {@link JSONTokener}
+	 * @return {@link JSONParser}
+	 */
+	public JSONParser ofParser(final JSONTokener tokener){
+		return JSONParser.of(tokener, this.config).setPredicate(this.predicate);
+	}
+
+	/**
+	 * 创建{@link JSONWriter}，用于JSON写出
+	 *
+	 * @param appendable {@link Appendable}
+	 * @return {@link JSONWriter}
+	 */
+	public JSONWriter ofWriter(final Appendable appendable) {
+		return ofWriter(appendable, 0);
+	}
+
+	/**
+	 * 创建{@link JSONWriter}，用于JSON写出
+	 *
+	 * @param appendable  {@link Appendable}
+	 * @param prettyPrint 是否格式化输出
+	 * @return {@link JSONWriter}
+	 */
+	public JSONWriter ofWriter(final Appendable appendable, final boolean prettyPrint) {
+		return ofWriter(appendable, prettyPrint ? 2 : 0);
+	}
+
+	/**
+	 * 创建{@link JSONWriter}，用于JSON写出
+	 *
+	 * @param appendable   {@link Appendable}
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量，用于格式化输出
+	 * @return {@link JSONWriter}
+	 */
+	public JSONWriter ofWriter(final Appendable appendable, final int indentFactor) {
+		return JSONWriter.of(appendable, indentFactor, config, predicate);
+	}
+
+	/**
+	 * 创建BeanPath，用于使用路径方式访问或设置值
+	 *
+	 * @param expression BeanPath表达式
+	 * @return BeanPath
+	 */
+	public BeanPath<JSON> ofBeanPath(final String expression) {
+		return BeanPath.of(expression, new JSONNodeBeanFactory(config));
 	}
 	// endregion
 
@@ -112,11 +214,11 @@ public class JSONFactory {
 			obj = new ByteArrayInputStream((byte[]) obj);
 		}
 
-		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
+		final JSONMapper mapper = getMapper();
 		if (obj instanceof CharSequence) {
-			return (JSONObject) jsonMapper.map((CharSequence) obj);
+			return (JSONObject) mapper.map((CharSequence) obj);
 		}
-		return jsonMapper.mapObj(obj);
+		return mapper.mapObj(obj);
 	}
 
 	/**
@@ -127,20 +229,19 @@ public class JSONFactory {
 	 *     <li>其它支持和自定义的对象（如集合、数组等）</li>
 	 * </ul>
 	 *
-	 * @param obj       数组或集合对象
+	 * @param obj 数组或集合对象
 	 * @return JSONArray
 	 */
 	public JSONArray parseArray(final Object obj) {
+		final JSONMapper mapper = getMapper();
 		if (obj instanceof JSONObject) {
-			final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
-			return jsonMapper.mapFromJSONObject((JSONObject) obj);
+			return mapper.mapFromJSONObject((JSONObject) obj);
 		}
 
-		final JSONMapper jsonMapper = JSONMapper.of(config, predicate);
 		if (obj instanceof CharSequence) {
-			return (JSONArray) jsonMapper.map((CharSequence) obj);
+			return (JSONArray) mapper.map((CharSequence) obj);
 		}
-		return jsonMapper.mapArray(obj);
+		return mapper.mapArray(obj);
 	}
 
 	/**
@@ -156,6 +257,7 @@ public class JSONFactory {
 	 * @return JSON（JSONObject or JSONArray）
 	 */
 	public JSON parse(final Object obj) {
+		final JSONMapper mapper = this.getMapper();
 		if (obj instanceof CharSequence) {
 			return mapper.map((CharSequence) obj);
 		}
@@ -174,7 +276,7 @@ public class JSONFactory {
 	 * @return Bean对象
 	 */
 	public <T> T toBean(final JSON json, final Type type) {
-		return mapper.toBean(json, type);
+		return getMapper().toBean(json, type);
 	}
 	// endregion
 

@@ -17,12 +17,10 @@
 package org.dromara.hutool.json.serializer;
 
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.xml.JSONXMLParser;
 import org.dromara.hutool.json.xml.ParseConfig;
@@ -31,7 +29,6 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * 对象和JSON值映射器，用于Java对象和JSON对象互转<br>
@@ -53,27 +50,23 @@ public class JSONMapper implements Serializable {
 	/**
 	 * 创建JSONMapper
 	 *
-	 * @param jsonConfig 来源对象
-	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @param factory {@link JSONFactory}
 	 * @return ObjectMapper
 	 */
-	public static JSONMapper of(final JSONConfig jsonConfig, final Predicate<MutableEntry<Object, Object>> predicate) {
-		return new JSONMapper(jsonConfig, predicate);
+	public static JSONMapper of(final JSONFactory factory) {
+		return new JSONMapper(factory);
 	}
 
-	private final JSONConfig jsonConfig;
-	private final Predicate<MutableEntry<Object, Object>> predicate;
+	private final JSONFactory factory;
 	private TypeAdapterManager typeAdapterManager;
 
 	/**
 	 * 构造
 	 *
-	 * @param jsonConfig JSON配置
-	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @param factory {@link JSONFactory}
 	 */
-	public JSONMapper(final JSONConfig jsonConfig, final Predicate<MutableEntry<Object, Object>> predicate) {
-		this.jsonConfig = ObjUtil.defaultIfNull(jsonConfig, JSONConfig::of);
-		this.predicate = predicate;
+	public JSONMapper(final JSONFactory factory) {
+		this.factory = factory;
 	}
 
 	/**
@@ -126,7 +119,7 @@ public class JSONMapper implements Serializable {
 		if (null == deserializer) {
 			deserializer = TypeAdapterManager.getInstance().getDeserializer(json, type);
 		}
-		final boolean ignoreError = ObjUtil.defaultIfNull(this.jsonConfig, JSONConfig::isIgnoreError, false);
+		final boolean ignoreError = ObjUtil.defaultIfNull(this.factory.getConfig(), JSONConfig::isIgnoreError, false);
 		if (null == deserializer) {
 			if (ignoreError) {
 				return null;
@@ -152,7 +145,7 @@ public class JSONMapper implements Serializable {
 	 * @return JSONArray
 	 */
 	public JSONArray mapFromJSONObject(final JSONObject jsonObject) {
-		final JSONArray array = JSONUtil.ofArray(jsonConfig);
+		final JSONArray array = factory.ofArray();
 		for (final Map.Entry<String, JSON> entry : jsonObject) {
 			array.set(entry);
 		}
@@ -168,15 +161,15 @@ public class JSONMapper implements Serializable {
 	 */
 	public JSON map(final CharSequence source) {
 		final String jsonStr = StrUtil.trim(source);
-		if(StrUtil.isEmpty(jsonStr)){
+		if (StrUtil.isEmpty(jsonStr)) {
 			// https://www.rfc-editor.org/rfc/rfc8259#section-7
 			// 未被包装的空串理解为null
 			return null;
 		}
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
-			final JSONObject jsonObject = JSONUtil.ofObj(jsonConfig);
-			JSONXMLParser.of(ParseConfig.of(), this.predicate).parseJSONObject(jsonStr, jsonObject);
+			final JSONObject jsonObject = this.factory.ofObj();
+			JSONXMLParser.of(ParseConfig.of(), this.factory.getPredicate()).parseJSONObject(jsonStr, jsonObject);
 			return jsonObject;
 		}
 
@@ -212,7 +205,7 @@ public class JSONMapper implements Serializable {
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
 	public JSONObject mapObj(final Object obj) {
-		return mapTo(obj, JSONUtil.ofObj(jsonConfig));
+		return mapTo(obj, factory.ofObj());
 	}
 
 	/**
@@ -226,7 +219,7 @@ public class JSONMapper implements Serializable {
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
 	public JSONArray mapArray(final Object obj) {
-		return mapTo(obj, JSONUtil.ofArray(jsonConfig));
+		return mapTo(obj, factory.ofArray());
 	}
 
 	/**
@@ -283,7 +276,7 @@ public class JSONMapper implements Serializable {
 		if (null == serializer) {
 			serializer = TypeAdapterManager.getInstance().getSerializer(obj, clazz);
 		}
-		final boolean ignoreError = ObjUtil.defaultIfNull(this.jsonConfig, JSONConfig::isIgnoreError, false);
+		final boolean ignoreError = ObjUtil.defaultIfNull(this.factory.getConfig(), JSONConfig::isIgnoreError, false);
 		if (null == serializer) {
 			if (ignoreError) {
 				return null;
@@ -293,7 +286,7 @@ public class JSONMapper implements Serializable {
 
 		final JSON result;
 		try {
-			result = serializer.serialize(obj, new SimpleJSONContext(json, this.jsonConfig));
+			result = serializer.serialize(obj, new SimpleJSONContext(json, this.factory.getConfig()));
 		} catch (final Exception e) {
 			if (ignoreError) {
 				return null;
@@ -301,11 +294,11 @@ public class JSONMapper implements Serializable {
 			throw e;
 		}
 
-		if(null == json || result.getClass() == json.getClass()){
+		if (null == json || result.getClass() == json.getClass()) {
 			return (T) result;
 		}
 
-		if(ignoreError){
+		if (ignoreError) {
 			return null;
 		}
 		throw new JSONException("JSON type not match, expect: {}, actual: {}",
@@ -319,6 +312,6 @@ public class JSONMapper implements Serializable {
 	 * @return JSON
 	 */
 	private JSON mapFromTokener(final JSONTokener tokener) {
-		return JSONParser.of(tokener, jsonConfig).setPredicate(this.predicate).parse();
+		return this.factory.ofParser(tokener).parse();
 	}
 }

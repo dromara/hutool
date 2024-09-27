@@ -70,11 +70,8 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 			|| String.class == type;
 	}
 
+	private final JSONFactory factory;
 	private Object value;
-	/**
-	 * 配置项
-	 */
-	private JSONConfig config;
 
 	/**
 	 * 构造
@@ -83,8 +80,18 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 	 * @param config 配置项
 	 */
 	public JSONPrimitive(final Object value, final JSONConfig config) {
+		this(value, JSONFactory.of(config, null));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param value  值
+	 * @param factory 配置项
+	 */
+	public JSONPrimitive(final Object value, final JSONFactory factory) {
 		this.value = Assert.notNull(value);
-		this.config = config;
+		this.factory = factory;
 	}
 
 	/**
@@ -114,18 +121,7 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 
 	@Override
 	public JSONConfig config() {
-		return this.config;
-	}
-
-	/**
-	 * 设置配置项
-	 *
-	 * @param config 配置项
-	 * @return this
-	 */
-	JSONPrimitive setConfig(final JSONConfig config) {
-		this.config = config;
-		return this;
+		return this.factory.getConfig();
 	}
 
 	/**
@@ -203,13 +199,6 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 			// 默认包装字符串
 			writer.writeQuoteStrValue(value.toString());
 		}
-	}
-
-	@Override
-	public String toString() {
-		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), 0, 0, this.config);
-		write(jsonWriter);
-		return jsonWriter.toString();
 	}
 
 	/**

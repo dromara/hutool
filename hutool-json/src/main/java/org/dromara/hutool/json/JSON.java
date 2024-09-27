@@ -18,8 +18,6 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.json.serializer.JSONMapper;
-import org.dromara.hutool.json.support.JSONNodeBeanFactory;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Serializable;
@@ -147,7 +145,7 @@ public interface JSON extends Serializable {
 			return null;
 		}
 
-		return JSONMapper.of(config(), null).toBean(json, resultType);
+		return json.toBean(resultType);
 	}
 
 	/**
@@ -171,7 +169,7 @@ public interface JSON extends Serializable {
 	 * @see BeanPath#getValue(Object)
 	 */
 	default JSON getByPath(final String expression) {
-		return (JSON) BeanPath.of(expression).getValue(this);
+		return (JSON) JSONFactory.of(config(), null).ofBeanPath(expression).getValue(this);
 	}
 
 	/**
@@ -196,7 +194,7 @@ public interface JSON extends Serializable {
 	 * @param value      值
 	 */
 	default void putByPath(final String expression, final Object value) {
-		BeanPath.of(expression, new JSONNodeBeanFactory(config())).setValue(this, value);
+		JSONFactory.of(config(), null).ofBeanPath(expression).setValue(this, value);
 	}
 
 	/**
@@ -214,25 +212,25 @@ public interface JSON extends Serializable {
 	 * 格式化输出JSON字符串
 	 *
 	 * @param indentFactor 每层缩进空格数
-	 * @param predicate    过滤器，用于过滤不需要的键值对
 	 * @return JSON字符串
 	 * @throws JSONException 包含非法数抛出此异常
 	 */
-	default String toJSONString(final int indentFactor, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
-		final JSONWriter jsonWriter = JSONWriter.of(new StringBuilder(), indentFactor, 0, config()).setPredicate(predicate);
-		this.write(jsonWriter);
-		return jsonWriter.toString();
+	default String toJSONString(final int indentFactor) throws JSONException {
+		return toJSONString(indentFactor, null);
 	}
 
 	/**
 	 * 格式化输出JSON字符串
 	 *
 	 * @param indentFactor 每层缩进空格数
+	 * @param predicate    过滤器，用于过滤不需要的键值对
 	 * @return JSON字符串
 	 * @throws JSONException 包含非法数抛出此异常
 	 */
-	default String toJSONString(final int indentFactor) throws JSONException {
-		return toJSONString(indentFactor, null);
+	default String toJSONString(final int indentFactor, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
+		final JSONWriter jsonWriter = JSONFactory.of(config(), predicate).ofWriter(new StringBuilder(), indentFactor);
+		this.write(jsonWriter);
+		return jsonWriter.toString();
 	}
 
 	/**
@@ -252,6 +250,6 @@ public interface JSON extends Serializable {
 	 * @return 实体类对象
 	 */
 	default <T> T toBean(final Type type) {
-		return JSONMapper.of(config(), null).toBean(this, type);
+		return JSONFactory.of(config(), null).toBean(this, type);
 	}
 }

@@ -24,11 +24,9 @@ import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.support.JSONStrFormatter;
-import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
 import java.io.File;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -49,7 +47,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 */
 	public static JSONObject ofObj() {
-		return new JSONObject();
+		return JSONFactory.getInstance().ofObj();
 	}
 
 	/**
@@ -60,7 +58,7 @@ public class JSONUtil {
 	 * @since 5.2.5
 	 */
 	public static JSONObject ofObj(final JSONConfig config) {
-		return new JSONObject(config);
+		return JSONFactory.of(config, null).ofObj();
 	}
 
 	/**
@@ -69,7 +67,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 */
 	public static JSONArray ofArray() {
-		return new JSONArray();
+		return JSONFactory.getInstance().ofArray();
 	}
 
 	/**
@@ -80,7 +78,7 @@ public class JSONUtil {
 	 * @since 5.2.5
 	 */
 	public static JSONArray ofArray(final JSONConfig config) {
-		return new JSONArray(config);
+		return JSONFactory.of(config, null).ofArray();
 	}
 
 	/**
@@ -117,7 +115,7 @@ public class JSONUtil {
 	 * @since 6.0.0
 	 */
 	public static JSONPrimitive ofPrimitive(final Object value, final JSONConfig config) {
-		return new JSONPrimitive(value, config);
+		return JSONFactory.of(config, null).ofPrimitive(value);
 	}
 	// endregion
 
@@ -335,13 +333,14 @@ public class JSONUtil {
 	 * 转换为JSON字符串并写出到writer
 	 *
 	 * @param obj    被转为JSON的对象
-	 * @param writer Writer
+	 * @param appendable {@link Appendable}
 	 * @since 5.3.3
 	 */
-	public static void toJsonStr(final Object obj, final Writer writer) {
-		if (null != obj) {
-			parse(obj).write(JSONWriter.of(writer, 0, 0, null));
-		}
+	public static void toJsonStr(final Object obj, final Appendable appendable) {
+		Assert.notNull(appendable);
+		final JSONFactory jsonFactory = JSONFactory.of(null, null);
+		final JSON json = jsonFactory.parse(obj);
+		json.write(jsonFactory.ofWriter(appendable, 0));
 	}
 
 	/**

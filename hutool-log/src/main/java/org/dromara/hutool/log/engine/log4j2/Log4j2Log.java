@@ -28,7 +28,6 @@ import org.dromara.hutool.log.AbstractLog;
  * <a href="http://logging.apache.org/log4j/2.x/index.html">Apache Log4J 2</a> log.<br>
  *
  * @author Looly
- *
  */
 public class Log4j2Log extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
@@ -36,16 +35,31 @@ public class Log4j2Log extends AbstractLog {
 	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Log4j2Log(final Logger logger) {
-		this.logger = logger;
-	}
-
+	/**
+	 * 构造
+	 *
+	 * @param clazz 日志标识
+	 */
 	public Log4j2Log(final Class<?> clazz) {
 		this(LogManager.getLogger(clazz));
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param name 日志标识
+	 */
 	public Log4j2Log(final String name) {
 		this(LogManager.getLogger(name));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param logger 日志实现
+	 */
+	public Log4j2Log(final Logger logger) {
+		this.logger = logger;
 	}
 
 	@Override
