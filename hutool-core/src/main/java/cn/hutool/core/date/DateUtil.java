@@ -96,6 +96,13 @@ public class DateUtil extends CalendarUtil {
 		return new DateTime(date);
 	}
 
+	public static DateTime dateNew2(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return new DateTime(date);
+	}
+
 	/**
 	 * Long类型时间转为{@link DateTime}<br>
 	 * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
