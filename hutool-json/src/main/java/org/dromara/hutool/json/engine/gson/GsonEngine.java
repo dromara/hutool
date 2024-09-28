@@ -115,7 +115,7 @@ public class GsonEngine extends AbstractJSONEngine implements Wrapper<Gson> {
 	 */
 	private void registerDate(final GsonBuilder builder, final String dateFormat){
 		// java date
-		builder.registerTypeHierarchyAdapter(Date.class, new DateSerDesc(dateFormat));
+		builder.registerTypeHierarchyAdapter(Date.class, new DateGsonTypeAdapter(dateFormat));
 		builder.registerTypeHierarchyAdapter(TimeZone.class, TimeZoneGsonTypeAdapter.INSTANCE);
 
 		// java.time

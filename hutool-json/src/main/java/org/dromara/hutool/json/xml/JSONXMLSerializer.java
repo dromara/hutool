@@ -65,7 +65,7 @@ public class JSONXMLSerializer {
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(JSON json, final String tagName, final String... contentKeys) throws JSONException {
+	public static String toXml(final JSON json, final String tagName, final String... contentKeys) throws JSONException {
 		if (null == json) {
 			return null;
 		}

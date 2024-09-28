@@ -28,7 +28,7 @@ import java.util.TimeZone;
 
 public class JSONEngineTest {
 
-	private final String[] engineNames = {"jackson", "gson", "fastjson", "hutool"};
+	private final String[] engineNames = {"jackson", "gson", "fastjson", "moshi", "hutool"};
 
 	@Test
 	void writeDateFormatTest() {

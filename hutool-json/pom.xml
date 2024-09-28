@@ -38,6 +38,10 @@
 		<bouncycastle.version>1.78.1</bouncycastle.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<jackson.version>2.17.2</jackson.version>
+		<gson.version>2.11.0</gson.version>
+		<fastjson2.version>2.0.41</fastjson2.version>
+		<moshi.version>1.15.1</moshi.version>
+		<jmh.version>1.37</jmh.version>
 	</properties>
 
 	<dependencies>
@@ -69,13 +73,19 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.11.0</version>
+			<version>${gson.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba.fastjson2</groupId>
 			<artifactId>fastjson2</artifactId>
-			<version>2.0.41</version>
+			<version>${fastjson2.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.moshi</groupId>
+			<artifactId>moshi</artifactId>
+			<version>1.15.1</version>
 			<optional>true</optional>
 		</dependency>
 
@@ -98,6 +108,45 @@
 			<version>${jjwt.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- 基准性能测试 -->
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-core</artifactId>
+			<version>${jmh.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-generator-annprocess</artifactId>
+			<version>${jmh.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- 添加JMH测试资源 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.6.0</version>
+				<executions>
+					<execution>
+						<id>add-jmh-resource</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<directory>src/test/jmh</directory>
+								<targetPath>my-resources</targetPath>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

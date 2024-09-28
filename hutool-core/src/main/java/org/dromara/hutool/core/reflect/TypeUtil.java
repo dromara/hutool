@@ -312,7 +312,7 @@ public class TypeUtil {
 	 * @since 4.5.2
 	 */
 	public static ParameterizedType toParameterizedType(Type type, final int interfaceIndex) {
-		if(type instanceof TypeReference){
+		if (type instanceof TypeReference) {
 			type = ((TypeReference<?>) type).getType();
 		}
 
@@ -471,6 +471,22 @@ public class TypeUtil {
 		}
 
 		return parameterizedType;
+	}
+
+	/**
+	 * 创建泛型对象，例如：
+	 *
+	 * <pre>{@code
+	 *     List<String> list = TypeUtil.createParameterizedType(List.class, String.class);
+	 * }</pre>
+	 *
+	 * @param rawType             原始类型，例如：List.class
+	 * @param actualTypeArguments 实际类型，例如：String.class
+	 * @return 泛型对象
+	 * @since 6.0.0
+	 */
+	public static Type createParameterizedType(final Type rawType, final Type... actualTypeArguments) {
+		return new ParameterizedTypeImpl(actualTypeArguments, null, rawType);
 	}
 
 	/**
