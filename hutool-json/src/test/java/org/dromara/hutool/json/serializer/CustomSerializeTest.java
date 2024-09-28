@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json;
+package org.dromara.hutool.json.serializer;
 
 import lombok.ToString;
-import org.dromara.hutool.json.serializer.JSONDeserializer;
-import org.dromara.hutool.json.serializer.JSONSerializer;
-import org.dromara.hutool.json.serializer.TypeAdapterManager;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

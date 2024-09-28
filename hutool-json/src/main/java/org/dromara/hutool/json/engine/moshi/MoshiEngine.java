@@ -22,7 +22,6 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
 import org.dromara.hutool.core.io.stream.ReaderInputStream;
-import org.dromara.hutool.core.io.stream.WriterOutputStream;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -32,8 +31,8 @@ import org.dromara.hutool.json.engine.AbstractJSONEngine;
 import org.dromara.hutool.json.engine.JSONEngineConfig;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -64,25 +63,20 @@ public class MoshiEngine extends AbstractJSONEngine implements Wrapper<Moshi> {
 		return this.moshi;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void serialize(final Object bean, final Writer writer) {
-		initEngine();
-		final BufferedSink sink = Okio.buffer(Okio.sink(new WriterOutputStream(writer, CharsetUtil.UTF_8)));
-		JsonAdapter<Object> adapter = (JsonAdapter<Object>) this.moshi.adapter(bean.getClass());
-
-		if(ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)){
-			adapter = adapter.indent("  ");
-		}
-		if(!ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isIgnoreNullValue, true)){
-			adapter = adapter.serializeNulls();
-		}
-
+	public void serialize(final Object bean, final OutputStream out) {
+		final BufferedSink sink = Okio.buffer(Okio.sink(out));
 		try {
-			adapter.toJson(sink, bean);
+			getAdapter(this.moshi, bean.getClass()).toJson(sink, bean);
 		} catch (final IOException e) {
 			throw new JSONException(e);
 		}
+	}
+
+	@Override
+	public String toJsonString(final Object bean) {
+		final JsonAdapter<Object> adapter = getAdapter(this.moshi, bean.getClass());
+		return adapter.toJson(bean);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -121,12 +115,31 @@ public class MoshiEngine extends AbstractJSONEngine implements Wrapper<Moshi> {
 	}
 
 	/**
+	 * 获取并配置{@link JsonAdapter}
+	 *
+	 * @param moshi {@link Moshi}
+	 * @param type  Bean类型
+	 * @return this
+	 */
+	private JsonAdapter<Object> getAdapter(final Moshi moshi, final Type type) {
+		initEngine();
+		JsonAdapter<Object> adapter = this.moshi.adapter(type);
+		if (ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)) {
+			adapter = adapter.indent("  ");
+		}
+		if (!ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isIgnoreNullValue, true)) {
+			adapter = adapter.serializeNulls();
+		}
+		return adapter;
+	}
+
+	/**
 	 * 注册日期相关序列化描述
 	 *
-	 * @param builder Gson构造器
+	 * @param builder    Gson构造器
 	 * @param dateFormat 日期格式
 	 */
-	private void registerDate(final Moshi.Builder builder, final String dateFormat){
+	private void registerDate(final Moshi.Builder builder, final String dateFormat) {
 		builder.add(DateMoshiAdapter.createFactory(dateFormat));
 		builder.add(LocalDateTime.class, new TemporalMoshiAdapter(LocalDateTime.class, dateFormat));
 		builder.add(LocalDate.class, new TemporalMoshiAdapter(LocalDate.class, dateFormat));

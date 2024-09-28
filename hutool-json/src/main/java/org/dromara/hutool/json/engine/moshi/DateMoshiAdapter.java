@@ -73,11 +73,14 @@ public class DateMoshiAdapter extends JsonAdapter<Date> {
 		}else{
 			jsonWriter.value(DateUtil.format(date, dateFormat));
 		}
-		jsonWriter.flush();
 	}
 
 	@Override
 	public Date fromJson(final JsonReader jsonReader) throws IOException {
+		if(jsonReader.peek() == JsonReader.Token.NULL){
+			return jsonReader.nextNull();
+		}
+
 		return StrUtil.isEmpty(dateFormat) ?
 			DateUtil.date(jsonReader.nextLong()) :
 			DateUtil.parse(jsonReader.nextString(), dateFormat);

@@ -140,7 +140,6 @@
 						<configuration>
 							<resources>
 								<directory>src/test/jmh</directory>
-								<targetPath>my-resources</targetPath>
 							</resources>
 						</configuration>
 					</execution>

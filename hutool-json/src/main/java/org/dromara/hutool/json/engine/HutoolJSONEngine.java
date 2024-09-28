@@ -16,13 +16,14 @@
 
 package org.dromara.hutool.json.engine;
 
+import org.dromara.hutool.core.io.stream.UTF8OutputStreamWriter;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONFactory;
 
+import java.io.OutputStream;
 import java.io.Reader;
-import java.io.Writer;
 import java.lang.reflect.Type;
 
 /**
@@ -36,11 +37,19 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 	private JSONFactory jsonFactory;
 
 	@Override
-	public void serialize(final Object bean, final Writer writer) {
+	public void serialize(final Object bean, final OutputStream out) {
 		initEngine();
 		final JSON json = jsonFactory.parse(bean);
-		json.write(jsonFactory.ofWriter(writer,
+		json.write(jsonFactory.ofWriter(new UTF8OutputStreamWriter(out),
 			ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)));
+	}
+
+	@Override
+	public String toJsonString(final Object bean) {
+		initEngine();
+		final JSON json = jsonFactory.parse(bean);
+		final boolean isPrettyPrint = ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false);
+		return isPrettyPrint ? json.toStringPretty() : json.toString();
 	}
 
 	@Override

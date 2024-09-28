@@ -35,8 +35,8 @@ import org.dromara.hutool.json.engine.AbstractJSONEngine;
 import org.dromara.hutool.json.engine.JSONEngineConfig;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
-import java.io.Writer;
 
 /**
  * Jackson引擎
@@ -68,10 +68,20 @@ public class JacksonEngine extends AbstractJSONEngine implements Wrapper<ObjectM
 	}
 
 	@Override
-	public void serialize(final Object bean, final Writer writer) {
+	public void serialize(final Object bean, final OutputStream out) {
 		initEngine();
 		try {
-			mapper.writeValue(writer, bean);
+			mapper.writeValue(out, bean);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	@Override
+	public String toJsonString(final Object bean) {
+		initEngine();
+		try {
+			return mapper.writeValueAsString(bean);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

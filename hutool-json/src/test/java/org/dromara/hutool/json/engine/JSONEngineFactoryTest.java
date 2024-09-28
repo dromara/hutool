@@ -26,7 +26,6 @@ import org.dromara.hutool.json.engine.jackson.JacksonEngine;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
-import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -72,12 +71,10 @@ public class JSONEngineFactoryTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine("gson");
 		assertEquals(GsonEngine.class, engine.getClass());
 
-		final StringWriter stringWriter = new StringWriter();
 		final TestBean testBean = new TestBean("张三", 18, true);
-		engine.serialize(testBean, stringWriter);
 
 		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, stringWriter.toString());
+		assertEquals(jsonStr, engine.toJsonString(testBean));
 
 		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
 		assertEquals(testBean, testBean1);
@@ -88,12 +85,10 @@ public class JSONEngineFactoryTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine("fastjson");
 		assertEquals(FastJSON2Engine.class, engine.getClass());
 
-		final StringWriter stringWriter = new StringWriter();
 		final TestBean testBean = new TestBean("张三", 18, true);
-		engine.serialize(testBean, stringWriter);
 
 		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, stringWriter.toString());
+		assertEquals(jsonStr, engine.toJsonString(testBean));
 
 		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
 		assertEquals(testBean, testBean1);
@@ -104,12 +99,10 @@ public class JSONEngineFactoryTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine("hutoolJSON");
 		assertEquals(HutoolJSONEngine.class, engine.getClass());
 
-		final StringWriter stringWriter = new StringWriter();
 		final TestBean testBean = new TestBean("张三", 18, true);
-		engine.serialize(testBean, stringWriter);
 
 		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, stringWriter.toString());
+		assertEquals(jsonStr, engine.toJsonString(testBean));
 
 		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
 		assertEquals(testBean, testBean1);

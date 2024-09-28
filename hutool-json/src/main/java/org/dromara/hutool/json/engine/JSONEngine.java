@@ -16,10 +16,10 @@
 
 package org.dromara.hutool.json.engine;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
+import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
+import org.dromara.hutool.core.util.CharsetUtil;
+
+import java.io.*;
 
 /**
  * JSON引擎实现
@@ -43,9 +43,9 @@ public interface JSONEngine {
 	 * 生成JSON数据（序列化），用于将指定的Bean对象通过Writer写出为JSON字符串
 	 *
 	 * @param bean   Java Bean（POJO）对象
-	 * @param writer 写出到的Writer
+	 * @param out 写出到的{@link OutputStream}
 	 */
-	void serialize(Object bean, Writer writer);
+	void serialize(Object bean, OutputStream out);
 
 	/**
 	 * 解析JSON数据（反序列化），用于从Reader中读取JSON字符串，转换为Bean对象<br>
@@ -65,9 +65,9 @@ public interface JSONEngine {
 	 * @return JSON字符串
 	 */
 	default String toJsonString(final Object bean) {
-		final StringWriter stringWriter = new StringWriter();
-		serialize(bean, stringWriter);
-		return stringWriter.toString();
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		serialize(bean, out);
+		return out.toString(CharsetUtil.UTF_8);
 	}
 
 	/**

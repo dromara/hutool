@@ -22,13 +22,16 @@ import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.reader.ObjectReader;
 import com.alibaba.fastjson2.writer.ObjectWriter;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.engine.AbstractJSONEngine;
 import org.dromara.hutool.json.engine.JSONEngineConfig;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -53,19 +56,26 @@ public class FastJSON2Engine extends AbstractJSONEngine {
 	}
 
 	@Override
-	public void serialize(final Object bean, final Writer writer) {
-		initEngine();
-		try (final JSONWriter jsonWriter = JSONWriter.of(this.writerContext)) {
-			if (bean == null) {
-				jsonWriter.writeNull();
-			} else {
-				jsonWriter.setRootObject(bean);
-				final Class<?> valueClass = bean.getClass();
-				final ObjectWriter<?> objectWriter = this.writerContext.getObjectWriter(valueClass, valueClass);
-				objectWriter.write(jsonWriter, bean, null, null, 0);
-			}
+	public void serialize(final Object bean, final OutputStream out) {
+		JSONWriter jsonWriter = null;
+		try{
+			jsonWriter = toJsonWriter(bean);
+			jsonWriter.flushTo(out);
+		} catch (final IOException e){
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.closeQuietly(jsonWriter);
+		}
+	}
 
-			jsonWriter.flushTo(writer);
+	@Override
+	public String toJsonString(final Object bean) {
+		JSONWriter jsonWriter = null;
+		try{
+			jsonWriter = toJsonWriter(bean);
+			return jsonWriter.toString();
+		} finally {
+			IoUtil.closeQuietly(jsonWriter);
 		}
 	}
 
@@ -115,5 +125,27 @@ public class FastJSON2Engine extends AbstractJSONEngine {
 			// 自定义其它配置
 			this.writerContext.setDateFormat(ObjUtil.defaultIfNull(config.getDateFormat(), "millis"));
 		}
+	}
+
+	/**
+	 * 将对象转为JSONWriter
+	 *
+	 * @param bean 对象
+	 * @return JSONWriter
+	 */
+	private JSONWriter toJsonWriter(final Object bean) {
+		initEngine();
+
+		final JSONWriter jsonWriter = JSONWriter.of(this.writerContext);
+		if (bean == null) {
+			jsonWriter.writeNull();
+		} else {
+			jsonWriter.setRootObject(bean);
+			final Class<?> valueClass = bean.getClass();
+			final ObjectWriter<?> objectWriter = this.writerContext.getObjectWriter(valueClass, valueClass);
+			objectWriter.write(jsonWriter, bean, null, null, 0);
+		}
+
+		return jsonWriter;
 	}
 }

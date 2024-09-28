@@ -18,6 +18,7 @@ package org.dromara.hutool.json.engine.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.dromara.hutool.core.io.stream.UTF8OutputStreamWriter;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -25,8 +26,8 @@ import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.engine.AbstractJSONEngine;
 import org.dromara.hutool.json.engine.JSONEngineConfig;
 
+import java.io.OutputStream;
 import java.io.Reader;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -60,9 +61,15 @@ public class GsonEngine extends AbstractJSONEngine implements Wrapper<Gson> {
 	}
 
 	@Override
-	public void serialize(final Object bean, final Writer writer) {
+	public void serialize(final Object bean, final OutputStream out) {
 		initEngine();
-		gson.toJson(bean, writer);
+		gson.toJson(bean, new UTF8OutputStreamWriter(out));
+	}
+
+	@Override
+	public String toJsonString(final Object bean) {
+		initEngine();
+		return gson.toJson(bean);
 	}
 
 	@SuppressWarnings("unchecked")

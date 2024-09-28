@@ -60,7 +60,6 @@ public class TimeZoneMoshiAdapter extends JsonAdapter<TimeZone> {
 			return;
 		}
 		jsonWriter.value(timeZone.getID());
-		jsonWriter.flush();
 	}
 
 	@Override

@@ -60,11 +60,13 @@ public class TemporalMoshiAdapter extends JsonAdapter<TemporalAccessor> {
 		} else {
 			jsonWriter.value(TimeUtil.format(src, dateFormat));
 		}
-		jsonWriter.flush();
 	}
 
 	@Override
 	public TemporalAccessor fromJson(final JsonReader jsonReader) throws IOException {
+		if(jsonReader.peek() == JsonReader.Token.NULL){
+			return jsonReader.nextNull();
+		}
 		return StrUtil.isEmpty(dateFormat) ?
 			ConvertUtil.convert(this.type, jsonReader.nextLong()) :
 			ConvertUtil.convert(this.type, TimeUtil.parse(jsonReader.nextString(), dateFormat));
