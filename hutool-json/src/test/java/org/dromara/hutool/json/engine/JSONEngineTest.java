@@ -20,11 +20,12 @@ import lombok.Data;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.TimeZone;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JSONEngineTest {
 
@@ -61,10 +62,10 @@ public class JSONEngineTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
 
 		final String jsonString = engine.toJsonString(bean);
-		Assertions.assertEquals("{\"date1\":1704042741000,\"date2\":1704042741000}", jsonString);
+		assertEquals("{\"date1\":1704042741000,\"date2\":1704042741000}", jsonString);
 
 		engine.init(JSONEngineConfig.of().setDateFormat("yyyy-MM-dd HH:mm:ss"));
-		Assertions.assertEquals("{\"date1\":\"2024-01-01 01:12:21\",\"date2\":\"2024-01-01 01:12:21\"}", engine.toJsonString(bean));
+		assertEquals("{\"date1\":\"2024-01-01 01:12:21\",\"date2\":\"2024-01-01 01:12:21\"}", engine.toJsonString(bean));
 	}
 
 	void assertWriteLocalDateFormat(final String engineName) {
@@ -73,10 +74,10 @@ public class JSONEngineTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
 
 		final String jsonString = engine.toJsonString(bean);
-		Assertions.assertEquals("{\"date\":1704038400000}", jsonString);
+		assertEquals("{\"date\":1704038400000}", jsonString);
 
 		engine.init(JSONEngineConfig.of().setDateFormat("yyyy-MM-dd HH:mm:ss"));
-		Assertions.assertEquals("{\"date\":\"2024-01-01 00:00:00\"}", engine.toJsonString(bean));
+		assertEquals("{\"date\":\"2024-01-01 00:00:00\"}", engine.toJsonString(bean));
 	}
 
 	private void assertWriteNull(final String engineName) {
@@ -84,11 +85,11 @@ public class JSONEngineTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
 
 		String jsonString = engine.toJsonString(bean);
-		Assertions.assertEquals("{}", jsonString);
+		assertEquals("{}", jsonString);
 
 		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
 		jsonString = engine.toJsonString(bean);
-		Assertions.assertEquals("{\"date1\":null,\"date2\":null}", jsonString);
+		assertEquals("{\"date1\":null,\"date2\":null}", jsonString);
 	}
 
 	private void assertWriteTimeZone(final String engineName) {
@@ -96,17 +97,17 @@ public class JSONEngineTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
 
 		String jsonString = engine.toJsonString(timeZone);
-		Assertions.assertEquals("\"GMT+08:00\"", jsonString);
+		assertEquals("\"GMT+08:00\"", jsonString);
 
 		engine.init(JSONEngineConfig.of().setIgnoreNullValue(false));
 		jsonString = engine.toJsonString(timeZone);
-		Assertions.assertEquals("\"GMT+08:00\"", jsonString);
+		assertEquals("\"GMT+08:00\"", jsonString);
 	}
 
 	private void assertEmptyBeanToJson(final String engineName){
 		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
 		final String jsonString = engine.toJsonString(new EmptyBean());
-		Assertions.assertEquals("{}", jsonString);
+		assertEquals("{}", jsonString);
 	}
 
 	@Data
