@@ -23,7 +23,12 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONException;
 
 /**
- * JSON引擎工厂
+ * JSON引擎工厂<br>
+ * 通过SPI方式，动态查找用户引入的JSON实现库，并加载，提供两种加载方式：
+ * <ul>
+ *     <li>{@link #getEngine()} 自动按照service文件中的顺序检查并加载第一个可用引擎。</li>
+ *     <li>{@link #createEngine(String)} 加载指定名称的引擎</li>
+ * </ul>
  *
  * @author looly
  * @since 6.0.0
@@ -48,10 +53,10 @@ public class JSONEngineFactory {
 	 */
 	public static JSONEngine createEngine(String engineName) throws JSONException {
 		// fastjson名字兼容
-		if(StrUtil.equalsIgnoreCase("fastjson", engineName)){
+		if (StrUtil.equalsIgnoreCase("fastjson", engineName)) {
 			engineName = "FastJSON2";
 		}
-		if(StrUtil.equalsIgnoreCase("hutool", engineName)){
+		if (StrUtil.equalsIgnoreCase("hutool", engineName)) {
 			engineName = "HutoolJSON";
 		}
 

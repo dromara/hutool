@@ -22,7 +22,13 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import java.io.*;
 
 /**
- * JSON引擎实现
+ * JSON引擎接口，提供API：
+ * <ul>
+ *     <li>serialize：  JSON序列化，  将Bean对象序列化为JSON字符串</li>
+ *     <li>deserialize：JSON反序列化，将JSON字符串解析为Bean对象</li>
+ * </ul>
+ *
+ * <p>{@link #init(JSONEngineConfig)}用于使用公共配置，初始化引擎。</p>
  *
  * @author Looly
  * @since 6.0.0
@@ -42,8 +48,8 @@ public interface JSONEngine {
 	/**
 	 * 生成JSON数据（序列化），用于将指定的Bean对象通过Writer写出为JSON字符串
 	 *
-	 * @param bean   Java Bean（POJO）对象
-	 * @param out 写出到的{@link OutputStream}
+	 * @param bean Java Bean（POJO）对象
+	 * @param out  写出到的{@link OutputStream}
 	 */
 	void serialize(Object bean, OutputStream out);
 
