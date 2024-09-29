@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)//每次执行平均花费时间
 @Warmup(iterations = 1, time = 1) //预热5次调用
-@Measurement(iterations = 1, time = 5, timeUnit = TimeUnit.SECONDS) // 执行5此，每次1秒
+@Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS) // 执行5此，每次1秒
 @Threads(1) //单线程
 @Fork(1) //
 @OutputTimeUnit(TimeUnit.NANOSECONDS) // 单位：纳秒
@@ -34,6 +34,12 @@ public class JsonToStringJmh {
 
 	@Benchmark
 	public void gsonJmh() {
+		final String jsonStr = gson.toString();
+		Assertions.assertNotNull(jsonStr);
+	}
+
+	@Benchmark
+	public void gsonAppendJmh() {
 		final String jsonStr = gson.toString();
 		Assertions.assertNotNull(jsonStr);
 	}
