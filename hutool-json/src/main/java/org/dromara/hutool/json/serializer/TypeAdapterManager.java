@@ -225,7 +225,8 @@ public class TypeAdapterManager {
 			}
 		}
 
-		return DefaultDeserializer.INSTANCE;
+		// 此处返回null，错误处理在mapper中
+		return null;
 	}
 	// endregion
 

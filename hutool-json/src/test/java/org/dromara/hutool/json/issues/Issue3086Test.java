@@ -18,6 +18,8 @@ package org.dromara.hutool.json.issues;
 
 import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONUtil;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.dromara.hutool.json.serializer.TypeAdapterManager;

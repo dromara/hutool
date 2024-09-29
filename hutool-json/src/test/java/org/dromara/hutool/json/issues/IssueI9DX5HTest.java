@@ -17,6 +17,9 @@
 package org.dromara.hutool.json.issues;
 
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONFactory;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

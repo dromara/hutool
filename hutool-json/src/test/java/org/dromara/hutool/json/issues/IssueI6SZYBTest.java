@@ -18,6 +18,7 @@ package org.dromara.hutool.json.issues;
 
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.reflect.TypeReference;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

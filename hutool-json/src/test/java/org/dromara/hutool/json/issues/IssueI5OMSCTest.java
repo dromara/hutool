@@ -18,6 +18,8 @@ package org.dromara.hutool.json.issues;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

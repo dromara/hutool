@@ -16,10 +16,12 @@
 
 package org.dromara.hutool.json.issues;
 
-import org.dromara.hutool.core.collection.ListUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

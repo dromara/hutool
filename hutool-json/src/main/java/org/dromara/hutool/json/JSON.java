@@ -38,12 +38,21 @@ import java.util.function.Predicate;
 public interface JSON extends Serializable {
 
 	/**
+	 * 获取JSON工厂
+	 *
+	 * @return JSON工厂
+	 */
+	JSONFactory getFactory();
+
+	/**
 	 * 获取JSON配置
 	 *
 	 * @return {@link JSONConfig}
 	 * @since 5.3.0
 	 */
-	JSONConfig config();
+	default JSONConfig config(){
+		return getFactory().getConfig();
+	}
 
 	/**
 	 * JSON大小，对于JSONObject，是键值对的多少，JSONArray则是元素的个数，JSON原始数据为1
@@ -250,6 +259,6 @@ public interface JSON extends Serializable {
 	 * @return 实体类对象
 	 */
 	default <T> T toBean(final Type type) {
-		return JSONFactory.of(config(), null).toBean(this, type);
+		return getFactory().toBean(this, type);
 	}
 }

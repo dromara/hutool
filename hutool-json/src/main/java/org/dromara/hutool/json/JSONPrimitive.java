@@ -119,9 +119,14 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 		return this;
 	}
 
+	/**
+	 * 获得JSON工厂类
+	 *
+	 * @return JSON工厂类
+	 */
 	@Override
-	public JSONConfig config() {
-		return this.factory.getConfig();
+	public JSONFactory getFactory() {
+		return this.factory;
 	}
 
 	/**

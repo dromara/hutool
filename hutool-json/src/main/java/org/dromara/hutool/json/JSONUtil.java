@@ -22,6 +22,10 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
+import org.dromara.hutool.json.serializer.TypeAdapter;
+import org.dromara.hutool.json.serializer.TypeAdapterManager;
 import org.dromara.hutool.json.support.JSONStrFormatter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
@@ -404,7 +408,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(final Object obj, final JSONConfig config, Type type) {
+	public static <T> T toBean(final Object obj, final JSONConfig config, final Type type) {
 		if (null == obj) {
 			return null;
 		}
@@ -632,6 +636,29 @@ public class JSONUtil {
 			return false;
 		}
 		return StrUtil.isWrap(StrUtil.trim(str), '[', ']');
+	}
+	// endregion
+
+	// region ----- registerTypeAdapter
+	/**
+	 * 全局注册自定义类型适配器，用于自定义对象序列化和反序列化
+	 *
+	 * @param type        类型
+	 * @param typeAdapter 自定义序列化器，{@code null}表示移除
+	 */
+	public void registerTypeAdapter(final Type type, final TypeAdapter typeAdapter) {
+		TypeAdapterManager.getInstance().register(type, typeAdapter);
+	}
+
+	/**
+	 * 全局注册自定义类型适配器，用于自定义对象序列化和反序列化<br>
+	 * 提供的适配器必须为实现{@link MatcherJSONSerializer}或{@link MatcherJSONDeserializer}接口<br>
+	 * 当两个接口都实现时，同时注册序列化和反序列化器
+	 *
+	 * @param typeAdapter 自定义类型适配器
+	 */
+	public void registerTypeAdapter(final TypeAdapter typeAdapter) {
+		TypeAdapterManager.getInstance().register(typeAdapter);
 	}
 	// endregion
 }

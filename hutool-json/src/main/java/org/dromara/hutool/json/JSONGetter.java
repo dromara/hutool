@@ -31,12 +31,10 @@ import java.util.List;
 public interface JSONGetter<K> extends TypeGetter<K> {
 
 	/**
-	 * 获取JSON配置
-	 *
-	 * @return {@link JSONConfig}
-	 * @since 5.3.0
+	 * 获取JSON工厂
+	 * @return JSON工厂
 	 */
-	JSONConfig config();
+	JSONFactory getFactory();
 
 	/**
 	 * key对应值是否为{@code null}或无此key
@@ -85,7 +83,7 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 		}
 
 		if (json instanceof JSONObject) {
-			return JSONUtil.parseArray(json, config());
+			return getFactory().parseArray(json);
 		}
 
 		return json.asJSONArray();

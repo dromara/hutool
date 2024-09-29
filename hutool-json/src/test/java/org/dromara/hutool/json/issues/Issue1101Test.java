@@ -16,10 +16,13 @@
 
 package org.dromara.hutool.json.issues;
 
+import lombok.Data;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
-import lombok.Data;
+import org.dromara.hutool.json.JSONArray;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

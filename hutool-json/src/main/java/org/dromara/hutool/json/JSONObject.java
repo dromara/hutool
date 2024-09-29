@@ -100,8 +100,8 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	// endregion
 
 	@Override
-	public JSONConfig config() {
-		return this.factory.getConfig();
+	public JSONFactory getFactory() {
+		return this.factory;
 	}
 
 	@Override

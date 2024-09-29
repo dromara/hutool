@@ -103,8 +103,8 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	// endregion
 
 	@Override
-	public JSONConfig config() {
-		return factory.getConfig();
+	public JSONFactory getFactory() {
+		return this.factory;
 	}
 
 	@Override

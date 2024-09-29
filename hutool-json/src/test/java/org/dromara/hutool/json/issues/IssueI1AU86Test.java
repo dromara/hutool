@@ -16,8 +16,10 @@
 
 package org.dromara.hutool.json.issues;
 
-import org.dromara.hutool.core.collection.ListUtil;
 import lombok.Data;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.json.JSONArray;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

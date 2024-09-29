@@ -29,7 +29,7 @@ import java.util.List;
  * @author looly
  *
  */
-public class ParseBeanTest {
+public class ParseBeanWithListTest {
 
 	@Test
 	public void parseBeanTest() {

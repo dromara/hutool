@@ -17,6 +17,9 @@
 package org.dromara.hutool.json.issues;
 
 import lombok.Data;
+import org.dromara.hutool.json.JSONFactory;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.serializer.impl.ClassTypeAdapter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,21 +27,28 @@ public class Issue3506Test {
 
 	@Test
 	void toBeanTest() {
+		final JSONFactory factory = JSONFactory.of(null, null);
+		factory.register(Class.class, ClassTypeAdapter.INSTANCE);
+
 		final Languages languages = new Languages();
 		languages.setLanguageType(Java.class);
 
-		final String hutoolJSONString = JSONUtil.toJsonStr(languages);
-		final Languages bean = JSONUtil.toBean(hutoolJSONString, Languages.class);
+		final String hutoolJSONString = factory.parseObj(languages).toString();
+		Assertions.assertEquals("{\"languageType\":\"org.dromara.hutool.json.issues.Issue3506Test$Java\"}", hutoolJSONString);
+
+		final JSONObject jsonObject = factory.parseObj(hutoolJSONString);
+		final Languages bean = jsonObject.toBean(Languages.class);
+
 		Assertions.assertNotNull(bean);
 		Assertions.assertEquals(bean.getLanguageType(), Java.class);
 	}
 
 	@Data
-	public static class Languages {
+	static class Languages {
 		private Class<? extends Language> languageType;
 	}
 
-	public interface Language {
+	interface Language {
 	}
 
 	public static class Java implements Language {

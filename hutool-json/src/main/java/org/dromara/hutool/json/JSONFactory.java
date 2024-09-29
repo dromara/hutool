@@ -22,6 +22,9 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.reader.JSONParser;
 import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.JSONMapper;
+import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
+import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
+import org.dromara.hutool.json.serializer.TypeAdapter;
 import org.dromara.hutool.json.support.JSONNodeBeanFactory;
 import org.dromara.hutool.json.writer.JSONWriter;
 
@@ -52,6 +55,16 @@ public class JSONFactory {
 	 */
 	public static JSONFactory getInstance() {
 		return InstanceHolder.INSTANCE;
+	}
+
+	/**
+	 * 创建JSON工厂
+	 *
+	 * @param config JSON配置
+	 * @return JSON工厂
+	 */
+	public static JSONFactory of(final JSONConfig config) {
+		return of(config, null);
 	}
 
 	/**
@@ -142,6 +155,31 @@ public class JSONFactory {
 			}
 		}
 		return this.mapper;
+	}
+
+	/**
+	 * 注册自定义类型适配器，用于自定义对象序列化和反序列化
+	 *
+	 * @param type        类型
+	 * @param typeAdapter 自定义序列化器，{@code null}表示移除
+	 * @return this
+	 */
+	public JSONFactory register(final Type type, final TypeAdapter typeAdapter) {
+		getMapper().register(type, typeAdapter);
+		return this;
+	}
+
+	/**
+	 * 注册自定义类型适配器，用于自定义对象序列化和反序列化<br>
+	 * 提供的适配器必须为实现{@link MatcherJSONSerializer}或{@link MatcherJSONDeserializer}接口<br>
+	 * 当两个接口都实现时，同时注册序列化和反序列化器
+	 *
+	 * @param typeAdapter 自定义类型适配器
+	 * @return this
+	 */
+	public JSONFactory register(final TypeAdapter typeAdapter) {
+		getMapper().register(typeAdapter);
+		return this;
 	}
 
 	// region ----- of

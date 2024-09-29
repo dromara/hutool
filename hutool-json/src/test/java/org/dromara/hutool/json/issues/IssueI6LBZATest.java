@@ -16,6 +16,9 @@
 
 package org.dromara.hutool.json.issues;
 
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONPrimitive;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

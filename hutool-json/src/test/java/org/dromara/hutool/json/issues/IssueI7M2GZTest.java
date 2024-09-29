@@ -19,6 +19,8 @@ package org.dromara.hutool.json.issues;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.dromara.hutool.core.reflect.TypeReference;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONUtil;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

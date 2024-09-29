@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json;
+package org.dromara.hutool.json.issues;
 
+import org.dromara.hutool.json.JSONFactory;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.serializer.JSONSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class Pr3507Test {
 	@Test
 	void writeClassTest() {
-		final JSONObject set = JSONUtil.ofObj().putObj("name", Pr3507Test.class);
-		Assertions.assertEquals("{\"name\":\"org.dromara.hutool.json.Pr3507Test\"}", set.toString());
+		// 考虑安全问题，不提供默认的Class的序列化器，此处局部自定义
+		final JSONFactory factory = JSONFactory.of(null, null);
+		factory.register(Class.class, (JSONSerializer<Class<?>>) (bean, context) -> context.getOrCreatePrimitive(bean.getName()));
+
+		final JSONObject set = factory.ofObj().putObj("name", Pr3507Test.class);
+		Assertions.assertEquals("{\"name\":\"org.dromara.hutool.json.issues.Pr3507Test\"}", set.toString());
 	}
 }

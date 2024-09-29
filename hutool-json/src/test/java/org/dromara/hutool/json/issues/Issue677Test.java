@@ -16,8 +16,9 @@
 
 package org.dromara.hutool.json.issues;
 
-import org.dromara.hutool.core.date.DateUtil;
 import lombok.Data;
+import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

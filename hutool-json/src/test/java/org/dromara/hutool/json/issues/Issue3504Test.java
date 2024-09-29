@@ -19,6 +19,8 @@ package org.dromara.hutool.json.issues;
 import lombok.Data;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.JSONPrimitive;
+import org.dromara.hutool.json.JSONUtil;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.JSONDeserializer;
 import org.dromara.hutool.json.serializer.JSONSerializer;

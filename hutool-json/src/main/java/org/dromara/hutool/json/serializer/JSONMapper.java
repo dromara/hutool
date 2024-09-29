@@ -22,6 +22,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.reader.JSONTokener;
+import org.dromara.hutool.json.serializer.impl.DefaultDeserializer;
 import org.dromara.hutool.json.xml.JSONXMLParser;
 import org.dromara.hutool.json.xml.ParseConfig;
 
@@ -58,7 +59,7 @@ public class JSONMapper implements Serializable {
 	}
 
 	private final JSONFactory factory;
-	private TypeAdapterManager typeAdapterManager;
+	private volatile TypeAdapterManager typeAdapterManager;
 
 	/**
 	 * 构造
@@ -86,6 +87,31 @@ public class JSONMapper implements Serializable {
 	 */
 	public JSONMapper setTypeAdapterManager(final TypeAdapterManager typeAdapterManager) {
 		this.typeAdapterManager = typeAdapterManager;
+		return this;
+	}
+
+	/**
+	 * 注册自定义类型适配器，用于自定义对象序列化和反序列化
+	 *
+	 * @param type        类型
+	 * @param typeAdapter 自定义序列化器，{@code null}表示移除
+	 * @return this
+	 */
+	public JSONMapper register(final Type type, final TypeAdapter typeAdapter) {
+		initTypeAdapterManager().register(type, typeAdapter);
+		return this;
+	}
+
+	/**
+	 * 注册自定义类型适配器，用于自定义对象序列化和反序列化<br>
+	 * 提供的适配器必须为实现{@link MatcherJSONSerializer}或{@link MatcherJSONDeserializer}接口<br>
+	 * 当两个接口都实现时，同时注册序列化和反序列化器
+	 *
+	 * @param typeAdapter 自定义类型适配器
+	 * @return this
+	 */
+	public JSONMapper register(final TypeAdapter typeAdapter) {
+		initTypeAdapterManager().register(typeAdapter);
 		return this;
 	}
 
@@ -121,10 +147,7 @@ public class JSONMapper implements Serializable {
 		}
 		final boolean ignoreError = ObjUtil.defaultIfNull(this.factory.getConfig(), JSONConfig::isIgnoreError, false);
 		if (null == deserializer) {
-			if (ignoreError) {
-				return null;
-			}
-			throw new JSONException("No deserializer for type: " + type);
+			deserializer = DefaultDeserializer.INSTANCE;
 		}
 
 		try {
@@ -313,5 +336,21 @@ public class JSONMapper implements Serializable {
 	 */
 	private JSON mapFromTokener(final JSONTokener tokener) {
 		return this.factory.ofParser(tokener).parse();
+	}
+
+	/**
+	 * 初始化类型转换器管理器，如果尚未初始化，则初始化，否则直接返回
+	 *
+	 * @return {@link TypeAdapterManager}
+	 */
+	private TypeAdapterManager initTypeAdapterManager() {
+		if (null == this.typeAdapterManager) {
+			synchronized (this) {
+				if (null == this.typeAdapterManager) {
+					this.typeAdapterManager = TypeAdapterManager.of();
+				}
+			}
+		}
+		return this.typeAdapterManager;
 	}
 }

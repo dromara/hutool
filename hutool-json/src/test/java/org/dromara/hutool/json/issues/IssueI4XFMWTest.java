@@ -16,8 +16,9 @@
 
 package org.dromara.hutool.json.issues;
 
-import org.dromara.hutool.core.annotation.Alias;
 import lombok.Data;
+import org.dromara.hutool.core.annotation.Alias;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
