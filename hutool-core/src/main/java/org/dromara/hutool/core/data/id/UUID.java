@@ -185,18 +185,20 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	/**
-	 * 获取随机生成的UUIDv7
+	 * 获取随机生成的UUIDv7<br>
+	 * 【开源之夏】贡献内容，见：https://gitee.com/dromara/hutool/pulls/1263
 	 *
 	 * @return UUIDv7
+	 * @author Cason(https://gitee.com/Casonhqc)
 	 */
 	public static UUID randomUUID7() {
-		byte[] randomBytes = new byte[16];
+		final byte[] randomBytes = new byte[16];
 		final Random ng = Holder.NUMBER_GENERATOR;
 		ng.nextBytes(randomBytes);
 
-		long[] v7Time = getV7Time();
-		long milli = v7Time[0];
-		long seq = v7Time[1];
+		final long[] v7Time = getV7Time();
+		final long milli = v7Time[0];
+		final long seq = v7Time[1];
 
 		randomBytes[0] = (byte) (milli >> 40);
 		randomBytes[1] = (byte) (milli >> 32);
@@ -208,20 +210,20 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 		randomBytes[6] = (byte) ((0x70) | (0x0F & (seq >> 8)));
 		randomBytes[7] = (byte) seq;
 		randomBytes[8] &= 0x3f; /* clear variant */
-		randomBytes[8] |= 0x80; /* set to IETF variant */
+		randomBytes[8] |= (byte) 0x80; /* set to IETF variant */
 
 		return new UUID(ByteUtil.toLong(randomBytes, 0, ByteOrder.BIG_ENDIAN),
 				ByteUtil.toLong(randomBytes, 8, ByteOrder.BIG_ENDIAN));
 	}
 
 	private static long[] getV7Time() {
-		long nano = System.nanoTime();
+		final long nano = System.nanoTime();
 		long milli = nano / NANOS_PER_MILLI;
 		long seq = (nano - milli * NANOS_PER_MILLI) >> 8;
 		long now = (milli << 12) + seq;
 
 		while (true) {
-			long last = lastV7time.get();
+			final long last = lastV7time.get();
 			if (now <= last) {
 				now = last + 1;
 				milli = now >> 12;

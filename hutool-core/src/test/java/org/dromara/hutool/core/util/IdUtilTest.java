@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,7 +78,7 @@ public class IdUtilTest {
 		timer.start();
 		for (int i = 0; i < 1000000; i++) {
 			//noinspection ResultOfMethodCallIgnored
-			UUID.randomUUID().toString().replace("-", "");
+			java.util.UUID.randomUUID().toString().replace("-", "");
 		}
 		timer.stop();
 		Console.log(timer.getLastTaskTimeMillis());
@@ -169,8 +168,8 @@ public class IdUtilTest {
 
 	@Test
 	public void testUUIDv7Format() {
-		org.dromara.hutool.core.data.id.UUID uuid = org.dromara.hutool.core.data.id.UUID.randomUUID7();
-		String uuidStr = uuid.toString();
+		final org.dromara.hutool.core.data.id.UUID uuid = org.dromara.hutool.core.data.id.UUID.randomUUID7();
+		final String uuidStr = uuid.toString();
 
 		// 验证UUID字符串格式是否符合标准
 		assertTrue(uuidStr.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"));
@@ -178,7 +177,7 @@ public class IdUtilTest {
 
 	@Test
 	public void testUUIDv7Properties() {
-		org.dromara.hutool.core.data.id.UUID uuid = org.dromara.hutool.core.data.id.UUID.randomUUID7();
+		final org.dromara.hutool.core.data.id.UUID uuid = org.dromara.hutool.core.data.id.UUID.randomUUID7();
 
 		// 验证版本号是否为7
 		assertEquals(7, uuid.version());
@@ -190,11 +189,11 @@ public class IdUtilTest {
 
 	@RepeatedTest(10)
 	public void testUUIDv7Uniqueness() {
-		Set<org.dromara.hutool.core.data.id.UUID> uuids = new HashSet<>();
+		final Set<org.dromara.hutool.core.data.id.UUID> uuids = new HashSet<>();
 
 		// 生成100万个UUIDv7，验证是否有重复
 		for (int i = 0; i < 1000000; i++) {
-			org.dromara.hutool.core.data.id.UUID uuid = org.dromara.hutool.core.data.id.UUID.randomUUID7();
+			final org.dromara.hutool.core.data.id.UUID uuid = org.dromara.hutool.core.data.id.UUID.randomUUID7();
 			assertFalse(uuids.contains(uuid));
 			uuids.add(uuid);
 		}
@@ -207,7 +206,7 @@ public class IdUtilTest {
 
 		// 验证连续生成的1000个UUIDv7是否呈单调递增趋势
 		for (int i = 0; i < 1000; i++) {
-			org.dromara.hutool.core.data.id.UUID next = org.dromara.hutool.core.data.id.UUID.randomUUID7();
+			final org.dromara.hutool.core.data.id.UUID next = org.dromara.hutool.core.data.id.UUID.randomUUID7();
 			assertTrue(next.compareTo(prev) > 0);
 			prev = next;
 		}
@@ -217,6 +216,7 @@ public class IdUtilTest {
 	 * UUIDv7的性能测试
 	 */
 	@Test
+	@Disabled
 	public void testUUIDv7Benchmark() {
 		final StopWatch timer = DateUtil.createStopWatch();
 
