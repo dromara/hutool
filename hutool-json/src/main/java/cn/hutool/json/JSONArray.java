@@ -594,6 +594,13 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 				return false;
 			}
 		}
+
+		// issue#3759
+		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
+		if (ObjectUtil.isNull(obj) && ignoreNullValue) {
+			return false;
+		}
+
 		return this.rawList.add(obj);
 	}
 }

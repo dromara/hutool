@@ -1,5 +1,5 @@
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+package cn.hutool.json;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
