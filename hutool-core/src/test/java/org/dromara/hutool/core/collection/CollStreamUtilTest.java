@@ -16,10 +16,10 @@
 
 package org.dromara.hutool.core.collection;
 
-import org.dromara.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
+import org.dromara.hutool.core.map.MapUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -318,6 +318,25 @@ public class CollStreamUtilTest {
 		} else {
 			return student1.getName() + student2.getName();
 		}
+	}
+
+	@Test
+	void cartesianProductTest() {
+		final List<List<Object>> sets = new ArrayList<>();
+		sets.add(ListUtil.of(10, 20));
+		sets.add(ListUtil.of("John", "Jack"));
+		sets.add(ListUtil.of('I', 'J'));
+
+		final List<List<Object>> collect = CollStreamUtil.cartesianProduct(sets, 0).collect(Collectors.toList());
+		Assertions.assertEquals(8, collect.size());
+		Assertions.assertEquals("[10, John, I]", collect.get(0).toString());
+		Assertions.assertEquals("[10, John, J]", collect.get(1).toString());
+		Assertions.assertEquals("[10, Jack, I]", collect.get(2).toString());
+		Assertions.assertEquals("[10, Jack, J]", collect.get(3).toString());
+		Assertions.assertEquals("[20, John, I]", collect.get(4).toString());
+		Assertions.assertEquals("[20, John, J]", collect.get(5).toString());
+		Assertions.assertEquals("[20, Jack, I]", collect.get(6).toString());
+		Assertions.assertEquals("[20, Jack, J]", collect.get(7).toString());
 	}
 
 	/**
