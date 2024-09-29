@@ -77,6 +77,10 @@ public class IdUtil {
 		return UUID.fastUUID().toString(true);
 	}
 
+	public static String randomUUID7() {
+		return UUID.randomUUID7().toString();
+	}
+
 	// endregion
 
 	// region ----- ObjectId
@@ -259,7 +263,7 @@ public class IdUtil {
 		}
 		if (null != mac) {
 			id = ((0x000000FF & (long) mac[mac.length - 2])
-				| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
+					| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
 			id = id % (maxDatacenterId + 1);
 		}
 
@@ -305,7 +309,6 @@ public class IdUtil {
 	 * 则会使用此默认实例。
 	 *
 	 * @return SeataSnowflake 返回一个默认配置的SeataSnowflake实例。
-	 *
 	 * @see IdConstants#DEFAULT_SNOWFLAKE
 	 */
 	public static SeataSnowflake getSeataSnowflake() {
@@ -320,7 +323,6 @@ public class IdUtil {
 	 *
 	 * @param nodeId 节点ID
 	 * @return SeataSnowflake 返回一个自定义配置的SeataSnowflake实例。
-	 *
 	 * @see IdConstants#DEFAULT_SEATA_SNOWFLAKE
 	 */
 	public static SeataSnowflake getSeataSnowflake(final long nodeId) {
