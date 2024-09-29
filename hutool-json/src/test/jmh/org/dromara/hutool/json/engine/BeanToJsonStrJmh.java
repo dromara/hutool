@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Fork(1) //
 @OutputTimeUnit(TimeUnit.NANOSECONDS) // 单位：纳秒
 @State(Scope.Benchmark) // 共享域
-public class ToJsonStrJmh {
+public class BeanToJsonStrJmh {
 
 	private JSONEngine jacksonEngine;
 	private JSONEngine gsonEngine;
