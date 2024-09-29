@@ -2152,28 +2152,24 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 获得一个输出流对象
 	 *
-	 * @param file 文件
+	 * @param file    文件
+	 * @param options 选项，如追加模式传{@link java.nio.file.StandardOpenOption#APPEND}
 	 * @return 输出流对象
 	 * @throws IORuntimeException IO异常
 	 */
-	public static BufferedOutputStream getOutputStream(final File file) throws IORuntimeException {
-		final OutputStream out;
-		try {
-			out = Files.newOutputStream(touch(file).toPath());
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return IoUtil.toBuffered(out);
+	public static BufferedOutputStream getOutputStream(final File file, final OpenOption... options) throws IORuntimeException {
+		return PathUtil.getOutputStream(touch(file).toPath(), options);
 	}
 
 	/**
 	 * 获得一个输出流对象
 	 *
-	 * @param path 输出到的文件路径，绝对路径
+	 * @param path    输出到的文件路径，绝对路径
+	 * @param options 选项，如追加模式传{@link java.nio.file.StandardOpenOption#APPEND}
 	 * @return 输出流对象
 	 * @throws IORuntimeException IO异常
 	 */
-	public static BufferedOutputStream getOutputStream(final String path) throws IORuntimeException {
+	public static BufferedOutputStream getOutputStream(final String path, final OpenOption... options) throws IORuntimeException {
 		return getOutputStream(touch(path));
 	}
 

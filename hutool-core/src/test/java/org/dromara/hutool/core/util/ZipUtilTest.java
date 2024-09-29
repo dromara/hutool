@@ -20,6 +20,7 @@ import org.dromara.hutool.core.compress.ZipReader;
 import org.dromara.hutool.core.compress.ZipUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
@@ -31,7 +32,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,7 +173,7 @@ public class ZipUtilTest {
 		//https://github.com/dromara/hutool/issues/944
 		final String dir = "d:/test";
 		final String zip = "d:/test.zip";
-		try (final OutputStream out = Files.newOutputStream(Paths.get(zip))){
+		try (final OutputStream out = PathUtil.getOutputStream(Paths.get(zip))){
 			//实际应用中, out 为 HttpServletResponse.getOutputStream
 			ZipUtil.zip(out, Charset.defaultCharset(), false, null, new File(dir));
 		} catch (final IOException e) {

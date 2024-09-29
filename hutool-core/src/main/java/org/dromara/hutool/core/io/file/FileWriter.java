@@ -22,17 +22,9 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -216,13 +208,13 @@ public class FileWriter extends FileWrapper {
 			boolean isFirst = true;
 			for (final T t : list) {
 				if (null != t) {
-					if(isFirst){
+					if (isFirst) {
 						isFirst = false;
-						if(isAppend && FileUtil.isNotEmpty(this.file)){
+						if (isAppend && FileUtil.isNotEmpty(this.file)) {
 							// 追加模式下且文件非空，补充换行符
 							printNewLine(writer, lineSeparator);
 						}
-					} else{
+					} else {
 						printNewLine(writer, lineSeparator);
 					}
 					writer.print(t);
@@ -338,17 +330,16 @@ public class FileWriter extends FileWrapper {
 	 *
 	 * @param in        输入流，不关闭
 	 * @param isCloseIn 是否关闭输入流
+	 * @param options   选项，如追加模式传{@link java.nio.file.StandardOpenOption#APPEND}
 	 * @return file
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.2
 	 */
-	public File writeFromStream(final InputStream in, final boolean isCloseIn) throws IORuntimeException {
+	public File writeFromStream(final InputStream in, final boolean isCloseIn, final OpenOption... options) throws IORuntimeException {
 		OutputStream out = null;
 		try {
-			out = Files.newOutputStream(FileUtil.touch(file).toPath());
+			out = FileUtil.getOutputStream(file, options);
 			IoUtil.copy(in, out);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.closeQuietly(out);
 			if (isCloseIn) {
@@ -361,15 +352,12 @@ public class FileWriter extends FileWrapper {
 	/**
 	 * 获得一个输出流对象
 	 *
+	 * @param options 选项，如追加模式传{@link java.nio.file.StandardOpenOption#APPEND}
 	 * @return 输出流对象
 	 * @throws IORuntimeException IO异常
 	 */
-	public BufferedOutputStream getOutputStream() throws IORuntimeException {
-		try {
-			return new BufferedOutputStream(Files.newOutputStream(FileUtil.touch(file).toPath()));
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+	public BufferedOutputStream getOutputStream(final OpenOption... options) throws IORuntimeException {
+		return FileUtil.getOutputStream(file, options);
 	}
 
 	/**

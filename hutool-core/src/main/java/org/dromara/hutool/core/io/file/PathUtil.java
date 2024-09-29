@@ -94,6 +94,7 @@ public class PathUtil {
 	}
 
 	// region ----- loop and walk
+
 	/**
 	 * 递归遍历目录以及子目录中的所有文件<br>
 	 * 如果提供path为文件，直接返回过滤结果
@@ -232,6 +233,7 @@ public class PathUtil {
 	}
 
 	// region ----- copy
+
 	/**
 	 * 拷贝资源到目标文件
 	 * <ul>
@@ -286,7 +288,7 @@ public class PathUtil {
 	/**
 	 * 通过JDK7+的 {@link Files#copy(InputStream, Path, CopyOption...)} 方法拷贝文件
 	 *
-	 * @param src    源文件流，使用后不闭流
+	 * @param src 源文件流，使用后不闭流
 	 * @param out 目标流
 	 * @return 拷贝bytes数
 	 * @throws IORuntimeException IO异常
@@ -539,15 +541,15 @@ public class PathUtil {
 	/**
 	 * 获得输出流
 	 *
-	 * @param path Path
+	 * @param path    Path
+	 * @param options 选项，如追加模式传{@link java.nio.file.StandardOpenOption#APPEND}
 	 * @return 输入流
 	 * @throws IORuntimeException 文件未找到
-	 * @since 5.4.1
 	 */
-	public static BufferedOutputStream getOutputStream(final Path path) throws IORuntimeException {
+	public static BufferedOutputStream getOutputStream(final Path path, final OpenOption... options) throws IORuntimeException {
 		final OutputStream in;
 		try {
-			in = Files.newOutputStream(path);
+			in = Files.newOutputStream(path, options);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -631,7 +633,7 @@ public class PathUtil {
 	 */
 	public static boolean equals(final Path file1, final Path file2) throws IORuntimeException {
 		// 都为null认定为相同
-		if(null == file1 || null == file2){
+		if (null == file1 || null == file2) {
 			return null == file1 && null == file2;
 		}
 
@@ -639,7 +641,7 @@ public class PathUtil {
 		final boolean exists2 = exists(file2, false);
 
 
-		if(exists1 && exists2){
+		if (exists1 && exists2) {
 			return isSameFile(file1, file2);
 		}
 

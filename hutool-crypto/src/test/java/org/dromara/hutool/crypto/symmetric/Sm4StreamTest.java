@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.crypto.symmetric;
 
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +51,7 @@ public class Sm4StreamTest {
 			sm4.encrypt(input, out, IS_CLOSE);
 			System.out.println("============encrypt end");
 		} catch (final IOException e) {
-			e.printStackTrace();
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -60,7 +61,7 @@ public class Sm4StreamTest {
 			sm4.decrypt(input, out, IS_CLOSE);
 			System.out.println("============decrypt end");
 		} catch (final IOException e) {
-			e.printStackTrace();
+			throw new IORuntimeException(e);
 		}
 	}
 }
