@@ -18,18 +18,22 @@ package org.dromara.hutool.json.writer;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONException;
 
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * JSON数据写出器<br>
@@ -73,6 +77,14 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 								final Predicate<MutableEntry<Object, Object>> predicate) {
 		return new JSONWriter(appendable, indentFactor, indent, config, predicate);
 	}
+
+	/**
+	 * JS中表示的数字最大值
+	 */
+	private static final long JS_MAX_NUMBER = 9007199254740992L;
+	// Syntax as defined by https://datatracker.ietf.org/doc/html/rfc8259#section-6
+	private static final Pattern JSON_NUMBER_PATTERN =
+		Pattern.compile("-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][-+]?[0-9]+)?");
 
 	/**
 	 * Writer
@@ -295,6 +307,42 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 			this.appendable.append(csq);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
+		}
+		return this;
+	}
+
+	/**
+	 * 写出数字，根据{@link JSONConfig#isStripTrailingZeros()} 配置不同，写出不同数字<br>
+	 * 主要针对Double型是否去掉小数点后多余的0<br>
+	 * 此方法输出的值不包装引号。
+	 *
+	 * @param number 数字
+	 * @return this
+	 */
+	public JSONWriter writeNumber(final Number number) {
+		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
+		final boolean isStripTrailingZeros = (null == config) || config.isStripTrailingZeros();
+		final String numberStr = NumberUtil.toStr(number, isStripTrailingZeros);
+
+		// 检查有效性
+		if(!ReUtil.isMatch(JSON_NUMBER_PATTERN, numberStr)){
+			throw new JSONException("Invalid RFC8259 JSON format number: " + numberStr);
+		}
+
+		final NumberWriteMode numberWriteMode = (null == config) ? NumberWriteMode.NORMAL : config.getNumberWriteMode();
+		switch (numberWriteMode){
+			case JS:
+				if(number.longValue() > JS_MAX_NUMBER){
+					writeQuoteStrValue(numberStr);
+				} else{
+					return writeRaw(numberStr);
+				}
+				break;
+			case STRING:
+				writeQuoteStrValue(numberStr);
+				break;
+			default:
+				return writeRaw(numberStr);
 		}
 		return this;
 	}

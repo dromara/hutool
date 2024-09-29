@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
+import org.junit.jupiter.api.Assertions;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
@@ -34,15 +35,18 @@ public class JsonToStringJmh {
 	@Benchmark
 	public void gsonJmh() {
 		final String jsonStr = gson.toString();
+		Assertions.assertNotNull(jsonStr);
 	}
 
 	@Benchmark
 	public void hutoolJmh() {
 		final String jsonStr = hutoolJSON.toString();
+		Assertions.assertNotNull(jsonStr);
 	}
 
 	@Benchmark
 	public void fastJSONJmh() {
 		final String jsonStr = fastJSON.toString();
+		Assertions.assertNotNull(jsonStr);
 	}
 }

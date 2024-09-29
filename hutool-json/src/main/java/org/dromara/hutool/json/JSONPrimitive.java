@@ -18,10 +18,8 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
-import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.json.writer.JSONWriter;
-import org.dromara.hutool.json.writer.NumberWriteMode;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,11 +37,6 @@ import java.math.BigInteger;
  */
 public class JSONPrimitive implements Wrapper<Object>, JSON {
 	private static final long serialVersionUID = -2026215279191790345L;
-
-	/**
-	 * JS中表示的数字最大值
-	 */
-	private static final long JS_MAX_NUMBER = 9007199254740992L;
 
 	/**
 	 * 判断给定对象是否可以转为JSONPrimitive类型
@@ -199,7 +192,7 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 			writer.writeRaw(value.toString());
 		} else if (value instanceof Number){
 			// Number
-			writeNumber(writer, (Number) value);
+			writer.writeNumber((Number) value);
 		} else{
 			// 默认包装字符串
 			writer.writeQuoteStrValue(value.toString());
@@ -209,37 +202,5 @@ public class JSONPrimitive implements Wrapper<Object>, JSON {
 	@Override
 	public String toString() {
 		return toJSONString(0);
-	}
-
-	/**
-	 * 写出数字，根据{@link JSONConfig#isStripTrailingZeros()} 配置不同，写出不同数字<br>
-	 * 主要针对Double型是否去掉小数点后多余的0<br>
-	 * 此方法输出的值不包装引号。
-	 *
-	 * @param writer {@link JSONWriter}
-	 * @param number 数字
-	 */
-	private void writeNumber(final JSONWriter writer, final Number number) {
-		final JSONConfig config = writer.getConfig();
-		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
-		final boolean isStripTrailingZeros = (null == config) || config.isStripTrailingZeros();
-		final String numberStr = NumberUtil.toStr(number, isStripTrailingZeros);
-
-		final NumberWriteMode numberWriteMode = (null == config) ? NumberWriteMode.NORMAL : config.getNumberWriteMode();
-		switch (numberWriteMode){
-			case JS:
-				if(number.longValue() > JS_MAX_NUMBER){
-					writer.writeQuoteStrValue(numberStr);
-				} else{
-					writer.writeRaw(numberStr);
-				}
-				break;
-			case STRING:
-				writer.writeQuoteStrValue(numberStr);
-				break;
-			default:
-				writer.writeRaw(numberStr);
-				break;
-		}
 	}
 }

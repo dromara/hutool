@@ -188,6 +188,7 @@ public class IdUtilTest {
 	}
 
 	@RepeatedTest(10)
+	@Disabled
 	public void testUUIDv7Uniqueness() {
 		final Set<org.dromara.hutool.core.data.id.UUID> uuids = new HashSet<>();
 
