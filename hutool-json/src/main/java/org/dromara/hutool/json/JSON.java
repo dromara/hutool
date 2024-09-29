@@ -225,7 +225,9 @@ public interface JSON extends Serializable {
 	 * @throws JSONException 包含非法数抛出此异常
 	 */
 	default String toJSONString(final int indentFactor) throws JSONException {
-		return toJSONString(indentFactor, null);
+		final JSONWriter jsonWriter = getFactory().ofWriter(new StringBuilder(), indentFactor);
+		this.write(jsonWriter);
+		return jsonWriter.toString();
 	}
 
 	/**

@@ -39,12 +39,6 @@ public class JsonToStringJmh {
 	}
 
 	@Benchmark
-	public void gsonAppendJmh() {
-		final String jsonStr = gson.toString();
-		Assertions.assertNotNull(jsonStr);
-	}
-
-	@Benchmark
 	public void hutoolJmh() {
 		final String jsonStr = hutoolJSON.toString();
 		Assertions.assertNotNull(jsonStr);

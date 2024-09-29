@@ -41,7 +41,6 @@
 		<gson.version>2.11.0</gson.version>
 		<fastjson2.version>2.0.41</fastjson2.version>
 		<moshi.version>1.15.1</moshi.version>
-		<jmh.version>1.37</jmh.version>
 	</properties>
 
 	<dependencies>
@@ -106,19 +105,6 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-gson</artifactId>
 			<version>${jjwt.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- 基准性能测试 -->
-		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-core</artifactId>
-			<version>${jmh.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-generator-annprocess</artifactId>
-			<version>${jmh.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

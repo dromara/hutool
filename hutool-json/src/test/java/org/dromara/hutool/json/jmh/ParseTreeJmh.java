@@ -1,6 +1,9 @@
 package org.dromara.hutool.json.jmh;
 
 import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.dromara.hutool.json.JSONObject;
@@ -48,5 +51,12 @@ public class ParseTreeJmh {
 	public void fastJSONJmh() {
 		final com.alibaba.fastjson2.JSONObject jsonObject = JSON.parseObject(jsonStr);
 		assertNotNull(jsonObject);
+	}
+
+	@Benchmark
+	public void jacksonJmh() throws JsonProcessingException {
+		final ObjectMapper mapper = new ObjectMapper();
+		final JsonNode jsonNode = mapper.readTree(jsonStr);
+		assertNotNull(jsonNode);
 	}
 }
