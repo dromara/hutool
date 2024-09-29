@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author looly
  */
 @BenchmarkMode(Mode.AverageTime)//每次执行平均花费时间
-@Warmup(iterations = 1, time = 1) //预热5次调用
-@Measurement(iterations = 1, time = 5, timeUnit = TimeUnit.SECONDS) // 执行5此，每次1秒
+@Warmup(iterations = 5, time = 1) //预热5次调用
+@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS) // 执行5此，每次1秒
 @Threads(1) //单线程
 @Fork(1) //
 @OutputTimeUnit(TimeUnit.NANOSECONDS) // 单位：纳秒
