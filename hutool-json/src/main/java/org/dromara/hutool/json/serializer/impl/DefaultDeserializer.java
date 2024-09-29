@@ -39,7 +39,7 @@ public class DefaultDeserializer implements JSONDeserializer<Object> {
 	public Object deserialize(final JSON json, final Type deserializeType) {
 		// 当目标类型不确定时，返回原JSON
 		final Class<?> rawType = TypeUtil.getClass(deserializeType);
-		if (null == rawType || Object.class == rawType || rawType == json.getClass()) {
+		if (null == rawType || Object.class == rawType || rawType.isAssignableFrom(json.getClass())) {
 			return json;
 		}
 

@@ -67,7 +67,7 @@ public class MoshiEngine extends AbstractJSONEngine implements Wrapper<Moshi> {
 	public void serialize(final Object bean, final OutputStream out) {
 		final BufferedSink sink = Okio.buffer(Okio.sink(out));
 		try {
-			getAdapter(this.moshi, bean.getClass()).toJson(sink, bean);
+			getAdapter(bean.getClass()).toJson(sink, bean);
 		} catch (final IOException e) {
 			throw new JSONException(e);
 		}
@@ -75,7 +75,7 @@ public class MoshiEngine extends AbstractJSONEngine implements Wrapper<Moshi> {
 
 	@Override
 	public String toJsonString(final Object bean) {
-		final JsonAdapter<Object> adapter = getAdapter(this.moshi, bean.getClass());
+		final JsonAdapter<Object> adapter = getAdapter(bean.getClass());
 		return adapter.toJson(bean);
 	}
 
@@ -117,11 +117,10 @@ public class MoshiEngine extends AbstractJSONEngine implements Wrapper<Moshi> {
 	/**
 	 * 获取并配置{@link JsonAdapter}
 	 *
-	 * @param moshi {@link Moshi}
 	 * @param type  Bean类型
 	 * @return this
 	 */
-	private JsonAdapter<Object> getAdapter(final Moshi moshi, final Type type) {
+	private JsonAdapter<Object> getAdapter(final Type type) {
 		initEngine();
 		JsonAdapter<Object> adapter = this.moshi.adapter(type);
 		if (ObjUtil.defaultIfNull(this.config, JSONEngineConfig::isPrettyPrint, false)) {
