@@ -42,6 +42,11 @@ import java.nio.charset.Charset;
 public class NioUtil {
 
 	/**
+	 * 默认小缓存大小 1024
+	 */
+	public static final int DEFAULT_SMALL_BUFFER_SIZE = 2 << 9;
+
+	/**
 	 * 默认缓存大小 8192
 	 */
 	public static final int DEFAULT_BUFFER_SIZE = 2 << 12;

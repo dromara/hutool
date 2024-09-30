@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.io;
+package org.dromara.hutool.core.io.buffer;
 
-import java.nio.ByteBuffer;
-
-import org.dromara.hutool.core.io.buffer.BufferUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.nio.ByteBuffer;
 
 /**
  * BufferUtil单元测试

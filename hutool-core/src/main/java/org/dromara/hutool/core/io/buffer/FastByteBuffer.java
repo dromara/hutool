@@ -41,7 +41,7 @@ public class FastByteBuffer extends FastBuffer {
 	 * 构造
 	 */
 	public FastByteBuffer() {
-		this(IoUtil.DEFAULT_BUFFER_SIZE);
+		this(IoUtil.DEFAULT_SMALL_BUFFER_SIZE);
 	}
 
 	/**
