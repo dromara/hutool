@@ -293,10 +293,6 @@ public class JSONFactory {
 	 */
 	public JSONArray parseArray(final Object obj) {
 		final JSONMapper mapper = getMapper();
-//		if (obj instanceof JSONObject) {
-//			return mapper.mapFromJSONObject((JSONObject) obj);
-//		}
-
 		if (obj instanceof CharSequence) {
 			return (JSONArray) mapper.map((CharSequence) obj);
 		}
