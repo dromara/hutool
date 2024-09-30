@@ -28,7 +28,6 @@ import org.dromara.hutool.json.serializer.TypeAdapter;
 import org.dromara.hutool.json.support.JSONNodeBeanFactory;
 import org.dromara.hutool.json.writer.JSONWriter;
 
-import java.io.ByteArrayInputStream;
 import java.lang.reflect.Type;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -268,16 +267,12 @@ public class JSONFactory {
 	// region ----- parse
 
 	/**
-	 * JSON字符串转JSONObject对象
+	 * 对象转JSONObject对象
 	 *
 	 * @param obj Bean对象或者Map
 	 * @return JSONObject
 	 */
-	public JSONObject parseObj(Object obj) {
-		if (obj instanceof byte[]) {
-			obj = new ByteArrayInputStream((byte[]) obj);
-		}
-
+	public JSONObject parseObj(final Object obj) {
 		final JSONMapper mapper = getMapper();
 		if (obj instanceof CharSequence) {
 			return (JSONObject) mapper.map((CharSequence) obj);
@@ -298,9 +293,9 @@ public class JSONFactory {
 	 */
 	public JSONArray parseArray(final Object obj) {
 		final JSONMapper mapper = getMapper();
-		if (obj instanceof JSONObject) {
-			return mapper.mapFromJSONObject((JSONObject) obj);
-		}
+//		if (obj instanceof JSONObject) {
+//			return mapper.mapFromJSONObject((JSONObject) obj);
+//		}
 
 		if (obj instanceof CharSequence) {
 			return (JSONArray) mapper.map((CharSequence) obj);

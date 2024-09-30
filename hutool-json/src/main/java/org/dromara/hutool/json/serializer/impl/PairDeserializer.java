@@ -44,7 +44,7 @@ public class PairDeserializer implements JSONDeserializer<Pair<?, ?>> {
 			deserializeType = ((TypeReference<?>) deserializeType).getType();
 		}
 		final Type leftType = TypeUtil.getTypeArgument(deserializeType, 0);
-		final Type rightType = TypeUtil.getTypeArgument(deserializeType, 2);
+		final Type rightType = TypeUtil.getTypeArgument(deserializeType, 1);
 
 		final JSONObject jsonObject = json.asJSONObject();
 		final JSON left = jsonObject.get("left");

@@ -18,7 +18,6 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.Serializable;
@@ -261,11 +260,7 @@ public interface JSON extends Serializable {
 	 * @param type {@link Type}
 	 * @return 实体类对象
 	 */
-	@SuppressWarnings("unchecked")
 	default <T> T toBean(final Type type) {
-		if(JSON.class.isAssignableFrom(TypeUtil.getClass(type))){
-			return (T) this;
-		}
 		return getFactory().toBean(this, type);
 	}
 }

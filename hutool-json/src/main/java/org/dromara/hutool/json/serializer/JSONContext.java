@@ -28,7 +28,8 @@ public interface JSONContext {
 
 	/**
 	 * 获取当前JSON对象<br>
-	 * 此对象为在Mapper时预定义的对象，用于指定序列化的JSON类型
+	 * 此对象为在Mapper时预定义的对象，用于指定序列化的JSON类型<br>
+	 * 未指定返回{@code null}
 	 *
 	 * @return JSON对象
 	 */

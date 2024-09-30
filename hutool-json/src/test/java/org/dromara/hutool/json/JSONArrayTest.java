@@ -48,7 +48,7 @@ public class JSONArrayTest {
 		// JSONObject实现了Iterable接口，可以转换为JSONArray
 		final JSONObject jsonObject = new JSONObject();
 
-		JSONArray jsonArray = JSONUtil.parseArray(jsonObject, JSONConfig.of());
+		JSONArray jsonArray = JSONUtil.parseArray(jsonObject);
 		assertEquals(new JSONArray(), jsonArray);
 
 		jsonObject.putObj("key1", "value1");

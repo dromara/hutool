@@ -17,22 +17,24 @@
 package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.convert.CompositeConverter;
-import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONArray;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
 import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Map类型适配器器，用于将JSON对象和Map对象互转。
+ * Map类型适配器，用于将JSON对象和Map对象互转。
  *
  * @author looly
  * @since 6.0.0
@@ -60,10 +62,24 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 
 	@Override
 	public JSON serialize(final Map<?, ?> bean, final JSONContext context) {
+		// 序列化为JSONArray
+		if(context.getContextJson() instanceof JSONArray){
+			final Iterator<?> iter;
+			if(bean instanceof Iterator){
+				iter = (Iterator<?>) bean;
+			} else if(bean instanceof Iterable){
+				iter = ((Iterable<?>) bean).iterator();
+			} else{
+				iter = bean.entrySet().iterator();
+			}
+			return IterTypeAdapter.INSTANCE.serialize(bean, context);
+		}
+
+		// Map to JSONObject
 		final JSONObject result = context.getOrCreateObj();
 		// 注入键值对
 		for (final Map.Entry<?, ?> e : bean.entrySet()) {
-			result.putObj(ConvertUtil.toStr(e.getKey()), e.getValue());
+			result.putObj(StrUtil.toStringOrNull(e.getKey()), e.getValue());
 		}
 		return result;
 	}

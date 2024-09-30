@@ -129,13 +129,6 @@ public class JSONMapper implements Serializable {
 			type = ((TypeReference<?>) type).getType();
 		}
 
-		if (null == type || Object.class == type) {
-			if (json instanceof JSONPrimitive) {
-				return (T) ((JSONPrimitive) json).getValue();
-			}
-			return (T) json;
-		}
-
 		JSONDeserializer<Object> deserializer = null;
 		// 自定义反序列化
 		if (null != this.typeAdapterManager) {

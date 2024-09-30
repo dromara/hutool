@@ -37,9 +37,12 @@ public class DefaultDeserializer implements JSONDeserializer<Object> {
 
 	@Override
 	public Object deserialize(final JSON json, final Type deserializeType) {
-		// 当目标类型不确定时，返回原JSON
+		// 当目标类型不确定时，返回原JSON或JSONPrimitive的值
 		final Class<?> rawType = TypeUtil.getClass(deserializeType);
 		if (null == rawType || Object.class == rawType || rawType.isAssignableFrom(json.getClass())) {
+			if (json instanceof JSONPrimitive) {
+				return ((JSONPrimitive) json).getValue();
+			}
 			return json;
 		}
 

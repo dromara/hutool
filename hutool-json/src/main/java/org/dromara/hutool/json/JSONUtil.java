@@ -99,7 +99,7 @@ public class JSONUtil {
 	 * @since 6.0.0
 	 */
 	public static JSONPrimitive ofPrimitive(final Object value) {
-		return ofPrimitive(value, JSONConfig.of());
+		return JSONFactory.getInstance().ofPrimitive(value);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 */
 	public static JSONObject parseObj(final Object obj) {
-		return parseObj(obj, JSONConfig.of(), null);
+		return JSONFactory.getInstance().parseObj(obj);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 */
 	public static JSONArray parseArray(final Object obj) {
-		return parseArray(obj, null);
+		return JSONFactory.getInstance().parseArray(obj);
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class JSONUtil {
 	 * @return JSON
 	 */
 	public static JSON parse(final Object obj) {
-		return parse(obj, null);
+		return JSONFactory.getInstance().parse(obj);
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(final Object obj) {
-		return toJsonStr(obj, (JSONConfig) null);
+		return parse(obj).toString();
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class JSONUtil {
 	 */
 	public static void toJsonStr(final Object obj, final Appendable appendable) {
 		Assert.notNull(appendable);
-		final JSONFactory jsonFactory = JSONFactory.of(null, null);
+		final JSONFactory jsonFactory = JSONFactory.getInstance();
 		final JSON json = jsonFactory.parse(obj);
 		json.write(jsonFactory.ofWriter(appendable, 0));
 	}
@@ -389,13 +389,15 @@ public class JSONUtil {
 	 * 转为实体类对象
 	 *
 	 * @param <T>  Bean类型
-	 * @param json JSONObject
+	 * @param obj 对象
 	 * @param type 实体类对象类型
 	 * @return 实体类对象
-	 * @since 4.3.2
 	 */
-	public static <T> T toBean(final Object json, final Type type) {
-		return toBean(json, null, type);
+	public static <T> T toBean(final Object obj, final Type type) {
+		if (null == obj) {
+			return null;
+		}
+		return parse(obj).toBean(type);
 	}
 
 	/**
