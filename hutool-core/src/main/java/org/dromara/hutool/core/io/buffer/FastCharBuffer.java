@@ -83,7 +83,7 @@ public class FastCharBuffer extends FastBuffer implements CharSequence, Appendab
 		if (remaining > 0) {
 			// still some data left
 			// ask for new buffer
-			needNewBuffer(newSize);
+			ensureCapacity(newSize);
 
 			// then copy remaining
 			// but this time we are sure that it will fit
@@ -114,7 +114,7 @@ public class FastCharBuffer extends FastBuffer implements CharSequence, Appendab
 	 */
 	public FastCharBuffer append(final char element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
-			needNewBuffer(size + 1);
+			ensureCapacity(size + 1);
 		}
 
 		currentBuffer[offset] = element;
@@ -310,7 +310,7 @@ public class FastCharBuffer extends FastBuffer implements CharSequence, Appendab
 		if (remaining > 0) {
 			// still some data left
 			// ask for new buffer
-			needNewBuffer(newSize);
+			ensureCapacity(newSize);
 
 			// then copy remaining
 			// but this time we are sure that it will fit
@@ -324,8 +324,8 @@ public class FastCharBuffer extends FastBuffer implements CharSequence, Appendab
 	}
 
 	@Override
-	protected void needNewBuffer(final int newSize) {
-		final int delta = newSize - size;
+	protected void ensureCapacity(final int capacity) {
+		final int delta = capacity - size;
 		final int newBufferSize = Math.max(minChunkLen, delta);
 
 		currentBufferIndex++;

@@ -107,9 +107,9 @@ public abstract class FastBuffer {
 	}
 
 	/**
-	 * 分配下一个缓冲区，不会小于1024
+	 * 检查现有缓冲区是否满足capacity，不满足则分配新的区域分配下一个缓冲区，不会小于1024
 	 *
-	 * @param newSize 理想缓冲区字节数
+	 * @param capacity 理想缓冲区字节数
 	 */
-	abstract protected void needNewBuffer(final int newSize);
+	abstract protected void ensureCapacity(final int capacity);
 }

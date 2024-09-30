@@ -16,9 +16,9 @@
 
 package org.dromara.hutool.core.io.buffer;
 
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.nio.ByteBuffer;
@@ -36,25 +36,55 @@ import java.util.Arrays;
  */
 public class BufferUtil {
 
+	// region ----- of
+
 	/**
-	 * {@link ByteBuffer} 转byte数组
+	 * 创建新Buffer
 	 *
-	 * @param bytebuffer {@link ByteBuffer}
-	 * @return byte数组
+	 * @param data 数据
+	 * @return {@link ByteBuffer}
+	 * @since 4.5.0
 	 */
-	public static byte[] toBytes(final ByteBuffer bytebuffer) {
-		if (bytebuffer.hasArray()) {
-			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
-		} else {
-			final int oldPosition = bytebuffer.position();
-			bytebuffer.position(0);
-			final int size = bytebuffer.limit();
-			final byte[] buffers = new byte[size];
-			bytebuffer.get(buffers);
-			bytebuffer.position(oldPosition);
-			return buffers;
-		}
+	public static ByteBuffer of(final byte[] data) {
+		return ByteBuffer.wrap(data);
 	}
+
+	/**
+	 * 从字符串创建新Buffer
+	 *
+	 * @param data    数据
+	 * @param charset 编码
+	 * @return {@link ByteBuffer}
+	 * @since 4.5.0
+	 */
+	public static ByteBuffer of(final CharSequence data, final Charset charset) {
+		return of(ByteUtil.toBytes(data, charset));
+	}
+
+	/**
+	 * 从字符串创建新Buffer，使用UTF-8编码
+	 *
+	 * @param data 数据
+	 * @return {@link ByteBuffer}
+	 * @since 4.5.0
+	 */
+	public static ByteBuffer ofUtf8(final CharSequence data) {
+		return of(ByteUtil.toUtf8Bytes(data));
+	}
+
+	/**
+	 * 创建{@link CharBuffer}
+	 *
+	 * @param capacity 容量
+	 * @return {@link CharBuffer}
+	 * @since 5.5.7
+	 */
+	public static CharBuffer ofCharBuffer(final int capacity) {
+		return CharBuffer.allocate(capacity);
+	}
+	// endregion
+
+	// region ----- copy
 
 	/**
 	 * 拷贝到一个新的ByteBuffer
@@ -105,6 +135,9 @@ public class BufferUtil {
 		System.arraycopy(src.array(), srcStart, dest.array(), destStart, length);
 		return dest;
 	}
+	// endregion
+
+	// region ----- read
 
 	/**
 	 * 读取剩余部分并转为UTF-8编码字符串
@@ -175,6 +208,81 @@ public class BufferUtil {
 	}
 
 	/**
+	 * 读取一行，如果buffer中最后一部分并非完整一行，则返回null<br>
+	 * 支持的换行符如下：
+	 *
+	 * <pre>
+	 * 1. \r\n
+	 * 2. \n
+	 * </pre>
+	 *
+	 * @param buffer  ByteBuffer
+	 * @param charset 编码
+	 * @return 一行
+	 */
+	public static String readLine(final ByteBuffer buffer, final Charset charset) {
+		final int startPosition = buffer.position();
+		final int endPosition = lineEnd(buffer);
+
+		if (endPosition > startPosition) {
+			final byte[] bs = readBytes(buffer, startPosition, endPosition);
+			return StrUtil.str(bs, charset);
+		} else if (endPosition == startPosition) {
+			return StrUtil.EMPTY;
+		}
+
+		return null;
+	}
+	// endregion
+
+	// region ----- toXXX
+
+	/**
+	 * {@link ByteBuffer} 转byte数组
+	 *
+	 * @param bytebuffer {@link ByteBuffer}
+	 * @return byte数组
+	 */
+	public static byte[] toBytes(final ByteBuffer bytebuffer) {
+		if (bytebuffer.hasArray()) {
+			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
+		} else {
+			final int oldPosition = bytebuffer.position();
+			bytebuffer.position(0);
+			final int size = bytebuffer.limit();
+			final byte[] buffers = new byte[size];
+			bytebuffer.get(buffers);
+			bytebuffer.position(oldPosition);
+			return buffers;
+		}
+	}
+
+	/**
+	 * {@link CharBuffer} 转 {@link ByteBuffer}
+	 *
+	 * @param charBuffer {@link CharBuffer}
+	 * @param charset    编码
+	 * @return {@link ByteBuffer}
+	 */
+	public static ByteBuffer toByteBuffer(final CharBuffer charBuffer, final Charset charset) {
+		return charset.encode(charBuffer);
+	}
+
+	/**
+	 * {@link ByteBuffer} 转 {@link CharBuffer}
+	 *
+	 * @param byteBuffer {@link ByteBuffer}
+	 * @param charset    编码
+	 * @return {@link CharBuffer}
+	 */
+	public static CharBuffer toCharBuffer(final ByteBuffer byteBuffer, final Charset charset) {
+		return charset.decode(byteBuffer);
+	}
+	// endregion
+
+	// region ----- lineEnd
+
+	/**
 	 * 一行的末尾位置，查找位置时位移ByteBuffer到结束位置
 	 *
 	 * @param buffer {@link ByteBuffer}
@@ -226,76 +334,5 @@ public class BufferUtil {
 		// 读到结束位置
 		return -1;
 	}
-
-	/**
-	 * 读取一行，如果buffer中最后一部分并非完整一行，则返回null<br>
-	 * 支持的换行符如下：
-	 *
-	 * <pre>
-	 * 1. \r\n
-	 * 2. \n
-	 * </pre>
-	 *
-	 * @param buffer  ByteBuffer
-	 * @param charset 编码
-	 * @return 一行
-	 */
-	public static String readLine(final ByteBuffer buffer, final Charset charset) {
-		final int startPosition = buffer.position();
-		final int endPosition = lineEnd(buffer);
-
-		if (endPosition > startPosition) {
-			final byte[] bs = readBytes(buffer, startPosition, endPosition);
-			return StrUtil.str(bs, charset);
-		} else if (endPosition == startPosition) {
-			return StrUtil.EMPTY;
-		}
-
-		return null;
-	}
-
-	/**
-	 * 创建新Buffer
-	 *
-	 * @param data 数据
-	 * @return {@link ByteBuffer}
-	 * @since 4.5.0
-	 */
-	public static ByteBuffer of(final byte[] data) {
-		return ByteBuffer.wrap(data);
-	}
-
-	/**
-	 * 从字符串创建新Buffer
-	 *
-	 * @param data    数据
-	 * @param charset 编码
-	 * @return {@link ByteBuffer}
-	 * @since 4.5.0
-	 */
-	public static ByteBuffer of(final CharSequence data, final Charset charset) {
-		return of(ByteUtil.toBytes(data, charset));
-	}
-
-	/**
-	 * 从字符串创建新Buffer，使用UTF-8编码
-	 *
-	 * @param data 数据
-	 * @return {@link ByteBuffer}
-	 * @since 4.5.0
-	 */
-	public static ByteBuffer ofUtf8(final CharSequence data) {
-		return of(ByteUtil.toUtf8Bytes(data));
-	}
-
-	/**
-	 * 创建{@link CharBuffer}
-	 *
-	 * @param capacity 容量
-	 * @return {@link CharBuffer}
-	 * @since 5.5.7
-	 */
-	public static CharBuffer ofCharBuffer(final int capacity) {
-		return CharBuffer.allocate(capacity);
-	}
+	// endregion
 }
