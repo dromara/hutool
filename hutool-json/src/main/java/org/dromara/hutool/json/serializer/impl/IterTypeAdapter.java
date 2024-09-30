@@ -82,6 +82,24 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 	}
 
 	/**
+	 * 从Iterator中读取数据，并添加到JSONArray中
+	 *
+	 * @param source    源对象，用于检查循环引用
+	 * @param iter      {@link Iterator}
+	 * @param jsonArray {@link JSONArray}
+	 */
+	public void mapFromIterator(final Object source, final Iterator<?> iter, final JSONArray jsonArray) {
+		Object next;
+		while (iter.hasNext()) {
+			next = iter.next();
+			// 检查循环引用
+			if (next != source) {
+				jsonArray.addObj(next);
+			}
+		}
+	}
+
+	/**
 	 * 反序列化
 	 *
 	 * @param json            JSON
@@ -99,23 +117,6 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 		}
 
 		return result;
-	}
-
-	/**
-	 * 从Iterator中读取数据，并添加到JSONArray中
-	 *
-	 * @param iter      {@link Iterator}
-	 * @param jsonArray {@link JSONArray}
-	 */
-	private void mapFromIterator(final Object source, final Iterator<?> iter, final JSONArray jsonArray) {
-		Object next;
-		while (iter.hasNext()) {
-			next = iter.next();
-			// 检查循环引用
-			if (next != source) {
-				jsonArray.addObj(next);
-			}
-		}
 	}
 
 	/**

@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.json.serializer.impl;
 
-import org.dromara.hutool.core.convert.CompositeConverter;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -62,8 +62,10 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 
 	@Override
 	public JSON serialize(final Map<?, ?> bean, final JSONContext context) {
+
+		final JSON contextJson = context.getContextJson();
 		// 序列化为JSONArray
-		if(context.getContextJson() instanceof JSONArray){
+		if(contextJson instanceof JSONArray){
 			final Iterator<?> iter;
 			if(bean instanceof Iterator){
 				iter = (Iterator<?>) bean;
@@ -72,7 +74,8 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 			} else{
 				iter = bean.entrySet().iterator();
 			}
-			return IterTypeAdapter.INSTANCE.serialize(bean, context);
+			IterTypeAdapter.INSTANCE.mapFromIterator(bean, iter, (JSONArray) contextJson);
+			return contextJson;
 		}
 
 		// Map to JSONObject
@@ -94,7 +97,7 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 		for (final Map.Entry<String, JSON> entry : (JSONObject) json) {
 			map.put(
 				// key类型为String转目标类型，使用标准转换器
-				CompositeConverter.getInstance().convert(keyType, entry.getKey()),
+				ConvertUtil.convert(keyType, entry.getKey()),
 				ObjUtil.apply(entry.getValue(), (value)-> value.toBean(valueType))
 			);
 		}
