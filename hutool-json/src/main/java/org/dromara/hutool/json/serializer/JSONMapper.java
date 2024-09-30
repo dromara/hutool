@@ -201,6 +201,7 @@ public class JSONMapper implements Serializable {
 	 *   <li>standard property (Double, String, et al) =》 原对象</li>
 	 *   <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
 	 * </ul>
+	 * 注意，此方法不支持JSON字符串的解析，解析请用{@link #map(CharSequence)}
 	 *
 	 * @param obj 被映射的对象
 	 * @return 映射后的值，null表示此值需被忽略
@@ -249,11 +250,11 @@ public class JSONMapper implements Serializable {
 	 * </ul>
 	 *
 	 * @param obj  被映射的对象
-	 * @param json 被映射的到的对象，{@code null}表示自动识别
+	 * @param json 被映射的到的对象，{@code null}表示根据序列化器自动识别
 	 * @param <T>  JSON类型
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	@SuppressWarnings({"ReassignedVariable", "unchecked"})
+	@SuppressWarnings({"unchecked"})
 	private <T extends JSON> T mapTo(Object obj, final T json) {
 		if (null == obj) {
 			return null;

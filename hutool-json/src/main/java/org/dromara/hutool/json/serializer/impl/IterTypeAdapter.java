@@ -82,24 +82,6 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 	}
 
 	/**
-	 * 从Iterator中读取数据，并添加到JSONArray中
-	 *
-	 * @param source    源对象，用于检查循环引用
-	 * @param iter      {@link Iterator}
-	 * @param jsonArray {@link JSONArray}
-	 */
-	public void mapFromIterator(final Object source, final Iterator<?> iter, final JSONArray jsonArray) {
-		Object next;
-		while (iter.hasNext()) {
-			next = iter.next();
-			// 检查循环引用
-			if (next != source) {
-				jsonArray.addObj(next);
-			}
-		}
-	}
-
-	/**
 	 * 反序列化
 	 *
 	 * @param json            JSON
@@ -120,13 +102,31 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 	}
 
 	/**
+	 * 从Iterator中读取数据，并添加到JSONArray中
+	 *
+	 * @param source    源对象，用于检查循环引用
+	 * @param iter      {@link Iterator}
+	 * @param jsonArray {@link JSONArray}
+	 */
+	static void mapFromIterator(final Object source, final Iterator<?> iter, final JSONArray jsonArray) {
+		Object next;
+		while (iter.hasNext()) {
+			next = iter.next();
+			// 检查循环引用
+			if (next != source) {
+				jsonArray.addObj(next);
+			}
+		}
+	}
+
+	/**
 	 * 将JSONObject转换为集合
 	 *
 	 * @param json        JSONObject
 	 * @param result      结果集合
 	 * @param elementType 元素类型
 	 */
-	private void fill(final JSONObject json, final Collection<?> result, final Type elementType) {
+	private static void fill(final JSONObject json, final Collection<?> result, final Type elementType) {
 		json.forEach((key, value)->{
 			result.add(null == value ? null : value.toBean(elementType));
 		});
@@ -139,7 +139,7 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 	 * @param result      结果集合
 	 * @param elementType 元素类型
 	 */
-	private void fill(final JSONArray json, final Collection<?> result, final Type elementType) {
+	private static void fill(final JSONArray json, final Collection<?> result, final Type elementType) {
 		json.forEach((element)->{
 			result.add(null == element ? null : element.toBean(elementType));
 		});

@@ -74,7 +74,7 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 			} else{
 				iter = bean.entrySet().iterator();
 			}
-			IterTypeAdapter.INSTANCE.mapFromIterator(bean, iter, (JSONArray) contextJson);
+			IterTypeAdapter.mapFromIterator(bean, iter, (JSONArray) contextJson);
 			return contextJson;
 		}
 
