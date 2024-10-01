@@ -19,34 +19,43 @@ package org.dromara.hutool.json.issues;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.json.JSONUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Issue3681Test {
 	@Test
 	void toJsonStrOfOptionalTest() {
 		String abc = JSONUtil.toJsonStr(Optional.of("abc"));
-		Assertions.assertEquals("\"abc\"", abc);
+		assertEquals("\"abc\"", abc);
 
+		// 默认解析
 		abc = JSONUtil.toJsonStr(Optional.of("123"));
-		Assertions.assertEquals("123", abc);
+		assertEquals("123", abc);
+
+		// 按照字符串对待
+		abc = JSONUtil.toJSON(Optional.of("123")).toString();
+		assertEquals("\"123\"", abc);
 	}
 
 	@Test
 	void toJsonStrOfOptionalTest2() {
 		final String abc = JSONUtil.toJsonStr(Optional.of(MapUtil.of("a", 1)));
-		Assertions.assertEquals("{\"a\":1}", abc);
+		assertEquals("{\"a\":1}", abc);
 	}
 
 	@Test
 	void toJsonStrOfOptTest() {
 		String abc = JSONUtil.toJsonStr(Opt.of("abc"));
-		Assertions.assertEquals("\"abc\"", abc);
+		assertEquals("\"abc\"", abc);
 
 		abc = JSONUtil.toJsonStr(Opt.of("123"));
-		Assertions.assertEquals("123", abc);
+		assertEquals("123", abc);
 
+		// 按照字符串对待
+		abc = JSONUtil.toJSON(Opt.of("123")).toString();
+		assertEquals("\"123\"", abc);
 	}
 }

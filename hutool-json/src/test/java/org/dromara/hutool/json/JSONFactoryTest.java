@@ -16,21 +16,34 @@
 
 package org.dromara.hutool.json;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JSONFactoryTest {
 	@Test
 	void parseFromStringBuilderTest() {
 		final String jsonStr = "{\"name\":\"张三\"}";
 		final JSON parse = JSONFactory.getInstance().parse(new StringBuilder(jsonStr));
-		Assertions.assertEquals(JSONObject.class, parse.getClass());
+		assertEquals(JSONObject.class, parse.getClass());
 	}
 
 	@Test
 	void parseFromStringTest() {
 		final String jsonStr = "{\"name\":\"张三\"}";
 		final JSON parse = JSONFactory.getInstance().parse(jsonStr);
-		Assertions.assertEquals(JSONObject.class, parse.getClass());
+		assertEquals(JSONObject.class, parse.getClass());
+	}
+
+	@Test
+	void parseAsNumberTest() {
+		final JSON json = JSONFactory.getInstance().parse("123");
+		assertEquals(Integer.class, json.asJSONPrimitive().getValue().getClass());
+	}
+
+	@Test
+	void toJSONTest() {
+		final JSON json = JSONFactory.getInstance().toJSON("123");
+		assertEquals(String.class, json.asJSONPrimitive().getValue().getClass());
 	}
 }
