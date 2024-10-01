@@ -20,7 +20,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.xml.XmlConstants;
-import org.dromara.hutool.json.InternalJSONUtil;
+import org.dromara.hutool.json.support.InternalJSONUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;

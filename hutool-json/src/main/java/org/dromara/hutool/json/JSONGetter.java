@@ -18,6 +18,7 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.lang.getter.TypeGetter;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.support.InternalJSONUtil;
 
 import java.lang.reflect.Type;
 import java.util.List;

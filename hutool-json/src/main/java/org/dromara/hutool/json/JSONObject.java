@@ -25,6 +25,7 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.support.InternalJSONUtil;
 import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.util.Arrays;

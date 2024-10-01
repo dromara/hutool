@@ -23,7 +23,7 @@ import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.InternalJSONUtil;
+import org.dromara.hutool.json.support.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
@@ -232,7 +232,8 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 		}
 		// 换行缩进
 		writeLF().writeSpace(indent);
-		return writeRaw(InternalJSONUtil.quote(key));
+		writeQuoteStrValue(key);
+		return this;
 	}
 
 	@Override

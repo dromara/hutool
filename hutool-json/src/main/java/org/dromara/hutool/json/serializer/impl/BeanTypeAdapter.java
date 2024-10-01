@@ -23,7 +23,7 @@ import org.dromara.hutool.core.lang.copier.Copier;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.InternalJSONUtil;
+import org.dromara.hutool.json.support.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONObject;

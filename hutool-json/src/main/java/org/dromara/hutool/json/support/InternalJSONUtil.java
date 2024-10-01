@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json;
+package org.dromara.hutool.json.support;
 
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.codec.binary.HexUtil;
@@ -24,6 +24,9 @@ import org.dromara.hutool.core.map.CaseInsensitiveTreeMap;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONConfig;
+import org.dromara.hutool.json.JSONFactory;
 import org.dromara.hutool.json.serializer.JSONMapper;
 
 import java.io.IOException;
@@ -125,32 +128,6 @@ public final class InternalJSONUtil {
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
-	 * @param string 字符串
-	 * @return 适合在JSON中显示的字符串
-	 */
-	public static String quote(final CharSequence string) {
-		return quote(string, true);
-	}
-
-	/**
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
-	 * @param string 字符串
-	 * @param isWrap 是否使用双引号包装字符串
-	 * @return 适合在JSON中显示的字符串
-	 * @since 3.3.1
-	 */
-	public static String quote(final CharSequence string, final boolean isWrap) {
-		return quote(string, new StringBuilder(), isWrap).toString();
-	}
-
-	/**
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
 	 * @param str        字符串
 	 * @param appendable {@link Appendable}
 	 * @throws IORuntimeException IO异常
@@ -207,7 +184,7 @@ public final class InternalJSONUtil {
 	 * @param factory  JSON工厂，{@code null}则使用默认配置
 	 * @return Map
 	 */
-	static Map<String, JSON> createRawMap(final int capacity, final JSONFactory factory) {
+	public static Map<String, JSON> createRawMap(final int capacity, final JSONFactory factory) {
 		final JSONConfig config = ObjUtil.apply(factory, JSONFactory::getConfig);
 		final boolean ignoreCase = ObjUtil.defaultIfNull(config, JSONConfig::isIgnoreCase, false);
 		final Comparator<String> keyComparator = ObjUtil.apply(config, JSONConfig::getKeyComparator);

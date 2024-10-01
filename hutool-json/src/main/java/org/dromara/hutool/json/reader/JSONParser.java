@@ -19,6 +19,7 @@ package org.dromara.hutool.json.reader;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.support.InternalJSONUtil;
 
 import java.util.function.Predicate;
 
