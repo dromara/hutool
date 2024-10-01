@@ -27,6 +27,7 @@ import org.dromara.hutool.json.support.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONException;
+import org.dromara.hutool.json.support.JSONFormatStyle;
 
 import java.io.Closeable;
 import java.io.Flushable;
@@ -65,17 +66,17 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 *
 	 * @param appendable   {@link Appendable}
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
+	 * @param level        层级
 	 * @param config       JSON选项
 	 * @param predicate    predicate    字段过滤器
 	 * @return JSONWriter
 	 */
 	public static JSONWriter of(final Appendable appendable,
 								final int indentFactor,
-								final int indent,
+								final int level,
 								final JSONConfig config,
 								final Predicate<MutableEntry<Object, Object>> predicate) {
-		return new JSONWriter(appendable, indentFactor, indent, config, predicate);
+		return new JSONWriter(appendable, JSONFormatStyle.getStyle(indentFactor), level, config, predicate);
 	}
 
 	/**
@@ -96,9 +97,9 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	private final JSONConfig config;
 
 	/**
-	 * 缩进因子，定义每一级别增加的缩进量
+	 * 格式化风格
 	 */
-	private final int indentFactor;
+	private final JSONFormatStyle formatStyle;
 	/**
 	 * 键值对过滤器，用于修改键值对
 	 */
@@ -110,27 +111,27 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 */
 	private boolean needSeparator;
 	/**
-	 * 本级别缩进量
+	 * 层级
 	 */
-	private int indent;
+	private int level;
 
 	/**
 	 * 构造
 	 *
 	 * @param appendable   {@link Appendable}
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
+	 * @param formatStyle 格式化风格
+	 * @param level        层级
 	 * @param config       JSON选项
 	 * @param predicate    字段过滤器
 	 */
 	public JSONWriter(final Appendable appendable,
-					  final int indentFactor,
-					  final int indent,
+					  final JSONFormatStyle formatStyle,
+					  final int level,
 					  final JSONConfig config,
 					  final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.appendable = appendable;
-		this.indentFactor = indentFactor;
-		this.indent = indent;
+		this.formatStyle = formatStyle;
+		this.level = level;
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
 		this.predicate = predicate;
 	}
@@ -153,7 +154,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	public JSONWriter beginObj() {
 		append(CharUtil.DELIM_START);
 		needSeparator = false;
-		indent += indentFactor;
+		level += 1;
 		return this;
 	}
 
@@ -175,7 +176,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	public JSONWriter beginArray() {
 		append(CharUtil.BRACKET_START);
 		needSeparator = false;
-		indent += indentFactor;
+		level += 1;
 		return this;
 	}
 
@@ -231,7 +232,7 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 			append(CharUtil.COMMA);
 		}
 		// 换行缩进
-		writeLF().writeSpace(indent);
+		writeNewLine().writeIndent(level);
 		writeQuoteStrValue(key);
 		return this;
 	}
@@ -271,15 +272,28 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	}
 
 	/**
-	 * 写出空格
+	 * 写出空白字符，默认写出一个空格
+	 *
+	 * @return this
+	 */
+	public JSONWriter writeSpaceAfterSeparators() {
+		if (this.formatStyle.isSpaceAfterSeparators()) {
+			return append(CharUtil.SPACE);
+		}
+		return this;
+	}
+
+	/**
+	 * 写出缩进
 	 *
 	 * @param count 空格数
 	 */
-	public void writeSpace(final int count) {
-		if (indentFactor > 0) {
+	public void writeIndent(final int count) {
+		final String indentStr = this.formatStyle.getIndent();
+		if (StrUtil.isNotEmpty(indentStr)) {
 			for (int i = 0; i < count; i++) {
 				//noinspection resource
-				append(CharUtil.SPACE);
+				append(indentStr);
 			}
 		}
 	}
@@ -289,10 +303,11 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	 *
 	 * @return this
 	 */
-	public JSONWriter writeLF() {
-		if (indentFactor > 0) {
+	public JSONWriter writeNewLine() {
+		final String newline = this.formatStyle.getNewline();
+		if (StrUtil.isNotEmpty(newline)) {
 			//noinspection resource
-			append(CharUtil.LF);
+			append(newline);
 		}
 		return this;
 	}
@@ -326,16 +341,16 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 		final String numberStr = NumberUtil.toStr(number, isStripTrailingZeros);
 
 		// 检查有效性
-		if(!ReUtil.isMatch(JSON_NUMBER_PATTERN, numberStr)){
+		if (!ReUtil.isMatch(JSON_NUMBER_PATTERN, numberStr)) {
 			throw new JSONException("Invalid RFC8259 JSON format number: " + numberStr);
 		}
 
 		final NumberWriteMode numberWriteMode = (null == config) ? NumberWriteMode.NORMAL : config.getNumberWriteMode();
-		switch (numberWriteMode){
+		switch (numberWriteMode) {
 			case JS:
-				if(number.longValue() > JS_MAX_NUMBER){
+				if (number.longValue() > JS_MAX_NUMBER) {
 					writeQuoteStrValue(numberStr);
-				} else{
+				} else {
 					return writeRaw(numberStr);
 				}
 				break;
@@ -394,9 +409,9 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 	@SuppressWarnings("resource")
 	private JSONWriter end(final boolean arrayMode) {
 		// 结束子缩进
-		indent -= indentFactor;
+		level -= 1;
 		// 换行缩进
-		writeLF().writeSpace(indent);
+		writeNewLine().writeIndent(level);
 		append(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
 		flush();
 		// 当前对象或数组结束，当新的
@@ -419,10 +434,10 @@ public class JSONWriter implements Appendable, Flushable, Closeable {
 			}
 			// 换行缩进
 			//noinspection resource
-			writeLF().writeSpace(indent);
+			writeNewLine().writeIndent(level);
 		} else {
 			//noinspection resource
-			append(CharUtil.COLON).writeSpace(1);
+			append(CharUtil.COLON).writeSpaceAfterSeparators();
 		}
 		needSeparator = true;
 		return writeObjValue(value);

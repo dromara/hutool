@@ -18,6 +18,7 @@ package org.dromara.hutool.json;
 
 import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.json.test.bean.Price;
@@ -144,14 +145,16 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void toJsonStrTest() {
+	public void toJsonPrettyStrTest() {
+		final DateTime date = DateUtil.date(1727800929605L);
 		final UserA a1 = new UserA();
 		a1.setA("aaaa");
-		a1.setDate(DateUtil.now());
+		a1.setDate(date);
 		a1.setName("AAAAName");
+
 		final UserA a2 = new UserA();
 		a2.setA("aaaa222");
-		a2.setDate(DateUtil.now());
+		a2.setDate(date);
 		a2.setName("AAAA222Name");
 
 		final ArrayList<UserA> list = ListUtil.of(a1, a2);
@@ -159,9 +162,22 @@ public class JSONUtilTest {
 		map.put("total", 13);
 		map.put("rows", list);
 
-		final String str = JSONUtil.toJsonPrettyStr(map);
-		JSONUtil.parse(str);
-		Assertions.assertNotNull(str);
+		final String jsonStr = JSONUtil.toJsonPrettyStr(map);
+		Assertions.assertEquals("{\n" +
+			"  \"total\": 13,\n" +
+			"  \"rows\": [\n" +
+			"    {\n" +
+			"      \"name\": \"AAAAName\",\n" +
+			"      \"a\": \"aaaa\",\n" +
+			"      \"date\": 1727800929605\n" +
+			"    },\n" +
+			"    {\n" +
+			"      \"name\": \"AAAA222Name\",\n" +
+			"      \"a\": \"aaaa222\",\n" +
+			"      \"date\": 1727800929605\n" +
+			"    }\n" +
+			"  ]\n" +
+			"}", jsonStr);
 	}
 
 	@Test

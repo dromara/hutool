@@ -16,12 +16,16 @@
 
 package org.dromara.hutool.json.engine;
 
+import com.alibaba.fastjson2.annotation.JSONField;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
 import org.junit.jupiter.api.Test;
 
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.TimeZone;
 
@@ -54,6 +58,11 @@ public class JSONEngineTest {
 	@Test
 	void writeEmptyBeanTest() {
 		Arrays.stream(engineNames).forEach(this::assertEmptyBeanToJson);
+	}
+
+	@Test
+	void toStringOrFromStringTest() {
+		Arrays.stream(engineNames).forEach(this::assertToStringOrFromString);
 	}
 
 	private void assertWriteDateFormat(final String engineName) {
@@ -110,8 +119,37 @@ public class JSONEngineTest {
 		assertEquals("{}", jsonString);
 	}
 
+	private void assertToStringOrFromString(final String engineName) {
+		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
+		final TestBean testBean = new TestBean("张三", 18, true);
+
+		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
+		if("moshi".equals(engineName)){
+			// TODO Moshi无法指定key的顺序
+			assertEquals("{\"age\":18,\"gender\":true,\"name\":\"张三\"}", engine.toJsonString(testBean));
+		}else{
+			assertEquals(jsonStr, engine.toJsonString(testBean));
+		}
+
+		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
+		assertEquals(testBean, testBean1);
+	}
+
 	@Data
 	private static class EmptyBean{
 
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	static class TestBean {
+		// 解决输出顺序问题
+		@JSONField(ordinal = 1)
+		private String name;
+		@JSONField(ordinal = 2)
+		private int age;
+		@JSONField(ordinal = 3)
+		private boolean gender;
 	}
 }
