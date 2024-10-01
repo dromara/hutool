@@ -233,7 +233,8 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject putObj(final String key, final Object value) throws JSONException {
-		this.put(key, factory.getMapper().toJSON(value));
+		// put时，如果value为字符串，不解析，而是作为JSONPrimitive对待
+		this.put(key, factory.getMapper().toJSON(value, false));
 		return this;
 	}
 

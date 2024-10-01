@@ -267,7 +267,12 @@ public class JSONFactory {
 	// region ----- parse
 
 	/**
-	 * 对象转JSONObject对象
+	 * 对象转{@link JSONObject}，支持：
+	 * <ul>
+	 *     <li>{@link CharSequence}，解析{...}字符串</li>
+	 *     <li>Bean解析</li>
+	 *     <li>Map解析</li>
+	 * </ul>
 	 *
 	 * @param obj Bean对象或者Map
 	 * @return JSONObject
@@ -292,23 +297,37 @@ public class JSONFactory {
 	}
 
 	/**
-	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
+	 * 解析对象为JSON<br>
 	 * 支持的对象：
 	 * <ul>
 	 *     <li>String: 转换为相应的对象</li>
 	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
 	 *     <li>Bean对象：转为JSONObject</li>
 	 * </ul>
+	 * 注意：与{@link #toJSON(Object)}不同的是，对象如果为字符串，会被当作json字符串解析！
 	 *
 	 * @param obj 对象
 	 * @return JSON（JSONObject or JSONArray）
 	 */
 	public JSON parse(final Object obj) {
-		final JSONMapper mapper = this.getMapper();
-		if (obj instanceof CharSequence) {
-			return mapper.toJSON((CharSequence) obj);
-		}
-		return mapper.toJSON(obj);
+		return getMapper().toJSON(obj, true);
+	}
+
+	/**
+	 * 转换对象为JSON<br>
+	 * 支持的对象：
+	 * <ul>
+	 *     <li>String: 转换为{@link JSONPrimitive}</li>
+	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
+	 *     <li>Bean对象：转为JSONObject</li>
+	 * </ul>
+	 * 注意；与{@link #parse(Object)}不同的是，对象如果为字符串，则返回{@link JSONPrimitive}，不会做二次解析
+	 *
+	 * @param obj 对象
+	 * @return JSON（JSONObject or JSONArray）
+	 */
+	public JSON toJSON(final Object obj) {
+		return getMapper().toJSON(obj, false);
 	}
 	// endregion
 

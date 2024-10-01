@@ -20,6 +20,7 @@ import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
+import org.dromara.hutool.json.serializer.impl.CharSequenceTypeAdapter;
 import org.dromara.hutool.json.serializer.impl.DefaultDeserializer;
 
 import java.io.Serializable;
@@ -29,7 +30,7 @@ import java.util.Optional;
 /**
  * 对象和JSON值映射器，用于Java对象和JSON对象互转<br>
  * <ul>
- *     <li>Java对象转JSON：{@link #toJSON(Object)}</li>
+ *     <li>Java对象转JSON：{@link #toJSON(Object, boolean)}</li>
  *     <li>JSON转Java对象：{@link #toBean(JSON, Type)}</li>
  * </ul>
  * <p>
@@ -139,22 +140,23 @@ public class JSONMapper implements Serializable {
 	}
 
 	// region ----- toJSON
-
 	/**
 	 * 在需要的时候转换映射对象<br>
 	 * 包装包括：
 	 * <ul>
-	 *   <li>array or collection =》 JSONArray</li>
-	 *   <li>map =》 JSONObject</li>
-	 *   <li>standard property (Double, String, et al) =》 原对象</li>
+	 *   <li>array or collection =》 {@link JSONArray}</li>
+	 *   <li>map or bean =》 {@link JSONObject}</li>
+	 *   <li>standard property (number boolean or char) =》 {@link JSONPrimitive}</li>
+	 *   <li>String =》 parseIfString为{@code true}时解析为{@link JSON}，{@code false}直接包装为{@link JSONPrimitive}</li>
 	 *   <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
 	 * </ul>
 	 *
 	 * @param obj 被映射的对象
+	 * @param parseIfString 如果提供的是字符串，是否解析为JSON，{@code false}则直接包装为{@link JSONPrimitive}
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	public JSON toJSON(final Object obj) {
-		return mapTo(obj, null);
+	public JSON toJSON(final Object obj, final boolean parseIfString) {
+		return mapTo(obj, null, parseIfString);
 	}
 
 	/**
@@ -169,7 +171,7 @@ public class JSONMapper implements Serializable {
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
 	public JSONObject toJSONObject(final Object obj) {
-		return mapTo(obj, factory.ofObj());
+		return mapTo(obj, factory.ofObj(), false);
 	}
 
 	/**
@@ -183,7 +185,7 @@ public class JSONMapper implements Serializable {
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
 	public JSONArray toJSONArray(final Object obj) {
-		return mapTo(obj, factory.ofArray());
+		return mapTo(obj, factory.ofArray(), false);
 	}
 	// endregion
 
@@ -191,19 +193,22 @@ public class JSONMapper implements Serializable {
 	 * 在需要的时候转换映射对象<br>
 	 * 包装包括：
 	 * <ul>
-	 *   <li>array or collection =》 JSONArray</li>
-	 *   <li>map =》 JSONObject</li>
-	 *   <li>standard property (Double, String, et al) =》 原对象</li>
+	 *   <li>array or collection =》 {@link JSONArray}</li>
+	 *   <li>map or bean =》 {@link JSONObject}</li>
+	 *   <li>standard property (number boolean or char) =》 {@link JSONPrimitive}</li>
+	 *   <li>String =》 parseIfString为{@code true}时解析为{@link JSON}，{@code false}直接包装为{@link JSONPrimitive}</li>
 	 *   <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
 	 * </ul>
 	 *
-	 * @param obj  被映射的对象
-	 * @param json 被映射的到的对象，{@code null}表示根据序列化器自动识别
-	 * @param <T>  JSON类型
+	 * @param obj           被映射的对象
+	 * @param json          被映射的到的对象，{@code null}表示根据序列化器自动识别
+	 * @param parseIfString 如果提供的是字符串，是否解析为JSON，{@code false}则直接包装为{@link JSONPrimitive},
+	 *                      只有json参数为{@code null}时有效
+	 * @param <T>           JSON类型
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
 	@SuppressWarnings({"unchecked"})
-	private <T extends JSON> T mapTo(Object obj, final T json) {
+	private <T extends JSON> T mapTo(Object obj, final T json, final boolean parseIfString) {
 		if (null == obj) {
 			return null;
 		}
@@ -224,9 +229,19 @@ public class JSONMapper implements Serializable {
 		// 考虑性能问题，默认原始类型对象直接包装为JSONPrimitive，不再查找TypeAdapter
 		// 如果原始类型想转为其他JSON类型，依旧可以查找TypeAdapter
 		if (JSONPrimitive.isTypeForJSONPrimitive(obj)) {
-			if (null == json || json instanceof JSONPrimitive) {
+			if (null == json) {
+				// 未指定转换的JSON类型，对于String产生二义性
+				// 通过parseIfString参数决定是解析字符串还是直接转为原始类型
+				if (parseIfString && obj instanceof String) {
+					return (T) CharSequenceTypeAdapter.INSTANCE.serialize((String)obj,
+						new SimpleJSONContext(null, factory));
+				}
 				return (T) factory.ofPrimitive(obj);
 			}
+			if (json instanceof JSONPrimitive) {
+				return (T) factory.ofPrimitive(obj);
+			}
+			// 用户想将Primitive对象转为特定JSON对象，则需要查找TypeAdapter
 		}
 
 		// JSON对象如果与预期结果类型一致，则直接返回

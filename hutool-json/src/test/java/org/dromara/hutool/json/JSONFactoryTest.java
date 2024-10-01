@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.issues;
+package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONConfig;
-import org.dromara.hutool.json.JSONFactory;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class IssueI9DX5HTest {
-
-	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+public class JSONFactoryTest {
 	@Test
-	void xmlToJSONTest() {
-		final String xml = "<GoodMsg>你好</GoodMsg>";
-		final JSONFactory factory = JSONFactory.of(JSONConfig.of(), entry -> {
-			entry.setKey(StrUtil.toUnderlineCase((CharSequence) entry.getKey()));
-			return true;
-		});
-		final JSONObject jsonObject = factory.parseObj(xml);
+	void parseFromStringBuilderTest() {
+		final String jsonStr = "{\"name\":\"张三\"}";
+		final JSON parse = JSONFactory.getInstance().parse(new StringBuilder(jsonStr));
+		Assertions.assertEquals(JSONObject.class, parse.getClass());
+	}
 
-		Assertions.assertEquals("{\"good_msg\":\"你好\"}", jsonObject.toString());
+	@Test
+	void parseFromStringTest() {
+		final String jsonStr = "{\"name\":\"张三\"}";
+		final JSON parse = JSONFactory.getInstance().parse(jsonStr);
+		Assertions.assertEquals(JSONObject.class, parse.getClass());
 	}
 }

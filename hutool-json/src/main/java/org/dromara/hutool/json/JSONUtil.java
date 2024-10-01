@@ -172,8 +172,8 @@ public class JSONUtil {
 	/**
 	 * JSON字符串转JSONArray
 	 *
-	 * @param obj 数组或集合对象
-	 * @param config            JSON配置
+	 * @param obj    数组或集合对象
+	 * @param config JSON配置
 	 * @return JSONArray
 	 * @since 5.3.1
 	 */
@@ -184,9 +184,9 @@ public class JSONUtil {
 	/**
 	 * 对象转JSONArray
 	 *
-	 * @param obj 数组或集合对象
-	 * @param config            JSON配置
-	 * @param predicate         index和值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @param obj       数组或集合对象
+	 * @param config    JSON配置
+	 * @param predicate index和值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONArray
 	 * @since 5.3.1
 	 */
@@ -195,12 +195,12 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
-	 * 支持的对象：
+	 * 解析对象为JSON，持的对象：
 	 * <ul>
-	 *     <li>String: 转换为相应的对象</li>
-	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
-	 *     <li>Bean对象：转为JSONObject</li>
+	 *     <li>String: 解析为相应的对象</li>
+	 *     <li>Number、boolean: 转换为{@link JSONPrimitive}</li>
+	 *     <li>Array、Iterable、Iterator：转换为{@link JSONArray}</li>
+	 *     <li>Bean对象：转为{@link JSONObject}</li>
 	 * </ul>
 	 *
 	 * @param obj 对象
@@ -211,45 +211,46 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
-	 * 支持的对象：
+	 * 解析对象为JSON，持的对象：
 	 * <ul>
-	 *     <li>String: 转换为相应的对象</li>
-	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
-	 *     <li>Bean对象：转为JSONObject</li>
+	 *     <li>String: 解析为相应的对象</li>
+	 *     <li>Number、boolean: 转换为{@link JSONPrimitive}</li>
+	 *     <li>Array、Iterable、Iterator：转换为{@link JSONArray}</li>
+	 *     <li>Bean对象：转为{@link JSONObject}</li>
 	 * </ul>
 	 *
 	 * @param obj    对象
 	 * @param config JSON配置，{@code null}使用默认配置
-	 * @return JSON（JSONObject or JSONArray）
+	 * @return JSON
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config) {
 		return parse(obj, config, null);
 	}
 
 	/**
-	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
-	 * 支持的对象：
+	 * 解析对象为JSON，持的对象：
 	 * <ul>
-	 *     <li>String: 转换为相应的对象</li>
-	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
-	 *     <li>Bean对象：转为JSONObject</li>
+	 *     <li>String: 解析为相应的对象</li>
+	 *     <li>Number、boolean: 转换为{@link JSONPrimitive}</li>
+	 *     <li>Array、Iterable、Iterator：转换为{@link JSONArray}</li>
+	 *     <li>Bean对象：转为{@link JSONObject}</li>
 	 * </ul>
 	 *
 	 * @param obj       对象
 	 * @param config    JSON配置，{@code null}使用默认配置
-	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
-	 * @return JSON（JSONObject or JSONArray）
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，
+	 *                  {@link Predicate#test(Object)}为{@code true}保留
+	 * @return JSON
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
 		return JSONFactory.of(config, predicate).parse(obj);
 	}
 
 	/**
-	 * XML字符串转为JSONObject
+	 * XML字符串解析为{@link JSONObject}
 	 *
 	 * @param xmlStr XML字符串
-	 * @return JSONObject
+	 * @return {@link JSONObject}
 	 */
 	public static JSONObject parseFromXml(final String xmlStr) {
 		return JSONXMLUtil.toJSONObject(xmlStr);
@@ -335,7 +336,7 @@ public class JSONUtil {
 	/**
 	 * 转换为JSON字符串并写出到writer
 	 *
-	 * @param obj    被转为JSON的对象
+	 * @param obj        被转为JSON的对象
 	 * @param appendable {@link Appendable}
 	 * @since 5.3.3
 	 */
@@ -389,7 +390,7 @@ public class JSONUtil {
 	 * 转为实体类对象
 	 *
 	 * @param <T>  Bean类型
-	 * @param obj 对象
+	 * @param obj  对象
 	 * @param type 实体类对象类型
 	 * @return 实体类对象
 	 */
@@ -418,7 +419,62 @@ public class JSONUtil {
 	}
 	// endregion
 
+	// region ----- toJSON
+
+	/**
+	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
+	 * 支持的对象：
+	 * <ul>
+	 *     <li>boolean、Number、String: 转换为{@link JSONPrimitive}/li>
+	 *     <li>Array、Iterable、Iterator：转换为{@link JSONArray}</li>
+	 *     <li>Bean对象：转为{@link JSONObject}</li>
+	 * </ul>
+	 *
+	 * @param obj 对象
+	 * @return JSON
+	 */
+	public static JSON toJSON(final Object obj) {
+		return JSONFactory.getInstance().toJSON(obj);
+	}
+
+	/**
+	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
+	 * 支持的对象：
+	 * <ul>
+	 *     <li>boolean、Number、String: 转换为{@link JSONPrimitive}</li>
+	 *     <li>Array、Iterable、Iterator：转换为{@link JSONArray}</li>
+	 *     <li>Bean对象：转为{@link JSONObject}</li>
+	 * </ul>
+	 *
+	 * @param obj    对象
+	 * @param config JSON配置，{@code null}使用默认配置
+	 * @return JSON
+	 */
+	public static JSON toJSON(final Object obj, final JSONConfig config) {
+		return toJSON(obj, config, null);
+	}
+
+	/**
+	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
+	 * 支持的对象：
+	 * <ul>
+	 *     <li>boolean、Number、String: 转换为{@link JSONPrimitive}</li>
+	 *     <li>Array、Iterable、Iterator：转换为{@link JSONArray}</li>
+	 *     <li>Bean对象：转为{@link JSONObject}</li>
+	 * </ul>
+	 *
+	 * @param obj       对象
+	 * @param config    JSON配置，{@code null}使用默认配置
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
+	 * @return JSON
+	 */
+	public static JSON toJSON(final Object obj, final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
+		return JSONFactory.of(config, predicate).toJSON(obj);
+	}
+	// endregion
+
 	// region ----- toList
+
 	/**
 	 * 将JSONArray字符串转换为Bean的List，默认为ArrayList
 	 *
@@ -601,6 +657,7 @@ public class JSONUtil {
 	}
 
 	// region ----- isType
+
 	/**
 	 * 是否为JSON类型字符串，首尾都为大括号或中括号判定为JSON字符串
 	 *
@@ -642,6 +699,7 @@ public class JSONUtil {
 	// endregion
 
 	// region ----- registerTypeAdapter
+
 	/**
 	 * 全局注册自定义类型适配器，用于自定义对象序列化和反序列化
 	 *

@@ -120,7 +120,8 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return this.
 	 */
 	public JSONArray addObj(final Object value) {
-		this.add(this.factory.getMapper().toJSON(value));
+		// add时，如果value为字符串，不解析，而是作为JSONPrimitive对待
+		this.add(this.factory.getMapper().toJSON(value, false));
 		return this;
 	}
 
@@ -171,7 +172,8 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return this
 	 */
 	public JSONArray setObj(final int index, final Object element) {
-		set(index, this.factory.getMapper().toJSON(element));
+		// set时，如果value为字符串，不解析，而是作为JSONPrimitive对待
+		set(index, this.factory.getMapper().toJSON(element, false));
 		return this;
 	}
 
