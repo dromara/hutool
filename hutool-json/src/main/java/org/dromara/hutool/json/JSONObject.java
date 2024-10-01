@@ -219,9 +219,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 */
 	public JSONObject putAllObj(final Map<?, ?> map) {
 		if(MapUtil.isNotEmpty(map)){
-			for (final Entry<?, ?> entry : map.entrySet()) {
-				this.putObj(StrUtil.toStringOrNull(entry.getKey()), entry.getValue());
-			}
+			map.forEach((key, value) -> putObj(StrUtil.toStringOrNull(key), value));
 		}
 		return this;
 	}
@@ -235,7 +233,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject putObj(final String key, final Object value) throws JSONException {
-		this.put(key, factory.getMapper().map(value));
+		this.put(key, factory.getMapper().toJSON(value));
 		return this;
 	}
 

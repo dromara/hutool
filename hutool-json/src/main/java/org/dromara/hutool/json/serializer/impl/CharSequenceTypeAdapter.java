@@ -19,6 +19,7 @@ package org.dromara.hutool.json.serializer.impl;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONFactory;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONPrimitive;
 import org.dromara.hutool.json.reader.JSONTokener;
@@ -31,7 +32,13 @@ import org.dromara.hutool.json.xml.ParseConfig;
 import java.lang.reflect.Type;
 
 /**
- * CharSequence类型适配器，用于处理未匹配的JSON类型。
+ * {@link CharSequence}类型适配器，主要用于：
+ * <ul>
+ *     <li>序列化(serialize)：按照给定类型，解析JSON或XML字符串为{@link JSON}</li>
+ *     <li>反序列化(deserialize)：如果为原始值，返回原始值并调用toString方法，其他JSON对象直接转为JSON字符换。</li>
+ * </ul>
+ *
+ * {@link CharSequence}适配器主要解决在JSON的get调用时，如果用户指定为字符串类型转换问题。
  *
  * @author looly
  * @since 6.0.0
@@ -55,7 +62,22 @@ public class CharSequenceTypeAdapter implements MatcherJSONSerializer<CharSequen
 
 	@Override
 	public JSON serialize(final CharSequence bean, final JSONContext context) {
+		// null 检查
 		final String jsonStr = StrUtil.trim(bean);
+		if (StrUtil.isEmpty(jsonStr)) {
+			// https://www.rfc-editor.org/rfc/rfc8259#section-7
+			// 未被包装的空串理解为null
+			return null;
+		}
+
+		final JSON contextJson = context.getContextJson();
+
+		// 如果指定序列化为JSONPrimitive，则直接返回原始值
+		if (contextJson instanceof JSONPrimitive) {
+			return context.getOrCreatePrimitive(bean);
+		}
+
+		// 按照XML解析
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
 			final JSONObject jsonObject = context.getOrCreateObj();
@@ -63,14 +85,26 @@ public class CharSequenceTypeAdapter implements MatcherJSONSerializer<CharSequen
 			return jsonObject;
 		}
 
-		return context.getFactory().ofParser(new JSONTokener(jsonStr)).parse();
+		// 按照JSON字符串解析
+		return parse(new JSONTokener(jsonStr), context.getFactory());
 	}
 
 	@Override
 	public CharSequence deserialize(final JSON json, final Type deserializeType) {
-		if(json instanceof JSONPrimitive){
+		if (json instanceof JSONPrimitive) {
 			return ((JSONPrimitive) json).getValue().toString();
 		}
 		return json.toString();
+	}
+
+	/**
+	 * 从{@link JSONTokener} 中读取JSON字符串，并解析为JSON
+	 *
+	 * @param tokener {@link JSONTokener}
+	 * @param factory JSON工厂
+	 * @return JSON
+	 */
+	public static JSON parse(final JSONTokener tokener, final JSONFactory factory) {
+		return factory.ofParser(tokener).parse();
 	}
 }

@@ -46,11 +46,11 @@ public class JsonPutJmh {
 
 	@Benchmark
 	public void hutoolJmh() {
-		testData.forEach(hutoolJSON::putObj);
+		hutoolJSON.putAllObj(testData);
 	}
 
 	@Benchmark
 	public void fastJSONJmh() {
-		testData.forEach(fastJSON::put);
+		fastJSON.putAll(testData);
 	}
 }

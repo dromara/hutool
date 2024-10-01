@@ -290,6 +290,7 @@ public class TypeAdapterManager {
 		manager.register(ResourceBundleSerializer.INSTANCE);
 
 		// 自定义反序列化器
+		manager.register(JSONPrimitiveDeserializer.INSTANCE);
 		manager.register(KBeanDeserializer.INSTANCE);
 		manager.register(RecordDeserializer.INSTANCE);
 		manager.register(Triple.class, TripleDeserializer.INSTANCE);
@@ -297,7 +298,6 @@ public class TypeAdapterManager {
 		manager.register(Tuple.class, TupleDeserializer.INSTANCE);
 
 		// 自定义类型适配器
-		manager.register(JSONPrimitiveTypeAdapter.INSTANCE);
 		manager.register(CharSequenceTypeAdapter.INSTANCE);
 		manager.register(DateTypeAdapter.INSTANCE);
 		manager.register(CalendarTypeAdapter.INSTANCE);

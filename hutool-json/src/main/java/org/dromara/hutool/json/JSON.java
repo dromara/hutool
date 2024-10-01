@@ -45,6 +45,22 @@ public interface JSON extends Serializable {
 	JSONFactory getFactory();
 
 	/**
+	 * JSON大小，对于JSONObject，是键值对的多少，JSONArray则是元素的个数，JSON原始数据为1
+	 *
+	 * @return 大小
+	 */
+	int size();
+
+	/**
+	 * 将JSON内容写入Writer<br>
+	 * Warning: This method assumes that the data structure is acyclical.
+	 *
+	 * @param writer writer
+	 * @throws JSONException JSON相关异常
+	 */
+	void write(JSONWriter writer) throws JSONException;
+
+	/**
 	 * 获取JSON配置
 	 *
 	 * @return {@link JSONConfig}
@@ -53,13 +69,6 @@ public interface JSON extends Serializable {
 	default JSONConfig config(){
 		return getFactory().getConfig();
 	}
-
-	/**
-	 * JSON大小，对于JSONObject，是键值对的多少，JSONArray则是元素的个数，JSON原始数据为1
-	 *
-	 * @return 大小
-	 */
-	int size();
 
 	/**
 	 * 判断JSON是否为空，即大小为0
@@ -243,15 +252,6 @@ public interface JSON extends Serializable {
 		this.write(jsonWriter);
 		return jsonWriter.toString();
 	}
-
-	/**
-	 * 将JSON内容写入Writer<br>
-	 * Warning: This method assumes that the data structure is acyclical.
-	 *
-	 * @param writer writer
-	 * @throws JSONException JSON相关异常
-	 */
-	void write(JSONWriter writer) throws JSONException;
 
 	/**
 	 * 转为实体类对象

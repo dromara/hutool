@@ -120,7 +120,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return this.
 	 */
 	public JSONArray addObj(final Object value) {
-		this.add(this.factory.getMapper().map(value));
+		this.add(this.factory.getMapper().toJSON(value));
 		return this;
 	}
 
@@ -171,7 +171,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @return this
 	 */
 	public JSONArray setObj(final int index, final Object element) {
-		set(index, this.factory.getMapper().map(element));
+		set(index, this.factory.getMapper().toJSON(element));
 		return this;
 	}
 

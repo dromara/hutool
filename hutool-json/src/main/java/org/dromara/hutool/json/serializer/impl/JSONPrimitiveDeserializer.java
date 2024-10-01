@@ -22,43 +22,26 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONPrimitive;
-import org.dromara.hutool.json.serializer.JSONContext;
 import org.dromara.hutool.json.serializer.MatcherJSONDeserializer;
-import org.dromara.hutool.json.serializer.MatcherJSONSerializer;
 
 import java.lang.reflect.Type;
 
 /**
- * {@link JSONPrimitive}相关类型适配器，用于处理数字类型的序列化和反序列化
+ * {@link JSONPrimitive}相关类型反序列化器
  *
  * @author Looly
  * @since 6.0.0
  */
-public class JSONPrimitiveTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJSONDeserializer<Object> {
+public class JSONPrimitiveDeserializer implements MatcherJSONDeserializer<Object> {
 
 	/**
 	 * 单例
 	 */
-	public static final JSONPrimitiveTypeAdapter INSTANCE = new JSONPrimitiveTypeAdapter();
-
-	@Override
-	public boolean match(final Object bean, final JSONContext context) {
-		return JSONPrimitive.isTypeForJSONPrimitive(bean);
-	}
+	public static final JSONPrimitiveDeserializer INSTANCE = new JSONPrimitiveDeserializer();
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
 		return json instanceof JSONPrimitive && JSONPrimitive.isTypeForJSONPrimitive(TypeUtil.getClass(deserializeType));
-	}
-
-	@Override
-	public JSON serialize(Object bean, final JSONContext context) {
-		if(bean instanceof Character){
-			// 字符按照字符串存储
-			bean = bean.toString();
-		}
-
-		return context.getOrCreatePrimitive(bean);
 	}
 
 	@Override

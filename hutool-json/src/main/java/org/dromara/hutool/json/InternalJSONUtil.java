@@ -117,7 +117,7 @@ public final class InternalJSONUtil {
 			.setIgnoreError(config.isIgnoreError())
 			.setIgnoreNullValue(config.isIgnoreNullValue())
 			.setTransientSupport(config.isTransientSupport())
-			.setConverter((targetType, value) -> mapper.map(value));
+			.setConverter((targetType, value) -> mapper.toJSON(value));
 	}
 
 	/**

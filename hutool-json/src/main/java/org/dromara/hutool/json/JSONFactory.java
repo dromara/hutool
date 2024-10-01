@@ -273,11 +273,7 @@ public class JSONFactory {
 	 * @return JSONObject
 	 */
 	public JSONObject parseObj(final Object obj) {
-		final JSONMapper mapper = getMapper();
-		if (obj instanceof CharSequence) {
-			return (JSONObject) mapper.map((CharSequence) obj);
-		}
-		return mapper.mapObj(obj);
+		return getMapper().toJSONObject(obj);
 	}
 
 	/**
@@ -292,11 +288,7 @@ public class JSONFactory {
 	 * @return JSONArray
 	 */
 	public JSONArray parseArray(final Object obj) {
-		final JSONMapper mapper = getMapper();
-		if (obj instanceof CharSequence) {
-			return (JSONArray) mapper.map((CharSequence) obj);
-		}
-		return mapper.mapArray(obj);
+		return getMapper().toJSONArray(obj);
 	}
 
 	/**
@@ -314,9 +306,9 @@ public class JSONFactory {
 	public JSON parse(final Object obj) {
 		final JSONMapper mapper = this.getMapper();
 		if (obj instanceof CharSequence) {
-			return mapper.map((CharSequence) obj);
+			return mapper.toJSON((CharSequence) obj);
 		}
-		return mapper.map(obj);
+		return mapper.toJSON(obj);
 	}
 	// endregion
 

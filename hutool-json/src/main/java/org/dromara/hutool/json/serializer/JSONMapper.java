@@ -18,23 +18,18 @@ package org.dromara.hutool.json.serializer;
 
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.reflect.TypeReference;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
-import org.dromara.hutool.json.reader.JSONTokener;
 import org.dromara.hutool.json.serializer.impl.DefaultDeserializer;
-import org.dromara.hutool.json.xml.JSONXMLParser;
-import org.dromara.hutool.json.xml.ParseConfig;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * 对象和JSON值映射器，用于Java对象和JSON对象互转<br>
  * <ul>
- *     <li>Java对象转JSON：{@link #map(Object)}</li>
+ *     <li>Java对象转JSON：{@link #toJSON(Object)}</li>
  *     <li>JSON转Java对象：{@link #toBean(JSON, Type)}</li>
  * </ul>
  * <p>
@@ -69,6 +64,8 @@ public class JSONMapper implements Serializable {
 	public JSONMapper(final JSONFactory factory) {
 		this.factory = factory;
 	}
+
+	// region ----- typeAdapterManager
 
 	/**
 	 * 获取自定义类型转换器，用于将自定义类型转换为JSONObject
@@ -114,6 +111,7 @@ public class JSONMapper implements Serializable {
 		initTypeAdapterManager().register(typeAdapter);
 		return this;
 	}
+	//endregion
 
 	/**
 	 * 转为实体类对象
@@ -129,68 +127,18 @@ public class JSONMapper implements Serializable {
 			type = ((TypeReference<?>) type).getType();
 		}
 
-		JSONDeserializer<Object> deserializer = null;
-		// 自定义反序列化
-		if (null != this.typeAdapterManager) {
-			deserializer = this.typeAdapterManager.getDeserializer(json, type);
-		}
-		// 全局自定义反序列化
-		if (null == deserializer) {
-			deserializer = TypeAdapterManager.getInstance().getDeserializer(json, type);
-		}
-		final boolean ignoreError = ObjUtil.defaultIfNull(this.factory.getConfig(), JSONConfig::isIgnoreError, false);
-		if (null == deserializer) {
-			deserializer = DefaultDeserializer.INSTANCE;
-		}
-
+		final JSONDeserializer<Object> deserializer = getDeserializer(json, type);
 		try {
 			return (T) deserializer.deserialize(json, type);
 		} catch (final Exception e) {
-			if (ignoreError) {
+			if (ObjUtil.defaultIfNull(this.factory.getConfig(), JSONConfig::isIgnoreError, false)) {
 				return null;
 			}
 			throw e;
 		}
 	}
 
-	/**
-	 * 将JSONObject转换为JSONArrayM<br>
-	 * 在普通的Serializer中，JSONObject会被直接返回，如果想转为JSONArray，
-	 *
-	 * @param jsonObject JSONObject
-	 * @return JSONArray
-	 */
-	public JSONArray mapFromJSONObject(final JSONObject jsonObject) {
-		final JSONArray array = factory.ofArray();
-		for (final Map.Entry<String, JSON> entry : jsonObject) {
-			array.addObj(entry);
-		}
-		return array;
-	}
-
-	/**
-	 * 解析JSON字符串或XML字符串为JSON结构<br>
-	 * 在普通的Serializer中，字符串会被作为普通字符串转为{@link JSONPrimitive},此处做区分
-	 *
-	 * @param source JSON字符串或XML字符串
-	 * @return JSON对象
-	 */
-	public JSON map(final CharSequence source) {
-		final String jsonStr = StrUtil.trim(source);
-		if (StrUtil.isEmpty(jsonStr)) {
-			// https://www.rfc-editor.org/rfc/rfc8259#section-7
-			// 未被包装的空串理解为null
-			return null;
-		}
-		if (StrUtil.startWith(jsonStr, '<')) {
-			// 可能为XML
-			final JSONObject jsonObject = this.factory.ofObj();
-			JSONXMLParser.of(ParseConfig.of(), this.factory.getPredicate()).parseJSONObject(jsonStr, jsonObject);
-			return jsonObject;
-		}
-
-		return mapFromTokener(new JSONTokener(source));
-	}
+	// region ----- toJSON
 
 	/**
 	 * 在需要的时候转换映射对象<br>
@@ -201,12 +149,11 @@ public class JSONMapper implements Serializable {
 	 *   <li>standard property (Double, String, et al) =》 原对象</li>
 	 *   <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
 	 * </ul>
-	 * 注意，此方法不支持JSON字符串的解析，解析请用{@link #map(CharSequence)}
 	 *
 	 * @param obj 被映射的对象
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	public JSON map(final Object obj) {
+	public JSON toJSON(final Object obj) {
 		return mapTo(obj, null);
 	}
 
@@ -221,7 +168,7 @@ public class JSONMapper implements Serializable {
 	 * @param obj 被映射的对象
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	public JSONObject mapObj(final Object obj) {
+	public JSONObject toJSONObject(final Object obj) {
 		return mapTo(obj, factory.ofObj());
 	}
 
@@ -235,9 +182,10 @@ public class JSONMapper implements Serializable {
 	 * @param obj 被映射的对象
 	 * @return 映射后的值，null表示此值需被忽略
 	 */
-	public JSONArray mapArray(final Object obj) {
+	public JSONArray toJSONArray(final Object obj) {
 		return mapTo(obj, factory.ofArray());
 	}
+	// endregion
 
 	/**
 	 * 在需要的时候转换映射对象<br>
@@ -272,6 +220,15 @@ public class JSONMapper implements Serializable {
 			}
 		}
 
+		// JSONPrimitive对象
+		// 考虑性能问题，默认原始类型对象直接包装为JSONPrimitive，不再查找TypeAdapter
+		// 如果原始类型想转为其他JSON类型，依旧可以查找TypeAdapter
+		if (JSONPrimitive.isTypeForJSONPrimitive(obj)) {
+			if (null == json || json instanceof JSONPrimitive) {
+				return (T) factory.ofPrimitive(obj);
+			}
+		}
+
 		// JSON对象如果与预期结果类型一致，则直接返回
 		if (obj instanceof JSON) {
 			if (null != json) {
@@ -283,16 +240,7 @@ public class JSONMapper implements Serializable {
 			}
 		}
 
-		final Class<?> clazz = obj.getClass();
-		JSONSerializer<Object> serializer = null;
-		// 自定义序列化
-		if (null != this.typeAdapterManager) {
-			serializer = this.typeAdapterManager.getSerializer(obj, clazz);
-		}
-		// 全局自定义序列化
-		if (null == serializer) {
-			serializer = TypeAdapterManager.getInstance().getSerializer(obj, clazz);
-		}
+		final JSONSerializer<Object> serializer = getSerializer(obj, obj.getClass());
 		final boolean ignoreError = ObjUtil.defaultIfNull(this.factory.getConfig(), JSONConfig::isIgnoreError, false);
 		if (null == serializer) {
 			if (ignoreError) {
@@ -323,16 +271,6 @@ public class JSONMapper implements Serializable {
 	}
 
 	/**
-	 * 从{@link JSONTokener} 中读取JSON字符串，并转换为JSON
-	 *
-	 * @param tokener {@link JSONTokener}
-	 * @return JSON
-	 */
-	private JSON mapFromTokener(final JSONTokener tokener) {
-		return this.factory.ofParser(tokener).parse();
-	}
-
-	/**
 	 * 初始化类型转换器管理器，如果尚未初始化，则初始化，否则直接返回
 	 *
 	 * @return {@link TypeAdapterManager}
@@ -346,5 +284,49 @@ public class JSONMapper implements Serializable {
 			}
 		}
 		return this.typeAdapterManager;
+	}
+
+	/**
+	 * 获取JSON对象对应的序列化器，先查找局部自定义，如果没有则查找全局自定义
+	 *
+	 * @param obj   对象
+	 * @param clazz 对象类型
+	 * @return {@link JSONSerializer}
+	 */
+	private JSONSerializer<Object> getSerializer(final Object obj, final Class<?> clazz) {
+		JSONSerializer<Object> serializer = null;
+		// 自定义序列化
+		if (null != this.typeAdapterManager) {
+			serializer = this.typeAdapterManager.getSerializer(obj, clazz);
+		}
+		// 全局自定义序列化
+		if (null == serializer) {
+			serializer = TypeAdapterManager.getInstance().getSerializer(obj, clazz);
+		}
+		return serializer;
+	}
+
+	/**
+	 * 获取JSON对象对应的反序列化器，先查找局部自定义，如果没有则查找全局自定义，如果都没有则使用默认反序列化器
+	 *
+	 * @param json JSON对象
+	 * @param type 反序列化目标类型
+	 * @return {@link JSONDeserializer}
+	 */
+	private JSONDeserializer<Object> getDeserializer(final JSON json, final Type type) {
+		JSONDeserializer<Object> deserializer = null;
+		// 自定义反序列化
+		if (null != this.typeAdapterManager) {
+			deserializer = this.typeAdapterManager.getDeserializer(json, type);
+		}
+		// 全局自定义反序列化
+		if (null == deserializer) {
+			deserializer = TypeAdapterManager.getInstance().getDeserializer(json, type);
+		}
+		// 默认反序列化
+		if (null == deserializer) {
+			deserializer = DefaultDeserializer.INSTANCE;
+		}
+		return deserializer;
 	}
 }
