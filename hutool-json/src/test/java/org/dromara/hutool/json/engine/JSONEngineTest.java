@@ -23,6 +23,8 @@ import lombok.NoArgsConstructor;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
+import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
@@ -63,6 +65,11 @@ public class JSONEngineTest {
 	@Test
 	void toStringOrFromStringTest() {
 		Arrays.stream(engineNames).forEach(this::assertToStringOrFromString);
+	}
+
+	@Test
+	void prettyPrintTest() {
+		Arrays.stream(engineNames).forEach(this::assertPrettyPrint);
 	}
 
 	private void assertWriteDateFormat(final String engineName) {
@@ -133,6 +140,41 @@ public class JSONEngineTest {
 
 		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
 		assertEquals(testBean, testBean1);
+	}
+
+	private void assertPrettyPrint(final String engineName){
+		final JSONEngine engine = JSONEngineFactory.createEngine(engineName);
+		engine.init(JSONEngineConfig.of().setPrettyPrint(true));
+
+		final TestBean testBean = new TestBean("张三", 18, true);
+		String jsonString = engine.toJsonString(testBean);
+		Console.log(engineName);
+		if("jackson".equals(engineName)){
+			jsonString = jsonString.replace(" : ", ": ");
+			// 使用统一换行符
+			jsonString = StrUtil.removeAll(jsonString, '\r');
+		}
+		if(engineName.startsWith("fastjson")){
+			jsonString = jsonString.replace(":", ": ");
+			jsonString = jsonString.replace("\t", "  ");
+		}
+
+		if("moshi".equals(engineName)){
+			// Moshi顺序不同
+			// 使用统一换行符
+			assertEquals("{\n" +
+				"  \"age\": 18,\n" +
+				"  \"gender\": true,\n" +
+				"  \"name\": \"张三\"\n" +
+				"}", jsonString);
+			return;
+		}
+		// 使用统一换行符
+		assertEquals("{\n" +
+			"  \"name\": \"张三\",\n" +
+			"  \"age\": 18,\n" +
+			"  \"gender\": true\n" +
+			"}", jsonString);
 	}
 
 	@Data

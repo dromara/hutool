@@ -25,7 +25,7 @@ public class HutoolJSONTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine("hutoolJSON");
 		engine.init(JSONEngineConfig.of().setPrettyPrint(true));
 
-		final JSONEngineFactoryTest.TestBean testBean = new JSONEngineFactoryTest.TestBean("张三", 18, true);
+		final JSONEngineTest.TestBean testBean = new JSONEngineTest.TestBean("张三", 18, true);
 		final String jsonString = engine.toJsonString(testBean);
 		Assertions.assertEquals("{\n" +
 			"  \"name\": \"张三\",\n" +

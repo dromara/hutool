@@ -29,7 +29,7 @@ public class JacksonTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine("jackson");
 		engine.init(JSONEngineConfig.of().setPrettyPrint(true));
 
-		final JSONEngineFactoryTest.TestBean testBean = new JSONEngineFactoryTest.TestBean("张三", 18, true);
+		final JSONEngineTest.TestBean testBean = new JSONEngineTest.TestBean("张三", 18, true);
 		String jsonString = engine.toJsonString(testBean);
 		// 使用统一换行符
 		jsonString = StrUtil.removeAll(jsonString, '\r');

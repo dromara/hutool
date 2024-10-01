@@ -34,7 +34,7 @@ public class GsonTest {
 		final JSONEngine engine = JSONEngineFactory.createEngine("gson");
 		engine.init(JSONEngineConfig.of().setPrettyPrint(true));
 
-		final JSONEngineFactoryTest.TestBean testBean = new JSONEngineFactoryTest.TestBean("张三", 18, true);
+		final JSONEngineTest.TestBean testBean = new JSONEngineTest.TestBean("张三", 18, true);
 		final String jsonString = engine.toJsonString(testBean);
 		// 使用统一换行符
 		Assertions.assertEquals("{\n" +

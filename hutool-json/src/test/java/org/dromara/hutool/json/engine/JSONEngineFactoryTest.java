@@ -16,16 +16,10 @@
 
 package org.dromara.hutool.json.engine;
 
-import com.alibaba.fastjson2.annotation.JSONField;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.dromara.hutool.json.engine.fastjson.FastJSON2Engine;
 import org.dromara.hutool.json.engine.gson.GsonEngine;
 import org.dromara.hutool.json.engine.jackson.JacksonEngine;
 import org.junit.jupiter.api.Test;
-
-import java.io.StringReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,84 +34,23 @@ public class JSONEngineFactoryTest {
 	void jacksonTest() {
 		final JSONEngine engine = JSONEngineFactory.createEngine("jackson");
 		assertEquals(JacksonEngine.class, engine.getClass());
-
-		final TestBean testBean = new TestBean("张三", 18, true);
-		final String jsonString = engine.toJsonString(testBean);
-
-		final String resultJsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(resultJsonStr, jsonString);
-
-		final TestBean testBean1 = engine.fromJsonString(resultJsonStr, TestBean.class);
-		assertEquals(testBean, testBean1);
-	}
-
-	@Test
-	void jacksonTest2() {
-		final JSONEngine engine = JSONEngineFactory.createEngine("jackson");
-		assertEquals(JacksonEngine.class, engine.getClass());
-
-		final TestBean testBean = new TestBean("张三", 18, true);
-		final String serialize = engine.toJsonString(testBean);
-
-		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, serialize);
-
-		final TestBean testBean1 = engine.fromJsonString(jsonStr, TestBean.class);
-		assertEquals(testBean, testBean1);
 	}
 
 	@Test
 	void GsonTest() {
 		final JSONEngine engine = JSONEngineFactory.createEngine("gson");
 		assertEquals(GsonEngine.class, engine.getClass());
-
-		final TestBean testBean = new TestBean("张三", 18, true);
-
-		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, engine.toJsonString(testBean));
-
-		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
-		assertEquals(testBean, testBean1);
 	}
 
 	@Test
 	void fastJSON2Test() {
 		final JSONEngine engine = JSONEngineFactory.createEngine("fastjson");
 		assertEquals(FastJSON2Engine.class, engine.getClass());
-
-		final TestBean testBean = new TestBean("张三", 18, true);
-
-		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, engine.toJsonString(testBean));
-
-		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
-		assertEquals(testBean, testBean1);
 	}
 
 	@Test
 	void HutoolJSONTest() {
 		final JSONEngine engine = JSONEngineFactory.createEngine("hutoolJSON");
 		assertEquals(HutoolJSONEngine.class, engine.getClass());
-
-		final TestBean testBean = new TestBean("张三", 18, true);
-
-		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"gender\":true}";
-		assertEquals(jsonStr, engine.toJsonString(testBean));
-
-		final TestBean testBean1 = engine.deserialize(new StringReader(jsonStr), TestBean.class);
-		assertEquals(testBean, testBean1);
-	}
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	static class TestBean {
-		// 解决输出顺序问题
-		@JSONField(ordinal = 1)
-		private String name;
-		@JSONField(ordinal = 2)
-		private int age;
-		@JSONField(ordinal = 3)
-		private boolean gender;
 	}
 }
