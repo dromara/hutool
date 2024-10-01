@@ -36,7 +36,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * JSON工具类
+ * JSON工具类，封装包括：
+ * <ul>
+ *     <li>JSON类型判断</li>
+ *     <li>JSON对象创建</li>
+ *     <li>JSON对象解析或读取</li>
+ *     <li>JSON对象转Bean、List等</li>
+ *     <li>Bean转JSON字符串</li>
+ *     <li>序列化和反序列化注册</li>
+ *     <li>JSON路径操作</li>
+ * </ul>
  *
  * @author Looly
  */
