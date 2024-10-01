@@ -55,7 +55,7 @@ public class Claims implements Serializable {
 			claimJSON.remove(name);
 			return;
 		}
-		claimJSON.putObj(name, value);
+		claimJSON.putValue(name, value);
 	}
 
 	/**

@@ -65,9 +65,9 @@ public class JSONConfig implements Serializable {
 	 */
 	private boolean stripTrailingZeros = true;
 	/**
-	 * 是否检查重复key
+	 * 重复key的put策略
 	 */
-	private boolean checkDuplicate;
+	private DuplicateMode duplicateMode = DuplicateMode.OVERRIDE;
 	/**
 	 * Number写出模式
 	 */
@@ -247,24 +247,22 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 是否检查多个相同的key
+	 * 获取key重复策略
 	 *
-	 * @return 是否检查多个相同的key
-	 * @since 5.8.5
+	 * @return key重复策略
 	 */
-	public boolean isCheckDuplicate() {
-		return checkDuplicate;
+	public DuplicateMode getDuplicateMode() {
+		return duplicateMode;
 	}
 
 	/**
-	 * 是否检查多个相同的key
+	 * 设置key重复策略
 	 *
-	 * @param checkDuplicate 是否检查多个相同的key
+	 * @param duplicateMode key重复策略
 	 * @return this
-	 * @since 5.8.5
 	 */
-	public JSONConfig setCheckDuplicate(final boolean checkDuplicate) {
-		this.checkDuplicate = checkDuplicate;
+	public JSONConfig set(final DuplicateMode duplicateMode) {
+		this.duplicateMode = duplicateMode;
 		return this;
 	}
 
@@ -289,5 +287,24 @@ public class JSONConfig implements Serializable {
 	public JSONConfig setNumberWriteMode(final NumberWriteMode numberWriteMode) {
 		this.numberWriteMode = numberWriteMode;
 		return this;
+	}
+
+	/**
+	 * 重复key或重复对象处理方式<br>
+	 * 只针对{@link JSONObject}，检查在put时key的重复情况
+	 */
+	public enum DuplicateMode {
+		/**
+		 * 抛出异常
+		 */
+		THROW,
+		/**
+		 * 覆盖
+		 */
+		OVERRIDE,
+		/**
+		 * 忽略
+		 */
+		IGNORE
 	}
 }

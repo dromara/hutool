@@ -1,5 +1,7 @@
 package org.dromara.hutool.json.jmh;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -25,6 +27,7 @@ public class JsonPutJmh {
 	private JSONObject hutoolJSON;
 	private JsonObject gson;
 	private com.alibaba.fastjson2.JSONObject fastJSON;
+	private ObjectNode jackson;
 
 
 	@Setup
@@ -37,6 +40,7 @@ public class JsonPutJmh {
 		hutoolJSON = new JSONObject();
 		gson = new JsonObject();
 		fastJSON = new com.alibaba.fastjson2.JSONObject();
+		jackson = JsonNodeFactory.instance.objectNode();
 	}
 
 	@Benchmark
@@ -46,11 +50,17 @@ public class JsonPutJmh {
 
 	@Benchmark
 	public void hutoolJmh() {
-		hutoolJSON.putAllObj(testData);
+		testData.forEach(hutoolJSON::putValue);
+		//hutoolJSON.putAllObj(testData);
 	}
 
 	@Benchmark
 	public void fastJSONJmh() {
 		fastJSON.putAll(testData);
+	}
+
+	@Benchmark
+	public void jacksonJmh(){
+		testData.forEach(jackson::put);
 	}
 }

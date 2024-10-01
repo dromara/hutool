@@ -27,7 +27,7 @@ public class JSONWriterTest {
 	@Test
 	public void writeDateTest() {
 		final JSONObject jsonObject = JSONUtil.ofObj(JSONConfig.of().setDateFormat("yyyy-MM-dd"))
-				.putObj("date", DateUtil.parse("2022-09-30"));
+				.putValue("date", DateUtil.parse("2022-09-30"));
 
 		// 日期原样写入
 		final Date date = jsonObject.getDate("date");

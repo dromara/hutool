@@ -109,7 +109,7 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 		// 非标准的二进制流，则按照普通数组对待
 		final JSONArray result = context.getOrCreateArray();
 		for (final byte b : bytes) {
-			result.addObj(b);
+			result.addValue(b);
 		}
 		return result;
 	}

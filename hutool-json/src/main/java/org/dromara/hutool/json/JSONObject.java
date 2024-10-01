@@ -144,7 +144,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	}
 	// endregion
 
-	// region ----- put
+	// region ----- increment or append
 	/**
 	 * 对值加一，如果值不存在，赋值1，如果为数字类型，做加一操作
 	 *
@@ -155,7 +155,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	public JSONObject increment(final String key) throws JSONException {
 		final JSON json = this.get(key);
 		if(null == json){
-			return putObj(key, 1);
+			return putValue(key, 1);
 		}
 
 		if(json instanceof JSONPrimitive){
@@ -186,15 +186,17 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	public JSONObject append(final String key, final Object value) throws JSONException {
 		final Object object = this.getObj(key);
 		if (object == null) {
-			this.putObj(key, value);
+			this.putValue(key, value);
 		} else if (object instanceof JSONArray) {
-			((JSONArray) object).addObj(value);
+			((JSONArray) object).addValue(value);
 		} else {
-			this.putObj(key, factory.ofArray().addObj(object).addObj(value));
+			this.putValue(key, factory.ofArray().addValue(object).addValue(value));
 		}
 		return this;
 	}
+	// endregion
 
+	// region ----- put
 	/**
 	 * 通过lambda批量设置值<br>
 	 * 实际使用时，可以使用getXXX的方法引用来完成键值对的赋值：
@@ -207,7 +209,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @return this
 	 */
 	public JSONObject putFields(final SerSupplier<?>... fields) {
-		Arrays.stream(fields).forEach(f -> putObj(LambdaUtil.getFieldName(f), f.get()));
+		Arrays.stream(fields).forEach(f -> putValue(LambdaUtil.getFieldName(f), f.get()));
 		return this;
 	}
 
@@ -218,9 +220,9 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
-	public JSONObject putAllObj(final Map<?, ?> map) {
+	public JSONObject putAllValue(final Map<?, ?> map) {
 		if(MapUtil.isNotEmpty(map)){
-			map.forEach((key, value) -> putObj(StrUtil.toStringOrNull(key), value));
+			map.forEach((key, value) -> putValue(StrUtil.toStringOrNull(key), value));
 		}
 		return this;
 	}
@@ -229,11 +231,11 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
 	 *
 	 * @param key   键
-	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the {@code null}
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
-	public JSONObject putObj(final String key, final Object value) throws JSONException {
+	public JSONObject putValue(final String key, final Object value) throws JSONException {
 		// put时，如果value为字符串，不解析，而是作为JSONPrimitive对待
 		this.put(key, factory.getMapper().toJSON(value, false));
 		return this;
@@ -253,11 +255,17 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 			return null;
 		}
 
-		final boolean ignoreNullValue = config().isIgnoreNullValue();
-		if (null == value && ignoreNullValue) {
+		final JSONConfig config = config();
+		if (null == value && config.isIgnoreNullValue()) {
 			// 忽略值模式下如果值为空清除key
 			return this.remove(key);
-		} else if (config().isCheckDuplicate() && containsKey(key)) {
+		}
+
+		final JSONConfig.DuplicateMode duplicateMode = config.getDuplicateMode();
+		if (JSONConfig.DuplicateMode.OVERRIDE != duplicateMode && containsKey(key)) {
+			if(JSONConfig.DuplicateMode.IGNORE == duplicateMode){
+				return null;
+			}
 			throw new JSONException("Duplicate key \"{}\"", key);
 		}
 		return super.put(key, value);

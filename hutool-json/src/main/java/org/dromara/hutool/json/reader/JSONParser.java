@@ -202,7 +202,7 @@ public class JSONParser {
 			final MutableEntry<Object, Object> entry = new MutableEntry<>(key, value);
 			if (predicate.test(entry)) {
 				// 使用修改后的键值对
-				jsonObject.putObj((String) entry.getKey(), entry.getValue());
+				jsonObject.putValue((String) entry.getKey(), entry.getValue());
 			}
 		} else {
 			jsonObject.put(key, value);
@@ -242,7 +242,7 @@ public class JSONParser {
 			final MutableEntry<Object, Object> entry = MutableEntry.of(jsonArray.size(), value);
 			if (predicate.test(entry)) {
 				// 使用修改后的键值对，用户修改后可能不是JSON，此处使用set，调用mapper转换
-				jsonArray.setObj((Integer) entry.getKey(), entry.getValue());
+				jsonArray.setValue((Integer) entry.getKey(), entry.getValue());
 			}
 		} else {
 			jsonArray.add(value);

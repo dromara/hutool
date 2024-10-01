@@ -84,10 +84,10 @@ public class BeanToJSONCopier implements Copier<JSONObject> {
 			final MutableEntry<Object, Object> entry = new MutableEntry<>(fieldName, sValue);
 			if (predicate.test(entry)) {
 				// 使用修改后的键值对
-				target.putObj((String) entry.getKey(), entry.getValue());
+				target.putValue((String) entry.getKey(), entry.getValue());
 			}
 		} else if (null != sValue || !ignoreNullValue) {
-			target.putObj(fieldName, sValue);
+			target.putValue(fieldName, sValue);
 		}
 	}
 }

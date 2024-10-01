@@ -32,7 +32,7 @@ public class CustomSerializeTest {
 		TypeAdapterManager.getInstance().register(CustomBean.class,
 			(JSONSerializer<CustomBean>) (bean, context) ->{
 				final JSONObject contextJson = context.getOrCreateObj();
-				return contextJson.putObj("customName", bean.name);
+				return contextJson.putValue("customName", bean.name);
 			});
 	}
 
@@ -50,7 +50,7 @@ public class CustomSerializeTest {
 		final CustomBean customBean = new CustomBean();
 		customBean.name = "testName";
 
-		final JSONObject obj = JSONUtil.ofObj().putObj("customBean", customBean);
+		final JSONObject obj = JSONUtil.ofObj().putValue("customBean", customBean);
 		Assertions.assertEquals("testName", obj.getJSONObject("customBean").getStr("customName"));
 	}
 

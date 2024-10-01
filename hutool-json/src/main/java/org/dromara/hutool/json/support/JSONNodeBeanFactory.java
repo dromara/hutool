@@ -82,9 +82,9 @@ public class JSONNodeBeanFactory implements NodeBeanFactory<JSON> {
 			return bean;
 		} else if (node instanceof NameNode) {
 			if(bean instanceof JSONObject){
-				((JSONObject) bean).putObj(((NameNode) node).getName(), value);
+				((JSONObject) bean).putValue(((NameNode) node).getName(), value);
 			} else if(bean instanceof JSONArray){
-				((JSONArray) bean).setObj(Integer.parseInt(((NameNode) node).getName()), value);
+				((JSONArray) bean).setValue(Integer.parseInt(((NameNode) node).getName()), value);
 			}
 			return bean;
 		}

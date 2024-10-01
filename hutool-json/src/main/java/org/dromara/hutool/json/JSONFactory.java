@@ -204,10 +204,13 @@ public class JSONFactory {
 	/**
 	 * 创建JSONPrimitive
 	 *
-	 * @param value 值
+	 * @param value 值，{@code null}则返回{@code null}
 	 * @return JSONPrimitive
 	 */
 	public JSONPrimitive ofPrimitive(final Object value) {
+		if(null == value){
+			return null;
+		}
 		return new JSONPrimitive(value, this);
 	}
 

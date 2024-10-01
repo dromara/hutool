@@ -82,7 +82,7 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 		final JSONObject result = context.getOrCreateObj();
 		// 注入键值对
 		for (final Map.Entry<?, ?> e : bean.entrySet()) {
-			result.putObj(StrUtil.toStringOrNull(e.getKey()), e.getValue());
+			result.putValue(StrUtil.toStringOrNull(e.getKey()), e.getValue());
 		}
 		return result;
 	}

@@ -136,24 +136,24 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 	private static void toJSONObject(final TemporalAccessor bean, final JSONObject json) {
 		if (bean instanceof LocalDate) {
 			final LocalDate localDate = (LocalDate) bean;
-			json.putObj(YEAR_KEY, localDate.getYear());
-			json.putObj(MONTH_KEY, localDate.getMonthValue());
-			json.putObj(DAY_KEY, localDate.getDayOfMonth());
+			json.putValue(YEAR_KEY, localDate.getYear());
+			json.putValue(MONTH_KEY, localDate.getMonthValue());
+			json.putValue(DAY_KEY, localDate.getDayOfMonth());
 		} else if (bean instanceof LocalDateTime) {
 			final LocalDateTime localDateTime = (LocalDateTime) bean;
-			json.putObj(YEAR_KEY, localDateTime.getYear());
-			json.putObj(MONTH_KEY, localDateTime.getMonthValue());
-			json.putObj(DAY_KEY, localDateTime.getDayOfMonth());
-			json.putObj(HOUR_KEY, localDateTime.getHour());
-			json.putObj(MINUTE_KEY, localDateTime.getMinute());
-			json.putObj(SECOND_KEY, localDateTime.getSecond());
-			json.putObj(NANO_KEY, localDateTime.getNano());
+			json.putValue(YEAR_KEY, localDateTime.getYear());
+			json.putValue(MONTH_KEY, localDateTime.getMonthValue());
+			json.putValue(DAY_KEY, localDateTime.getDayOfMonth());
+			json.putValue(HOUR_KEY, localDateTime.getHour());
+			json.putValue(MINUTE_KEY, localDateTime.getMinute());
+			json.putValue(SECOND_KEY, localDateTime.getSecond());
+			json.putValue(NANO_KEY, localDateTime.getNano());
 		} else if (bean instanceof LocalTime) {
 			final LocalTime localTime = (LocalTime) bean;
-			json.putObj(HOUR_KEY, localTime.getHour());
-			json.putObj(MINUTE_KEY, localTime.getMinute());
-			json.putObj(SECOND_KEY, localTime.getSecond());
-			json.putObj(NANO_KEY, localTime.getNano());
+			json.putValue(HOUR_KEY, localTime.getHour());
+			json.putValue(MINUTE_KEY, localTime.getMinute());
+			json.putValue(SECOND_KEY, localTime.getSecond());
+			json.putValue(NANO_KEY, localTime.getNano());
 		} else{
 			throw new JSONException("Unsupported type: {}", bean.getClass().getName());
 		}

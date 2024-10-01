@@ -29,7 +29,7 @@ public class Pr3507Test {
 		final JSONFactory factory = JSONFactory.of(null, null);
 		factory.register(Class.class, (JSONSerializer<Class<?>>) (bean, context) -> context.getOrCreatePrimitive(bean.getName()));
 
-		final JSONObject set = factory.ofObj().putObj("name", Pr3507Test.class);
+		final JSONObject set = factory.ofObj().putValue("name", Pr3507Test.class);
 		Assertions.assertEquals("{\"name\":\"org.dromara.hutool.json.issues.Pr3507Test\"}", set.toString());
 	}
 }

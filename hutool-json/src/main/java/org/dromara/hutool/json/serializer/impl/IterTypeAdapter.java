@@ -114,7 +114,7 @@ public class IterTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJS
 			next = iter.next();
 			// 检查循环引用
 			if (next != source) {
-				jsonArray.addObj(next);
+				jsonArray.addValue(next);
 			}
 		}
 	}

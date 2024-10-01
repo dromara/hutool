@@ -26,8 +26,8 @@ public class XMLTest {
 	@Test
 	public void toXmlTest(){
 		final JSONObject put = JSONUtil.ofObj()
-				.putObj("aaa", "你好")
-				.putObj("键2", "test");
+				.putValue("aaa", "你好")
+				.putValue("键2", "test");
 		final String s = JSONUtil.toXmlStr(put);
 		Assertions.assertEquals("<aaa>你好</aaa><键2>test</键2>", s);
 	}
@@ -45,7 +45,7 @@ public class XMLTest {
 
 	@Test
 	public void xmlContentTest(){
-		final JSONObject jsonObject = JSONUtil.ofObj().putObj("content","123456");
+		final JSONObject jsonObject = JSONUtil.ofObj().putValue("content","123456");
 
 		String xml = JSONXMLUtil.toXml(jsonObject);
 		Assertions.assertEquals("123456", xml);
@@ -56,7 +56,7 @@ public class XMLTest {
 
 	@Test
 	public void xmlContentTest2(){
-		final JSONObject jsonObject = JSONUtil.ofObj().putObj("content","123456");
+		final JSONObject jsonObject = JSONUtil.ofObj().putValue("content","123456");
 		final String xml = JSONXMLUtil.toXml(jsonObject, null, new String[0]);
 		Assertions.assertEquals("<content>123456</content>", xml);
 	}

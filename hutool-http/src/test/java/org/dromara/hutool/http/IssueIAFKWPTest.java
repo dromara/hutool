@@ -32,7 +32,7 @@ public class IssueIAFKWPTest {
 	@Test
 	void urlWithFormTest() {
 		final JSONObject obj = JSONUtil.ofObj();
-		obj.putObj("fields", ListUtil.of("1", "2", "good"));
+		obj.putValue("fields", ListUtil.of("1", "2", "good"));
 
 		final Map<String, Object> params = new HashMap<>();
 		params.put("query", obj.toString());

@@ -119,7 +119,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
 	 */
-	public JSONArray addObj(final Object value) {
+	public JSONArray addValue(final Object value) {
 		// add时，如果value为字符串，不解析，而是作为JSONPrimitive对待
 		this.add(this.factory.getMapper().toJSON(value, false));
 		return this;
@@ -138,7 +138,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		}
 		final JSONObject jo = this.factory.ofObj();
 		for (int i = 0; i < names.size(); i += 1) {
-			jo.putObj(names.getStr(i), this.getObj(i));
+			jo.putValue(names.getStr(i), this.getObj(i));
 		}
 		return jo;
 	}
@@ -171,7 +171,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 	 * @param element 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this
 	 */
-	public JSONArray setObj(final int index, final Object element) {
+	public JSONArray setValue(final int index, final Object element) {
 		// set时，如果value为字符串，不解析，而是作为JSONPrimitive对待
 		set(index, this.factory.getMapper().toJSON(element, false));
 		return this;
