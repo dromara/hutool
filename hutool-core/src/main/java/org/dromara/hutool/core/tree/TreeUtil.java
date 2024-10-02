@@ -41,7 +41,7 @@ public class TreeUtil {
 	 * @return {@link MapTree}
 	 * @since 5.7.2
 	 */
-	public static MapTree<Integer> buildSingle(final List<TreeNode<Integer>> list) {
+	public static MapTree<Integer> buildSingle(final Iterable<TreeNode<Integer>> list) {
 		return buildSingle(list, 0);
 	}
 
@@ -51,7 +51,7 @@ public class TreeUtil {
 	 * @param list 源数据集合
 	 * @return List
 	 */
-	public static List<MapTree<Integer>> build(final List<TreeNode<Integer>> list) {
+	public static List<MapTree<Integer>> build(final Iterable<TreeNode<Integer>> list) {
 		return build(list, 0);
 	}
 
@@ -65,7 +65,7 @@ public class TreeUtil {
 	 * @return {@link MapTree}
 	 * @since 5.7.2
 	 */
-	public static <E> MapTree<E> buildSingle(final List<TreeNode<E>> list, final E parentId) {
+	public static <E> MapTree<E> buildSingle(final Iterable<TreeNode<E>> list, final E parentId) {
 		return buildSingle(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, new DefaultNodeParser<>());
 	}
 
@@ -77,7 +77,7 @@ public class TreeUtil {
 	 * @param parentId 最顶层父id值 一般为 0 之类
 	 * @return List
 	 */
-	public static <E> List<MapTree<E>> build(final List<TreeNode<E>> list, final E parentId) {
+	public static <E> List<MapTree<E>> build(final Iterable<TreeNode<E>> list, final E parentId) {
 		return build(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, new DefaultNodeParser<>());
 	}
 
@@ -93,7 +93,7 @@ public class TreeUtil {
 	 * @return {@link MapTree}
 	 * @since 5.7.2
 	 */
-	public static <T, E> MapTree<E> buildSingle(final List<T> list, final E parentId, final NodeParser<T, E> nodeParser) {
+	public static <T, E> MapTree<E> buildSingle(final Iterable<T> list, final E parentId, final NodeParser<T, E> nodeParser) {
 		return buildSingle(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, nodeParser);
 	}
 
@@ -107,7 +107,7 @@ public class TreeUtil {
 	 * @param nodeParser 转换器
 	 * @return List
 	 */
-	public static <T, E> List<MapTree<E>> build(final List<T> list, final E parentId, final NodeParser<T, E> nodeParser) {
+	public static <T, E> List<MapTree<E>> build(final Iterable<T> list, final E parentId, final NodeParser<T, E> nodeParser) {
 		return build(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, nodeParser);
 	}
 
@@ -122,7 +122,7 @@ public class TreeUtil {
 	 * @param nodeParser     转换器
 	 * @return List
 	 */
-	public static <T, E> List<MapTree<E>> build(final List<T> list, final E rootId, final TreeNodeConfig treeNodeConfig, final NodeParser<T, E> nodeParser) {
+	public static <T, E> List<MapTree<E>> build(final Iterable<T> list, final E rootId, final TreeNodeConfig treeNodeConfig, final NodeParser<T, E> nodeParser) {
 		return buildSingle(list, rootId, treeNodeConfig, nodeParser).getChildren();
 	}
 
@@ -139,7 +139,7 @@ public class TreeUtil {
 	 * @return {@link MapTree}
 	 * @since 5.7.2
 	 */
-	public static <T, E> MapTree<E> buildSingle(final List<T> list, final E rootId, final TreeNodeConfig treeNodeConfig, final NodeParser<T, E> nodeParser) {
+	public static <T, E> MapTree<E> buildSingle(final Iterable<T> list, final E rootId, final TreeNodeConfig treeNodeConfig, final NodeParser<T, E> nodeParser) {
 		return TreeBuilder.of(rootId, treeNodeConfig)
 				.append(list, nodeParser).build();
 	}

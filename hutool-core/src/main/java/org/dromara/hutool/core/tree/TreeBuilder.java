@@ -23,6 +23,7 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.tree.parser.NodeParser;
 import org.dromara.hutool.core.util.ObjUtil;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ import java.util.Map;
 public class TreeBuilder<E> implements Builder<MapTree<E>> {
 	private static final long serialVersionUID = 1L;
 
-	private final MapTree<E> root;
+	private MapTree<E> root;
 	private final Map<E, MapTree<E>> idTreeMap;
 	private boolean isBuild;
 
@@ -69,8 +70,17 @@ public class TreeBuilder<E> implements Builder<MapTree<E>> {
 	 * @param config 配置
 	 */
 	public TreeBuilder(final E rootId, final TreeNodeConfig config) {
-		root = new MapTree<>(config);
-		root.setId(rootId);
+		this(new MapTree<E>(config).setId(rootId));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param root 根节点
+	 * @since 5.8.33
+	 */
+	public TreeBuilder(final MapTree<E> root) {
+		this.root = root;
 		this.idTreeMap = new LinkedHashMap<>();
 	}
 
@@ -152,14 +162,48 @@ public class TreeBuilder<E> implements Builder<MapTree<E>> {
 	/**
 	 * 增加节点列表，增加的节点是不带子节点的
 	 *
+	 * @param list       Bean列表
+	 * @param <T>        Bean类型
+	 * @param nodeParser 节点转换器，用于定义一个Bean如何转换为Tree节点
+	 * @return this
+	 */
+	public <T> TreeBuilder<E> append(final Iterable<T> list, final NodeParser<T, E> nodeParser) {
+		checkBuilt();
+
+		final TreeNodeConfig config = this.root.getConfig();
+		final Iterator<T> iterator = list.iterator();
+		return append(new Iterator<MapTree<E>>() {
+			@Override
+			public boolean hasNext() {
+				return iterator.hasNext();
+			}
+
+			@Override
+			public MapTree<E> next() {
+				final MapTree<E> node = new MapTree<>(config);
+				nodeParser.parse(iterator.next(), node);
+
+				if(ObjUtil.equals(node.getId(), root.getId())){
+					// issue#IAUSHR 如果指定根节点存在，直接复用
+					TreeBuilder.this.root = node;
+					return null;
+				}
+
+				return node;
+			}
+		});
+	}
+
+	/**
+	 * 增加节点列表，增加的节点是不带子节点的
+	 *
 	 * @param trees 节点列表
 	 * @return this
 	 */
 	public TreeBuilder<E> append(final Iterable<MapTree<E>> trees) {
 		checkBuilt();
-
-		for (final MapTree<E> tree : trees) {
-			this.idTreeMap.put(tree.getId(), tree);
+		if (null != trees) {
+			append(trees.iterator());
 		}
 		return this;
 	}
@@ -167,25 +211,22 @@ public class TreeBuilder<E> implements Builder<MapTree<E>> {
 	/**
 	 * 增加节点列表，增加的节点是不带子节点的
 	 *
-	 * @param list       Bean列表
-	 * @param <T>        Bean类型
-	 * @param nodeParser 节点转换器，用于定义一个Bean如何转换为Tree节点
+	 * @param iterator 节点列表
 	 * @return this
 	 */
-	public <T> TreeBuilder<E> append(final List<T> list, final NodeParser<T, E> nodeParser) {
+	public TreeBuilder<E> append(final Iterator<MapTree<E>> iterator) {
 		checkBuilt();
 
-		final TreeNodeConfig config = this.root.getConfig();
-		final Map<E, MapTree<E>> map = new LinkedHashMap<>(list.size(), 1);
-		MapTree<E> node;
-		for (final T t : list) {
-			node = new MapTree<>(config);
-			nodeParser.parse(t, node);
-			map.put(node.getId(), node);
+		MapTree<E> tree;
+		while (iterator.hasNext()) {
+			tree = iterator.next();
+			if(null != tree){
+				this.idTreeMap.put(tree.getId(), tree);
+			}
 		}
-		return append(map);
-	}
 
+		return this;
+	}
 
 	/**
 	 * 重置Builder，实现复用
