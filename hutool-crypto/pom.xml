@@ -34,8 +34,6 @@
 
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.crypto</Automatic-Module-Name>
-		<!-- versions -->
-		<bouncycastle.version>1.78.1</bouncycastle.version>
 	</properties>
 
 	<dependencies>

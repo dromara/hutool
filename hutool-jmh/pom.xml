@@ -28,14 +28,16 @@
 		<version>6.0.0-M17</version>
 	</parent>
 
-	<artifactId>hutool-json</artifactId>
+	<artifactId>hutool-jmh</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool JSON封装</description>
+	<description>Hutool 性能测试</description>
 
 	<properties>
-		<Automatic-Module-Name>org.dromara.hutool.json</Automatic-Module-Name>
-		<!-- versions -->
-		<jjwt.version>0.12.6</jjwt.version>
+		<Automatic-Module-Name>org.dromara.hutool.jmh</Automatic-Module-Name>
+		<!-- 此模块不部署 -->
+		<maven.deploy.skip>true</maven.deploy.skip>
+		<jmh.version>1.37</jmh.version>
+
 		<jackson.version>2.17.2</jackson.version>
 		<gson.version>2.11.0</gson.version>
 		<fastjson2.version>2.0.41</fastjson2.version>
@@ -45,14 +47,23 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.dromara.hutool</groupId>
-			<artifactId>hutool-core</artifactId>
+			<artifactId>hutool-bom</artifactId>
 			<version>${project.parent.version}</version>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+		<!-- 基准性能测试 -->
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-core</artifactId>
+			<version>${jmh.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.dromara.hutool</groupId>
-			<artifactId>hutool-crypto</artifactId>
-			<version>${project.parent.version}</version>
-			<optional>true</optional>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-generator-annprocess</artifactId>
+			<version>${jmh.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- JSON 引擎实现 -->
@@ -85,26 +96,6 @@
 			<artifactId>moshi</artifactId>
 			<version>1.15.1</version>
 			<optional>true</optional>
-		</dependency>
-
-		<!-- 测试特殊算法 -->
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcpkix-jdk18on</artifactId>
-			<version>${bouncycastle.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>${jjwt.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-gson</artifactId>
-			<version>${jjwt.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

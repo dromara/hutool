@@ -1,5 +1,6 @@
-package org.dromara.hutool.core.io.buffer;
+package org.dromara.hutool.jmh.core;
 
+import org.dromara.hutool.core.io.buffer.FastCharBuffer;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;

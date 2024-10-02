@@ -1,4 +1,4 @@
-package org.dromara.hutool.json.jmh;
+package org.dromara.hutool.jmh.json;
 
 import com.alibaba.fastjson2.JSON;
 import com.google.gson.JsonElement;

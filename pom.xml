@@ -46,6 +46,7 @@
 		<module>hutool-poi</module>
 		<module>hutool-socket</module>
 		<module>hutool-swing</module>
+		<module>hutool-jmh</module>
 	</modules>
 
 	<properties>
@@ -58,7 +59,7 @@
 		<junit.version>5.10.3</junit.version>
 		<lombok.version>1.18.34</lombok.version>
 		<kotlin-version>1.9.25</kotlin-version>
-		<jmh.version>1.37</jmh.version>
+		<bouncycastle.version>1.78.1</bouncycastle.version>
 	</properties>
 
 	<dependencies>
@@ -80,19 +81,6 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- 基准性能测试 -->
-		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-core</artifactId>
-			<version>${jmh.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-generator-annprocess</artifactId>
-			<version>${jmh.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.json.jmh;
+package org.dromara.hutool.jmh.json;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package org.dromara.hutool.json.jmh;
+package org.dromara.hutool.jmh.json;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;

@@ -434,7 +434,7 @@ public class JSONUtil {
 	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
 	 * 支持的对象：
 	 * <ul>
-	 *     <li>boolean、Number、String: 转换为{@link JSONPrimitive}/li>
+	 *     <li>boolean、Number、String: 转换为{@link JSONPrimitive}</li>
 	 *     <li>Array、Iterable、Iterator：转换为{@link JSONArray}</li>
 	 *     <li>Bean对象：转为{@link JSONObject}</li>
 	 * </ul>
