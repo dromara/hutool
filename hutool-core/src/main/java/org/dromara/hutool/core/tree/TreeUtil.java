@@ -34,6 +34,8 @@ import java.util.function.Function;
  */
 public class TreeUtil {
 
+	// region ----- build
+
 	/**
 	 * 构建单root节点树
 	 *
@@ -83,7 +85,7 @@ public class TreeUtil {
 
 	/**
 	 * 构建单root节点树<br>
-	 * 它会生成一个以指定ID为ID的空的节点，然后逐级增加子节点。
+	 * 它会将指定Id的节点作为根节点，如果这个节点不存在，则创建一个空节点，然后逐级增加子节点。
 	 *
 	 * @param <T>        转换的实体 为数据源里的对象类型
 	 * @param <E>        ID类型
@@ -98,7 +100,8 @@ public class TreeUtil {
 	}
 
 	/**
-	 * 树构建
+	 * 树构建<br>
+	 * 你所有节点的ID都不应该重复，那你要构建一个列表形式的树结构，指定的这个rootId应该是首层节点的parentId，而非某个节点的id
 	 *
 	 * @param <T>        转换的实体 为数据源里的对象类型
 	 * @param <E>        ID类型
@@ -112,7 +115,8 @@ public class TreeUtil {
 	}
 
 	/**
-	 * 树构建
+	 * 树构建<br>
+	 * 你所有节点的ID都不应该重复，那你要构建一个列表形式的树结构，指定的这个rootId应该是首层节点的parentId，而非某个节点的id
 	 *
 	 * @param <T>            转换的实体 为数据源里的对象类型
 	 * @param <E>            ID类型
@@ -141,7 +145,7 @@ public class TreeUtil {
 	 */
 	public static <T, E> MapTree<E> buildSingle(final Iterable<T> list, final E rootId, final TreeNodeConfig treeNodeConfig, final NodeParser<T, E> nodeParser) {
 		return TreeBuilder.of(rootId, treeNodeConfig)
-				.append(list, nodeParser).build();
+			.append(list, nodeParser).build();
 	}
 
 	/**
@@ -172,12 +176,13 @@ public class TreeUtil {
 		if (null != tree) {
 			final TreeNodeConfig config = tree.getConfig();
 			return TreeBuilder.of(rootId, config)
-					.append(map)
-					.build();
+				.append(map)
+				.build();
 		}
 
 		return createEmptyNode(rootId);
 	}
+	// endregion
 
 	/**
 	 * 获取ID对应的节点，如果有多个ID相同的节点，只返回第一个。<br>
@@ -230,7 +235,7 @@ public class TreeUtil {
 	}
 
 	/**
-	 *  获取所有父节点ID列表
+	 * 获取所有父节点ID列表
 	 *
 	 * <p>
 	 * 比如有个人在研发1部，他上面有研发部，接着上面有技术中心<br>
@@ -243,17 +248,17 @@ public class TreeUtil {
 	 * @since 5.8.22
 	 */
 	public static <T> List<T> getParentsId(final MapTree<T> node, final boolean includeCurrentNode) {
-		return getParents(node, includeCurrentNode,  MapTree::getId);
+		return getParents(node, includeCurrentNode, MapTree::getId);
 	}
 
 	/**
-	 *  获取所有父节点指定函数结果列表
+	 * 获取所有父节点指定函数结果列表
 	 *
 	 * @param <T>                节点ID类型
 	 * @param <E>                字段值类型
 	 * @param node               节点
 	 * @param includeCurrentNode 是否包含当前节点的名称
-	 * @param fieldFunc           获取父节点名称的函数
+	 * @param fieldFunc          获取父节点名称的函数
 	 * @return 所有父节点字段值列表，node为null返回空List
 	 * @since 6.0.0
 	 */
@@ -272,7 +277,7 @@ public class TreeUtil {
 		while (null != parent) {
 			fieldValue = fieldFunc.apply(parent);
 			parent = parent.getParent();
-			if(null != fieldValue || null != parent){
+			if (null != fieldValue || null != parent) {
 				// issue#I795IN，根节点的null不加入
 				result.add(fieldValue);
 			}
@@ -285,16 +290,16 @@ public class TreeUtil {
 	 *
 	 * <p>
 	 * 比如有个人在研发1部，他上面有研发部，接着上面有技术中心<br>
-			parent = parent.getParent();) {
-			if(null != id || null != parent){
-				// issue#I795IN，根节点的null不加入
-				result.add(fieldFunc.apply(parent));
-			}
-		}
-		return result;
-	}
-
-	/**
+	 * parent = parent.getParent();) {
+	 * if(null != id || null != parent){
+	 * // issue#I795IN，根节点的null不加入
+	 * result.add(fieldFunc.apply(parent));
+	 * }
+	 * }
+	 * return result;
+	 * }
+	 * <p>
+	 * /**
 	 * 创建空Tree的节点
 	 *
 	 * @param id  节点ID
