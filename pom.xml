@@ -60,6 +60,12 @@
 		<lombok.version>1.18.34</lombok.version>
 		<kotlin-version>1.9.25</kotlin-version>
 		<bouncycastle.version>1.78.1</bouncycastle.version>
+
+		<!-- version for json and jmh -->
+		<jackson.version>2.17.2</jackson.version>
+		<gson.version>2.11.0</gson.version>
+		<fastjson2.version>2.0.41</fastjson2.version>
+		<moshi.version>1.15.1</moshi.version>
 	</properties>
 
 	<dependencies>
