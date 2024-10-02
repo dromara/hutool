@@ -300,7 +300,7 @@ public class JSONArrayTest {
 	@Test
 	public void putNullTest() {
 		final JSONArray array = JSONUtil.ofArray(JSONConfig.of().setIgnoreNullValue(false));
-		array.addValue(null);
+		array.addNull();
 
 		assertEquals("[null]", array.toString());
 	}

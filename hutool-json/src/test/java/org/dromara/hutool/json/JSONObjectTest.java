@@ -730,7 +730,7 @@ public class JSONObjectTest {
 	@Test
 	public void nullToEmptyTest() {
 		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of().setIgnoreNullValue(false))
-				.putValue("a", null)
+				.putNull("a")
 				.putValue("b", "value2");
 
 		final String s = json1.toJSONString(0, (pair) -> {

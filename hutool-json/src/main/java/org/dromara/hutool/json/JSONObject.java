@@ -228,6 +228,70 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	}
 
 	/**
+	 * 设置设置{@code null}值。在忽略null模式下移除对应键值对。
+	 *
+	 * @param key 键
+	 * @return this.
+	 */
+	public JSONObject putNull(final String key){
+		this.put(key, null);
+		return this;
+	}
+
+	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
+	 *
+	 * @param key   键
+	 * @param value Boolean类型对象
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 */
+	public JSONObject putValue(final String key, final Boolean value) throws JSONException {
+		this.put(key, factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
+	 *
+	 * @param key   键
+	 * @param value Number类型对象
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 */
+	public JSONObject putValue(final String key, final Number value) throws JSONException {
+		this.put(key, factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
+	 *
+	 * @param key   键
+	 * @param value Character类型对象
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 */
+	public JSONObject putValue(final String key, final Character value) throws JSONException {
+		this.put(key, factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
+	 *
+	 * @param key   键
+	 * @param value String类型对象
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 */
+	public JSONObject putValue(final String key, final String value) throws JSONException {
+		// put时，不解析字符串，而是作为JSONPrimitive对待
+		this.put(key, factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
 	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
 	 *
 	 * @param key   键
@@ -236,6 +300,9 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject putValue(final String key, final Object value) throws JSONException {
+		if(null == value){
+			return putNull(key);
+		}
 		// put时，如果value为字符串，不解析，而是作为JSONPrimitive对待
 		this.put(key, factory.getMapper().toJSON(value, false));
 		return this;

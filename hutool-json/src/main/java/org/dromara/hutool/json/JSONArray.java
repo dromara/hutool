@@ -112,11 +112,69 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		return this.raw.get(key);
 	}
 
+	// region ----- addValue
 	/**
-	 * Append an object value. This increases the array's length by one. <br>
+	 * 加入{@code null}元素，如果设置中忽略null值，则忽略
+	 *
+	 * @return this.
+	 */
+	public JSONArray addNull() {
+		this.add(null);
+		return this;
+	}
+
+	/**
 	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
 	 *
-	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
+	 * @param value Number值
+	 * @return this.
+	 */
+	public JSONArray addValue(final Boolean value) {
+		// add时，不解析字符串，而是作为JSONPrimitive对待
+		this.add(this.factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	 *
+	 * @param value Number值
+	 * @return this.
+	 */
+	public JSONArray addValue(final Number value) {
+		// add时，不解析字符串，而是作为JSONPrimitive对待
+		this.add(this.factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	 *
+	 * @param value Character值
+	 * @return this.
+	 */
+	public JSONArray addValue(final Character value) {
+		// add时，不解析字符串，而是作为JSONPrimitive对待
+		this.add(this.factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	 *
+	 * @param value String值
+	 * @return this.
+	 */
+	public JSONArray addValue(final String value) {
+		// add时，不解析字符串，而是作为JSONPrimitive对待
+		this.add(this.factory.ofPrimitive(value));
+		return this;
+	}
+
+	/**
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	 *
+	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the {@code null}。
 	 * @return this.
 	 */
 	public JSONArray addValue(final Object value) {
@@ -124,6 +182,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		this.add(this.factory.getMapper().toJSON(value, false));
 		return this;
 	}
+	// endregion
 
 	/**
 	 * 根据给定名列表，与其位置对应的值组成JSONObject
@@ -204,6 +263,7 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 		return this.raw.set(index, element);
 	}
 
+	// region ----- add
 	@Override
 	public boolean add(final JSON element) {
 		if (null == element && config().isIgnoreNullValue()) {
@@ -235,8 +295,8 @@ public class JSONArray extends ListWrapper<JSON> implements JSON, JSONGetter<Int
 			}
 			this.add(element);
 		}
-
 	}
+	// endregion
 
 	@Override
 	@SuppressWarnings({"unchecked"})
