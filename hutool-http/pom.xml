@@ -34,6 +34,9 @@
 
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.http</Automatic-Module-Name>
+		<httpclient5.version>5.4</httpclient5.version>
+		<httpclient4.version>4.5.14</httpclient4.version>
+		<okhttp.version>4.12.0</okhttp.version>
 	</properties>
 
 	<dependencies>
@@ -81,19 +84,19 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5</artifactId>
-			<version>5.2.1</version>
+			<version>${httpclient5.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.14</version>
+			<version>${httpclient4.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
-			<version>4.12.0</version>
+			<version>${okhttp.version}</version>
 			<scope>provided</scope>
 		</dependency>
 

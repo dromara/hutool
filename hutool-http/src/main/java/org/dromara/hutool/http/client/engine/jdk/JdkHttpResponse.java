@@ -272,7 +272,9 @@ public class JdkHttpResponse implements Response, Closeable {
 		}
 
 		// 存储服务端设置的Cookie信息
-		this.cookieManager.saveFromResponse(this.httpConnection, this.headers);
+		if(null != this.cookieManager){
+			this.cookieManager.saveFromResponse(this.httpConnection, this.headers);
+		}
 
 		// 获取响应内容流
 		if (!isIgnoreBody) {

@@ -107,7 +107,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 	@Override
 	protected void initEngine() {
-		this.cookieManager = this.config.isUseCookieManager() ? new JdkCookieManager() : new JdkCookieManager(null);
+		this.cookieManager = (null != this.config && this.config.isUseCookieManager()) ? new JdkCookieManager() : new JdkCookieManager(null);
 	}
 
 	/**
@@ -160,7 +160,8 @@ public class JdkClientEngine extends AbstractClientEngine {
 			}
 		}
 
-		if (null == message.header(HeaderName.COOKIE)) {
+		// Cookie管理
+		if (null == message.header(HeaderName.COOKIE) && null != this.cookieManager) {
 			// 用户没有自定义Cookie，则读取Cookie管理器中的信息并附带到请求中
 			// 不覆盖模式回填Cookie头，这样用户定义的Cookie将优先
 			conn.header(this.cookieManager.loadForRequest(conn), false);

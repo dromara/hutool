@@ -135,7 +135,7 @@ public class OkHttpEngine extends AbstractClientEngine {
 		setProxy(builder, config);
 
 		// Cookie管理
-		if (this.config.isUseCookieManager()) {
+		if (null != this.config && this.config.isUseCookieManager()) {
 			this.cookieStore = new InMemoryCookieStore();
 			builder.cookieJar(new CookieJarImpl(this.cookieStore));
 		}
