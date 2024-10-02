@@ -10,6 +10,7 @@ import cn.hutool.core.util.ObjectUtil;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 树构建器
@@ -19,7 +20,7 @@ import java.util.Map;
 public class TreeBuilder<E> implements Builder<Tree<E>> {
 	private static final long serialVersionUID = 1L;
 
-	private final Tree<E> root;
+	private Tree<E> root;
 	private final Map<E, Tree<E>> idTreeMap;
 	private boolean isBuild;
 
@@ -53,8 +54,17 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param config 配置
 	 */
 	public TreeBuilder(E rootId, TreeNodeConfig config) {
-		root = new Tree<>(config);
-		root.setId(rootId);
+		this(new Tree<E>(config).setId(rootId));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param rootNode 根节点
+	 * @since 5.8.33
+	 */
+	public TreeBuilder(Tree<E> rootNode) {
+		this.root = rootNode;
 		this.idTreeMap = new LinkedHashMap<>();
 	}
 
@@ -157,7 +167,28 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @return this
 	 */
 	public <T> TreeBuilder<E> append(List<T> list, NodeParser<T, E> nodeParser) {
-		return append(list, null, nodeParser);
+		checkBuilt();
+
+		final TreeNodeConfig config = this.root.getConfig();
+		final E rootId = this.root.getId();
+		final Map<E, Tree<E>> map = this.idTreeMap;
+		Tree<E> node;
+		for (T t : list) {
+			node = new Tree<>(config);
+			nodeParser.parse(t, node);
+			if (null != rootId && false == rootId.getClass().equals(node.getId().getClass())) {
+				throw new IllegalArgumentException("rootId type is node.getId().getClass()!");
+			}
+			// issue#IAUSHR 如果指定根节点存在，直接复用
+			if(Objects.equals(rootId, node.getId())){
+				this.root = node;
+			}else {
+				//非根节点
+				map.put(node.getId(), node);
+			}
+
+		}
+		return append(map);
 	}
 
 	/**
@@ -169,12 +200,14 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param nodeParser 节点转换器，用于定义一个Bean如何转换为Tree节点
 	 * @return this
 	 * @since 5.8.6
+	 * @deprecated rootId参数可以不提供，在root节点中直接获取，请使用{@link #append(List, NodeParser)}
 	 */
+	@Deprecated
 	public <T> TreeBuilder<E> append(List<T> list, E rootId, NodeParser<T, E> nodeParser) {
 		checkBuilt();
 
 		final TreeNodeConfig config = this.root.getConfig();
-		final Map<E, Tree<E>> map = new LinkedHashMap<>(list.size(), 1);
+		final Map<E, Tree<E>> map = this.idTreeMap;
 		Tree<E> node;
 		for (T t : list) {
 			node = new Tree<>(config);
@@ -182,7 +215,14 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 			if (null != rootId && false == rootId.getClass().equals(node.getId().getClass())) {
 				throw new IllegalArgumentException("rootId type is node.getId().getClass()!");
 			}
-			map.put(node.getId(), node);
+			// issue#IAUSHR 如果指定根节点存在，直接复用
+			if(Objects.equals(rootId, node.getId())){
+				this.root = node;
+			}else {
+				//非根节点
+				map.put(node.getId(), node);
+			}
+
 		}
 		return append(map);
 	}
