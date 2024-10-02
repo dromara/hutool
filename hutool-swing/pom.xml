@@ -34,6 +34,8 @@
 
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.swing</Automatic-Module-Name>
+		<animated-gif-lib.version>1.4</animated-gif-lib.version>
+		<metadata-extractor.version>2.19.0</metadata-extractor.version>
 	</properties>
 
 	<dependencies>
@@ -46,13 +48,13 @@
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>animated-gif-lib</artifactId>
-			<version>1.4</version>
+			<version>${animated-gif-lib.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.drewnoakes</groupId>
 			<artifactId>metadata-extractor</artifactId>
-			<version>2.18.0</version>
+			<version>${metadata-extractor.version}</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

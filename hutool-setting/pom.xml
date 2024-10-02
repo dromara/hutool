@@ -34,6 +34,7 @@
 
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.setting</Automatic-Module-Name>
+		<snakeyaml.version>2.3</snakeyaml.version>
 	</properties>
 
 	<dependencies>
@@ -51,7 +52,7 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>2.2</version>
+			<version>${snakeyaml.version}</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
