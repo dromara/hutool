@@ -16,7 +16,6 @@
 
 package org.dromara.hutool.core.io.watch;
 
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.io.watch.watchers.WatcherChain;
 import org.dromara.hutool.core.text.CharUtil;
@@ -172,7 +171,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 		//获取目录或文件路径
 		if (!PathUtil.exists(this.dir, false)) {
 			// 不存在的路径
-			final Path lastPathEle = FileUtil.getLastPathEle(this.dir);
+			final Path lastPathEle = PathUtil.getLastPathEle(this.dir);
 			if (null != lastPathEle) {
 				final String lastPathEleStr = lastPathEle.toString();
 				//带有点表示有扩展名，按照未创建的文件对待。Linux下.d的为目录，排除之

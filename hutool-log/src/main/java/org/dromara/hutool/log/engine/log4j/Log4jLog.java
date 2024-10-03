@@ -34,16 +34,31 @@ public class Log4jLog extends AbstractLog {
 	private final Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Log4jLog(final Logger logger) {
-		this.logger = logger;
-	}
-
+	/**
+	 * 构造
+	 *
+	 * @param clazz 日志标识
+	 */
 	public Log4jLog(final Class<?> clazz) {
 		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param name 日志标识
+	 */
 	public Log4jLog(final String name) {
 		this(Logger.getLogger(name));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param logger 日志实现
+	 */
+	public Log4jLog(final Logger logger) {
+		this.logger = logger;
 	}
 
 	@Override

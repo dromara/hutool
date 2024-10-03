@@ -814,7 +814,7 @@ public class BeanUtilTest {
 
 		testPojo.setTestPojo2List(new TestPojo2[]{testPojo2, testPojo3});
 
-		final BeanPath beanPath = BeanPath.of("testPojo2List.age");
+		final BeanPath<Object> beanPath = BeanPath.of("testPojo2List.age");
 		final Object o = beanPath.getValue(testPojo);
 
 		assertEquals(Integer.valueOf(2), ArrayUtil.get(o, 0));

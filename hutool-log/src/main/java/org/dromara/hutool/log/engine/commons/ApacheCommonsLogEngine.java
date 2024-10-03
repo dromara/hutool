@@ -30,7 +30,7 @@ public class ApacheCommonsLogEngine extends AbsLogEngine {
 	 * 构造
 	 */
 	public ApacheCommonsLogEngine() {
-		super("Apache Common Logging");
+		super("Apache Commons Logging");
 		checkLogExist(org.apache.commons.logging.LogFactory.class);
 	}
 

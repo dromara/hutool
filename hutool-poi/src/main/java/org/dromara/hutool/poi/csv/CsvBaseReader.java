@@ -16,11 +16,11 @@
 
 package org.dromara.hutool.poi.csv;
 
-import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -180,7 +180,7 @@ public class CsvBaseReader implements Serializable {
 	 */
 	public CsvData read(final Path path, final Charset charset) throws IORuntimeException {
 		Assert.notNull(path, "path must not be null");
-		return read(FileUtil.getReader(path, charset), true);
+		return read(PathUtil.getReader(path, charset), true);
 	}
 
 	/**

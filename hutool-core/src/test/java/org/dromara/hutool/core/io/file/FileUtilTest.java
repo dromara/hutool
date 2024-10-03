@@ -27,8 +27,6 @@ import org.junit.jupiter.api.condition.EnabledForJreRange;
 import org.junit.jupiter.api.condition.JRE;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -198,28 +196,6 @@ public class FileUtilTest {
 	}
 
 	@Test
-	public void subPathTest() {
-		final Path path = Paths.get("/aaa/bbb/ccc/ddd/eee/fff");
-
-		Path subPath = FileUtil.subPath(path, 5, 4);
-		Assertions.assertEquals("eee", subPath.toString());
-		subPath = FileUtil.subPath(path, 0, 1);
-		Assertions.assertEquals("aaa", subPath.toString());
-		subPath = FileUtil.subPath(path, 1, 0);
-		Assertions.assertEquals("aaa", subPath.toString());
-
-		// 负数
-		subPath = FileUtil.subPath(path, -1, 0);
-		Assertions.assertEquals("aaa/bbb/ccc/ddd/eee", subPath.toString().replace('\\', '/'));
-		subPath = FileUtil.subPath(path, -1, Integer.MAX_VALUE);
-		Assertions.assertEquals("fff", subPath.toString());
-		subPath = FileUtil.subPath(path, -1, path.getNameCount());
-		Assertions.assertEquals("fff", subPath.toString());
-		subPath = FileUtil.subPath(path, -2, -3);
-		Assertions.assertEquals("ddd", subPath.toString());
-	}
-
-	@Test
 	public void subPathTest2() {
 		String subPath = FileUtil.subPath("d:/aaa/bbb/", "d:/aaa/bbb/ccc/");
 		Assertions.assertEquals("ccc/", subPath);
@@ -241,20 +217,6 @@ public class FileUtilTest {
 
 		subPath = FileUtil.subPath("d:/aaa/bbb/", "d:/aaa/bbb");
 		Assertions.assertEquals("", subPath);
-	}
-
-	@Test
-	public void getPathEle() {
-		final Path path = Paths.get("/aaa/bbb/ccc/ddd/eee/fff");
-
-		Path ele = FileUtil.getPathEle(path, -1);
-		Assertions.assertEquals("fff", ele.toString());
-		ele = FileUtil.getPathEle(path, 0);
-		Assertions.assertEquals("aaa", ele.toString());
-		ele = FileUtil.getPathEle(path, -5);
-		Assertions.assertEquals("bbb", ele.toString());
-		ele = FileUtil.getPathEle(path, -6);
-		Assertions.assertEquals("aaa", ele.toString());
 	}
 
 	@Test

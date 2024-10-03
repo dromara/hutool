@@ -164,4 +164,40 @@ public class PathUtilTest {
 
 		assertTrue(PathUtil.isSameFile(srcFile.toPath(), destFile.toPath()));
 	}
+
+	@Test
+	public void subPathTest() {
+		final Path path = Paths.get("/aaa/bbb/ccc/ddd/eee/fff");
+
+		Path subPath = PathUtil.subPath(path, 5, 4);
+		Assertions.assertEquals("eee", subPath.toString());
+		subPath = PathUtil.subPath(path, 0, 1);
+		Assertions.assertEquals("aaa", subPath.toString());
+		subPath = PathUtil.subPath(path, 1, 0);
+		Assertions.assertEquals("aaa", subPath.toString());
+
+		// 负数
+		subPath = PathUtil.subPath(path, -1, 0);
+		Assertions.assertEquals("aaa/bbb/ccc/ddd/eee", subPath.toString().replace('\\', '/'));
+		subPath = PathUtil.subPath(path, -1, Integer.MAX_VALUE);
+		Assertions.assertEquals("fff", subPath.toString());
+		subPath = PathUtil.subPath(path, -1, path.getNameCount());
+		Assertions.assertEquals("fff", subPath.toString());
+		subPath = PathUtil.subPath(path, -2, -3);
+		Assertions.assertEquals("ddd", subPath.toString());
+	}
+
+	@Test
+	public void getPathEleTest() {
+		final Path path = Paths.get("/aaa/bbb/ccc/ddd/eee/fff");
+
+		Path ele = PathUtil.getPathEle(path, -1);
+		assertEquals("fff", ele.toString());
+		ele = PathUtil.getPathEle(path, 0);
+		assertEquals("aaa", ele.toString());
+		ele = PathUtil.getPathEle(path, -5);
+		assertEquals("bbb", ele.toString());
+		ele = PathUtil.getPathEle(path, -6);
+		assertEquals("aaa", ele.toString());
+	}
 }

@@ -20,6 +20,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.func.SerConsumer;
+import org.dromara.hutool.core.io.file.PathUtil;
 
 import java.io.Closeable;
 import java.io.File;
@@ -102,7 +103,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @since 5.0.4
 	 */
 	public CsvReader(final Path path, final Charset charset, final CsvReadConfig config) {
-		this(FileUtil.getReader(path, charset), config);
+		this(PathUtil.getReader(path, charset), config);
 	}
 
 	/**

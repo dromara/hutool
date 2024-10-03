@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
  *
  * @author looly
  */
-public class FileUtil extends PathUtil {
+public class FileUtil {
 
 	/**
 	 * 文件路径分隔符<br>
@@ -146,7 +146,7 @@ public class FileUtil extends PathUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isDirEmpty(final File dir) {
-		return isDirEmpty(dir.toPath());
+		return PathUtil.isDirEmpty(dir.toPath());
 	}
 
 	// region ----- loop and walk
@@ -187,7 +187,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.6.3
 	 */
 	public static List<File> loopFiles(final File file, final int maxDepth, final FileFilter fileFilter) {
-		return loopFiles(file.toPath(), maxDepth, fileFilter);
+		return PathUtil.loopFiles(file.toPath(), maxDepth, fileFilter);
 	}
 
 	/**
@@ -739,7 +739,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static void del(final File file) throws IORuntimeException {
 		Assert.notNull(file, "File must be not null!");
-		del(file.toPath());
+		PathUtil.del(file.toPath());
 	}
 
 	/**
@@ -764,7 +764,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static void clean(final File directory) throws IORuntimeException {
 		Assert.notNull(directory, "File must be not null!");
-		clean(directory.toPath());
+		PathUtil.clean(directory.toPath());
 	}
 
 	/**
@@ -991,7 +991,7 @@ public class FileUtil extends PathUtil {
 	public static File copy(final Resource src, final File target, final boolean isOverride) throws IORuntimeException {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
-		return copy(
+		return PathUtil.copy(
 			src,
 			target.toPath(),
 			isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
@@ -1012,7 +1012,7 @@ public class FileUtil extends PathUtil {
 		// check
 		Assert.notNull(src, "Source File is null !");
 		Assert.notNull(target, "Target File or directory is null !");
-		return copy(src, target.toPath(), options).toFile();
+		return PathUtil.copy(src, target.toPath(), options).toFile();
 	}
 
 	/**
@@ -1028,7 +1028,7 @@ public class FileUtil extends PathUtil {
 		// check
 		Assert.notNull(src, "Source File is null !");
 		Assert.notNull(out, "Target stream is null !");
-		return copy(src.toPath(), out);
+		return PathUtil.copy(src.toPath(), out);
 	}
 
 	/**
@@ -1064,7 +1064,7 @@ public class FileUtil extends PathUtil {
 	public static File copy(final File src, final File target, final boolean isOverride) throws IORuntimeException {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
-		return copy(
+		return PathUtil.copy(
 			src.toPath(),
 			target.toPath(),
 			isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
@@ -1090,7 +1090,7 @@ public class FileUtil extends PathUtil {
 	public static File copyContent(final File src, final File target, final boolean isOverride) throws IORuntimeException {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
-		return copyContent(
+		return PathUtil.copyContent(
 			src.toPath(),
 			target.toPath(),
 			isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
@@ -1119,7 +1119,7 @@ public class FileUtil extends PathUtil {
 	public static File move(final File src, final File target, final boolean isOverride) throws IORuntimeException {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
-		return move(src.toPath(), target.toPath(), isOverride).toFile();
+		return PathUtil.move(src.toPath(), target.toPath(), isOverride).toFile();
 	}
 
 	/**
@@ -1170,7 +1170,7 @@ public class FileUtil extends PathUtil {
 				newName = newName.concat(".").concat(extName);
 			}
 		}
-		return rename(file.toPath(), newName, isOverride).toFile();
+		return PathUtil.rename(file.toPath(), newName, isOverride).toFile();
 	}
 
 	// region ----- getCanonicalPath and getAbsolutePath
@@ -1758,7 +1758,7 @@ public class FileUtil extends PathUtil {
 		if (null == file) {
 			return null;
 		}
-		return readBytes(file.toPath());
+		return PathUtil.readBytes(file.toPath());
 	}
 
 	/**
@@ -2170,7 +2170,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedOutputStream getOutputStream(final String path, final OpenOption... options) throws IORuntimeException {
-		return getOutputStream(touch(path));
+		return getOutputStream(touch(path), options);
 	}
 
 	/**
@@ -2809,7 +2809,7 @@ public class FileUtil extends PathUtil {
 
 		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
 		if (null == contentType) {
-			contentType = getMimeType(Paths.get(filePath));
+			contentType = PathUtil.getMimeType(Paths.get(filePath));
 		}
 
 		return contentType;
@@ -2823,7 +2823,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.4.2
 	 */
 	public static boolean isSymlink(final File file) {
-		return isSymlink(file.toPath());
+		return PathUtil.isSymlink(file.toPath());
 	}
 
 	/**
@@ -2837,7 +2837,7 @@ public class FileUtil extends PathUtil {
 	public static boolean isSub(final File parent, final File sub) {
 		Assert.notNull(parent);
 		Assert.notNull(sub);
-		return isSub(parent.toPath(), sub.toPath());
+		return PathUtil.isSub(parent.toPath(), sub.toPath());
 	}
 
 	/**
