@@ -46,7 +46,6 @@
 		<module>hutool-poi</module>
 		<module>hutool-socket</module>
 		<module>hutool-swing</module>
-		<module>hutool-jmh</module>
 	</modules>
 
 	<properties>
