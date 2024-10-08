@@ -57,7 +57,7 @@
 		<compile.version>8</compile.version>
 		<junit.version>5.11.1</junit.version>
 		<lombok.version>1.18.34</lombok.version>
-		<kotlin-version>1.9.25</kotlin-version>
+		<kotlin-version>2.0.20</kotlin-version>
 		<bouncycastle.version>1.78.1</bouncycastle.version>
 
 		<!-- version for json and jmh -->
@@ -191,7 +191,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>3.5.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -217,7 +217,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.10.1</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -286,6 +286,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
+						<!-- 固定1.6，高版本签名失败 -->
 						<version>1.6</version>
 						<executions>
 							<execution>

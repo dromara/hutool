@@ -20,7 +20,6 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.writer.ObjectWriter;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -52,7 +51,7 @@ public class FastJSONTest {
 
 		final JSONWriter.Context context = writer.getContext();
 		final ObjectWriter<?> objectWriter = context.getObjectWriter(jsonObject.getClass());
-		Console.log(objectWriter.getClass());
+		//Console.log(objectWriter.getClass());
 
 		writer.close();
 	}

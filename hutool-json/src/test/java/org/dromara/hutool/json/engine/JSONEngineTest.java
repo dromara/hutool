@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Test;
 
@@ -148,7 +147,6 @@ public class JSONEngineTest {
 
 		final TestBean testBean = new TestBean("张三", 18, true);
 		String jsonString = engine.toJsonString(testBean);
-		Console.log(engineName);
 		if("jackson".equals(engineName)){
 			jsonString = jsonString.replace(" : ", ": ");
 			// 使用统一换行符
