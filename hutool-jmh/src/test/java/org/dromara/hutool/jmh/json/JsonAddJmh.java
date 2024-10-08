@@ -29,6 +29,7 @@ public class JsonAddJmh {
 	private JsonArray gson;
 	private com.alibaba.fastjson2.JSONArray fastJSON;
 	private ArrayNode jackson;
+	private ArrayList<Object> arrayList;
 
 
 	@Setup
@@ -43,6 +44,7 @@ public class JsonAddJmh {
 		gson = new JsonArray();
 		fastJSON = new com.alibaba.fastjson2.JSONArray();
 		jackson = JsonNodeFactory.instance.arrayNode();
+		arrayList = new ArrayList<>();
 		Console.log("数据完毕");
 	}
 
@@ -66,5 +68,10 @@ public class JsonAddJmh {
 	@Benchmark
 	public void jacksonJmh(){
 		testData.forEach(jackson::add);
+	}
+
+	@Benchmark
+	public void arrayListJmh(){
+		testData.forEach(arrayList::add);
 	}
 }

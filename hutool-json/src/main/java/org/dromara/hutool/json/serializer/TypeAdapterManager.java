@@ -16,12 +16,12 @@
 
 package org.dromara.hutool.json.serializer;
 
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.loader.LazyFunLoader;
+import org.dromara.hutool.core.lang.loader.Loader;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.lang.tuple.Tuple;
-import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.json.JSON;
@@ -83,26 +83,30 @@ public class TypeAdapterManager {
 	/**
 	 * 用户自定义序列化器，存储自定义匹配规则的一类对象的转换器
 	 */
-	private volatile Set<MatcherJSONSerializer<?>> serializerSet;
+	private final Loader<Set<MatcherJSONSerializer<?>>> serializerSetLoader;
 	/**
 	 * 用户自定义精确类型转换器<br>
 	 * 主要存储类型明确（无子类）的转换器
 	 */
-	private volatile Map<Type, JSONSerializer<?>> serializerMap;
+	private final Loader<Map<Type, JSONSerializer<?>>> serializerMapLoader;
 	/**
 	 * 用户自定义类型转换器，存储自定义匹配规则的一类对象的转换器
 	 */
-	private volatile Set<MatcherJSONDeserializer<?>> deserializerSet;
+	private final Loader<Set<MatcherJSONDeserializer<?>>> deserializerSetLoader;
 	/**
 	 * 用户自定义精确类型转换器<br>
 	 * 主要存储类型明确（无子类）的转换器
 	 */
-	private volatile Map<Type, JSONDeserializer<?>> deserializerMap;
+	private final Loader<Map<Type, JSONDeserializer<?>>> deserializerMapLoader;
 
 	/**
 	 * 构造
 	 */
 	public TypeAdapterManager() {
+		serializerSetLoader = LazyFunLoader.of(LinkedHashSet::new);
+		serializerMapLoader = LazyFunLoader.of(HashMap::new);
+		deserializerSetLoader = LazyFunLoader.of(LinkedHashSet::new);
+		deserializerMapLoader = LazyFunLoader.of(HashMap::new);
 	}
 
 	// region ----- register
@@ -117,12 +121,12 @@ public class TypeAdapterManager {
 	 */
 	public TypeAdapterManager register(final TypeAdapter typeAdapter) {
 		Assert.notNull(typeAdapter, "typeAdapter must be not null!");
-		if(typeAdapter instanceof MatcherJSONSerializer || typeAdapter instanceof MatcherJSONDeserializer){
-			if(typeAdapter instanceof MatcherJSONSerializer){
-				getSerializerSet().add((MatcherJSONSerializer<?>) typeAdapter);
+		if (typeAdapter instanceof MatcherJSONSerializer || typeAdapter instanceof MatcherJSONDeserializer) {
+			if (typeAdapter instanceof MatcherJSONSerializer) {
+				serializerSetLoader.get().add((MatcherJSONSerializer<?>) typeAdapter);
 			}
-			if(typeAdapter instanceof MatcherJSONDeserializer){
-				getDeserializerSet().add((MatcherJSONDeserializer<?>) typeAdapter);
+			if (typeAdapter instanceof MatcherJSONDeserializer) {
+				deserializerSetLoader.get().add((MatcherJSONDeserializer<?>) typeAdapter);
 			}
 			return this;
 		}
@@ -133,18 +137,18 @@ public class TypeAdapterManager {
 	/**
 	 * 注册自定义类型适配器，用于自定义对象序列化和反序列化
 	 *
-	 * @param type       类型
+	 * @param type        类型
 	 * @param typeAdapter 自定义序列化器，{@code null}表示移除
 	 * @return this
 	 */
 	public TypeAdapterManager register(final Type type, final TypeAdapter typeAdapter) {
 		Assert.notNull(type);
-		if(typeAdapter instanceof JSONSerializer || typeAdapter instanceof JSONDeserializer){
-			if(typeAdapter instanceof JSONSerializer){
-				getSerializerMap().put(type, (JSONSerializer<?>) typeAdapter);
+		if (typeAdapter instanceof JSONSerializer || typeAdapter instanceof JSONDeserializer) {
+			if (typeAdapter instanceof JSONSerializer) {
+				serializerMapLoader.get().put(type, (JSONSerializer<?>) typeAdapter);
 			}
-			if(typeAdapter instanceof JSONDeserializer){
-				getDeserializerMap().put(type, (JSONDeserializer<?>) typeAdapter);
+			if (typeAdapter instanceof JSONDeserializer) {
+				deserializerMapLoader.get().put(type, (JSONDeserializer<?>) typeAdapter);
 			}
 			return this;
 		}
@@ -172,16 +176,19 @@ public class TypeAdapterManager {
 			return (JSONSerializer<Object>) ConstructorUtil.newInstanceIfPossible(rawType);
 		}
 
-		if (MapUtil.isNotEmpty(this.serializerMap)) {
-			final JSONSerializer<?> result = this.serializerMap.get(rawType);
-			if(null != result){
-				return (JSONSerializer<Object>) result;
+		if (this.serializerMapLoader.isInitialized()) {
+			final Map<Type, JSONSerializer<?>> serializerMap = this.serializerMapLoader.get();
+			if (!serializerMap.isEmpty()) {
+				final JSONSerializer<?> result = serializerMap.get(rawType);
+				if (null != result) {
+					return (JSONSerializer<Object>) result;
+				}
 			}
 		}
 
 		// Matcher
-		if (CollUtil.isNotEmpty(this.serializerSet)) {
-			for (final MatcherJSONSerializer<?> serializer : this.serializerSet) {
+		if (this.serializerSetLoader.isInitialized()) {
+			for (final MatcherJSONSerializer<?> serializer : this.serializerSetLoader.get()) {
 				if (serializer.match(bean, null)) {
 					return (MatcherJSONSerializer<Object>) serializer;
 				}
@@ -209,70 +216,29 @@ public class TypeAdapterManager {
 			return (JSONDeserializer<Object>) ConstructorUtil.newInstanceIfPossible(rawType);
 		}
 
-		if (MapUtil.isNotEmpty(this.deserializerMap)) {
-			final JSONDeserializer<?> jsonDeserializer = this.deserializerMap.get(rawType);
-			if (null != jsonDeserializer) {
-				return (JSONDeserializer<Object>) jsonDeserializer;
+		if (this.deserializerMapLoader.isInitialized()) {
+			final Map<Type, JSONDeserializer<?>> deserializerMap = this.deserializerMapLoader.get();
+			if (!deserializerMap.isEmpty()) {
+				final JSONDeserializer<?> result = deserializerMap.get(rawType);
+				if (null != result) {
+					return (JSONDeserializer<Object>) result;
+				}
 			}
 		}
 
 		// Matcher
-		if (CollUtil.isNotEmpty(this.deserializerSet)) {
-			for (final MatcherJSONDeserializer<?> deserializer : this.deserializerSet) {
-				if (deserializer.match(json, type)) {
-					return (JSONDeserializer<Object>) deserializer;
-				}
+		if (this.deserializerSetLoader.isInitialized()) {
+			final Set<MatcherJSONDeserializer<?>> deserializerSet = this.deserializerSetLoader.get();
+			if (!deserializerSet.isEmpty()) {
+				return (JSONDeserializer<Object>) deserializerSet.stream()
+					.filter(deserializer -> deserializer.match(json, type))
+					.findFirst()
+					.orElse(null);
 			}
 		}
 
 		// 此处返回null，错误处理在mapper中
 		return null;
-	}
-	// endregion
-
-	// region ----- getSet or Map
-	private Set<MatcherJSONSerializer<?>> getSerializerSet() {
-		if (null == this.serializerSet) {
-			synchronized (this) {
-				if (null == this.serializerSet) {
-					this.serializerSet = new LinkedHashSet<>();
-				}
-			}
-		}
-		return this.serializerSet;
-	}
-
-	private Map<Type, JSONSerializer<?>> getSerializerMap() {
-		if (null == this.serializerMap) {
-			synchronized (this) {
-				if (null == this.serializerMap) {
-					this.serializerMap = new HashMap<>();
-				}
-			}
-		}
-		return this.serializerMap;
-	}
-
-	private Set<MatcherJSONDeserializer<?>> getDeserializerSet() {
-		if (null == this.deserializerSet) {
-			synchronized (this) {
-				if (null == this.deserializerSet) {
-					this.deserializerSet = new LinkedHashSet<>();
-				}
-			}
-		}
-		return this.deserializerSet;
-	}
-
-	private Map<Type, JSONDeserializer<?>> getDeserializerMap() {
-		if (null == this.deserializerMap) {
-			synchronized (this) {
-				if (null == this.deserializerMap) {
-					this.deserializerMap = new HashMap<>();
-				}
-			}
-		}
-		return this.deserializerMap;
 	}
 	// endregion
 

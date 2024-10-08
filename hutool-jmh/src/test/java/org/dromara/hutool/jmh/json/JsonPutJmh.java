@@ -28,6 +28,7 @@ public class JsonPutJmh {
 	private JsonObject gson;
 	private com.alibaba.fastjson2.JSONObject fastJSON;
 	private ObjectNode jackson;
+	private HashMap<String, Object> hashMap;
 
 
 	@Setup
@@ -41,6 +42,7 @@ public class JsonPutJmh {
 		gson = new JsonObject();
 		fastJSON = new com.alibaba.fastjson2.JSONObject();
 		jackson = JsonNodeFactory.instance.objectNode();
+		hashMap = new HashMap<>();
 	}
 
 	@Benchmark
@@ -62,5 +64,10 @@ public class JsonPutJmh {
 	@Benchmark
 	public void jacksonJmh(){
 		testData.forEach(jackson::put);
+	}
+
+	@Benchmark
+	public void hashMapJmh(){
+		testData.forEach(hashMap::put);
 	}
 }

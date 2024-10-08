@@ -32,7 +32,7 @@ public class ParseTreeJmh {
 
 	@Setup
 	public void setup() {
-		jsonStr = "{\"name\":\"张三\",\"age\":18,\"birthday\":\"2020-01-01\"}";
+		jsonStr = JSONJmhData.jsonStr;
 	}
 
 	@Benchmark

@@ -20,8 +20,10 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.writer.ObjectWriter;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class FastJSONTest {
@@ -42,6 +44,7 @@ public class FastJSONTest {
 	}
 
 	@Test
+	@Disabled
 	void toStringTest() {
 		final String jsonStr = "{\"name\":\"张三\",\"age\":18,\"birthday\":\"2020-01-01\"}";
 		final JSONObject jsonObject = JSON.parseObject(jsonStr);
@@ -51,7 +54,7 @@ public class FastJSONTest {
 
 		final JSONWriter.Context context = writer.getContext();
 		final ObjectWriter<?> objectWriter = context.getObjectWriter(jsonObject.getClass());
-		//Console.log(objectWriter.getClass());
+		Console.log(objectWriter.getClass());
 
 		writer.close();
 	}

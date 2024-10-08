@@ -17,6 +17,8 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.bean.path.BeanPath;
+import org.dromara.hutool.core.lang.loader.LazyFunLoader;
+import org.dromara.hutool.core.lang.loader.Loader;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.reader.JSONParser;
@@ -85,7 +87,7 @@ public class JSONFactory {
 	 * entry中，key在JSONObject中为name，在JSONArray中为index
 	 */
 	private final Predicate<MutableEntry<Object, Object>> predicate;
-	private volatile JSONMapper mapper;
+	private final Loader<JSONMapper> mapperLoader;
 
 	/**
 	 * 构造
@@ -96,6 +98,7 @@ public class JSONFactory {
 	public JSONFactory(final JSONConfig config, final Predicate<MutableEntry<Object, Object>> predicate) {
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
 		this.predicate = predicate;
+		this.mapperLoader = LazyFunLoader.of(()->JSONMapper.of(this));
 	}
 
 	/**
@@ -146,14 +149,7 @@ public class JSONFactory {
 	 * @return {@link JSONMapper}
 	 */
 	public JSONMapper getMapper() {
-		if (null == this.mapper) {
-			synchronized (this) {
-				if (null == this.mapper) {
-					this.mapper = JSONMapper.of(this);
-				}
-			}
-		}
-		return this.mapper;
+		return this.mapperLoader.get();
 	}
 
 	/**

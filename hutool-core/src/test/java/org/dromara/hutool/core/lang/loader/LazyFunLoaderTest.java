@@ -36,7 +36,7 @@ public class LazyFunLoaderTest {
 		final LazyFunLoader<BigObject> loader = new LazyFunLoader<>(BigObject::new);
 
 		Assertions.assertNotNull(loader.get());
-		Assertions.assertTrue(loader.isInitialize());
+		Assertions.assertTrue(loader.isInitialized());
 
 		// 对于某些对象，在程序关闭时，需要进行销毁操作
 		loader.ifInitialized(BigObject::destroy);
@@ -56,16 +56,16 @@ public class LazyFunLoaderTest {
 			it.destroy();
 		});
 
-		Assertions.assertFalse(loader.isInitialize());
+		Assertions.assertFalse(loader.isInitialized());
 	}
 
 	@Test
-	public void testOnLoadStaticFactoryMethod1() {
+	public void testOfLoadStaticFactoryMethod1() {
 
-		final LazyFunLoader<BigObject> loader = LazyFunLoader.on(BigObject::new);
+		final LazyFunLoader<BigObject> loader = LazyFunLoader.of(BigObject::new);
 
 		Assertions.assertNotNull(loader.get());
-		Assertions.assertTrue(loader.isInitialize());
+		Assertions.assertTrue(loader.isInitialized());
 
 		// 对于某些对象，在程序关闭时，需要进行销毁操作
 		loader.ifInitialized(BigObject::destroy);
@@ -74,9 +74,9 @@ public class LazyFunLoaderTest {
 	}
 
 	@Test
-	public void testOnLoadStaticFactoryMethod2() {
+	public void testOfLoadStaticFactoryMethod2() {
 
-		final LazyFunLoader<BigObject> loader = LazyFunLoader.on(BigObject::new);
+		final LazyFunLoader<BigObject> loader = LazyFunLoader.of(BigObject::new);
 
 		// 若从未使用，则可以避免不必要的初始化
 		loader.ifInitialized(it -> {

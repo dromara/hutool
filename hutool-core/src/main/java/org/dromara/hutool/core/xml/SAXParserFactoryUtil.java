@@ -16,6 +16,9 @@
 
 package org.dromara.hutool.core.xml;
 
+import org.dromara.hutool.core.lang.loader.LazyFunLoader;
+import org.dromara.hutool.core.lang.loader.Loader;
+
 import javax.xml.parsers.SAXParserFactory;
 
 /**
@@ -29,7 +32,7 @@ public class SAXParserFactoryUtil {
 	/**
 	 * Sax读取器工厂缓存
 	 */
-	private static volatile SAXParserFactory factory;
+	private static final Loader<SAXParserFactory> factoryLoader = LazyFunLoader.of(()->createFactory(false, true));
 
 	/**
 	 * 获取全局{@link SAXParserFactory}<br>
@@ -41,15 +44,7 @@ public class SAXParserFactoryUtil {
 	 * @return {@link SAXParserFactory}
 	 */
 	public static SAXParserFactory getFactory() {
-		if (null == factory) {
-			synchronized (SAXParserFactoryUtil.class) {
-				if (null == factory) {
-					factory = createFactory(false, true);
-				}
-			}
-		}
-
-		return factory;
+		return factoryLoader.get();
 	}
 
 	/**

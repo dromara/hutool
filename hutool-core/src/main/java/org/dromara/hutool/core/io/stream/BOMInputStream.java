@@ -49,7 +49,7 @@ import java.io.PushbackInputStream;
 public class BOMInputStream extends InputStream {
 
 	private final PushbackInputStream in;
-	private boolean isInited = false;
+	private boolean initialized;
 	private final String defaultCharset;
 	private String charset;
 
@@ -92,7 +92,7 @@ public class BOMInputStream extends InputStream {
 	 * @return 编码
 	 */
 	public String getCharset() {
-		if (!isInited) {
+		if (!initialized) {
 			try {
 				init();
 			} catch (final IOException ex) {
@@ -104,13 +104,13 @@ public class BOMInputStream extends InputStream {
 
 	@Override
 	public void close() throws IOException {
-		isInited = true;
+		initialized = true;
 		in.close();
 	}
 
 	@Override
 	public int read() throws IOException {
-		isInited = true;
+		initialized = true;
 		return in.read();
 	}
 
@@ -120,7 +120,7 @@ public class BOMInputStream extends InputStream {
 	 * @throws IOException 读取引起的异常
 	 */
 	protected void init() throws IOException {
-		if (isInited) {
+		if (initialized) {
 			return;
 		}
 
@@ -146,6 +146,6 @@ public class BOMInputStream extends InputStream {
 			in.unread(bom, (n - unread), unread);
 		}
 
-		isInited = true;
+		initialized = true;
 	}
 }

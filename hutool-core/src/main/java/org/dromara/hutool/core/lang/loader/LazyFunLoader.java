@@ -18,7 +18,6 @@ package org.dromara.hutool.core.lang.loader;
 
 import org.dromara.hutool.core.lang.Assert;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -42,12 +41,13 @@ public class LazyFunLoader<T> extends LazyLoader<T> {
 
 	/**
 	 * 静态工厂方法，提供语义性与编码便利性
+	 *
 	 * @param supplier 用于生成对象的函数
-	 * @param <T> 对象类型
+	 * @param <T>      对象类型
 	 * @return 函数式懒加载加载器对象
 	 * @since 5.8.0
 	 */
-	public static <T> LazyFunLoader<T> on(final Supplier<T> supplier) {
+	public static <T> LazyFunLoader<T> of(final Supplier<T> supplier) {
 		Assert.notNull(supplier, "supplier must be not null!");
 		return new LazyFunLoader<>(supplier);
 	}
@@ -67,28 +67,5 @@ public class LazyFunLoader<T> extends LazyLoader<T> {
 		final T t = this.supplier.get();
 		this.supplier = null;
 		return t;
-	}
-
-	/**
-	 * 是否已经初始化
-	 *
-	 * @return 是/否
-	 */
-	public boolean isInitialize() {
-		return this.supplier == null;
-	}
-
-	/**
-	 * 如果已经初始化，就执行传入函数
-	 *
-	 * @param consumer 待执行函数
-	 */
-	public void ifInitialized(final Consumer<T> consumer) {
-		Assert.notNull(consumer);
-
-		//	已经初始化
-		if (this.isInitialize()) {
-			consumer.accept(this.get());
-		}
 	}
 }

@@ -19,6 +19,7 @@ package org.dromara.hutool.jmh.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.JsonElement;
 import org.dromara.hutool.json.JSON;
+import org.dromara.hutool.json.JSONUtil;
 import org.dromara.hutool.json.engine.JSONEngine;
 import org.dromara.hutool.json.engine.JSONEngineFactory;
 import org.openjdk.jmh.annotations.*;
@@ -43,7 +44,7 @@ public class FromJsonStringStrJmh {
 
 	@Setup
 	public void setup() {
-		jsonStr = "{\"name\":\"张三\",\"age\":18,\"birthday\":\"2020-01-01\"}";
+		jsonStr = JSONJmhData.jsonStr;
 
 		jacksonEngine = JSONEngineFactory.createEngine("jackson");
 		gsonEngine = JSONEngineFactory.createEngine("gson");
@@ -69,5 +70,10 @@ public class FromJsonStringStrJmh {
 	@Benchmark
 	public void hutoolJSONJmh() {
 		hutoolEngine.fromJsonString(jsonStr, JSON.class);
+	}
+
+	@Benchmark
+	public void hutoolJSONParseJmh() {
+		JSONUtil.parseObj(jsonStr);
 	}
 }

@@ -60,6 +60,13 @@ public class HutoolJSONEngine extends AbstractJSONEngine {
 	}
 
 	@Override
+	public <T> T fromJsonString(final String jsonStr, final Object type) {
+		initEngine();
+		final JSON json = jsonFactory.parse(jsonStr);
+		return json.toBean((Type) type);
+	}
+
+	@Override
 	protected void reset() {
 		jsonFactory = null;
 	}

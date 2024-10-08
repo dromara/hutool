@@ -16,7 +16,10 @@
 
 package org.dromara.hutool.json.serializer;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.lang.loader.LazyFunLoader;
+import org.dromara.hutool.core.lang.loader.Loader;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
@@ -55,7 +58,7 @@ public class JSONMapper implements Serializable {
 	}
 
 	private final JSONFactory factory;
-	private volatile TypeAdapterManager typeAdapterManager;
+	private Loader<TypeAdapterManager> typeAdapterManagerLoader;
 
 	/**
 	 * 构造
@@ -64,6 +67,7 @@ public class JSONMapper implements Serializable {
 	 */
 	public JSONMapper(final JSONFactory factory) {
 		this.factory = factory;
+		this.typeAdapterManagerLoader = LazyFunLoader.of(TypeAdapterManager::of);
 	}
 
 	// region ----- typeAdapterManager
@@ -74,17 +78,17 @@ public class JSONMapper implements Serializable {
 	 * @return 类型转换器管理器
 	 */
 	public TypeAdapterManager getTypeAdapterManager() {
-		return this.typeAdapterManager;
+		return typeAdapterManagerLoader.get();
 	}
 
 	/**
 	 * 设置自定义类型转换器，用于将自定义类型转换为JSONObject
 	 *
-	 * @param typeAdapterManager 类型转换器管理器
+	 * @param typeAdapterManager 类型转换器管理器，不能为空
 	 * @return this
 	 */
 	public JSONMapper setTypeAdapterManager(final TypeAdapterManager typeAdapterManager) {
-		this.typeAdapterManager = typeAdapterManager;
+		this.typeAdapterManagerLoader = () -> Assert.notNull(typeAdapterManager);
 		return this;
 	}
 
@@ -96,7 +100,7 @@ public class JSONMapper implements Serializable {
 	 * @return this
 	 */
 	public JSONMapper register(final Type type, final TypeAdapter typeAdapter) {
-		initTypeAdapterManager().register(type, typeAdapter);
+		getTypeAdapterManager().register(type, typeAdapter);
 		return this;
 	}
 
@@ -109,7 +113,7 @@ public class JSONMapper implements Serializable {
 	 * @return this
 	 */
 	public JSONMapper register(final TypeAdapter typeAdapter) {
-		initTypeAdapterManager().register(typeAdapter);
+		getTypeAdapterManager().register(typeAdapter);
 		return this;
 	}
 	//endregion
@@ -286,22 +290,6 @@ public class JSONMapper implements Serializable {
 	}
 
 	/**
-	 * 初始化类型转换器管理器，如果尚未初始化，则初始化，否则直接返回
-	 *
-	 * @return {@link TypeAdapterManager}
-	 */
-	private TypeAdapterManager initTypeAdapterManager() {
-		if (null == this.typeAdapterManager) {
-			synchronized (this) {
-				if (null == this.typeAdapterManager) {
-					this.typeAdapterManager = TypeAdapterManager.of();
-				}
-			}
-		}
-		return this.typeAdapterManager;
-	}
-
-	/**
 	 * 获取JSON对象对应的序列化器，先查找局部自定义，如果没有则查找全局自定义
 	 *
 	 * @param obj   对象
@@ -311,8 +299,8 @@ public class JSONMapper implements Serializable {
 	private JSONSerializer<Object> getSerializer(final Object obj, final Class<?> clazz) {
 		JSONSerializer<Object> serializer = null;
 		// 自定义序列化
-		if (null != this.typeAdapterManager) {
-			serializer = this.typeAdapterManager.getSerializer(obj, clazz);
+		if (this.typeAdapterManagerLoader.isInitialized()) {
+			serializer = getTypeAdapterManager().getSerializer(obj, clazz);
 		}
 		// 全局自定义序列化
 		if (null == serializer) {
@@ -331,8 +319,8 @@ public class JSONMapper implements Serializable {
 	private JSONDeserializer<Object> getDeserializer(final JSON json, final Type type) {
 		JSONDeserializer<Object> deserializer = null;
 		// 自定义反序列化
-		if (null != this.typeAdapterManager) {
-			deserializer = this.typeAdapterManager.getDeserializer(json, type);
+		if (this.typeAdapterManagerLoader.isInitialized()) {
+			deserializer = getTypeAdapterManager().getDeserializer(json, type);
 		}
 		// 全局自定义反序列化
 		if (null == deserializer) {
