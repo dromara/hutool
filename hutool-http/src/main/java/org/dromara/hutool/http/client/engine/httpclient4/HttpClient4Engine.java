@@ -217,8 +217,14 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		// 连接池配置
 		if (config instanceof ApacheHttpClientConfig) {
 			final ApacheHttpClientConfig apacheHttpClientConfig = (ApacheHttpClientConfig) config;
-			manager.setMaxTotal(apacheHttpClientConfig.getMaxTotal());
-			manager.setDefaultMaxPerRoute(apacheHttpClientConfig.getMaxPerRoute());
+			final int maxTotal = apacheHttpClientConfig.getMaxTotal();
+			if(maxTotal > 0){
+				manager.setMaxTotal(maxTotal);
+			}
+			final int maxPerRoute = apacheHttpClientConfig.getMaxPerRoute();
+			if(maxPerRoute > 0){
+				manager.setDefaultMaxPerRoute(maxPerRoute);
+			}
 		}
 
 		return manager;

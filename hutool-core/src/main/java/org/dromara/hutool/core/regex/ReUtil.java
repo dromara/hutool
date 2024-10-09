@@ -250,7 +250,7 @@ public class ReUtil {
 	 * result : year: 2021, month: 10, day: 11
 	 * </pre>
 	 *
-	 * <p>jdk9+之后，因为此方法无效</p>
+	 * <p>jdk9+之后，此方法无效</p>
 	 *
 	 * @param pattern 匹配的正则
 	 * @param content 被匹配的内容

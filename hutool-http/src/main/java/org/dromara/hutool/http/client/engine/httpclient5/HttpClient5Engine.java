@@ -226,10 +226,10 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		if (config instanceof ApacheHttpClientConfig) {
 			final ApacheHttpClientConfig apacheHttpClientConfig = (ApacheHttpClientConfig) config;
 			final int maxTotal = apacheHttpClientConfig.getMaxTotal();
-			final int maxPerRoute = apacheHttpClientConfig.getMaxPerRoute();
 			if (maxTotal > 0) {
 				connectionManagerBuilder.setMaxConnTotal(maxTotal);
 			}
+			final int maxPerRoute = apacheHttpClientConfig.getMaxPerRoute();
 			if (maxPerRoute > 0) {
 				connectionManagerBuilder.setMaxConnPerRoute(maxPerRoute);
 			}
