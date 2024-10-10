@@ -17,11 +17,10 @@
 package org.dromara.hutool.core.date.format;
 
 import org.dromara.hutool.core.date.format.parser.FastDateParser;
+import org.dromara.hutool.core.text.StrUtil;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * {@link java.text.SimpleDateFormat} 的线程安全版本，用于将 {@link Date} 格式化输出<br>
@@ -33,19 +32,25 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 	private static final long serialVersionUID = -6305750172255764887L;
 
 	private final DatePattern datePattern;
+	/**
+	 * 缓存的Calendar对象，用于减少对象创建。参考tomcat的ConcurrentDateFormat
+	 */
+	private final Queue<Calendar> queue;
 
 	// Constructor
 	// -----------------------------------------------------------------------
+
 	/**
 	 * 构造，内部使用<br>
 	 *
-	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
+	 * @param pattern  使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 非空时区{@link TimeZone}
-	 * @param locale 非空{@link Locale} 日期地理位置
+	 * @param locale   非空{@link Locale} 日期地理位置
 	 */
 	public FastDatePrinter(final String pattern, final TimeZone timeZone, final Locale locale) {
 		super(pattern, timeZone, locale);
 		this.datePattern = new DatePattern(pattern, locale, timeZone);
+		this.queue = new ConcurrentLinkedQueue<>();
 	}
 
 	// Format methods
@@ -72,36 +77,28 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 	}
 
 	@Override
-	public String format(final long millis) {
-		final Calendar c = Calendar.getInstance(timeZone, locale);
-		c.setTimeInMillis(millis);
-		return applyRulesToString(c);
+	public String format(final Date date) {
+		return format(date.getTime());
 	}
 
 	@Override
-	public String format(final Date date) {
-		final Calendar c = Calendar.getInstance(timeZone, locale);
-		c.setTime(date);
-		return applyRulesToString(c);
+	public String format(final long millis) {
+		return format(millis, StrUtil.builder(datePattern.getEstimateLength())).toString();
 	}
 
 	@Override
 	public String format(final Calendar calendar) {
-		return format(calendar, new StringBuilder(datePattern.getEstimateLength())).toString();
+		return format(calendar, StrUtil.builder(datePattern.getEstimateLength())).toString();
 	}
 
 	@Override
 	public <B extends Appendable> B format(final Date date, final B buf) {
-		final Calendar c = Calendar.getInstance(timeZone, locale);
-		c.setTime(date);
-		return datePattern.applyRules(c, buf);
+		return format(date.getTime(), buf);
 	}
 
 	@Override
 	public <B extends Appendable> B format(final long millis, final B buf) {
-		final Calendar c = Calendar.getInstance(timeZone, locale);
-		c.setTimeInMillis(millis);
-		return datePattern.applyRules(c, buf);
+		return applyRules(millis, buf);
 	}
 
 	@Override
@@ -115,17 +112,25 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 	}
 
 	/**
-	 * Creates a String representation of the given Calendar by applying the rules of this printer to it.
+	 * 根据规则将时间戳转换为Appendable，复用Calendar对象，避免创建新对象
 	 *
-	 * @param c the Calender to apply the rules to.
-	 * @return a String representation of the given Calendar.
+	 * @param millis 时间戳
+	 * @param buf    待拼接的 Appendable
+	 * @return buf 拼接后的Appendable
 	 */
-	private String applyRulesToString(final Calendar c) {
-		return datePattern.applyRules(c, new StringBuilder(datePattern.getEstimateLength())).toString();
+	private <B extends Appendable> B applyRules(final long millis, final B buf) {
+		Calendar calendar = queue.poll();
+		if (calendar == null) {
+			calendar = Calendar.getInstance(timeZone, locale);
+		}
+		calendar.setTimeInMillis(millis);
+		final B b = datePattern.applyRules(calendar, buf);
+		queue.offer(calendar);
+		return b;
 	}
 
 	/**
-	 *估算生成的日期字符串长度<br>
+	 * 估算生成的日期字符串长度<br>
 	 * 实际生成的字符串长度小于或等于此值
 	 *
 	 * @return 日期字符串长度
