@@ -18,6 +18,10 @@ package org.dromara.hutool.core.math;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.text.split.SplitUtil;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 数字转中文类<br>
@@ -65,7 +69,7 @@ public class ChineseNumberFormatter {
 		if (c < '0' || c > '9') {
 			return c;
 		}
-		return numberToChinese(c - '0', isUseTraditional);
+		return singleNumberToChinese(c - '0', isUseTraditional);
 	}
 
 	/**
@@ -115,6 +119,7 @@ public class ChineseNumberFormatter {
 
 	/**
 	 * 是否使用口语模式，此模式下的数字更加简化，如“一十一”会表示为“十一”
+	 *
 	 * @param colloquialMode 是否口语模式
 	 * @return this
 	 */
@@ -141,10 +146,37 @@ public class ChineseNumberFormatter {
 	 * @return this
 	 */
 	public ChineseNumberFormatter setUnitName(final String unitName) {
-		this.unitName = Assert.notNull(unitName);;
+		this.unitName = Assert.notNull(unitName);
+		;
 		return this;
 	}
 	// endregion
+
+	/**
+	 * 阿拉伯数字转换成中文. 使用于整数、小数的转换.
+	 * 支持多位小数
+	 *
+	 * @param amount 数字
+	 * @return 中文
+	 */
+	public String format(final BigDecimal amount) {
+		final long longValue = amount.longValue();
+
+		String formatAmount;
+		if (amount.scale() <= 0) {
+			formatAmount = format(longValue);
+		} else {
+			final List<String> numberList = SplitUtil.split(amount.toPlainString(), StrUtil.DOT);
+			// 小数部分逐个数字转换为汉字
+			final StringBuilder decimalPartStr = new StringBuilder();
+			for (final char decimalChar : numberList.get(1).toCharArray()) {
+				decimalPartStr.append(formatChar(decimalChar, this.useTraditional));
+			}
+			formatAmount = format(longValue) + "点" + decimalPartStr;
+		}
+
+		return formatAmount;
+	}
 
 	/**
 	 * 阿拉伯数字转换成中文.
@@ -212,7 +244,7 @@ public class ChineseNumberFormatter {
 				chineseStr.append("零");
 			}
 		} else {
-			chineseStr.append(numberToChinese(jiao, this.useTraditional));
+			chineseStr.append(singleNumberToChinese(jiao, this.useTraditional));
 			if (isMoneyMode && 0 != jiao) {
 				chineseStr.append("角");
 			}
@@ -220,7 +252,7 @@ public class ChineseNumberFormatter {
 
 		// 分
 		if (0 != fen) {
-			chineseStr.append(numberToChinese(fen, this.useTraditional));
+			chineseStr.append(singleNumberToChinese(fen, this.useTraditional));
 			if (isMoneyMode) {
 				chineseStr.append("分");
 			}
@@ -232,7 +264,7 @@ public class ChineseNumberFormatter {
 	/**
 	 * 阿拉伯数字整数部分转换成中文，只支持正数
 	 *
-	 * @param amount           数字
+	 * @param amount 数字
 	 * @return 中文
 	 */
 	private String longToChinese(long amount) {
@@ -327,7 +359,7 @@ public class ChineseNumberFormatter {
 	/**
 	 * 把一个 0~9999 之间的整数转换为汉字的字符串，如果是 0 则返回 ""
 	 *
-	 * @param amountPart       数字部分
+	 * @param amountPart 数字部分
 	 * @return 转换后的汉字
 	 */
 	private String thousandToChinese(final int amountPart) {
@@ -350,7 +382,7 @@ public class ChineseNumberFormatter {
 				lastIsZero = true;
 			} else { // 取到的数字不是 0
 				final boolean isUseTraditional = this.useTraditional;
-				chineseStr.insert(0, numberToChinese(digit, isUseTraditional) + ChineseNumberParser.getUnitName(i, isUseTraditional));
+				chineseStr.insert(0, singleNumberToChinese(digit, isUseTraditional) + ChineseNumberParser.getUnitName(i, isUseTraditional));
 				lastIsZero = false;
 			}
 			temp = temp / 10;
@@ -365,7 +397,7 @@ public class ChineseNumberFormatter {
 	 * @param isUseTraditional 是否使用繁体
 	 * @return 汉字
 	 */
-	private static char numberToChinese(final int number, final boolean isUseTraditional) {
+	private static char singleNumberToChinese(final int number, final boolean isUseTraditional) {
 		if (0 == number) {
 			return DIGITS[0];
 		}
