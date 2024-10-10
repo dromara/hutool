@@ -16,8 +16,9 @@
 
 package org.dromara.hutool.core.data;
 
+import org.dromara.hutool.core.data.masking.MaskingManager;
+import org.dromara.hutool.core.data.masking.MaskingType;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.text.CharUtil;
 
 /**
  * 数据脱敏（Data Masking）工具类，对某些敏感信息（比如，身份证号、手机号、卡号、姓名、地址、邮箱等 ）屏蔽敏感数据。<br>
@@ -45,74 +46,6 @@ import org.dromara.hutool.core.text.CharUtil;
 public class MaskingUtil {
 
 	/**
-	 * 支持的脱敏类型枚举
-	 *
-	 * @author dazer and neusoft and qiaomu
-	 */
-	public enum MaskingType {
-		/**
-		 * 用户id
-		 */
-		USER_ID,
-		/**
-		 * 中文名
-		 */
-		CHINESE_NAME,
-		/**
-		 * 身份证号
-		 */
-		ID_CARD,
-		/**
-		 * 座机号
-		 */
-		FIXED_PHONE,
-		/**
-		 * 手机号
-		 */
-		MOBILE_PHONE,
-		/**
-		 * 地址
-		 */
-		ADDRESS,
-		/**
-		 * 电子邮件
-		 */
-		EMAIL,
-		/**
-		 * 密码
-		 */
-		PASSWORD,
-		/**
-		 * 中国大陆车牌，包含普通车辆、新能源车辆
-		 */
-		CAR_LICENSE,
-		/**
-		 * 银行卡
-		 */
-		BANK_CARD,
-		/**
-		 * IPv4地址
-		 */
-		IPV4,
-		/**
-		 * IPv6地址
-		 */
-		IPV6,
-		/**
-		 * 定义了一个first_mask的规则，只显示第一个字符。
-		 */
-		FIRST_MASK,
-		/**
-		 * 清空为null
-		 */
-		CLEAR_TO_NULL,
-		/**
-		 * 清空为""
-		 */
-		CLEAR_TO_EMPTY
-	}
-
-	/**
 	 * 脱敏，使用默认的脱敏策略
 	 * <pre>
 	 * MaskingUtil.masking("100", MaskingUtil.DesensitizedType.USER_ID)) =  "0"
@@ -134,60 +67,8 @@ public class MaskingUtil {
 	 * @author dazer and neusoft and qiaomu
 	 * @since 5.6.2
 	 */
-	public static String masking(final CharSequence str, final MaskingType maskingType) {
-		if (StrUtil.isBlank(str)) {
-			return StrUtil.EMPTY;
-		}
-		String newStr = String.valueOf(str);
-		switch (maskingType) {
-			case USER_ID:
-				newStr = String.valueOf(userId());
-				break;
-			case CHINESE_NAME:
-				newStr = chineseName(String.valueOf(str));
-				break;
-			case ID_CARD:
-				newStr = idCardNum(String.valueOf(str), 1, 2);
-				break;
-			case FIXED_PHONE:
-				newStr = fixedPhone(String.valueOf(str));
-				break;
-			case MOBILE_PHONE:
-				newStr = mobilePhone(String.valueOf(str));
-				break;
-			case ADDRESS:
-				newStr = address(String.valueOf(str), 8);
-				break;
-			case EMAIL:
-				newStr = email(String.valueOf(str));
-				break;
-			case PASSWORD:
-				newStr = password(String.valueOf(str));
-				break;
-			case CAR_LICENSE:
-				newStr = carLicense(String.valueOf(str));
-				break;
-			case BANK_CARD:
-				newStr = bankCard(String.valueOf(str));
-				break;
-			case IPV4:
-				newStr = ipv4(String.valueOf(str));
-				break;
-			case IPV6:
-				newStr = ipv6(String.valueOf(str));
-				break;
-			case FIRST_MASK:
-				newStr = firstMask(String.valueOf(str));
-				break;
-			case CLEAR_TO_EMPTY:
-				newStr = clear();
-				break;
-			case CLEAR_TO_NULL:
-				newStr = clearToNull();
-				break;
-			default:
-		}
-		return newStr;
+	public static String masking(final MaskingType maskingType, final CharSequence str) {
+		return MaskingManager.getInstance().masking(maskingType.name(), str);
 	}
 
 	/**
@@ -220,27 +101,24 @@ public class MaskingUtil {
 	}
 
 	/**
+	 * 【中文姓名】只显示第一个汉字，其他隐藏为2个星号，比如：李**
+	 *
+	 * @param fullName 姓名
+	 * @return 脱敏后的姓名
+	 */
+	public static String chineseName(final CharSequence fullName) {
+		return firstMask(fullName);
+	}
+
+	/**
 	 * 定义了一个first_mask的规则，只显示第一个字符。<br>
 	 * 脱敏前：123456789；脱敏后：1********。
 	 *
 	 * @param str 字符串
 	 * @return 脱敏后的字符串
 	 */
-	public static String firstMask(final String str) {
-		if (StrUtil.isBlank(str)) {
-			return StrUtil.EMPTY;
-		}
-		return StrUtil.hide(str, 1, str.length());
-	}
-
-	/**
-	 * 【中文姓名】只显示第一个汉字，其他隐藏为2个星号，比如：李**
-	 *
-	 * @param fullName 姓名
-	 * @return 脱敏后的姓名
-	 */
-	public static String chineseName(final String fullName) {
-		return firstMask(fullName);
+	public static String firstMask(final CharSequence str) {
+		return MaskingManager.EMPTY.firstMask(str);
 	}
 
 	/**
@@ -251,20 +129,8 @@ public class MaskingUtil {
 	 * @param end       保留：后面的end位数；从1开始
 	 * @return 脱敏后的身份证
 	 */
-	public static String idCardNum(final String idCardNum, final int front, final int end) {
-		//身份证不能为空
-		if (StrUtil.isBlank(idCardNum)) {
-			return StrUtil.EMPTY;
-		}
-		//需要截取的长度不能大于身份证号长度
-		if ((front + end) > idCardNum.length()) {
-			return StrUtil.EMPTY;
-		}
-		//需要截取的不能小于0
-		if (front < 0 || end < 0) {
-			return StrUtil.EMPTY;
-		}
-		return StrUtil.hide(idCardNum, front, idCardNum.length() - end);
+	public static String idCardNum(final CharSequence idCardNum, final int front, final int end) {
+		return MaskingManager.EMPTY.idCardNum(idCardNum, front, end);
 	}
 
 	/**
@@ -273,11 +139,8 @@ public class MaskingUtil {
 	 * @param num 固定电话
 	 * @return 脱敏后的固定电话；
 	 */
-	public static String fixedPhone(final String num) {
-		if (StrUtil.isBlank(num)) {
-			return StrUtil.EMPTY;
-		}
-		return StrUtil.hide(num, 4, num.length() - 2);
+	public static String fixedPhone(final CharSequence num) {
+		return MaskingManager.EMPTY.fixedPhone(num);
 	}
 
 	/**
@@ -286,11 +149,8 @@ public class MaskingUtil {
 	 * @param num 移动电话；
 	 * @return 脱敏后的移动电话；
 	 */
-	public static String mobilePhone(final String num) {
-		if (StrUtil.isBlank(num)) {
-			return StrUtil.EMPTY;
-		}
-		return StrUtil.hide(num, 3, num.length() - 4);
+	public static String mobilePhone(final CharSequence num) {
+		return MaskingManager.EMPTY.mobilePhone(num);
 	}
 
 	/**
@@ -300,12 +160,8 @@ public class MaskingUtil {
 	 * @param sensitiveSize 敏感信息长度
 	 * @return 脱敏后的家庭地址
 	 */
-	public static String address(final String address, final int sensitiveSize) {
-		if (StrUtil.isBlank(address)) {
-			return StrUtil.EMPTY;
-		}
-		final int length = address.length();
-		return StrUtil.hide(address, length - sensitiveSize, length);
+	public static String address(final CharSequence address, final int sensitiveSize) {
+		return MaskingManager.EMPTY.address(address, sensitiveSize);
 	}
 
 	/**
@@ -314,28 +170,23 @@ public class MaskingUtil {
 	 * @param email 邮箱
 	 * @return 脱敏后的邮箱
 	 */
-	public static String email(final String email) {
-		if (StrUtil.isBlank(email)) {
-			return StrUtil.EMPTY;
-		}
-		final int index = StrUtil.indexOf(email, '@');
-		if (index <= 1) {
-			return email;
-		}
-		return StrUtil.hide(email, 1, index);
+	public static String email(final CharSequence email) {
+		return MaskingManager.EMPTY.email(email);
 	}
 
 	/**
-	 * 【密码】密码的全部字符都用*代替，比如：******
+	 * 【密码】密码的全部字符都用*代替，比如：******<br>
+	 * 密码位数不能被猜测，因此固定10位
 	 *
 	 * @param password 密码
 	 * @return 脱敏后的密码
 	 */
-	public static String password(final String password) {
+	public static String password(final CharSequence password) {
 		if (StrUtil.isBlank(password)) {
 			return StrUtil.EMPTY;
 		}
-		return StrUtil.repeat('*', password.length());
+		// 密码位数不能被猜测，因此固定10位
+		return StrUtil.repeat('*', 10);
 	}
 
 	/**
@@ -349,18 +200,8 @@ public class MaskingUtil {
 	 * @param carLicense 完整的车牌号
 	 * @return 脱敏后的车牌
 	 */
-	public static String carLicense(String carLicense) {
-		if (StrUtil.isBlank(carLicense)) {
-			return StrUtil.EMPTY;
-		}
-		// 普通车牌
-		if (carLicense.length() == 7) {
-			carLicense = StrUtil.hide(carLicense, 3, 6);
-		} else if (carLicense.length() == 8) {
-			// 新能源车牌
-			carLicense = StrUtil.hide(carLicense, 3, 7);
-		}
-		return carLicense;
+	public static String carLicense(final CharSequence carLicense) {
+		return MaskingManager.EMPTY.carLicense(carLicense);
 	}
 
 	/**
@@ -371,29 +212,8 @@ public class MaskingUtil {
 	 * @return 脱敏之后的银行卡号
 	 * @since 5.6.3
 	 */
-	public static String bankCard(String bankCardNo) {
-		if (StrUtil.isBlank(bankCardNo)) {
-			return bankCardNo;
-		}
-		bankCardNo = StrUtil.cleanBlank(bankCardNo);
-		if (bankCardNo.length() < 9) {
-			return bankCardNo;
-		}
-
-		final int length = bankCardNo.length();
-		final int endLength = length % 4 == 0 ? 4 : length % 4;
-		final int midLength = length - 4 - endLength;
-		final StringBuilder buf = new StringBuilder();
-
-		buf.append(bankCardNo, 0, 4);
-		for (int i = 0; i < midLength; ++i) {
-			if (i % 4 == 0) {
-				buf.append(CharUtil.SPACE);
-			}
-			buf.append('*');
-		}
-		buf.append(CharUtil.SPACE).append(bankCardNo, length - endLength, length);
-		return buf.toString();
+	public static String bankCard(final CharSequence bankCardNo) {
+		return MaskingManager.EMPTY.bankCard(bankCardNo);
 	}
 
 	/**
@@ -402,8 +222,8 @@ public class MaskingUtil {
 	 * @param ipv4 IPv4地址
 	 * @return 脱敏后的地址
 	 */
-	public static String ipv4(final String ipv4) {
-		return StrUtil.subBefore(ipv4, '.', false) + ".*.*.*";
+	public static String ipv4(final CharSequence ipv4) {
+		return MaskingManager.EMPTY.ipv4(ipv4);
 	}
 
 	/**
@@ -412,7 +232,7 @@ public class MaskingUtil {
 	 * @param ipv6 IPv6地址
 	 * @return 脱敏后的地址
 	 */
-	public static String ipv6(final String ipv6) {
-		return StrUtil.subBefore(ipv6, ':', false) + ":*:*:*:*:*:*:*";
+	public static String ipv6(final CharSequence ipv6) {
+		return MaskingManager.EMPTY.ipv6(ipv6);
 	}
 }
