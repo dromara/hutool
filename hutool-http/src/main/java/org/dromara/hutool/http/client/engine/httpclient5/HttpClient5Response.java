@@ -16,28 +16,27 @@
 
 package org.dromara.hutool.http.client.engine.httpclient5;
 
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
-import org.dromara.hutool.core.io.IORuntimeException;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.dromara.hutool.http.client.body.ResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * HttpClient响应包装<br>
@@ -52,18 +51,20 @@ public class HttpClient5Response extends SimpleWrapper<ClassicHttpResponse> impl
 	 * 请求时的默认编码
 	 */
 	private final Charset requestCharset;
+	private final ResponseBody body;
 
 	/**
 	 * 构造<br>
 	 * 通过传入一个请求时的编码，当无法获取响应内容的编码时，默认使用响应时的编码
 	 *
-	 * @param rawRes         {@link CloseableHttpResponse}
-	 * @param requestCharset 请求时的编码
+	 * @param rawRes  {@link CloseableHttpResponse}
+	 * @param message 请求消息
 	 */
-	public HttpClient5Response(final ClassicHttpResponse rawRes, final Charset requestCharset) {
+	public HttpClient5Response(final ClassicHttpResponse rawRes, final Request message) {
 		super(rawRes);
 		this.entity = rawRes.getEntity();
-		this.requestCharset = requestCharset;
+		this.requestCharset = message.charset();
+		this.body = message.method().isIgnoreBody() ? null : new ResponseBody(this, bodyStream());
 	}
 
 
@@ -110,6 +111,21 @@ public class HttpClient5Response extends SimpleWrapper<ClassicHttpResponse> impl
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	@Override
+	public HttpClient5Response sync() {
+		final ResponseBody body = this.body;
+		if(null != body){
+			body.sync();
+		}
+		IoUtil.closeQuietly(this.raw);
+		return this;
+	}
+
+	@Override
+	public ResponseBody body() {
+		return this.body;
 	}
 
 	@Override

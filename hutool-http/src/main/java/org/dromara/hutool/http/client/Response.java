@@ -82,13 +82,21 @@ public interface Response extends Closeable {
 	InputStream bodyStream();
 
 	/**
-	 * 获取响应体，包含服务端返回的内容和Content-Type信息
+	 * 同步<br>
+	 * 如果为异步状态，则暂时不读取服务器中响应的内容，而是持有Http链接的{@link InputStream}。<br>
+	 * 当调用此方法时，异步状态转为同步状态，此时从Http链接流中读取body内容并暂存在内容(内存)中。如果已经是同步状态，则不进行任何操作。
+	 *
+	 * @return this
+	 */
+	Response sync();
+
+	/**
+	 * 获取响应体，包含服务端返回的内容和Content-Type信息<br>
+	 * 如果为HEAD、CONNECT、TRACE等方法无响应体，则返回{@code null}
 	 *
 	 * @return {@link ResponseBody}
 	 */
-	default ResponseBody body() {
-		return new ResponseBody(this, bodyStream(), false, true);
-	}
+	ResponseBody body();
 
 	/**
 	 * 获取响应主体
@@ -112,7 +120,7 @@ public interface Response extends Closeable {
 	 */
 	default byte[] bodyBytes() {
 		try (final ResponseBody body = body()) {
-			return body.getBytes();
+			return null == body ? null : body.getBytes();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

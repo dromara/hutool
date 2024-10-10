@@ -71,7 +71,7 @@ public class OkHttpEngine extends AbstractClientEngine {
 			throw new IORuntimeException(e);
 		}
 
-		return new OkHttpResponse(response, message.charset());
+		return new OkHttpResponse(response, message);
 	}
 
 	@Override

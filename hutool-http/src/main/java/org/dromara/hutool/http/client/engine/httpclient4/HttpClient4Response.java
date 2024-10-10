@@ -24,13 +24,15 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
+import org.dromara.hutool.http.client.body.ResponseBody;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -52,18 +54,20 @@ public class HttpClient4Response extends SimpleWrapper<HttpResponse> implements 
 	 * 请求时的默认编码
 	 */
 	private final Charset requestCharset;
+	private final ResponseBody body;
 
 	/**
 	 * 构造<br>
 	 * 通过传入一个请求时的编码，当无法获取响应内容的编码时，默认使用响应时的编码
 	 *
-	 * @param rawRes         {@link HttpResponse}
-	 * @param requestCharset 请求时的编码
+	 * @param rawRes  {@link HttpResponse}
+	 * @param message 请求消息
 	 */
-	public HttpClient4Response(final HttpResponse rawRes, final Charset requestCharset) {
+	public HttpClient4Response(final HttpResponse rawRes, final Request message) {
 		super(rawRes);
 		this.entity = rawRes.getEntity();
-		this.requestCharset = requestCharset;
+		this.requestCharset = message.charset();
+		this.body = message.method().isIgnoreBody() ? null : new ResponseBody(this, bodyStream());
 	}
 
 
@@ -113,6 +117,21 @@ public class HttpClient4Response extends SimpleWrapper<HttpResponse> implements 
 	}
 
 	@Override
+	public HttpClient4Response sync() {
+		final ResponseBody body = this.body;
+		if(null != body){
+			body.sync();
+		}
+		IoUtil.closeIfPossible(this.raw);
+		return this;
+	}
+
+	@Override
+	public ResponseBody body() {
+		return this.body;
+	}
+
+	@Override
 	public String bodyStr() throws HttpException {
 		try {
 			return EntityUtils.toString(this.entity, charset());
@@ -124,10 +143,8 @@ public class HttpClient4Response extends SimpleWrapper<HttpResponse> implements 
 	}
 
 	@Override
-	public void close() throws IOException {
-		if(this.raw instanceof Closeable){
-			((Closeable) this.raw).close();
-		}
+	public void close() {
+		IoUtil.closeIfPossible(this.raw);
 	}
 
 	@Override

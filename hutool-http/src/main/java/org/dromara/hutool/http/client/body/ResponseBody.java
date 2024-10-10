@@ -45,6 +45,16 @@ public class ResponseBody implements HttpBody, Closeable {
 	private final SyncInputStream bodyStream;
 
 	/**
+	 * 构造，不读取响应体，忽略响应体EOF错误
+	 *
+	 * @param response 响应体
+	 * @param in       HTTP主体响应流
+	 */
+	public ResponseBody(final Response response, final InputStream in) {
+		this(response, in, true, true);
+	}
+
+	/**
 	 * 构造
 	 *
 	 * @param response         响应体

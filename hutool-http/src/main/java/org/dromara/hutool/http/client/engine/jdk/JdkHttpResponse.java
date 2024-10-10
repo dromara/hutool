@@ -21,6 +21,7 @@ import org.dromara.hutool.core.io.stream.EmptyInputStream;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.ResponseBody;
 import org.dromara.hutool.http.meta.HeaderName;
@@ -43,6 +44,10 @@ import java.util.Map;
 public class JdkHttpResponse implements Response, Closeable {
 
 	/**
+	 * 持有连接对象
+	 */
+	protected JdkHttpConnection httpConnection;
+	/**
 	 * 请求时的默认编码
 	 */
 	private final Charset requestCharset;
@@ -51,25 +56,13 @@ public class JdkHttpResponse implements Response, Closeable {
 	 */
 	private final JdkCookieManager cookieManager;
 	/**
-	 * 响应内容体，{@code null} 表示无内容
-	 */
-	private ResponseBody body;
-	/**
 	 * 响应头
 	 */
 	private Map<String, List<String>> headers;
-
 	/**
-	 * 是否忽略响应读取时可能的EOF异常。<br>
-	 * 在Http协议中，对于Transfer-Encoding: Chunked在正常情况下末尾会写入一个Length为0的的chunk标识完整结束。<br>
-	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
+	 * 响应内容体，{@code null} 表示无内容
 	 */
-	private final boolean ignoreEOFError;
-
-	/**
-	 * 持有连接对象
-	 */
-	protected JdkHttpConnection httpConnection;
+	private ResponseBody body;
 	/**
 	 * 响应状态码
 	 */
@@ -80,22 +73,15 @@ public class JdkHttpResponse implements Response, Closeable {
 	 *
 	 * @param httpConnection {@link JdkHttpConnection}
 	 * @param cookieManager  Cookie管理器
-	 * @param ignoreEOFError 是否忽略响应读取时可能的EOF异常
-	 * @param requestCharset 编码，从请求编码中获取默认编码
-	 * @param isAsync        是否异步
-	 * @param isIgnoreBody   是否忽略读取响应体
+	 * @param message        请求消息
 	 */
 	protected JdkHttpResponse(final JdkHttpConnection httpConnection,
 							  final JdkCookieManager cookieManager,
-							  final boolean ignoreEOFError,
-							  final Charset requestCharset,
-							  final boolean isAsync,
-							  final boolean isIgnoreBody) {
+							  final Request message) {
 		this.httpConnection = httpConnection;
 		this.cookieManager = cookieManager;
-		this.ignoreEOFError = ignoreEOFError;
-		this.requestCharset = requestCharset;
-		init(isAsync, isIgnoreBody);
+		this.requestCharset = message.charset();
+		init(message.method().isIgnoreBody());
 	}
 
 	/**
@@ -128,18 +114,13 @@ public class JdkHttpResponse implements Response, Closeable {
 		return ObjUtil.defaultIfNull(Response.super.charset(), requestCharset);
 	}
 
-	/**
-	 * 同步<br>
-	 * 如果为异步状态，则暂时不读取服务器中响应的内容，而是持有Http链接的{@link InputStream}。<br>
-	 * 当调用此方法时，异步状态转为同步状态，此时从Http链接流中读取body内容并暂存在内容中。如果已经是同步状态，则不进行任何操作。
-	 *
-	 * @return this
-	 */
+	@Override
 	public JdkHttpResponse sync() {
 		if (null != this.body) {
 			this.body.sync();
 		}
-		close();
+		// 关闭连接
+		this.httpConnection.closeQuietly();
 		return this;
 	}
 
@@ -250,9 +231,10 @@ public class JdkHttpResponse implements Response, Closeable {
 	 * 3、持有Http流，并不关闭流
 	 * </pre>
 	 *
+	 * @param isIgnoreBody 是否忽略消息体
 	 * @throws HttpException IO异常
 	 */
-	private void init(final boolean isAsync, final boolean isIgnoreBody) throws HttpException {
+	private void init(final boolean isIgnoreBody) throws HttpException {
 		// 获取响应状态码
 		try {
 			this.status = httpConnection.getCode();
@@ -272,13 +254,13 @@ public class JdkHttpResponse implements Response, Closeable {
 		}
 
 		// 存储服务端设置的Cookie信息
-		if(null != this.cookieManager){
+		if (null != this.cookieManager) {
 			this.cookieManager.saveFromResponse(this.httpConnection, this.headers);
 		}
 
 		// 获取响应内容流
 		if (!isIgnoreBody) {
-			this.body = new ResponseBody(this, new JdkHttpInputStream(this), isAsync, this.ignoreEOFError);
+			this.body = new ResponseBody(this, new JdkHttpInputStream(this));
 		}
 	}
 	// ---------------------------------------------------------------- Private method end
