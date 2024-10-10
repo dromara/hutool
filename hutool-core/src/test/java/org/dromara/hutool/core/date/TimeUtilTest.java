@@ -75,13 +75,13 @@ public class TimeUtilTest {
 
 	@Test
 	public void parseTest2() {
-		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23", DatePattern.NORM_DATE_PATTERN);
+		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23", DateFormatPool.NORM_DATE_PATTERN);
 		assertEquals("2020-01-23T00:00", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest3() {
-		final LocalDateTime localDateTime = TimeUtil.parse("12:23:56", DatePattern.NORM_TIME_PATTERN);
+		final LocalDateTime localDateTime = TimeUtil.parse("12:23:56", DateFormatPool.NORM_TIME_PATTERN);
 		assertEquals("12:23:56", Objects.requireNonNull(localDateTime).toLocalTime().toString());
 	}
 
@@ -127,20 +127,20 @@ public class TimeUtilTest {
 	@Test
 	public void formatTest() {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
-		String format = TimeUtil.format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);
+		String format = TimeUtil.format(localDateTime, DateFormatPool.NORM_DATETIME_PATTERN);
 		assertEquals("2020-01-23 12:23:56", format);
 
 		format = TimeUtil.formatNormal(localDateTime);
 		assertEquals("2020-01-23 12:23:56", format);
 
-		format = TimeUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN);
+		format = TimeUtil.format(localDateTime, DateFormatPool.NORM_DATE_PATTERN);
 		assertEquals("2020-01-23", format);
 	}
 
 	@Test
 	public void formatLocalDateTest() {
 		final LocalDate date = LocalDate.parse("2020-01-23");
-		String format = TimeUtil.format(date, DatePattern.NORM_DATE_PATTERN);
+		String format = TimeUtil.format(date, DateFormatPool.NORM_DATE_PATTERN);
 		assertEquals("2020-01-23", format);
 
 		format = TimeUtil.formatNormal(date);
@@ -354,7 +354,7 @@ public class TimeUtilTest {
 	public void formatDateFunctionTest() {
 		final List<String> dateStrList = Stream.of("2023-03-01", "2023-03-02")
 				.map(LocalDate::parse)
-				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
+				.map(TimeUtil.formatFunc(DateFormatPool.CHINESE_DATE_FORMATTER))
 				.collect(Collectors.toList());
 		assertEquals("2023年03月01日", dateStrList.get(0));
 		assertEquals("2023年03月02日", dateStrList.get(1));
@@ -364,7 +364,7 @@ public class TimeUtilTest {
 	public void formatTimeFunctionTest() {
 		final List<String> dateStrList = Stream.of("2023-03-01T12:23:56", "2023-03-02T12:23:56")
 				.map(LocalDateTime::parse)
-				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
+				.map(TimeUtil.formatFunc(DateFormatPool.CHINESE_DATE_FORMATTER))
 				.collect(Collectors.toList());
 		assertEquals("2023年03月01日", dateStrList.get(0));
 		assertEquals("2023年03月02日", dateStrList.get(1));

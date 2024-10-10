@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.text;
 
-import org.dromara.hutool.core.date.DatePattern;
+import org.dromara.hutool.core.date.DateFormatPool;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
@@ -203,12 +203,12 @@ public class CharSequenceUtilTest {
 	public void defaultIfEmptyTest() {
 		final String emptyValue = "";
 		final Instant result1 = CharSequenceUtil.defaultIfEmpty(emptyValue,
-				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+				(v) -> DateUtil.parse(v, DateFormatPool.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
 		Assertions.assertNotNull(result1);
 
 		final String dateStr = "2020-10-23 15:12:30";
 		final Instant result2 = CharSequenceUtil.defaultIfEmpty(dateStr,
-				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+				(v) -> DateUtil.parse(v, DateFormatPool.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
 		Assertions.assertNotNull(result2);
 	}
 
@@ -216,12 +216,12 @@ public class CharSequenceUtilTest {
 	public void defaultIfBlankTest() {
 		final String emptyValue = " ";
 		final Instant result1 = CharSequenceUtil.defaultIfBlank(emptyValue,
-				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+				(v) -> DateUtil.parse(v, DateFormatPool.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
 		Assertions.assertNotNull(result1);
 
 		final String dateStr = "2020-10-23 15:12:30";
 		final Instant result2 = CharSequenceUtil.defaultIfBlank(dateStr,
-				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+				(v) -> DateUtil.parse(v, DateFormatPool.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
 		Assertions.assertNotNull(result2);
 	}
 

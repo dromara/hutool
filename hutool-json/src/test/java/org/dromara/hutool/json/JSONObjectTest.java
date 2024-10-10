@@ -20,7 +20,7 @@ import lombok.Data;
 import org.dromara.hutool.core.annotation.Alias;
 import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.date.DatePattern;
+import org.dromara.hutool.core.date.DateFormatPool;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
@@ -74,7 +74,7 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toStringTest3() {
-		final JSONObject json = JSONUtil.ofObj(JSONConfig.of().setDateFormat(DatePattern.NORM_DATE_PATTERN))//
+		final JSONObject json = JSONUtil.ofObj(JSONConfig.of().setDateFormat(DateFormatPool.NORM_DATE_PATTERN))//
 						.putValue("dateTime", DateUtil.parse("2019-05-02 22:12:01"));
 		assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
 	}
@@ -85,7 +85,7 @@ public class JSONObjectTest {
 		assert json != null;
 		assertEquals("{\"date\":1557314301000}", json.toString());
 
-		json = JSONUtil.ofObj(JSONConfig.of().setDateFormat(DatePattern.NORM_DATE_PATTERN))
+		json = JSONUtil.ofObj(JSONConfig.of().setDateFormat(DateFormatPool.NORM_DATE_PATTERN))
 			.putValue("date", DateUtil.parse("2019-05-08 19:18:21"));
 		assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
 	}

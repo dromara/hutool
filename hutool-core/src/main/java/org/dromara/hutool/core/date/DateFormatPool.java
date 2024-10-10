@@ -81,7 +81,7 @@ import java.util.TimeZone;
  *
  * @author Looly
  */
-public class DatePattern {
+public class DateFormatPool {
 
 	// region Normal
 	//================================================== Normal ==================================================
@@ -275,7 +275,7 @@ public class DatePattern {
 	 * jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
 	 */
 	public static final DateTimeFormatter PURE_DATETIME_MS_FORMATTER = new DateTimeFormatterBuilder()
-			.appendPattern(DatePattern.PURE_DATETIME_PATTERN)
+			.appendPattern(DateFormatPool.PURE_DATETIME_PATTERN)
 			.appendValue(ChronoField.MILLI_OF_SECOND, 3)
 			.toFormatter();
 	// endregion

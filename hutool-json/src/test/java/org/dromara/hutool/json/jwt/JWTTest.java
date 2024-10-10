@@ -17,7 +17,7 @@
 package org.dromara.hutool.json.jwt;
 
 import lombok.Data;
-import org.dromara.hutool.core.date.DatePattern;
+import org.dromara.hutool.core.date.DateFormatPool;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.util.ByteUtil;
@@ -179,7 +179,7 @@ public class JWTTest {
 
 		// 签发时间早于被检查的时间
 		final Date date = JWT.of(token).getPayload().getClaimsJson().getDate(JWTPayload.ISSUED_AT);
-		Assertions.assertEquals("2022-02-02", DateUtil.format(date, DatePattern.NORM_DATE_PATTERN));
+		Assertions.assertEquals("2022-02-02", DateUtil.format(date, DateFormatPool.NORM_DATE_PATTERN));
 	}
 
 	@Test

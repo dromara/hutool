@@ -17,7 +17,7 @@
 package org.dromara.hutool.core.date.format;
 
 import org.dromara.hutool.core.date.DateException;
-import org.dromara.hutool.core.date.DatePattern;
+import org.dromara.hutool.core.date.DateFormatPool;
 import org.dromara.hutool.core.date.format.parser.FastDateParser;
 import org.dromara.hutool.core.date.format.parser.PositionDateParser;
 
@@ -47,7 +47,6 @@ import java.util.TimeZone;
  * </p>
  * Thanks to Apache Commons Lang 3.5
  *
- * @since 2.16.2
  */
 public class FastDateFormat extends Format implements PositionDateParser, DatePrinter {
 	private static final long serialVersionUID = 8097890768636183236L;
@@ -413,7 +412,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 
 	/**
 	 * 便捷获取 DateTimeFormatter
-	 * 由于 {@link DatePattern} 很大一部分的格式没有提供 {@link DateTimeFormatter},因此这里提供快捷获取方式
+	 * 由于 {@link DateFormatPool} 很大一部分的格式没有提供 {@link DateTimeFormatter},因此这里提供快捷获取方式
 	 *
 	 * @return DateTimeFormatter
 	 * @author dazer neusoft

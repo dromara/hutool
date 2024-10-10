@@ -26,14 +26,14 @@ public class TemporalAccessorUtilTest {
 
 	@Test
 	public void formatLocalDateTest(){
-		final String format = TemporalAccessorUtil.format(LocalDate.of(2020, 12, 7), DatePattern.NORM_DATETIME_PATTERN);
+		final String format = TemporalAccessorUtil.format(LocalDate.of(2020, 12, 7), DateFormatPool.NORM_DATETIME_PATTERN);
 		Assertions.assertEquals("2020-12-07 00:00:00", format);
 	}
 
 	@Test
 	public void formatLocalTimeTest(){
-		final String today = TemporalAccessorUtil.format(LocalDate.now(), DatePattern.NORM_DATE_PATTERN);
-		final String format = TemporalAccessorUtil.format(LocalTime.MIN, DatePattern.NORM_DATETIME_PATTERN);
+		final String today = TemporalAccessorUtil.format(LocalDate.now(), DateFormatPool.NORM_DATE_PATTERN);
+		final String format = TemporalAccessorUtil.format(LocalTime.MIN, DateFormatPool.NORM_DATETIME_PATTERN);
 		Assertions.assertEquals(today + " 00:00:00", format);
 	}
 
@@ -54,9 +54,9 @@ public class TemporalAccessorUtilTest {
 		final String startTimeStr = "2022-04-19 00:00:00";
 		final String endTimeStr = "2022-04-19 23:59:59";
 		final boolean between = TimeUtil.isIn(
-				TimeUtil.parse(sourceStr, DatePattern.NORM_DATETIME_FORMATTER),
-				TimeUtil.parse(startTimeStr, DatePattern.NORM_DATETIME_FORMATTER),
-				TimeUtil.parse(endTimeStr, DatePattern.NORM_DATETIME_FORMATTER));
+				TimeUtil.parse(sourceStr, DateFormatPool.NORM_DATETIME_FORMATTER),
+				TimeUtil.parse(startTimeStr, DateFormatPool.NORM_DATETIME_FORMATTER),
+				TimeUtil.parse(endTimeStr, DateFormatPool.NORM_DATETIME_FORMATTER));
 		Assertions.assertTrue(between);
 	}
 }

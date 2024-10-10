@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  *
  * @author Looly
  * @see TimeUtil java8日志工具类
- * @see DatePattern 日期常用格式工具类
+ * @see DateFormatPool 日期常用格式工具类
  */
 public class DateUtil {
 
@@ -526,7 +526,7 @@ public class DateUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param localDateTime 被格式化的日期
-	 * @param format        日期格式，常用格式见： {@link DatePattern}
+	 * @param format        日期格式，常用格式见： {@link DateFormatPool}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(final LocalDateTime localDateTime, final String format) {
@@ -537,7 +537,7 @@ public class DateUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format 日期格式，常用格式见： {@link DatePattern} {@link DatePattern#NORM_DATETIME_PATTERN}
+	 * @param format 日期格式，常用格式见： {@link DateFormatPool} {@link DateFormatPool#NORM_DATETIME_PATTERN}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(final Date date, final String format) {
@@ -561,7 +561,7 @@ public class DateUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format {@link DatePrinter} 或 {@link FastDateFormat} {@link DatePattern#NORM_DATETIME_FORMAT}
+	 * @param format {@link DatePrinter} 或 {@link FastDateFormat} {@link DateFormatPool#NORM_DATETIME_FORMAT}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(final Date date, final DatePrinter format) {
@@ -589,7 +589,7 @@ public class DateUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format {@link SimpleDateFormat} {@link DatePattern#NORM_DATETIME_FORMATTER}
+	 * @param format {@link SimpleDateFormat} {@link DateFormatPool#NORM_DATETIME_FORMATTER}
 	 * @return 格式化后的字符串
 	 * @since 5.0.0
 	 */
@@ -613,7 +613,7 @@ public class DateUtil {
 		if (null == date) {
 			return null;
 		}
-		return DatePattern.NORM_DATETIME_FORMAT.format(date);
+		return DateFormatPool.NORM_DATETIME_FORMAT.format(date);
 	}
 
 	/**
@@ -627,7 +627,7 @@ public class DateUtil {
 		if (null == date) {
 			return null;
 		}
-		return DatePattern.NORM_DATE_FORMAT.format(date);
+		return DateFormatPool.NORM_DATE_FORMAT.format(date);
 	}
 
 	/**
@@ -642,7 +642,7 @@ public class DateUtil {
 		if (null == date) {
 			return null;
 		}
-		return DatePattern.NORM_TIME_FORMAT.format(date);
+		return DateFormatPool.NORM_TIME_FORMAT.format(date);
 	}
 
 	/**
@@ -656,7 +656,7 @@ public class DateUtil {
 		if (null == date) {
 			return null;
 		}
-		return DatePattern.HTTP_DATETIME_FORMAT_GMT.format(date);
+		return DateFormatPool.HTTP_DATETIME_FORMAT_GMT.format(date);
 	}
 
 	/**
@@ -674,7 +674,7 @@ public class DateUtil {
 		}
 
 		if (!isUppercase) {
-			return (withTime ? DatePattern.CHINESE_DATE_TIME_FORMAT : DatePattern.CHINESE_DATE_FORMAT).format(date);
+			return (withTime ? DateFormatPool.CHINESE_DATE_TIME_FORMAT : DateFormatPool.CHINESE_DATE_FORMAT).format(date);
 		}
 
 		return CalendarUtil.formatChineseDate(CalendarUtil.calendar(date), withTime);
@@ -1814,7 +1814,7 @@ public class DateUtil {
 	 *
 	 * @param date1  日期1
 	 * @param date2  日期2
-	 * @param format 日期格式，常用格式见： {@link DatePattern}; 允许为空； date1 date2; eg: yyyy-MM-dd
+	 * @param format 日期格式，常用格式见： {@link DateFormatPool}; 允许为空； date1 date2; eg: yyyy-MM-dd
 	 * @return 比较结果，如果date1 &lt; date2，返回数小于0，date1==date2返回0，date1 &gt; date2 大于0
 	 * @author dazer
 	 * @since 5.6.4

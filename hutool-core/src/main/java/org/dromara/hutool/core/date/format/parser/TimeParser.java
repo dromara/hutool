@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.date.format.parser;
 
-import org.dromara.hutool.core.date.DatePattern;
+import org.dromara.hutool.core.date.DateFormatPool;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.regex.PatternPool;
@@ -57,10 +57,10 @@ public class TimeParser implements PredicateDateParser, Serializable {
 		source = StrUtil.format("{} {}", DateUtil.formatToday(), source);
 		if (1 == StrUtil.count(source, ':')) {
 			// 时间格式为 HH:mm
-			return new DateTime(source, DatePattern.NORM_DATETIME_MINUTE_PATTERN);
+			return new DateTime(source, DateFormatPool.NORM_DATETIME_MINUTE_PATTERN);
 		} else {
 			// 时间格式为 HH:mm:ss
-			return new DateTime(source, DatePattern.NORM_DATETIME_FORMAT);
+			return new DateTime(source, DateFormatPool.NORM_DATETIME_FORMAT);
 		}
 	}
 }

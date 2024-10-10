@@ -127,7 +127,7 @@ public class DateTime extends Date {
 	 * @param dateStr Date字符串
 	 * @param format  格式
 	 * @return this
-	 * @see DatePattern
+	 * @see DateFormatPool
 	 */
 	public static DateTime of(final String dateStr, final String format) {
 		return new DateTime(dateStr, format);
@@ -294,7 +294,7 @@ public class DateTime extends Date {
 	 *
 	 * @param dateStr Date字符串
 	 * @param format  格式
-	 * @see DatePattern
+	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final String format) {
 		this(GlobalCustomFormat.isCustomFormat(format)
@@ -307,7 +307,7 @@ public class DateTime extends Date {
 	 *
 	 * @param dateStr    Date字符串
 	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
-	 * @see DatePattern
+	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final DateFormat dateFormat) {
 		this(parse(dateStr, dateFormat), dateFormat.getTimeZone());
@@ -329,7 +329,7 @@ public class DateTime extends Date {
 	 *
 	 * @param dateStr    Date字符串
 	 * @param dateParser 格式化器 {@link DateParser}，可以使用 {@link FastDateFormat}
-	 * @see DatePattern
+	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final PositionDateParser dateParser) {
 		this(dateStr, dateParser, SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, true));
@@ -341,7 +341,7 @@ public class DateTime extends Date {
 	 * @param dateStr    Date字符串
 	 * @param dateParser 格式化器 {@link DateParser}，可以使用 {@link FastDateFormat}
 	 * @param lenient    是否宽容模式
-	 * @see DatePattern
+	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final PositionDateParser dateParser, final boolean lenient) {
 		this(parse(dateStr, dateParser, lenient));
@@ -1004,9 +1004,9 @@ public class DateTime extends Date {
 	 */
 	public String toString(final TimeZone timeZone) {
 		if (null != timeZone) {
-			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_DATETIME_PATTERN, null, timeZone));
+			return toString(DateUtil.newSimpleFormat(DateFormatPool.NORM_DATETIME_PATTERN, null, timeZone));
 		}
-		return toString(DatePattern.NORM_DATETIME_FORMAT);
+		return toString(DateFormatPool.NORM_DATETIME_FORMAT);
 	}
 
 	/**
@@ -1017,9 +1017,9 @@ public class DateTime extends Date {
 	 */
 	public String toDateStr() {
 		if (null != this.timeZone) {
-			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_DATE_PATTERN, null, timeZone));
+			return toString(DateUtil.newSimpleFormat(DateFormatPool.NORM_DATE_PATTERN, null, timeZone));
 		}
-		return toString(DatePattern.NORM_DATE_FORMAT);
+		return toString(DateFormatPool.NORM_DATE_FORMAT);
 	}
 
 	/**
@@ -1030,15 +1030,15 @@ public class DateTime extends Date {
 	 */
 	public String toTimeStr() {
 		if (null != this.timeZone) {
-			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_TIME_PATTERN, null, timeZone));
+			return toString(DateUtil.newSimpleFormat(DateFormatPool.NORM_TIME_PATTERN, null, timeZone));
 		}
-		return toString(DatePattern.NORM_TIME_FORMAT);
+		return toString(DateFormatPool.NORM_TIME_FORMAT);
 	}
 
 	/**
 	 * 转为字符串
 	 *
-	 * @param format 日期格式，常用格式见： {@link DatePattern}
+	 * @param format 日期格式，常用格式见： {@link DateFormatPool}
 	 * @return String
 	 */
 	public String toString(final String format) {
@@ -1072,7 +1072,7 @@ public class DateTime extends Date {
 	 * @return 输出精确到毫秒的标准日期形式
 	 */
 	public String toMsStr() {
-		return toString(DatePattern.NORM_DATETIME_MS_FORMAT);
+		return toString(DateFormatPool.NORM_DATETIME_MS_FORMAT);
 	}
 	// -------------------------------------------------------------------- toString end
 

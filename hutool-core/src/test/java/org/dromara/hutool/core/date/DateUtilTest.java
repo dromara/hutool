@@ -142,10 +142,10 @@ public class DateUtilTest {
 
 
 		DateTime dateTime = DateUtil.ceiling(date2, DateField.MINUTE, false);
-		Assertions.assertEquals("2020-02-29 12:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-29 12:59:59.999", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 
 		dateTime = DateUtil.ceiling(date2, DateField.MINUTE, true);
-		Assertions.assertEquals("2020-02-29 12:59:59.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-29 12:59:59.000", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 	}
 
 	@Test
@@ -155,10 +155,10 @@ public class DateUtilTest {
 
 
 		DateTime dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH, false);
-		Assertions.assertEquals("2020-02-29 23:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-29 23:59:59.999", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 
 		dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH, true);
-		Assertions.assertEquals("2020-02-29 23:59:59.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-29 23:59:59.000", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 	}
 
 	@Test
@@ -393,13 +393,13 @@ public class DateUtilTest {
 	public void parseTest3() {
 		final String dateStr = "2018-10-10 12:11:11";
 		final Date date = DateUtil.parse(dateStr);
-		final String format = DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN);
+		final String format = DateUtil.format(date, DateFormatPool.NORM_DATETIME_PATTERN);
 		Assertions.assertEquals(dateStr, format);
 	}
 
 	@Test
 	public void parseTest4() {
-		final String ymd = DateUtil.parse("2019-3-21 12:20:15", "yyyy-MM-dd").toString(DatePattern.PURE_DATE_PATTERN);
+		final String ymd = DateUtil.parse("2019-3-21 12:20:15", "yyyy-MM-dd").toString(DateFormatPool.PURE_DATE_PATTERN);
 		Assertions.assertEquals("20190321", ymd);
 	}
 
@@ -407,33 +407,33 @@ public class DateUtilTest {
 	public void parseTest5() {
 		// 测试时间解析
 		//noinspection ConstantConditions
-		String time = DateUtil.parse("22:12:12").toString(DatePattern.NORM_TIME_FORMAT);
+		String time = DateUtil.parse("22:12:12").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("22:12:12", time);
 		//noinspection ConstantConditions
-		time = DateUtil.parse("2:12:12").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("2:12:12").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("02:12:12", time);
 		//noinspection ConstantConditions
-		time = DateUtil.parse("2:2:12").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("2:2:12").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("02:02:12", time);
 		//noinspection ConstantConditions
-		time = DateUtil.parse("2:2:1").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("2:2:1").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("02:02:01", time);
 		//noinspection ConstantConditions
-		time = DateUtil.parse("22:2:1").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("22:2:1").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("22:02:01", time);
 		//noinspection ConstantConditions
-		time = DateUtil.parse("2:22:1").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("2:22:1").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("02:22:01", time);
 
 		// 测试两位时间解析
 		//noinspection ConstantConditions
-		time = DateUtil.parse("2:22").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("2:22").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("02:22:00", time);
 		//noinspection ConstantConditions
-		time = DateUtil.parse("12:22").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("12:22").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("12:22:00", time);
 		//noinspection ConstantConditions
-		time = DateUtil.parse("12:2").toString(DatePattern.NORM_TIME_FORMAT);
+		time = DateUtil.parse("12:2").toString(DateFormatPool.NORM_TIME_FORMAT);
 		Assertions.assertEquals("12:02:00", time);
 
 	}
@@ -475,22 +475,22 @@ public class DateUtilTest {
 		String str = "2020-02-06 01:58:00.000020";
 		DateTime dateTime = DateUtil.parse(str);
 		Assertions.assertNotNull(dateTime);
-		Assertions.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 
 		str = "2020-02-06 01:58:00.00002";
 		dateTime = DateUtil.parse(str);
 		Assertions.assertNotNull(dateTime);
-		Assertions.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 
 		str = "2020-02-06 01:58:00.111000";
 		dateTime = DateUtil.parse(str);
 		Assertions.assertNotNull(dateTime);
-		Assertions.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 
 		str = "2020-02-06 01:58:00.111";
 		dateTime = DateUtil.parse(str);
 		Assertions.assertNotNull(dateTime);
-		Assertions.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+		Assertions.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DateFormatPool.NORM_DATETIME_MS_PATTERN));
 	}
 
 	/**
@@ -532,7 +532,7 @@ public class DateUtilTest {
 	public void parseDateTest() {
 		final String dateStr = "2018-4-10";
 		final Date date = DateUtil.parse(dateStr);
-		final String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
+		final String format = DateUtil.format(date, DateFormatPool.NORM_DATE_PATTERN);
 		Assertions.assertEquals("2018-04-10", format);
 	}
 
@@ -645,7 +645,7 @@ public class DateUtilTest {
 
 		dateStr1 = "2018-09-13T13:34:36.999+0800";
 		dt = DateUtil.parse(dateStr1);
-		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_MS_PATTERN);
+		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateFormatPool.NORM_DATETIME_MS_PATTERN);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 		dateStr = Objects.requireNonNull(dt).toString(simpleDateFormat);
 		Assertions.assertEquals("2018-09-13 13:34:36.999", dateStr);
@@ -705,7 +705,7 @@ public class DateUtilTest {
 	public void parseCSTTest() {
 		final String dateStr = "Wed Sep 16 11:26:23 +0800 2009";
 
-		final SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		final SimpleDateFormat sdf = new SimpleDateFormat(DateFormatPool.JDK_DATETIME_PATTERN, Locale.US);
 		// Asia/Shanghai是以地区命名的地区标准时，在中国叫CST，因此如果解析CST时不使用"Asia/Shanghai"而使用"GMT+08:00"，会导致相差一个小时
 		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
@@ -719,11 +719,11 @@ public class DateUtilTest {
 	public void parseCSTTest2() {
 		final String dateStr = "Wed Sep 16 11:26:23 CST 2009";
 
-		final SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		final SimpleDateFormat sdf = new SimpleDateFormat(DateFormatPool.JDK_DATETIME_PATTERN, Locale.US);
 		sdf.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
-		final FastDateFormat fdf = FastDateFormat.getInstance(DatePattern.JDK_DATETIME_PATTERN, TimeZone.getTimeZone("America/Chicago"), Locale.US);
+		final FastDateFormat fdf = FastDateFormat.getInstance(DateFormatPool.JDK_DATETIME_PATTERN, TimeZone.getTimeZone("America/Chicago"), Locale.US);
 		final DateTime parse2 = DateUtil.parse(dateStr, fdf);
 
 		Assertions.assertEquals(parse, parse2);
@@ -788,14 +788,14 @@ public class DateUtilTest {
 		final Date date2 = DateUtil.parse("2021-04-13 23:59:10");
 
 		Assertions.assertEquals(1, DateUtil.compare(date1, date2));
-		Assertions.assertEquals(1, DateUtil.compare(date1, date2, DatePattern.NORM_DATETIME_PATTERN));
-		Assertions.assertEquals(0, DateUtil.compare(date1, date2, DatePattern.NORM_DATE_PATTERN));
-		Assertions.assertEquals(0, DateUtil.compare(date1, date2, DatePattern.NORM_DATETIME_MINUTE_PATTERN));
+		Assertions.assertEquals(1, DateUtil.compare(date1, date2, DateFormatPool.NORM_DATETIME_PATTERN));
+		Assertions.assertEquals(0, DateUtil.compare(date1, date2, DateFormatPool.NORM_DATE_PATTERN));
+		Assertions.assertEquals(0, DateUtil.compare(date1, date2, DateFormatPool.NORM_DATETIME_MINUTE_PATTERN));
 
 
 		final Date date11 = DateUtil.parse("2021-04-13 23:59:59.999");
 		final Date date22 = DateUtil.parse("2021-04-11 23:10:10");
-		Assertions.assertEquals(0, DateUtil.compare(date11, date22, DatePattern.NORM_MONTH_PATTERN));
+		Assertions.assertEquals(0, DateUtil.compare(date11, date22, DateFormatPool.NORM_MONTH_PATTERN));
 	}
 
 	@Test
@@ -830,7 +830,7 @@ public class DateUtilTest {
 		final LocalDate localDate = localDateTime.toLocalDate();
 		final DateTime date2 = DateUtil.date(localDate);
 		Assertions.assertEquals("2017-05-06",
-				DateUtil.format(date2, DatePattern.NORM_DATE_PATTERN));
+				DateUtil.format(date2, DateFormatPool.NORM_DATE_PATTERN));
 	}
 
 	@Test
@@ -890,8 +890,8 @@ public class DateUtilTest {
 		Assertions.assertEquals(strDate, strDate1);
 
 		final String strDate2 = "2019-12-01 17:02:30.111";
-		ldt = TimeUtil.parse(strDate2, DatePattern.NORM_DATETIME_MS_PATTERN);
-		strDate1 = DateUtil.format(ldt, DatePattern.NORM_DATETIME_PATTERN);
+		ldt = TimeUtil.parse(strDate2, DateFormatPool.NORM_DATETIME_MS_PATTERN);
+		strDate1 = DateUtil.format(ldt, DateFormatPool.NORM_DATETIME_PATTERN);
 		Assertions.assertEquals(strDate, strDate1);
 	}
 
@@ -900,7 +900,7 @@ public class DateUtilTest {
 		// 测试字符串与LocalDateTime的互相转换
 		final String strDate = "2019-12-01";
 		final LocalDateTime localDateTime = TimeUtil.parse(strDate, "yyyy-MM-dd");
-		Assertions.assertEquals(strDate, DateUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN));
+		Assertions.assertEquals(strDate, DateUtil.format(localDateTime, DateFormatPool.NORM_DATE_PATTERN));
 	}
 
 	@Test
@@ -975,7 +975,7 @@ public class DateUtilTest {
 		Assertions.assertThrows(DateException.class, ()->{
 			//https://github.com/dromara/hutool/issues/1332
 			// 在日期格式不匹配的时候，测试是否正常报错
-			DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
+			DateUtil.parse("2020-12-23", DateFormatPool.PURE_DATE_PATTERN);
 		});
 	}
 
@@ -985,14 +985,14 @@ public class DateUtilTest {
 		calendar.set(2021, Calendar.JULY, 14, 23, 59, 59);
 		final Date date = new DateTime(calendar);
 
-		Assertions.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_FORMATTER));
-		Assertions.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_FORMAT));
-		Assertions.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN));
+		Assertions.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DateFormatPool.NORM_DATETIME_FORMATTER));
+		Assertions.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DateFormatPool.NORM_DATETIME_FORMAT));
+		Assertions.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DateFormatPool.NORM_DATETIME_PATTERN));
 	}
 
 	@Test
 	public void formatNormDateTimeFormatterTest() {
-		String format = DateUtil.format(DateUtil.parse("2021-07-14 10:05:38"), DatePattern.NORM_DATETIME_FORMATTER);
+		String format = DateUtil.format(DateUtil.parse("2021-07-14 10:05:38"), DateFormatPool.NORM_DATETIME_FORMATTER);
 		Assertions.assertEquals("2021-07-14 10:05:38", format);
 
 		format = DateUtil.format(TimeUtil.parseByISO("2021-07-14T10:05:38"),
@@ -1024,7 +1024,7 @@ public class DateUtilTest {
 
 	@Test
 	public void parseByDateTimeFormatterTest() {
-		final DateTime parse = DateUtil.parse("2021-12-01", DatePattern.NORM_DATE_FORMATTER);
+		final DateTime parse = DateUtil.parse("2021-12-01", DateFormatPool.NORM_DATE_FORMATTER);
 		Assertions.assertEquals("2021-12-01 00:00:00", parse.toString());
 	}
 

@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.data;
 
-import org.dromara.hutool.core.date.DatePattern;
+import org.dromara.hutool.core.date.DateFormatPool;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -188,7 +188,7 @@ public class CIN {
 	 */
 	public DateTime getBirthDate() {
 		final String birth = getBirth();
-		return DateUtil.parse(birth, DatePattern.PURE_DATE_FORMAT);
+		return DateUtil.parse(birth, DateFormatPool.PURE_DATE_FORMAT);
 	}
 
 	/**

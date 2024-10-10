@@ -332,23 +332,23 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	/**
 	 * 单个日期字段的分析策略
 	 */
-	private static abstract class Strategy {
+	interface Strategy {
+		boolean parse(FastDateParser parser, Calendar calendar, CharSequence source, ParsePosition pos, int maxWidth);
+
 		/**
-		 * Is this field a number? The default implementation returns false.
+		 * 是否为数字，默认{@code false}
 		 *
-		 * @return true, if field is a number
+		 * @return {@code true}表示为数字
 		 */
-		boolean isNumber() {
+		default boolean isNumber() {
 			return false;
 		}
-
-		abstract boolean parse(FastDateParser parser, Calendar calendar, CharSequence source, ParsePosition pos, int maxWidth);
 	}
 
 	/**
 	 * A strategy to parse a single field from the parsing pattern
 	 */
-	private static abstract class PatternStrategy extends Strategy {
+	private static abstract class PatternStrategy implements Strategy {
 
 		private Pattern pattern;
 
@@ -361,7 +361,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		}
 
 		@Override
-		boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
+		public boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
 			final Matcher matcher = pattern.matcher(source.subSequence(pos.getIndex(), source.length()));
 			if (!matcher.lookingAt()) {
 				pos.setErrorIndex(pos.getIndex());
@@ -477,7 +477,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	/**
 	 * A strategy that copies the static or quoted field in the parsing pattern
 	 */
-	private static class CopyQuotedStrategy extends Strategy {
+	private static class CopyQuotedStrategy implements Strategy {
 
 		final private String formatField;
 
@@ -491,7 +491,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		}
 
 		@Override
-		boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
+		public boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
 			for (int idx = 0; idx < formatField.length(); ++idx) {
 				final int sIdx = idx + pos.getIndex();
 				if (sIdx == source.length()) {
@@ -545,7 +545,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	/**
 	 * A strategy that handles a number field in the parsing pattern
 	 */
-	private static class NumberStrategy extends Strategy {
+	private static class NumberStrategy implements Strategy {
 		private final int field;
 
 		/**
@@ -558,12 +558,12 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		}
 
 		@Override
-		boolean isNumber() {
+		public boolean isNumber() {
 			return true;
 		}
 
 		@Override
-		boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
+		public boolean parse(final FastDateParser parser, final Calendar calendar, final CharSequence source, final ParsePosition pos, final int maxWidth) {
 			int idx = pos.getIndex();
 			int last = source.length();
 

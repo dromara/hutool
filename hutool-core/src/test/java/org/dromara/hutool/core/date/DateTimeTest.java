@@ -31,7 +31,7 @@ public class DateTimeTest {
 
 	@Test
 	public void datetimeTest() {
-		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 
 		// 年
 		final int year = dateTime.year();
@@ -73,36 +73,36 @@ public class DateTimeTest {
 
 	@Test
 	public void quarterTest() {
-		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 		Quarter quarter = dateTime.quarterEnum();
 		Assertions.assertEquals(Quarter.Q1, quarter);
 
-		dateTime = new DateTime("2017-04-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		dateTime = new DateTime("2017-04-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 		quarter = dateTime.quarterEnum();
 		Assertions.assertEquals(Quarter.Q2, quarter);
 
-		dateTime = new DateTime("2017-07-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		dateTime = new DateTime("2017-07-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 		quarter = dateTime.quarterEnum();
 		Assertions.assertEquals(Quarter.Q3, quarter);
 
-		dateTime = new DateTime("2017-10-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		dateTime = new DateTime("2017-10-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 		quarter = dateTime.quarterEnum();
 		Assertions.assertEquals(Quarter.Q4, quarter);
 
 		// 精确到毫秒
-		final DateTime beginTime = new DateTime("2017-10-01 00:00:00.000", DatePattern.NORM_DATETIME_MS_FORMAT);
+		final DateTime beginTime = new DateTime("2017-10-01 00:00:00.000", DateFormatPool.NORM_DATETIME_MS_FORMAT);
 		dateTime = DateUtil.beginOfQuarter(dateTime);
 		Assertions.assertEquals(beginTime, dateTime);
 
 		// 精确到毫秒
-		final DateTime endTime = new DateTime("2017-12-31 23:59:59.999", DatePattern.NORM_DATETIME_MS_FORMAT);
+		final DateTime endTime = new DateTime("2017-12-31 23:59:59.999", DateFormatPool.NORM_DATETIME_MS_FORMAT);
 		dateTime = DateUtil.endOfQuarter(dateTime, false);
 		Assertions.assertEquals(endTime, dateTime);
 	}
 
 	@Test
 	public void mutableTest() {
-		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 
 		// 默认情况下DateTime为可变对象
 		DateTime offsite = dateTime.offset(DateField.YEAR, 0);
@@ -116,7 +116,7 @@ public class DateTimeTest {
 
 	@Test
 	public void toStringTest() {
-		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 		Assertions.assertEquals("2017-01-05 12:34:23", dateTime.toString());
 
 		final String dateStr = dateTime.toString("yyyy/MM/dd");
@@ -125,18 +125,18 @@ public class DateTimeTest {
 
 	@Test
 	public void toStringTest2() {
-		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 
-		String dateStr = dateTime.toString(DatePattern.ISO8601_WITH_ZONE_OFFSET_PATTERN);
+		String dateStr = dateTime.toString(DateFormatPool.ISO8601_WITH_ZONE_OFFSET_PATTERN);
 		Assertions.assertEquals("2017-01-05T12:34:23+0800", dateStr);
 
-		dateStr = dateTime.toString(DatePattern.ISO8601_WITH_XXX_OFFSET_PATTERN);
+		dateStr = dateTime.toString(DateFormatPool.ISO8601_WITH_XXX_OFFSET_PATTERN);
 		Assertions.assertEquals("2017-01-05T12:34:23+08:00", dateStr);
 	}
 
 	@Test
 	public void toStringWithTimeZoneTest() {
-		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DateFormatPool.NORM_DATETIME_FORMAT);
 
 		final String dateStr = dateTime.toString(TimeZone.getTimeZone("UTC"));
 		Assertions.assertEquals("2017-01-05 04:34:23", dateStr);
@@ -168,7 +168,7 @@ public class DateTimeTest {
 	public void ofTest(){
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
 			final String a = "2021-09-27 00:00:99";
-			new DateTime(a, DatePattern.NORM_DATETIME_FORMAT, false);
+			new DateTime(a, DateFormatPool.NORM_DATETIME_FORMAT, false);
 		});
 
 	}

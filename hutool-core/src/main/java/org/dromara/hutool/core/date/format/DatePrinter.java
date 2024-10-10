@@ -22,8 +22,8 @@ import java.util.Date;
 /**
  * 日期格式化输出接口<br>
  * Thanks to Apache Commons Lang 3.5
+ *
  * @author Looly
- * @since 2.16.2
  */
 public interface DatePrinter extends DateBasic {
 
@@ -61,8 +61,8 @@ public interface DatePrinter extends DateBasic {
 	 * </p>
 	 *
 	 * @param millis the millisecond value to format
-	 * @param buf the buffer to format into
-	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
+	 * @param buf    the buffer to format into
+	 * @param <B>    the Appendable class type, usually StringBuilder or StringBuffer.
 	 * @return the specified string buffer
 	 */
 	<B extends Appendable> B format(long millis, B buf);
@@ -73,8 +73,8 @@ public interface DatePrinter extends DateBasic {
 	 * </p>
 	 *
 	 * @param date the date to format
-	 * @param buf the buffer to format into
-	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
+	 * @param buf  the buffer to format into
+	 * @param <B>  the Appendable class type, usually StringBuilder or StringBuffer.
 	 * @return the specified string buffer
 	 */
 	<B extends Appendable> B format(Date date, B buf);
@@ -86,8 +86,8 @@ public interface DatePrinter extends DateBasic {
 	 * The TimeZone set on the Calendar is only used to adjust the time offset. The TimeZone specified during the construction of the Parser will determine the TimeZone used in the formatted string.
 	 *
 	 * @param calendar the calendar to format
-	 * @param buf the buffer to format into
-	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
+	 * @param buf      the buffer to format into
+	 * @param <B>      the Appendable class type, usually StringBuilder or StringBuffer.
 	 * @return the specified string buffer
 	 */
 	<B extends Appendable> B format(Calendar calendar, B buf);

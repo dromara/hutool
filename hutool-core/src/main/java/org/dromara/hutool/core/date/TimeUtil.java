@@ -40,7 +40,7 @@ import java.util.function.Function;
  *
  * @author looly
  * @see DateUtil java7及其以下版本，使用Date工具类
- * @see DatePattern 常用格式工具类
+ * @see DateFormatPool 常用格式工具类
  * @since 6.0.0
  */
 public class TimeUtil extends TemporalAccessorUtil {
@@ -298,7 +298,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 		if (StrUtil.contains(text, 'T')) {
 			return parse(text, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 		} else {
-			return parse(text, DatePattern.NORM_DATETIME_FORMATTER);
+			return parse(text, DateFormatPool.NORM_DATETIME_FORMATTER);
 		}
 	}
 
@@ -343,14 +343,14 @@ public class TimeUtil extends TemporalAccessorUtil {
 			// fix issue#1082
 			//see https://stackoverflow.com/questions/22588051/is-java-time-failing-to-parse-fraction-of-second
 			// jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
-			if (StrUtil.startWithIgnoreEquals(format, DatePattern.PURE_DATETIME_PATTERN) && format.endsWith("S")) {
+			if (StrUtil.startWithIgnoreEquals(format, DateFormatPool.PURE_DATETIME_PATTERN) && format.endsWith("S")) {
 				// 需要填充的0的个数
-				final int paddingWidth = 3 - (format.length() - DatePattern.PURE_DATETIME_PATTERN.length());
+				final int paddingWidth = 3 - (format.length() - DateFormatPool.PURE_DATETIME_PATTERN.length());
 				if (paddingWidth > 0) {
 					//将yyyyMMddHHmmssS、yyyyMMddHHmmssSS的日期统一替换为yyyyMMddHHmmssSSS格式，用0补
 					text += StrUtil.repeat('0', paddingWidth);
 				}
-				formatter = DatePattern.PURE_DATETIME_MS_FORMATTER;
+				formatter = DateFormatPool.PURE_DATETIME_MS_FORMATTER;
 			} else {
 				formatter = DateTimeFormatter.ofPattern(format);
 			}
@@ -411,7 +411,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @since 5.3.11
 	 */
 	public static String formatNormal(final ChronoLocalDateTime<?> time) {
-		return format(time, DatePattern.NORM_DATETIME_FORMATTER);
+		return format(time, DateFormatPool.NORM_DATETIME_FORMATTER);
 	}
 
 	/**
@@ -422,7 +422,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @since 5.3.11
 	 */
 	public static String formatNormal(final ChronoLocalDate date) {
-		return format(date, DatePattern.NORM_DATE_FORMATTER);
+		return format(date, DateFormatPool.NORM_DATE_FORMATTER);
 	}
 
 

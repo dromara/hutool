@@ -27,7 +27,7 @@ public class TimeZoneTest {
 	@Test
 	public void timeZoneConvertTest() {
 		final DateTime dt = DateUtil.parse("2018-07-10 21:44:32", //
-				FastDateFormat.getInstance(DatePattern.NORM_DATETIME_PATTERN, TimeZone.getTimeZone("GMT+8:00")));
+				FastDateFormat.getInstance(DateFormatPool.NORM_DATETIME_PATTERN, TimeZone.getTimeZone("GMT+8:00")));
 		Assertions.assertEquals("2018-07-10 21:44:32", dt.toString());
 
 		dt.setTimeZone(TimeZone.getTimeZone("Europe/London"));
