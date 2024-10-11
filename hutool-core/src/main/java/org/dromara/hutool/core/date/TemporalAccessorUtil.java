@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.date;
 
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.DayOfWeek;
@@ -118,8 +118,9 @@ public class TemporalAccessorUtil extends TemporalUtil{
 		}
 
 		// 检查自定义格式
-		if(GlobalCustomFormat.isCustomFormat(format)){
-			return GlobalCustomFormat.format(time, format);
+		final DateFormatManager formatManager = DateFormatManager.getInstance();
+		if(formatManager.isCustomFormat(format)){
+			return formatManager.format(time, format);
 		}
 
 		final DateTimeFormatter formatter = StrUtil.isBlank(format)

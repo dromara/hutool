@@ -19,7 +19,7 @@ package org.dromara.hutool.json.jwt;
 import lombok.Data;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.json.JSONConfig;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
@@ -41,7 +41,7 @@ public class IssueI6IS5BTest {
 		final JwtToken jwtToken = new JwtToken();
 		jwtToken.setIat(iat);
 
-		final JSONObject payloadsData = JSONUtil.parseObj(jwtToken, JSONConfig.of().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS));
+		final JSONObject payloadsData = JSONUtil.parseObj(jwtToken, JSONConfig.of().setDateFormat(DateFormatManager.FORMAT_SECONDS));
 
 		final String token = JWTUtil.createToken(payloadsData, "123".getBytes(StandardCharsets.UTF_8));
 		Assertions.assertEquals("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Nzc3NzI4MDB9.SXU_mm1wT5lNoK-Dq5Y8f3BItv_44zuAlyeWLqajpXg", token);
@@ -62,7 +62,7 @@ public class IssueI6IS5BTest {
 		final JwtToken2 jwtToken = new JwtToken2();
 		jwtToken.setIat(iat);
 
-		final JSONObject payloadsData = JSONUtil.parseObj(jwtToken, JSONConfig.of().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS));
+		final JSONObject payloadsData = JSONUtil.parseObj(jwtToken, JSONConfig.of().setDateFormat(DateFormatManager.FORMAT_SECONDS));
 
 		final String token = JWTUtil.createToken(payloadsData, "123".getBytes(StandardCharsets.UTF_8));
 		Assertions.assertEquals("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Nzc3NzI4MDB9.SXU_mm1wT5lNoK-Dq5Y8f3BItv_44zuAlyeWLqajpXg", token);

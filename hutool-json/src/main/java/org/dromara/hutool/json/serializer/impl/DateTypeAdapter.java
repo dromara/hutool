@@ -18,7 +18,7 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.convert.impl.DateConverter;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.JSON;
@@ -61,9 +61,9 @@ public class DateTypeAdapter implements MatcherJSONSerializer<Date>, MatcherJSON
 
 		final Object value;
 		// 默认为时间戳
-		if(null == format || GlobalCustomFormat.FORMAT_MILLISECONDS.equals(format)){
+		if(null == format || DateFormatManager.FORMAT_MILLISECONDS.equals(format)){
 			value = bean.getTime();
-		} else if(GlobalCustomFormat.FORMAT_SECONDS.equals(format)){
+		} else if(DateFormatManager.FORMAT_SECONDS.equals(format)){
 			value = Math.floorDiv(bean.getTime(), 1000L);
 		} else {
 			value = DateUtil.format(bean, format);

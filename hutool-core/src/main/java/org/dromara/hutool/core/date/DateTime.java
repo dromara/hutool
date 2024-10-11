@@ -18,7 +18,7 @@ package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.date.format.DatePrinter;
 import org.dromara.hutool.core.date.format.FastDateFormat;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.date.format.parser.DateParser;
 import org.dromara.hutool.core.date.format.parser.PositionDateParser;
 import org.dromara.hutool.core.lang.Assert;
@@ -297,8 +297,8 @@ public class DateTime extends Date {
 	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final String format) {
-		this(GlobalCustomFormat.isCustomFormat(format)
-				? GlobalCustomFormat.parse(dateStr, format)
+		this(DateFormatManager.getInstance().isCustomFormat(format)
+				? DateFormatManager.getInstance().parse(dateStr, format)
 				: parse(dateStr, DateUtil.newSimpleFormat(format)));
 	}
 

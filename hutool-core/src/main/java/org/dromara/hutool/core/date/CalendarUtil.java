@@ -19,7 +19,7 @@ package org.dromara.hutool.core.date;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.ChineseNumberFormatter;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.date.format.parser.DateParser;
 import org.dromara.hutool.core.date.format.parser.FastDateParser;
 import org.dromara.hutool.core.date.format.parser.PositionDateParser;
@@ -755,9 +755,10 @@ public class CalendarUtil {
 		final Calendar calendar = Calendar.getInstance(tz, lcl);
 		calendar.setLenient(lenient);
 
+		final DateFormatManager formatManager = DateFormatManager.getInstance();
 		for (final String parsePattern : parsePatterns) {
-			if (GlobalCustomFormat.isCustomFormat(parsePattern)) {
-				final Date parse = GlobalCustomFormat.parse(str, parsePattern);
+			if (formatManager.isCustomParse(parsePattern)) {
+				final Date parse = formatManager.parse(str, parsePattern);
 				if (null == parse) {
 					continue;
 				}

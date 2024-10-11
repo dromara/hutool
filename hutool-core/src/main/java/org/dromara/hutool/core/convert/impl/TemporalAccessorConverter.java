@@ -20,7 +20,7 @@ import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -195,7 +195,7 @@ public class TemporalAccessorConverter extends AbstractConverter {
 		}
 
 		final Instant instant;
-		if (GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)) {
+		if (DateFormatManager.FORMAT_SECONDS.equals(this.format)) {
 			// https://gitee.com/dromara/hutool/issues/I6IS5B
 			// Unix时间戳
 			instant = Instant.ofEpochSecond(time);

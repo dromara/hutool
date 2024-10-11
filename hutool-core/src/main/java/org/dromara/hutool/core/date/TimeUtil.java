@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.core.date;
 
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -333,8 +333,9 @@ public class TimeUtil extends TemporalAccessorUtil {
 			return null;
 		}
 
-		if (GlobalCustomFormat.isCustomFormat(format)) {
-			return of(GlobalCustomFormat.parse(text, format));
+		final DateFormatManager formatManager = DateFormatManager.getInstance();
+		if (formatManager.isCustomFormat(format)) {
+			return of(formatManager.parse(text, format));
 		}
 
 		DateTimeFormatter formatter = null;

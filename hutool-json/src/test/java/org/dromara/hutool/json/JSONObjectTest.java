@@ -22,7 +22,7 @@ import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateFormatPool;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -491,7 +491,7 @@ public class JSONObjectTest {
 	@Test
 	public void setDateFormatSecondsTest() {
 		// 自定义格式为只有秒的时间戳，一般用于JWT
-		final JSONConfig jsonConfig = JSONConfig.of().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
+		final JSONConfig jsonConfig = JSONConfig.of().setDateFormat(DateFormatManager.FORMAT_SECONDS);
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
 		final JSONObject json = new JSONObject(jsonConfig);
@@ -507,7 +507,7 @@ public class JSONObjectTest {
 	@Test
 	public void setCustomDateFormatTest() {
 		final JSONConfig jsonConfig = JSONConfig.of();
-		jsonConfig.setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
+		jsonConfig.setDateFormat(DateFormatManager.FORMAT_SECONDS);
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
 		final JSONObject json = new JSONObject(jsonConfig);

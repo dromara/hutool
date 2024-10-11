@@ -20,7 +20,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.date.format.DatePrinter;
 import org.dromara.hutool.core.date.format.FastDateFormat;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.date.format.parser.PositionDateParser;
 import org.dromara.hutool.core.date.format.parser.RegisterDateParser;
 import org.dromara.hutool.core.lang.Assert;
@@ -546,8 +546,9 @@ public class DateUtil {
 		}
 
 		// 检查自定义格式
-		if (GlobalCustomFormat.isCustomFormat(format)) {
-			return GlobalCustomFormat.format(date, format);
+		final DateFormatManager formatManager = DateFormatManager.getInstance();
+		if (formatManager.isCustomFormat(format)) {
+			return formatManager.format(date, format);
 		}
 
 		TimeZone timeZone = null;
@@ -751,9 +752,10 @@ public class DateUtil {
 	 * @since 4.5.18
 	 */
 	public static DateTime parse(final CharSequence dateStr, final String format, final Locale locale) {
-		if (GlobalCustomFormat.isCustomFormat(format)) {
+		final DateFormatManager formatManager = DateFormatManager.getInstance();
+		if (formatManager.isCustomFormat(format)) {
 			// 自定义格式化器忽略Locale
-			return new DateTime(GlobalCustomFormat.parse(dateStr, format));
+			return new DateTime(formatManager.parse(dateStr, format));
 		}
 		return new DateTime(dateStr, DateUtil.newSimpleFormat(format, locale, null));
 	}

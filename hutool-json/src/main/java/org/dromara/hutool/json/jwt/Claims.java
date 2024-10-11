@@ -17,7 +17,7 @@
 package org.dromara.hutool.json.jwt;
 
 import org.dromara.hutool.core.codec.binary.Base64;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.json.JSONConfig;
@@ -38,7 +38,7 @@ public class Claims implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// 时间使用秒级时间戳表示
-	private final JSONConfig CONFIG = JSONConfig.of().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
+	private final JSONConfig CONFIG = JSONConfig.of().setDateFormat(DateFormatManager.FORMAT_SECONDS);
 
 	private JSONObject claimJSON;
 

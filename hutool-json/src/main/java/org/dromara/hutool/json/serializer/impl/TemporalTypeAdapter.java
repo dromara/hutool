@@ -18,7 +18,7 @@ package org.dromara.hutool.json.serializer.impl;
 
 import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
 import org.dromara.hutool.core.date.TimeUtil;
-import org.dromara.hutool.core.date.format.GlobalCustomFormat;
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.math.NumberUtil;
@@ -90,9 +90,9 @@ public class TemporalTypeAdapter implements MatcherJSONSerializer<TemporalAccess
 
 		final Object value;
 		// 默认为时间戳
-		if (null == format || GlobalCustomFormat.FORMAT_MILLISECONDS.equals(format)) {
+		if (null == format || DateFormatManager.FORMAT_MILLISECONDS.equals(format)) {
 			value = TimeUtil.toEpochMilli(bean);
-		} else if (GlobalCustomFormat.FORMAT_SECONDS.equals(format)) {
+		} else if (DateFormatManager.FORMAT_SECONDS.equals(format)) {
 			value = Math.floorDiv(TimeUtil.toEpochMilli(bean), 1000L);
 		} else {
 			value = TimeUtil.format(bean, format);
