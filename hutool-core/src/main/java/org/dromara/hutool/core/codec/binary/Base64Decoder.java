@@ -24,7 +24,8 @@ import java.io.Serializable;
 
 /**
  * Base64解码实现<br>
- * 此解码保留的原因是，JDK提供的解码需要指定是否为URL安全的或是否换行，此解码无需区分
+ * 此解码保留的原因是，JDK提供的解码需要指定是否为URL安全的或是否换行，此解码无需区分<br>
+ * 此解码对非Base64字符忽略
  *
  * @author looly
  *

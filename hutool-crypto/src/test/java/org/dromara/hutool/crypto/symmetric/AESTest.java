@@ -149,7 +149,8 @@ public class AESTest {
 
 	@Test
 	void issue3766Test() {
-		Assertions.assertThrows(CryptoException.class, ()->
+		Assertions.assertThrows(IllegalArgumentException.class, ()->
+			// data必须为hex或base64
 			SecureUtil.aes("8888888888888888".getBytes()).decryptStr("哈哈"));
 	}
 }
