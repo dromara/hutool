@@ -19,9 +19,7 @@ package org.dromara.hutool.crypto.symmetric;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.util.RandomUtil;
-import org.dromara.hutool.crypto.KeyUtil;
-import org.dromara.hutool.crypto.Mode;
-import org.dromara.hutool.crypto.Padding;
+import org.dromara.hutool.crypto.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -147,5 +145,11 @@ public class AESTest {
 		final byte[] encrypt = aes.encrypt(phone);
 		final String decryptStr = aes.decryptStr(encrypt);
 		Assertions.assertEquals(phone, decryptStr);
+	}
+
+	@Test
+	void issue3766Test() {
+		Assertions.assertThrows(CryptoException.class, ()->
+			SecureUtil.aes("8888888888888888".getBytes()).decryptStr("哈哈"));
 	}
 }

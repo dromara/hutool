@@ -58,7 +58,8 @@ public class SyncInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * 同步数据到内存
+	 * 同步数据到内存，同步后关闭原流
+	 *
 	 * @return this
 	 */
 	public SyncInputStream sync() {
@@ -76,18 +77,19 @@ public class SyncInputStream extends FilterInputStream {
 	 * @return bytes
 	 */
 	public byte[] readBytes() {
-		final FastByteArrayOutputStream bytesOut = new FastByteArrayOutputStream(length > 0 ? (int)length : 1024);
+		final FastByteArrayOutputStream bytesOut = new FastByteArrayOutputStream(length > 0 ? (int) length : 1024);
 		final long length = copyTo(bytesOut, null);
 		return length > 0 ? bytesOut.toByteArray() : new byte[0];
 	}
 
 	/**
-	 * 将流的内容拷贝到输出流
-	 * @param out 输出流
+	 * 将流的内容拷贝到输出流，拷贝结束后关闭输入流
+	 *
+	 * @param out            输出流
 	 * @param streamProgress 进度条
 	 * @return 拷贝长度
 	 */
-	public long copyTo(final OutputStream out, final StreamProgress streamProgress){
+	public long copyTo(final OutputStream out, final StreamProgress streamProgress) {
 		long copyLength = -1;
 		try {
 			copyLength = IoUtil.copy(this.in, out, IoUtil.DEFAULT_BUFFER_SIZE, this.length, streamProgress);
@@ -96,7 +98,7 @@ public class SyncInputStream extends FilterInputStream {
 				throw e;
 			}
 			// 忽略读取流中的EOF错误
-		}finally {
+		} finally {
 			// 读取结束
 			IoUtil.closeQuietly(in);
 		}

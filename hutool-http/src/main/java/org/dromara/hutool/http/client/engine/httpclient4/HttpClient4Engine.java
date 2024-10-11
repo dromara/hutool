@@ -21,6 +21,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -75,11 +76,14 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		initEngine();
 
 		final HttpUriRequest request = buildRequest(message);
+		final CloseableHttpResponse response;
 		try {
-			return this.engine.execute(request, response -> new HttpClient4Response(response, message.charset()));
+			//return this.engine.execute(request, response -> new HttpClient4Response(response, message));
+			response = this.engine.execute(request);
 		} catch (final IOException e) {
 			throw new HttpException(e);
 		}
+		return new HttpClient4Response(response, message);
 	}
 
 	@Override

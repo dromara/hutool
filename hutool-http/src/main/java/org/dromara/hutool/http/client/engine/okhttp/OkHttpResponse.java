@@ -16,19 +16,20 @@
 
 package org.dromara.hutool.http.client.engine.okhttp;
 
-import kotlin.Pair;
-import okhttp3.Headers;
-import okhttp3.ResponseBody;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.stream.EmptyInputStream;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalCompressStreamRegister;
 import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
+import org.dromara.hutool.http.client.body.ResponseBody;
 import org.dromara.hutool.http.meta.HeaderName;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * OkHttp3的{@link okhttp3.Response} 响应包装
@@ -42,14 +43,16 @@ public class OkHttpResponse implements Response {
 	 * 请求时的默认编码
 	 */
 	private final Charset requestCharset;
+	private final ResponseBody body;
 
 	/**
 	 * @param rawRes         {@link okhttp3.Response}
-	 * @param requestCharset 请求时的默认编码
+	 * @param message       请求对象
 	 */
-	public OkHttpResponse(final okhttp3.Response rawRes, final Charset requestCharset) {
+	public OkHttpResponse(final okhttp3.Response rawRes, final Request message) {
 		this.rawRes = rawRes;
-		this.requestCharset = requestCharset;
+		this.requestCharset = message.charset();
+		this.body = message.method().isIgnoreBody() ? null : new ResponseBody(this, bodyStream());
 	}
 
 	@Override
@@ -74,7 +77,7 @@ public class OkHttpResponse implements Response {
 
 	@Override
 	public InputStream bodyStream() {
-		final ResponseBody body = rawRes.body();
+		final okhttp3.ResponseBody body = rawRes.body();
 		if(null == body){
 			return EmptyInputStream.INSTANCE;
 		}
@@ -84,10 +87,22 @@ public class OkHttpResponse implements Response {
 	}
 
 	@Override
-	public void close() {
-		if(null != this.rawRes){
-			rawRes.close();
+	public OkHttpResponse sync() {
+		if (null != this.body) {
+			this.body.sync();
 		}
+		IoUtil.closeQuietly(this.rawRes);
+		return this;
+	}
+
+	@Override
+	public ResponseBody body() {
+		return this.body;
+	}
+
+	@Override
+	public void close() {
+		IoUtil.closeQuietly(this.rawRes);
 	}
 
 	@Override

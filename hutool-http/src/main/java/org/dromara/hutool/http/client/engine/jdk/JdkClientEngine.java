@@ -26,7 +26,6 @@ import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
-import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
@@ -65,18 +64,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 	}
 
 	@Override
-	public Response send(final Request message) {
-		return send(message, true);
-	}
-
-	/**
-	 * 发送请求
-	 *
-	 * @param message 请求消息
-	 * @param isAsync 是否异步，异步不会立即读取响应内容
-	 * @return {@link Response}
-	 */
-	public JdkHttpResponse send(final Request message, final boolean isAsync) {
+	public JdkHttpResponse send(final Request message) {
 		final JdkHttpConnection conn = buildConn(message);
 		try {
 			doSend(conn, message);
@@ -86,7 +74,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 			throw new IORuntimeException(e);
 		}
 
-		return sendRedirectIfPossible(conn, message, isAsync);
+		return sendRedirectIfPossible(conn, message);
 	}
 
 	@Override
@@ -173,11 +161,10 @@ public class JdkClientEngine extends AbstractClientEngine {
 	/**
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
-	 * @param conn    {@link JdkHttpConnection}}
-	 * @param isAsync 最终请求是否异步
+	 * @param conn {@link JdkHttpConnection}}
 	 * @return {@link JdkHttpResponse}，无转发返回 {@code null}
 	 */
-	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final Request message, final boolean isAsync) {
+	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final Request message) {
 		// 手动实现重定向
 		if (message.maxRedirects() > 0) {
 			final int code;
@@ -203,14 +190,14 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 					if (conn.redirectCount < message.maxRedirects()) {
 						conn.redirectCount++;
-						return send(message, isAsync);
+						return send(message);
 					}
 				}
 			}
 		}
 
 		// 最终页面
-		return new JdkHttpResponse(conn, this.cookieManager, true, message.charset(), isAsync, message.method().isIgnoreBody());
+		return new JdkHttpResponse(conn, this.cookieManager, message);
 	}
 
 	/**
