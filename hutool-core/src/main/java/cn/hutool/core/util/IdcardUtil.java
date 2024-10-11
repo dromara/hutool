@@ -3,15 +3,21 @@ package cn.hutool.core.util;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.Month;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.Year;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 身份证相关工具类<br>
@@ -47,6 +53,24 @@ public class IdcardUtil {
 	 * 台湾身份首字母对应数字
 	 */
 	private static final Map<Character, Integer> TW_FIRST_CODE = new HashMap<>();
+
+	/**
+	 * 18位身份证前 6 位（地址码）作为 key, 该 key 对应的实际省市县名称 <br />
+	 * 来源：<a href="https://www.mca.gov.cn/mzsj/xzqh/2023/202301xzqh.html">2023年中华人民共和国县以上行政区划代码</a>
+	 */
+	private static final Map<String, String> AREA_MAP = new TreeMap<>();
+
+	/**
+	 * 预先存储所有的地址码，使得后续能够随机获取相关的地址码
+	 */
+	private static final List<String> AREA_MAP_KEY_LIST;
+
+	static {
+        loadAreaMap();
+
+		AREA_MAP_KEY_LIST = new ArrayList<>(AREA_MAP.keySet().size());
+		AREA_MAP_KEY_LIST.addAll(AREA_MAP.keySet());
+    }
 
 	static {
 		CITY_CODES.put("11", "北京");
@@ -158,6 +182,91 @@ public class IdcardUtil {
 		}
 		return idCard;
 	}
+
+	/**
+	 * 随机生成一位有效的 18 位身份证号码，该方法在某些测试场景下可能会很有用
+	 *
+	 * @see IdcardUtil#createValidIdNumber(int, int)
+	 * @return 随机生成的一个 18 位的有效身份证号码
+	 */
+	public static String createValidIdNumber() {
+		return createValidIdNumber(1900, LocalDate.now().getYear());
+	}
+
+	/**
+	 * 随机生成一位有效的 18 位身份证号码，该方法在某些测试场景下可能会很有用
+	 *
+	 * @see IdcardUtil#isValidCard(String)
+	 * @param minBirthYear 最小出身年份
+	 * @param maxBirthYear 最大出生年份
+	 * @return 随机生成的一个 18 位的有效身份证号码
+	 */
+	public static String createValidIdNumber(int minBirthYear, int maxBirthYear) {
+		if (minBirthYear > 9999 || minBirthYear < 1000) {
+			throw new IllegalArgumentException("随机生成身份证号的最小出生年不合法：" + minBirthYear);
+		}
+		if (maxBirthYear > 9999 || maxBirthYear < 1000) {
+			throw new IllegalArgumentException("随机生成身份证号的最大出生年不合法：" + maxBirthYear);
+		}
+		if (minBirthYear >= maxBirthYear) {
+			throw new IllegalArgumentException("随机生成的身份证号码的最小出生年不能大于等于最大出生年");
+		}
+
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		int index = random.nextInt(0, AREA_MAP_KEY_LIST.size());
+
+		StringBuilder sb = new StringBuilder();
+
+		// 前六位
+		sb.append(AREA_MAP_KEY_LIST.get(index));
+
+		// 出生年月
+		int year = random.nextInt(minBirthYear, maxBirthYear + 1);
+		int month = random.nextInt(1, 13);
+		int day = random.nextInt(1,Month.getLastDay(month - 1, Year.isLeap(year)) + 1);
+		sb.append(String.format("%4s%2s%2s", year, month, day).replaceAll(" ", "0"));
+
+		// 顺序编码
+		sb.append(String.format("%2s", random.nextInt(0, 99))
+			.replaceAll(" ", "0"));
+		sb.append((random.nextInt() & 1)); // 随机设置为性别
+
+		// 最后一位的校验码
+		sb.append(getCheckCode18(sb.toString()));
+
+		return sb.toString();
+	}
+
+	/**
+	 * 初始化地址码相关的映射关系，该方法在系统运行周期中应当只被调用一次
+	 */
+	private static void loadAreaMap() {
+		if (!AREA_MAP.isEmpty()) return;
+		synchronized (IdcardUtil.AREA_MAP) {
+			// DCL 防止被重复加载
+			if (!AREA_MAP.isEmpty()) return;
+
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			try (InputStream in = classLoader.getResourceAsStream("areaMap.txt")) {
+				String areInfoStr = IoUtil.read(in, StandardCharsets.UTF_8);
+				String[] areaPairs = areInfoStr.split("\n");
+				for (String areaPair : areaPairs) {
+					if (areaPair == null || areaPair.trim().isEmpty()) continue;
+
+					/*
+						每行以 地址码,地址名称 的形式给出，如：110000,北京市
+					 */
+					String[] pair = areaPair.split(",");
+					if (pair[0] == null || pair[0].isEmpty()) continue;
+					if (pair[1] == null || pair[1].isEmpty()) continue;
+
+					AREA_MAP.put(pair[0], pair[1]);
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+    }
 
 	/**
 	 * 是否有效身份证号，忽略X的大小写<br>

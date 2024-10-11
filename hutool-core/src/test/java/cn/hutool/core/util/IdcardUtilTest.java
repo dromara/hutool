@@ -60,6 +60,20 @@ public class IdcardUtilTest {
 	}
 
 	@Test
+	public void createValidIdNumberTest() {
+		for (int i = 0; i < 10000; ++i) {
+			String idNumber = IdcardUtil.createValidIdNumber();
+			assertTrue(IdcardUtil.isValidCard(idNumber));
+		}
+
+		for (int i = 0; i < 10000; ++i) {
+			int minYear = (int) (Math.random() * 50) + 1900;
+			int maxYear = (int) (Math.random() * 50) + 1970;
+			assertTrue(IdcardUtil.isValidCard(IdcardUtil.createValidIdNumber(minYear, maxYear)));
+		}
+	}
+
+	@Test
 	public void getAgeByIdCardTest() {
 		DateTime date = DateUtil.parse("2017-04-10");
 
