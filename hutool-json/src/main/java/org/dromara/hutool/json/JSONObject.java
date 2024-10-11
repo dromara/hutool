@@ -23,6 +23,7 @@ import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.MapWrapper;
+import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.support.InternalJSONUtil;
@@ -41,7 +42,7 @@ import java.util.Map;
  *
  * @author looly
  */
-public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGetter<String>{
+public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGetter<String> {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -52,6 +53,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	private final JSONFactory factory;
 
 	// region ----- 构造
+
 	/**
 	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY有序
 	 */
@@ -113,6 +115,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	}
 
 	// region ----- get
+
 	/**
 	 * 根据lambda的方法引用，获取
 	 *
@@ -130,9 +133,9 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	public Object getObj(final String key, final Object defaultValue) {
 		final Object value;
 		final JSON json = get(key);
-		if(json instanceof JSONPrimitive){
+		if (json instanceof JSONPrimitive) {
 			value = ((JSONPrimitive) json).getValue();
-		}else {
+		} else {
 			value = json;
 		}
 		return ObjUtil.defaultIfNull(value, defaultValue);
@@ -145,6 +148,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	// endregion
 
 	// region ----- increment or append
+
 	/**
 	 * 对值加一，如果值不存在，赋值1，如果为数字类型，做加一操作
 	 *
@@ -154,13 +158,13 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 */
 	public JSONObject increment(final String key) throws JSONException {
 		final JSON json = this.get(key);
-		if(null == json){
+		if (null == json) {
 			return putValue(key, 1);
 		}
 
-		if(json instanceof JSONPrimitive){
+		if (json instanceof JSONPrimitive) {
 			final JSONPrimitive jsonPrimitive = (JSONPrimitive) json;
-			if(jsonPrimitive.isNumber()){
+			if (jsonPrimitive.isNumber()) {
 				jsonPrimitive.increment();
 				return this;
 			}
@@ -177,8 +181,8 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 *     <li>如果值是一个其他值，则和旧值共同组合为一个{@link JSONArray}</li>
 	 * </ul>
 	 *
-	 * @param key       键
-	 * @param value     值
+	 * @param key   键
+	 * @param value 值
 	 * @return this.
 	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
 	 * @since 6.0.0
@@ -197,6 +201,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	// endregion
 
 	// region ----- put
+
 	/**
 	 * 通过lambda批量设置值<br>
 	 * 实际使用时，可以使用getXXX的方法引用来完成键值对的赋值：
@@ -221,7 +226,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject putAllValue(final Map<?, ?> map) {
-		if(MapUtil.isNotEmpty(map)){
+		if (MapUtil.isNotEmpty(map)) {
 			map.forEach((key, value) -> putValue(StrUtil.toStringOrNull(key), value));
 		}
 		return this;
@@ -233,7 +238,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @param key 键
 	 * @return this.
 	 */
-	public JSONObject putNull(final String key){
+	public JSONObject putNull(final String key) {
 		this.put(key, null);
 		return this;
 	}
@@ -300,7 +305,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject putValue(final String key, final Object value) throws JSONException {
-		if(null == value){
+		if (null == value) {
 			return putNull(key);
 		}
 		// put时，如果value为字符串，不解析，而是作为JSONPrimitive对待
@@ -311,8 +316,8 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	/**
 	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
 	 *
-	 * @param key            键
-	 * @param value          值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param key   键
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return 旧值
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
@@ -330,7 +335,7 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 
 		final JSONConfig.DuplicateMode duplicateMode = config.getDuplicateMode();
 		if (JSONConfig.DuplicateMode.OVERRIDE != duplicateMode && containsKey(key)) {
-			if(JSONConfig.DuplicateMode.IGNORE == duplicateMode){
+			if (JSONConfig.DuplicateMode.IGNORE == duplicateMode) {
 				return null;
 			}
 			throw new JSONException("Duplicate key \"{}\"", key);
@@ -339,6 +344,18 @@ public class JSONObject extends MapWrapper<String, JSON> implements JSON, JSONGe
 	}
 	// endregion
 
+	/**
+	 * 将JSONObject转换为指定类型的Map
+	 *
+	 * @param keyType   键类型Class
+	 * @param valueType 值类型Class
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @return Map
+	 */
+	public <K, V> Map<K, V> toMap(final Class<K> keyType, final Class<V> valueType) {
+		return toBean(TypeUtil.createParameterizedType(Map.class, keyType, valueType));
+	}
 
 	@Override
 	public String toString() {

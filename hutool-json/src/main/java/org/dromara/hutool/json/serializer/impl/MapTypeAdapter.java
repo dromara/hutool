@@ -53,7 +53,7 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 
 	@Override
 	public boolean match(final JSON json, final Type deserializeType) {
-		if(json instanceof JSONObject){
+		if (json instanceof JSONObject) {
 			final Class<?> rawType = TypeUtil.getClass(deserializeType);
 			return Map.class.isAssignableFrom(rawType);
 		}
@@ -65,13 +65,13 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 
 		final JSON contextJson = context.getContextJson();
 		// 序列化为JSONArray
-		if(contextJson instanceof JSONArray){
+		if (contextJson instanceof JSONArray) {
 			final Iterator<?> iter;
-			if(bean instanceof Iterator){
+			if (bean instanceof Iterator) {
 				iter = (Iterator<?>) bean;
-			} else if(bean instanceof Iterable){
+			} else if (bean instanceof Iterable) {
 				iter = ((Iterable<?>) bean).iterator();
-			} else{
+			} else {
 				iter = bean.entrySet().iterator();
 			}
 			IterTypeAdapter.mapFromIterator(bean, iter, (JSONArray) contextJson);
@@ -87,18 +87,32 @@ public class MapTypeAdapter implements MatcherJSONSerializer<Map<?, ?>>, Matcher
 		return result;
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public Map<?, ?> deserialize(final JSON json, final Type deserializeType) {
-		final Map map = MapUtil.createMap(TypeUtil.getClass(deserializeType), LinkedHashMap::new);
 		final Type keyType = TypeUtil.getTypeArgument(deserializeType, 0);
 		final Type valueType = TypeUtil.getTypeArgument(deserializeType, 1);
+		return toMap(json,
+			TypeUtil.getClass(deserializeType),
+			keyType,
+			valueType);
+	}
 
+	/**
+	 * 将JSON对象转换为Map
+	 *
+	 * @param json      JSON对象
+	 * @param mapClass  Map类型
+	 * @param keyType   键类型
+	 * @param valueType 值类型
+	 * @return Map
+	 */
+	public Map<?, ?> toMap(final JSON json, final Class<?> mapClass, final Type keyType, final Type valueType) {
+		final Map<?, ?> map = MapUtil.createMap(mapClass, LinkedHashMap::new);
 		for (final Map.Entry<String, JSON> entry : (JSONObject) json) {
 			map.put(
 				// key类型为String转目标类型，使用标准转换器
 				ConvertUtil.convert(keyType, entry.getKey()),
-				ObjUtil.apply(entry.getValue(), (value)-> value.toBean(valueType))
+				ObjUtil.apply(entry.getValue(), (value) -> value.toBean(valueType))
 			);
 		}
 		return map;
