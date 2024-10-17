@@ -16,19 +16,33 @@
 
 package org.dromara.hutool.json.engine.jackson;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.dromara.hutool.core.convert.ConvertUtil;
+import org.dromara.hutool.core.date.TimeUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.time.temporal.TemporalAccessor;
 
+/**
+ * Jackson时间反序列化器
+ *
+ * @author Looly
+ */
 public class JacksonTemporalDeserializer extends StdDeserializer<TemporalAccessor> {
+	private static final long serialVersionUID = 1L;
 
 	private final Class<? extends TemporalAccessor> type;
 	private final String dateFormat;
 
+	/**
+	 * 构造
+	 *
+	 * @param type       时间类型
+	 * @param dateFormat 日期格式
+	 */
 	public JacksonTemporalDeserializer(final Class<? extends TemporalAccessor> type, final String dateFormat) {
 		super(TemporalAccessor.class);
 		this.type = type;
@@ -36,7 +50,9 @@ public class JacksonTemporalDeserializer extends StdDeserializer<TemporalAccesso
 	}
 
 	@Override
-	public TemporalAccessor deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JacksonException {
-		return null;
+	public TemporalAccessor deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+		return StrUtil.isEmpty(dateFormat) ?
+			ConvertUtil.convert(this.type, p.getLongValue()) :
+			ConvertUtil.convert(this.type, TimeUtil.parse(p.getValueAsString(), dateFormat));
 	}
 }
