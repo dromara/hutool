@@ -348,4 +348,22 @@ public class LambdaUtilTest {
 			LambdaUtil.getInvokeMethod(LambdaUtilTest.class);
 		});
 	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	void issueIAXU8JTest() {
+		final SerFunction<Child, String> function1 = Child::getParentField;
+		final SerFunction<Child, String> function2 = LambdaUtil.build(SerFunction.class, Child.class, "getParentField");
+
+		Assertions.assertEquals(LambdaUtil.getRealClass(function1), LambdaUtil.getRealClass(function2));
+	}
+
+	@Data
+	static
+	class Parent {
+		private String parentField;
+	}
+
+	static class Child extends Parent {
+	}
 }

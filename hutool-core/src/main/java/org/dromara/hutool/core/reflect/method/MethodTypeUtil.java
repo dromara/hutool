@@ -41,12 +41,31 @@ public class MethodTypeUtil {
 	 * @return {@link MethodType}
 	 */
 	public static MethodType methodType(final Executable executable) {
+		return methodType(executable, null);
+	}
+
+	/**
+	 * 获取指定{@link Executable}的{@link MethodType}<br>
+	 * 此方法主要是读取方法或构造中的方法列表，主要为：
+	 * <ul>
+	 *     <li>方法：[返回类型, 参数1类型, 参数2类型, ...]</li>
+	 *     <li>构造：[构造对应类类型, 参数1类型, 参数2类型, ...]</li>
+	 * </ul>
+	 *
+	 * @param executable     方法或构造
+	 * @param declaringClass 方法或构造对应的类，用于获取其声明的参数类型，如果为{@code null}，则使用{@link Executable#getDeclaringClass()}
+	 * @return {@link MethodType}
+	 */
+	public static MethodType methodType(final Executable executable, Class<?> declaringClass) {
+		if (null == declaringClass) {
+			declaringClass = executable.getDeclaringClass();
+		}
 		if (executable instanceof Method) {
 			final Method method = (Method) executable;
-			return MethodType.methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
+			return MethodType.methodType(method.getReturnType(), declaringClass, method.getParameterTypes());
 		} else {
 			final Constructor<?> constructor = (Constructor<?>) executable;
-			return MethodType.methodType(constructor.getDeclaringClass(), constructor.getParameterTypes());
+			return MethodType.methodType(declaringClass, constructor.getParameterTypes());
 		}
 	}
 }

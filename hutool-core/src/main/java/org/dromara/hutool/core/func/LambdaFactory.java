@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * 以类似反射的方式动态创建Lambda，在性能上有一定优势，同时避免每次调用Lambda时创建匿名内部类
  *
- *  @author nasodaengineer
+ * @author nasodaengineer
  */
 public class LambdaFactory {
 
@@ -58,14 +58,14 @@ public class LambdaFactory {
 	 * </pre>
 	 *
 	 * @param functionInterfaceType 接受Lambda的函数式接口类型
-	 * @param methodClass           声明方法的类的类型
+	 * @param declaringClass           声明方法的类的类型
 	 * @param methodName            方法名称
 	 * @param paramTypes            方法参数数组
 	 * @param <F>                   Function类型
 	 * @return 接受Lambda的函数式接口对象
 	 */
-	public static <F> F build(final Class<F> functionInterfaceType, final Class<?> methodClass, final String methodName, final Class<?>... paramTypes) {
-		return build(functionInterfaceType, MethodUtil.getMethod(methodClass, methodName, paramTypes));
+	public static <F> F build(final Class<F> functionInterfaceType, final Class<?> declaringClass, final String methodName, final Class<?>... paramTypes) {
+		return build(functionInterfaceType, MethodUtil.getMethod(declaringClass, methodName, paramTypes), declaringClass);
 	}
 
 	/**
@@ -77,33 +77,50 @@ public class LambdaFactory {
 	 * @param <F>                   Function类型
 	 * @return 接受Lambda的函数式接口对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static <F> F build(final Class<F> functionInterfaceType, final Executable executable) {
+		return build(functionInterfaceType, executable, null);
+	}
+
+	/**
+	 * 根据提供的方法或构造对象，构建对应的Lambda函数<br>
+	 * 调用函数相当于执行对应的方法或构造
+	 *
+	 * @param <F>                   Function类型
+	 * @param functionInterfaceType 接受Lambda的函数式接口类型
+	 * @param executable            方法对象，支持构造器
+	 * @param declaringClass        {@link Executable}声明的类，如果方法或构造定义在父类中，此处用于指定子类
+	 * @return 接受Lambda的函数式接口对象
+	 */
+	@SuppressWarnings("unchecked")
+	public static <F> F build(final Class<F> functionInterfaceType,
+							  final Executable executable, final Class<?> declaringClass) {
 		Assert.notNull(functionInterfaceType);
 		Assert.notNull(executable);
 
 		final MutableEntry<Class<?>, Executable> cacheKey = new MutableEntry<>(functionInterfaceType, executable);
 		return (F) CACHE.computeIfAbsent(cacheKey,
-			key -> doBuildWithoutCache(functionInterfaceType, executable));
+			key -> doBuildWithoutCache(functionInterfaceType, executable, declaringClass));
 	}
 
 	/**
 	 * 根据提供的方法或构造对象，构建对应的Lambda函数，即通过Lambda函数代理方法或构造<br>
 	 * 调用函数相当于执行对应的方法或构造
 	 *
-	 * @param funcType   接受Lambda的函数式接口类型
-	 * @param executable 方法对象，支持构造器
-	 * @param <F>        Function类型
+	 * @param <F>            Function类型
+	 * @param funcType       接受Lambda的函数式接口类型
+	 * @param executable     方法对象，支持构造器
+	 * @param declaringClass {@link Executable}声明的类，如果方法或构造定义在父类中，此处用于指定子类
 	 * @return 接受Lambda的函数式接口对象
 	 */
 	@SuppressWarnings("unchecked")
-	private static <F> F doBuildWithoutCache(final Class<F> funcType, final Executable executable) {
+	private static <F> F doBuildWithoutCache(final Class<F> funcType,
+											 final Executable executable, final Class<?> declaringClass) {
 		ReflectUtil.setAccessible(executable);
 
 		// 获取Lambda函数
 		final Method invokeMethod = LambdaUtil.getInvokeMethod(funcType);
 		try {
-			return (F) metaFactory(funcType, invokeMethod, executable)
+			return (F) metaFactory(funcType, invokeMethod, executable, declaringClass)
 				.getTarget().invoke();
 		} catch (final Throwable e) {
 			throw new HutoolException(e);
@@ -117,14 +134,15 @@ public class LambdaFactory {
 	 *     见：https://gitee.com/dromara/hutool/issues/I96JIP
 	 * </p>
 	 *
-	 * @param funcType   函数类型
-	 * @param funcMethod 函数执行的方法
-	 * @param executable 被代理的方法或构造
+	 * @param funcType       函数类型
+	 * @param funcMethod     函数执行的方法
+	 * @param executable     被代理的方法或构造
+	 * @param declaringClass {@link Executable}声明的类，如果方法或构造定义在父类中，此处用于指定子类
 	 * @return {@link CallSite}
 	 * @throws LambdaConversionException 权限等异常
 	 */
 	private static CallSite metaFactory(final Class<?> funcType, final Method funcMethod,
-										final Executable executable) throws LambdaConversionException {
+										final Executable executable, final Class<?> declaringClass) throws LambdaConversionException {
 		// 查找上下文与调用者的访问权限
 		final MethodHandles.Lookup caller = LookupUtil.lookup(executable.getDeclaringClass());
 		// 要实现的方法的名字
@@ -145,7 +163,7 @@ public class LambdaFactory {
 				invokedType,
 				samMethodType,
 				implMethodHandle,
-				MethodTypeUtil.methodType(executable),
+				MethodTypeUtil.methodType(executable, declaringClass),
 				LambdaMetafactory.FLAG_SERIALIZABLE
 			);
 		}
@@ -156,7 +174,7 @@ public class LambdaFactory {
 			invokedType,
 			samMethodType,
 			implMethodHandle,
-			MethodTypeUtil.methodType(executable)
+			MethodTypeUtil.methodType(executable, declaringClass)
 		);
 	}
 }
