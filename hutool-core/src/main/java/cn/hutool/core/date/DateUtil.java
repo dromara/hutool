@@ -1406,7 +1406,7 @@ public class DateUtil extends CalendarUtil {
 		return offset(date, DateField.HOUR_OF_DAY, offset);
 	}
 
-	/**w
+	/**
 	 * 偏移天
 	 *
 	 * @param date   日期
