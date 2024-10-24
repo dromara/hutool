@@ -217,7 +217,13 @@ public class RegisterConverter extends ConverterWithRoot implements Serializable
 
 		// 日期时间
 		converterMap.put(Calendar.class, new CalendarConverter());
-		converterMap.put(XMLGregorianCalendar.class, new XMLGregorianCalendarConverter());
+		//issue#IAY5Z7
+		// 可能抛出Provider org.apache.xerces.jaxp.datatype.DatatypeFactoryImpl not found，此处忽略
+		try{
+			converterMap.put(XMLGregorianCalendar.class, new XMLGregorianCalendarConverter());
+		}catch (final Exception ignore){
+			// ignore
+		}
 
 		// 日期时间 JDK8+(since 5.0.0)
 		converterMap.put(TemporalAccessor.class, TemporalAccessorConverter.INSTANCE);
