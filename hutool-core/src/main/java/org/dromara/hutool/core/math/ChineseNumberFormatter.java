@@ -73,9 +73,9 @@ public class ChineseNumberFormatter {
 	}
 
 	/**
-	 * 获取 NumberChineseFormatter 默认对象
+	 * 获取 ChineseNumberFormatter 默认对象
 	 *
-	 * @return NumberChineseFormatter
+	 * @return ChineseNumberFormatter
 	 */
 	public static ChineseNumberFormatter of() {
 		return new ChineseNumberFormatter();

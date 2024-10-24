@@ -362,4 +362,10 @@ public class ChineseNumberFormatterTest {
 		assertEquals("负十一", formatter.format(new BigDecimal("-11")));
 		assertEquals("负十", formatter.format(new BigDecimal("-10")));
 	}
+
+	@Test
+	void issueIAZ8UBTest() {
+		final String format = ChineseNumberFormatter.of().setUseTraditional(true).format(9810005022.12D);
+		assertEquals("玖拾捌亿壹仟万零伍仟零贰拾贰点壹贰", format);
+	}
 }
