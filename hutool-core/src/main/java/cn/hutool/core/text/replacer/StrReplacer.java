@@ -2,6 +2,7 @@ package cn.hutool.core.text.replacer;
 
 import cn.hutool.core.lang.Replacer;
 import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 
@@ -27,6 +28,9 @@ public abstract class StrReplacer implements Replacer<CharSequence>, Serializabl
 
 	@Override
 	public CharSequence replace(CharSequence t) {
+		if(StrUtil.isEmpty(t)){
+			return t;
+		}
 		final int len = t.length();
 		final StrBuilder builder = StrBuilder.create(len);
 		int pos = 0;//当前位置

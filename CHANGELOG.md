@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.33(2024-10-02)
+# 5.8.33(2024-10-25)
 
 ### 🐣新特性
 * 【core   】      SyncFinisher增加setExecutorService方法（issue#IANKQ1@Gitee）
@@ -15,6 +15,7 @@
 * 【db     】      AbstractDb增加getDs方法（issue#IARKZL@Gitee）
 * 【db     】      QrCodeUtil添加二维码logo支持配置圆角（pr#3747@Github）
 * 【core   】      TreeUtil.buildSingle指定rootId节点存在时，作为根节点（issue#IAUSHR@Gitee）
+* 【core   】      EscapeUtil.escapeHtml4增加空处理（issue#IAZMYU@Gitee）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）
