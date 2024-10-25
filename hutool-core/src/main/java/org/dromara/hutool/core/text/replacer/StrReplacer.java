@@ -16,6 +16,8 @@
 
 package org.dromara.hutool.core.text.replacer;
 
+import org.dromara.hutool.core.text.StrUtil;
+
 import java.io.Serializable;
 import java.util.function.UnaryOperator;
 
@@ -46,6 +48,9 @@ public abstract class StrReplacer implements UnaryOperator<CharSequence>, Serial
 	 */
 	@Override
 	public CharSequence apply(final CharSequence str) {
+		if(StrUtil.isEmpty(str)){
+			return str;
+		}
 		final int len = str.length();
 		final StringBuilder builder = new StringBuilder(len);
 		int pos = 0;//当前位置
