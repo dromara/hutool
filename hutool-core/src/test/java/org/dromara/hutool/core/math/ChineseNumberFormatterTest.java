@@ -365,7 +365,10 @@ public class ChineseNumberFormatterTest {
 
 	@Test
 	void issueIAZ8UBTest() {
-		final String format = ChineseNumberFormatter.of().setUseTraditional(true).format(9810005022.12D);
+		String format = ChineseNumberFormatter.of().setUseTraditional(true).format(9810005022.12D);
 		assertEquals("玖拾捌亿壹仟万零伍仟零贰拾贰点壹贰", format);
+
+		format = ChineseNumberFormatter.of().setMoneyMode(true).setUseTraditional(true).format(9810005022.12D);
+		assertEquals("玖拾捌亿壹仟万零伍仟零贰拾贰元壹角贰分", format);
 	}
 }
