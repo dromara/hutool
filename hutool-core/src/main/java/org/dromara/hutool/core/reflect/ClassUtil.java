@@ -711,6 +711,21 @@ public class ClassUtil {
 	}
 
 	/**
+	 * 判断指定类名的类是否存在
+	 *
+	 * @param className 全类名
+	 * @param loader    {@link ClassLoader}
+	 * @return 类名的类是否存在
+	 */
+	public static boolean isClassExists(final String className, final ClassLoader loader) {
+		try {
+			return null != forName(className, false, loader);
+		} catch (final Exception e) {
+			return false;
+		}
+	}
+
+	/**
 	 * 加载指定名称的类，支持：
 	 * <ul>
 	 *     <li>替换"/"为"."</li>
@@ -781,7 +796,7 @@ public class ClassUtil {
 	/**
 	 * 按广度优先遍历包括{@code root}在内，其层级结构中的所有类和接口，直到{@code terminator}返回{@code false}
 	 *
-	 * @param root 根类
+	 * @param root       根类
 	 * @param terminator 对遍历到的每个类与接口执行的校验，若为{@code false}则立刻中断遍历
 	 */
 	public static void traverseTypeHierarchyWhile(
@@ -792,8 +807,8 @@ public class ClassUtil {
 	/**
 	 * 按广度优先遍历包括{@code root}在内，其层级结构中的所有类和接口，直到{@code terminator}返回{@code false}
 	 *
-	 * @param root 根类
-	 * @param filter 过滤器，被过滤的类及其层级结构中的类与接口将被忽略
+	 * @param root       根类
+	 * @param filter     过滤器，被过滤的类及其层级结构中的类与接口将被忽略
 	 * @param terminator 对遍历到的每个类与接口执行的校验，若为{@code false}则立刻中断遍历
 	 */
 	public static void traverseTypeHierarchyWhile(
@@ -812,9 +827,9 @@ public class ClassUtil {
 	 *     <li>与{@code type}距离相同的接口，则顺序遵循接口在{@link Class#getInterfaces()}的顺序；</li>
 	 * </ul>
 	 *
-	 * @param root 根类
-	 * @param filter 过滤器，被过滤的类及其层级结构中的类与接口将被忽略
-	 * @param consumer 对遍历到的每个类与接口执行的操作，每个类和接口都只会被访问一次
+	 * @param root        根类
+	 * @param filter      过滤器，被过滤的类及其层级结构中的类与接口将被忽略
+	 * @param consumer    对遍历到的每个类与接口执行的操作，每个类和接口都只会被访问一次
 	 * @param includeRoot 是否包括根类
 	 */
 	public static void traverseTypeHierarchy(
