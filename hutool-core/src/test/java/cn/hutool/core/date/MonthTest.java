@@ -1,8 +1,11 @@
 package cn.hutool.core.date;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.format.TextStyle;
 import java.util.Calendar;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -67,5 +70,11 @@ public class MonthTest {
 
 		month = Month.of(java.time.Month.FEBRUARY);
 		assertEquals(Month.FEBRUARY, month);
+	}
+
+	@Test
+	void getDisplayNameTest() {
+		final String displayName = Month.FEBRUARY.getDisplayName(TextStyle.SHORT, Locale.US);
+		Assertions.assertEquals("Feb", displayName);
 	}
 }
