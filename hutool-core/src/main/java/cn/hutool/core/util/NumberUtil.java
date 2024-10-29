@@ -2329,7 +2329,7 @@ public class NumberUtil {
 	 * @since 3.0.6
 	 */
 	public static int count(int total, int part) {
-		return (total % part == 0) ? (total / part) : (total / part + 1);
+		return total == 0 ? 0 : (total - 1) / part + 1;
 	}
 
 	/**
