@@ -363,6 +363,7 @@ public class PropDesc {
 	 * @return 是否为Transient关键字修饰的
 	 * @since 5.3.11
 	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private boolean isTransientForGet() {
 		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierUtil.ModifierType.TRANSIENT);
 
@@ -372,7 +373,17 @@ public class PropDesc {
 
 			// 检查注解
 			if (false == isTransient) {
-				isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
+				//isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
+				Class aClass = null;
+				try {
+					// issue#IB0JP5，Android可能无这个类
+					aClass = Class.forName("java.beans.Transient");
+				} catch (final ClassNotFoundException e) {
+					// ignore
+				}
+				if(null != aClass){
+					isTransient = AnnotationUtil.hasAnnotation(this.getter, aClass);
+				}
 			}
 		}
 
