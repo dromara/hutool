@@ -17,6 +17,7 @@
 * 【core   】      TreeUtil.buildSingle指定rootId节点存在时，作为根节点（issue#IAUSHR@Gitee）
 * 【core   】      EscapeUtil.escapeHtml4增加空处理（issue#IAZMYU@Gitee）
 * 【core   】      PropDesc.isTransientForGet使用className，避免Android下类找不到问题（issue#IB0JP5@Gitee）
+* 【core   】      优化NumberUtil.count（pr#3772@Github）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）
