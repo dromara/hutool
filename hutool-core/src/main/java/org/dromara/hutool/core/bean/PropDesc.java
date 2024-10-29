@@ -442,12 +442,15 @@ public class PropDesc {
 
 			// 检查注解
 			if (!isTransient) {
+				Class aClass = null;
 				try {
 					// issue#IB0JP5，Android可能无这个类
-					final Class aClass = Class.forName("java.beans.Transient");
-					isTransient = AnnotationUtil.hasAnnotation(getterMethod, aClass);
+					aClass = Class.forName("java.beans.Transient");
 				} catch (final ClassNotFoundException e) {
 					// ignore
+				}
+				if(null != aClass){
+					isTransient = AnnotationUtil.hasAnnotation(getterMethod, aClass);
 				}
 			}
 		}
