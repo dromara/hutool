@@ -960,7 +960,8 @@ public class NumberUtil extends NumberValidator {
 	public static int count(final int total, final int pageSize) {
 		// 因为总条数除以页大小的最大余数是页大小数-1，
 		// 因此加一个最大余数，保证舍弃的余数与最大余数凑1.x，就是一旦有余数则+1页
-		return (total + pageSize - 1) / pageSize;
+		// return (total + pageSize - 1) / pageSize;
+		return total == 0 ? 0 : (total - 1) / pageSize + 1;
 	}
 
 	/**
