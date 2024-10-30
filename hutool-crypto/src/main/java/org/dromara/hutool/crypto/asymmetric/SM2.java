@@ -475,6 +475,29 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	/**
 	 * 用私钥对信息生成数字签名
 	 *
+	 * @param dataHex 被签名的数据数据（Hex格式）
+	 * @return 签名
+	 * @since 5.8.33
+	 */
+	public String signHexFromHex(final String dataHex) {
+		return signHexFromHex(dataHex, null);
+	}
+
+	/**
+	 * 用私钥对信息生成数字签名
+	 *
+	 * @param dataHex 被签名的数据数据（Hex格式）
+	 * @param idHex   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
+	 * @return 签名
+	 * @since 5.8.33
+	 */
+	public String signHexFromHex(final String dataHex, final String idHex) {
+		return HexUtil.encodeStr(sign(HexUtil.decode(dataHex), HexUtil.decode(idHex)));
+	}
+
+	/**
+	 * 用私钥对信息生成数字签名
+	 *
 	 * @param data 被签名的数据数据
 	 * @return 签名
 	 */

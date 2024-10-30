@@ -226,7 +226,7 @@ public class SM2Test {
 		final String id = "31323334353637383132333435363738";
 
 		final SM2 sm2 = new SM2(d, x, y);
-		final String sign = sm2.signHex(HexUtil.decode(data), HexUtil.decode(id));
+		final String sign = sm2.signHexFromHex(data, id);
 		Assertions.assertTrue(sm2.verifyHex(data, sign));
 	}
 
@@ -249,7 +249,7 @@ public class SM2Test {
 		final String sign = "DCA0E80A7F46C93714B51C3EFC55A922BCEF7ECF0FE9E62B53BA6A7438B543A76C145A452CA9036F3CB70D7E6C67D4D9D7FE114E5367A2F6F5A4D39F2B10F3D6";
 		Assertions.assertTrue(sm2.verifyHex(data, sign));
 
-		final String sign2 = sm2.signHex(HexUtil.decode(data), HexUtil.decode(id));
+		final String sign2 = sm2.signHexFromHex(data, id);
 		Assertions.assertTrue(sm2.verifyHex(data, sign2));
 	}
 
