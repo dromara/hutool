@@ -324,8 +324,44 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param dataHex 被签名的数据数据
 	 * @return 签名
 	 */
+	public String signHexFromHex(String dataHex) {
+		return signHex(dataHex, null);
+	}
+
+	/**
+	 * 用私钥对信息生成数字签名
+	 *
+	 * @param dataHex 被签名的数据数据
+	 * @return 签名
+	 * @deprecated 歧义，使用{@link #signHexFromHex(String)}
+	 */
+	@Deprecated
 	public String signHex(String dataHex) {
 		return signHex(dataHex, null);
+	}
+
+	/**
+	 * 用私钥对信息生成数字签名
+	 *
+	 * @param dataHex 被签名的数据数据
+	 * @param idHex   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
+	 * @return 签名
+	 */
+	public String signHexFromHex(String dataHex, String idHex) {
+		return HexUtil.encodeHexStr(sign(HexUtil.decodeHex(dataHex), HexUtil.decodeHex(idHex)));
+	}
+
+	/**
+	 * 用私钥对信息生成数字签名
+	 *
+	 * @param dataHex 被签名的数据数据
+	 * @param idHex   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
+	 * @return 签名
+	 * @deprecated 歧义，使用{@link #signHexFromHex(String, String)}
+	 */
+	@Deprecated
+	public String signHex(String dataHex, String idHex) {
+		return HexUtil.encodeHexStr(sign(HexUtil.decodeHex(dataHex), HexUtil.decodeHex(idHex)));
 	}
 
 	/**
@@ -337,17 +373,6 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public byte[] sign(byte[] data) {
 		return sign(data, null);
-	}
-
-	/**
-	 * 用私钥对信息生成数字签名
-	 *
-	 * @param dataHex 被签名的数据数据
-	 * @param idHex   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
-	 * @return 签名
-	 */
-	public String signHex(String dataHex, String idHex) {
-		return HexUtil.encodeHexStr(sign(HexUtil.decodeHex(dataHex), HexUtil.decodeHex(idHex)));
 	}
 
 	/**

@@ -160,7 +160,7 @@ public class SM2Test {
 
 		final SM2 sm2 = SmUtil.sm2();
 
-		String sign = sm2.signHex(HexUtil.encodeHexStr(content));
+		String sign = sm2.signHexFromHex(HexUtil.encodeHexStr(content));
 		boolean verify = sm2.verifyHex(HexUtil.encodeHexStr(content), sign);
 		assertTrue(verify);
 	}

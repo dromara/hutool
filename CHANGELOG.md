@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.33(2024-10-29)
+# 5.8.33(2024-10-30)
 
 ### 🐣新特性
 * 【core   】      SyncFinisher增加setExecutorService方法（issue#IANKQ1@Gitee）
@@ -18,6 +18,7 @@
 * 【core   】      EscapeUtil.escapeHtml4增加空处理（issue#IAZMYU@Gitee）
 * 【core   】      PropDesc.isTransientForGet使用className，避免Android下类找不到问题（issue#IB0JP5@Gitee）
 * 【core   】      优化NumberUtil.count（pr#3772@Github）
+* 【crypto 】      SM2.signHex改名为signHexFromHex，原名标记废弃，避免歧义（issue#IB0NVY@Gitee）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）
