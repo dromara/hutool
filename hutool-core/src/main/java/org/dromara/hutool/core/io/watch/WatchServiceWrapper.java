@@ -19,7 +19,7 @@ package org.dromara.hutool.core.io.watch;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.PathUtil;
-import org.dromara.hutool.core.lang.wrapper.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -38,7 +38,7 @@ import java.util.function.Predicate;
  * @author looly
  * @since 6.0.0
  */
-public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>, Serializable {
+public class WatchServiceWrapper extends SimpleWrapper<WatchService> implements WatchService, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -51,10 +51,6 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 		return new WatchServiceWrapper(events);
 	}
 
-	/**
-	 * 监听服务
-	 */
-	private final WatchService watchService;
 	/**
 	 * 监听事件列表，如新建、修改、删除等
 	 */
@@ -75,18 +71,8 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 	 */
 	public WatchServiceWrapper(final WatchEvent.Kind<?>... events) {
 		//初始化监听
-		try {
-			watchService = FileSystems.getDefault().newWatchService();
-		} catch (final IOException e) {
-			throw new WatchException(e);
-		}
-
+		super(newWatchService());
 		this.events = events;
-	}
-
-	@Override
-	public WatchService getRaw() {
-		return this.watchService;
 	}
 
 	/**
@@ -102,23 +88,23 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 	public void close() {
 		if (!this.isClosed) {
 			this.isClosed = true;
-			IoUtil.closeQuietly(this.watchService);
+			IoUtil.closeQuietly(this.raw);
 		}
 	}
 
 	@Override
 	public WatchKey poll() {
-		return this.watchService.poll();
+		return this.raw.poll();
 	}
 
 	@Override
 	public WatchKey poll(final long timeout, final TimeUnit unit) throws InterruptedException {
-		return this.watchService.poll(timeout, unit);
+		return this.raw.poll(timeout, unit);
 	}
 
 	@Override
 	public WatchKey take() throws InterruptedException {
-		return this.watchService.take();
+		return this.raw.take();
 	}
 
 	/**
@@ -176,9 +162,9 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 		WatchKey watchKey = null;
 		try {
 			if (ArrayUtil.isEmpty(this.modifiers)) {
-				watchKey = watchable.register(this.watchService, kinds);
+				watchKey = watchable.register(this.raw, kinds);
 			} else {
-				watchKey = watchable.register(this.watchService, kinds, this.modifiers);
+				watchKey = watchable.register(this.raw, kinds, this.modifiers);
 			}
 		} catch (final IOException e) {
 			if (!(e instanceof AccessDeniedException)) {
@@ -266,7 +252,7 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 	public void watch(final BiConsumer<WatchEvent<?>, WatchKey> action, final Predicate<WatchEvent<?>> watchFilter) {
 		final WatchKey wk;
 		try {
-			wk = watchService.take();
+			wk = raw.take();
 		} catch (final InterruptedException | ClosedWatchServiceException e) {
 			// 用户中断
 			close();
@@ -282,5 +268,18 @@ public class WatchServiceWrapper implements WatchService, Wrapper<WatchService>,
 		}
 
 		wk.reset();
+	}
+
+	/**
+	 * 创建一个新的{@link WatchService}实例，用于监听指定目录
+	 *
+	 * @return {@link WatchService}
+	 */
+	private static WatchService newWatchService() {
+		try {
+			return FileSystems.getDefault().newWatchService();
+		} catch (final IOException e) {
+			throw new WatchException(e);
+		}
 	}
 }
