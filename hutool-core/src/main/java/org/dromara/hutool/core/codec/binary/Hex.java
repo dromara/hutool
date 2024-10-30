@@ -87,7 +87,7 @@ public class Hex {
 	 * @param data 被编码的字符串
 	 * @return 十六进制String
 	 */
-	public static String encodeStr(final String data) {
+	public static String encodeStr(final CharSequence data) {
 		return encodeStr(data, CharsetUtil.UTF_8);
 	}
 
@@ -98,7 +98,7 @@ public class Hex {
 	 * @param charset 编码
 	 * @return 十六进制String
 	 */
-	public static String encodeStr(final String data, final Charset charset) {
+	public static String encodeStr(final CharSequence data, final Charset charset) {
 		return encodeStr(ByteUtil.toBytes(data, charset), true);
 	}
 
@@ -122,7 +122,7 @@ public class Hex {
 	 * @param hexStr 十六进制String
 	 * @return 字符串
 	 */
-	public static String decodeStr(final String hexStr) {
+	public static String decodeStr(final CharSequence hexStr) {
 		return decodeStr(hexStr, CharsetUtil.UTF_8);
 	}
 
@@ -133,9 +133,9 @@ public class Hex {
 	 * @param charset 编码
 	 * @return 字符串
 	 */
-	public static String decodeStr(final String hexStr, final Charset charset) {
+	public static String decodeStr(final CharSequence hexStr, final Charset charset) {
 		if (StrUtil.isEmpty(hexStr)) {
-			return hexStr;
+			return StrUtil.toStringOrNull(hexStr);
 		}
 		return StrUtil.str(decode(hexStr), charset);
 	}
@@ -149,16 +149,6 @@ public class Hex {
 	 */
 	public static String decodeStr(final char[] hexData, final Charset charset) {
 		return StrUtil.str(decode(hexData), charset);
-	}
-
-	/**
-	 * 将十六进制字符串解码为byte[]
-	 *
-	 * @param hexStr 十六进制String
-	 * @return byte[]
-	 */
-	public static byte[] decode(final String hexStr) {
-		return decode((CharSequence) hexStr);
 	}
 
 	/**

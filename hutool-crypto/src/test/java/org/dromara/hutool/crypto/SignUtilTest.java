@@ -25,6 +25,7 @@ import org.dromara.hutool.crypto.bc.PemUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PublicKey;
 
@@ -39,7 +40,7 @@ public class SignUtilTest {
 		final PublicKey publicKey = KeyUtil.generatePublicKey(SignAlgorithm.SHA256withRSA.getValue(), Base64.decode(base64));
 		Assertions.assertEquals(sign.getPublicKey(), publicKey);
 
-		final String signHex = sign.signHex("abcd");
+		final String signHex = sign.signHex("abcd".getBytes(StandardCharsets.UTF_8));
 		Assert.notNull(signHex);
 	}
 

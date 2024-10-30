@@ -16,12 +16,10 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
+import org.dromara.hutool.core.codec.binary.HexUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.SecureUtil;
@@ -29,8 +27,9 @@ import org.dromara.hutool.crypto.SignUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyPair;
+import java.security.Signature;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.spec.AlgorithmParameterSpec;
@@ -179,64 +178,57 @@ public class Sign extends BaseAsymmetric<Sign> {
 		return this;
 	}
 
-	// --------------------------------------------------------------------------------- Sign and Verify
-
 	/**
-	 * 生成文件签名
+	 * 获得签名对象
 	 *
-	 * @param data    被签名数据
-	 * @param charset 编码
-	 * @return 签名
-	 * @since 5.7.0
+	 * @return {@link Signature}
 	 */
-	public byte[] sign(final String data, final Charset charset) {
-		return sign(ByteUtil.toBytes(data, charset));
+	public Signature getSignature() {
+		return signature;
 	}
 
 	/**
-	 * 生成文件签名
+	 * 设置签名
 	 *
-	 * @param data 被签名数据
-	 * @return 签名
-	 * @since 5.7.0
+	 * @param signature 签名对象 {@link Signature}
+	 * @return 自身 {@link AsymmetricCrypto}
 	 */
-	public byte[] sign(final String data) {
-		return sign(data, CharsetUtil.UTF_8);
+	public Sign setSignature(final Signature signature) {
+		this.signature = signature;
+		return this;
 	}
 
 	/**
-	 * 生成文件签名，并转为16进制字符串
+	 * 设置{@link Certificate} 为PublicKey<br>
+	 * 如果Certificate是X509Certificate，我们需要检查是否有密钥扩展
 	 *
-	 * @param data    被签名数据
-	 * @param charset 编码
-	 * @return 签名
-	 * @since 5.7.0
+	 * @param certificate {@link Certificate}
+	 * @return this
 	 */
-	public String signHex(final String data, final Charset charset) {
-		return HexUtil.encodeStr(sign(data, charset));
+	public Sign setCertificate(final Certificate certificate) {
+		// If the certificate is of type X509Certificate,
+		// we should check whether it has a Key Usage
+		// extension marked as critical.
+		if (certificate instanceof X509Certificate) {
+			// Check whether the cert has a key usage extension
+			// marked as a critical extension.
+			// The OID for KeyUsage extension is 2.5.29.15.
+			final X509Certificate cert = (X509Certificate) certificate;
+			final Set<String> critSet = cert.getCriticalExtensionOIDs();
+
+			if (CollUtil.isNotEmpty(critSet) && critSet.contains("2.5.29.15")) {
+				final boolean[] keyUsageInfo = cert.getKeyUsage();
+				// keyUsageInfo[0] is for digitalSignature.
+				if ((keyUsageInfo != null) && (keyUsageInfo[0] == false)) {
+					throw new CryptoException("Wrong key usage");
+				}
+			}
+		}
+		this.publicKey = certificate.getPublicKey();
+		return this;
 	}
 
-	/**
-	 * 生成文件签名
-	 *
-	 * @param data 被签名数据
-	 * @return 签名
-	 * @since 5.7.0
-	 */
-	public String signHex(final String data) {
-		return signHex(data, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 用私钥对信息生成数字签名
-	 *
-	 * @param data 加密数据
-	 * @return 签名
-	 */
-	public byte[] sign(final byte[] data) {
-		return sign(new ByteArrayInputStream(data), -1);
-	}
-
+	// region ----- Sign and Verify
 	/**
 	 * 生成签名，并转为16进制字符串<br>
 	 *
@@ -257,18 +249,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public String signHex(final InputStream data) {
-		return HexUtil.encodeStr(sign(data));
-	}
-
-	/**
-	 * 生成签名，使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 *
-	 * @param data {@link InputStream} 数据流
-	 * @return 签名bytes
-	 * @since 5.7.0
-	 */
-	public byte[] sign(final InputStream data) {
-		return sign(data, IoUtil.DEFAULT_BUFFER_SIZE);
+		return signHex(data, -1);
 	}
 
 	/**
@@ -280,8 +261,29 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public String digestHex(final InputStream data, final int bufferLength) {
+	public String signHex(final InputStream data, final int bufferLength) {
 		return HexUtil.encodeStr(sign(data, bufferLength));
+	}
+
+	/**
+	 * 用私钥对信息生成数字签名
+	 *
+	 * @param data 加密数据
+	 * @return 签名
+	 */
+	public byte[] sign(final byte[] data) {
+		return sign(new ByteArrayInputStream(data), -1);
+	}
+
+	/**
+	 * 生成签名，使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
+	 *
+	 * @param data {@link InputStream} 数据流
+	 * @return 签名bytes
+	 * @since 5.7.0
+	 */
+	public byte[] sign(final InputStream data) {
+		return sign(data, -1);
 	}
 
 	/**
@@ -339,54 +341,5 @@ public class Sign extends BaseAsymmetric<Sign> {
 			lock.unlock();
 		}
 	}
-
-	/**
-	 * 获得签名对象
-	 *
-	 * @return {@link Signature}
-	 */
-	public Signature getSignature() {
-		return signature;
-	}
-
-	/**
-	 * 设置签名
-	 *
-	 * @param signature 签名对象 {@link Signature}
-	 * @return 自身 {@link AsymmetricCrypto}
-	 */
-	public Sign setSignature(final Signature signature) {
-		this.signature = signature;
-		return this;
-	}
-
-	/**
-	 * 设置{@link Certificate} 为PublicKey<br>
-	 * 如果Certificate是X509Certificate，我们需要检查是否有密钥扩展
-	 *
-	 * @param certificate {@link Certificate}
-	 * @return this
-	 */
-	public Sign setCertificate(final Certificate certificate) {
-		// If the certificate is of type X509Certificate,
-		// we should check whether it has a Key Usage
-		// extension marked as critical.
-		if (certificate instanceof X509Certificate) {
-			// Check whether the cert has a key usage extension
-			// marked as a critical extension.
-			// The OID for KeyUsage extension is 2.5.29.15.
-			final X509Certificate cert = (X509Certificate) certificate;
-			final Set<String> critSet = cert.getCriticalExtensionOIDs();
-
-			if (CollUtil.isNotEmpty(critSet) && critSet.contains("2.5.29.15")) {
-				final boolean[] keyUsageInfo = cert.getKeyUsage();
-				// keyUsageInfo[0] is for digitalSignature.
-				if ((keyUsageInfo != null) && (keyUsageInfo[0] == false)) {
-					throw new CryptoException("Wrong key usage");
-				}
-			}
-		}
-		this.publicKey = certificate.getPublicKey();
-		return this;
-	}
+	// endregion
 }
