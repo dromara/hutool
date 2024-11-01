@@ -198,6 +198,26 @@ public class Column implements Serializable, Cloneable {
 	}
 
 	/**
+	 * 获取数据库字段类型，包括长度
+	 *
+	 * @return 数据库字段类型，包括长度
+	 */
+	public ColumnType getType() {
+		return type;
+	}
+
+	/**
+	 * 设置数据库字段类型，包括长度
+	 *
+	 * @param type 数据库字段类型，包括长度
+	 * @return this
+	 */
+	public Column setType(final ColumnType type) {
+		this.type = type;
+		return this;
+	}
+
+	/**
 	 * 获取小数位数
 	 *
 	 * @return 大小或数据长度
