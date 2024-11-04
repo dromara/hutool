@@ -70,12 +70,12 @@ public class PathMover {
 	 */
 	public PathMover(final Path src, final Path target, final CopyOption[] options) {
 		Assert.notNull(target, "Src path must be not null !");
-		if(!PathUtil.exists(src, false)){
+		if (!PathUtil.exists(src, false)) {
 			throw new IllegalArgumentException("Src path is not exist!");
 		}
 		this.src = src;
 		this.target = Assert.notNull(target, "Target path must be not null !");
-		this.options = ObjUtil.defaultIfNull(options, new CopyOption[]{});
+		this.options = ObjUtil.defaultIfNull(options, () -> new CopyOption[]{});
 	}
 
 	/**
@@ -94,13 +94,13 @@ public class PathMover {
 	 * @return 目标文件Path
 	 * @throws IllegalArgumentException src为目录，target为其子目录抛出此异常
 	 */
-	public Path move() throws IllegalArgumentException{
+	public Path move() throws IllegalArgumentException {
 		final Path src = this.src;
 		Path target = this.target;
 		final CopyOption[] options = this.options;
 
 		if (PathUtil.isSub(src, target)) {
-			if(PathUtil.equals(src, target)){
+			if (PathUtil.equals(src, target)) {
 				// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
 				return target;
 			}

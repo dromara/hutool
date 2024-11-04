@@ -77,7 +77,7 @@ public class UrlPath {
 	 * @return 节点列表
 	 */
 	public List<CharSequence> getSegments() {
-		return ObjUtil.defaultIfNull(this.segments, ListUtil.empty());
+		return ObjUtil.defaultIfNull(this.segments, ListUtil::empty);
 	}
 
 	/**
