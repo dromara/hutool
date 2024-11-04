@@ -72,7 +72,7 @@ public class ExceptionUtil {
 	 * @return 运行时异常
 	 */
 	public static RuntimeException wrapRuntime(final Throwable throwable) {
-		if(throwable instanceof IOException){
+		if (throwable instanceof IOException) {
 			return new IORuntimeException(throwable);
 		}
 		if (throwable instanceof RuntimeException) {
@@ -128,11 +128,22 @@ public class ExceptionUtil {
 	/**
 	 * 将消息包装为运行时异常并抛出
 	 *
-	 * @param message 异常消息
-	 * @since 5.5.2
+	 * @param message 错误消息模板，被替换的部分用 {} 表示
+	 * @param params  参数
 	 */
-	public static void wrapRuntimeAndThrow(final String message) {
-		throw new RuntimeException(message);
+	public static void wrapRuntimeAndThrow(final String message, final Object... params) {
+		throw new RuntimeException(StrUtil.format(message, params));
+	}
+
+	/**
+	 * 将消息包装为运行时异常并抛出
+	 *
+	 * @param cause   异常原因
+	 * @param message 错误消息模板，被替换的部分用 {} 表示
+	 * @param params  参数
+	 */
+	public static void wrapRuntimeAndThrow(final Throwable cause, final String message, final Object... params) {
+		throw new RuntimeException(StrUtil.format(message, params), cause);
 	}
 
 	/**
@@ -179,14 +190,14 @@ public class ExceptionUtil {
 	 * 获取指定层的堆栈信息
 	 *
 	 * @param fqcn 指定类名为基础
-	 * @param i 指定类名的类堆栈相对层数
+	 * @param i    指定类名的类堆栈相对层数
 	 * @return 指定层的堆栈信息
 	 * @since 5.6.6
 	 */
 	public static StackTraceElement getStackElement(final String fqcn, final int i) {
 		final StackTraceElement[] stackTraceArray = Thread.currentThread().getStackTrace();
 		final int index = ArrayUtil.matchIndex((ele) -> StrUtil.equals(fqcn, ele.getClassName()), stackTraceArray);
-		if(index > 0){
+		if (index > 0) {
 			return stackTraceArray[index + i];
 		}
 
@@ -284,7 +295,7 @@ public class ExceptionUtil {
 			}
 			return sb.toString();
 		} else {
-			if(limit == length){
+			if (limit == length) {
 				return exceptionStr;
 			}
 			return StrUtil.subPre(exceptionStr, limit);
@@ -424,7 +435,6 @@ public class ExceptionUtil {
 	 * 获取异常链中最尾端的异常，即异常最早发生的异常对象。<br>
 	 * 此方法通过调用{@link Throwable#getCause()} 直到没有cause为止，如果异常本身没有cause，返回异常本身<br>
 	 * 传入null返回也为null
-	 *
 	 *
 	 * @param throwable 异常对象，可能为null
 	 * @return 最尾端异常，传入null参数返回也为null
