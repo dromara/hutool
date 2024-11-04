@@ -323,10 +323,10 @@ public class MailAccount implements Serializable {
 	 * 设置发送方，遵循RFC-822标准<br>
 	 * 发件人可以是以下形式：
 	 *
-	 * <pre>
+	 * <pre>{@code
 	 * 1. user@xxx.xx
-	 * 2.  name &lt;user@xxx.xx&gt;
-	 * </pre>
+	 * 2. name<user@xxx.xx>
+	 * }</pre>
 	 *
 	 * @param from 发送方，遵循RFC-822标准
 	 * @return this

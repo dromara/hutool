@@ -16,15 +16,15 @@
 
 package org.dromara.hutool.setting;
 
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.LineReader;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.regex.ReUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.SystemUtil;
 import org.dromara.hutool.log.Log;
@@ -39,29 +39,46 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 /**
  * Setting文件加载器
  *
  * @author Looly
- *
  */
 public class SettingLoader {
 	private static final Log log = Log.get();
 
-	/** 注释符号（当有此符号在行首，表示此行为注释） */
+	/**
+	 * 注释符号（当有此符号在行首，表示此行为注释）
+	 */
 	private final static char COMMENT_FLAG_PRE = '#';
-	/** 赋值分隔符（用于分隔键值对） */
-	private char assignFlag = '=';
-	/** 变量名称的正则 */
-	private String varRegex = "\\$\\{(.*?)\\}";
 
-	/** 本设置对象的字符集 */
+	/**
+	 * 本设置对象的字符集
+	 */
 	private final Charset charset;
-	/** 是否使用变量 */
+	/**
+	 * 是否使用变量
+	 */
 	private final boolean isUseVariable;
-	/** GroupedMap */
+	/**
+	 * GroupedMap
+	 */
 	private final GroupedMap groupedMap;
+
+	/**
+	 * 赋值分隔符（用于分隔键值对）
+	 */
+	private char assignFlag = '=';
+	/**
+	 * 变量名称的正则
+	 */
+	private String varRegex = "\\$\\{(.*?)\\}";
+	/**
+	 * 值编辑器
+	 */
+	private UnaryOperator<String> valueEditor;
 
 	/**
 	 * 构造
@@ -75,8 +92,8 @@ public class SettingLoader {
 	/**
 	 * 构造
 	 *
-	 * @param groupedMap GroupedMap
-	 * @param charset 编码
+	 * @param groupedMap    GroupedMap
+	 * @param charset       编码
 	 * @param isUseVariable 是否使用变量
 	 */
 	public SettingLoader(final GroupedMap groupedMap, final Charset charset, final boolean isUseVariable) {
@@ -142,13 +159,17 @@ public class SettingLoader {
 				}
 
 				final String[] keyValue = SplitUtil.split(line, String.valueOf(this.assignFlag), 2, true, false)
-						.toArray(new String[0]);
+					.toArray(new String[0]);
 				// 跳过不符合键值规范的行
 				if (keyValue.length < 2) {
 					continue;
 				}
 
 				String value = keyValue[1];
+				if (null != this.valueEditor) {
+					value = this.valueEditor.apply(value);
+				}
+
 				// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
 				if (this.isUseVariable) {
 					value = replaceVar(group, value);
@@ -165,19 +186,37 @@ public class SettingLoader {
 	 * 正则只能有一个group表示变量本身，剩余为字符 例如 \$\{(name)\}表示${name}变量名为name的一个变量表示
 	 *
 	 * @param regex 正则
+	 * @return this
 	 */
-	public void setVarRegex(final String regex) {
+	public SettingLoader setVarRegex(final String regex) {
 		this.varRegex = regex;
+		return this;
 	}
 
 	/**
 	 * 赋值分隔符（用于分隔键值对）
 	 *
 	 * @param assignFlag 正则
+	 * @return this
 	 * @since 4.6.5
 	 */
-	public void setAssignFlag(final char assignFlag) {
+	public SettingLoader setAssignFlag(final char assignFlag) {
 		this.assignFlag = assignFlag;
+		return this;
+	}
+
+	/**
+	 * 设置值编辑器，用于在获取值后编辑返回值，例如解密等<br>
+	 * 编辑器函数接受一个参数，此参数为待编辑的值，函数返回编辑后的值<br>
+	 * 注意：此函数调用在变量替换前
+	 *
+	 * @param valueEditor 编辑器函数
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public SettingLoader setValueEditor(final UnaryOperator<String> valueEditor) {
+		this.valueEditor = valueEditor;
+		return this;
 	}
 
 	/**
@@ -224,6 +263,7 @@ public class SettingLoader {
 	}
 
 	// ----------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 替换给定值中的变量标识
 	 *
