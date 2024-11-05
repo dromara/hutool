@@ -20,6 +20,7 @@
 * 【core   】      优化NumberUtil.count（pr#3772@Github）
 * 【crypto 】      SM2.signHex改名为signHexFromHex，原名标记废弃，避免歧义（issue#IB0NVY@Gitee）
 * 【all    】      优化所调用的ObjectUtil#defaultIfNull避免重复创建（pr#1274@Gitee）
+* 【core   】      NetUtil.bigIntegerToIPv6增加长度修正（issue#IB27HV@Gitee）
 
 ### 🐞Bug修复
 * 【json   】      修复JSONConfig.setDateFormat设置后toBean无效问题（issue#3713@Github）

@@ -108,9 +108,30 @@ public class NetUtil {
 	 * @since 5.5.7
 	 */
 	public static String bigIntegerToIPv6(BigInteger bigInteger) {
+		// 确保 BigInteger 在 IPv6 地址范围内
+		if (bigInteger.compareTo(BigInteger.ZERO) < 0 || bigInteger.compareTo(new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16)) > 0) {
+			throw new IllegalArgumentException("BigInteger value is out of IPv6 range");
+		}
+
+		// 将 BigInteger 转换为 16 字节的字节数组
+		byte[] bytes = bigInteger.toByteArray();
+		if (bytes.length > 16) {
+			// 如果字节数组长度大于 16，去掉前导零
+			int offset = bytes[0] == 0 ? 1 : 0;
+			final byte[] newBytes = new byte[16];
+			System.arraycopy(bytes, offset, newBytes, 0, 16);
+			bytes = newBytes;
+		} else if (bytes.length < 16) {
+			// 如果字节数组长度小于 16，前面补零
+			byte[] paddedBytes = new byte[16];
+			System.arraycopy(bytes, 0, paddedBytes, 16 - bytes.length, bytes.length);
+			bytes = paddedBytes;
+		}
+
+		// 将字节数组转换为 IPv6 地址字符串
 		try {
-			return InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
-		} catch (UnknownHostException ignore) {
+			return Inet6Address.getByAddress(bytes).getHostAddress();
+		} catch (UnknownHostException e) {
 			return null;
 		}
 	}

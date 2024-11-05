@@ -3,14 +3,17 @@ package cn.hutool.core.net;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.ReUtil;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
 import java.net.HttpCookie;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * NetUtil单元测试
@@ -125,5 +128,12 @@ public class NetUtilTest {
 		final String ips = "unknown, 12.34.56.78, 23.45.67.89";
 		final String ip = NetUtil.getMultistageReverseProxyIp(ips);
 		assertEquals("12.34.56.78", ip);
+	}
+
+	@Test
+	void bigIntegerToIPv6Test() {
+		BigInteger bigInteger = new BigInteger("21987654321098765432109876543210", 10);
+		String ipv6Address = NetUtil.bigIntegerToIPv6(bigInteger);
+		Assertions.assertEquals("0:115:85f1:5eb3:c74d:a870:11c6:7eea", ipv6Address);
 	}
 }
