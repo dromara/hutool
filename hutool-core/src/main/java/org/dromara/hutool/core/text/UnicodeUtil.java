@@ -98,7 +98,7 @@ public class UnicodeUtil {
 	 * @param str 被编码的字符串
 	 * @return Unicode字符串
 	 */
-	public static String toUnicode(final String str) {
+	public static String toUnicode(final CharSequence str) {
 		return toUnicode(str, true);
 	}
 
@@ -109,9 +109,9 @@ public class UnicodeUtil {
 	 * @param isSkipAscii 是否跳过ASCII字符（只跳过可见字符）
 	 * @return Unicode字符串
 	 */
-	public static String toUnicode(final String str, final boolean isSkipAscii) {
+	public static String toUnicode(final CharSequence str, final boolean isSkipAscii) {
 		if (StrUtil.isEmpty(str)) {
-			return str;
+			return StrUtil.toStringOrNull(str);
 		}
 
 		final int len = str.length();
