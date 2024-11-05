@@ -105,8 +105,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
-		super(InternalJSONUtil.createRawMap(capacity, ObjectUtil.defaultIfNull(config, JSONConfig.create())));
-		this.config = ObjectUtil.defaultIfNull(config, JSONConfig.create());
+		super(InternalJSONUtil.createRawMap(capacity, ObjectUtil.defaultIfNull(config, JSONConfig::create)));
+		this.config = ObjectUtil.defaultIfNull(config, JSONConfig::create);
 	}
 
 	/**

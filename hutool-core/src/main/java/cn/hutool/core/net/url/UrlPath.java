@@ -54,7 +54,7 @@ public class UrlPath {
 	 * @return 节点列表
 	 */
 	public List<String> getSegments() {
-		return ObjectUtil.defaultIfNull(this.segments, ListUtil.empty());
+		return ObjectUtil.defaultIfNull(this.segments, ListUtil::empty);
 	}
 
 	/**

@@ -389,7 +389,7 @@ public class TypeUtil {
 		if (null == field) {
 			return null;
 		}
-		return getActualType(ObjectUtil.defaultIfNull(type, field.getDeclaringClass()), field.getGenericType());
+		return getActualType(ObjectUtil.defaultIfNull(type, field::getDeclaringClass), field.getGenericType());
 	}
 
 	/**
