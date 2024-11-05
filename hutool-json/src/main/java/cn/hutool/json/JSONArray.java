@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.mutable.Mutable;
@@ -445,12 +446,17 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 		if (index >= size()) {
 			add(index, element);
+			return null;
 		}
 		return this.rawList.set(index, JSONUtil.wrap(element, this.config));
 	}
 
 	@Override
 	public void add(int index, Object element) {
+		final boolean ignoreNullValue = config.isIgnoreNullValue();
+		if (null == element && ignoreNullValue) {
+			return;
+		}
 		if (index < 0) {
 			throw new JSONException("JSONArray[{}] not found.", index);
 		}
@@ -458,12 +464,14 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			InternalJSONUtil.testValidity(element);
 			this.rawList.add(index, JSONUtil.wrap(element, this.config));
 		} else {
-			// issue#3286, 增加安全检查，最多增加10倍
-			Validator.checkIndexLimit(index, this.size());
-			while (index != this.size()) {
-				this.add(JSONNull.NULL);
+			if(false == ignoreNullValue){
+				// issue#3286, 增加安全检查，最多增加10倍
+				Validator.checkIndexLimit(index, this.size());
+				while (index != this.size()) {
+					this.add(JSONNull.NULL);
+				}
 			}
-			this.set(element);
+			this.add(element);
 		}
 
 	}

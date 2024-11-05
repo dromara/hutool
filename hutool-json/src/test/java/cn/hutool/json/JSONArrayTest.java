@@ -167,7 +167,7 @@ public class JSONArrayTest {
 	@Test
 	public void toListWithNullTest() {
 		String json = "[null,{'akey':'avalue','bkey':'bvalue'}]";
-		JSONArray ja = JSONUtil.parseArray(json);
+		JSONArray ja = JSONUtil.parseArray(json, JSONConfig.create().setIgnoreNullValue(false));
 
 		List<KeyBean> list = ja.toList(KeyBean.class);
 		assertNull(list.get(0));
@@ -221,10 +221,15 @@ public class JSONArrayTest {
 
 	@Test
 	public void putToIndexTest() {
-		final JSONArray jsonArray = new JSONArray();
+		JSONArray jsonArray = new JSONArray(JSONConfig.create().setIgnoreNullValue(false));
 		jsonArray.put(3, "test");
 		// 第三个位置插入值，0~2都是null
 		assertEquals(4, jsonArray.size());
+
+		jsonArray = new JSONArray(JSONConfig.create().setIgnoreNullValue(true));
+		jsonArray.put(3, "test");
+		// 第三个位置插入值，忽略null，则追加
+		assertEquals(1, jsonArray.size());
 	}
 
 	// https://github.com/dromara/hutool/issues/1858
