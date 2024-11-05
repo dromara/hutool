@@ -142,10 +142,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 
 		if (isRunning) {
 			// 继续监听
-			clipboard.setContents(
-					ObjectUtil.defaultIfNull(transferable,
-							() -> ObjectUtil.defaultIfNull(newContents, contents)),
-					this);
+			clipboard.setContents(ObjectUtil.defaultIfNull(transferable, ObjectUtil.defaultIfNull(newContents, contents)), this);
 		}
 	}
 
