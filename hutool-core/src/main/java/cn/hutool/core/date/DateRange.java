@@ -48,6 +48,10 @@ public class DateRange extends Range<DateTime> {
 	 */
 	public DateRange(Date start, Date end, DateField unit, int step, boolean isIncludeStart, boolean isIncludeEnd) {
 		super(DateUtil.date(start), DateUtil.date(end), (current, end1, index) -> {
+			if(step <= 0){
+				// issue#3783
+				return null;
+			}
 			final DateTime dt = DateUtil.date(start).offsetNew(unit, (index + 1) * step);
 			if (dt.isAfter(end1)) {
 				return null;
