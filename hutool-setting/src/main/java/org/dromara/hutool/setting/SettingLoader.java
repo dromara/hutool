@@ -38,7 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.UnaryOperator;
 
 /**
  * Setting文件加载器
@@ -72,7 +71,7 @@ public class SettingLoader {
 	/**
 	 * 值编辑器
 	 */
-	private UnaryOperator<String> valueEditor;
+	private ValueEditor valueEditor;
 
 	/**
 	 * 构造
@@ -120,7 +119,7 @@ public class SettingLoader {
 	 * @return this
 	 * @since 6.0.0
 	 */
-	public SettingLoader setValueEditor(final UnaryOperator<String> valueEditor) {
+	public SettingLoader setValueEditor(final ValueEditor valueEditor) {
 		this.valueEditor = valueEditor;
 		return this;
 	}
@@ -192,16 +191,17 @@ public class SettingLoader {
 					continue;
 				}
 
+				final String key = StrUtil.trim(keyValue[0]);
 				String value = keyValue[1];
 				if (null != this.valueEditor) {
-					value = this.valueEditor.apply(value);
+					value = this.valueEditor.edit(group, key, value);
 				}
 
 				// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
 				if (this.isUseVariable) {
 					value = replaceVar(groupedMap, group, value);
 				}
-				groupedMap.put(group, StrUtil.trim(keyValue[0]), value);
+				groupedMap.put(group, key, value);
 			}
 		} finally {
 			IoUtil.closeQuietly(reader);
@@ -217,7 +217,7 @@ public class SettingLoader {
 	 * 持久化当前设置，会覆盖掉之前的设置<br>
 	 * 持久化会不会保留之前的分组
 	 *
-	 * @param groupedMap 分组map
+	 * @param groupedMap   分组map
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(final GroupedMap groupedMap, final String absolutePath) {
@@ -229,7 +229,7 @@ public class SettingLoader {
 	 * 持久化会不会保留之前的分组
 	 *
 	 * @param groupedMap 分组map
-	 * @param file 设置文件
+	 * @param file       设置文件
 	 */
 	public void store(final GroupedMap groupedMap, final File file) {
 		Assert.notNull(file, "File to store must be not null !");
@@ -298,4 +298,22 @@ public class SettingLoader {
 		return value;
 	}
 	// ----------------------------------------------------------------------------------- Private method end
+
+	/**
+	 * 值编辑器，用于在加载配置文件时对值进行编辑，例如解密等<br>
+	 * 此接口用于在加载配置文件时，编辑值，例如解密等，从而加载出明文的配置值
+	 *
+	 */
+	@FunctionalInterface
+	public interface ValueEditor {
+		/**
+		 * 编辑值
+		 *
+		 * @param group 分组
+		 * @param key   键
+		 * @param value 值
+		 * @return 编辑后的值
+		 */
+		String edit(String group, String key, String value);
+	}
 }
