@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class EntityTest {
 
 	@Test
-	public void parseTest() {
+	public void ofTest() {
 		final User user = new User();
 		user.setId(1);
 		user.setName("test");
@@ -40,7 +40,7 @@ public class EntityTest {
 	}
 
 	@Test
-	public void parseTest2() {
+	public void ofTest2() {
 		final User user = new User();
 		user.setId(1);
 		user.setName("test");
@@ -52,7 +52,7 @@ public class EntityTest {
 	}
 
 	@Test
-	public void parseTest3() {
+	public void ofTest3() {
 		final User user = new User();
 		user.setName("test");
 

@@ -65,12 +65,19 @@ public class EntityListHandler implements RsHandler<List<Entity>> {
 
 	@Override
 	public List<Entity> handle(final ResultSet rs) throws SQLException {
-		final ResultSetMetaData meta = rs.getMetaData();
-		final EntityRowHandler rowHandler = new EntityRowHandler(meta, caseInsensitive, true);
-
 		final List<Entity> result = ListUtil.of();
-		while (rs.next()) {
+
+		// 首行获取元信息
+		final ResultSetMetaData meta = rs.getMetaData();
+		EntityRowHandler rowHandler = new EntityRowHandler(meta, caseInsensitive, true);
+		if(rs.next()){
 			result.add(rowHandler.handle(rs));
+		}
+
+		// 后续行共享元数据
+		rowHandler = new EntityRowHandler(meta, caseInsensitive, false);
+		while (rs.next()) {
+			result.add(rowHandler.handle(rs).setMeta(result.get(0).getMeta()));
 		}
 
 		return result;

@@ -17,6 +17,7 @@
 package org.dromara.hutool.db;
 
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.map.Dict;
@@ -33,10 +34,7 @@ import java.sql.Clob;
 import java.sql.RowId;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 数据实体对象<br>
@@ -49,7 +47,7 @@ import java.util.Set;
 public class Entity extends Dict {
 	private static final long serialVersionUID = -1951012511464327448L;
 
-	// --------------------------------------------------------------- Static method start
+	// region ----- of
 
 	/**
 	 * 创建Entity
@@ -71,13 +69,24 @@ public class Entity extends Dict {
 	}
 
 	/**
+	 * 将PO对象转为Entity,并采用下划线法转换字段
+	 *
+	 * @param <T>  Bean对象类型
+	 * @param bean Bean对象
+	 * @return Entity
+	 */
+	public static <T> Entity ofWithUnderlineCase(final T bean) {
+		return of(null).parseBean(bean, true, true);
+	}
+
+	/**
 	 * 将PO对象转为Entity
 	 *
 	 * @param <T>  Bean对象类型
 	 * @param bean Bean对象
 	 * @return Entity
 	 */
-	public static <T> Entity parse(final T bean) {
+	public static <T> Entity of(final T bean) {
 		return of(null).parseBean(bean);
 	}
 
@@ -90,28 +99,15 @@ public class Entity extends Dict {
 	 * @param ignoreNullValue   是否忽略值为空的字段
 	 * @return Entity
 	 */
-	public static <T> Entity parse(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
+	public static <T> Entity of(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
 		return of(null).parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
+	// endregion
 
-	/**
-	 * 将PO对象转为Entity,并采用下划线法转换字段
-	 *
-	 * @param <T>  Bean对象类型
-	 * @param bean Bean对象
-	 * @return Entity
-	 */
-	public static <T> Entity parseWithUnderlineCase(final T bean) {
-		return of(null).parseBean(bean, true, true);
-	}
-	// --------------------------------------------------------------- Static method end
-
-	/* 表名 */
-	private String tableName;
-	/* 字段名列表，用于限制加入的字段的值 */
-	private Set<String> fieldNames;
+	private Meta meta;
 
 	// region ----- Constructor
+
 	/**
 	 * 构造
 	 */
@@ -125,7 +121,7 @@ public class Entity extends Dict {
 	 */
 
 	public Entity(final String tableName) {
-		this.tableName = tableName;
+		this(tableName, false);
 	}
 
 	/**
@@ -136,18 +132,48 @@ public class Entity extends Dict {
 	 * @since 4.5.16
 	 */
 	public Entity(final String tableName, final boolean caseInsensitive) {
+		this(new Meta(tableName, null), caseInsensitive);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param meta            元信息
+	 * @param caseInsensitive 是否大小写不敏感
+	 */
+	public Entity(final Meta meta, final boolean caseInsensitive) {
 		super(caseInsensitive);
-		this.tableName = tableName;
+		this.meta = meta;
 	}
 	// endregion
 
 	// --------------------------------------------------------------- Getters and Setters start
 
 	/**
+	 * 获得元信息
+	 *
+	 * @return 元信息
+	 */
+	public Meta getMeta() {
+		return this.meta;
+	}
+
+	/**
+	 * 设置元信息
+	 *
+	 * @param meta 元信息
+	 * @return 本身
+	 */
+	public Entity setMeta(final Meta meta) {
+		this.meta = meta;
+		return this;
+	}
+
+	/**
 	 * @return 获得表名
 	 */
 	public String getTableName() {
-		return tableName;
+		return null == this.meta ? null : this.meta.getTableName();
 	}
 
 	/**
@@ -157,7 +183,11 @@ public class Entity extends Dict {
 	 * @return 本身
 	 */
 	public Entity setTableName(final String tableName) {
-		this.tableName = tableName;
+		if (null == this.meta) {
+			this.meta = new Meta(tableName, null);
+		} else {
+			this.meta.setTableName(tableName);
+		}
 		return this;
 	}
 
@@ -165,7 +195,7 @@ public class Entity extends Dict {
 	 * @return 字段集合
 	 */
 	public Set<String> getFieldNames() {
-		return this.fieldNames;
+		return null == this.meta ? null : this.meta.getFieldNames();
 	}
 
 	/**
@@ -174,9 +204,14 @@ public class Entity extends Dict {
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
-	public Entity setFieldNames(final Collection<String> fieldNames) {
+	public Entity setFieldNames(final Iterable<String> fieldNames) {
 		if (CollUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = SetUtil.of(true, fieldNames);
+			final HashSet<String> fieldNameSet = SetUtil.of(true, fieldNames);
+			if (null == this.meta) {
+				this.meta = new Meta(null, fieldNameSet);
+			} else {
+				this.meta.setFieldNames(fieldNameSet);
+			}
 		}
 		return this;
 	}
@@ -189,13 +224,14 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(final String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = SetUtil.ofLinked(fieldNames);
+			setFieldNames(new ArrayIter<>(fieldNames));
 		}
 		return this;
 	}
 
 	/**
 	 * 通过lambda批量设置值
+	 *
 	 * @param fields lambda,不能为空
 	 * @return this
 	 */
@@ -212,10 +248,10 @@ public class Entity extends Dict {
 	 */
 	public Entity addFieldNames(final String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
-			if (null == this.fieldNames) {
+			if (null == this.meta || CollUtil.isEmpty(this.meta.fieldNames)) {
 				return setFieldNames(fieldNames);
 			} else {
-				Collections.addAll(this.fieldNames, fieldNames);
+				Collections.addAll(this.meta.fieldNames, fieldNames);
 			}
 		}
 		return this;
@@ -233,7 +269,7 @@ public class Entity extends Dict {
 	 */
 	@Override
 	public <T> Entity parseBean(final T bean) {
-		if (StrUtil.isBlank(this.tableName)) {
+		if (null == this.meta || StrUtil.isBlank(this.meta.tableName)) {
 			this.setTableName(StrUtil.lowerFirst(bean.getClass().getSimpleName()));
 		}
 		return (Entity) super.parseBean(bean);
@@ -251,7 +287,7 @@ public class Entity extends Dict {
 	 */
 	@Override
 	public <T> Entity parseBean(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
-		if (StrUtil.isBlank(this.tableName)) {
+		if (null == this.meta || StrUtil.isBlank(this.meta.tableName)) {
 			final String simpleName = bean.getClass().getSimpleName();
 			this.setTableName(isToUnderlineCase ? StrUtil.toUnderlineCase(simpleName) : StrUtil.lowerFirst(simpleName));
 		}
@@ -267,9 +303,7 @@ public class Entity extends Dict {
 	 */
 	@Override
 	public Entity filterNew(final String... keys) {
-		final Entity result = new Entity(this.tableName);
-		result.setFieldNames(this.fieldNames);
-
+		final Entity result = new Entity(this.meta, this.caseInsensitive);
 		for (final String key : keys) {
 			if (this.containsKey(key)) {
 				result.put(key, this.get(key));
@@ -427,6 +461,67 @@ public class Entity extends Dict {
 
 	@Override
 	public String toString() {
-		return "Entity {tableName=" + tableName + ", fieldNames=" + fieldNames + ", fields=" + super.toString() + "}";
+		return "Entity {meta=" + meta + ", fields=" + super.toString() + "}";
+	}
+
+	/**
+	 * Entity元数据
+	 *
+	 * @author Looly
+	 */
+	public static class Meta {
+		private String tableName;
+		private Set<String> fieldNames;
+
+		/**
+		 * 构造
+		 *
+		 * @param tableName  表名
+		 * @param fieldNames 字段名
+		 */
+		public Meta(final String tableName, final Set<String> fieldNames) {
+			this.tableName = tableName;
+			this.fieldNames = fieldNames;
+		}
+
+		/**
+		 * 获得表名
+		 *
+		 * @return 表名
+		 */
+		public String getTableName() {
+			return tableName;
+		}
+
+		/**
+		 * 设置表名
+		 *
+		 * @param tableName 表名
+		 * @return this
+		 */
+		public Meta setTableName(final String tableName) {
+			this.tableName = tableName;
+			return this;
+		}
+
+		/**
+		 * 获得字段名
+		 *
+		 * @return 字段名
+		 */
+		public Set<String> getFieldNames() {
+			return fieldNames;
+		}
+
+		/**
+		 * 设置字段名，用于限制加入的字段的值
+		 *
+		 * @param fieldNames 字段名
+		 * @return this
+		 */
+		public Meta setFieldNames(final Set<String> fieldNames) {
+			this.fieldNames = fieldNames;
+			return this;
+		}
 	}
 }

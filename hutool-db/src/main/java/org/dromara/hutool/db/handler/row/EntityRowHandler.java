@@ -49,7 +49,7 @@ public class EntityRowHandler extends AbsRowHandler<Entity> {
 
 	@Override
 	public Entity handle(final ResultSet rs) throws SQLException {
-		final Entity entity = new Entity(null, caseInsensitive);
+		final Entity entity = new Entity((Entity.Meta)null, caseInsensitive);
 		return fillEntity(entity, rs);
 	}
 

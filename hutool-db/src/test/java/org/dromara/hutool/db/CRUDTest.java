@@ -184,9 +184,9 @@ public class CRUDTest {
 		user2.setBirthday("19890512");
 		user2.setGender(false);
 
-		final Entity data1 = Entity.parse(user1);
+		final Entity data1 = Entity.of(user1);
 		data1.put("name", null);
-		final Entity data2 = Entity.parse(user2);
+		final Entity data2 = Entity.of(user2);
 
 		Console.log(data1);
 		Console.log(data2);
@@ -204,7 +204,7 @@ public class CRUDTest {
 		user1.setBirthday("19900112");
 		user1.setGender(true);
 
-		final Entity data1 = Entity.parse(user1);
+		final Entity data1 = Entity.of(user1);
 
 		Console.log(data1);
 

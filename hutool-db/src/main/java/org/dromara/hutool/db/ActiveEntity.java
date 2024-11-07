@@ -19,8 +19,6 @@ package org.dromara.hutool.db;
 import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.map.MapUtil;
 
-import java.util.Collection;
-
 /**
  * 动态实体类<br>
  * 提供了针对自身实体的增删改方法
@@ -145,7 +143,7 @@ public class ActiveEntity extends Entity {
 	}
 
 	@Override
-	public ActiveEntity setFieldNames(final Collection<String> fieldNames) {
+	public ActiveEntity setFieldNames(final Iterable<String> fieldNames) {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
 	}
 

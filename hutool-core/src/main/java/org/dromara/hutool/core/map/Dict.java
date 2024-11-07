@@ -47,7 +47,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	/**
 	 * 是否大小写不敏感
 	 */
-	private boolean caseInsensitive;
+	protected boolean caseInsensitive;
 
 	// --------------------------------------------------------------- Static method start
 
