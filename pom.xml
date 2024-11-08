@@ -58,7 +58,7 @@
 		<junit.version>5.11.1</junit.version>
 		<lombok.version>1.18.34</lombok.version>
 		<kotlin-version>2.0.20</kotlin-version>
-		<bouncycastle.version>1.78.1</bouncycastle.version>
+		<bouncycastle.version>1.79</bouncycastle.version>
 
 		<!-- version for json and jmh -->
 		<jackson.version>2.18.0</jackson.version>
