@@ -48,6 +48,7 @@ public class ReUtil {
 	 */
 	public final static Set<Character> RE_KEYS = SetUtil.of('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
 
+	// region ----- get
 	/**
 	 * 获得匹配的字符串，获得正则中分组0的内容
 	 *
@@ -185,7 +186,9 @@ public class ReUtil {
 			consumer.accept(m);
 		}
 	}
+	// endregion
 
+	// region ----- getAllGroups
 	/**
 	 * 获得匹配的字符串匹配到的所有分组
 	 *
@@ -272,7 +275,9 @@ public class ReUtil {
 		}
 		return result;
 	}
+	// endregion
 
+	// region ----- extractMulti
 	/**
 	 * 从content中匹配出多个值并根据template生成新的字符串<br>
 	 * 例如：<br>
@@ -375,7 +380,9 @@ public class ReUtil {
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return extractMultiAndDelPre(pattern, contentHolder, template);
 	}
+	// endregion
 
+	// region ----- replace and del
 	/**
 	 * 删除匹配的第一个内容
 	 *
@@ -520,7 +527,9 @@ public class ReUtil {
 
 		return StrUtil.toStringOrNull(content);
 	}
+	// endregion
 
+	// region ----- findAll
 	/**
 	 * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组0的内容
 	 *
@@ -651,6 +660,7 @@ public class ReUtil {
 			consumer.accept(matcher);
 		}
 	}
+	// endregion
 
 	/**
 	 * 计算指定字符串中，匹配pattern的个数
@@ -721,6 +731,7 @@ public class ReUtil {
 		return pattern.matcher(content).find();
 	}
 
+	// region ----- indexOf
 	/**
 	 * 找到指定正则匹配到字符串的开始位置
 	 *
@@ -802,7 +813,7 @@ public class ReUtil {
 	 * @return 位置集合，{@code null}表示未找到
 	 * @since 6.0.0
 	 */
-	public static List<MatchResult> allIndexOf(String regex, CharSequence content) {
+	public static List<MatchResult> allIndexOf(final String regex, final CharSequence content) {
 		if (null == regex || null == content) {
 			return null;
 		}
@@ -817,9 +828,9 @@ public class ReUtil {
 	 * @param pattern 模式
 	 * @param content 字符串
 	 * @return 位置集合，{@code null}表示未找到
-	 * @since 5.6.34
+	 * @since 6.0.0
 	 */
-	public static List<MatchResult> allIndexOf(Pattern pattern, CharSequence content) {
+	public static List<MatchResult> allIndexOf(final Pattern pattern, final CharSequence content) {
 		List<MatchResult> results = null;
 		if (null != pattern && null != content) {
 			final Matcher matcher = pattern.matcher(content);
@@ -833,6 +844,7 @@ public class ReUtil {
 
 		return results;
 	}
+	// endregion
 
 	/**
 	 * 从字符串中获得第一个整数
@@ -881,6 +893,7 @@ public class ReUtil {
 		return pattern.matcher(content).matches();
 	}
 
+	// region ----- replaceAll
 	/**
 	 * 正则替换指定值<br>
 	 * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
@@ -997,6 +1010,7 @@ public class ReUtil {
 		matcher.appendTail(buffer);
 		return buffer.toString();
 	}
+	// endregion
 
 	/**
 	 * 转义字符，将正则的关键字转义
