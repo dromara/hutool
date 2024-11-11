@@ -135,6 +135,14 @@ public class MaskingUtilTest {
 		assertEquals("1234 **** **** **** **** 91", MaskingUtil.bankCard("1234 2222 3333 4444 6789 91"));
 		assertEquals("1234 **** **** **** 6789", MaskingUtil.bankCard("1234 2222 3333 4444 6789"));
 		assertEquals("1234 **** **** **** 678", MaskingUtil.bankCard("1234 2222 3333 4444 678"));
+	}
 
+	@Test
+	void customTest() {
+		final MaskingManager maskingManager = MaskingManager.ofDefault('#');
+		maskingManager.register("custom", (str)->"custom" + str);
+
+		final String masking = maskingManager.masking("custom", "hutool");
+		Assertions.assertEquals("customhutool", masking);
 	}
 }
