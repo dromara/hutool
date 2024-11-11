@@ -140,7 +140,7 @@ public class JacksonEngine extends AbstractJSONEngine implements Wrapper<ObjectM
 		}
 		final String dateFormat = config.getDateFormat();
 		// 用于处理java.time库中对象的序列化和反序列化
-		mapper.registerModule(new TemporalModule(dateFormat));
+		mapper.registerModule(new HutoolModule(dateFormat));
 		if(StrUtil.isNotEmpty(dateFormat)){
 			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 			mapper.setDateFormat(DateUtil.newSimpleFormat(dateFormat));

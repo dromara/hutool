@@ -17,6 +17,8 @@
 package org.dromara.hutool.json.engine;
 
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -38,5 +40,21 @@ public class JacksonTest {
 			"  \"age\" : 18,\n" +
 			"  \"gender\" : true\n" +
 			"}", jsonString);
+	}
+
+	/**
+	 * https://gitee.com/dromara/hutool/issues/IB3GM4<br>
+	 * JSON和Jackson兼容
+	 */
+	@Test
+	void toJsonStringOfHutoolJsonTest() {
+		final JSONObject jsonObject = JSONUtil.ofObj()
+			.putValue("name", "张三")
+			.putValue("age", 18)
+			.putValue("sub", JSONUtil.ofObj()
+				.putValue("aaa", "aa1").putValue("bbb", "bb1"));
+		final JSONEngine engine = JSONEngineFactory.createEngine("jackson");
+		final String jsonString = engine.toJsonString(jsonObject);
+		Assertions.assertEquals("{\"name\":\"张三\",\"age\":18,\"sub\":{\"aaa\":\"aa1\",\"bbb\":\"bb1\"}}", jsonString);
 	}
 }

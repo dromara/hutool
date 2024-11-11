@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
  * @author Looly
  * @since 6.0.0
  */
-public class TemporalModule extends SimpleModule {
+public class HutoolModule extends SimpleModule {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -32,8 +32,9 @@ public class TemporalModule extends SimpleModule {
 	 *
 	 * @param dateFormat 日期格式，null表示使用时间戳
 	 */
-	public TemporalModule(final String dateFormat) {
+	public HutoolModule(final String dateFormat) {
 		super();
 		this.addSerializer(new JacksonTemporalSerializer(dateFormat));
+		this.addSerializer(new HutoolJSONSerializer());
 	}
 }
