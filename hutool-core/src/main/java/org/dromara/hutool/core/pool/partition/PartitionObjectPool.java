@@ -20,6 +20,7 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.pool.ObjectFactory;
 import org.dromara.hutool.core.pool.ObjectPool;
 import org.dromara.hutool.core.pool.Poolable;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.thread.ThreadUtil;
 
 import java.io.IOException;
@@ -115,6 +116,12 @@ public class PartitionObjectPool<T> implements ObjectPool<T> {
 	public void close() throws IOException {
 		this.closed = true;
 		IoUtil.closeQuietly(this.partitions);
+	}
+
+	@Override
+	public String toString() {
+		return StrUtil.format("PartitionObjectPool: total: {}, idle: {}, active: {}",
+			getTotal(), getIdleCount(), getActiveCount());
 	}
 
 	/**

@@ -106,6 +106,15 @@ public class DSPool implements Closeable {
 	}
 
 	/**
+	 * 获取数据源工厂
+	 *
+	 * @return 数据源工厂
+	 */
+	public DSFactory getFactory() {
+		return this.factory;
+	}
+
+	/**
 	 * 设置自定义的{@link DSFactory}
 	 *
 	 * @param factory {@link DSFactory}

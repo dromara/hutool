@@ -81,7 +81,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 				// 检查是否超过最长空闲时间
 				final long maxIdle = this.config.getMaxIdle();
 				if (maxIdle <= 0 || poolable.getIdle() <= maxIdle) {
-					return poolable.getRaw();
+					return obj;
 				}
 			}
 
@@ -188,11 +188,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 		return wrapPoolable(t);
 	}
 
-	@SuppressWarnings("unchecked")
 	private Poolable<T> wrapPoolable(final T t) {
-		if (t instanceof Poolable) {
-			return (Poolable<T>) t;
-		}
 		return new PartitionPoolable<>(t, this);
 	}
 

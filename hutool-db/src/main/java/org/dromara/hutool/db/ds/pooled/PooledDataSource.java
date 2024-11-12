@@ -46,7 +46,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	protected Driver driver;
 	private final int maxWait;
-	private final ObjectPool<Connection> connPool;
+	private final ObjectPool<PooledConnection> connPool;
 
 	/**
 	 * 构造
@@ -83,8 +83,8 @@ public class PooledDataSource extends AbstractDataSource {
 	}
 
 	@Override
-	public Connection getConnection() throws SQLException {
-		return (Connection) connPool.borrowObject();
+	public PooledConnection getConnection() throws SQLException {
+		return connPool.borrowObject();
 	}
 
 	@Override
@@ -112,15 +112,15 @@ public class PooledDataSource extends AbstractDataSource {
 	 * @param config 数据库配置
 	 * @return {@link ObjectFactory}
 	 */
-	private ObjectFactory<Connection> createConnFactory(final ConnectionConfig<?> config) {
-		return new ObjectFactory<Connection>() {
+	private ObjectFactory<PooledConnection> createConnFactory(final ConnectionConfig<?> config) {
+		return new ObjectFactory<PooledConnection>() {
 			@Override
-			public Connection create() {
+			public PooledConnection create() {
 				return new PooledConnection(config, PooledDataSource.this);
 			}
 
 			@Override
-			public boolean validate(final Connection connection) {
+			public boolean validate(final PooledConnection connection) {
 				try {
 					return null != connection
 						&& connection.isValid(maxWait);
@@ -133,8 +133,10 @@ public class PooledDataSource extends AbstractDataSource {
 			}
 
 			@Override
-			public void destroy(final Connection connection) {
-				IoUtil.closeQuietly(connection);
+			public void destroy(final PooledConnection connection) {
+				if(null != connection){
+					connection.destroy();
+				}
 			}
 		};
 	}

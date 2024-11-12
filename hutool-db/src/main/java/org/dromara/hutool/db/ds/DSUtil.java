@@ -120,6 +120,7 @@ public class DSUtil {
 	 * @param dsFactory 数据源工厂
 	 * @return 自定义的数据源工厂
 	 */
+	@SuppressWarnings("resource")
 	public static DSFactory setGlobalDSFactory(final DSFactory dsFactory) {
 		DSPool.getInstance().setFactory(dsFactory);
 		return dsFactory;
