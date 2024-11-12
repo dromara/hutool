@@ -47,11 +47,13 @@ public class OkHttpRequestBody extends okhttp3.RequestBody {
 
 	@Override
 	public long contentLength() throws IOException {
-		return this.body.contentLength();
+		return null == this.body ? 0 : this.body.contentLength();
 	}
 
 	@Override
 	public void writeTo(final BufferedSink bufferedSink) {
-		body.writeClose(bufferedSink.outputStream());
+		if(null != this.body){
+			this.body.writeClose(bufferedSink.outputStream());
+		}
 	}
 }

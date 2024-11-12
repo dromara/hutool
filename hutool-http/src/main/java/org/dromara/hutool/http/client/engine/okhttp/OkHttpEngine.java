@@ -17,6 +17,7 @@
 package org.dromara.hutool.http.client.engine.okhttp;
 
 import okhttp3.OkHttpClient;
+import okhttp3.internal.http.HttpMethod;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -156,7 +157,8 @@ public class OkHttpEngine extends AbstractClientEngine {
 		// 填充方法
 		final String method = message.method().name();
 		final HttpBody body = message.handledBody();
-		if (null != body) {
+		if (null != body || HttpMethod.requiresRequestBody(method)) {
+			// okhttp中，POST等请求必须提供body，否则会抛异常，此处传空的OkHttpRequestBody
 			// 为了兼容支持rest请求，在此不区分是否为GET等方法，一律按照body是否有值填充，兼容
 			builder.method(method, new OkHttpRequestBody(body));
 		} else {
