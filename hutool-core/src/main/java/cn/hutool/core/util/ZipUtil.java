@@ -34,10 +34,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.*;
 
 /**
  * 压缩工具类
@@ -65,6 +62,17 @@ public class ZipUtil {
 		try {
 			return new ZipFile(file, ObjectUtil.defaultIfNull(charset, CharsetUtil.CHARSET_UTF_8));
 		} catch (IOException e) {
+			// issue#I3UZ28 可能编码错误提示
+			if(e instanceof ZipException){
+				if(e.getMessage().contains("invalid CEN header")){
+					try {
+						// 尝试使用不同编码
+						return new ZipFile(file, CharsetUtil.CHARSET_UTF_8.equals(charset) ? CharsetUtil.CHARSET_GBK : CharsetUtil.CHARSET_UTF_8);
+					} catch (final IOException ex) {
+						throw new IORuntimeException(ex);
+					}
+				}
+			}
 			throw new IORuntimeException(e);
 		}
 	}
