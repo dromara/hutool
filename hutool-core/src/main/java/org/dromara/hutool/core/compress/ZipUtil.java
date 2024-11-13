@@ -33,7 +33,6 @@ import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -45,10 +44,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.*;
 
 /**
  * 压缩工具类
@@ -72,10 +68,24 @@ public class ZipUtil {
 	 * @param charset 解析zip文件的编码，null表示{@link CharsetUtil#UTF_8}
 	 * @return {@link ZipFile}
 	 */
-	public static ZipFile toZipFile(final File file, final Charset charset) {
+	public static ZipFile toZipFile(final File file, Charset charset) {
+		if(null == charset){
+			charset = CharsetUtil.UTF_8;
+		}
 		try {
-			return new ZipFile(file, ObjUtil.defaultIfNull(charset, CharsetUtil.UTF_8));
+			return new ZipFile(file, charset);
 		} catch (final IOException e) {
+			// issue#I3UZ28 可能编码错误提示
+			if(e instanceof ZipException){
+				if(e.getMessage().contains("invalid CEN header")){
+					try {
+						// 尝试使用不同编码
+						return new ZipFile(file, CharsetUtil.UTF_8.equals(charset) ? CharsetUtil.GBK : CharsetUtil.UTF_8);
+					} catch (final IOException ex) {
+						throw new IORuntimeException(ex);
+					}
+				}
+			}
 			throw new IORuntimeException(e);
 		}
 	}
