@@ -2,10 +2,8 @@ package cn.hutool.db;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
-import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;

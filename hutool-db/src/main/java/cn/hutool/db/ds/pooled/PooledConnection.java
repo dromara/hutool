@@ -1,7 +1,6 @@
 package cn.hutool.db.ds.pooled;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;

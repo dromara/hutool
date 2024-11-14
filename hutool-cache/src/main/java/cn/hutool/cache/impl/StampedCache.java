@@ -1,7 +1,6 @@
 package cn.hutool.cache.impl;
 
 import cn.hutool.core.collection.CopiedIter;
-import cn.hutool.core.thread.ThreadUtil;
 
 import java.util.Iterator;
 import java.util.concurrent.locks.StampedLock;
