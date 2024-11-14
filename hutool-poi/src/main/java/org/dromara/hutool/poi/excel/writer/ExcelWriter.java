@@ -29,6 +29,8 @@ import org.dromara.hutool.poi.POIException;
 import org.dromara.hutool.poi.excel.*;
 import org.dromara.hutool.poi.excel.cell.CellRangeUtil;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
+import org.dromara.hutool.poi.excel.shape.ExcelPicType;
+import org.dromara.hutool.poi.excel.shape.ExcelPicUtil;
 import org.dromara.hutool.poi.excel.style.*;
 
 import java.awt.Color;
@@ -769,7 +771,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	}
 	// endregion
 
-	// region ----- writeImg
+	// region ----- writePic
 
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
@@ -784,8 +786,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @author vhukze
 	 * @since 5.7.18
 	 */
-	public ExcelWriter writeImg(final File imgFile, final int col1, final int row1, final int col2, final int row2) {
-		return writeImg(imgFile, new SimpleClientAnchor(col1, row1, col2, row2));
+	public ExcelWriter writePic(final File imgFile, final int col1, final int row1, final int col2, final int row2) {
+		return writePic(imgFile, new SimpleClientAnchor(col1, row1, col2, row2));
 	}
 
 	/**
@@ -798,8 +800,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @author vhukze
 	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final File imgFile, final SimpleClientAnchor clientAnchor) {
-		return writeImg(imgFile, ExcelImgUtil.getImgType(imgFile), clientAnchor);
+	public ExcelWriter writePic(final File imgFile, final SimpleClientAnchor clientAnchor) {
+		return writePic(imgFile, ExcelPicUtil.getPicType(imgFile), clientAnchor);
 	}
 
 	/**
@@ -813,8 +815,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @author vhukze
 	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final File imgFile, final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
-		return writeImg(FileUtil.readBytes(imgFile), imgType, clientAnchor);
+	public ExcelWriter writePic(final File imgFile, final ExcelPicType imgType, final SimpleClientAnchor clientAnchor) {
+		return writePic(FileUtil.readBytes(imgFile), imgType, clientAnchor);
 	}
 
 	/**
@@ -828,8 +830,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 	 * @author vhukze
 	 * @since 6.0.0
 	 */
-	public ExcelWriter writeImg(final byte[] pictureData, final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
-		ExcelDrawingUtil.drawingImg(this.sheet, pictureData, imgType, clientAnchor);
+	public ExcelWriter writePic(final byte[] pictureData, final ExcelPicType imgType, final SimpleClientAnchor clientAnchor) {
+		ExcelDrawingUtil.drawingPic(this.sheet, pictureData, imgType, clientAnchor);
 		return this;
 	}
 

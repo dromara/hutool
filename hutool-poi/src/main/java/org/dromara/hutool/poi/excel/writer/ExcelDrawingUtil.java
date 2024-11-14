@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFSimpleShape;
-import org.dromara.hutool.poi.excel.ExcelImgType;
+import org.dromara.hutool.poi.excel.shape.ExcelPicType;
 import org.dromara.hutool.poi.excel.SimpleClientAnchor;
 import org.dromara.hutool.poi.excel.style.ShapeConfig;
 
@@ -49,8 +49,8 @@ public class ExcelDrawingUtil {
 	 * @author vhukze
 	 * @since 6.0.0
 	 */
-	public static void drawingImg(final Sheet sheet, final byte[] pictureData,
-								  final ExcelImgType imgType, final SimpleClientAnchor clientAnchor) {
+	public static void drawingPic(final Sheet sheet, final byte[] pictureData,
+								  final ExcelPicType imgType, final SimpleClientAnchor clientAnchor) {
 		final Drawing<?> patriarch = sheet.createDrawingPatriarch();
 		final Workbook workbook = sheet.getWorkbook();
 		final ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();

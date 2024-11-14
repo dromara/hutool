@@ -33,7 +33,7 @@ public class ImgTest {
 	@Test
 	@Disabled
 	public void cutTest1() {
-		Img.from(FileUtil.file("e:/pic/face.jpg")).cut(0, 0, 200).write(FileUtil.file("e:/pic/face_radis.png"));
+		Img.from(FileUtil.file("e:/shape/face.jpg")).cut(0, 0, 200).write(FileUtil.file("e:/shape/face_radis.png"));
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class ImgTest {
 	@Test
 	@Disabled
 	public void roundTest() {
-		Img.from(FileUtil.file("e:/pic/face.jpg")).round(0.5).write(FileUtil.file("e:/pic/face_round.png"));
+		Img.from(FileUtil.file("e:/shape/face.jpg")).round(0.5).write(FileUtil.file("e:/shape/face_round.png"));
 	}
 
 	@Test

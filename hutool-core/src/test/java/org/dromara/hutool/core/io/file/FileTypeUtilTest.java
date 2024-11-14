@@ -83,7 +83,7 @@ public class FileTypeUtilTest {
 	@Test
 	@Disabled
 	public void getTypeFromInputStream() throws IOException {
-		final File file = FileUtil.file("d:/test/pic.jpg");
+		final File file = FileUtil.file("d:/test/shape.jpg");
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		inputStream.mark(0);
 		final String type = FileTypeUtil.getType(inputStream);

@@ -17,10 +17,7 @@
 package org.dromara.hutool.poi.excel.reader;
 
 import org.apache.poi.ss.extractor.ExcelExtractor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -28,6 +25,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.poi.excel.*;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.reader.sheet.*;
+import org.dromara.hutool.poi.excel.shape.ExcelPicUtil;
 import org.dromara.hutool.poi.excel.writer.ExcelWriter;
 
 import java.io.File;
@@ -362,6 +360,16 @@ public class ExcelReader extends ExcelBase<ExcelReader, ExcelReadConfig> {
 	 */
 	public Object readCellValue(final int x, final int y) {
 		return CellUtil.getCellValue(getCell(x, y), this.config.getCellEditor());
+	}
+
+	/**
+	 * 读取绘制的图片列表
+	 *
+	 * @return 图片列表
+	 * @since 6.0.0
+	 */
+	public List<Picture> readPics() {
+		return ExcelPicUtil.getShapePics(this.sheet);
 	}
 
 	/**

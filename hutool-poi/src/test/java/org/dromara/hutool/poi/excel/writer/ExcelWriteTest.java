@@ -835,7 +835,7 @@ public class ExcelWriteTest {
 
 		final File file = new File("C:\\Users\\zsz\\Desktop\\1.jpg");
 
-		writer.writeImg(file, 0, 0, 5, 10);
+		writer.writePic(file, 0, 0, 5, 10);
 
 		writer.flush(new File("C:\\Users\\zsz\\Desktop\\2.xlsx"), true);
 

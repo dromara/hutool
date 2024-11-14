@@ -18,8 +18,8 @@ package org.dromara.hutool.poi.excel.cell.setters;
 
 import org.apache.poi.ss.usermodel.*;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.poi.excel.ExcelImgType;
-import org.dromara.hutool.poi.excel.ExcelImgUtil;
+import org.dromara.hutool.poi.excel.shape.ExcelPicType;
+import org.dromara.hutool.poi.excel.shape.ExcelPicUtil;
 import org.dromara.hutool.poi.excel.SimpleClientAnchor;
 import org.dromara.hutool.poi.excel.writer.ExcelDrawingUtil;
 
@@ -31,10 +31,10 @@ import java.io.File;
  * @author Looly
  * @since 6.0.0
  */
-public class ImgCellSetter implements CellSetter {
+public class PicCellSetter implements CellSetter {
 
 	private final byte[] pictureData;
-	private final ExcelImgType imgType;
+	private final ExcelPicType picType;
 
 	// region ----- 构造
 
@@ -43,8 +43,8 @@ public class ImgCellSetter implements CellSetter {
 	 *
 	 * @param pictureData 图片数据
 	 */
-	public ImgCellSetter(final byte[] pictureData) {
-		this(pictureData, ExcelImgType.PNG);
+	public PicCellSetter(final byte[] pictureData) {
+		this(pictureData, ExcelPicType.PNG);
 	}
 
 	/**
@@ -52,19 +52,19 @@ public class ImgCellSetter implements CellSetter {
 	 *
 	 * @param picturefile 图片数据
 	 */
-	public ImgCellSetter(final File picturefile) {
-		this(FileUtil.readBytes(picturefile), ExcelImgUtil.getImgType(picturefile));
+	public PicCellSetter(final File picturefile) {
+		this(FileUtil.readBytes(picturefile), ExcelPicUtil.getPicType(picturefile));
 	}
 
 	/**
 	 * 构造
 	 *
 	 * @param pictureData 图片数据
-	 * @param imgType     图片类型
+	 * @param picType     图片类型
 	 */
-	public ImgCellSetter(final byte[] pictureData, final ExcelImgType imgType) {
+	public PicCellSetter(final byte[] pictureData, final ExcelPicType picType) {
 		this.pictureData = pictureData;
-		this.imgType = imgType;
+		this.picType = picType;
 	}
 	// endregion
 
@@ -74,7 +74,7 @@ public class ImgCellSetter implements CellSetter {
 		final int columnIndex = cell.getColumnIndex();
 		final int rowIndex = cell.getRowIndex();
 
-		ExcelDrawingUtil.drawingImg(sheet, this.pictureData, this.imgType,
+		ExcelDrawingUtil.drawingPic(sheet, this.pictureData, this.picType,
 			new SimpleClientAnchor(columnIndex, rowIndex, columnIndex + 1, rowIndex + 1));
 	}
 }

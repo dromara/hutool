@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.poi.excel;
+package org.dromara.hutool.poi.excel.shape;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -30,7 +30,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @see Workbook#PICTURE_TYPE_DIB
  * @since 6.0.0
  */
-public enum ExcelImgType {
+public enum ExcelPicType {
 	/**
 	 * Extended windows meta file
 	 */
@@ -68,7 +68,7 @@ public enum ExcelImgType {
 	 *
 	 * @param value 类型编码
 	 */
-	ExcelImgType(final int value) {
+	ExcelPicType(final int value) {
 		this.value = value;
 	}
 

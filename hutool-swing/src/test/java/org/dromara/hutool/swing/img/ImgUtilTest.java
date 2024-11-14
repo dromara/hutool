@@ -37,7 +37,7 @@ public class ImgUtilTest {
 	@Test
 	@Disabled
 	public void scaleTest() {
-		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
+		ImgUtil.scale(FileUtil.file("e:/shape/test.jpg"), FileUtil.file("e:/shape/test_result.jpg"), 0.8f);
 	}
 
 	@Test
@@ -71,8 +71,8 @@ public class ImgUtilTest {
 	@Test
 	@Disabled
 	public void rotateTest() throws IOException {
-		final Image image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
-		ImgUtil.write(image, FileUtil.file("e:/pic/result.png"));
+		final Image image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/shape/366466.jpg")), 180);
+		ImgUtil.write(image, FileUtil.file("e:/shape/result.png"));
 	}
 
 	@Test
@@ -148,8 +148,8 @@ public class ImgUtilTest {
 	@Test
 	@Disabled
 	public void copyTest() {
-		final BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
-		ImgUtil.write(image, FileUtil.file("f:/pic/test_dest.jpg"));
+		final BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/shape/test.png"), BufferedImage.TYPE_INT_RGB);
+		ImgUtil.write(image, FileUtil.file("f:/shape/test_dest.jpg"));
 	}
 
 	@Test

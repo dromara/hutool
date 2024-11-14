@@ -66,7 +66,7 @@ public class QrCodeUtilTest {
 	@Test
 	@Disabled
 	public void generateWithLogoTest() {
-		final String icon = FileUtil.isWindows() ? "d:/test/pic/logo.jpg" : "~/Desktop/hutool/pic/logo.jpg";
+		final String icon = FileUtil.isWindows() ? "d:/test/shape/logo.jpg" : "~/Desktop/hutool/shape/logo.jpg";
 		final String targetPath = FileUtil.isWindows() ? "d:/test/qrcodeWithLogo.jpg" : "~/Desktop/hutool/qrcodeWithLogo.jpg";
 		QrCodeUtil.generate(//
 			"https://hutool.cn/", //
@@ -77,7 +77,7 @@ public class QrCodeUtilTest {
 	@Test
 	@Disabled
 	public void decodeTest() {
-		final String decode = QrCodeUtil.decode(FileUtil.file("d:/test/pic/qr.png"));
+		final String decode = QrCodeUtil.decode(FileUtil.file("d:/test/shape/qr.png"));
 		Console.log(decode);
 	}
 
@@ -141,7 +141,7 @@ public class QrCodeUtilTest {
 	@Disabled
 	public void generateSvgTest() {
 		final QrConfig qrConfig = QrConfig.of()
-			.setImg("d:/test/pic/logo.jpg")
+			.setImg("d:/test/shape/logo.jpg")
 			.setForeColor(Color.blue)
 			.setBackColor(Color.pink)
 			.setRatio(8)

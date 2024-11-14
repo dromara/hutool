@@ -47,7 +47,7 @@ public class DownloadTest {
 	@Disabled
 	public void downloadPicTest() {
 		final String url = "http://wx.qlogo.cn/mmopen/vKhlFcibVUtNBVDjcIowlg0X8aJfHXrTNCEFBukWVH9ta99pfEN88lU39MKspCUCOP3yrFBH3y2NbV7sYtIIlon8XxLwAEqv2/0";
-		HttpDownloader.downloadFile(url, new File("e:/pic/t3.jpg"));
+		HttpDownloader.downloadFile(url, new File("e:/shape/t3.jpg"));
 		Console.log("ok");
 	}
 
@@ -56,8 +56,8 @@ public class DownloadTest {
 	@Disabled
 	public void downloadSizeTest() {
 		final String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
-		ClientEngineFactory.getEngine().send(Request.of(url)).body().write("e:/pic/366466.jpg");
-		//HttpRequest.get(url).setSSLProtocol("TLSv1.2").executeAsync().body().write("e:/pic/366466.jpg");
+		ClientEngineFactory.getEngine().send(Request.of(url)).body().write("e:/shape/366466.jpg");
+		//HttpRequest.get(url).setSSLProtocol("TLSv1.2").executeAsync().body().write("e:/shape/366466.jpg");
 	}
 
 	@Test
