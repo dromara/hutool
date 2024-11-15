@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.core.math;
 
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
@@ -207,6 +208,9 @@ public class Calculator {
 						arr[i] = '~';
 					}
 				}
+			} else if(CharUtil.equals(arr[i], 'x', true)){
+				// issue#3787 x转换为*
+				arr[i] = '*';
 			}
 		}
 		if (arr[0] == '~' && (arr.length > 1 && arr[1] == '(')) {
