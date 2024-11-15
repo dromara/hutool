@@ -1,7 +1,8 @@
 package cn.hutool.core.math;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CalculatorTest {
 
@@ -54,5 +55,15 @@ public class CalculatorTest {
 		// https://github.com/dromara/hutool/issues/2964
 		final double calcValue = Calculator.conversion("(11+2)12");
 		assertEquals(156D, calcValue, 0.001);
+	}
+
+	@Test
+	void issue3787Test() {
+		final Calculator calculator1 = new Calculator();
+		double result = calculator1.calculate("0+50/100x(1/0.5)");
+		assertEquals(1D, result);
+
+		result = calculator1.calculate("0+50/100X(1/0.5)");
+		assertEquals(1D, result);
 	}
 }
