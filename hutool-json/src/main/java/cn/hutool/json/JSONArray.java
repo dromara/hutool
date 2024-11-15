@@ -2,7 +2,6 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.mutable.Mutable;

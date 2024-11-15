@@ -3,7 +3,6 @@ package cn.hutool.db.dialect.impl;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
-import cn.hutool.db.Page;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.SqlBuilder;
