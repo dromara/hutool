@@ -1,6 +1,7 @@
 package cn.hutool.core.math;
 
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
@@ -35,14 +36,16 @@ public class Calculator {
 	 * @return 计算结果
 	 */
 	public double calculate(String expression) {
+
+		validExpression(expression);
 		prepare(transform(expression));
 
 		final Stack<String> resultStack = new Stack<>();
 		Collections.reverse(postfixStack);// 将后缀式栈反转
 		String firstValue, secondValue, currentOp;// 参与计算的第一个值，第二个值和算术运算符
-		while (false == postfixStack.isEmpty()) {
+		while (!postfixStack.isEmpty()) {
 			currentOp = postfixStack.pop();
-			if (false == isOperator(currentOp.charAt(0))) {// 如果不是运算符则存入操作数栈中
+			if (!isOperator(currentOp.charAt(0))) {// 如果不是运算符则存入操作数栈中
 				currentOp = currentOp.replace("~", "-");
 				resultStack.push(currentOp);
 			} else {// 如果是运算符则从操作数栈中取两个值和该数值一起参与运算
@@ -108,6 +111,40 @@ public class Calculator {
 			postfixStack.push(String.valueOf(opStack.pop()));// 将操作符栈中的剩余的元素添加到后缀式栈中
 		}
 	}
+
+	/**
+	 * 校验字符串是否只包含数字和加减乘除符号、括号、百分号、E和e、小数点。
+	 *
+	 * @param str 待校验的字符串
+	 * @return 如果字符串只包含数字和加减乘除符号、括号、百分号、E和e、小数点，则返回 true；否则返回 false。
+	 */
+	private static boolean isNumericAndOperators(String str) {
+		String regex = "^[0-9+\\-*\\/()%,Ee.]+$";
+		return ReUtil.isMatch(regex, str);
+	}
+
+	/**
+	 * 校验表达式是否合法，并报告非法字符。
+	 *
+	 * @param expression 表达式字符串
+	 * @throws IllegalArgumentException 如果表达式不合法
+	 */
+	public static void validExpression(String expression) {
+		String trimmedExpression = StrUtil.removeAll(expression, " ");
+		if (!isNumericAndOperators(trimmedExpression)) {
+			StringBuilder invalidChars = new StringBuilder();
+			for (char c : trimmedExpression.toCharArray()) {
+				if (!"0123456789+-*/()%,Ee.".contains(String.valueOf(c))) {
+					if (invalidChars.length() > 0) {
+						invalidChars.append(", ");
+					}
+					invalidChars.append(c);
+				}
+			}
+			throw new IllegalArgumentException("Expression contains invalid characters: " + invalidChars);
+		}
+	}
+
 
 	/**
 	 * 判断是否为算术符号

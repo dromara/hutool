@@ -55,4 +55,14 @@ public class CalculatorTest {
 		final double calcValue = Calculator.conversion("(11+2)12");
 		assertEquals(156D, calcValue, 0.001);
 	}
+
+
+	@Test
+	public void validExpressionTest(){
+		try {
+			Calculator.conversion("0+50 / 100x(1/0.5)");
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("Expression contains invalid characters: x"));
+		}
+	}
 }
