@@ -35,23 +35,23 @@
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
-		<velocity.version>2.4</velocity.version>
+		<velocity.version>2.4.1</velocity.version>
 		<beetl.version>3.17.0.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.33</freemarker.version>
-		<enjoy.version>5.1.3</enjoy.version>
+		<enjoy.version>5.2.2</enjoy.version>
 		<thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
 		<jte.version>2.3.2</jte.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.39.0</sshj.version>
-		<sshd.version>2.13.2</sshd.version>
+		<sshd.version>2.14.0</sshd.version>
 		<zxing.version>3.5.3</zxing.version>
-		<net.version>3.9.0</net.version>
+		<net.version>3.11.1</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<spring-boot.version>2.7.18</spring-boot.version>
 		<oshi.version>6.6.5</oshi.version>
-		<byte-buddy.version>1.15.3</byte-buddy.version>
+		<byte-buddy.version>1.15.10</byte-buddy.version>
 		<commons-compress.version>1.27.1</commons-compress.version>
 		<smartcn.version>8.11.4</smartcn.version>
 		<mail-api.version>2.1.3</mail-api.version>
@@ -353,7 +353,7 @@
 		<dependency>
 			<groupId>com.hankcs</groupId>
 			<artifactId>hanlp</artifactId>
-			<version>portable-1.8.4</version>
+			<version>portable-1.8.5</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

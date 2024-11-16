@@ -34,7 +34,7 @@
 
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.http</Automatic-Module-Name>
-		<httpclient5.version>5.4</httpclient5.version>
+		<httpclient5.version>5.4.1</httpclient5.version>
 		<httpclient4.version>4.5.14</httpclient4.version>
 		<okhttp.version>4.12.0</okhttp.version>
 	</properties>
