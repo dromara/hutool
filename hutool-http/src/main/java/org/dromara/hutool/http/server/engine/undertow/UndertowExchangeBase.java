@@ -14,19 +14,35 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server;
+package org.dromara.hutool.http.server.engine.undertow;
 
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.http.HttpUtil;
-import org.dromara.hutool.http.server.engine.sun.filter.DefaultExceptionFilter;
+import io.undertow.server.HttpServerExchange;
 
-public class ExceptionServerTest {
-	public static void main(final String[] args) {
-		HttpUtil.createServer(8888)
-			.addFilter(new DefaultExceptionFilter())
-			.addAction("/", (req, res) -> {
-				throw new IORuntimeException("Test Exception");
-			})
-			.start();
+/**
+ * Undertow请求对象基类，用于获取原始Undertow请求对象
+ *
+ * @author looly
+ * @since 6.0.0
+ */
+public class UndertowExchangeBase {
+
+	final HttpServerExchange exchange;
+
+	/**
+	 * 构造
+	 *
+	 * @param exchange Undertow请求对象
+	 */
+	public UndertowExchangeBase(final HttpServerExchange exchange) {
+		this.exchange = exchange;
+	}
+
+	/**
+	 * 获取原始Undertow请求对象
+	 *
+	 * @return 原始Undertow请求对象
+	 */
+	public HttpServerExchange getExchange(){
+		return this.exchange;
 	}
 }

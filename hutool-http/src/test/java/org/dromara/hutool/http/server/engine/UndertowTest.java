@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server;
+package org.dromara.hutool.http.server.engine;
 
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.http.HttpUtil;
-import org.dromara.hutool.http.server.engine.sun.filter.DefaultExceptionFilter;
+import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.http.server.ServerConfig;
+import org.dromara.hutool.http.server.engine.undertow.UndertowEngine;
 
-public class ExceptionServerTest {
-	public static void main(final String[] args) {
-		HttpUtil.createServer(8888)
-			.addFilter(new DefaultExceptionFilter())
-			.addAction("/", (req, res) -> {
-				throw new IORuntimeException("Test Exception");
-			})
-			.start();
+public class UndertowTest {
+	public static void main(String[] args) {
+		final UndertowEngine undertowEngine = new UndertowEngine();
+		undertowEngine.init(ServerConfig.of());
+		undertowEngine.setHandler((request, response) -> {
+			Console.log(request.getPath());
+			response.write("Hutool Undertow response test");
+		});
+		undertowEngine.start();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2024 Hutool Team and hutool.cn
+ * Copyright (c) 2024 Hutool Team and hutool.cn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server.filter;
-
-import com.sun.net.httpserver.Filter;
-
 /**
- * 匿名简单过滤器，跳过了描述
+ * Tomcat引擎实现
  *
- * @author looly
- * @since 5.5.7
+ * @author Looly
  */
-public abstract class SimpleFilter extends Filter {
-
-	@Override
-	public String description() {
-		return "Anonymous Filter";
-	}
-}
+package org.dromara.hutool.http.server.engine.tomcat;

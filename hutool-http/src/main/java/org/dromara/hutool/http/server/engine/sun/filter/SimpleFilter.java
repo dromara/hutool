@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server.filter;
+package org.dromara.hutool.http.server.engine.sun.filter;
 
-import org.dromara.hutool.http.server.HttpServerRequest;
-import org.dromara.hutool.http.server.HttpServerResponse;
 import com.sun.net.httpserver.Filter;
 
-import java.io.IOException;
-
 /**
- * 过滤器接口，用于简化{@link Filter} 使用
+ * 匿名简单过滤器，跳过了描述
  *
  * @author looly
  * @since 5.5.7
  */
-@FunctionalInterface
-public interface HttpFilter {
+public abstract class SimpleFilter extends Filter {
 
-	/**
-	 * 执行过滤
-	 * @param req {@link HttpServerRequest} 请求对象，用于获取请求内容
-	 * @param res {@link HttpServerResponse} 响应对象，用于写出内容
-	 * @param chain {@link Filter.Chain}
-	 * @throws IOException IO异常
-	 */
-	void doFilter(HttpServerRequest req, HttpServerResponse res, Filter.Chain chain) throws IOException;
+	@Override
+	public String description() {
+		return "Anonymous Filter";
+	}
 }

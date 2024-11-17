@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server;
+package org.dromara.hutool.http.server.engine.sun;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
@@ -36,8 +36,8 @@ import java.net.URI;
 public class HttpExchangeWrapper extends HttpExchange implements Wrapper<HttpExchange> {
 
 	private final HttpExchange raw;
-	private final HttpServerRequest request;
-	private final HttpServerResponse response;
+	private final SunServerRequest request;
+	private final SunServerResponse response;
 
 	/**
 	 * 构造
@@ -46,8 +46,8 @@ public class HttpExchangeWrapper extends HttpExchange implements Wrapper<HttpExc
 	 */
 	public HttpExchangeWrapper(final HttpExchange raw) {
 		this.raw = raw;
-		this.request = new HttpServerRequest(this);
-		this.response = new HttpServerResponse(this);
+		this.request = new SunServerRequest(this);
+		this.response = new SunServerResponse(this);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class HttpExchangeWrapper extends HttpExchange implements Wrapper<HttpExc
 	 *
 	 * @return 请求
 	 */
-	public HttpServerRequest getRequest() {
+	public SunServerRequest getRequest() {
 		return request;
 	}
 
@@ -69,7 +69,7 @@ public class HttpExchangeWrapper extends HttpExchange implements Wrapper<HttpExc
 	 *
 	 * @return 响应
 	 */
-	public HttpServerResponse getResponse() {
+	public SunServerResponse getResponse() {
 		return response;
 	}
 

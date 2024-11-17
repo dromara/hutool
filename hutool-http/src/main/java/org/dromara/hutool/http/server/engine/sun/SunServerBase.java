@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server;
+package org.dromara.hutool.http.server.engine.sun;
 
-import org.dromara.hutool.core.util.CharsetUtil;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.Closeable;
-import java.nio.charset.Charset;
 
 /**
  * HttpServer公用对象，提供HttpExchange包装和公用方法
@@ -29,18 +27,16 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 5.2.6
  */
-public class HttpServerBase implements Closeable {
+public class SunServerBase implements Closeable {
 
-	final static Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
-
-	final HttpExchange httpExchange;
+	protected final HttpExchange httpExchange;
 
 	/**
 	 * 构造
 	 *
 	 * @param httpExchange {@link HttpExchange}
 	 */
-	public HttpServerBase(final HttpExchange httpExchange) {
+	public SunServerBase(final HttpExchange httpExchange) {
 		this.httpExchange = httpExchange;
 	}
 
@@ -49,7 +45,7 @@ public class HttpServerBase implements Closeable {
 	 *
 	 * @return {@link HttpExchange}对象
 	 */
-	public HttpExchange getHttpExchange() {
+	public HttpExchange getExchange() {
 		return this.httpExchange;
 	}
 
@@ -60,7 +56,7 @@ public class HttpServerBase implements Closeable {
 	 * @since 5.5.7
 	 */
 	public HttpContext getHttpContext() {
-		return getHttpExchange().getHttpContext();
+		return getExchange().getHttpContext();
 	}
 
 	/**

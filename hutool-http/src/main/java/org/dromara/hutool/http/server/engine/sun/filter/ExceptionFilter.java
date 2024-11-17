@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server.filter;
+package org.dromara.hutool.http.server.engine.sun.filter;
 
 import com.sun.net.httpserver.Filter;
-import org.dromara.hutool.http.server.HttpServerRequest;
-import org.dromara.hutool.http.server.HttpServerResponse;
+import org.dromara.hutool.http.server.engine.sun.SunServerRequest;
+import org.dromara.hutool.http.server.engine.sun.SunServerResponse;
 
 /**
  * 异常处理过滤器
@@ -28,9 +28,9 @@ import org.dromara.hutool.http.server.HttpServerResponse;
 public abstract class ExceptionFilter implements HttpFilter {
 
 	@Override
-	public void doFilter(final HttpServerRequest req, final HttpServerResponse res, final Filter.Chain chain) {
+	public void doFilter(final SunServerRequest req, final SunServerResponse res, final Filter.Chain chain) {
 		try {
-			chain.doFilter(req.getHttpExchange());
+			chain.doFilter(req.getExchange());
 		} catch (final Throwable e) {
 			afterException(req, res, e);
 		}
@@ -39,9 +39,9 @@ public abstract class ExceptionFilter implements HttpFilter {
 	/**
 	 * 异常之后的处理逻辑
 	 *
-	 * @param req {@link HttpServerRequest}
-	 * @param res {@link HttpServerResponse}
+	 * @param req {@link SunServerRequest}
+	 * @param res {@link SunServerResponse}
 	 * @param e   异常
 	 */
-	public abstract void afterException(final HttpServerRequest req, final HttpServerResponse res, final Throwable e);
+	public abstract void afterException(final SunServerRequest req, final SunServerResponse res, final Throwable e);
 }

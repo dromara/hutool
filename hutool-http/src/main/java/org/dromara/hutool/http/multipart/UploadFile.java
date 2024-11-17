@@ -16,17 +16,13 @@
 
 package org.dromara.hutool.http.multipart;
 
-import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.NoSuchFileException;
+import java.io.*;
 
 /**
  * 上传的文件对象
@@ -80,9 +76,9 @@ public class UploadFile {
 	 *
 	 * @param destPath 目标文件路径
 	 * @return 目标文件
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
-	public File write(final String destPath) throws IOException {
+	public File write(final String destPath) throws IORuntimeException {
 		if (data != null || tempFile != null) {
 			return write(FileUtil.file(destPath));
 		}
@@ -95,9 +91,9 @@ public class UploadFile {
 	 *
 	 * @param destination 目标文件
 	 * @return 目标文件
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
-	public File write(File destination) throws IOException {
+	public File write(File destination) throws IORuntimeException {
 		assertValid();
 
 		if (destination.isDirectory()) {
@@ -113,7 +109,7 @@ public class UploadFile {
 				throw new NullPointerException("Temp file is null !");
 			}
 			if(!this.tempFile.exists()){
-				throw new NoSuchFileException("Temp file: [" + this.tempFile.getAbsolutePath() + "] not exist!");
+				throw new IORuntimeException("Temp file: [" + this.tempFile.getAbsolutePath() + "] not exist!");
 			}
 
 			FileUtil.move(tempFile, destination, true);
@@ -123,9 +119,9 @@ public class UploadFile {
 
 	/**
 	 * @return 获得文件字节流
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] getFileContent() throws IOException {
+	public byte[] getFileContent() throws IORuntimeException {
 		assertValid();
 
 		if (data != null) {
@@ -139,9 +135,9 @@ public class UploadFile {
 
 	/**
 	 * @return 获得文件流
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
-	public InputStream getFileInputStream() throws IOException {
+	public InputStream getFileInputStream() throws IORuntimeException {
 		assertValid();
 
 		if (data != null) {
@@ -278,11 +274,11 @@ public class UploadFile {
 	/**
 	 * 断言是否文件流可用
 	 *
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
-	private void assertValid() throws IOException {
+	private void assertValid() throws IORuntimeException {
 		if (!isUploaded()) {
-			throw new IOException(StrUtil.format("File [{}] upload fail", getFileName()));
+			throw new IORuntimeException(StrUtil.format("File [{}] upload fail", getFileName()));
 		}
 	}
 	// ---------------------------------------------------------------------------- Private method end

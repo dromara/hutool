@@ -37,6 +37,10 @@
 		<httpclient5.version>5.4.1</httpclient5.version>
 		<httpclient4.version>4.5.14</httpclient4.version>
 		<okhttp.version>4.12.0</okhttp.version>
+		<!-- 固定 2.2.x支持到JDK8 -->
+		<undertow.version>2.2.36.Final</undertow.version>
+		<jetty.version>12.0.15</jetty.version>
+		<tomcat.version>11.0.1</tomcat.version>
 	</properties>
 
 	<dependencies>
@@ -97,6 +101,26 @@
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
 			<version>${okhttp.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- 第三方HTTP服务器库 -->
+		<dependency>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-core</artifactId>
+			<version>${undertow.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>${tomcat.version}</version>
 			<scope>provided</scope>
 		</dependency>
 

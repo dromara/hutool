@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server;
+package org.dromara.hutool.http.server.handler;
 
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.http.HttpUtil;
-import org.dromara.hutool.http.server.engine.sun.filter.DefaultExceptionFilter;
+import org.dromara.hutool.http.server.ServerRequest;
+import org.dromara.hutool.http.server.ServerResponse;
 
-public class ExceptionServerTest {
-	public static void main(final String[] args) {
-		HttpUtil.createServer(8888)
-			.addFilter(new DefaultExceptionFilter())
-			.addAction("/", (req, res) -> {
-				throw new IORuntimeException("Test Exception");
-			})
-			.start();
-	}
+/**
+ * HTTP请求处理器
+ *
+ * @author Looly
+ */
+public interface HttpHandler {
+
+	/**
+	 * 处理请求
+	 *
+	 * @param request  请求对象
+	 * @param response 响应对象
+	 */
+	void handle(ServerRequest request, ServerResponse response);
 }

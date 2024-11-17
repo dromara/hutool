@@ -19,8 +19,10 @@ package org.dromara.hutool.http.server;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.http.multipart.MultipartFormData;
 import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.multipart.MultipartFormData;
+import org.dromara.hutool.http.server.engine.sun.SimpleServer;
+import org.dromara.hutool.http.server.engine.sun.SunServerRequest;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +37,7 @@ public class IssueI6Q30XTest {
 	public static void main(String[] args) {
 		final SimpleServer server = HttpUtil.createServer(8888);
 		server.addAction("/file", (request, response) -> {
-			Console.log(request.getHeaders().entrySet());
+			Console.log(((SunServerRequest)request).getHeaders().entrySet());
 
 			final StopWatch stopWatch = DateUtil.createStopWatch();
 			stopWatch.start();

@@ -19,10 +19,11 @@ package org.dromara.hutool.http.server;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.http.multipart.UploadFile;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.meta.ContentType;
 import org.dromara.hutool.http.meta.HeaderName;
-import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.multipart.UploadFile;
+import org.dromara.hutool.http.server.engine.sun.SunServerRequest;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.net.HttpCookie;
@@ -33,13 +34,13 @@ public class SimpleServerTest {
 		HttpUtil.createServer(8888)
 			.addFilter(((req, res, chain) -> {
 				Console.log("Filter: " + req.getPath());
-				chain.doFilter(req.getHttpExchange());
+				chain.doFilter(req.getExchange());
 			}))
 			// 设置默认根目录，classpath/html
 			.setRoot(FileUtil.file("html"))
 			// get数据测试，返回请求的PATH
 			.addAction("/get", (request, response) ->
-				response.write(request.getURI().toString(), ContentType.TEXT_PLAIN.toString())
+				response.write(((SunServerRequest)request).getURI().toString(), ContentType.TEXT_PLAIN.toString())
 			)
 			// 返回JSON数据测试
 			.addAction("/restTest", (request, response) -> {

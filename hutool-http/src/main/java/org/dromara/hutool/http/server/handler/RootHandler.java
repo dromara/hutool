@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server.action;
+package org.dromara.hutool.http.server.handler;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.http.server.HttpServerRequest;
-import org.dromara.hutool.http.server.HttpServerResponse;
+import org.dromara.hutool.http.meta.HttpStatus;
+import org.dromara.hutool.http.server.ServerRequest;
+import org.dromara.hutool.http.server.ServerResponse;
 
 import java.io.File;
 import java.util.List;
@@ -30,8 +31,11 @@ import java.util.List;
  * @author looly
  * @since 5.2.6
  */
-public class RootAction implements Action {
+public class RootHandler implements HttpHandler {
 
+	/**
+	 * 默认主页文件名
+	 */
 	public static final String DEFAULT_INDEX_FILE_NAME = "index.html";
 
 	private final File rootDir;
@@ -42,7 +46,7 @@ public class RootAction implements Action {
 	 *
 	 * @param rootDir 网页根目录
 	 */
-	public RootAction(final String rootDir) {
+	public RootHandler(final String rootDir) {
 		this(new File(rootDir));
 	}
 
@@ -51,7 +55,7 @@ public class RootAction implements Action {
 	 *
 	 * @param rootDir 网页根目录
 	 */
-	public RootAction(final File rootDir) {
+	public RootHandler(final File rootDir) {
 		this(rootDir, DEFAULT_INDEX_FILE_NAME);
 	}
 
@@ -61,7 +65,7 @@ public class RootAction implements Action {
 	 * @param rootDir        网页根目录
 	 * @param indexFileNames 主页文件名列表
 	 */
-	public RootAction(final String rootDir, final String... indexFileNames) {
+	public RootHandler(final String rootDir, final String... indexFileNames) {
 		this(new File(rootDir), indexFileNames);
 	}
 
@@ -72,13 +76,13 @@ public class RootAction implements Action {
 	 * @param indexFileNames 主页文件名列表
 	 * @since 5.4.0
 	 */
-	public RootAction(final File rootDir, final String... indexFileNames) {
+	public RootHandler(final File rootDir, final String... indexFileNames) {
 		this.rootDir = rootDir;
 		this.indexFileNames = ListUtil.of(indexFileNames);
 	}
 
 	@Override
-	public void doAction(final HttpServerRequest request, final HttpServerResponse response) {
+	public void handle(final ServerRequest request, final ServerResponse response) {
 		final String path = request.getPath();
 
 		File file = FileUtil.file(rootDir, path);
@@ -99,6 +103,7 @@ public class RootAction implements Action {
 			}
 		}
 
-		response.send404("404 Not Found !");
+		response.setStatus(HttpStatus.HTTP_NOT_FOUND);
+		response.write("404 Not Found !");
 	}
 }

@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server;
+package org.dromara.hutool.http.server.engine.sun;
 
 import com.sun.net.httpserver.*;
-import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.thread.GlobalThreadPool;
-import org.dromara.hutool.http.server.action.Action;
-import org.dromara.hutool.http.server.action.RootAction;
-import org.dromara.hutool.http.server.filter.HttpFilter;
-import org.dromara.hutool.http.server.filter.SimpleFilter;
-import org.dromara.hutool.http.server.handler.ActionHandler;
+import org.dromara.hutool.http.server.ServerConfig;
+import org.dromara.hutool.http.server.engine.sun.filter.HttpFilter;
+import org.dromara.hutool.http.server.engine.sun.filter.SimpleFilter;
+import org.dromara.hutool.http.server.handler.RootHandler;
 
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
@@ -43,8 +38,7 @@ import java.util.concurrent.Executor;
  */
 public class SimpleServer {
 
-	private final HttpServer server;
-	private final List<Filter> filters;
+	private final SunHttpServerEngine engine;
 
 	/**
 	 * 构造
@@ -71,39 +65,23 @@ public class SimpleServer {
 	 * @param address 监听地址
 	 */
 	public SimpleServer(final InetSocketAddress address) {
-		this(address, (HttpsConfigurator) null);
+		this(address, null);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param address 监听地址
+	 * @param address    监听地址
 	 * @param sslContext ssl配置
 	 */
 	public SimpleServer(final InetSocketAddress address, final SSLContext sslContext) {
-		this(address, new HttpsConfigurator(sslContext));
-	}
+		this.engine = new SunHttpServerEngine();
 
-	/**
-	 * 构造
-	 *
-	 * @param address 监听地址
-	 * @param configurator https配置信息，用于使用自定义SSL（TLS）证书等
-	 */
-	public SimpleServer(final InetSocketAddress address, final HttpsConfigurator configurator) {
-		try {
-			if(null != configurator){
-				final HttpsServer server = HttpsServer.create(address, 0);
-				server.setHttpsConfigurator(configurator);
-				this.server = server;
-			} else{
-				this.server = HttpServer.create(address, 0);
-			}
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-		setExecutor(GlobalThreadPool.getExecutor());
-		filters = new ArrayList<>();
+		final ServerConfig serverConfig = ServerConfig.of()
+			.setHost(address.getHostName())
+			.setPort(address.getPort())
+			.setSslContext(sslContext);
+		this.engine.init(serverConfig);
 	}
 
 	/**
@@ -115,7 +93,6 @@ public class SimpleServer {
 	 *     <li>{@link #setRoot(String)}  </li>
 	 *     <li>{@link #createContext(String, HttpHandler)} </li>
 	 *     <li>{@link #addHandler(String, HttpHandler)}</li>
-	 *     <li>{@link #addAction(String, Action)} </li>
 	 * </ul>
 	 *
 	 * @param filter {@link Filter} 请求过滤器
@@ -123,7 +100,7 @@ public class SimpleServer {
 	 * @since 5.5.7
 	 */
 	public SimpleServer addFilter(final Filter filter) {
-		this.filters.add(filter);
+		this.engine.addFilter(filter);
 		return this;
 	}
 
@@ -136,7 +113,6 @@ public class SimpleServer {
 	 *     <li>{@link #setRoot(String)}  </li>
 	 *     <li>{@link #createContext(String, HttpHandler)} </li>
 	 *     <li>{@link #addHandler(String, HttpHandler)}</li>
-	 *     <li>{@link #addAction(String, Action)} </li>
 	 * </ul>
 	 *
 	 * @param filter {@link Filter} 请求过滤器
@@ -177,10 +153,22 @@ public class SimpleServer {
 	public HttpContext createContext(String path, final HttpHandler handler) {
 		// 非/开头的路径会报错
 		path = StrUtil.addPrefixIfNot(path, StrUtil.SLASH);
-		final HttpContext context = this.server.createContext(path, handler);
-		// 增加整体过滤器
-		context.getFilters().addAll(this.filters);
-		return context;
+		return this.engine.createContext(path, handler);
+	}
+
+	/**
+	 * 增加请求处理规则，使用默认的{@link RootHandler}，默认从当前项目根目录读取页面
+	 *
+	 * @param path   路径，例如:/a/b 或者 a/b
+	 * @param action 处理器，包括请求和响应处理
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public SimpleServer addAction(final String path, final org.dromara.hutool.http.server.handler.HttpHandler action) {
+		return addHandler(path, exchange -> {
+			final HttpExchangeWrapper exchangeWrapper = new HttpExchangeWrapper(exchange);
+			action.handle(exchangeWrapper.getRequest(), exchangeWrapper.getResponse());
+		});
 	}
 
 	/**
@@ -200,18 +188,8 @@ public class SimpleServer {
 	 * @return this
 	 */
 	public SimpleServer setRoot(final File root) {
-		return addAction("/", new RootAction(root));
-	}
-
-	/**
-	 * 增加请求处理规则
-	 *
-	 * @param path   路径
-	 * @param action 处理器
-	 * @return this
-	 */
-	public SimpleServer addAction(final String path, final Action action) {
-		return addHandler(path, new ActionHandler(action));
+		this.engine.setHandler(new RootHandler(root));
+		return this;
 	}
 
 	/**
@@ -221,7 +199,7 @@ public class SimpleServer {
 	 * @return this
 	 */
 	public SimpleServer setExecutor(final Executor executor) {
-		this.server.setExecutor(executor);
+		this.engine.setExecutor(executor);
 		return this;
 	}
 
@@ -231,7 +209,7 @@ public class SimpleServer {
 	 * @return {@link HttpServer}
 	 */
 	public HttpServer getRawServer() {
-		return this.server;
+		return this.engine.getRawEngine();
 	}
 
 	/**
@@ -240,7 +218,7 @@ public class SimpleServer {
 	 * @return {@link InetSocketAddress}
 	 */
 	public InetSocketAddress getAddress() {
-		return this.server.getAddress();
+		return getRawServer().getAddress();
 	}
 
 	/**
@@ -249,6 +227,6 @@ public class SimpleServer {
 	public void start() {
 		final InetSocketAddress address = getAddress();
 		Console.log("Hutool Simple Http Server listen on 【{}:{}】", address.getHostName(), address.getPort());
-		this.server.start();
+		this.engine.start();
 	}
 }

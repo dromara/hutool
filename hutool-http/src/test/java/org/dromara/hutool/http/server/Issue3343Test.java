@@ -20,6 +20,7 @@ import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.multi.ListValueMap;
 import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.http.server.engine.sun.SimpleServer;
 
 /**
  * http://localhost:8888/?name=hutool
@@ -33,7 +34,7 @@ public class Issue3343Test {
 				Console.log(" >   from : " + req.getClientIP());
 				// 过滤器中获取请求参数
 				Console.log(" > params : " + req.getParams());
-				chain.doFilter(req.getHttpExchange());
+				chain.doFilter(req.getExchange());
 			});
 
 		server.addAction("/", Issue3343Test::index);
@@ -41,9 +42,9 @@ public class Issue3343Test {
 		server.start();
 	}
 
-	private static void index(HttpServerRequest request, HttpServerResponse response) {
+	private static void index(final ServerRequest request, final ServerResponse response) {
 		// 具体逻辑中再次获取请求参数
-		ListValueMap<String, String> params = request.getParams();
+		final ListValueMap<String, String> params = request.getParams();
 		Console.log("index params: " + params);
 		response.getWriter().write("GOT: " + params);
 	}

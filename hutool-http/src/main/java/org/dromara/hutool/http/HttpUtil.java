@@ -27,7 +27,7 @@ import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.engine.ClientEngineFactory;
 import org.dromara.hutool.http.meta.Method;
-import org.dromara.hutool.http.server.SimpleServer;
+import org.dromara.hutool.http.server.engine.sun.SimpleServer;
 
 import java.nio.charset.Charset;
 import java.util.Collection;

@@ -19,18 +19,19 @@ package org.dromara.hutool.http.server;
 import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.meta.ContentType;
+import org.dromara.hutool.http.server.engine.sun.SimpleServer;
 
 public class Issue3723Test {
 	public static void main(final String[] args) {
 		final SimpleServer server = HttpUtil.createServer(8888);
 		server.addFilter((req, res, chain) -> {
 			final String requestId = IdUtil.fastSimpleUUID();
-			req.getHttpExchange().setAttribute("requestId", requestId);
+			req.getExchange().setAttribute("requestId", requestId);
 			res.addHeader("X-Request-Id", requestId);
 
 			res.write("new Content");
 
-			chain.doFilter(req.getHttpExchange());
+			chain.doFilter(req.getExchange());
 		});
 		server.addAction("/", (req, res)-> res.write("Hello Hutool Server", ContentType.JSON.getValue()));
 		server.start();
