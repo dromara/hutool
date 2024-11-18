@@ -188,7 +188,7 @@ public class SimpleServer {
 	 * @return this
 	 */
 	public SimpleServer setRoot(final File root) {
-		this.engine.setHandler(new RootHandler(root));
+		addAction("/", new RootHandler(root));
 		return this;
 	}
 

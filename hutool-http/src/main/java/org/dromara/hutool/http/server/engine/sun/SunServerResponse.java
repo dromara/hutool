@@ -37,7 +37,7 @@ import java.util.Map;
  * @author looly
  * @since 6.0.0
  */
-public class SunServerResponse extends SunServerBase implements ServerResponse {
+public class SunServerResponse extends SunServerExchangeBase implements ServerResponse {
 
 	private Charset charset;
 	/**

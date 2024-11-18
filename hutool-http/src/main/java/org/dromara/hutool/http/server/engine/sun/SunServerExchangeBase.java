@@ -27,7 +27,7 @@ import java.io.Closeable;
  * @author looly
  * @since 5.2.6
  */
-public class SunServerBase implements Closeable {
+public class SunServerExchangeBase implements Closeable {
 
 	protected final HttpExchange httpExchange;
 
@@ -36,7 +36,7 @@ public class SunServerBase implements Closeable {
 	 *
 	 * @param httpExchange {@link HttpExchange}
 	 */
-	public SunServerBase(final HttpExchange httpExchange) {
+	public SunServerExchangeBase(final HttpExchange httpExchange) {
 		this.httpExchange = httpExchange;
 	}
 

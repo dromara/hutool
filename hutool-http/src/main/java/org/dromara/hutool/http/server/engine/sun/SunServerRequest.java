@@ -47,7 +47,7 @@ import java.util.Map;
  *
  * @author Looly
  */
-public class SunServerRequest extends SunServerBase implements ServerRequest {
+public class SunServerRequest extends SunServerExchangeBase implements ServerRequest {
 
 	private Map<String, HttpCookie> cookieCache;
 	private ListValueMap<String, String> paramsCache;
