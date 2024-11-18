@@ -33,7 +33,7 @@ import org.dromara.hutool.http.meta.ContentTypeUtil;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.multipart.MultipartFormData;
 import org.dromara.hutool.http.multipart.UploadSetting;
-import org.dromara.hutool.http.server.ServerRequest;
+import org.dromara.hutool.http.server.handler.ServerRequest;
 
 import java.io.InputStream;
 import java.net.HttpCookie;

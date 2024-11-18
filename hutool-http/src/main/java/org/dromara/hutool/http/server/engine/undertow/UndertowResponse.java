@@ -19,7 +19,7 @@ package org.dromara.hutool.http.server.engine.undertow;
 import io.undertow.io.Sender;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HttpString;
-import org.dromara.hutool.http.server.ServerResponse;
+import org.dromara.hutool.http.server.handler.ServerResponse;
 
 import java.io.OutputStream;
 import java.nio.ByteBuffer;

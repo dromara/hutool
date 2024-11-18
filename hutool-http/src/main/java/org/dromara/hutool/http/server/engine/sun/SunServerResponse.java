@@ -22,7 +22,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.http.meta.ContentType;
 import org.dromara.hutool.http.meta.HttpStatus;
-import org.dromara.hutool.http.server.ServerResponse;
+import org.dromara.hutool.http.server.handler.ServerResponse;
 
 import java.io.IOException;
 import java.io.InputStream;

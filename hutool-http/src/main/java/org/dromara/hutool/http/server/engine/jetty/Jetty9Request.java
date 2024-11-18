@@ -16,7 +16,7 @@
 
 package org.dromara.hutool.http.server.engine.jetty;
 
-import org.dromara.hutool.http.server.ServerRequest;
+import org.dromara.hutool.http.server.handler.ServerRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;

@@ -17,34 +17,47 @@
 package org.dromara.hutool.http.server.engine.jetty;
 
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.server.ServerConfig;
 import org.dromara.hutool.http.server.engine.AbstractServerEngine;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import javax.net.ssl.SSLContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Jetty引擎实现
  *
  * @author Looly
  */
-public class Jetty9Engine extends AbstractServerEngine {
+public class JettyEngine extends AbstractServerEngine {
 
 	private Server server;
+	/**
+	 * 由于Jetty9和以上版本中接口实现不同，此处根据不同版本做兼容自定义
+	 */
+	private Handler jettyHandler;
 
 	/**
 	 * 构造
 	 */
-	public Jetty9Engine() {
+	public JettyEngine() {
 		// issue#IABWBL JDK8下，在IDEA旗舰版加载Spring boot插件时，启动应用不会检查字段类是否存在
 		// 此处构造时调用下这个类，以便触发类是否存在的检查
 		Assert.notNull(Server.class);
+	}
+
+	/**
+	 * 设置Jetty处理器，用于处理请求
+	 *
+	 * @param jettyHandler 处理器
+	 * @return this
+	 */
+	public JettyEngine setJettyHandler(final Handler jettyHandler) {
+		this.jettyHandler = jettyHandler;
+		return this;
 	}
 
 	@Override
@@ -80,13 +93,8 @@ public class Jetty9Engine extends AbstractServerEngine {
 		final ServerConfig config = this.config;
 		final Server server = new Server();
 		server.addConnector(createConnector(server, config));
-		server.setHandler(new AbstractHandler() {
-			@Override
-			public void handle(final String target, final Request baseRequest,
-							   final HttpServletRequest request, final HttpServletResponse response) {
-				handler.handle(new Jetty9Request(request), new Jetty9Response(response));
-			}
-		});
+		server.setHandler(ObjUtil.defaultIfNull(this.jettyHandler,
+			() -> new Jetty9Handler(this.handler)));
 		this.server = server;
 	}
 

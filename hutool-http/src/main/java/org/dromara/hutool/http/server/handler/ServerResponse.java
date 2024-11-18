@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server;
+package org.dromara.hutool.http.server.handler;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;

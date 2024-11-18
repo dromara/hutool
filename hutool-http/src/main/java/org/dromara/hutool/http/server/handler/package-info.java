@@ -15,6 +15,8 @@
  */
 
 /**
- * {@link com.sun.net.httpserver.HttpHandler} 实现包装
+ * HTTP服务器请求和响应处理器的统一封装
+ *
+ * @author Looly
  */
 package org.dromara.hutool.http.server.handler;

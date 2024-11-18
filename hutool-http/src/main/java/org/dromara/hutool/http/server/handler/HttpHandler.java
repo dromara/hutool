@@ -16,11 +16,9 @@
 
 package org.dromara.hutool.http.server.handler;
 
-import org.dromara.hutool.http.server.ServerRequest;
-import org.dromara.hutool.http.server.ServerResponse;
-
 /**
- * HTTP请求处理器
+ * HTTP请求处理器<br>
+ * 抽象请求处理，对于不同的HTTP服务器，将这个处理器封装成对应的处理器，例如Jetty的JettyHandler，Undertow的UndertowHandler等
  *
  * @author Looly
  */

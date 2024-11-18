@@ -17,7 +17,7 @@
 package org.dromara.hutool.http.server.engine.jetty;
 
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.http.server.ServerResponse;
+import org.dromara.hutool.http.server.handler.ServerResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

@@ -19,8 +19,6 @@ package org.dromara.hutool.http.server.handler;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.http.meta.HttpStatus;
-import org.dromara.hutool.http.server.ServerRequest;
-import org.dromara.hutool.http.server.ServerResponse;
 
 import java.io.File;
 import java.util.List;

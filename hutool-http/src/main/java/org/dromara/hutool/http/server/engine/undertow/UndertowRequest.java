@@ -19,7 +19,7 @@ package org.dromara.hutool.http.server.engine.undertow;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.http.server.ServerRequest;
+import org.dromara.hutool.http.server.handler.ServerRequest;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
