@@ -39,7 +39,8 @@
 		<okhttp.version>4.12.0</okhttp.version>
 		<!-- 固定 2.2.x支持到JDK8 -->
 		<undertow.version>2.2.36.Final</undertow.version>
-		<jetty.version>12.0.15</jetty.version>
+		<!-- 9.x支持到JDK8 -->
+		<jetty.version>9.4.56.v20240826</jetty.version>
 		<tomcat.version>11.0.1</tomcat.version>
 	</properties>
 

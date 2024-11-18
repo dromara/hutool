@@ -22,12 +22,12 @@ import org.dromara.hutool.http.server.engine.undertow.UndertowEngine;
 
 public class UndertowTest {
 	public static void main(String[] args) {
-		final UndertowEngine undertowEngine = new UndertowEngine();
-		undertowEngine.init(ServerConfig.of());
-		undertowEngine.setHandler((request, response) -> {
+		final UndertowEngine engine = new UndertowEngine();
+		engine.init(ServerConfig.of());
+		engine.setHandler((request, response) -> {
 			Console.log(request.getPath());
 			response.write("Hutool Undertow response test");
 		});
-		undertowEngine.start();
+		engine.start();
 	}
 }
