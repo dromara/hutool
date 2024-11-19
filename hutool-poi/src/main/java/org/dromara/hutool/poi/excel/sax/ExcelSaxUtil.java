@@ -16,22 +16,23 @@
 
 package org.dromara.hutool.poi.excel.sax;
 
-import org.dromara.hutool.core.date.DateTime;
-import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.exception.DependencyException;
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.text.CharUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.ExcelDateUtil;
-import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
-import org.dromara.hutool.poi.POIException;
 import org.apache.poi.hssf.eventusermodel.FormatTrackingHSSFListener;
 import org.apache.poi.hssf.record.CellValueRecordInterface;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.util.XMLHelper;
 import org.apache.poi.xssf.model.SharedStrings;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.dromara.hutool.core.date.DateTime;
+import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.exception.DependencyException;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.poi.POIException;
+import org.dromara.hutool.poi.excel.ExcelDateUtil;
+import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -285,7 +286,15 @@ public class ExcelSaxUtil {
 		if (StrUtil.isBlank(value)) {
 			return null;
 		}
-		return getNumberValue(Double.parseDouble(value), numFmtString);
+
+		// issue#IB0EJ9 可能精度丢失
+		final double number = Double.parseDouble(value);
+		if(false == value.equals(Double.toString(number))){
+			// 精度丢失
+			return NumberUtil.toBigDecimal(value);
+		}
+
+		return getNumberValue(number, numFmtString);
 	}
 
 	/**
