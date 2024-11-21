@@ -29,7 +29,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest1() {
 		final StringReader reader = StrUtil.getReader("aaa,b\"bba\",ccc");
-		final CsvParser parser = new CsvParser(reader, null);
+		final CsvParser2 parser = new CsvParser2(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("b\"bba\"", row.getRaw().get(1));
@@ -39,7 +39,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest2() {
 		final StringReader reader = StrUtil.getReader("aaa,\"bba\"bbb,ccc");
-		final CsvParser parser = new CsvParser(reader, null);
+		final CsvParser2 parser = new CsvParser2(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("\"bba\"bbb", row.getRaw().get(1));
@@ -49,7 +49,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest3() {
 		final StringReader reader = StrUtil.getReader("aaa,\"bba\",ccc");
-		final CsvParser parser = new CsvParser(reader, null);
+		final CsvParser2 parser = new CsvParser2(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("bba", row.getRaw().get(1));
@@ -59,7 +59,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest4() {
 		final StringReader reader = StrUtil.getReader("aaa,\"\",ccc");
-		final CsvParser parser = new CsvParser(reader, null);
+		final CsvParser2 parser = new CsvParser2(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("", row.getRaw().get(1));
