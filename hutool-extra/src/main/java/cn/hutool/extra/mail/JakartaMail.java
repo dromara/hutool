@@ -268,6 +268,8 @@ public class JakartaMail implements Builder<MimeMessage> {
 					if (StrUtil.startWith(attachment.getContentType(), "image/")) {
 						// 图片附件，用于正文中引用图片
 						bodyPart.setContentID(nameEncoded);
+						// 图片附件设置内联,否则无法正常引用图片
+						bodyPart.setDisposition(MimeBodyPart.INLINE);
 					}
 					this.multipart.addBodyPart(bodyPart);
 				}

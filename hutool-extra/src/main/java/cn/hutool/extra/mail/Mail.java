@@ -8,10 +8,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.activation.FileTypeMap;
+import javax.activation.*;
 import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -273,6 +270,8 @@ public class Mail implements Builder<MimeMessage> {
 					if (StrUtil.startWith(attachment.getContentType(), "image/")) {
 						// 图片附件，用于正文中引用图片
 						bodyPart.setContentID(nameEncoded);
+						// 图片附件设置内联,否则无法正常引用图片
+						bodyPart.setDisposition(MimeBodyPart.INLINE);
 					}
 					this.multipart.addBodyPart(bodyPart);
 				}

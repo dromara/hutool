@@ -40,6 +40,15 @@ public class JakartaMailTest {
 
 	@Test
 	@Disabled
+	public void sendHtmlWithImageTest() {
+		Map<String, InputStream> map = new HashMap<>();
+		InputStream in = getClass().getClassLoader().getResourceAsStream("image/Dromara.png");
+		map.put("<image-1>", in);
+		JakartaMailUtil.sendHtml("hutool@foxmail.com;li7hai26@outlook.com", "测试", "<h1>邮件来自Hutool测试</h1><img src=\"cid:image-1\" />", map);
+	}
+
+	@Test
+	@Disabled
 	public void sendHtmlTest() {
 		JakartaMailUtil.send("hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1>", true);
 	}
