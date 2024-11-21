@@ -17,6 +17,7 @@
 package org.dromara.hutool.poi.csv;
 
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -75,5 +76,13 @@ public class CsvParserTest {
 		Assertions.assertNotNull(row);
 		Assertions.assertEquals(1, row.size());
 		Assertions.assertEquals("b\"bb", row.get(0));
+	}
+
+	@Test
+	void issueIB5UQ8Test() {
+		String csv = "\"Consultancy, 10\"\",, food\"";
+		final CsvReader reader = CsvUtil.getReader(new StringReader(csv));
+		final String s = reader.read().getRow(0).get(0);
+		Console.log(s);
 	}
 }
