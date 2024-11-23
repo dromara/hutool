@@ -266,9 +266,9 @@ public class ExcelSaxUtil {
 			return null;
 		}
 
-		// issue#IB0EJ9 可能精度丢失
+		// issue#IB0EJ9 可能精度丢失，对含有小数的value判断并转为BigDecimal
 		final double number = Double.parseDouble(value);
-		if(false == value.equals(Double.toString(number))){
+		if(StrUtil.contains(value, CharUtil.DOT) && !value.equals(Double.toString(number))){
 			// 精度丢失
 			return NumberUtil.toBigDecimal(value);
 		}
