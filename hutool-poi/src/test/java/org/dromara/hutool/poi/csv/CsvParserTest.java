@@ -17,7 +17,6 @@
 package org.dromara.hutool.poi.csv;
 
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest1() {
 		final StringReader reader = StrUtil.getReader("aaa,b\"bba\",ccc");
-		final CsvParser2 parser = new CsvParser2(reader, null);
+		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("b\"bba\"", row.getRaw().get(1));
@@ -39,7 +38,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest2() {
 		final StringReader reader = StrUtil.getReader("aaa,\"bba\"bbb,ccc");
-		final CsvParser2 parser = new CsvParser2(reader, null);
+		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("\"bba\"bbb", row.getRaw().get(1));
@@ -49,7 +48,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest3() {
 		final StringReader reader = StrUtil.getReader("aaa,\"bba\",ccc");
-		final CsvParser2 parser = new CsvParser2(reader, null);
+		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("bba", row.getRaw().get(1));
@@ -59,7 +58,7 @@ public class CsvParserTest {
 	@Test
 	public void parseTest4() {
 		final StringReader reader = StrUtil.getReader("aaa,\"\",ccc");
-		final CsvParser2 parser = new CsvParser2(reader, null);
+		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assertions.assertEquals("", row.getRaw().get(1));
@@ -80,9 +79,36 @@ public class CsvParserTest {
 
 	@Test
 	void issueIB5UQ8Test() {
-		String csv = "\"Consultancy, 10\"\",, food\"";
+		final String csv = "\"Consultancy, 10\"\",, food\"";
 		final CsvReader reader = CsvUtil.getReader(new StringReader(csv));
 		final String s = reader.read().getRow(0).get(0);
-		Console.log(s);
+		Assertions.assertEquals("Consultancy, 10\",, food", s);
+	}
+
+	@Test
+	void textDelimiterAtEndTest() {
+		final String csv = "\"Consultancy, 10\"";
+		final CsvReader reader = CsvUtil.getReader(new StringReader(csv));
+		final String s = reader.read().getRow(0).get(0);
+		Assertions.assertEquals("Consultancy, 10", s);
+	}
+
+	@Test
+	void textDelimiterUncloseTest() {
+		// 未闭合的文本包装符，文本结尾自动结束，文本包装符
+		final String csv = "\"Consultancy,";
+		final CsvReader reader = CsvUtil.getReader(new StringReader(csv));
+		final String s = reader.read().getRow(0).get(0);
+		Assertions.assertEquals("Consultancy,", s);
+	}
+
+	@Test
+	void textDelimiterOfCount3Test() {
+		// 未闭合的文本包装符，文本结尾自动结束，文本包装符
+		final String csv = "\"\"\"";
+		final CsvParser csvParser = new CsvParser(new StringReader(csv), CsvReadConfig.of().setSkipEmptyRows(false));
+		final CsvRow row = csvParser.nextRow();
+		Assertions.assertNotNull(row);
+		Assertions.assertEquals("\"", row.get(0));
 	}
 }

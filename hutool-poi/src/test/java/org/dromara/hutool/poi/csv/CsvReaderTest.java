@@ -68,7 +68,7 @@ public class CsvReaderTest {
 
 	@Test
 	public void readAliasMapListTest() {
-		final CsvReadConfig csvReadConfig = CsvReadConfig.defaultConfig();
+		final CsvReadConfig csvReadConfig = CsvReadConfig.of();
 		csvReadConfig.addHeaderAlias("姓名", "name");
 
 		final CsvReader reader = CsvUtil.getReader(csvReadConfig);
@@ -135,7 +135,7 @@ public class CsvReaderTest {
 	@Test
 	@Disabled
 	public void readTest3() {
-		final CsvReadConfig csvReadConfig = CsvReadConfig.defaultConfig();
+		final CsvReadConfig csvReadConfig = CsvReadConfig.of();
 		csvReadConfig.setContainsHeader(true);
 		final CsvReader reader = CsvUtil.getReader(csvReadConfig);
 		final CsvData read = reader.read(FileUtil.file("d:/test/ceshi.csv"));
@@ -164,7 +164,7 @@ public class CsvReaderTest {
 	@Test
 	public void lineLimitTest() {
 		// 从原始第2行开始读取
-		final CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2));
+		final CsvReader reader = new CsvReader(CsvReadConfig.of().setBeginLineNo(2));
 		final CsvData data = reader.read(
 			ResourceUtil.getUtf8Reader("test_lines.csv"), true);
 
@@ -183,7 +183,7 @@ public class CsvReaderTest {
 	@Test
 	public void lineLimitWithHeaderTest() {
 		// 从原始第2行开始读取
-		final CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2).setContainsHeader(true));
+		final CsvReader reader = new CsvReader(CsvReadConfig.of().setBeginLineNo(2).setContainsHeader(true));
 		final CsvData data = reader.read(
 			ResourceUtil.getUtf8Reader("test_lines.csv"), true);
 
@@ -199,7 +199,7 @@ public class CsvReaderTest {
 	@Test
 	public void customConfigTest() {
 		final CsvReader reader = CsvUtil.getReader(
-				CsvReadConfig.defaultConfig()
+				CsvReadConfig.of()
 						.setTextDelimiter('\'')
 						.setFieldSeparator(';'));
 		final CsvData csvRows = reader.readFromStr("123;456;'789;0'abc;");
@@ -211,7 +211,7 @@ public class CsvReaderTest {
 
 	@Test
 	public void readDisableCommentTest() {
-		final CsvReader reader = CsvUtil.getReader(CsvReadConfig.defaultConfig().disableComment());
+		final CsvReader reader = CsvUtil.getReader(CsvReadConfig.of().disableComment());
 		final CsvData read = reader.read(
 			ResourceUtil.getUtf8Reader("test.csv"), true);
 		final CsvRow row = read.getRow(0);

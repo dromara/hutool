@@ -45,7 +45,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 *
 	 * @return 默认配置
 	 */
-	public static CsvReadConfig defaultConfig() {
+	public static CsvReadConfig of() {
 		return new CsvReadConfig();
 	}
 

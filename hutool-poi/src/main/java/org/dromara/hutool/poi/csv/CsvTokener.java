@@ -24,6 +24,12 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
 
+/**
+ * CSV解析器，用于解析CSV文件
+ *
+ * @author looly
+ * @since 5.8.0
+ */
 public class CsvTokener extends SimpleWrapper<Reader> implements Closeable {
 
 	/**
@@ -45,7 +51,7 @@ public class CsvTokener extends SimpleWrapper<Reader> implements Closeable {
 	 * @param reader {@link Reader}
 	 */
 	public CsvTokener(final Reader reader) {
-		super(reader);
+		super(IoUtil.toBuffered(reader));
 	}
 
 	/**
@@ -56,12 +62,12 @@ public class CsvTokener extends SimpleWrapper<Reader> implements Closeable {
 	public int next() {
 		if(this.usePrev){
 			this.usePrev = false;
-			return this.prev;
-		}
-		try {
-			this.prev = this.raw.read();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
+		}else{
+			try {
+				this.prev = this.raw.read();
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
 		}
 		this.index++;
 		return this.prev;
@@ -78,6 +84,15 @@ public class CsvTokener extends SimpleWrapper<Reader> implements Closeable {
 		}
 		this.index --;
 		this.usePrev = true;
+	}
+
+	/**
+	 * 获取当前位置
+	 *
+	 * @return 位置
+	 */
+	public long getIndex() {
+		return this.index;
 	}
 
 	@Override

@@ -48,11 +48,12 @@ public class CsvUtilTest {
 		Assertions.assertEquals("关注\"对象\"", row0.get(3));
 		Assertions.assertEquals("年龄", row0.get(4));
 		Assertions.assertEquals("", row0.get(5));
-		Assertions.assertEquals("\"", row0.get(6));
+		// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+		Assertions.assertEquals("\"\n", row0.get(6));
 	}
 
 	@Test
-	public void readTest2() {
+	public void readUseConsumerTest() {
 		final CsvReader reader = CsvUtil.getReader();
 		reader.read(FileUtil.getUtf8Reader("test.csv"), true, (csvRow)-> {
 			// 只有一行，所以直接判断
@@ -62,7 +63,8 @@ public class CsvUtilTest {
 			Assertions.assertEquals("关注\"对象\"", csvRow.get(3));
 			Assertions.assertEquals("年龄", csvRow.get(4));
 			Assertions.assertEquals("", csvRow.get(5));
-			Assertions.assertEquals("\"", csvRow.get(6));
+			// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+			Assertions.assertEquals("\"\n", csvRow.get(6));
 		});
 	}
 
@@ -75,9 +77,26 @@ public class CsvUtilTest {
 	}
 
 	@Test
-	public void readCsvStr1(){
+	public void readCsvStr1WithUncloseTest(){
 		final CsvData data = CsvUtil.getReader().readFromStr("# 这是一行注释，读取时应忽略\n" +
 				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n");
+		final List<CsvRow> rows = data.getRows();
+		final CsvRow row0 = rows.get(0);
+		Assertions.assertEquals("sss,sss", row0.get(0));
+		Assertions.assertEquals("姓名", row0.get(1));
+		Assertions.assertEquals("性别", row0.get(2));
+		Assertions.assertEquals("关注\"对象\"", row0.get(3));
+		Assertions.assertEquals("年龄", row0.get(4));
+		Assertions.assertEquals("", row0.get(5));
+		// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+		Assertions.assertEquals("\"\n", row0.get(6));
+	}
+
+	@Test
+	public void readCsvStr1WithUncloseTrimTest(){
+		final CsvData data = CsvUtil.getReader(CsvReadConfig.of().setTrimField(true))
+			.readFromStr("# 这是一行注释，读取时应忽略\n" +
+			"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n");
 		final List<CsvRow> rows = data.getRows();
 		final CsvRow row0 = rows.get(0);
 		Assertions.assertEquals("sss,sss", row0.get(0));
@@ -90,7 +109,7 @@ public class CsvUtilTest {
 	}
 
 	@Test
-	public void readCsvStr2(){
+	public void readCsvStrUseConsumerTest(){
 		CsvUtil.getReader().readFromStr("# 这是一行注释，读取时应忽略\n" +
 				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n",(csvRow)-> {
 			// 只有一行，所以直接判断
@@ -100,7 +119,8 @@ public class CsvUtilTest {
 			Assertions.assertEquals("关注\"对象\"", csvRow.get(3));
 			Assertions.assertEquals("年龄", csvRow.get(4));
 			Assertions.assertEquals("", csvRow.get(5));
-			Assertions.assertEquals("\"", csvRow.get(6));
+			// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+			Assertions.assertEquals("\"\n", csvRow.get(6));
 		});
 	}
 
