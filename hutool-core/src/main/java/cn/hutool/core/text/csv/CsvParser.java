@@ -1,24 +1,33 @@
+/*
+ * Copyright (c) 2013-2024 Hutool Team and hutool.cn
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.hutool.core.text.csv;
 
 import cn.hutool.core.collection.ComputeIter;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * CSV行解析器，参考：FastCSV
@@ -30,10 +39,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 
 	private static final int DEFAULT_ROW_CAPACITY = 10;
 
-	private final Reader reader;
 	private final CsvReadConfig config;
-
-	private final Buffer buf = new Buffer(IoUtil.DEFAULT_LARGE_BUFFER_SIZE);
+	private final CsvTokener tokener;
 	/**
 	 * 前一个特殊分界字符
 	 */
@@ -45,7 +52,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	/**
 	 * 当前读取字段
 	 */
-	private final StrBuilder currentField = new StrBuilder(512);
+	private final StringBuilder currentField = new StringBuilder(512);
 
 	/**
 	 * 标题行
@@ -78,9 +85,9 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @param reader Reader
 	 * @param config 配置，null则为默认配置
 	 */
-	public CsvParser(final Reader reader, CsvReadConfig config) {
-		this.reader = Objects.requireNonNull(reader, "reader must not be null");
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
+	public CsvParser(final Reader reader, final CsvReadConfig config) {
+		this.config = ObjUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
+		this.tokener = new CsvTokener(reader);
 	}
 
 	/**
@@ -90,13 +97,13 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @throws IllegalStateException 如果不解析头部或者没有调用nextRow()方法
 	 */
 	public List<String> getHeader() {
-		if (config.headerLineNo  < 0) {
+		if (config.headerLineNo < 0) {
 			throw new IllegalStateException("No header available - header parsing is disabled");
 		}
 		if (lineNo < config.beginLineNo) {
 			throw new IllegalStateException("No header available - call nextRow() first");
 		}
-		return header.fields;
+		return header.getRawList();
 	}
 
 	@Override
@@ -107,13 +114,13 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	/**
 	 * 读取下一行数据
 	 *
-	 * @return CsvRow
+	 * @return CsvRow，{@code null}表示
 	 * @throws IORuntimeException IO读取异常
 	 */
 	public CsvRow nextRow() throws IORuntimeException {
 		List<String> currentFields;
 		int fieldCount;
-		while (false == finished) {
+		while (!finished) {
 			currentFields = readLine();
 			fieldCount = currentFields.size();
 			if (fieldCount < 1) {
@@ -122,11 +129,11 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			}
 
 			// 读取范围校验
-			if(lineNo < config.beginLineNo){
+			if (lineNo < config.beginLineNo) {
 				// 未达到读取起始行，继续
 				continue;
 			}
-			if(lineNo > config.endLineNo){
+			if (lineNo > config.endLineNo) {
 				// 超出结束行，读取结束
 				break;
 			}
@@ -175,9 +182,9 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			String field = currentFields.get(i);
 			if (MapUtil.isNotEmpty(this.config.headerAlias)) {
 				// 自定义别名
-				field = ObjectUtil.defaultIfNull(this.config.headerAlias.get(field), field);
+				field = ObjUtil.defaultIfNull(this.config.headerAlias.get(field), field);
 			}
-			if (StrUtil.isNotEmpty(field) && false == localHeaderMap.containsKey(field)) {
+			if (StrUtil.isNotEmpty(field) && !localHeaderMap.containsKey(field)) {
 				localHeaderMap.put(field, i);
 			}
 		}
@@ -190,7 +197,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * 空行是size为1的List，唯一元素是""
 	 *
 	 * <p>
-	 *     行号要考虑注释行和引号包装的内容中的换行
+	 * 行号要考虑注释行和引号包装的内容中的换行
 	 * </p>
 	 *
 	 * @return 一行数据
@@ -199,70 +206,67 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	private List<String> readLine() throws IORuntimeException {
 		// 矫正行号
 		// 当一行内容包含多行数据时，记录首行行号，但是读取下一行时，需要把多行内容的行数加上
-		if(inQuotesLineCount > 0){
+		if (inQuotesLineCount > 0) {
 			this.lineNo += this.inQuotesLineCount;
 			this.inQuotesLineCount = 0;
 		}
 
 		final List<String> currentFields = new ArrayList<>(maxFieldCount > 0 ? maxFieldCount : DEFAULT_ROW_CAPACITY);
 
-		final StrBuilder currentField = this.currentField;
-		final Buffer buf = this.buf;
+		final StringBuilder currentField = this.currentField;
 		int preChar = this.preChar;//前一个特殊分界字符
-		int copyLen = 0; //拷贝长度
 		boolean inComment = false;
 
+		int c;
 		while (true) {
-			if (false == buf.hasRemaining()) {
-				// 此Buffer读取结束，开始读取下一段
-				if (copyLen > 0) {
-					buf.appendTo(currentField, copyLen);
-					// 此处无需mark，read方法会重置mark
-				}
-				if (buf.read(this.reader) < 0) {
-					// CSV读取结束
-					finished = true;
-
-					if (currentField.hasContent() || preChar == config.fieldSeparator) {
-						//剩余部分作为一个字段
-						addField(currentFields, currentField.toStringAndReset());
+			c = tokener.next();
+			if(c < 0){
+				if (currentField.length() > 0 || preChar == config.fieldSeparator) {
+					if(this.inQuotes){
+						// 未闭合的文本包装，在末尾补充包装符
+						currentField.append(config.textDelimiter);
 					}
-					break;
-				}
 
-				//重置
-				copyLen = 0;
+					//剩余部分作为一个字段
+					addField(currentFields, currentField.toString());
+					currentField.setLength(0);
+				}
+				// 读取结束
+				this.finished = true;
+				break;
 			}
 
-			final char c = buf.get();
-
 			// 注释行标记
-			if(preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF){
+			if (preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF) {
 				// 判断行首字符为指定注释字符的注释开始，直到遇到换行符
 				// 行首分两种，1是preChar < 0表示文本开始，2是换行符后紧跟就是下一行的开始
 				// issue#IA8WE0 如果注释符出现在包装符内，被认为是普通字符
-				if((false == inQuotes) && null != this.config.commentCharacter && c == this.config.commentCharacter){
+				if (!inQuotes && null != this.config.commentCharacter && c == this.config.commentCharacter) {
 					inComment = true;
 				}
 			}
 			// 注释行处理
-			if(inComment){
+			if (inComment) {
 				if (c == CharUtil.CR || c == CharUtil.LF) {
 					// 注释行以换行符为结尾
 					lineNo++;
 					inComment = false;
 				}
 				// 跳过注释行中的任何字符
-				buf.mark();
-				preChar = c;
 				continue;
 			}
 
 			if (inQuotes) {
 				//引号内，作为内容，直到引号结束
 				if (c == config.textDelimiter) {
-					// End of quoted text
-					inQuotes = false;
+					// issue#IB5UQ8 文本包装符转义
+					final int next = tokener.next();
+					if(next != config.textDelimiter){
+						// 包装结束
+						inQuotes = false;
+						tokener.back();
+					}
+					// https://datatracker.ietf.org/doc/html/rfc4180#section-2 跳过转义符，只保留被转义的包装符
 				} else {
 					// 字段内容中新行
 					if (isLineEnd(c, preChar)) {
@@ -270,46 +274,34 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 					}
 				}
 				// 普通字段字符
-				copyLen++;
+				currentField.append((char)c);
 			} else {
 				// 非引号内
 				if (c == config.fieldSeparator) {
 					//一个字段结束
-					if (copyLen > 0) {
-						buf.appendTo(currentField, copyLen);
-						copyLen = 0;
-					}
-					buf.mark();
-					addField(currentFields, currentField.toStringAndReset());
+					addField(currentFields, currentField.toString());
+					currentField.setLength(0);
 				} else if (c == config.textDelimiter && isFieldBegin(preChar)) {
 					// 引号开始且出现在字段开头
 					inQuotes = true;
-					copyLen++;
+					currentField.append((char)c);
 				} else if (c == CharUtil.CR) {
-					// \r，直接结束
-					if (copyLen > 0) {
-						buf.appendTo(currentField, copyLen);
-					}
-					buf.mark();
-					addField(currentFields, currentField.toStringAndReset());
+					// \r
+					addField(currentFields, currentField.toString());
+					currentField.setLength(0);
 					preChar = c;
 					break;
 				} else if (c == CharUtil.LF) {
 					// \n
 					if (preChar != CharUtil.CR) {
-						if (copyLen > 0) {
-							buf.appendTo(currentField, copyLen);
-						}
-						buf.mark();
-						addField(currentFields, currentField.toStringAndReset());
+						addField(currentFields, currentField.toString());
+						currentField.setLength(0);
 						preChar = c;
 						break;
 					}
 					// 前一个字符是\r，已经处理过这个字段了，此处直接跳过
-					buf.mark();
 				} else {
-					// 普通字符
-					copyLen++;
+					currentField.append((char)c);
 				}
 			}
 
@@ -325,7 +317,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 
 	@Override
 	public void close() throws IOException {
-		reader.close();
+		tokener.close();
 	}
 
 	/**
@@ -334,7 +326,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @param currentFields 当前的字段列表（即为行）
 	 * @param field         字段
 	 */
-	private void addField(List<String> currentFields, String field) {
+	private void addField(final List<String> currentFields, String field) {
 		final char textDelimiter = this.config.textDelimiter;
 
 		// 忽略多余引号后的换行符
@@ -342,12 +334,9 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 
 		if(StrUtil.isWrap(field, textDelimiter)){
 			field = StrUtil.sub(field, 1, field.length() - 1);
-			// https://datatracker.ietf.org/doc/html/rfc4180#section-2
-			// 第七条规则，只有包装内的包装符需要转义
-			field = StrUtil.replace(field, String.valueOf(textDelimiter) + textDelimiter, String.valueOf(textDelimiter));
 		}
 
-		if(this.config.trimField){
+		if (this.config.trimField) {
 			// issue#I49M0C@Gitee
 			field = StrUtil.trim(field);
 		}
@@ -362,7 +351,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @return 是否结束
 	 * @since 5.7.4
 	 */
-	private boolean isLineEnd(char c, int preChar) {
+	private boolean isLineEnd(final int c, final int preChar) {
 		return (c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR;
 	}
 
@@ -382,90 +371,5 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			|| preChar == config.fieldSeparator
 			|| preChar == CharUtil.LF
 			|| preChar == CharUtil.CR;
-	}
-
-	/**
-	 * 内部Buffer
-	 *
-	 * @author looly
-	 */
-	private static class Buffer implements Serializable{
-		private static final long serialVersionUID = 1L;
-
-		final char[] buf;
-
-		/**
-		 * 标记位置，用于读数据
-		 */
-		private int mark;
-		/**
-		 * 当前位置
-		 */
-		private int position;
-		/**
-		 * 读取的数据长度，一般小于buf.length，-1表示无数据
-		 */
-		private int limit;
-
-		Buffer(int capacity) {
-			buf = new char[capacity];
-		}
-
-		/**
-		 * 是否还有未读数据
-		 *
-		 * @return 是否还有未读数据
-		 */
-		public final boolean hasRemaining() {
-			return position < limit;
-		}
-
-		/**
-		 * 读取到缓存<br>
-		 * 全量读取，会重置Buffer中所有数据
-		 *
-		 * @param reader {@link Reader}
-		 */
-		int read(Reader reader) {
-			int length;
-			try {
-				length = reader.read(this.buf);
-			} catch (IOException e) {
-				throw new IORuntimeException(e);
-			}
-			this.mark = 0;
-			this.position = 0;
-			this.limit = length;
-			return length;
-		}
-
-		/**
-		 * 先获取当前字符，再将当前位置后移一位<br>
-		 * 此方法不检查是否到了数组末尾，请自行使用{@link #hasRemaining()}判断。
-		 *
-		 * @return 当前位置字符
-		 * @see #hasRemaining()
-		 */
-		char get() {
-			return this.buf[this.position++];
-		}
-
-		/**
-		 * 标记位置记为下次读取位置
-		 */
-		void mark() {
-			this.mark = this.position;
-		}
-
-		/**
-		 * 将数据追加到{@link StrBuilder}，追加结束后需手动调用{@link #mark()} 重置读取位置
-		 *
-		 * @param builder {@link StrBuilder}
-		 * @param length  追加的长度
-		 * @see #mark()
-		 */
-		void appendTo(StrBuilder builder, int length) {
-			builder.append(this.buf, this.mark, length);
-		}
 	}
 }
