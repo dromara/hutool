@@ -18,11 +18,10 @@ package org.dromara.hutool.http.server.engine;
 
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.http.server.ServerConfig;
-import org.dromara.hutool.http.server.engine.undertow.UndertowEngine;
 
 public class UndertowTest {
 	public static void main(String[] args) {
-		final UndertowEngine engine = new UndertowEngine();
+		final ServerEngine engine = ServerEngineFactory.createEngine("undertow");
 		engine.init(ServerConfig.of());
 		engine.setHandler((request, response) -> {
 			Console.log(request.getPath());

@@ -17,6 +17,7 @@
 package org.dromara.hutool.http.server.engine.sun;
 
 import com.sun.net.httpserver.*;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.thread.GlobalThreadPool;
@@ -115,7 +116,9 @@ public class SunHttpServerEngine extends AbstractServerEngine {
 		path = StrUtil.addPrefixIfNot(path, StrUtil.SLASH);
 		final HttpContext context = this.server.createContext(path, handler);
 		// 增加整体过滤器
-		context.getFilters().addAll(this.filters);
+		if(CollUtil.isNotEmpty(this.filters)){
+			context.getFilters().addAll(this.filters);
+		}
 		return context;
 	}
 

@@ -14,58 +14,54 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server.engine.jetty;
+package org.dromara.hutool.http.server.engine.tomcat;
 
+import org.apache.catalina.connector.Request;
 import org.dromara.hutool.http.server.handler.ServerRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Jetty请求对象包装
+ * Tomcat请求对象包装
  *
  * @author Looly
+ * @since 6.0.0
  */
-public class Jetty9Request implements ServerRequest {
+public class TomcatRequest implements ServerRequest {
 
-	private final HttpServletRequest request;
+	private final Request request;
 
 	/**
 	 * 构造
 	 *
-	 * @param request Jetty请求对象
+	 * @param request Tomcat请求对象
 	 */
-	public Jetty9Request(final HttpServletRequest request) {
+	public TomcatRequest(final Request request) {
 		this.request = request;
 	}
 
 	@Override
 	public String getMethod() {
-		return this.request.getMethod();
+		return request.getMethod();
 	}
 
 	@Override
 	public String getPath() {
-		return this.request.getContextPath();
+		return request.getContextPath();
 	}
 
 	@Override
 	public String getQuery() {
-		return this.request.getQueryString();
+		return request.getQueryString();
 	}
 
 	@Override
 	public String getHeader(final String name) {
-		return this.request.getHeader(name);
+		return request.getHeader(name);
 	}
 
 	@Override
 	public InputStream getBodyStream() {
-		try {
-			return this.request.getInputStream();
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
+		return request.getStream();
 	}
 }

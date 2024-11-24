@@ -14,43 +14,44 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http.server.engine.jetty;
+package org.dromara.hutool.http.server.engine.tomcat;
 
+import org.apache.catalina.connector.Response;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.http.server.handler.ServerResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * Jetty响应对象包装
+ * Tomcat响应对象包装
  *
  * @author Looly
+ * @since 6.0.0
  */
-public class Jetty9Response implements ServerResponse {
+public class TomcatResponse implements ServerResponse {
 
-	private final HttpServletResponse response;
+	private final Response response;
 	private Charset charset;
 
 	/**
 	 * 构造
 	 *
-	 * @param response Jetty响应对象
+	 * @param response Tomcat响应对象
 	 */
-	public Jetty9Response(final HttpServletResponse response) {
+	public TomcatResponse(final Response response) {
 		this.response = response;
 	}
 
 	@Override
-	public Jetty9Response setStatus(final int statusCode) {
-		this.response.setStatus(statusCode);
+	public TomcatResponse setStatus(final int statusCode) {
+		response.setStatus(statusCode);
 		return this;
 	}
 
 	@Override
-	public Jetty9Response setCharset(final Charset charset) {
+	public TomcatResponse setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -61,13 +62,13 @@ public class Jetty9Response implements ServerResponse {
 	}
 
 	@Override
-	public Jetty9Response addHeader(final String header, final String value) {
+	public TomcatResponse addHeader(final String header, final String value) {
 		this.response.addHeader(header, value);
 		return this;
 	}
 
 	@Override
-	public Jetty9Response setHeader(final String header, final String value) {
+	public TomcatResponse setHeader(final String header, final String value) {
 		this.response.setHeader(header, value);
 		return this;
 	}

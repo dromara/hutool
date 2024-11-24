@@ -17,6 +17,8 @@
 package org.dromara.hutool.http.server.engine.jetty;
 
 import org.dromara.hutool.http.server.handler.HttpHandler;
+import org.dromara.hutool.http.server.servlet.JavaxServletRequest;
+import org.dromara.hutool.http.server.servlet.JavaxServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
@@ -44,6 +46,6 @@ public class Jetty9Handler extends AbstractHandler {
 	@Override
 	public void handle(final String target, final Request baseRequest,
 					   final HttpServletRequest request, final HttpServletResponse response) {
-		handler.handle(new Jetty9Request(request), new Jetty9Response(response));
+		handler.handle(new JavaxServletRequest(request), new JavaxServletResponse(response));
 	}
 }
