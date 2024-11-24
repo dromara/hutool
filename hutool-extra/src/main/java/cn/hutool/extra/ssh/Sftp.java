@@ -8,13 +8,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.ftp.AbstractFtp;
 import cn.hutool.extra.ftp.FtpConfig;
 import cn.hutool.extra.ftp.FtpException;
-import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.*;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.File;
 import java.io.InputStream;
@@ -111,7 +107,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public Sftp(Session session, Charset charset) {
-		super(FtpConfig.create().setCharset(charset));
+		super(FtpConfig.create().setCharset(charset).setHost(session.getHost()).setPort(session.getPort()));
 		init(session, charset);
 	}
 
@@ -172,6 +168,17 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.3.3
 	 */
 	public void init() {
+		// issue#IB69U8 如果用户传入Session对象，则不能使用配置初始化，而是尝试重新连接
+		if(StrUtil.isEmpty(this.ftpConfig.getHost()) && null != this.session){
+			try {
+				this.session.connect((int) this.ftpConfig.getConnectionTimeout());
+			} catch (JSchException e) {
+				throw new JschRuntimeException(e);
+			}
+			init(this.session, this.ftpConfig.getCharset());
+			return;
+		}
+
 		init(this.ftpConfig);
 	}
 
