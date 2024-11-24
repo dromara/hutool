@@ -20,9 +20,9 @@ import com.sun.net.httpserver.*;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.thread.GlobalThreadPool;
-import org.dromara.hutool.http.server.engine.AbstractServerEngine;
+import org.dromara.hutool.core.thread.ExecutorBuilder;
 import org.dromara.hutool.http.server.ServerConfig;
+import org.dromara.hutool.http.server.engine.AbstractServerEngine;
 import org.dromara.hutool.http.server.engine.sun.filter.HttpFilter;
 import org.dromara.hutool.http.server.engine.sun.filter.SimpleFilter;
 
@@ -157,7 +157,23 @@ public class SunHttpServerEngine extends AbstractServerEngine {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-		setExecutor(GlobalThreadPool.getExecutor());
+
+		// 线程池
+		final int coreThreads = config.getCoreThreads();
+		final ExecutorBuilder executorBuilder = ExecutorBuilder.of();
+		if(coreThreads > 0){
+			executorBuilder.setCorePoolSize(coreThreads);
+		}
+		final int maxThreads = config.getMaxThreads();
+		if(maxThreads > 0){
+			executorBuilder.setMaxPoolSize(maxThreads);
+		}
+		final long idleTimeout = config.getIdleTimeout();
+		if(idleTimeout > 0){
+			executorBuilder.setKeepAliveTime(idleTimeout);
+		}
+
+		setExecutor(executorBuilder.build());
 		createContext("/", exchange -> SunHttpServerEngine.this.handler.handle(
 			new SunServerRequest(exchange),
 			new SunServerResponse(exchange)

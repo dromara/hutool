@@ -30,7 +30,7 @@ public class ServerConfig {
 	 *
 	 * @return 配置
 	 */
-	public static ServerConfig of(){
+	public static ServerConfig of() {
 		return new ServerConfig();
 	}
 
@@ -38,6 +38,13 @@ public class ServerConfig {
 	private int port = 8888;
 	private String root;
 	private SSLContext sslContext;
+
+	private int maxHeaderSize;
+	private long maxBodySize;
+	private int coreThreads;
+	private int maxThreads;
+	private long idleTimeout;
+
 
 	/**
 	 * 获取服务器地址，默认127.0.0.1
@@ -116,6 +123,106 @@ public class ServerConfig {
 	 */
 	public ServerConfig setSslContext(final SSLContext sslContext) {
 		this.sslContext = sslContext;
+		return this;
+	}
+
+	/**
+	 * 获取最大请求（响应）头大小
+	 *
+	 * @return maxHeaderSize 最大请求（响应）头大小
+	 */
+	public int getMaxHeaderSize() {
+		return maxHeaderSize;
+	}
+
+	/**
+	 * 设置最大请求（响应）头大小
+	 *
+	 * @param maxHeaderSize 最大请求（响应）头大小
+	 * @return this
+	 */
+	public ServerConfig setMaxHeaderSize(final int maxHeaderSize) {
+		this.maxHeaderSize = maxHeaderSize;
+		return this;
+	}
+
+	/**
+	 * 获取最大消息体大小
+	 *
+	 * @return maxBodySize 最大消息体大小
+	 */
+	public long getMaxBodySize() {
+		return maxBodySize;
+	}
+
+	/**
+	 * 设置最大消息体大小
+	 *
+	 * @param maxBodySize 最大消息体大小
+	 * @return this
+	 */
+	public ServerConfig setMaxBodySize(final long maxBodySize) {
+		this.maxBodySize = maxBodySize;
+		return this;
+	}
+
+	/**
+	 * 获取核心线程数
+	 *
+	 * @return coreThreads 核心线程数
+	 */
+	public int getCoreThreads() {
+		return coreThreads;
+	}
+
+	/**
+	 * 设置核心线程数
+	 *
+	 * @param coreThreads 核心线程数
+	 * @return this
+	 */
+	public ServerConfig setCoreThreads(final int coreThreads) {
+		this.coreThreads = coreThreads;
+		return this;
+	}
+
+	/**
+	 * 获取最大线程数
+	 *
+	 * @return maxThreads 最大线程数
+	 */
+	public int getMaxThreads() {
+		return maxThreads;
+	}
+
+	/**
+	 * 设置最大线程数
+	 *
+	 * @param maxThreads 最大线程数
+	 * @return this
+	 */
+	public ServerConfig setMaxThreads(final int maxThreads) {
+		this.maxThreads = maxThreads;
+		return this;
+	}
+
+	/**
+	 * 获取空闲超时时间
+	 *
+	 * @return idleTimeout 空闲超时时间
+	 */
+	public long getIdleTimeout() {
+		return idleTimeout;
+	}
+
+	/**
+	 * 设置空闲超时时间
+	 *
+	 * @param idleTimeout 空闲超时时间
+	 * @return this
+	 */
+	public ServerConfig setIdleTimeout(final long idleTimeout) {
+		this.idleTimeout = idleTimeout;
 		return this;
 	}
 }

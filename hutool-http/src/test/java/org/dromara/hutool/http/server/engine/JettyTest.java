@@ -4,7 +4,7 @@ import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.http.server.ServerConfig;
 
 public class JettyTest {
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		final ServerEngine engine = ServerEngineFactory.createEngine("jetty");
 		engine.init(ServerConfig.of());
 		engine.setHandler((request, response) -> {

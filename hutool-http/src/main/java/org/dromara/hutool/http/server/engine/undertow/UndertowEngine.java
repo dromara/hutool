@@ -17,7 +17,9 @@
 package org.dromara.hutool.http.server.engine.undertow;
 
 import io.undertow.Undertow;
+import io.undertow.UndertowOptions;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.http.server.ServerConfig;
 import org.dromara.hutool.http.server.engine.AbstractServerEngine;
 
 import javax.net.ssl.SSLContext;
@@ -71,12 +73,36 @@ public class UndertowEngine extends AbstractServerEngine {
 					new UndertowResponse(exchange));
 			});
 
-		final SSLContext sslContext = this.config.getSslContext();
-		if(null != sslContext){
-			builder.addHttpsListener(this.config.getPort(), this.config.getHost(), sslContext);
-		}else{
-			builder.addHttpListener(this.config.getPort(), this.config.getHost());
+		final ServerConfig config = this.config;
+		// 选项
+		final int maxHeaderSize = config.getMaxHeaderSize();
+		if(maxHeaderSize > 0){
+			builder.setServerOption(UndertowOptions.MAX_HEADER_SIZE, maxHeaderSize);
 		}
+		final long maxBodySize = config.getMaxBodySize();
+		if(maxBodySize > 0){
+			builder.setServerOption(UndertowOptions.MAX_ENTITY_SIZE, maxBodySize);
+		}
+		final long idleTimeout = config.getIdleTimeout();
+		if(idleTimeout > 0){
+			builder.setServerOption(UndertowOptions.IDLE_TIMEOUT, (int)idleTimeout);
+		}
+		final int coreThreads = config.getCoreThreads();
+		if(coreThreads > 0){
+			builder.setIoThreads(coreThreads);
+		}
+		final int maxThreads = config.getMaxThreads();
+		if(maxThreads > 0){
+			builder.setWorkerThreads(maxThreads);
+		}
+
+		final SSLContext sslContext = config.getSslContext();
+		if(null != sslContext){
+			builder.addHttpsListener(config.getPort(), config.getHost(), sslContext);
+		}else{
+			builder.addHttpListener(config.getPort(), config.getHost());
+		}
+
 		this.undertow = builder.build();
 	}
 }

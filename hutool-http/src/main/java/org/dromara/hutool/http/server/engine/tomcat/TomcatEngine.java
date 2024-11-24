@@ -23,13 +23,12 @@ import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.valves.ValveBase;
+import org.apache.coyote.http11.Http11NioProtocol;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
+import org.dromara.hutool.http.server.ServerConfig;
 import org.dromara.hutool.http.server.engine.AbstractServerEngine;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
 
 /**
  * Tomcat引擎实现
@@ -103,8 +102,24 @@ public class TomcatEngine extends AbstractServerEngine {
 	 * @param tomcat Tomcat
 	 */
 	private void initConnector(final Tomcat tomcat) {
-		final Connector connector = new Connector();
+		final ServerConfig config = this.config;
+		final Http11NioProtocol protocol = new Http11NioProtocol();
+		final int maxHeaderSize = config.getMaxHeaderSize();
+		if(maxHeaderSize > 0){
+			protocol.setMaxHttpHeaderSize(maxHeaderSize);
+		}
+		final int maxThreads = config.getMaxThreads();
+		if(maxThreads > 0){
+			protocol.setMaxThreads(maxThreads);
+		}
+
+		final Connector connector = new Connector(protocol);
 		connector.setPort(config.getPort());
+		final int maxBodySize = (int) config.getMaxBodySize();
+		if(maxBodySize > 0){
+			connector.setMaxPostSize(maxBodySize);
+		}
+
 		tomcat.setConnector(connector);
 	}
 
@@ -117,9 +132,9 @@ public class TomcatEngine extends AbstractServerEngine {
 		final Context context = tomcat.addContext(StrUtil.EMPTY, null);
 		context.getPipeline().addValve(new ValveBase() {
 			@Override
-			public void invoke(final Request request, final Response response) throws IOException, ServletException {
+			public void invoke(final Request request, final Response response) {
 				handler.handle(new TomcatRequest(request), new TomcatResponse(response));
-				getNext().invoke(request, response);
+				//getNext().invoke(request, response);
 			}
 		});
 	}

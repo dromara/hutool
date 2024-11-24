@@ -24,6 +24,7 @@ import org.dromara.hutool.http.server.engine.AbstractServerEngine;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import javax.net.ssl.SSLContext;
 
@@ -91,8 +92,25 @@ public class JettyEngine extends AbstractServerEngine {
 		}
 
 		final ServerConfig config = this.config;
-		final Server server = new Server();
-		server.addConnector(createConnector(server, config));
+
+		// 线程池
+		final QueuedThreadPool threadPool = new QueuedThreadPool();
+		threadPool.setName("Hutool");
+		final int coreThreads = config.getCoreThreads();
+		if(coreThreads > 0){
+			threadPool.setMinThreads(coreThreads);
+		}
+		final int maxThreads = config.getMaxThreads();
+		if(maxThreads > 0){
+			threadPool.setMaxThreads(maxThreads);
+		}
+		final long idleTimeout = config.getIdleTimeout();
+		if(idleTimeout > 0){
+			threadPool.setIdleTimeout((int) idleTimeout);
+		}
+
+		final Server server = new Server(threadPool);
+		server.addConnector(createConnector(server));
 		server.setHandler(ObjUtil.defaultIfNull(this.jettyHandler,
 			() -> new Jetty9Handler(this.handler)));
 		this.server = server;
@@ -102,14 +120,19 @@ public class JettyEngine extends AbstractServerEngine {
 	 * 创建连接器
 	 *
 	 * @param server 服务器
-	 * @param config 配置
 	 * @return 连接器
 	 */
-	private ServerConnector createConnector(final Server server, final ServerConfig config) {
+	private ServerConnector createConnector(final Server server) {
 		final ServerConnector connector;
+		final ServerConfig config = this.config;
 
 		// 配置
 		final HttpConfiguration configuration = new HttpConfiguration();
+		final int maxHeaderSize = config.getMaxHeaderSize();
+		if(maxHeaderSize > 0){
+			configuration.setRequestHeaderSize(maxHeaderSize);
+		}
+
 		final HttpConnectionFactory httpFactory = new HttpConnectionFactory(configuration);
 
 		final SSLContext sslContext = config.getSslContext();
@@ -124,6 +147,10 @@ public class JettyEngine extends AbstractServerEngine {
 			connector = new ServerConnector(server, httpFactory);
 		}
 
+		final long idleTimeout = config.getIdleTimeout();
+		if(idleTimeout > 0){
+			connector.setIdleTimeout(idleTimeout);
+		}
 		connector.setHost(config.getHost());
 		connector.setPort(config.getPort());
 
