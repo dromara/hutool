@@ -18,13 +18,18 @@ package org.dromara.hutool.http.server.engine.tomcat;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.valves.ValveBase;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.server.engine.AbstractServerEngine;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 /**
  * Tomcat引擎实现
@@ -55,8 +60,6 @@ public class TomcatEngine extends AbstractServerEngine {
 		} catch (final LifecycleException e) {
 			throw new HttpException(e);
 		}
-		// 阻塞
-		tomcat.getServer().await();
 	}
 
 	@Override
@@ -83,13 +86,26 @@ public class TomcatEngine extends AbstractServerEngine {
 		}
 
 		final Tomcat tomcat = new Tomcat();
-		tomcat.setHostname(this.config.getHost());
-		tomcat.setPort(this.config.getPort());
-		tomcat.setBaseDir(this.config.getRoot());
+		tomcat.setHostname(config.getHost());
+		tomcat.setBaseDir(config.getRoot());
 
+		initConnector(tomcat);
 		initContext(tomcat);
 
+		// TODO 配置支持HTTPS
+
 		this.tomcat = tomcat;
+	}
+
+	/**
+	 * 初始化Connector
+	 *
+	 * @param tomcat Tomcat
+	 */
+	private void initConnector(final Tomcat tomcat) {
+		final Connector connector = new Connector();
+		connector.setPort(config.getPort());
+		tomcat.setConnector(connector);
 	}
 
 	/**
@@ -98,14 +114,13 @@ public class TomcatEngine extends AbstractServerEngine {
 	 * @param tomcat Tomcat
 	 */
 	private void initContext(final Tomcat tomcat) {
-		final Context context = tomcat.addContext("/", this.config.getRoot());
+		final Context context = tomcat.addContext(StrUtil.EMPTY, null);
 		context.getPipeline().addValve(new ValveBase() {
 			@Override
-			public void invoke(final Request request, final Response response) {
+			public void invoke(final Request request, final Response response) throws IOException, ServletException {
 				handler.handle(new TomcatRequest(request), new TomcatResponse(response));
+				getNext().invoke(request, response);
 			}
-
-			// 此处拦截所有请求，无需调用getNext
 		});
 	}
 }
