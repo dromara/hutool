@@ -156,7 +156,7 @@ public class JschSftp extends AbstractFtp {
 					.getRaw();
 			}
 
-			if (false == session.isConnected()) {
+			if (!session.isConnected()) {
 				// issue#I9CH6A 首先Session需连接
 				try {
 					session.connect((int) this.ftpConfig.getConnector().getTimeout());
@@ -185,9 +185,6 @@ public class JschSftp extends AbstractFtp {
 
 	@Override
 	public JschSftp reconnectIfTimeout() {
-		if (StrUtil.isBlank(this.ftpConfig.getConnector().getHost())) {
-			throw new FtpException("Host is blank!");
-		}
 		try {
 			this.cd(StrUtil.SLASH);
 		} catch (final FtpException e) {
