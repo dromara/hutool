@@ -70,16 +70,35 @@ public enum DataUnit {
 	public static final String[] UNIT_NAMES_SIMPLE = new String[]{"B", "K", "M", "G", "T", "P", "E"};
 
 	private final String suffix;
-
 	private final DataSize size;
 
-
+	/**
+	 * 构造
+	 *
+	 * @param suffix 单位后缀
+	 * @param size   单位大小
+	 */
 	DataUnit(final String suffix, final DataSize size) {
 		this.suffix = suffix;
 		this.size = size;
 	}
 
-	DataSize size() {
+	/**
+	 * 单位后缀
+	 *
+	 * @return 单位后缀
+	 * @since 5.8.34
+	 */
+	public String getSuffix() {
+		return this.suffix;
+	}
+
+	/**
+	 * 单位大小
+	 *
+	 * @return 单位大小
+	 */
+	DataSize getSize() {
 		return this.size;
 	}
 

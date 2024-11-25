@@ -144,7 +144,7 @@ public final class DataSize implements Comparable<DataSize> {
 		if(null == unit){
 			unit = DataUnit.BYTES;
 		}
-		return new DataSize(Math.multiplyExact(amount, unit.size().toBytes()));
+		return new DataSize(Math.multiplyExact(amount, unit.getSize().toBytes()));
 	}
 
 	/**
@@ -159,7 +159,7 @@ public final class DataSize implements Comparable<DataSize> {
 		if(null == unit){
 			unit = DataUnit.BYTES;
 		}
-		return new DataSize(amount.multiply(new BigDecimal(unit.size().toBytes())).longValue());
+		return new DataSize(amount.multiply(new BigDecimal(unit.getSize().toBytes())).longValue());
 	}
 
 	/**

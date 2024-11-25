@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.core.io.unit;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.text.DecimalFormat;
@@ -78,5 +79,21 @@ public class DataSizeUtil {
 		final int digitGroups = Math.min(unitNames.length - 1, (int) (Math.log10(size) / Math.log10(1024)));
 		return new DecimalFormat("#,##0." + StrUtil.repeat('#', scale))
 			.format(size / Math.pow(1024, digitGroups)) + delimiter + unitNames[digitGroups];
+	}
+
+	/**
+	 * 根据单位，将文件大小转换为对应单位的大小
+	 *
+	 * @param size 文件大小
+	 * @param fileDataUnit 单位
+	 * @return 大小
+	 * @since 5.8.34
+	 */
+	public static String format(final Long size, final DataUnit fileDataUnit){
+		if (size <= 0) {
+			return "0";
+		}
+		final int digitGroups = ArrayUtil.indexOf(DataUnit.UNIT_NAMES,fileDataUnit.getSuffix());
+		return new DecimalFormat("##0.##").format(size / Math.pow(1024, digitGroups)) + " " + DataUnit.UNIT_NAMES[digitGroups];
 	}
 }
