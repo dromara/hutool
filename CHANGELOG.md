@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.34(2024-11-24)
+# 5.8.34(2024-11-25)
 
 ### 🐣新特性
 * 【http   】      增加Windows微信浏览器识别（issue#IB3SJF@Gitee）
@@ -10,6 +10,7 @@
 * 【core   】      Calculator兼容`x`字符作为乘号（issue#3787@Github）
 * 【poi    】      Excel07SaxReader中，对于小数类型，增加精度判断（issue#IB0EJ9@Gitee）
 * 【extra  】      SpringUtil增加getBean重载（issue#3779@Github）
+* 【core   】      DataSizeUtil 新增format方法（issue#IB6UUX@Gitee）
 
 ### 🐞Bug修复
 * 【core   】      修复DateUtil.rangeToList中step小于等于0时无限循环问题（issue#3783@Github）

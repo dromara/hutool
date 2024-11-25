@@ -1,7 +1,8 @@
 package cn.hutool.core.io.unit;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DataSizeUtilTest {
 
@@ -59,6 +60,18 @@ public class DataSizeUtilTest {
 
 		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024);
 		assertEquals("1 TB", format);
+	}
+
+	@Test
+	public void formatWithUnitTest(){
+		String format = DataSizeUtil.format(Long.MAX_VALUE, DataUnit.TERABYTES);
+		assertEquals("8388608 TB", format);
+
+		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024 * 1024, DataUnit.GIGABYTES);
+		assertEquals("1048576 GB", format);
+
+		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024, DataUnit.GIGABYTES);
+		assertEquals("1024 GB", format);
 	}
 
 	@Test

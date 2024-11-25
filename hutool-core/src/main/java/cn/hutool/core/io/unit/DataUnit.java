@@ -44,16 +44,28 @@ public enum DataUnit {
 	 */
 	TERABYTES("TB", DataSize.ofTerabytes(1));
 
+	/**
+	 * 单位后缀
+	 */
 	public static final String[] UNIT_NAMES = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB"};
 
 	private final String suffix;
-
 	private final DataSize size;
 
 
 	DataUnit(String suffix, DataSize size) {
 		this.suffix = suffix;
 		this.size = size;
+	}
+
+	/**
+	 * 单位后缀
+	 *
+	 * @return 单位后缀
+	 * @since 5.8.34
+	 */
+	public String getSuffix() {
+		return this.suffix;
 	}
 
 	DataSize size() {
@@ -76,5 +88,4 @@ public enum DataUnit {
 		}
 		throw new IllegalArgumentException("Unknown data unit suffix '" + suffix + "'");
 	}
-
 }
