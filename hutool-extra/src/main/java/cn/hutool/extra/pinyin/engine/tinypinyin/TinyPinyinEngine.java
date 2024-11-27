@@ -1,6 +1,5 @@
 package cn.hutool.extra.pinyin.engine.tinypinyin;
 
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.pinyin.PinyinEngine;
 import com.github.promeg.pinyinhelper.Pinyin;

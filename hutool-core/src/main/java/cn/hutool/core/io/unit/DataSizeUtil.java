@@ -1,5 +1,7 @@
 package cn.hutool.core.io.unit;
 
+import cn.hutool.core.util.ArrayUtil;
+
 import java.text.DecimalFormat;
 
 /**
@@ -34,5 +36,21 @@ public class DataSizeUtil {
 		int digitGroups = Math.min(DataUnit.UNIT_NAMES.length-1, (int) (Math.log10(size) / Math.log10(1024)));
 		return new DecimalFormat("#,##0.##")
 				.format(size / Math.pow(1024, digitGroups)) + " " + DataUnit.UNIT_NAMES[digitGroups];
+	}
+
+	/**
+	 * 根据单位，将文件大小转换为对应单位的大小
+	 *
+	 * @param size 文件大小
+	 * @param fileDataUnit 单位
+	 * @return 大小
+	 * @since 5.8.34
+	 */
+	public static String format(Long size, DataUnit fileDataUnit){
+		if (size <= 0) {
+			return "0";
+		}
+		int digitGroups = ArrayUtil.indexOf(DataUnit.UNIT_NAMES,fileDataUnit.getSuffix());
+		return new DecimalFormat("##0.##").format(size / Math.pow(1024, digitGroups)) + " " + DataUnit.UNIT_NAMES[digitGroups];
 	}
 }

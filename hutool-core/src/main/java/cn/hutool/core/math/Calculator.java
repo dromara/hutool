@@ -1,5 +1,6 @@
 package cn.hutool.core.math;
 
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -192,6 +193,9 @@ public class Calculator {
 						arr[i] = '~';
 					}
 				}
+			} else if(CharUtil.equals(arr[i], 'x', true)){
+				// issue#3787 x转换为*
+				arr[i] = '*';
 			}
 		}
 		if (arr[0] == '~' && (arr.length > 1 && arr[1] == '(')) {

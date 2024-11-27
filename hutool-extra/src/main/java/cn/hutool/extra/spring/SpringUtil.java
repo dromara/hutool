@@ -123,6 +123,19 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	}
 
 	/**
+	 * 通过class获取Bean
+	 *
+	 * @param <T>   Bean类型
+	 * @param clazz Bean类
+	 * @param args  创建bean需要的参数属性
+	 * @return Bean对象
+	 * @since 5.8.34
+	 */
+	public static <T> T getBean(Class<T> clazz, Object... args) {
+		return getBeanFactory().getBean(clazz, args);
+	}
+
+	/**
 	 * 通过name,以及Clazz返回指定的Bean
 	 *
 	 * @param <T>   bean类型
@@ -132,6 +145,18 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	public static <T> T getBean(String name, Class<T> clazz) {
 		return getBeanFactory().getBean(name, clazz);
+	}
+
+	/**
+	 * 通过name,以及Clazz返回指定的Bean
+	 *
+	 * @param name Bean名称
+	 * @param args 创建bean需要的参数属性
+	 * @return Bean对象
+	 * @since 5.8.34
+	 */
+	public static Object getBean(String name, Object... args) {
+		return getBeanFactory().getBean(name, args);
 	}
 
 	/**

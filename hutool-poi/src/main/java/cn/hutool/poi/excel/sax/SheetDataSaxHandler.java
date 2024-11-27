@@ -18,9 +18,10 @@ import java.util.List;
 /**
  * sheetData标签内容读取处理器
  *
- * <pre>
- * &lt;sheetData&gt;&lt;/sheetData&gt;
- * </pre>
+ * <pre>{@code
+ *   <sheetData></sheetData>
+ * }</pre>
+ *
  * @since 5.5.3
  */
 public class SheetDataSaxHandler extends DefaultHandler {
@@ -62,7 +63,12 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	// 存储每行的列元素
 	private List<Object> rowCellList = new ArrayList<>();
 
-	public SheetDataSaxHandler(RowHandler rowHandler){
+	/**
+	 * 构造
+	 *
+	 * @param rowHandler 行处理器
+	 */
+	public SheetDataSaxHandler(RowHandler rowHandler) {
 		this.rowHandler = rowHandler;
 	}
 
@@ -156,7 +162,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 					lastFormula.append(ch, start, length);
 					break;
 			}
-		} else{
+		} else {
 			// 按理说内容应该为"<v>内容</v>"，但是某些特别的XML内容不在v或f标签中，此处做一些兼容
 			// issue#1303@Github
 			lastContent.append(ch, start, length);
@@ -292,8 +298,8 @@ public class SheetDataSaxHandler extends DefaultHandler {
 				// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
 				final int numFmtIndex = xssfCellStyle.getDataFormat();
 				this.numFmtString = ObjectUtil.defaultIfNull(
-						xssfCellStyle.getDataFormatString(),
-						() -> BuiltinFormats.getBuiltinFormat(numFmtIndex));
+					xssfCellStyle.getDataFormatString(),
+					() -> BuiltinFormats.getBuiltinFormat(numFmtIndex));
 				if (CellDataType.NUMBER == this.cellDataType && ExcelSaxUtil.isDateFormat(numFmtIndex, numFmtString)) {
 					cellDataType = CellDataType.DATE;
 				}

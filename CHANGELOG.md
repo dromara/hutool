@@ -2,6 +2,25 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
+# 5.8.34(2024-11-25)
+
+### 🐣新特性
+* 【http   】      增加Windows微信浏览器识别（issue#IB3SJF@Gitee）
+* 【core   】      ZipUtil.unzip增加编码容错（issue#I3UZ28@Gitee）
+* 【core   】      Calculator兼容`x`字符作为乘号（issue#3787@Github）
+* 【poi    】      Excel07SaxReader中，对于小数类型，增加精度判断（issue#IB0EJ9@Gitee）
+* 【extra  】      SpringUtil增加getBean重载（issue#3779@Github）
+* 【core   】      DataSizeUtil 新增format方法（issue#IB6UUX@Gitee）
+
+### 🐞Bug修复
+* 【core   】      修复DateUtil.rangeToList中step小于等于0时无限循环问题（issue#3783@Github）
+* 【cron   】      修复cron模块依赖log模块问题
+* 【extra  】      修复MailUtil发送html格式邮件无法正常展示图片问题(pr#1279@Gitee)
+* 【core   】      【可能的向下兼容问题】修复双引号转义符转义错误问题，修改规则后，对非闭合双引号字段的策略变更，如"aa，则被识别为aa(issue#IB5UQ8@Gitee)
+* 【extra  】      修复Sftp中传入Session重连时逻辑错误问题(issue#IB69U8@Gitee)
+* 【json   】      修复JSONUtil.toBean()中将JSON数组字符串转Map对象返回错误问题(issue#3795@Github)
+
+-------------------------------------------------------------------------------------------------------------
 # 5.8.33(2024-11-05)
 
 ### 🐣新特性

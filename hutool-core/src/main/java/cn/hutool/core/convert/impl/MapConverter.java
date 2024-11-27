@@ -74,6 +74,11 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 			}
 			convertMapToMap((Map) value, map);
 		} else if (BeanUtil.isBean(value.getClass())) {
+			if(value.getClass().getName().equals("cn.hutool.json.JSONArray")){
+				// issue#3795 增加JSONArray转Map错误检查
+				throw new UnsupportedOperationException(StrUtil.format("Unsupported {} to Map.", value.getClass().getName()));
+			}
+
 			map = BeanUtil.beanToMap(value);
 			// 二次转换，转换键值类型
 			map = convertInternal(map);

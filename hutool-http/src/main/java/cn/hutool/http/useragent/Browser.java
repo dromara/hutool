@@ -31,6 +31,8 @@ public class Browser extends UserAgentInfo {
 		// 部分特殊浏览器是基于安卓、Iphone等的，需要优先判断
 		// 企业微信 企业微信使用微信浏览器内核,会包含 MicroMessenger 所以要放在前面
 		new Browser("wxwork", "wxwork", "wxwork\\/([\\d\\w\\.\\-]+)"),
+		// issue#IB3SJF 微信电脑端
+		new Browser("WindowsWechat", "WindowsWechat", "MicroMessenger" + Other_Version),
 		// 微信
 		new Browser("MicroMessenger", "MicroMessenger", Other_Version),
 		// 微信小程序

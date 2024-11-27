@@ -7,7 +7,6 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CsvUtilTest {
 
@@ -32,7 +33,8 @@ public class CsvUtilTest {
 		assertEquals("关注\"对象\"", row0.get(3));
 		assertEquals("年龄", row0.get(4));
 		assertEquals("", row0.get(5));
-		assertEquals("\"", row0.get(6));
+		// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+		assertEquals("\"\n", row0.get(6));
 	}
 
 	@Test
@@ -46,7 +48,8 @@ public class CsvUtilTest {
 			assertEquals("关注\"对象\"", csvRow.get(3));
 			assertEquals("年龄", csvRow.get(4));
 			assertEquals("", csvRow.get(5));
-			assertEquals("\"", csvRow.get(6));
+			// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+			assertEquals("\"\n", csvRow.get(6));
 		});
 	}
 
@@ -70,7 +73,8 @@ public class CsvUtilTest {
 		assertEquals("关注\"对象\"", row0.get(3));
 		assertEquals("年龄", row0.get(4));
 		assertEquals("", row0.get(5));
-		assertEquals("\"", row0.get(6));
+		// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+		assertEquals("\"\n", row0.get(6));
 	}
 
 	@Test
@@ -84,7 +88,8 @@ public class CsvUtilTest {
 			assertEquals("关注\"对象\"", csvRow.get(3));
 			assertEquals("年龄", csvRow.get(4));
 			assertEquals("", csvRow.get(5));
-			assertEquals("\"", csvRow.get(6));
+			// 由于"""未闭合包装，因此末尾的换行符被当作包装内的内容，相当于："""\n"，转义后就是"\n
+			assertEquals("\"\n", csvRow.get(6));
 		});
 	}
 
