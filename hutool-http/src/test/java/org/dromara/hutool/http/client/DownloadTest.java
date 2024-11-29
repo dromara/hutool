@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http;
+package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -22,8 +22,7 @@ import org.dromara.hutool.core.io.StreamProgress;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.http.client.HttpDownloader;
-import org.dromara.hutool.http.client.Request;
+import org.dromara.hutool.http.HttpGlobalConfig;
 import org.dromara.hutool.http.client.engine.ClientEngineFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;

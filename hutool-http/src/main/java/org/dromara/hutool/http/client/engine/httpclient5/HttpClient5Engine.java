@@ -47,7 +47,7 @@ import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
-import org.dromara.hutool.http.proxy.HttpProxy;
+import org.dromara.hutool.http.proxy.ProxyInfo;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
 import java.io.IOException;
@@ -296,16 +296,15 @@ public class HttpClient5Engine extends AbstractClientEngine {
 			return;
 		}
 
-		final HttpProxy proxy = config.getProxy();
+		final ProxyInfo proxy = config.getProxy();
 		if (null != proxy) {
-			final HttpHost httpHost = new HttpHost(proxy.getHost(), proxy.getPort());
-			clientBuilder.setProxy(httpHost);
+			clientBuilder.setProxySelector(proxy.getProxySelector());
 			final PasswordAuthentication auth = proxy.getAuth();
 			if (null != auth) {
 				// 代理验证
 				final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
 				credsProvider.setCredentials(
-					new AuthScope(httpHost),
+					new AuthScope(new HttpHost(proxy.getAuthHost(), proxy.getAuthPort())),
 					new UsernamePasswordCredentials(auth.getUserName(), auth.getPassword()));
 				clientBuilder.setDefaultCredentialsProvider(credsProvider);
 			}

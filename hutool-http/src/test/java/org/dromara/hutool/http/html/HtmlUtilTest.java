@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http;
+package org.dromara.hutool.http.html;
 
 import org.dromara.hutool.core.regex.ReUtil;
-import org.dromara.hutool.http.html.HtmlUtil;
 import org.dromara.hutool.http.meta.ContentTypeUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

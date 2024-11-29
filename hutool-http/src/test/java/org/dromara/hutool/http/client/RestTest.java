@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http;
+package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.http.client.Request;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.json.JSONUtil;

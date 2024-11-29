@@ -27,13 +27,14 @@ import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
-import org.dromara.hutool.http.proxy.HttpProxy;
+import org.dromara.hutool.http.proxy.ProxyInfo;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -178,10 +179,13 @@ public class OkHttpEngine extends AbstractClientEngine {
 	 * @param config  配置
 	 */
 	private static void setProxy(final OkHttpClient.Builder builder, final ClientConfig config) {
-		final HttpProxy proxy = config.getProxy();
-		if (null != proxy) {
-			builder.proxy(proxy);
-			final PasswordAuthentication auth = proxy.getAuth();
+		final ProxyInfo proxyInfo = config.getProxy();
+		if (null != proxyInfo) {
+			final ProxySelector proxySelector = proxyInfo.getProxySelector();
+			if(null != proxySelector){
+				builder.proxySelector(proxySelector);
+			}
+			final PasswordAuthentication auth = proxyInfo.getAuth();
 			if (null != auth) {
 				builder.proxyAuthenticator(new BasicProxyAuthenticator(auth));
 			}

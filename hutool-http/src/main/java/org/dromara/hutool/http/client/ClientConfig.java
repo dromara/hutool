@@ -17,7 +17,7 @@
 package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.http.HttpGlobalConfig;
-import org.dromara.hutool.http.proxy.HttpProxy;
+import org.dromara.hutool.http.proxy.ProxyInfo;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
 /**
@@ -55,7 +55,7 @@ public class ClientConfig {
 	/**
 	 * 代理
 	 */
-	private HttpProxy proxy;
+	private ProxyInfo proxy;
 	/**
 	 * 是否遇到响应状态码3xx时自动重定向请求
 	 */
@@ -189,7 +189,7 @@ public class ClientConfig {
 	 *
 	 * @return 代理
 	 */
-	public HttpProxy getProxy() {
+	public ProxyInfo getProxy() {
 		return proxy;
 	}
 
@@ -201,16 +201,16 @@ public class ClientConfig {
 	 * @return this
 	 */
 	public ClientConfig setHttpProxy(final String host, final int port) {
-		return setProxy(new HttpProxy(host, port));
+		return setProxy(new ProxyInfo(host, port));
 	}
 
 	/**
 	 * 设置代理
 	 *
-	 * @param proxy 代理 {@link HttpProxy}
+	 * @param proxy 代理 {@link ProxyInfo}
 	 * @return this
 	 */
-	public ClientConfig setProxy(final HttpProxy proxy) {
+	public ClientConfig setProxy(final ProxyInfo proxy) {
 		this.proxy = proxy;
 		return this;
 	}

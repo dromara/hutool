@@ -19,6 +19,7 @@ package org.dromara.hutool.http.client.engine.jdk;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.net.url.UrlBuilder;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -31,9 +32,12 @@ import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
 import org.dromara.hutool.http.meta.Method;
+import org.dromara.hutool.http.proxy.ProxyInfo;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -125,8 +129,14 @@ public class JdkClientEngine extends AbstractClientEngine {
 	private JdkHttpConnection buildConn(final Request message) {
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
 
+		final URL url = message.handledUrl().toURL();
+		Proxy proxy = null;
+		final ProxyInfo proxyInfo = config.getProxy();
+		if(null != proxyInfo){
+			proxy = proxyInfo.selectFirst(UrlUtil.toURI(url));
+		}
 		final JdkHttpConnection conn = JdkHttpConnection
-			.of(message.handledUrl().toURL(), config.getProxy())
+			.of(url, proxy)
 			.setConnectTimeout(config.getConnectionTimeout())
 			.setReadTimeout(config.getReadTimeout())
 			.setMethod(message.method())//

@@ -27,6 +27,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -42,11 +43,12 @@ import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
-import org.dromara.hutool.http.proxy.HttpProxy;
+import org.dromara.hutool.http.proxy.ProxyInfo;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
 import java.io.IOException;
 import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -290,18 +292,20 @@ public class HttpClient4Engine extends AbstractClientEngine {
 			return;
 		}
 
-		final HttpProxy proxy = config.getProxy();
+		final ProxyInfo proxy = config.getProxy();
 		if (null != proxy) {
-			final HttpHost httpHost = new HttpHost(proxy.getHost(), proxy.getPort());
-			clientBuilder.setProxy(httpHost);
+			final ProxySelector proxySelector = proxy.getProxySelector();
+			if(null != proxySelector){
+				clientBuilder.setRoutePlanner(new SystemDefaultRoutePlanner(proxySelector));
+			}
 			final PasswordAuthentication auth = proxy.getAuth();
 			if (null != auth) {
 				// 代理验证
-				final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
-				credsProvider.setCredentials(
-					new AuthScope(httpHost),
+				final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+				credentialsProvider.setCredentials(
+					new AuthScope(new HttpHost(proxy.getAuthHost(), proxy.getAuthPort())),
 					new UsernamePasswordCredentials(auth.getUserName(), String.valueOf(auth.getPassword())));
-				clientBuilder.setDefaultCredentialsProvider(credsProvider);
+				clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 			}
 		}
 	}

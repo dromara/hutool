@@ -242,17 +242,6 @@ public class Scheduler implements Serializable {
 	 * 新增Task，使用随机UUID
 	 *
 	 * @param pattern {@link CronPattern}对应的String表达式
-	 * @param task {@link Runnable}
-	 * @return ID
-	 */
-	public String schedule(final String pattern, final Runnable task) {
-		return schedule(pattern, new RunnableTask(task));
-	}
-
-	/**
-	 * 新增Task，使用随机UUID
-	 *
-	 * @param pattern {@link CronPattern}对应的String表达式
 	 * @param task {@link Task}
 	 * @return ID
 	 */

@@ -14,32 +14,18 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.http;
+package org.dromara.hutool.http.client;
 
-import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.http.meta.ContentType;
+import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.http.client.engine.jdk.JdkClientEngine;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-/**
- * ContentType 单元测试
- *
- */
-public class ContentTypeTest {
-
+public class Issue444Test {
 	@Test
-	public void testBuild() {
-		final String result = ContentType.build(ContentType.JSON, CharsetUtil.UTF_8);
-		assertEquals("application/json;charset=UTF-8", result);
-	}
-
-	@Test
-	void testGetWithLeadingSpace() {
-		final String json = " {\n" +
-			"     \"name\": \"hutool\"\n" +
-			" }";
-		final ContentType contentType = ContentType.get(json);
-		assertEquals(ContentType.JSON, contentType);
+	@Disabled
+	void getTest() {
+		final String s = Request.of("http://localhost:8888").send(new JdkClientEngine()).bodyStr();
+		Console.log(s);
 	}
 }
