@@ -27,6 +27,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpGlobalConfig;
+import org.dromara.hutool.http.HttpUrlUtil;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.body.*;
 import org.dromara.hutool.http.client.engine.ClientEngine;
@@ -204,6 +205,16 @@ public class Request implements HeaderOperation<Request> {
 	public Request url(final UrlBuilder url) {
 		this.url = url;
 		return this;
+	}
+
+	/**
+	 * 设置重定向后的URL，用于处理相对路径
+	 *
+	 * @param location 重定向后的URL
+	 * @return this
+	 */
+	public Request locationTo(final String location){
+		return url(HttpUrlUtil.getLocationUrl(handledUrl(), location));
 	}
 
 	/**

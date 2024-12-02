@@ -18,13 +18,9 @@ package org.dromara.hutool.http.client.engine.jdk;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.net.url.UrlUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
-import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.RequestContext;
@@ -36,10 +32,8 @@ import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.proxy.ProxyInfo;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
-import java.util.List;
 
 /**
  * 基于JDK的UrlConnection的Http客户端引擎实现
@@ -70,7 +64,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 	@Override
 	public JdkHttpResponse send(final Request message) {
-		return doSend(new RequestContext().setRequest(message));
+		return doSend(new RequestContext(message));
 	}
 
 	@Override
@@ -194,63 +188,24 @@ public class JdkClientEngine extends AbstractClientEngine {
 				throw new HttpException(e);
 			}
 
-			if (code != HttpURLConnection.HTTP_OK) {
-				if (HttpStatus.isRedirected(code)) {
-					message.url(getLocationUrl(message.handledUrl(), conn.header(HeaderName.LOCATION)));
+			if (HttpStatus.isRedirected(code)) {
+				message.locationTo(conn.header(HeaderName.LOCATION));
 
-					// https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
-					// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Redirections
-					// 307方法和消息主体都不发生变化。
-					if (HttpStatus.HTTP_TEMP_REDIRECT != code) {
-						// 重定向默认使用GET
-						message.method(Method.GET);
-					}
+				// https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
+				// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Redirections
+				// 307方法和消息主体都不发生变化。
+				if (HttpStatus.HTTP_TEMP_REDIRECT != code) {
+					// 重定向默认使用GET
+					message.method(Method.GET);
+				}
 
-					if (context.canRedirect()) {
-						return doSend(context);
-					}
+				if (context.canRedirect()) {
+					return doSend(context);
 				}
 			}
 		}
 
 		// 最终页面
 		return new JdkHttpResponse(conn, this.cookieManager, context.getRequest());
-	}
-
-	/**
-	 * 获取转发的新的URL
-	 *
-	 * @param parentUrl 上级请求的URL
-	 * @param location  获取的Location
-	 * @return 新的URL
-	 */
-	private static UrlBuilder getLocationUrl(final UrlBuilder parentUrl, String location) {
-		final UrlBuilder redirectUrl;
-		if (!HttpUtil.isHttp(location) && !HttpUtil.isHttps(location)) {
-			// issue#I5TPSY
-			// location可能为相对路径
-			if (!location.startsWith("/")) {
-				location = StrUtil.addSuffixIfNot(parentUrl.getPathStr(), "/") + location;
-			}
-
-			// issue#3265, 相对路径中可能存在参数，单独处理参数
-			final String query;
-			final List<String> split = SplitUtil.split(location, "?", 2, true, true);
-			if (split.size() == 2) {
-				// 存在参数
-				location = split.get(0);
-				query = split.get(1);
-			} else {
-				query = null;
-			}
-
-			redirectUrl = UrlBuilder.of(parentUrl.getScheme(), parentUrl.getHost(), parentUrl.getPort(),
-				location, query, null, parentUrl.getCharset());
-		} else {
-			// location已经是编码过的URL
-			redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
-		}
-
-		return redirectUrl;
 	}
 }

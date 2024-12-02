@@ -360,6 +360,9 @@ public interface HttpStatus {
 	 * @since 5.6.3
 	 */
 	static boolean isRedirected(final int responseCode) {
+		if(responseCode < 300){
+			return false;
+		}
 		return responseCode == HTTP_MOVED_PERM
 			|| responseCode == HTTP_MOVED_TEMP
 			|| responseCode == HTTP_SEE_OTHER

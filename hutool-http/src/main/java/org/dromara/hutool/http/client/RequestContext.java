@@ -28,6 +28,15 @@ public class RequestContext {
 	private int redirectCount;
 
 	/**
+	 * 构造
+	 *
+	 * @param request 请求
+	 */
+	public RequestContext(final Request request) {
+		this.request = request;
+	}
+
+	/**
 	 * 获取请求
 	 *
 	 * @return 请求

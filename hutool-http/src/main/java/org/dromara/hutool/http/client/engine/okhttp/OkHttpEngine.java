@@ -23,10 +23,14 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
+import org.dromara.hutool.http.client.RequestContext;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
+import org.dromara.hutool.http.meta.HeaderName;
+import org.dromara.hutool.http.meta.HttpStatus;
+import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.proxy.ProxyInfo;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
@@ -65,15 +69,7 @@ public class OkHttpEngine extends AbstractClientEngine {
 	@Override
 	public Response send(final Request message) {
 		initEngine();
-
-		final okhttp3.Response response;
-		try {
-			response = client.newCall(buildRequest(message)).execute();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-
-		return new OkHttpResponse(response, message);
+		return doSend(new RequestContext(message));
 	}
 
 	@Override
@@ -143,6 +139,43 @@ public class OkHttpEngine extends AbstractClientEngine {
 		}
 
 		this.client = builder.build();
+	}
+
+	/**
+	 * 发送请求
+	 *
+	 * @param context 请求上下文
+	 * @return {@link Response}
+	 */
+	private Response doSend(final RequestContext context) {
+		final Request message = context.getRequest();
+		final okhttp3.Response response;
+		try {
+			response = client.newCall(buildRequest(message)).execute();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		// 自定义重定向
+		if(message.maxRedirects() > 0){
+			final int code = response.code();
+			if (HttpStatus.isRedirected(code)) {
+				message.locationTo(response.header(HeaderName.LOCATION.getValue()));
+			}
+			// https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
+			// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Redirections
+			// 307方法和消息主体都不发生变化。
+			if (HttpStatus.HTTP_TEMP_REDIRECT != code) {
+				// 重定向默认使用GET
+				message.method(Method.GET);
+			}
+
+			if (context.canRedirect()) {
+				return doSend(context);
+			}
+		}
+
+		return new OkHttpResponse(response, message);
 	}
 
 	/**

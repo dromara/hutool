@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -203,12 +202,36 @@ public class DownloadTest {
 
 	@Test
 	@Disabled
-	public void downloadTeamViewerTest() throws IOException {
+	public void downloadTeamViewerByOkHttpTest() {
+		// 此URL有3次重定向, 需要请求4次
+		final String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";
+		HttpGlobalConfig.setMaxRedirects(2);
+
+		final Response send = Request.of(url).send(ClientEngineFactory.createEngine("okhttp"));
+		Console.log(send.getStatus());
+		Console.log(send.headers());
+	}
+
+	@Test
+	@Disabled
+	public void downloadTeamViewerByJdkTest() {
 		// 此URL有3次重定向, 需要请求4次
 		final String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";
 		HttpGlobalConfig.setMaxRedirects(2);
 
 		final Response send = Request.of(url).send(ClientEngineFactory.createEngine("jdkClient"));
+		Console.log(send.getStatus());
+		Console.log(send.headers());
+	}
+
+	@Test
+	@Disabled
+	public void downloadTeamViewerByHttpClient5Test() {
+		// 此URL有3次重定向, 需要请求4次
+		final String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";
+		HttpGlobalConfig.setMaxRedirects(2);
+
+		final Response send = Request.of(url).send(ClientEngineFactory.createEngine("HttpClient5"));
 		Console.log(send.getStatus());
 		Console.log(send.headers());
 	}
