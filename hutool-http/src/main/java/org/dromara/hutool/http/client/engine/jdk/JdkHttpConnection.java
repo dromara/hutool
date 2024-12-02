@@ -47,10 +47,6 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 	private final URL url;
 	private final Proxy proxy;
 	private final HttpURLConnection conn;
-	/**
-	 * 重定向次数计数器，内部使用
-	 */
-	protected int redirectCount;
 
 	/**
 	 * 创建HttpConnection

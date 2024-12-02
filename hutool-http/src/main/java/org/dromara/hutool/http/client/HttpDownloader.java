@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2024 Hutool Team and hutool.cn
+ * Copyright (c) 2024 Hutool Team and hutool.cn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,155 +16,189 @@
 
 package org.dromara.hutool.http.client;
 
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.StreamProgress;
-import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.http.HttpException;
+import org.dromara.hutool.http.client.body.ResponseBody;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.engine.ClientEngineFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
- * 下载封装，下载统一使用{@code GET}请求，默认支持30x跳转
+ * HTTP下载器，两种使用方式：<br>
+ * 1. 一次性使用：
+ * <pre>{@code HttpDownloader.of(url).downloadFile(file)}</pre>
+ * 2. 多次下载复用：
+ * <pre>{@code
+ *   HttpDownloader downloader = HttpDownloader.of(url).setCloseEngine(false);
+ *   downloader.downloadFile(file);
+ *   downloader.downloadFile(file2);
+ *   downloader.close();
+ * }</pre>
  *
  * @author looly
- * @since 5.6.4
+ * @since 6.0.0
  */
-@SuppressWarnings("resource")
 public class HttpDownloader {
 
 	/**
-	 * 下载远程文本
+	 * 创建下载器
 	 *
-	 * @param url           请求的url
-	 * @param customCharset 自定义的字符集，可以使用{@code CharsetUtil#charset} 方法转换
-	 * @param streamPress   进度条 {@link StreamProgress}
-	 * @return 文本
+	 * @param url 请求地址
+	 * @return 下载器
 	 */
-	public static String downloadString(final String url, final Charset customCharset, final StreamProgress streamPress) {
-		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-		download(url, out, true, streamPress);
-		return null == customCharset ? out.toString() : out.toString(customCharset);
+	public static HttpDownloader of(final String url) {
+		return new HttpDownloader(url);
+	}
+
+	private final Request request;
+	private ClientConfig config;
+	private ClientEngine engine;
+	private StreamProgress streamProgress;
+	private boolean closeEngine = true;
+
+	/**
+	 * 构造
+	 *
+	 * @param url 请求地址
+	 */
+	public HttpDownloader(final String url) {
+		this.request = Request.of(url);
 	}
 
 	/**
-	 * 下载远程文件数据，支持30x跳转
+	 * 设置请求头
 	 *
-	 * @param url 请求的url
-	 * @return 文件数据
+	 * @param headers 请求头
+	 * @return this
 	 */
-	public static byte[] downloadBytes(final String url) {
-		return downloadBytes(url, 0);
+	public HttpDownloader header(final Map<String, String> headers) {
+		this.request.header(headers);
+		return this;
 	}
 
 	/**
-	 * 下载远程文件数据，支持30x跳转
+	 * 设置配置
 	 *
-	 * @param url     请求的url
-	 * @param timeout 超时毫秒数
-	 * @return 文件数据
-	 * @since 5.8.28
+	 * @param config 配置
+	 * @return this
 	 */
-	public static byte[] downloadBytes(final String url, final int timeout) {
-		return requestDownload(url, timeout).bodyBytes();
+	public HttpDownloader setConfig(final ClientConfig config) {
+		this.config = config;
+		return this;
 	}
 
 	/**
-	 * 下载远程文件
+	 * 设置超时
 	 *
-	 * @param url             请求的url
-	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @return 文件
+	 * @param milliseconds 超时毫秒数
+	 * @return this
 	 */
-	public static File downloadFile(final String url, final File targetFileOrDir) {
-		return downloadFile(url, targetFileOrDir, -1);
+	public HttpDownloader setTimeout(final int milliseconds) {
+		if (null == this.config) {
+			this.config = ClientConfig.of();
+		}
+		this.config.setTimeout(milliseconds);
+		return this;
 	}
 
 	/**
-	 * 下载远程文件
+	 * 设置引擎，用于自定义引擎
 	 *
-	 * @param url             请求的url
-	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @param timeout         超时，单位毫秒，-1表示默认超时
-	 * @return 文件
+	 * @param engine 引擎
+	 * @return this
 	 */
-	public static File downloadFile(final String url, final File targetFileOrDir, final int timeout) {
-		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
-		return downloadFile(url, targetFileOrDir, timeout, null);
+	public HttpDownloader setEngine(final ClientEngine engine) {
+		this.engine = engine;
+		return this;
 	}
 
 	/**
-	 * 下载远程文件
+	 * 设置进度条
 	 *
-	 * @param url             请求的url
-	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @param timeout         超时，单位毫秒，-1表示默认超时
-	 * @param streamProgress  进度条
-	 * @return 文件
-	 */
-	public static File downloadFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
-		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
-		return requestDownload(url, timeout).body().write(targetFileOrDir, streamProgress);
-	}
-
-	/**
-	 * 下载文件-避免未完成的文件<br>
-	 * 来自：https://gitee.com/dromara/hutool/pulls/407<br>
-	 * 此方法原理是先在目标文件同级目录下创建临时文件，下载之，等下载完毕后重命名，避免因下载错误导致的文件不完整。
-	 *
-	 * @param url             请求的url
-	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @param tempFileSuffix  临时文件后缀，默认".temp"
-	 * @param timeout         超时，单位毫秒，-1表示默认超时
-	 * @param streamProgress  进度条
-	 * @return 文件
-	 * @since 5.7.12
-	 */
-	public static File downloadFile(final String url, final File targetFileOrDir, final String tempFileSuffix, final int timeout, final StreamProgress streamProgress) {
-		Assert.notNull(targetFileOrDir, "[targetFileOrDir] is null !");
-		return requestDownload(url, timeout).body().write(targetFileOrDir, tempFileSuffix, streamProgress);
-	}
-
-	/**
-	 * 下载远程文件
-	 *
-	 * @param url            请求的url
-	 * @param out            将下载内容写到输出流中 {@link OutputStream}
-	 * @param isCloseOut     是否关闭输出流
 	 * @param streamProgress 进度条
-	 * @return 文件大小
+	 * @return this
 	 */
-	public static long download(final String url, final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
-		Assert.notNull(out, "[out] is null !");
-		return requestDownload(url, -1).body().write(out, isCloseOut, streamProgress);
+	public HttpDownloader setStreamProgress(final StreamProgress streamProgress) {
+		this.streamProgress = streamProgress;
+		return this;
 	}
 
 	/**
-	 * 请求下载文件
+	 * 设置是否关闭引擎，默认为true，即自动关闭引擎
 	 *
-	 * @param url     请求下载文件地址
-	 * @param timeout 超时时间
-	 * @return HttpResponse
-	 * @since 5.4.1
+	 * @param closeEngine 是否关闭引擎
+	 * @return this
 	 */
-	private static Response requestDownload(final String url, final int timeout) {
-		Assert.notBlank(url, "[url] is blank !");
+	public HttpDownloader setCloseEngine(final boolean closeEngine) {
+		this.closeEngine = closeEngine;
+		return this;
+	}
 
-		final ClientConfig config = ClientConfig.of();
-		if(timeout > 0){
-			config.setTimeout(timeout);
+	/**
+	 * 下载文件
+	 *
+	 * @param targetFileOrDir 目标文件或目录，当为目录时，自动使用文件名作为下载文件名
+	 * @return 下载文件
+	 */
+	public File downloadFile(final File targetFileOrDir) {
+		return downloadFile(targetFileOrDir, null);
+	}
+
+	/**
+	 * 下载文件
+	 *
+	 * @param targetFileOrDir 目标文件或目录，当为目录时，自动使用文件名作为下载文件名
+	 * @param tempFileSuffix  临时文件后缀
+	 * @return 下载文件
+	 */
+	public File downloadFile(final File targetFileOrDir, final String tempFileSuffix) {
+		try (final ResponseBody body = send()) {
+			return body.write(targetFileOrDir, tempFileSuffix, this.streamProgress);
+		} catch (final IOException e) {
+			throw new HttpException(e);
+		} finally {
+			if (this.closeEngine) {
+				IoUtil.closeQuietly(this.engine);
+			}
 		}
+	}
 
-		final Response response = ClientEngineFactory.getEngine()
-				.init(config)
-				.send(Request.of(url));
-
-		if (response.isOk()) {
-			return response;
+	/**
+	 * 下载文件
+	 *
+	 * @param out        输出流
+	 * @param isCloseOut 是否关闭输出流，true关闭
+	 * @return 下载的字节数
+	 */
+	public long download(final OutputStream out, final boolean isCloseOut) {
+		try (final ResponseBody body = send()) {
+			return body.write(out, isCloseOut, this.streamProgress);
+		} catch (final IOException e) {
+			throw new HttpException(e);
+		} finally {
+			if (this.closeEngine) {
+				IoUtil.closeQuietly(this.engine);
+			}
 		}
+	}
 
-		throw new HttpException("Server response error with status code: [{}]", response.getStatus());
+	/**
+	 * 发送请求，获取响应
+	 *
+	 * @return 响应
+	 */
+	private ResponseBody send() {
+		if (null == this.engine) {
+			this.engine = ClientEngineFactory.createEngine();
+		}
+		if (null != this.config) {
+			this.engine.init(this.config);
+		}
+		return engine.send(this.request).body();
 	}
 }

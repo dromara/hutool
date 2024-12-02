@@ -57,10 +57,6 @@ public class ClientConfig {
 	 */
 	private ProxyInfo proxy;
 	/**
-	 * 是否遇到响应状态码3xx时自动重定向请求
-	 */
-	private boolean followRedirects;
-	/**
 	 * 是否使用引擎默认的Cookie管理器，默认为true<br>
 	 * 默认情况下每个客户端维护一个自己的Cookie管理器，这个管理器用于在多次请求中记录并自动附带Cookie信息<br>
 	 * 如请求登录后，服务器返回Set-Cookie信息，Cookie管理器记录之，后续请求会自动带上这个Cookie信息，从而实现会话保持。
@@ -212,28 +208,6 @@ public class ClientConfig {
 	 */
 	public ClientConfig setProxy(final ProxyInfo proxy) {
 		this.proxy = proxy;
-		return this;
-	}
-
-	/**
-	 * 是否遇到响应状态码3xx时自动重定向请求<br>
-	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirects()}无效
-	 *
-	 * @return 是否遇到响应状态码3xx时自动重定向请求
-	 */
-	public boolean isFollowRedirects() {
-		return followRedirects;
-	}
-
-	/**
-	 * 设置是否遇到响应状态码3xx时自动重定向请求<br>
-	 * 注意：当打开客户端级别的自动重定向，则{@link Request#maxRedirects()}无效
-	 *
-	 * @param followRedirects 是否遇到响应状态码3xx时自动重定向请求
-	 * @return this
-	 */
-	public ClientConfig setFollowRedirects(final boolean followRedirects) {
-		this.followRedirects = followRedirects;
 		return this;
 	}
 

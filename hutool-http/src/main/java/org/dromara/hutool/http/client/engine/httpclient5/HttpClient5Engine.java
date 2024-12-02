@@ -21,7 +21,6 @@ import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.DefaultRedirectStrategy;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -122,7 +121,7 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
 
 		// 实例级别默认请求配置
-		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
+		clientBuilder.setDefaultRequestConfig(buildDefaultRequestConfig(config));
 
 		// 缓存
 		if (config.isDisableCache()) {
@@ -131,13 +130,6 @@ public class HttpClient5Engine extends AbstractClientEngine {
 
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
-
-		// 重定向
-		if (config.isFollowRedirects()) {
-			clientBuilder.setRedirectStrategy(DefaultRedirectStrategy.INSTANCE);
-		} else {
-			clientBuilder.disableRedirectHandling();
-		}
 
 		// 设置代理
 		setProxy(clientBuilder, config);
@@ -261,12 +253,12 @@ public class HttpClient5Engine extends AbstractClientEngine {
 	}
 
 	/**
-	 * 构建请求配置，包括连接请求超时和响应（读取）超时
+	 * 构建默认请求配置，包括连接请求超时和响应（读取）超时
 	 *
 	 * @param config {@link ClientConfig}
 	 * @return {@link RequestConfig}
 	 */
-	private static RequestConfig buildRequestConfig(final ClientConfig config) {
+	private static RequestConfig buildDefaultRequestConfig(final ClientConfig config) {
 		final int connectionTimeout = config.getConnectionTimeout();
 
 		// 请求配置

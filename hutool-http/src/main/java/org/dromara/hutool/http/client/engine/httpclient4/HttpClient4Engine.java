@@ -134,13 +134,6 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
 
-		// 重定向
-		if (config.isFollowRedirects()) {
-			clientBuilder.setRedirectStrategy(LaxRedirectStrategy.INSTANCE);
-		} else {
-			clientBuilder.disableRedirectHandling();
-		}
-
 		// 设置代理
 		setProxy(clientBuilder, config);
 

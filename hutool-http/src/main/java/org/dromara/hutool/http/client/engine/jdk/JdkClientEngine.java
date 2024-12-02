@@ -27,6 +27,7 @@ import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
+import org.dromara.hutool.http.client.RequestContext;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
@@ -69,16 +70,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 	@Override
 	public JdkHttpResponse send(final Request message) {
-		final JdkHttpConnection conn = buildConn(message);
-		try {
-			doSend(conn, message);
-		} catch (final IOException e) {
-			// 出错后关闭连接
-			IoUtil.closeQuietly(conn);
-			throw new IORuntimeException(e);
-		}
-
-		return sendRedirectIfPossible(conn, message);
+		return doSend(new RequestContext().setRequest(message));
 	}
 
 	@Override
@@ -100,6 +92,20 @@ public class JdkClientEngine extends AbstractClientEngine {
 	@Override
 	protected void initEngine() {
 		this.cookieManager = (null != this.config && this.config.isUseCookieManager()) ? new JdkCookieManager() : new JdkCookieManager(null);
+	}
+
+	private JdkHttpResponse doSend(final RequestContext context) {
+		final Request message = context.getRequest();
+		final JdkHttpConnection conn = buildConn(message);
+		try {
+			doSend(conn, message);
+		} catch (final IOException e) {
+			// 出错后关闭连接
+			IoUtil.closeQuietly(conn);
+			throw new IORuntimeException(e);
+		}
+
+		return sendRedirectIfPossible(conn, context);
 	}
 
 	/**
@@ -132,7 +138,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 		final URL url = message.handledUrl().toURL();
 		Proxy proxy = null;
 		final ProxyInfo proxyInfo = config.getProxy();
-		if(null != proxyInfo){
+		if (null != proxyInfo) {
 			proxy = proxyInfo.selectFirst(UrlUtil.toURI(url));
 		}
 		final JdkHttpConnection conn = JdkHttpConnection
@@ -141,8 +147,8 @@ public class JdkClientEngine extends AbstractClientEngine {
 			.setReadTimeout(config.getReadTimeout())
 			.setMethod(message.method())//
 			.setSSLInfo(config.getSslInfo())
-			// 如果客户端设置自动重定向，则Request中maxRedirectCount无效
-			.setInstanceFollowRedirects(config.isFollowRedirects())
+			// 关闭自动重定向，手动处理重定向
+			.setInstanceFollowRedirects(false)
 			.setDisableCache(config.isDisableCache())
 			// 覆盖默认Header
 			.header(message.headers(), true);
@@ -171,10 +177,12 @@ public class JdkClientEngine extends AbstractClientEngine {
 	/**
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
-	 * @param conn {@link JdkHttpConnection}}
+	 * @param conn    {@link JdkHttpConnection}}
+	 * @param context 请求上下文
 	 * @return {@link JdkHttpResponse}，无转发返回 {@code null}
 	 */
-	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final Request message) {
+	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final RequestContext context) {
+		final Request message = context.getRequest();
 		// 手动实现重定向
 		if (message.maxRedirects() > 0) {
 			final int code;
@@ -198,16 +206,15 @@ public class JdkClientEngine extends AbstractClientEngine {
 						message.method(Method.GET);
 					}
 
-					if (conn.redirectCount < message.maxRedirects()) {
-						conn.redirectCount++;
-						return send(message);
+					if (context.canRedirect()) {
+						return doSend(context);
 					}
 				}
 			}
 		}
 
 		// 最终页面
-		return new JdkHttpResponse(conn, this.cookieManager, message);
+		return new JdkHttpResponse(conn, this.cookieManager, context.getRequest());
 	}
 
 	/**

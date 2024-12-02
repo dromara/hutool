@@ -138,6 +138,11 @@ public class Request implements HeaderOperation<Request> {
 	 * 是否是REST请求模式，REST模式运行GET请求附带body
 	 */
 	private boolean isRest;
+	/**
+	 * 重定向计数器，内部使用<br>
+	 * 单次请求时，重定向次数内部自增
+	 */
+	private int redirectCount;
 
 	/**
 	 * 默认构造
@@ -399,7 +404,7 @@ public class Request implements HeaderOperation<Request> {
 
 	/**
 	 * 获取最大重定向请求次数<br>
-	 * 注意：当{@link ClientConfig#isFollowRedirects()}为{@code true}时，此参数无效
+	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向。
 	 *
 	 * @return 最大重定向请求次数
 	 */
@@ -410,7 +415,6 @@ public class Request implements HeaderOperation<Request> {
 	/**
 	 * 设置最大重定向次数<br>
 	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向<br>
-	 * 注意：当{@link ClientConfig#isFollowRedirects()}为{@code true}时，此参数无效
 	 *
 	 * @param maxRedirects 最大重定向次数
 	 * @return this

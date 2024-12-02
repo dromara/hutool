@@ -130,8 +130,8 @@ public class OkHttpEngine extends AbstractClientEngine {
 			builder.connectionPool(((OkHttpClientConfig) config).getConnectionPool());
 		}
 
-		// 重定向
-		builder.followRedirects(config.isFollowRedirects());
+		// 关闭自动重定向，手动实现
+		builder.followRedirects(false);
 
 		// 设置代理
 		setProxy(builder, config);
@@ -168,7 +168,6 @@ public class OkHttpEngine extends AbstractClientEngine {
 
 		// 填充头信息
 		message.headers().forEach((key, values) -> values.forEach(value -> builder.addHeader(key, value)));
-
 		return builder.build();
 	}
 
