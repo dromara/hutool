@@ -46,7 +46,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 请求消息体，包括请求的URI、请求头、请求体等
+ * 请求消息<br>
+ * 请求消息用于定义请求所需的信息，如请求URL、请求方法、请求头、请求体等<br>
+ * 此对象为无状态对象，与具体引擎不相关，因此可以复用。
  *
  * @author looly
  * @since 6.0.0
@@ -139,11 +141,6 @@ public class Request implements HeaderOperation<Request> {
 	 * 是否是REST请求模式，REST模式运行GET请求附带body
 	 */
 	private boolean isRest;
-	/**
-	 * 重定向计数器，内部使用<br>
-	 * 单次请求时，重定向次数内部自增
-	 */
-	private int redirectCount;
 
 	/**
 	 * 默认构造
@@ -208,7 +205,8 @@ public class Request implements HeaderOperation<Request> {
 	}
 
 	/**
-	 * 设置重定向后的URL，用于处理相对路径
+	 * 更新设置重定向后的URL，用于处理相对路径<br>
+	 * 注意此方法会修改对象本身
 	 *
 	 * @param location 重定向后的URL
 	 * @return this

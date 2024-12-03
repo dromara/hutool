@@ -157,7 +157,8 @@ public class OkHttpEngine extends AbstractClientEngine {
 		}
 
 		// 自定义重定向
-		if(message.maxRedirects() > 0){
+		final int maxRedirects = message.maxRedirects();
+		if(maxRedirects > 0 && context.getRedirectCount() < maxRedirects){
 			final int code = response.code();
 			if (HttpStatus.isRedirected(code)) {
 				message.locationTo(response.header(HeaderName.LOCATION.getValue()));
@@ -169,10 +170,9 @@ public class OkHttpEngine extends AbstractClientEngine {
 				// 重定向默认使用GET
 				message.method(Method.GET);
 			}
-
-			if (context.canRedirect()) {
-				return doSend(context);
-			}
+			// 自增计数器
+			context.incrementRedirectCount();
+			return doSend(context);
 		}
 
 		return new OkHttpResponse(response, message);

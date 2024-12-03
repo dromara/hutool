@@ -46,7 +46,7 @@ public class RequestContext {
 	}
 
 	/**
-	 * 设置请求
+	 * 设置请求，在重新请求或重定向时，更新请求信息
 	 *
 	 * @param request 请求
 	 * @return this
@@ -57,16 +57,18 @@ public class RequestContext {
 	}
 
 	/**
-	 * 是否允许重定向，如果允许，则重定向计数器+1
+	 * 获取重定向计数器
 	 *
-	 * @return 是否允许重定向
+	 * @return 重定向计数器
 	 */
-	public boolean canRedirect(){
-		final int maxRedirects = request.maxRedirects();
-		if(maxRedirects > 0 && redirectCount < maxRedirects){
-			redirectCount++;
-			return true;
-		}
-		return false;
+	public int getRedirectCount() {
+		return redirectCount;
+	}
+
+	/**
+	 * 重定向计数器+1
+	 */
+	public void incrementRedirectCount() {
+		this.redirectCount++;
 	}
 }

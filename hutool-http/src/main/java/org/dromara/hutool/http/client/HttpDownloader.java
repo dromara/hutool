@@ -82,6 +82,18 @@ public class HttpDownloader {
 	}
 
 	/**
+	 * 设置请求头，多个请求头则多次调用
+	 *
+	 * @param name  请求头名
+	 * @param value 请求头值
+	 * @return this
+	 */
+	public HttpDownloader header(final String name, final String value) {
+		this.request.header(name, value);
+		return this;
+	}
+
+	/**
 	 * 设置配置
 	 *
 	 * @param config 配置

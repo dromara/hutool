@@ -19,6 +19,7 @@ package org.dromara.hutool.http.client;
 import org.dromara.hutool.core.io.StreamProgress;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.http.HttpGlobalConfig;
 import org.dromara.hutool.http.client.engine.ClientEngineFactory;
 import org.junit.jupiter.api.Assertions;
@@ -48,6 +49,13 @@ public class DownloadTest {
 	public void downloadTest1() {
 		final File size = HttpDownloader.of("http://explorer.bbfriend.com/crossdomain.xml").downloadFile(new File("d:test/download/temp/"));
 		Console.log("Download size: " + size);
+	}
+
+	@Test
+	void downloadWithHeaderTest() {
+		HttpDownloader.of("https://hutool.cn/")
+			.header(MapUtil.of("Authorization", "token"))
+			.downloadFile(FileUtil.file("d:/test/"));
 	}
 
 	@Test

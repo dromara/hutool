@@ -177,8 +177,9 @@ public class JdkClientEngine extends AbstractClientEngine {
 	 */
 	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final RequestContext context) {
 		final Request message = context.getRequest();
+		final int maxRedirects = message.maxRedirects();
 		// 手动实现重定向
-		if (message.maxRedirects() > 0) {
+		if (maxRedirects > 0 && context.getRedirectCount() < maxRedirects) {
 			final int code;
 			try {
 				code = conn.getCode();
@@ -189,8 +190,6 @@ public class JdkClientEngine extends AbstractClientEngine {
 			}
 
 			if (HttpStatus.isRedirected(code)) {
-				message.locationTo(conn.header(HeaderName.LOCATION));
-
 				// https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
 				// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Redirections
 				// 307方法和消息主体都不发生变化。
@@ -198,10 +197,10 @@ public class JdkClientEngine extends AbstractClientEngine {
 					// 重定向默认使用GET
 					message.method(Method.GET);
 				}
-
-				if (context.canRedirect()) {
-					return doSend(context);
-				}
+				message.locationTo(conn.header(HeaderName.LOCATION));
+				// 自增计数器
+				context.incrementRedirectCount();
+				return doSend(context);
 			}
 		}
 
