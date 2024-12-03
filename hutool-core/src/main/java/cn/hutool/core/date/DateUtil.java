@@ -1975,8 +1975,8 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeContains(DateRange start, DateRange end) {
-		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
-		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start.reset());
+		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end.reset());
 		return startDateTimes.stream().filter(endDateTimes::contains).collect(Collectors.toList());
 	}
 
@@ -1990,8 +1990,8 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeNotContains(DateRange start, DateRange end) {
-		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
-		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start.reset());
+		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end.reset());
 		return endDateTimes.stream().filter(item -> !startDateTimes.contains(item)).collect(Collectors.toList());
 	}
 
