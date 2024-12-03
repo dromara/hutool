@@ -278,7 +278,7 @@ public class JWTSignerUtil {
 		if (key instanceof PrivateKey || key instanceof PublicKey) {
 			// issue3205@Github
 			if(ReUtil.isMatch("ES\\d{3}", algorithmId)){
-				return new EllipticCurveJWTSigner(algorithmId, key);
+				return new EllipticCurveJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), key);
 			}
 
 			return new AsymmetricJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), key);
