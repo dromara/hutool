@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class Issue3081Test {
@@ -35,10 +36,10 @@ public class Issue3081Test {
 		final Date end = DateUtil.parse("2023-04-25 00:00:00");
 
 		final DateRange dateTimes = new DateRange(start, end, DateField.DAY_OF_MONTH, 30, true, true);
-
+		final Iterator<DateTime> iterator = dateTimes.iterator();
 		final List<DateTime> dateTimeList = new ArrayList<>();
-		while (dateTimes.hasNext()) {
-			dateTimeList.add(dateTimes.next());
+		while (iterator.hasNext()) {
+			dateTimeList.add(iterator.next());
 		}
 		Assertions.assertEquals(4, dateTimeList.size());
 

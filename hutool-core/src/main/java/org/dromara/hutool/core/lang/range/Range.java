@@ -17,13 +17,10 @@
 package org.dromara.hutool.core.lang.range;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.thread.lock.NoLock;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -37,13 +34,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @param <T> 生成范围对象的类型
  * @author Looly
  */
-public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
+public class Range<T> implements Iterable<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 锁保证线程安全
-	 */
-	private Lock lock = new ReentrantLock();
 	/**
 	 * 起始对象
 	 */
@@ -52,18 +45,11 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * 结束对象
 	 */
 	private final T end;
-	/**
-	 * 下一个对象
-	 */
-	private T next;
+
 	/**
 	 * 步进
 	 */
 	private final Stepper<T> stepper;
-	/**
-	 * 索引
-	 */
-	private int index = 0;
 	/**
 	 * 是否包含第一个元素
 	 */
@@ -108,116 +94,86 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 		this.start = start;
 		this.end = end;
 		this.stepper = stepper;
-		this.next = safeStep(this.start);
 		this.includeStart = isIncludeStart;
 		this.includeEnd = isIncludeEnd;
 	}
 
-	/**
-	 * 禁用锁，调用此方法后不再使用锁保护
-	 *
-	 * @return this
-	 * @since 4.3.1
-	 */
-	public Range<T> disableLock() {
-		this.lock = new NoLock();
-		return this;
-	}
-
-	@Override
-	public boolean hasNext() {
-		lock.lock();
-		try {
-			if (0 == this.index && this.includeStart) {
-				return true;
-			}
-			if (null == this.next) {
-				return false;
-			} else if (!includeEnd && this.next.equals(this.end)) {
-				return false;
-			}
-		} finally {
-			lock.unlock();
-		}
-		return true;
-	}
-
-	@Override
-	public T next() {
-		lock.lock();
-		try {
-			if (!this.hasNext()) {
-				throw new NoSuchElementException("Has no next range!");
-			}
-			return nextUncheck();
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 获取下一个元素，并将下下个元素准备好
-	 */
-	private T nextUncheck() {
-		final T current;
-		if(0 == this.index){
-			current = start;
-			if(!this.includeStart){
-				// 获取下一组元素
-				index ++;
-				return nextUncheck();
-			}
-		} else {
-			current = next;
-			this.next = safeStep(this.next);
-		}
-
-		index++;
-		return current;
-	}
-
-	/**
-	 * 不抛异常的获取下一步进的元素，如果获取失败返回{@code null}
-	 *
-	 * @param base  上一个元素
-	 * @return 下一步进
-	 */
-	private T safeStep(final T base) {
-		final int index = this.index;
-		T next = null;
-		try {
-			next = stepper.step(base, this.end, index);
-		} catch (final Exception e) {
-			// ignore
-		}
-
-		return next;
-	}
-
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException("Can not remove ranged element!");
-	}
-
 	@Override
 	public Iterator<T> iterator() {
-		return this;
-	}
+		return new Iterator<T>(){
+			/**
+			 * 下一个对象
+			 */
+			private T next = safeStep(start);
+			/**
+			 * 索引
+			 */
+			private int index = 0;
 
-	/**
-	 * 重置Range
-	 *
-	 * @return this
-	 */
-	public Range<T> reset() {
-		lock.lock();
-		try {
-			this.index = 0;
-			this.next = safeStep(this.start);
-		} finally {
-			lock.unlock();
-		}
-		return this;
+			@Override
+			public boolean hasNext() {
+				if (0 == this.index && includeStart) {
+					return true;
+				}
+				if (null == this.next) {
+					return false;
+				} else {
+					return includeEnd || !this.next.equals(end);
+				}
+			}
+
+			@Override
+			public T next() {
+				if (!this.hasNext()) {
+					throw new NoSuchElementException("Has no next range!");
+				}
+				return nextUncheck();
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException("Can not remove ranged element!");
+			}
+
+			/**
+			 * 获取下一个元素，并将下下个元素准备好
+			 */
+			private T nextUncheck() {
+				final T current;
+				if(0 == this.index){
+					current = start;
+					if(!includeStart){
+						// 获取下一组元素
+						index ++;
+						return nextUncheck();
+					}
+				} else {
+					current = next;
+					this.next = safeStep(this.next);
+				}
+
+				index++;
+				return current;
+			}
+
+			/**
+			 * 不抛异常的获取下一步进的元素，如果获取失败返回{@code null}
+			 *
+			 * @param base  上一个元素
+			 * @return 下一步进
+			 */
+			private T safeStep(final T base) {
+				final int index = this.index;
+				T next = null;
+				try {
+					next = stepper.step(base, end, index);
+				} catch (final Exception e) {
+					// ignore
+				}
+
+				return next;
+			}
+		};
 	}
 
 	/**
@@ -246,5 +202,10 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 		 * @return 增加步进后的对象
 		 */
 		T step(T current, T end, int index);
+	}
+
+	@Override
+	public String toString() {
+		return "Range [start=" + start + ", end=" + end + "]";
 	}
 }
