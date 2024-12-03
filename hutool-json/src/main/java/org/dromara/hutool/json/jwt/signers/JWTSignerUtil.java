@@ -23,6 +23,7 @@ import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.regex.Pattern;
 
 /**
  * JWT签名器工具类
@@ -31,6 +32,8 @@ import java.security.PublicKey;
  * @since 5.7.0
  */
 public class JWTSignerUtil {
+
+	private static final Pattern ES_ALGORITHM_PATTERN = Pattern.compile("es\\d{3}", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * 无签名
@@ -267,12 +270,13 @@ public class JWTSignerUtil {
 			return none();
 		}
 
+		final String algorithm = AlgorithmUtil.getAlgorithm(algorithmId);
 		// issue3205@Github
-		if(ReUtil.isMatch("es\\d{3}", algorithmId.toLowerCase())){
-			return new EllipticCurveJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), keyPair);
+		if(ReUtil.isMatch(ES_ALGORITHM_PATTERN, algorithmId)){
+			return new EllipticCurveJWTSigner(algorithm, keyPair);
 		}
 
-		return new AsymmetricJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), keyPair);
+		return new AsymmetricJWTSigner(algorithm, keyPair);
 	}
 
 	/**
@@ -288,14 +292,16 @@ public class JWTSignerUtil {
 		if (null == algorithmId || NoneJWTSigner.ID_NONE.equals(algorithmId)) {
 			return NoneJWTSigner.NONE;
 		}
+
+		final String algorithm = AlgorithmUtil.getAlgorithm(algorithmId);
 		if (key instanceof PrivateKey || key instanceof PublicKey) {
 			// issue3205@Github
-			if(ReUtil.isMatch("ES\\d{3}", algorithmId)){
-				return new EllipticCurveJWTSigner(algorithmId, key);
+			if(ReUtil.isMatch(ES_ALGORITHM_PATTERN, algorithmId)){
+				return new EllipticCurveJWTSigner(algorithm, key);
 			}
 
-			return new AsymmetricJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), key);
+			return new AsymmetricJWTSigner(algorithm, key);
 		}
-		return new HMacJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), key);
+		return new HMacJWTSigner(algorithm, key);
 	}
 }
