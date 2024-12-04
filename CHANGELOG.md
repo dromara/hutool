@@ -6,6 +6,7 @@
 
 ### 🐣新特性
 * 【poi    】      优化ExcelWriter中使用比较器writer的方法，只对第一条数据进行排序（pr#3807@Github）
+* 【extra  】      优化Ftp.download，返回false抛出异常（issue#3805@Github）
 
 ### 🐞Bug修复
 * 【crypto 】      修复JWTSignerUtil.createSigner中algorithmId未转换问题（issue#3806@Github）

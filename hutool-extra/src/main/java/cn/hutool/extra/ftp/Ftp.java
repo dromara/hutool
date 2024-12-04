@@ -708,15 +708,21 @@ public class Ftp extends AbstractFtp {
 		if (null != fileNameCharset) {
 			fileName = new String(fileName.getBytes(fileNameCharset), StandardCharsets.ISO_8859_1);
 		}
+
+		boolean isSuccess;
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
-			client.retrieveFile(fileName, out);
+			isSuccess = client.retrieveFile(fileName, out);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			if (backToPwd) {
 				cd(pwd);
 			}
+		}
+
+		if(false == isSuccess){
+			throw new FtpException("retrieveFile return false");
 		}
 	}
 
