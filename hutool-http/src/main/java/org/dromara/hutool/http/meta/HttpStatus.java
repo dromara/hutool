@@ -363,12 +363,16 @@ public interface HttpStatus {
 		if(responseCode < 300){
 			return false;
 		}
-		return responseCode == HTTP_MOVED_PERM
-			|| responseCode == HTTP_MOVED_TEMP
-			|| responseCode == HTTP_SEE_OTHER
-			// issue#1504@Github，307和308是RFC 7538中http 1.1定义的规范
-			|| responseCode == HTTP_TEMP_REDIRECT
-			|| responseCode == HTTP_PERMANENT_REDIRECT;
-
+		switch (responseCode){
+			case HTTP_MOVED_PERM:
+			case HTTP_MOVED_TEMP:
+			case HTTP_SEE_OTHER:
+				// issue#1504@Github，307和308是RFC 7538中http 1.1定义的规范
+			case HTTP_TEMP_REDIRECT:
+			case HTTP_PERMANENT_REDIRECT:
+				return true;
+			default:
+				return false;
+		}
 	}
 }
