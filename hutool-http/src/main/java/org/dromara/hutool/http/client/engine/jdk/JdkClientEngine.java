@@ -99,7 +99,35 @@ public class JdkClientEngine extends AbstractClientEngine {
 			throw new IORuntimeException(e);
 		}
 
-		return sendRedirectIfPossible(conn, context);
+		// 自定义重定向
+		final int maxRedirects = message.maxRedirects();
+		if (maxRedirects > 0 && context.getRedirectCount() < maxRedirects) {
+			final int code;
+			try {
+				code = conn.getCode();
+			} catch (final IOException e) {
+				// 错误时静默关闭连接
+				conn.closeQuietly();
+				throw new HttpException(e);
+			}
+
+			if (HttpStatus.isRedirected(code)) {
+				// https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
+				// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Redirections
+				// 307方法和消息主体都不发生变化。
+				if (HttpStatus.HTTP_TEMP_REDIRECT != code) {
+					// 重定向默认使用GET
+					message.method(Method.GET);
+				}
+				message.locationTo(conn.header(HeaderName.LOCATION));
+				// 自增计数器
+				context.incrementRedirectCount();
+				return doSend(context);
+			}
+		}
+
+		// 最终页面
+		return new JdkHttpResponse(conn, this.cookieManager, context.getRequest());
 	}
 
 	/**
@@ -166,45 +194,5 @@ public class JdkClientEngine extends AbstractClientEngine {
 		}
 
 		return conn;
-	}
-
-	/**
-	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
-	 *
-	 * @param conn    {@link JdkHttpConnection}}
-	 * @param context 请求上下文
-	 * @return {@link JdkHttpResponse}，无转发返回 {@code null}
-	 */
-	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final RequestContext context) {
-		final Request message = context.getRequest();
-		final int maxRedirects = message.maxRedirects();
-		// 手动实现重定向
-		if (maxRedirects > 0 && context.getRedirectCount() < maxRedirects) {
-			final int code;
-			try {
-				code = conn.getCode();
-			} catch (final IOException e) {
-				// 错误时静默关闭连接
-				conn.closeQuietly();
-				throw new HttpException(e);
-			}
-
-			if (HttpStatus.isRedirected(code)) {
-				// https://www.rfc-editor.org/rfc/rfc7231#section-6.4.7
-				// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Redirections
-				// 307方法和消息主体都不发生变化。
-				if (HttpStatus.HTTP_TEMP_REDIRECT != code) {
-					// 重定向默认使用GET
-					message.method(Method.GET);
-				}
-				message.locationTo(conn.header(HeaderName.LOCATION));
-				// 自增计数器
-				context.incrementRedirectCount();
-				return doSend(context);
-			}
-		}
-
-		// 最终页面
-		return new JdkHttpResponse(conn, this.cookieManager, context.getRequest());
 	}
 }

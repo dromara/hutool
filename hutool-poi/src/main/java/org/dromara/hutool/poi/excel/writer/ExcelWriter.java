@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -731,11 +732,20 @@ public class ExcelWriter extends ExcelBase<ExcelWriter, ExcelWriteConfig> {
 		boolean isFirstRow = true;
 		Map<?, ?> map;
 		for (final Object obj : data) {
-			if (obj instanceof Map) {
-				map = new TreeMap<>(comparator);
-				map.putAll((Map) obj);
-			} else {
-				map = BeanUtil.beanToMap(obj, new TreeMap<>(comparator), false, false);
+			if(isFirstRow){
+				// 只排序首行（标题），后续数据按照首行key的位置填充，无需重新排序
+				if (obj instanceof Map) {
+					map = new TreeMap<>(comparator);
+					map.putAll((Map) obj);
+				} else {
+					map = BeanUtil.beanToMap(obj, new TreeMap<>(comparator), false, false);
+				}
+			}else{
+				if (obj instanceof Map) {
+					map = (Map) obj;
+				} else {
+					map = BeanUtil.beanToMap(obj, new HashMap<>(), false, false);
+				}
 			}
 			writeRow(map, isFirstRow);
 			if (isFirstRow) {
