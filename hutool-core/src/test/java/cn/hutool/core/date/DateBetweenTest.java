@@ -1,11 +1,12 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DateBetweenTest {
 
@@ -34,6 +35,14 @@ public class DateBetweenTest {
 		Date end = DateUtil.parse("2018-02-28");
 		long betweenYear = new DateBetween(start, end).betweenYear(false);
 		assertEquals(18, betweenYear);
+	}
+
+	@Test
+	public void betweenYearTest3() {
+		Date start = DateUtil.parse("20170301");
+		Date end = DateUtil.parse("2024-02-29 14:56:18");
+		long betweenYear = new DateBetween(start, end).betweenYear(false);
+		assertEquals(6, betweenYear);
 	}
 
 	@Test
