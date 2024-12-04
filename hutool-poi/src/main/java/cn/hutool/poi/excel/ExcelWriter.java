@@ -865,11 +865,20 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		boolean isFirstRow = true;
 		Map<?, ?> map;
 		for (Object obj : data) {
-			if (obj instanceof Map) {
-				map = new TreeMap<>(comparator);
-				map.putAll((Map) obj);
+			// 只第一行使用比较器排序
+			if (isFirstRow) {
+				if (obj instanceof Map) {
+					map = new TreeMap<>(comparator);
+					map.putAll((Map) obj);
+				} else {
+					map = BeanUtil.beanToMap(obj, new TreeMap<>(comparator), false, false);
+				}
 			} else {
-				map = BeanUtil.beanToMap(obj, new TreeMap<>(comparator), false, false);
+				if (obj instanceof Map) {
+					map = (Map) obj;
+				} else {
+					map = BeanUtil.beanToMap(obj, new HashMap<>(), false, false);
+				}
 			}
 			writeRow(map, isFirstRow);
 			if (isFirstRow) {
