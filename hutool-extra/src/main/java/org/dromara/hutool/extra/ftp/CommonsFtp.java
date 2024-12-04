@@ -706,9 +706,9 @@ public class CommonsFtp extends AbstractFtp {
 	 * @param out             输出流，下载的文件写出到这个流中
 	 * @param fileNameCharset 文件名编码，通过此编码转换文件名编码为ISO8859-1
 	 * @throws IORuntimeException IO异常
-	 * @since 5.5.7
+	 * @return 是否下载成功
 	 */
-	public void download(final String path, String fileName, final OutputStream out, final Charset fileNameCharset) throws IORuntimeException {
+	public boolean download(final String path, String fileName, final OutputStream out, final Charset fileNameCharset) throws IORuntimeException {
 		String pwd = null;
 		if (this.backToPwd) {
 			pwd = pwd();
@@ -723,7 +723,7 @@ public class CommonsFtp extends AbstractFtp {
 		}
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
-			client.retrieveFile(fileName, out);
+			return client.retrieveFile(fileName, out);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
