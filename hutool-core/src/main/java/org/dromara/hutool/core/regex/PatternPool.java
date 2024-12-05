@@ -136,7 +136,7 @@ public class PatternPool {
 	/**
 	 * UUID
 	 */
-	public final static Pattern UUID = Pattern.compile(RegexPool.UUID, Pattern.CASE_INSENSITIVE);
+	public final static Pattern UUID = Pattern.compile(RegexPool.UUID);
 	/**
 	 * 不带横线的UUID
 	 */
@@ -144,7 +144,7 @@ public class PatternPool {
 	/**
 	 * MAC地址正则
 	 */
-	public static final Pattern MAC_ADDRESS = Pattern.compile(RegexPool.MAC_ADDRESS, Pattern.CASE_INSENSITIVE);
+	public static final Pattern MAC_ADDRESS = Pattern.compile(RegexPool.MAC_ADDRESS);
 	/**
 	 * 16进制字符串
 	 */
