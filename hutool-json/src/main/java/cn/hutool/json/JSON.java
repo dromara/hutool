@@ -98,6 +98,32 @@ public interface JSON extends Cloneable, Serializable, IJSONTypeConverter {
 	<T> T getByPath(String expression, Class<T> resultType);
 
 	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * <p>
+	 * 表达式栗子：
+	 *
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * <p>
+	 * 获取表达式对应值后转换为对应类型的值
+	 *
+	 * @param expression 表达式
+	 * @param targetType 返回值类型
+	 * @return 对象
+	 * @see BeanPath#get(Object)
+	 * @since 5.8.34
+	 */
+	<T> T getByPath(String expression, TypeReference<T> targetType);
+
+	/**
 	 * 格式化打印JSON，缩进为4个空格
 	 *
 	 * @return 格式化后的JSON字符串

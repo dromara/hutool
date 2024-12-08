@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
@@ -13,6 +14,7 @@ import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -195,7 +197,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public String join(String separator) throws JSONException {
 		return StrJoiner.of(separator)
-				.append(this, InternalJSONUtil::valueToString).toString();
+			.append(this, InternalJSONUtil::valueToString).toString();
 	}
 
 	@Override
@@ -216,6 +218,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	@Override
 	public <T> T getByPath(String expression, Class<T> resultType) {
 		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
+	}
+
+	@Override
+	public <T> T getByPath(String expression, TypeReference<T> targetType) {
+		return JSONConverter.jsonConvert(targetType, getByPath(expression), getConfig());
 	}
 
 	@Override
