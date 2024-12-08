@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
@@ -14,6 +15,7 @@ import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -161,8 +163,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	@Deprecated
 	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
 		this(source, JSONConfig.create()//
-				.setIgnoreCase((source instanceof CaseInsensitiveMap))//
-				.setIgnoreNullValue(ignoreNullValue)
+			.setIgnoreCase((source instanceof CaseInsensitiveMap))//
+			.setIgnoreNullValue(ignoreNullValue)
 		);
 	}
 
@@ -318,6 +320,11 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	@Override
 	public <T> T getByPath(String expression, Class<T> resultType) {
 		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
+	}
+
+	@Override
+	public <T> T getByPath(String expression, TypeReference<T> targetType) {
+		return JSONConverter.jsonConvert(targetType, getByPath(expression), getConfig());
 	}
 
 	@Override
@@ -561,7 +568,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 */
 	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<Object, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
-				.beginObj();
+			.beginObj();
 		this.forEach((key, value) -> jsonWriter.writeField(new MutablePair<>(key, value), filter));
 		jsonWriter.end();
 		// 此处不关闭Writer，考虑writer后续还需要填内容
