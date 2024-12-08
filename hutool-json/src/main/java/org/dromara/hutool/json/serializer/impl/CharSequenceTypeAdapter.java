@@ -85,7 +85,7 @@ public class CharSequenceTypeAdapter implements MatcherJSONSerializer<CharSequen
 		}
 
 		// 按照JSON字符串解析
-		return context.getFactory().ofParser(new JSONTokener(jsonStr)).parse();
+		return context.getFactory().ofParser(new JSONTokener(jsonStr, context.config().isIgnoreZeroWithChar())).parse();
 	}
 
 	@Override

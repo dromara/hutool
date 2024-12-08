@@ -24,7 +24,7 @@ public class JSONParserTest {
 	@Test
 	void parseTest() {
 		final String jsonStr = " {\"a\": 1} ";
-		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), JSONFactory.getInstance());
+		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr, true), JSONFactory.getInstance());
 		final JSON parse = jsonParser.parse();
 		Assertions.assertEquals("{\"a\":1}", parse.toString());
 	}
@@ -34,14 +34,14 @@ public class JSONParserTest {
 		final String jsonStr = "{\"a\": 1}";
 
 		final JSONObject jsonObject = JSONUtil.ofObj();
-		JSONParser.of(new JSONTokener(jsonStr), JSONFactory.getInstance()).parseTo(jsonObject);
+		JSONParser.of(new JSONTokener(jsonStr, true), JSONFactory.getInstance()).parseTo(jsonObject);
 		Assertions.assertEquals("{\"a\":1}", jsonObject.toString());
 	}
 
 	@Test
 	void parseToArrayTest() {
 		final String jsonStr = "[{},2,3]";
-		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr), JSONFactory.getInstance());
+		final JSONParser jsonParser = JSONParser.of(new JSONTokener(jsonStr, true), JSONFactory.getInstance());
 		final JSONArray jsonArray = new JSONArray();
 		jsonParser.parseTo(jsonArray);
 

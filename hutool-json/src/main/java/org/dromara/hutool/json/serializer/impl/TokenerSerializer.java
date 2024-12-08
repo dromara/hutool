@@ -53,9 +53,9 @@ public class TokenerSerializer implements MatcherJSONSerializer<Object> {
 		} else if (bean instanceof JSONParser) {
 			return ((JSONParser) bean).parse();
 		} else if (bean instanceof Reader) {
-			return mapFromTokener(new JSONTokener((Reader) bean), context.getFactory());
+			return mapFromTokener(new JSONTokener((Reader) bean, context.config().isIgnoreZeroWithChar()), context.getFactory());
 		} else if (bean instanceof InputStream) {
-			return mapFromTokener(new JSONTokener((InputStream) bean), context.getFactory());
+			return mapFromTokener(new JSONTokener((InputStream) bean, context.config().isIgnoreZeroWithChar()), context.getFactory());
 		}
 
 		throw new IllegalArgumentException("Unsupported source: " + bean);

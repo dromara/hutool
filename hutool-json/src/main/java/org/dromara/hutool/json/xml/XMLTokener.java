@@ -49,7 +49,7 @@ public class XMLTokener extends JSONTokener {
 	 * @param s      A source string.
 	 */
 	public XMLTokener(final CharSequence s) {
-		super(s);
+		super(s, true);
 	}
 
 	/**

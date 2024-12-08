@@ -101,7 +101,8 @@ public class ArrayTypeAdapter implements MatcherJSONSerializer<Object>, MatcherJ
 			switch (bytes[0]) {
 				case '{':
 				case '[':
-					return context.getFactory().ofParser(new JSONTokener(IoUtil.toStream(bytes))).parse();
+					return context.getFactory().ofParser(
+						new JSONTokener(IoUtil.toStream(bytes), context.config().isIgnoreZeroWithChar())).parse();
 			}
 		}
 

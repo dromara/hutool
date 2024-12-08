@@ -44,7 +44,7 @@ public class ResourceSerializer implements MatcherJSONSerializer<Resource> {
 
 	@Override
 	public JSON serialize(final Resource bean, final JSONContext context) {
-		return context.getFactory().ofParser(new JSONTokener(bean.getStream())).parse();
+		return context.getFactory().ofParser(new JSONTokener(bean.getStream(), context.config().isIgnoreZeroWithChar())).parse();
 	}
 
 	/**

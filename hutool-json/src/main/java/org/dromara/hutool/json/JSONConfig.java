@@ -74,6 +74,18 @@ public class JSONConfig implements Serializable {
 	private NumberWriteMode numberWriteMode = NumberWriteMode.NORMAL;
 
 	/**
+	 * 是否忽略零宽字符，这些字符可能会导致解析安全问题，这些字符包括：
+	 * <ul>
+	 *     <li>零宽空格：{@code \u200B}</li>
+	 *     <li>零宽非换行空：{@code \u200C}</li>
+	 *     <li>零宽连接符：{@code \u200D}</li>
+	 *     <li>零宽无断空格：{@code \uFEFF}</li>
+	 * </ul>
+	 * 如果此值为{@code false}，则转义，否则去除
+	 */
+	private boolean ignoreZeroWithChar = true;
+
+	/**
 	 * 创建默认的配置项
 	 *
 	 * @return JSONConfig
@@ -286,6 +298,36 @@ public class JSONConfig implements Serializable {
 	 */
 	public JSONConfig setNumberWriteMode(final NumberWriteMode numberWriteMode) {
 		this.numberWriteMode = numberWriteMode;
+		return this;
+	}
+
+	/**
+	 * 是否忽略零宽字符，这些字符可能会导致解析安全问题，这些字符包括：
+	 * <ul>
+	 *     <li>零宽空格：{@code \u200B}</li>
+	 *     <li>零宽非换行空：{@code \u200C}</li>
+	 *     <li>零宽连接符：{@code \u200D}</li>
+	 *     <li>零宽无断空格：{@code \uFEFF}</li>
+	 * </ul>
+	 * @return 此值为{@code false}，则转义，否则去除
+	 */
+	public boolean isIgnoreZeroWithChar() {
+		return ignoreZeroWithChar;
+	}
+
+	/**
+	 * 设置是否忽略零宽字符，这些字符可能会导致解析安全问题，这些字符包括：
+	 * <ul>
+	 *     <li>零宽空格：{@code \u200B}</li>
+	 *     <li>零宽非换行空：{@code \u200C}</li>
+	 *     <li>零宽连接符：{@code \u200D}</li>
+	 *     <li>零宽无断空格：{@code \uFEFF}</li>
+	 * </ul>
+	 * @param ignoreZeroWithChar 此值为{@code false}，则转义，否则去除
+	 * @return this
+	 */
+	public JSONConfig setIgnoreZeroWithChar(final boolean ignoreZeroWithChar) {
+		this.ignoreZeroWithChar = ignoreZeroWithChar;
 		return this;
 	}
 

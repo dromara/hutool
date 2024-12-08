@@ -34,7 +34,7 @@ public class JSONTokenerTest {
 
 	@Test
 	void nextTest() {
-		final JSONTokener jsonTokener = new JSONTokener("{\"ab\": \"abc\"}");
+		final JSONTokener jsonTokener = new JSONTokener("{\"ab\": \"abc\"}", true);
 		final char c = jsonTokener.nextTokenChar();
 		assertEquals('{', c);
 		assertEquals("ab", jsonTokener.nextString());
@@ -51,7 +51,7 @@ public class JSONTokenerTest {
 	 */
 	@Test
 	void nextWithoutWrapperTest() {
-		final JSONTokener jsonTokener = new JSONTokener("{ab: abc}");
+		final JSONTokener jsonTokener = new JSONTokener("{ab: abc}", true);
 		final char c = jsonTokener.nextTokenChar();
 		assertEquals('{', c);
 		assertEquals("ab", jsonTokener.nextString());

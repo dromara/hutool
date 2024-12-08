@@ -47,6 +47,9 @@ public class JSONTokener extends ReaderWrapper {
 	 */
 	public static final int EOF = 0;
 
+	/**
+	 * 当前字符
+	 */
 	private long character;
 	/**
 	 * 是否结尾 End of stream
@@ -68,6 +71,7 @@ public class JSONTokener extends ReaderWrapper {
 	 * 是否使用前一个字符
 	 */
 	private boolean usePrevious;
+	private boolean ignoreZeroWithChar;
 
 	// ------------------------------------------------------------------------------------ Constructor start
 
@@ -75,27 +79,30 @@ public class JSONTokener extends ReaderWrapper {
 	 * 从InputStream中构建，使用UTF-8编码
 	 *
 	 * @param inputStream InputStream
+	 * @param ignoreZeroWithChar 是否忽略零宽字符
 	 * @throws JSONException JSON异常，包装IO异常
 	 */
-	public JSONTokener(final InputStream inputStream) throws JSONException {
-		this(IoUtil.toUtf8Reader(inputStream));
+	public JSONTokener(final InputStream inputStream, final boolean ignoreZeroWithChar) throws JSONException {
+		this(IoUtil.toUtf8Reader(inputStream), ignoreZeroWithChar);
 	}
 
 	/**
 	 * 从字符串中构建
 	 *
-	 * @param s JSON字符串
+	 * @param s                  JSON字符串
+	 * @param ignoreZeroWithChar 是否忽略零宽字符
 	 */
-	public JSONTokener(final CharSequence s) {
-		this(new StringReader(Assert.notBlank(s).toString()));
+	public JSONTokener(final CharSequence s, final boolean ignoreZeroWithChar) {
+		this(new StringReader(Assert.notBlank(s).toString()), ignoreZeroWithChar);
 	}
 
 	/**
 	 * 从Reader中构建
 	 *
-	 * @param reader Reader
+	 * @param reader             Reader
+	 * @param ignoreZeroWithChar 是否忽略零宽字符
 	 */
-	public JSONTokener(final Reader reader) {
+	public JSONTokener(final Reader reader, final boolean ignoreZeroWithChar) {
 		super(IoUtil.toMarkSupport(Assert.notNull(reader)));
 		this.eof = false;
 		this.usePrevious = false;
@@ -103,6 +110,7 @@ public class JSONTokener extends ReaderWrapper {
 		this.index = 0;
 		this.character = 1;
 		this.line = 1;
+		this.ignoreZeroWithChar = ignoreZeroWithChar;
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
 
@@ -132,8 +140,8 @@ public class JSONTokener extends ReaderWrapper {
 	 * 检查是否到了结尾<br>
 	 * 如果读取完毕后还有未读的字符，报错
 	 */
-	public void checkEnd(){
-		if(EOF != nextClean()){
+	public void checkEnd() {
+		if (EOF != nextClean()) {
 			throw syntaxError("Invalid JSON, Unread data after end.");
 		}
 	}
@@ -160,34 +168,14 @@ public class JSONTokener extends ReaderWrapper {
 	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public char next() throws JSONException {
-		int c;
-		if (this.usePrevious) {
-			this.usePrevious = false;
-			c = this.previous;
-		} else {
-			try {
-				c = read();
-			} catch (final IOException exception) {
-				throw new JSONException(exception);
+		char c;
+		while(true){
+			c = _next();
+			if(this.ignoreZeroWithChar && CharUtil.isZeroWidthChar(c)){
+				continue;
 			}
-
-			if (c <= EOF) { // End of stream
-				this.eof = true;
-				c = EOF;
-			}
+			return c;
 		}
-		this.index += 1;
-		if (this.previous == '\r') {
-			this.line += 1;
-			this.character = c == '\n' ? 0 : 1;
-		} else if (c == '\n') {
-			this.line += 1;
-			this.character = 0;
-		} else {
-			this.character += 1;
-		}
-		this.previous = (char) c;
-		return this.previous;
 	}
 
 	/**
@@ -291,8 +279,8 @@ public class JSONTokener extends ReaderWrapper {
 	/**
 	 * 获取下一个冒号，非冒号则抛出异常
 	 *
-	 * @throws JSONException 非冒号字符
 	 * @return 冒号字符
+	 * @throws JSONException 非冒号字符
 	 */
 	public char nextColon() throws JSONException {
 		final char c = nextClean();
@@ -411,6 +399,43 @@ public class JSONTokener extends ReaderWrapper {
 	@Override
 	public String toString() {
 		return " at " + this.index + " [character " + this.character + " line " + this.line + "]";
+	}
+
+	/**
+	 * 获得源字符串中的下一个字符
+	 *
+	 * @return 下一个字符, or 0 if past the end of the source string.
+	 * @throws JSONException JSON异常，包装IO异常
+	 */
+	private char _next() throws JSONException {
+		int c;
+		if (this.usePrevious) {
+			this.usePrevious = false;
+			c = this.previous;
+		} else {
+			try {
+				c = read();
+			} catch (final IOException exception) {
+				throw new JSONException(exception);
+			}
+
+			if (c <= EOF) { // End of stream
+				this.eof = true;
+				c = EOF;
+			}
+		}
+		this.index += 1;
+		if (this.previous == '\r') {
+			this.line += 1;
+			this.character = c == '\n' ? 0 : 1;
+		} else if (c == '\n') {
+			this.line += 1;
+			this.character = 0;
+		} else {
+			this.character += 1;
+		}
+		this.previous = (char) c;
+		return this.previous;
 	}
 
 	/**

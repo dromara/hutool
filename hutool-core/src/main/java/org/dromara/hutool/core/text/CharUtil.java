@@ -313,6 +313,28 @@ public class CharUtil implements CharPool {
 	}
 
 	/**
+	 * 是否为零宽字符
+	 *
+	 * @param c 字符
+	 * @return 是否为零宽字符
+	 */
+	public static boolean isZeroWidthChar(final char c) {
+		switch (c) {
+			case '\u200B': // 零宽空格
+			case '\u200C': // 零宽非换行空格
+			case '\u200D': // 零宽连接符
+			case '\uFEFF': // 零宽无断空格
+			case '\u2060': // 零宽连字符
+			case '\u2063': // 零宽不连字符
+			case '\u2064': // 零宽连字符
+			case '\u2065': // 零宽不连字符
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
 	 * 比较两个字符是否相同
 	 *
 	 * @param c1              字符1
