@@ -219,7 +219,7 @@ public class DateUtil {
 		return formatDate(new DateTime());
 	}
 
-	// -------------------------------------------------------------- Part of Date start
+	// region ----- Part of Date start
 
 	/**
 	 * 获得年的部分
@@ -497,7 +497,7 @@ public class DateUtil {
 	public static int thisMillisecond() {
 		return millisecond(now());
 	}
-	// -------------------------------------------------------------- Part of Date end
+	// endregion
 
 	/**
 	 * 获得指定日期年份和季节<br>

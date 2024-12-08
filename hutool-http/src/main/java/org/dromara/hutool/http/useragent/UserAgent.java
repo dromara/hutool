@@ -209,4 +209,17 @@ public class UserAgent implements Serializable {
 		this.engineVersion = engineVersion;
 	}
 
+	@Override
+	public String toString() {
+		return "UserAgent{" +
+				"mobile=" + mobile +
+				", browser=" + browser +
+				", version='" + version + '\'' +
+				", platform=" + platform +
+				", os=" + os +
+				", osVersion='" + osVersion + '\'' +
+				", engine=" + engine +
+				", engineVersion='" + engineVersion + '\'' +
+				'}';
+	}
 }
