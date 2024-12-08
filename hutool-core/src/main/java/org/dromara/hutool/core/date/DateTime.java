@@ -142,7 +142,7 @@ public class DateTime extends Date {
 		return new DateTime();
 	}
 
-	// -------------------------------------------------------------------- Constructor start
+	// region ----- Constructors
 
 	/**
 	 * 当前时间
@@ -332,7 +332,7 @@ public class DateTime extends Date {
 	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final PositionDateParser dateParser) {
-		this(dateStr, dateParser, SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, true));
+		this(dateStr, dateParser, SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, false));
 	}
 
 	/**
@@ -347,9 +347,9 @@ public class DateTime extends Date {
 		this(parse(dateStr, dateParser, lenient));
 	}
 
-	// -------------------------------------------------------------------- Constructor end
+	// endregion
 
-	// -------------------------------------------------------------------- offset start
+	// region ----- offset
 
 	/**
 	 * 调整日期和时间<br>
@@ -388,9 +388,9 @@ public class DateTime extends Date {
 
 		return ObjUtil.clone(this).setTimeInternal(cal.getTimeInMillis());
 	}
-	// -------------------------------------------------------------------- offset end
+	// endregion
 
-	// -------------------------------------------------------------------- Part of Date start
+	// region ----- Part of Date
 
 	/**
 	 * 获得日期的某个部分<br>
@@ -658,7 +658,7 @@ public class DateTime extends Date {
 		final int dayOfWeek = dayOfWeek();
 		return Calendar.SATURDAY == dayOfWeek || Calendar.SUNDAY == dayOfWeek;
 	}
-	// -------------------------------------------------------------------- Part of Date end
+	// endregion
 
 	/**
 	 * 是否闰年
@@ -1107,14 +1107,7 @@ public class DateTime extends Date {
 	 * @return {@link Calendar}
 	 */
 	private static Calendar parse(final CharSequence dateStr, final PositionDateParser parser, final boolean lenient) {
-		Assert.notNull(parser, "Parser or DateFromat must be not null !");
-		Assert.notBlank(dateStr, "Date String must be not blank !");
-
-		final Calendar calendar = CalendarUtil.parse(dateStr, lenient, parser);
-		if (null == calendar) {
-			throw new DateException("Parse [{}] with format [{}] error!", dateStr, parser.getPattern());
-		}
-
+		final Calendar calendar = CalendarUtil.parse(dateStr, parser, lenient);
 		//noinspection MagicConstant
 		calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
 		return calendar;

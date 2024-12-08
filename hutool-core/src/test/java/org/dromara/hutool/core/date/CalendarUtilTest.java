@@ -37,8 +37,8 @@ public class CalendarUtilTest {
 	@Test
 	public void parseTest(){
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
-			final Calendar calendar = CalendarUtil.parse("2021-09-27 00:00:112323", false,
-				DateFormatPool.NORM_DATETIME_FORMAT);
+			final Calendar calendar = CalendarUtil.parse("2021-09-27 00:00:112323",
+				DateFormatPool.NORM_DATETIME_FORMAT, false);
 
 			// https://github.com/dromara/hutool/issues/1849
 			// 在使用严格模式时，秒不正确，抛出异常

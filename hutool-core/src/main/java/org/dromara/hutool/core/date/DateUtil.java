@@ -26,6 +26,7 @@ import org.dromara.hutool.core.date.format.parser.RegisterDateParser;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
+import org.dromara.hutool.core.util.SystemUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;
@@ -1956,7 +1957,24 @@ public class DateUtil {
 	 * @return {@link SimpleDateFormat}
 	 * @since 5.5.5
 	 */
-	public static SimpleDateFormat newSimpleFormat(final String pattern, Locale locale, final TimeZone timeZone) {
+	public static SimpleDateFormat newSimpleFormat(final String pattern,
+												   final Locale locale, final TimeZone timeZone) {
+		return newSimpleFormat(pattern, locale, timeZone,
+			SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, false));
+	}
+
+	/**
+	 * 创建{@link SimpleDateFormat}，注意此对象非线程安全！<br>
+	 * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
+	 *
+	 * @param pattern  表达式
+	 * @param locale   {@link Locale}，{@code null}表示默认
+	 * @param timeZone {@link TimeZone}，{@code null}表示默认
+	 * @param lenient  是否宽松模式
+	 * @return {@link SimpleDateFormat}
+	 */
+	public static SimpleDateFormat newSimpleFormat(final String pattern,
+												   Locale locale, final TimeZone timeZone, final boolean lenient) {
 		if (null == locale) {
 			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
@@ -1964,7 +1982,7 @@ public class DateUtil {
 		if (null != timeZone) {
 			format.setTimeZone(timeZone);
 		}
-		format.setLenient(false);
+		format.setLenient(lenient);
 		return format;
 	}
 

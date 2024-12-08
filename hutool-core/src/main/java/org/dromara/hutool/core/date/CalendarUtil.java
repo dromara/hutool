@@ -785,19 +785,26 @@ public class CalendarUtil {
 	 * 使用指定{@link DateParser}解析字符串为{@link Calendar}
 	 *
 	 * @param str     日期字符串
-	 * @param lenient 是否宽容模式
 	 * @param parser  {@link DateParser}
-	 * @return 解析后的 {@link Calendar}，解析失败返回{@code null}
-	 * @since 5.7.14
+	 * @param lenient 是否宽容模式
+	 * @return 解析后的 {@link Calendar}，解析失败抛出异常
+	 * @throws DateException 解析失败抛出此异常
 	 */
-	public static Calendar parse(final CharSequence str, final boolean lenient, final PositionDateParser parser) {
+	public static Calendar parse(final CharSequence str, final PositionDateParser parser,
+								 final boolean lenient) throws DateException{
 		Assert.notBlank(str, "Date str must be not blank!");
 		Assert.notNull(parser, "Parser must be not null!");
 		final Calendar calendar = Calendar.getInstance(parser.getTimeZone(), parser.getLocale());
 		calendar.clear();
 		calendar.setLenient(lenient);
 
-		return parser.parse(str.toString(), new ParsePosition(0), calendar) ? calendar : null;
+		final ParsePosition position = new ParsePosition(0);
+		if (parser.parse(str.toString(), position, calendar)) {
+			return calendar;
+		}
+
+		throw new DateException("Parse [{}] with format [{}] error, at: {}",
+			str, parser.getPattern(), position.getErrorIndex());
 	}
 	// endregion
 
