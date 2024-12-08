@@ -792,19 +792,8 @@ public class CalendarUtil {
 	 */
 	public static Calendar parse(final CharSequence str, final PositionDateParser parser,
 								 final boolean lenient) throws DateException{
-		Assert.notBlank(str, "Date str must be not blank!");
 		Assert.notNull(parser, "Parser must be not null!");
-		final Calendar calendar = Calendar.getInstance(parser.getTimeZone(), parser.getLocale());
-		calendar.clear();
-		calendar.setLenient(lenient);
-
-		final ParsePosition position = new ParsePosition(0);
-		if (parser.parse(str.toString(), position, calendar)) {
-			return calendar;
-		}
-
-		throw new DateException("Parse [{}] with format [{}] error, at: {}",
-			str, parser.getPattern(), position.getErrorIndex());
+		return parser.parseCalendar(str, null, lenient);
 	}
 	// endregion
 

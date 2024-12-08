@@ -244,16 +244,11 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	}
 
 	@Override
-	public Date parse(final CharSequence source, final ParsePosition pos) {
-		// timing tests indicate getting new instance is 19% faster than cloning
-		final Calendar cal = Calendar.getInstance(timeZone, locale);
-		cal.clear();
+	public boolean parse(final CharSequence source, ParsePosition pos, final Calendar calendar) {
+		if(null == pos){
+			pos = new ParsePosition(0);
+		}
 
-		return parse(source, pos, cal) ? cal.getTime() : null;
-	}
-
-	@Override
-	public boolean parse(final CharSequence source, final ParsePosition pos, final Calendar calendar) {
 		final ListIterator<StrategyAndWidth> lt = patterns.listIterator();
 		while (lt.hasNext()) {
 			final StrategyAndWidth strategyAndWidth = lt.next();

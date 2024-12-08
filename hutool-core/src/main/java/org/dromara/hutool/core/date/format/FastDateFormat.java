@@ -367,11 +367,6 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 	}
 
 	@Override
-	public Date parse(final CharSequence source, final ParsePosition pos) {
-		return parser.parse(source, pos);
-	}
-
-	@Override
 	public boolean parse(final CharSequence source, final ParsePosition pos, final Calendar calendar) {
 		return parser.parse(source, pos, calendar);
 	}

@@ -744,24 +744,6 @@ public class DateUtil {
 	}
 
 	/**
-	 * 将特定格式的日期转换为Date对象
-	 *
-	 * @param dateStr 特定格式的日期
-	 * @param format  格式，例如yyyy-MM-dd
-	 * @param locale  区域信息
-	 * @return 日期对象
-	 * @since 4.5.18
-	 */
-	public static DateTime parse(final CharSequence dateStr, final String format, final Locale locale) {
-		final DateFormatManager formatManager = DateFormatManager.getInstance();
-		if (formatManager.isCustomFormat(format)) {
-			// 自定义格式化器忽略Locale
-			return new DateTime(formatManager.parse(dateStr, format));
-		}
-		return new DateTime(dateStr, DateUtil.newSimpleFormat(format, locale, null));
-	}
-
-	/**
 	 * 通过给定的日期格式解析日期时间字符串。<br>
 	 * 传入的日期格式会逐个尝试，直到解析成功，返回{@link DateTime}对象，否则抛出{@link DateException}异常。
 	 *
@@ -1936,6 +1918,16 @@ public class DateUtil {
 	}
 
 	/**
+	 * 获取全局参数，是否日期解析宽容模式，未定义时返回false<br>
+	 * 通过系统参数{@code hutool.date.lenient}定义
+	 *
+	 * @return 是否日期解析宽容模式
+	 */
+	public static boolean isGlobalLenient() {
+		return SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, false);
+	}
+
+	/**
 	 * 创建{@link SimpleDateFormat}，注意此对象非线程安全！<br>
 	 * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
 	 *
@@ -1959,8 +1951,7 @@ public class DateUtil {
 	 */
 	public static SimpleDateFormat newSimpleFormat(final String pattern,
 												   final Locale locale, final TimeZone timeZone) {
-		return newSimpleFormat(pattern, locale, timeZone,
-			SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, false));
+		return newSimpleFormat(pattern, locale, timeZone, isGlobalLenient());
 	}
 
 	/**

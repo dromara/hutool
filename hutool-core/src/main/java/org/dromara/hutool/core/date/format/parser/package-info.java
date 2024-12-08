@@ -17,10 +17,10 @@
 /**
  * 提供日期解析相关封装，主要包括：
  * <pre>
- *                  DateParser
- *                   /    \
- *     FastDateParser     RegisterDateParser
- *   （根据日期格式解析）   （根据注册的模式匹配解析）
+ *                            DateParser
+ *             /                  |                   \
+ *     FastDateParser     RegisterDateParser     RegexDateParser
+ *   （根据日期格式解析）   （根据注册的模式匹配解析） （通过预定义正则解析）
  * </pre>
  *
  * @author looly

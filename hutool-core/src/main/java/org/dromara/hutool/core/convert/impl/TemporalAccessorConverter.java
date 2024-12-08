@@ -138,7 +138,7 @@ public class TemporalAccessorConverter extends AbstractConverter {
 		}
 
 		final Instant instant;
-		ZoneId zoneId = null;
+		final ZoneId zoneId;
 		if (null != this.format) {
 			final DateTimeFormatter formatter = TimeUtil.ofPattern(this.format);
 

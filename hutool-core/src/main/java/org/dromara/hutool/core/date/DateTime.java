@@ -16,15 +16,14 @@
 
 package org.dromara.hutool.core.date;
 
+import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.date.format.DatePrinter;
 import org.dromara.hutool.core.date.format.FastDateFormat;
-import org.dromara.hutool.core.date.format.DateFormatManager;
 import org.dromara.hutool.core.date.format.parser.DateParser;
 import org.dromara.hutool.core.date.format.parser.PositionDateParser;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.core.util.SystemUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -297,9 +296,7 @@ public class DateTime extends Date {
 	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final String format) {
-		this(DateFormatManager.getInstance().isCustomFormat(format)
-				? DateFormatManager.getInstance().parse(dateStr, format)
-				: parse(dateStr, DateUtil.newSimpleFormat(format)));
+		this(parse(dateStr, format));
 	}
 
 	/**
@@ -332,7 +329,7 @@ public class DateTime extends Date {
 	 * @see DateFormatPool
 	 */
 	public DateTime(final CharSequence dateStr, final PositionDateParser dateParser) {
-		this(dateStr, dateParser, SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, false));
+		this(dateStr, dateParser, DateUtil.isGlobalLenient());
 	}
 
 	/**
@@ -1080,6 +1077,20 @@ public class DateTime extends Date {
 	 * 转换字符串为Date
 	 *
 	 * @param dateStr    日期字符串
+	 * @param format 格式字符串
+	 * @return {@link Date}
+	 */
+	private static Date parse(final CharSequence dateStr, final String format) {
+		final DateFormatManager formatManager = DateFormatManager.getInstance();
+		return formatManager.isCustomFormat(format)
+			? formatManager.parse(dateStr, format)
+			: parse(dateStr, DateUtil.newSimpleFormat(format));
+	}
+
+	/**
+	 * 转换字符串为Date
+	 *
+	 * @param dateStr    日期字符串
 	 * @param dateFormat {@link SimpleDateFormat}
 	 * @return {@link Date}
 	 */
@@ -1099,21 +1110,6 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转换字符串为Date
-	 *
-	 * @param dateStr 日期字符串
-	 * @param parser  {@link FastDateFormat}
-	 * @param lenient 是否宽容模式
-	 * @return {@link Calendar}
-	 */
-	private static Calendar parse(final CharSequence dateStr, final PositionDateParser parser, final boolean lenient) {
-		final Calendar calendar = CalendarUtil.parse(dateStr, parser, lenient);
-		//noinspection MagicConstant
-		calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
-		return calendar;
-	}
-
-	/**
 	 * 设置日期时间
 	 *
 	 * @param time 日期时间毫秒
@@ -1122,5 +1118,20 @@ public class DateTime extends Date {
 	private DateTime setTimeInternal(final long time) {
 		super.setTime(time);
 		return this;
+	}
+
+	/**
+	 * 转换字符串为Date
+	 *
+	 * @param dateStr 日期字符串
+	 * @param parser  {@link FastDateFormat}
+	 * @param lenient 是否宽容模式
+	 * @return {@link Calendar}
+	 */
+	private static Calendar parse(final CharSequence dateStr, final PositionDateParser parser, final boolean lenient) {
+		final Calendar calendar = parser.parseCalendar(dateStr, null, lenient);
+		//noinspection MagicConstant
+		calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
+		return calendar;
 	}
 }
