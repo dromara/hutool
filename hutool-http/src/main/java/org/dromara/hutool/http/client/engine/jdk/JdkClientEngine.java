@@ -16,7 +16,6 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
-import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -96,7 +95,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 		} catch (final IOException e) {
 			// 出错后关闭连接
 			IoUtil.closeQuietly(conn);
-			throw new IORuntimeException(e);
+			throw new HttpException(e);
 		}
 
 		// 自定义重定向

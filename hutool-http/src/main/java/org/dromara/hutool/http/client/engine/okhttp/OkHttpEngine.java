@@ -18,9 +18,9 @@ package org.dromara.hutool.http.client.engine.okhttp;
 
 import okhttp3.OkHttpClient;
 import okhttp3.internal.http.HttpMethod;
-import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.RequestContext;
@@ -153,7 +153,7 @@ public class OkHttpEngine extends AbstractClientEngine {
 		try {
 			response = client.newCall(buildRequest(message)).execute();
 		} catch (final IOException e) {
-			throw new IORuntimeException(e);
+			throw new HttpException(e);
 		}
 
 		// 自定义重定向
