@@ -169,7 +169,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public void init() {
 		// issue#IB69U8 如果用户传入Session对象，则不能使用配置初始化，而是尝试重新连接
-		if(StrUtil.isEmpty(this.ftpConfig.getHost()) && null != this.session){
+		if(null != this.session){
 			try {
 				this.session.connect((int) this.ftpConfig.getConnectionTimeout());
 			} catch (JSchException e) {
