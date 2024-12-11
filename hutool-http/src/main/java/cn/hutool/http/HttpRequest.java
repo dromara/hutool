@@ -1198,25 +1198,27 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			}
 		}
 
-		// 初始化URL
-		urlWithParamIfGet();
-		// 初始化 connection
-		initConnection();
-		// 发送请求
-		send();
-
-		// 手动实现重定向
-		HttpResponse httpResponse = sendRedirectIfPossible(isAsync);
-
-		// 获取响应
-		if (null == httpResponse) {
-			httpResponse = new HttpResponse(this.httpConnection, this.config, this.charset, isAsync, isIgnoreResponseBody());
-		}
-
-		// 拦截响应
-		if (null != responseInterceptors) {
-			for (HttpInterceptor<HttpResponse> interceptor : responseInterceptors) {
-				interceptor.process(httpResponse);
+		try{
+			// 初始化URL
+			urlWithParamIfGet();
+			// 初始化 connection
+			initConnection();
+			// 发送请求
+			send();
+	
+			// 手动实现重定向
+			HttpResponse httpResponse = sendRedirectIfPossible(isAsync);
+	
+			// 获取响应
+			if (null == httpResponse) {
+				httpResponse = new HttpResponse(this.httpConnection, this.config, this.charset, isAsync, isIgnoreResponseBody());
+			}
+		}finally{
+			// 拦截响应
+			if (null != responseInterceptors) {
+				for (HttpInterceptor<HttpResponse> interceptor : responseInterceptors) {
+					interceptor.process(httpResponse);
+				}
 			}
 		}
 
