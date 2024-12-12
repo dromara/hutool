@@ -110,7 +110,7 @@ Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu
 
 [📘中文备用文档](https://plus.hutool.cn/)
 
-[📙参考API](https://apidoc.gitee.com/dromara/hutool/)
+[📙参考API](https://plus.hutool.cn/apidocs/)
 
 [🎬视频介绍](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
 

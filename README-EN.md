@@ -119,7 +119,7 @@ Each module can be introduced individually, or all modules can be introduced by 
 
 [📘Chinese back-up documentation](https://plus.hutool.cn/)
 
-[📙API](https://apidoc.gitee.com/dromara/hutool/)
+[📙API](https://plus.hutool.cn/apidocs/)
 
 [🎬Video](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
 
