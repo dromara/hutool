@@ -80,7 +80,7 @@ public class ValidationUtil {
 		if (CollUtil.isNotEmpty(constraintViolations)) {
 			final ConstraintViolation<Object> constraint = constraintViolations.iterator().next();
 			if (StrUtil.contains(constraint.getMessageTemplate(), "jakarta.validation.constraints")) {
-				throw new ValidationException(constraint.getPropertyPath() + constraint.getMessage());
+				throw new ValidationException(constraint.getPropertyPath() + " " + constraint.getMessage());
 			} else {
 				throw new ValidationException(constraint.getMessage());
 			}
