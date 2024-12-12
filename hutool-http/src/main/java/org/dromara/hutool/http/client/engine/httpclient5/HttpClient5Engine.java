@@ -18,7 +18,6 @@ package org.dromara.hutool.http.client.engine.httpclient5;
 
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
@@ -34,7 +33,6 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
@@ -42,10 +40,8 @@ import org.dromara.hutool.http.client.ApacheHttpClientConfig;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
-import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
-import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.proxy.ProxyInfo;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
@@ -80,7 +76,7 @@ public class HttpClient5Engine extends AbstractClientEngine {
 	public Response send(final Request message) {
 		initEngine();
 
-		final ClassicHttpRequest request = buildRequest(message);
+		final ClassicHttpRequest request = ClassicHttpRequestBuilder.INSTANCE.build(message);
 		final ClassicHttpResponse response;
 		try {
 			//return this.engine.execute(request, (response -> new HttpClient5Response(response, message)));
@@ -144,39 +140,6 @@ public class HttpClient5Engine extends AbstractClientEngine {
 	}
 
 	/**
-	 * 构建请求体
-	 *
-	 * @param message {@link Request}
-	 * @return {@link ClassicHttpRequest}
-	 */
-	@SuppressWarnings("ConstantConditions")
-	private static ClassicHttpRequest buildRequest(final Request message) {
-		final UrlBuilder url = message.handledUrl();
-		Assert.notNull(url, "Request URL must be not null!");
-
-		final HttpUriRequestBase request = new HttpUriRequestBase(message.method().name(), url.toURI());
-
-		// 自定义单次请求配置
-		request.setConfig(buildRequestConfig(message));
-
-		// 填充自定义头
-		request.setHeaders(toHeaderList(message.headers()).toArray(new Header[0]));
-
-		// 填充自定义消息体
-		final HttpBody body = message.handledBody();
-		if (null != body) {
-			request.setEntity(new HttpClient5BodyEntity(
-				// 用户自定义的内容类型
-				message.header(HeaderName.CONTENT_TYPE),
-				message.contentEncoding(),
-				message.isChunked(),
-				body));
-		}
-
-		return request;
-	}
-
-	/**
 	 * 获取默认头列表
 	 *
 	 * @return 默认头列表
@@ -232,24 +195,6 @@ public class HttpClient5Engine extends AbstractClientEngine {
 		}
 
 		return connectionManagerBuilder.build();
-	}
-
-	/**
-	 * 构建请求配置，包括重定向配置
-	 *
-	 * @param request 请求
-	 * @return {@link RequestConfig}
-	 */
-	private static RequestConfig buildRequestConfig(final Request request) {
-		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
-		final int maxRedirects = request.maxRedirects();
-		if (maxRedirects > 0) {
-			requestConfigBuilder.setMaxRedirects(maxRedirects);
-		} else {
-			requestConfigBuilder.setRedirectsEnabled(false);
-		}
-
-		return requestConfigBuilder.build();
 	}
 
 	/**

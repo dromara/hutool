@@ -19,9 +19,8 @@ package org.dromara.hutool.http.client.engine.jdk;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
-import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
+import org.dromara.hutool.http.client.cookie.CookieStoreSpi;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -42,15 +41,17 @@ import java.util.Map;
  * @author Looly
  * @since 6.0.0
  */
-public class JdkCookieManager implements Closeable {
+public class JdkCookieManager {
 
 	private CookieManager cookieManager;
 
 	/**
 	 * 构造
+	 *
+	 * @param cookieStore {@link CookieStoreSpi}
 	 */
-	public JdkCookieManager() {
-		this(new CookieManager(new JdkCookieStore(new InMemoryCookieStore()), CookiePolicy.ACCEPT_ALL));
+	public JdkCookieManager(final CookieStoreSpi cookieStore) {
+		this(new CookieManager(new JdkCookieStore(cookieStore), CookiePolicy.ACCEPT_ALL));
 	}
 
 	/**
@@ -60,20 +61,6 @@ public class JdkCookieManager implements Closeable {
 	 */
 	public JdkCookieManager(final CookieManager raw) {
 		this.cookieManager = raw;
-	}
-
-	/**
-	 * 是否启用Cookie管理
-	 *
-	 * @return 是否启用Cookie管理
-	 */
-	public boolean isEnable() {
-		return null != this.cookieManager;
-	}
-
-	@Override
-	public void close() {
-		this.cookieManager = null;
 	}
 
 	/**

@@ -17,22 +17,17 @@
 package org.dromara.hutool.http.client.engine.jdk;
 
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.net.url.UrlUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
-import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.RequestContext;
 import org.dromara.hutool.http.client.body.HttpBody;
+import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
 import org.dromara.hutool.http.meta.Method;
-import org.dromara.hutool.http.proxy.ProxyInfo;
 
 import java.io.IOException;
-import java.net.Proxy;
-import java.net.URL;
 
 /**
  * 基于JDK的UrlConnection的Http客户端引擎实现
@@ -63,6 +58,7 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 	@Override
 	public JdkHttpResponse send(final Request message) {
+		initEngine();
 		return doSend(new RequestContext(message));
 	}
 
@@ -84,12 +80,24 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 	@Override
 	protected void initEngine() {
-		this.cookieManager = (null != this.config && this.config.isUseCookieManager()) ? new JdkCookieManager() : new JdkCookieManager(null);
+		if(null != this.cookieManager){
+			return;
+		}
+		if(null != this.config && this.config.isUseCookieManager()){
+			this.cookieStore = new InMemoryCookieStore();
+			this.cookieManager = new JdkCookieManager(this.cookieStore);
+		}
 	}
 
+	/**
+	 * 发送请求
+	 *
+	 * @param context 请求上下文
+	 * @return 响应对象
+	 */
 	private JdkHttpResponse doSend(final RequestContext context) {
 		final Request message = context.getRequest();
-		final JdkHttpConnection conn = buildConn(message);
+		final JdkHttpConnection conn = new JdkRequestBuilder(this.config, this.cookieManager).build(message);
 		try {
 			doSend(conn, message);
 		} catch (final IOException e) {
@@ -145,53 +153,5 @@ public class JdkClientEngine extends AbstractClientEngine {
 
 		// 非Rest简单GET请求
 		conn.connect();
-	}
-
-	/**
-	 * 构建{@link JdkHttpConnection}
-	 *
-	 * @param message {@link Request}消息
-	 * @return {@link JdkHttpConnection}
-	 */
-	private JdkHttpConnection buildConn(final Request message) {
-		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
-
-		final URL url = message.handledUrl().toURL();
-		Proxy proxy = null;
-		final ProxyInfo proxyInfo = config.getProxy();
-		if (null != proxyInfo) {
-			proxy = proxyInfo.selectFirst(UrlUtil.toURI(url));
-		}
-		final JdkHttpConnection conn = JdkHttpConnection
-			.of(url, proxy)
-			.setConnectTimeout(config.getConnectionTimeout())
-			.setReadTimeout(config.getReadTimeout())
-			.setMethod(message.method())//
-			.setSSLInfo(config.getSslInfo())
-			// 关闭自动重定向，手动处理重定向
-			.setInstanceFollowRedirects(false)
-			.setDisableCache(config.isDisableCache())
-			// 覆盖默认Header
-			.header(message.headers(), true);
-
-		if (!message.method().isIgnoreBody()) {
-			// 在允许发送body的情况下，如果用户自定义了Content-Length，则使用用户定义的值
-			final long contentLength = message.contentLength();
-			if (contentLength > 0) {
-				// 固定请求长度
-				conn.setFixedLengthStreamingMode(contentLength);
-			} else if (message.isChunked()) {
-				conn.setChunkedStreamingMode(4096);
-			}
-		}
-
-		// Cookie管理
-		if (null == message.header(HeaderName.COOKIE) && null != this.cookieManager) {
-			// 用户没有自定义Cookie，则读取Cookie管理器中的信息并附带到请求中
-			// 不覆盖模式回填Cookie头，这样用户定义的Cookie将优先
-			conn.header(this.cookieManager.loadForRequest(conn), false);
-		}
-
-		return conn;
 	}
 }

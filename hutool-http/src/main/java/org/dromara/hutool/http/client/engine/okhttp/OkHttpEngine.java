@@ -17,7 +17,6 @@
 package org.dromara.hutool.http.client.engine.okhttp;
 
 import okhttp3.OkHttpClient;
-import okhttp3.internal.http.HttpMethod;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
@@ -25,7 +24,6 @@ import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.RequestContext;
 import org.dromara.hutool.http.client.Response;
-import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
@@ -149,9 +147,11 @@ public class OkHttpEngine extends AbstractClientEngine {
 	 */
 	private Response doSend(final RequestContext context) {
 		final Request message = context.getRequest();
+
+		final okhttp3.Request request = OkHttpRequestBuilder.INSTANCE.build(message);
 		final okhttp3.Response response;
 		try {
-			response = client.newCall(buildRequest(message)).execute();
+			response = client.newCall(request).execute();
 		} catch (final IOException e) {
 			throw new HttpException(e);
 		}
@@ -176,32 +176,6 @@ public class OkHttpEngine extends AbstractClientEngine {
 		}
 
 		return new OkHttpResponse(response, message);
-	}
-
-	/**
-	 * 构建请求体
-	 *
-	 * @param message {@link Request}
-	 * @return {@link okhttp3.Request}
-	 */
-	private static okhttp3.Request buildRequest(final Request message) {
-		final okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
-			.url(message.handledUrl().toURL());
-
-		// 填充方法
-		final String method = message.method().name();
-		final HttpBody body = message.handledBody();
-		if (null != body || HttpMethod.requiresRequestBody(method)) {
-			// okhttp中，POST等请求必须提供body，否则会抛异常，此处传空的OkHttpRequestBody
-			// 为了兼容支持rest请求，在此不区分是否为GET等方法，一律按照body是否有值填充，兼容
-			builder.method(method, new OkHttpRequestBody(body));
-		} else {
-			builder.method(method, null);
-		}
-
-		// 填充头信息
-		message.headers().forEach((key, values) -> values.forEach(value -> builder.addHeader(key, value)));
-		return builder.build();
 	}
 
 	/**

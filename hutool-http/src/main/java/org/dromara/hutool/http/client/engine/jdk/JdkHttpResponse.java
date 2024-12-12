@@ -133,7 +133,7 @@ public class JdkHttpResponse implements Response, Closeable {
 	 * @return Cookie列表
 	 */
 	public List<HttpCookie> getCookies() {
-		if (this.cookieManager.isEnable()) {
+		if (null != this.cookieManager) {
 			return this.cookieManager.getCookies(this.httpConnection);
 		}
 		return HttpCookie.parse(this.header(HeaderName.SET_COOKIE));

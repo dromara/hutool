@@ -23,15 +23,16 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.*;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
@@ -39,10 +40,8 @@ import org.dromara.hutool.http.client.ApacheHttpClientConfig;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
-import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
-import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.proxy.ProxyInfo;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
@@ -77,10 +76,9 @@ public class HttpClient4Engine extends AbstractClientEngine {
 	public Response send(final Request message) {
 		initEngine();
 
-		final HttpUriRequest request = buildRequest(message);
+		final HttpUriRequest request = HttpUriRequestBuilder.INSTANCE.build(message);
 		final CloseableHttpResponse response;
 		try {
-			//return this.engine.execute(request, response -> new HttpClient4Response(response, message));
 			response = this.engine.execute(request);
 		} catch (final IOException e) {
 			throw new HttpException(e);
@@ -124,7 +122,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
 
 		// 实例级别默认请求配置
-		clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
+		clientBuilder.setDefaultRequestConfig(buildDefaultRequestConfig(config));
 
 		// 缓存
 		if (config.isDisableCache()) {
@@ -144,40 +142,6 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		}
 
 		this.engine = clientBuilder.build();
-	}
-
-	/**
-	 * 构建请求体
-	 *
-	 * @param message {@link Request}
-	 * @return {@link HttpUriRequest}
-	 */
-	private static HttpUriRequest buildRequest(final Request message) {
-		final UrlBuilder url = message.handledUrl();
-		Assert.notNull(url, "Request URL must be not null!");
-
-		final RequestBuilder requestBuilder = RequestBuilder
-			.create(message.method().name())
-			.setUri(url.toURI());
-
-		// 自定义单次请求配置
-		requestBuilder.setConfig(buildRequestConfig(message));
-
-		// 填充自定义头
-		message.headers().forEach((k, v1) -> v1.forEach((v2) -> requestBuilder.addHeader(k, v2)));
-
-		// 填充自定义消息体
-		final HttpBody body = message.handledBody();
-		if (null != body) {
-			requestBuilder.setEntity(new HttpClient4BodyEntity(
-				// 用户自定义的内容类型
-				message.header(HeaderName.CONTENT_TYPE),
-				message.contentEncoding(),
-				message.isChunked(),
-				body));
-		}
-
-		return requestBuilder.build();
 	}
 
 	/**
@@ -230,30 +194,12 @@ public class HttpClient4Engine extends AbstractClientEngine {
 	}
 
 	/**
-	 * 构建请求配置，包括重定向
-	 *
-	 * @param request 请求
-	 * @return {@link RequestConfig}
-	 */
-	private static RequestConfig buildRequestConfig(final Request request) {
-		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
-		final int maxRedirects = request.maxRedirects();
-		if (maxRedirects > 0) {
-			requestConfigBuilder.setMaxRedirects(maxRedirects);
-		} else {
-			requestConfigBuilder.setRedirectsEnabled(false);
-		}
-
-		return requestConfigBuilder.build();
-	}
-
-	/**
 	 * 构建请求配置，包括连接请求超时和响应（读取）超时
 	 *
 	 * @param config {@link ClientConfig}
 	 * @return {@link RequestConfig}
 	 */
-	private static RequestConfig buildRequestConfig(final ClientConfig config) {
+	private static RequestConfig buildDefaultRequestConfig(final ClientConfig config) {
 		// 请求配置
 		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
 
