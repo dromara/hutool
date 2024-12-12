@@ -16,9 +16,9 @@
 
 package org.dromara.hutool.extra.validation;
 
-import org.dromara.hutool.core.collection.CollUtil;
-
 import jakarta.validation.*;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.text.StrPool;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Set;
@@ -80,7 +80,7 @@ public class ValidationUtil {
 		if (CollUtil.isNotEmpty(constraintViolations)) {
 			final ConstraintViolation<Object> constraint = constraintViolations.iterator().next();
 			if (StrUtil.contains(constraint.getMessageTemplate(), "jakarta.validation.constraints")) {
-				throw new ValidationException(constraint.getPropertyPath() + " " + constraint.getMessage());
+				throw new ValidationException(constraint.getPropertyPath() + StrPool.SPACE + constraint.getMessage());
 			} else {
 				throw new ValidationException(constraint.getMessage());
 			}

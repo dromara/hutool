@@ -25,6 +25,11 @@ package org.dromara.hutool.core.text;
  */
 public interface StrPool {
 	/**
+	 * 字符串常量：空格符 {@code " "}
+	 */
+	String SPACE = " ";
+
+	/**
 	 * 字符串常量：制表符 {@code "\t"}
 	 */
 	String TAB = "	";
