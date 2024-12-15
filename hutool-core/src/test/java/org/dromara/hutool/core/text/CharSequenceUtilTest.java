@@ -268,13 +268,13 @@ public class CharSequenceUtilTest {
 		assertEquals("中文", CharSequenceUtil.commonPrefix("中文english", "中文french"));
 
 		// { space * 10 } + "abc"
-		final String str1 = CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10) + "abc";
+		final String str1 = CharSequenceUtil.repeat(StrPool.SPACE, 10) + "abc";
 
 		// { space * 5 } + "efg"
-		final String str2 = CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 5) + "efg";
+		final String str2 = CharSequenceUtil.repeat(StrPool.SPACE, 5) + "efg";
 
 		// Expect common prefix: { space * 5 }
-		assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 5), CharSequenceUtil.commonPrefix(str1, str2));
+		assertEquals(CharSequenceUtil.repeat(StrPool.SPACE, 5), CharSequenceUtil.commonPrefix(str1, str2));
 	}
 
 	@Test
@@ -300,13 +300,13 @@ public class CharSequenceUtilTest {
 		assertEquals("中文", CharSequenceUtil.commonSuffix("english中文", "Korean中文"));
 
 		// "abc" + { space * 10 }
-		final String str1 = "abc" + CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10);
+		final String str1 = "abc" + CharSequenceUtil.repeat(StrPool.SPACE, 10);
 
 		// "efg" + { space * 15 }
-		final String str2 = "efg" + CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 15);
+		final String str2 = "efg" + CharSequenceUtil.repeat(StrPool.SPACE, 15);
 
 		// Expect common suffix: { space * 10 }
-		assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10), CharSequenceUtil.commonSuffix(str1, str2));
+		assertEquals(CharSequenceUtil.repeat(StrPool.SPACE, 10), CharSequenceUtil.commonSuffix(str1, str2));
 	}
 
 	@Test

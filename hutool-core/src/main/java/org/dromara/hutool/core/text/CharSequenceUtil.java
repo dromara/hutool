@@ -87,11 +87,6 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	public static final int INDEX_NOT_FOUND = Finder.INDEX_NOT_FOUND;
 
-	/**
-	 * 字符串常量：空格符 {@code " "}
-	 */
-	public static final String SPACE = " ";
-
 	// region toString
 
 	/**
@@ -2948,7 +2943,7 @@ public class CharSequenceUtil extends StrValidator {
 			return toStringOrNull(str);
 		}
 		if (isEmpty(padStr)) {
-			padStr = SPACE;
+			padStr = StrPool.SPACE;
 		}
 		final int strLen = str.length();
 		final int pads = size - strLen;
