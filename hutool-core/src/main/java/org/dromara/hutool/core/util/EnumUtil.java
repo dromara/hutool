@@ -90,6 +90,7 @@ public class EnumUtil {
 		return index >= 0 && index < enumConstants.length ? enumConstants[index] : null;
 	}
 
+	// region ----- fromString
 	/**
 	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}
 	 *
@@ -137,6 +138,7 @@ public class EnumUtil {
 	public static <E extends Enum<E>> E fromString(final Class<E> enumClass, final String value, final E defaultValue) {
 		return ObjUtil.defaultIfNull(fromStringQuietly(enumClass, value), defaultValue);
 	}
+	// endregion
 
 	/**
 	 * 模糊匹配转换为枚举，给定一个值，匹配枚举中定义的所有字段名（包括name属性），一旦匹配到返回这个枚举对象，否则返回null
@@ -247,6 +249,61 @@ public class EnumUtil {
 		return names;
 	}
 
+	// region ----- getBy
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
+	 *
+	 * @param condition 条件字段
+	 * @param value     条件字段值
+	 * @param <E>       枚举类型
+	 * @param <C>       字段类型
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 */
+	public static <E extends Enum<E>, C> E getBy(final SerFunction<E, C> condition, final C value) {
+		return getBy(condition, value, null);
+	}
+
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code defaultEnum}
+	 *
+	 * @param condition   条件字段
+	 * @param value       条件字段值
+	 * @param defaultEnum 条件找不到则返回结果使用这个
+	 * @param <C>         值类型
+	 * @param <E>         枚举类型
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 */
+	public static <E extends Enum<E>, C> E getBy(final SerFunction<E, C> condition,
+												 final C value,
+												 final E defaultEnum) {
+		if (null == condition) {
+			return null;
+		}
+		final Class<E> implClass = LambdaUtil.getRealClass(condition);
+		return getBy(implClass, condition, value, defaultEnum);
+	}
+
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code defaultEnum}
+	 *
+	 * @param enumClass   枚举类
+	 * @param condition   条件字段
+	 * @param value       条件字段值
+	 * @param defaultEnum 条件找不到则返回结果使用这个
+	 * @param <C>         值类型
+	 * @param <E>         枚举类型
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 */
+	public static <E extends Enum<E>, C> E getBy(final Class<E> enumClass,
+												 final SerFunction<E, C> condition,
+												 final C value,
+												 final E defaultEnum) {
+		if (null == condition) {
+			return null;
+		}
+		return getBy(enumClass, constant -> ObjUtil.equals(condition.apply(constant), value), defaultEnum);
+	}
+
 	/**
 	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
 	 *
@@ -281,40 +338,6 @@ public class EnumUtil {
 	}
 
 	/**
-	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
-	 *
-	 * @param condition 条件字段
-	 * @param value     条件字段值
-	 * @param <E>       枚举类型
-	 * @param <C>       字段类型
-	 * @return 对应枚举 ，获取不到时为 {@code null}
-	 */
-	public static <E extends Enum<E>, C> E getBy(final SerFunction<E, C> condition, final C value) {
-		return getBy(condition, value, null);
-	}
-
-	/**
-	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code defaultEnum}
-	 *
-	 * @param condition   条件字段
-	 * @param value       条件字段值
-	 * @param defaultEnum 条件找不到则返回结果使用这个
-	 * @param <C>         值类型
-	 * @param <E>         枚举类型
-	 * @return 对应枚举 ，获取不到时为 {@code null}
-	 */
-	public static <E extends Enum<E>, C> E getBy(final SerFunction<E, C> condition, final C value, final E defaultEnum) {
-		if (null == condition) {
-			return null;
-		}
-		final Class<E> implClass = LambdaUtil.getRealClass(condition);
-		return Arrays.stream(implClass.getEnumConstants())
-			.filter(constant -> ObjUtil.equals(condition.apply(constant), value))
-			.findAny()
-			.orElse(defaultEnum);
-	}
-
-	/**
 	 * 通过 某字段对应值 获取 枚举中另一字段值，获取不到时为 {@code null}
 	 *
 	 * @param field     你想要获取的字段
@@ -339,9 +362,10 @@ public class EnumUtil {
 			// 过滤
 			.filter(constant -> ObjUtil.equals(condition.apply(constant), value))
 			// 获取第一个并转换为结果
-			.findFirst().map(field)
+			.findAny().map(field)
 			.orElse(null);
 	}
+	// endregion
 
 	/**
 	 * 获取枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序<br>
