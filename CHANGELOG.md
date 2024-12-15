@@ -10,6 +10,7 @@
 * 【core   】      优化MAC地址正则（issue#IB95X4@Gitee）
 * 【json   】      JSON的getByPath方法新增更为通用的指定出参类型重载（pr#3814@Github）
 * 【core   】      DateUtil.parseUTC方法标记废弃，改名为parseISO8601（issue#IBB6I5@Gitee）
+* 【core   】      添加EnumUtil#getBy(Class, Func1, Object)方法（pr#1283@Gitee）
 
 ### 🐞Bug修复
 * 【crypto 】      修复JWTSignerUtil.createSigner中algorithmId未转换问题（issue#3806@Github）

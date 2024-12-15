@@ -260,11 +260,11 @@ public class EnumUtil {
 
 	/**
 	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
-	 * <p/>
+	 * <p>
 	 * {@link LambdaUtil#getRealClass(Func1)}} 是相对耗时的
 	 * 如果枚举值比较多,那么{@link EnumUtil#getBy(Func1, Object)} 方法
 	 * 大部分时间都是被{@link LambdaUtil#getRealClass(Func1)}}所消耗的
-	 * <br/>
+	 * <br>
 	 * 如果可以在编码过程中可以提供对应的枚举类 该方法与枚举的{@code Enum.values()}方法是差不多的。
 	 *
 	 * @param enumClass 枚举类， 为{@code null}返回{@code null}
