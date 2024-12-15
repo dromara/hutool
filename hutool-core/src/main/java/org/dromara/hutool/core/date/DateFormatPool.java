@@ -302,7 +302,9 @@ public class DateFormatPool {
 	 * JDK中日期时间格式 {@link FastDateFormat}：EEE MMM dd HH:mm:ss zzz yyyy
 	 */
 	public static final FastDateFormat JDK_DATETIME_FORMAT = FastDateFormat.getInstance(JDK_DATETIME_PATTERN, Locale.US);
+	// endregion
 
+	// region ----- ISO8601
 	/**
 	 * ISO8601日期时间：yyyy-MM-dd'T'HH:mm:ss<br>
 	 * 按照ISO8601规范，默认使用T分隔日期和时间，末尾不加Z表示当地时区
