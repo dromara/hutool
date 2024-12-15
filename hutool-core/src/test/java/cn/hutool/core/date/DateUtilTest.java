@@ -605,9 +605,9 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseUTCTest() {
+	public void parseISO8601Test() {
 		String dateStr1 = "2018-09-13T05:34:31Z";
-		DateTime dt = DateUtil.parseUTC(dateStr1);
+		DateTime dt = DateUtil.parseISO8601(dateStr1);
 
 		// parse方法支持UTC格式测试
 		final DateTime dt2 = DateUtil.parse(dateStr1);
@@ -622,12 +622,12 @@ public class DateUtilTest {
 		assertEquals("2018-09-13 13:34:31", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:32+0800";
-		dt = DateUtil.parseUTC(dateStr1);
+		dt = DateUtil.parseISO8601(dateStr1);
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		assertEquals("2018-09-13 13:34:32", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:33+08:00";
-		dt = DateUtil.parseUTC(dateStr1);
+		dt = DateUtil.parseISO8601(dateStr1);
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		assertEquals("2018-09-13 13:34:33", dateStr);
 
@@ -644,14 +644,14 @@ public class DateUtilTest {
 		assertEquals("2018-09-13 13:34:35", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:36.999+0800";
-		dt = DateUtil.parseUTC(dateStr1);
+		dt = DateUtil.parseISO8601(dateStr1);
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_MS_PATTERN);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 		dateStr = dt.toString(simpleDateFormat);
 		assertEquals("2018-09-13 13:34:36.999", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:37.999+08:00";
-		dt = DateUtil.parseUTC(dateStr1);
+		dt = DateUtil.parseISO8601(dateStr1);
 		dateStr = dt.toString(simpleDateFormat);
 		assertEquals("2018-09-13 13:34:37.999", dateStr);
 
@@ -676,19 +676,19 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseUTCTest2() {
+	public void parseUTCTest() {
 		// issue1503@Github
 		// 检查不同毫秒长度都可以正常匹配
 		String utcTime = "2021-03-30T12:56:51.3Z";
-		DateTime parse = DateUtil.parseUTC(utcTime);
+		DateTime parse = DateUtil.parseISO8601(utcTime);
 		assertEquals("2021-03-30 12:56:51", parse.toString());
 
 		utcTime = "2021-03-30T12:56:51.34Z";
-		parse = DateUtil.parseUTC(utcTime);
+		parse = DateUtil.parseISO8601(utcTime);
 		assertEquals("2021-03-30 12:56:51", parse.toString());
 
 		utcTime = "2021-03-30T12:56:51.345Z";
-		parse = DateUtil.parseUTC(utcTime);
+		parse = DateUtil.parseISO8601(utcTime);
 		assertEquals("2021-03-30 12:56:51", parse.toString());
 	}
 
@@ -994,7 +994,7 @@ public class DateUtilTest {
 
 	@SuppressWarnings("ConstantConditions")
 	@Test
-	public void parseISO8601Test() {
+	public void parseWithMilsTest() {
 		final String dt = "2020-06-03 12:32:12,333";
 		final DateTime parse = DateUtil.parse(dt);
 		assertEquals("2020-06-03 12:32:12", parse.toString());
