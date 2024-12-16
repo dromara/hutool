@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.cron.pattern;
-
-import org.dromara.hutool.cron.pattern.matcher.PatternMatcher;
-import org.dromara.hutool.cron.pattern.parser.PatternParser;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-public class IssueI7SMP7Test {
-	@Test
-	public void parseTest() {
-		final List<PatternMatcher> parse = PatternParser.parse("0 0 3 1 1 ? */1");
-		Assertions.assertNotNull(parse);
-	}
-}
+/**
+ * 模式构建器
+ *
+ * @author Looly
+ * @since 6.0.0
+ */
+package org.dromara.hutool.cron.pattern.builder;
