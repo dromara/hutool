@@ -232,7 +232,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param digit 小数位数
 	 * @return this
 	 */
-	public Column setDigit(final int digit) {
+	public Column setDigit(final Integer digit) {
 		this.digit = digit;
 		return this;
 	}
