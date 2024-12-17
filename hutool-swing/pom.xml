@@ -57,5 +57,12 @@
 			<version>${metadata-extractor.version}</version>
 			<optional>true</optional>
 		</dependency>
+		<!-- UI主题库 -->
+		<dependency>
+			<groupId>com.formdev</groupId>
+			<artifactId>flatlaf</artifactId>
+			<version>3.5.4</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

@@ -24,6 +24,6 @@ public class DesktopUtilTest {
 	@Test
 	@Disabled
 	public void browseTest() {
-		DesktopUtil.browse("https://www.hutool.club");
+		DesktopUtil.browse("https://hutool.cn");
 	}
 }
