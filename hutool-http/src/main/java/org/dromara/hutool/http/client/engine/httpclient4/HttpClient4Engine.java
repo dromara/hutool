@@ -23,7 +23,6 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -43,7 +42,6 @@ import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.cookie.InMemoryCookieStore;
 import org.dromara.hutool.http.client.engine.AbstractClientEngine;
 import org.dromara.hutool.http.proxy.ProxyInfo;
-import org.dromara.hutool.http.ssl.SSLInfo;
 
 import java.io.IOException;
 import java.net.PasswordAuthentication;
@@ -112,13 +110,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		final HttpClientBuilder clientBuilder = HttpClients.custom();
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ApacheHttpClientConfig::of);
 
-		// SSL配置
-		final SSLInfo sslInfo = config.getSslInfo();
-		if (null != sslInfo) {
-			clientBuilder.setSSLSocketFactory(buildSocketFactory(sslInfo));
-		}
-
-		// 连接配置，包括连接池
+		// 连接配置，包括SSL配置和连接池
 		clientBuilder.setConnectionManager(buildConnectionManager(config));
 
 		// 实例级别默认请求配置
@@ -136,7 +128,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		setProxy(clientBuilder, config);
 
 		// Cookie管理
-		if(config.isUseCookieManager()){
+		if (config.isUseCookieManager()) {
 			this.cookieStore = new InMemoryCookieStore();
 			clientBuilder.setDefaultCookieStore(new HttpClient4CookieStore(this.cookieStore));
 		}
@@ -156,36 +148,26 @@ public class HttpClient4Engine extends AbstractClientEngine {
 	}
 
 	/**
-	 * 支持SSL
-	 *
-	 * @return SSLConnectionSocketFactory
-	 */
-	private static SSLConnectionSocketFactory buildSocketFactory(final SSLInfo sslInfo) {
-		return new SSLConnectionSocketFactory(
-			sslInfo.getSslContext(),
-			sslInfo.getProtocols(),
-			null,
-			sslInfo.getHostnameVerifier());
-	}
-
-	/**
 	 * 构建连接池管理器
 	 *
 	 * @param config 配置
 	 * @return PoolingHttpClientConnectionManager
 	 */
 	private PoolingHttpClientConnectionManager buildConnectionManager(final ClientConfig config) {
-		final PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
+		final PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager(
+			// SSL配置，当config.getSslInfo()为null时，使用默认配置
+			ConnectionSocketFactoryRegistryBuilder.build(config.getSslInfo())
+		);
 
 		// 连接池配置
 		if (config instanceof ApacheHttpClientConfig) {
 			final ApacheHttpClientConfig apacheHttpClientConfig = (ApacheHttpClientConfig) config;
 			final int maxTotal = apacheHttpClientConfig.getMaxTotal();
-			if(maxTotal > 0){
+			if (maxTotal > 0) {
 				manager.setMaxTotal(maxTotal);
 			}
 			final int maxPerRoute = apacheHttpClientConfig.getMaxPerRoute();
-			if(maxPerRoute > 0){
+			if (maxPerRoute > 0) {
 				manager.setDefaultMaxPerRoute(maxPerRoute);
 			}
 		}
@@ -234,7 +216,7 @@ public class HttpClient4Engine extends AbstractClientEngine {
 		final ProxyInfo proxy = config.getProxy();
 		if (null != proxy) {
 			final ProxySelector proxySelector = proxy.getProxySelector();
-			if(null != proxySelector){
+			if (null != proxySelector) {
 				clientBuilder.setRoutePlanner(new SystemDefaultRoutePlanner(proxySelector));
 			}
 			final PasswordAuthentication auth = proxy.getAuth();
