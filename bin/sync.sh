@@ -22,6 +22,7 @@
 # 保证当前在v6-dev分支
 git checkout v6-dev
 
-# 同时同步Gitee和Github的库
+# 同时同步Gitee、Github和Gitcode的库
 git pull osc v6-dev
 git pull origin v6-dev
+git pull gitcode v6-dev
