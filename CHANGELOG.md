@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.35(2024-12-15)
+# 5.8.35(2024-12-19)
 
 ### 🐣新特性
 * 【poi    】      优化ExcelWriter中使用比较器writer的方法，只对第一条数据进行排序（pr#3807@Github）
@@ -11,6 +11,7 @@
 * 【json   】      JSON的getByPath方法新增更为通用的指定出参类型重载（pr#3814@Github）
 * 【core   】      DateUtil.parseUTC方法标记废弃，改名为parseISO8601（issue#IBB6I5@Gitee）
 * 【core   】      添加EnumUtil#getBy(Class, Func1, Object)方法（pr#1283@Gitee）
+* 【db     】      添加Entity.addCondition方法（issue#IBCDL2@Gitee）
 
 ### 🐞Bug修复
 * 【crypto 】      修复JWTSignerUtil.createSigner中algorithmId未转换问题（issue#3806@Github）

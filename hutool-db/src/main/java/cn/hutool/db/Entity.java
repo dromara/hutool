@@ -8,6 +8,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.SqlUtil;
 
 import java.nio.charset.Charset;
@@ -266,6 +267,17 @@ public class Entity extends Dict {
 	}
 
 	// -------------------------------------------------------------------- Put and Set start
+	/**
+	 * 添加条件
+	 *
+	 * @param condition 条件
+	 * @return this
+	 * @since 5.8.34
+	 */
+	public Entity addCondition(final Condition condition) {
+		return set(condition.getField(), condition);
+	}
+
 	@Override
 	public Entity set(String field, Object value) {
 		return (Entity) super.set(field, value);
