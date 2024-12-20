@@ -88,7 +88,12 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 	}
 
 	/**
-	 * 获取值
+	 * 获取值，使用乐观锁，但是此方法可能导致读取脏数据，但对于缓存业务可容忍。情况如下：
+	 * <pre>
+	 *     1. 读取时无写入，不冲突，直接获取值
+	 *     2. 读取时无写入，但是乐观读时触发了并发异常，此时获取同步锁，获取新值
+	 *     4. 读取时有写入，此时获取同步锁，获取新值
+	 * </pre>
 	 *
 	 * @param key                键
 	 * @param isUpdateLastAccess 是否更新最后修改时间
@@ -97,10 +102,24 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 	 */
 	private V get(K key, boolean isUpdateLastAccess, boolean isUpdateCount) {
 		// 尝试读取缓存，使用乐观读锁
+		CacheObj<K, V> co = null;
 		long stamp = lock.tryOptimisticRead();
-		CacheObj<K, V> co = getWithoutLock(key);
-		if (false == lock.validate(stamp)) {
-			// 有写线程修改了此对象，悲观读
+		boolean isReadError = true;
+		if(lock.validate(stamp)){
+			try{
+				// 乐观读，可能读取脏数据，在缓存中可容忍，分两种情况
+				// 1. 读取时无线程写入
+				// 2. 读取时有线程写入，导致数据不一致，此时读取未更新的缓存值
+				co = getWithoutLock(key);
+				isReadError = false;
+			} catch (final Exception ignore){
+				// ignore
+			}
+		}
+
+		if(isReadError){
+			// 转换为悲观读
+			// 原因可能为无锁读时触发并发异常，或者锁被占（正在写）
 			stamp = lock.readLock();
 			try {
 				co = getWithoutLock(key);
