@@ -75,6 +75,12 @@ user = root
 pass = 123456
 remarks = true
 
+[mariadb_local]
+url = jdbc:mysql://localhost:3306/test?useSSL=false
+user = root
+pass = 123456
+remarks = true
+
 [postgre]
 url = jdbc:postgresql://looly.centos:5432/test_hutool
 user = postgres

@@ -26,6 +26,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.db.sql.Condition;
 import org.dromara.hutool.db.sql.SqlUtil;
 
 import java.nio.charset.Charset;
@@ -318,6 +319,17 @@ public class Entity extends Dict {
 	}
 
 	// -------------------------------------------------------------------- Put and Set start
+
+	/**
+	 * 添加条件
+	 *
+	 * @param condition 条件
+	 * @return this
+	 */
+	public Entity addCondition(final Condition condition) {
+		return set(condition.getField(), condition);
+	}
+
 	@Override
 	public Entity set(final String field, final Object value) {
 		return (Entity) super.set(field, value);
