@@ -154,6 +154,18 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
+	 * 当给定字符串为空字符串时，转换为{@code null}
+	 *
+	 * @param <T> 字符串类型
+	 * @param str 被转换的字符串
+	 * @return 转换后的字符串
+	 * @since 6.0.0
+	 */
+	public static <T extends CharSequence> T nullIfBlank(final T str) {
+		return isBlank(str) ? null : str;
+	}
+
+	/**
 	 * <p>如果给定字符串为{@code null}返回默认值
 	 * <pre>{@code
 	 *   defaultIfNull(null, null);      // = null
@@ -1559,9 +1571,9 @@ public class CharSequenceUtil extends StrValidator {
 	 * }
 	 * </pre>
 	 *
-	 * @param str    被处理的字符串
-	 * @param prefix 前缀
-	 * @param suffix 后缀
+	 * @param str        被处理的字符串
+	 * @param prefix     前缀
+	 * @param suffix     后缀
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 处理后的字符串
 	 * @since 6.0.0
@@ -4154,7 +4166,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @param consumer 字符处理
 	 */
 	public static void forEach(final CharSequence str, final Consumer<Character> consumer) {
-		forEach(str, false, (cInt)-> consumer.accept((char) cInt));
+		forEach(str, false, (cInt) -> consumer.accept((char) cInt));
 	}
 
 	/**
