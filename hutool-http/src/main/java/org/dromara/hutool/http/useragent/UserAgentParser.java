@@ -59,7 +59,7 @@ public class UserAgentParser {
 
 		// issue#IA74K2 MACOS下的微信不属于移动平台
 		if(platform.isMobile() || browser.isMobile()){
-			if(false == os.isMacOS()){
+			if(!os.isMacOS()){
 				userAgent.setMobile(true);
 			}
 		}

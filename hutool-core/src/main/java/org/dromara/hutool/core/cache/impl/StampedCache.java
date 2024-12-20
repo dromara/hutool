@@ -51,12 +51,12 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 
 	@Override
 	public boolean containsKey(final K key) {
-		return null != get(key, false, false);
+		return null != doGet(key, false, false);
 	}
 
 	@Override
 	public V get(final K key, final boolean isUpdateLastAccess) {
-		return get(key, isUpdateLastAccess, true);
+		return doGet(key, isUpdateLastAccess, true);
 	}
 
 	@Override
@@ -106,19 +106,38 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 	}
 
 	/**
-	 * 获取值
+	 * 获取值，使用乐观锁，但是此方法可能导致读取脏数据，但对于缓存业务可容忍。情况如下：
+	 * <pre>
+	 *     1. 读取时无写入，不冲突，直接获取值
+	 *     2. 读取时无写入，但是乐观读时触发了并发异常，此时获取同步锁，获取新值
+	 *     4. 读取时有写入，此时获取同步锁，获取新值
+	 * </pre>
 	 *
 	 * @param key                键
 	 * @param isUpdateLastAccess 是否更新最后修改时间
 	 * @param isUpdateCount      是否更新命中数，get时更新，contains时不更新
 	 * @return 值或null
 	 */
-	private V get(final K key, final boolean isUpdateLastAccess, final boolean isUpdateCount) {
+	private V doGet(final K key, final boolean isUpdateLastAccess, final boolean isUpdateCount) {
 		// 尝试读取缓存，使用乐观读锁
+		CacheObj<K, V> co = null;
 		long stamp = lock.tryOptimisticRead();
-		CacheObj<K, V> co = getWithoutLock(key);
-		if (false == lock.validate(stamp)) {
-			// 有写线程修改了此对象，悲观读
+		boolean isReadError = true;
+		if(lock.validate(stamp)){
+			try{
+				// 乐观读，可能读取脏数据，在缓存中可容忍，分两种情况
+				// 1. 读取时无线程写入
+				// 2. 读取时有线程写入，导致数据不一致，此时读取未更新的缓存值
+				co = getWithoutLock(key);
+				isReadError = false;
+			} catch (final Exception ignore){
+				// ignore
+			}
+		}
+
+		if(isReadError){
+			// 转换为悲观读
+			// 原因可能为无锁读时触发并发异常，或者锁被占（正在写）
 			stamp = lock.readLock();
 			try {
 				co = getWithoutLock(key);
@@ -133,7 +152,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 				missCount.increment();
 			}
 			return null;
-		} else if (false == co.isExpired()) {
+		} else if (!co.isExpired()) {
 			if (isUpdateCount) {
 				hitCount.increment();
 			}
@@ -159,7 +178,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 			if (null == co) {
 				return null;
 			}
-			if (false == co.isExpired()) {
+			if (!co.isExpired()) {
 				// 首先尝试获取值，如果值存在且有效，返回之
 				if (isUpdateCount) {
 					hitCount.increment();

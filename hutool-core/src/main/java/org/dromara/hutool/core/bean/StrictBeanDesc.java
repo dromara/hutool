@@ -198,7 +198,7 @@ public class StrictBeanDesc extends AbstractBeanDesc {
 	private static Method getGetterForBoolean(final Method[] gettersOrSetters, final String fieldName, final boolean ignoreCase) {
 		// 查找isXXX
 		return MethodUtil.getMethod(gettersOrSetters, m -> {
-			if (0 != m.getParameterCount() || false == BooleanUtil.isBoolean(m.getReturnType())) {
+			if (0 != m.getParameterCount() || !BooleanUtil.isBoolean(m.getReturnType())) {
 				// getter方法要求无参数且返回boolean或Boolean
 				return false;
 			}
@@ -231,7 +231,7 @@ public class StrictBeanDesc extends AbstractBeanDesc {
 	private static Method getSetterForBoolean(final Method[] gettersOrSetters, final String fieldName, final boolean ignoreCase) {
 		// 查找isXXX
 		return MethodUtil.getMethod(gettersOrSetters, m -> {
-			if (1 != m.getParameterCount() || false == BooleanUtil.isBoolean(m.getParameterTypes()[0])) {
+			if (1 != m.getParameterCount() || !BooleanUtil.isBoolean(m.getParameterTypes()[0])) {
 				// setter方法要求1个boolean或Boolean参数
 				return false;
 			}

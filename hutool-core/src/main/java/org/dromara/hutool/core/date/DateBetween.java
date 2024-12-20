@@ -152,29 +152,30 @@ public class DateBetween implements Serializable {
 		final Calendar endCal = CalendarUtil.calendar(end);
 
 		final int result = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
-		if (false == isReset) {
-			final int beginMonthBase0 = beginCal.get(Calendar.MONTH);
-			final int endMonthBase0 = endCal.get(Calendar.MONTH);
-			if (beginMonthBase0 < endMonthBase0) {
-				return result;
-			} else if (beginMonthBase0 > endMonthBase0) {
-				return result - 1;
-			} else if (Calendar.FEBRUARY == beginMonthBase0
-				&& CalendarUtil.isLastDayOfMonth(beginCal)
-				&& CalendarUtil.isLastDayOfMonth(endCal)) {
-				// 考虑闰年的2月情况
-				// 两个日期都位于2月的最后一天，此时月数按照相等对待，此时都设置为1号
-				beginCal.set(Calendar.DAY_OF_MONTH, 1);
-				endCal.set(Calendar.DAY_OF_MONTH, 1);
-			}
-
-			endCal.set(Calendar.YEAR, beginCal.get(Calendar.YEAR));
-			final long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
-			if (between < 0) {
-				return result - 1;
-			}
+		if(isReset){
+			return result;
 		}
-		return result;
+
+		final int beginMonthBase0 = beginCal.get(Calendar.MONTH);
+		final int endMonthBase0 = endCal.get(Calendar.MONTH);
+		if (beginMonthBase0 < endMonthBase0) {
+			return result;
+		} else if (beginMonthBase0 > endMonthBase0) {
+			return result - 1;
+		} else if (Calendar.FEBRUARY == beginMonthBase0
+			&& CalendarUtil.isLastDayOfMonth(beginCal)
+			&& CalendarUtil.isLastDayOfMonth(endCal)) {
+			// 考虑闰年的2月情况
+			// 两个日期都位于2月的最后一天，此时月数按照相等对待，此时都设置为1号
+			beginCal.set(Calendar.DAY_OF_MONTH, 1);
+			endCal.set(Calendar.DAY_OF_MONTH, 1);
+		}
+
+		endCal.set(Calendar.YEAR, beginCal.get(Calendar.YEAR));
+		final long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
+		if (between < 0) {
+			return result - 1;
+		}
 	}
 
 	/**
