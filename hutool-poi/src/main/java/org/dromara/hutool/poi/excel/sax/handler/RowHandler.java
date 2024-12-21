@@ -29,7 +29,8 @@ import java.util.List;
 public interface RowHandler {
 
 	/**
-	 * 处理一行数据
+	 * 处理一行数据<br>
+	 * 如果想结束读取，抛出StopReadException即可
 	 *
 	 * @param sheetIndex 当前Sheet序号
 	 * @param rowIndex   当前行号，从0开始计数
@@ -38,7 +39,8 @@ public interface RowHandler {
 	void handle(int sheetIndex, long rowIndex, List<Object> rowCells);
 
 	/**
-	 * 处理一个单元格的数据
+	 * 处理一个单元格的数据<br>
+	 * 如果想结束读取，抛出StopReadException即可
 	 *
 	 * @param sheetIndex    当前Sheet序号
 	 * @param rowIndex      当前行号

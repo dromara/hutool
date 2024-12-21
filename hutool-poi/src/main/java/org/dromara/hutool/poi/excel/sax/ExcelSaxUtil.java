@@ -205,6 +205,8 @@ public class ExcelSaxUtil {
 			throw new IORuntimeException(e);
 		} catch (final SAXException e) {
 			throw new POIException(e);
+		} catch (final StopReadException e){
+			// issue#3820 跳过，用户抛出此异常，表示强制结束读取
 		}
 	}
 

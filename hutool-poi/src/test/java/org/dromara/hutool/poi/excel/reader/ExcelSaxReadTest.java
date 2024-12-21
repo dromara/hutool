@@ -26,6 +26,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.poi.excel.ExcelUtil;
 import org.dromara.hutool.poi.excel.cell.values.FormulaCellValue;
 import org.dromara.hutool.poi.excel.sax.Excel03SaxReader;
+import org.dromara.hutool.poi.excel.sax.StopReadException;
 import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
 import org.dromara.hutool.poi.POIException;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -49,6 +50,24 @@ public class ExcelSaxReadTest {
 	public void excel07Test() {
 		// 工具化快速读取
 		ExcelUtil.readBySax("aaa.xlsx", 0, createRowHandler());
+	}
+
+	@Test
+	void readEndByExceptionTest(){
+		ExcelUtil.readBySax("aaa.xlsx", 0, (sheetIndex, rowIndex, rowList) -> {
+			if (rowIndex == 1) {
+				throw new StopReadException();
+			}
+		});
+	}
+
+	@Test
+	void readEndByException03Test(){
+		ExcelUtil.readBySax("aaa.xls", 0, (sheetIndex, rowIndex, rowList) -> {
+			if (rowIndex == 1) {
+				throw new StopReadException();
+			}
+		});
 	}
 
 	@Test
