@@ -147,6 +147,8 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 			factory.processWorkbookEvents(request, fs);
 		} catch (IOException e) {
 			throw new POIException(e);
+		} catch (final StopReadException e) {
+			// issue#3820 跳过，用户抛出此异常，表示强制结束读取
 		} finally {
 			IoUtil.close(fs);
 		}

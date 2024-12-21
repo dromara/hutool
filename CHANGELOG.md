@@ -12,6 +12,7 @@
 * 【core   】      DateUtil.parseUTC方法标记废弃，改名为parseISO8601（issue#IBB6I5@Gitee）
 * 【core   】      添加EnumUtil#getBy(Class, Func1, Object)方法（pr#1283@Gitee）
 * 【db     】      添加Entity.addCondition方法（issue#IBCDL2@Gitee）
+* 【poi    】      添加StopReadException，定义sax读取时用户可手动终止（issue#3820@Github）
 
 ### 🐞Bug修复
 * 【crypto 】      修复JWTSignerUtil.createSigner中algorithmId未转换问题（issue#3806@Github）

@@ -8,6 +8,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
+import cn.hutool.poi.excel.sax.StopReadException;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -31,6 +32,24 @@ public class ExcelSaxReadTest {
 	public void excel07Test() {
 		// 工具化快速读取
 		ExcelUtil.readBySax("aaa.xlsx", 0, createRowHandler());
+	}
+
+	@Test
+	void readEndByExceptionTest(){
+		ExcelUtil.readBySax("aaa.xlsx", 0, (sheetIndex, rowIndex, rowList) -> {
+			if (rowIndex == 1) {
+				throw new StopReadException();
+			}
+		});
+	}
+
+	@Test
+	void readEndByException03Test(){
+		ExcelUtil.readBySax("aaa.xls", 0, (sheetIndex, rowIndex, rowList) -> {
+			if (rowIndex == 1) {
+				throw new StopReadException();
+			}
+		});
 	}
 
 	@Test

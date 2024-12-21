@@ -47,8 +47,8 @@ public class ExcelSaxUtil {
 	 */
 	public static ExcelSaxReader<?> createSaxReader(boolean isXlsx, RowHandler rowHandler) {
 		return isXlsx
-				? new Excel07SaxReader(rowHandler)
-				: new Excel03SaxReader(rowHandler);
+			? new Excel07SaxReader(rowHandler)
+			: new Excel03SaxReader(rowHandler);
 	}
 
 	/**
@@ -184,6 +184,8 @@ public class ExcelSaxUtil {
 			throw new IORuntimeException(e);
 		} catch (SAXException e) {
 			throw new POIException(e);
+		} catch (final StopReadException e) {
+			// issue#3820 跳过，用户抛出此异常，表示强制结束读取
 		}
 	}
 
@@ -268,7 +270,7 @@ public class ExcelSaxUtil {
 
 		// issue#IB0EJ9 可能精度丢失，对含有小数的value判断并转为BigDecimal
 		final double number = Double.parseDouble(value);
-		if(StrUtil.contains(value, CharUtil.DOT) && !value.equals(Double.toString(number))){
+		if (StrUtil.contains(value, CharUtil.DOT) && !value.equals(Double.toString(number))) {
 			// 精度丢失
 			return NumberUtil.toBigDecimal(value);
 		}
