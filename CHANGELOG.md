@@ -17,6 +17,7 @@
 * 【crypto 】      修复JWTSignerUtil.createSigner中algorithmId未转换问题（issue#3806@Github）
 * 【core   】      修复DateUtil.rangeContains未重置问题（issue#IB8OFS@Gitee）
 * 【cache  】      修复StampedCache类get方法并发问题（issue#IBCIQG@Gitee）
+* 【cache  】      修复FIFOCache类使用StampedCache导致并发读的并发问题（issue#IBCIQG@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.34(2024-11-25)
