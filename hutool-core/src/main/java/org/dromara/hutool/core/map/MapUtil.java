@@ -21,6 +21,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.collection.iter.IterUtil;
+import org.dromara.hutool.core.func.SerConsumer3;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.concurrent.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
@@ -1446,5 +1447,25 @@ public class MapUtil extends MapGetUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 循环遍历Map，使用{@link SerConsumer3} 接受遍历的每条数据，并针对每条数据做处理<br>
+	 * 和JDK8中的map.forEach不同的是，此方法支持index
+	 *
+	 * @param <K>        Key类型
+	 * @param <V>        Value类型
+	 * @param map        {@link Map}
+	 * @param kvConsumer {@link SerConsumer3} 遍历的每条数据处理器
+	 */
+	public static <K, V> void forEach(final Map<K, V> map, final SerConsumer3<Integer, K, V> kvConsumer) {
+		if (map == null) {
+			return;
+		}
+		int index = 0;
+		for (final Entry<K, V> entry : map.entrySet()) {
+			kvConsumer.accept(index, entry.getKey(), entry.getValue());
+			index++;
+		}
 	}
 }

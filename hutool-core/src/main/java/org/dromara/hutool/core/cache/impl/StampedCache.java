@@ -22,7 +22,8 @@ import java.util.Iterator;
 import java.util.concurrent.locks.StampedLock;
 
 /**
- * 使用{@link StampedLock}保护的缓存，使用读写乐观锁
+ * 使用{@link StampedLock}保护的缓存，使用读写乐观锁<br>
+ * 使用乐观锁有效的提高的缓存性能，但是无法避免脏读问题
  *
  * @param <K> 键类型
  * @param <V> 值类型

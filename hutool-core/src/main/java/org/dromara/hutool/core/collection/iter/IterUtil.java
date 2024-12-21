@@ -20,6 +20,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.ConvertUtil;
+import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
@@ -899,6 +900,24 @@ public class IterUtil {
 					consumer.accept(element);
 				}
 			}
+		}
+	}
+
+	/**
+	 * 循环遍历 {@link Iterator}，使用{@link SerBiConsumer} 接受遍历的每条数据，并针对每条数据做处理，支持index
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterator {@link Iterator}
+	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
+	 */
+	public static <T> void forEach(final Iterator<T> iterator, final SerBiConsumer<Integer, T> consumer) {
+		if (iterator == null) {
+			return;
+		}
+		int index = 0;
+		while (iterator.hasNext()) {
+			consumer.accept(index, iterator.next());
+			index++;
 		}
 	}
 

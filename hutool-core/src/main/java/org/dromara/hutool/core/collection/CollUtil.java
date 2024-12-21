@@ -64,7 +64,7 @@ import java.util.stream.Collectors;
  */
 public class CollUtil {
 
-	// ---------------------------------------------------------------------- isEmpty
+	// region ----- isEmpty
 
 	/**
 	 * 集合是否为空
@@ -174,8 +174,9 @@ public class CollUtil {
 	public static <T> List<T> emptyIfNull(final List<T> list) {
 		return ObjUtil.defaultIfNull(list, Collections.emptyList());
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- isNotEmpty
+	// region ----- isNotEmpty
 
 	/**
 	 * 集合是否为非空
@@ -247,6 +248,7 @@ public class CollUtil {
 	public static boolean isNotEmpty(final Map<?, ?> map) {
 		return MapUtil.isNotEmpty(map);
 	}
+	// endregion
 
 	/**
 	 * 去重集合
@@ -578,6 +580,7 @@ public class CollUtil {
 		return IterUtil.countMap(IterUtil.getIter(collection));
 	}
 
+	// region ----- join
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
 	 *
@@ -627,6 +630,7 @@ public class CollUtil {
 		}
 		return IterUtil.join(iterable.iterator(), conjunction, prefix, suffix);
 	}
+	// endregion
 
 	/**
 	 * 切取部分数据<br>
@@ -807,6 +811,7 @@ public class CollUtil {
 		return list;
 	}
 
+	// region ----- sub
 	/**
 	 * 截取列表的部分
 	 *
@@ -869,6 +874,7 @@ public class CollUtil {
 		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.of(collection);
 		return sub(list, start, end, step);
 	}
+	// endregion
 
 	/**
 	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
@@ -955,6 +961,7 @@ public class CollUtil {
 		return edit(collection, t -> predicate.test(t) ? t : null);
 	}
 
+	// region ----- remove
 	/**
 	 * 去掉集合中的多个元素，此方法直接修改原集合
 	 *
@@ -1074,6 +1081,7 @@ public class CollUtil {
 		removeWithAddIf(targetCollection, removed, predicate);
 		return removed;
 	}
+	// endregion
 
 	/**
 	 * 通过func自定义一个规则，此规则将原集合中的元素转换成新的元素，生成新的列表返回<br>
@@ -1117,6 +1125,7 @@ public class CollUtil {
 		return StreamUtil.of(collection).map(mapper).collect(Collectors.toList());
 	}
 
+	// region ----- getFieldValues
 	/**
 	 * 获取给定Bean列表中指定字段名对应字段值的列表<br>
 	 * 列表元素支持Bean与Map
@@ -1165,6 +1174,7 @@ public class CollUtil {
 		final Collection<Object> fieldValues = getFieldValues(collection, fieldName);
 		return ConvertUtil.toList(elementType, fieldValues);
 	}
+	// endregion
 
 	/**
 	 * 字段值与列表值对应的Map，常用于元素对象中有唯一ID时需要按照这个ID查找对象的情况<br>
@@ -1194,73 +1204,6 @@ public class CollUtil {
 	 */
 	public static <K, V> Map<K, V> fieldValueAsMap(final Iterable<?> iterable, final String fieldNameForKey, final String fieldNameForValue) {
 		return IterUtil.fieldValueAsMap(IterUtil.getIter(iterable), fieldNameForKey, fieldNameForValue);
-	}
-
-	/**
-	 * 获取集合的第一个元素，如果集合为空（null或者空集合），返回{@code null}
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterable {@link Iterable}
-	 * @return 第一个元素，为空返回{@code null}
-	 */
-	public static <T> T getFirst(final Iterable<T> iterable) {
-		if (iterable instanceof List) {
-			final List<T> list = (List<T>) iterable;
-			return CollUtil.isEmpty(list) ? null : list.get(0);
-		}
-		return IterUtil.getFirst(IterUtil.getIter(iterable));
-	}
-
-	/**
-	 * 获取集合的第一个非空元素
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterable {@link Iterable}
-	 * @return 第一个元素
-	 * @since 5.7.2
-	 */
-	public static <T> T getFirstNoneNull(final Iterable<T> iterable) {
-		return IterUtil.getFirstNoneNull(IterUtil.getIter(iterable));
-	}
-
-	/**
-	 * 查找第一个匹配元素对象
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合
-	 * @param predicate  过滤器，满足过滤条件的第一个元素将被返回
-	 * @return 满足过滤条件的第一个元素
-	 * @since 3.1.0
-	 */
-	public static <T> T getFirst(final Iterable<T> collection, final Predicate<T> predicate) {
-		return IterUtil.getFirst(IterUtil.getIter(collection), predicate);
-	}
-
-	/**
-	 * 查找第一个匹配元素对象<br>
-	 * 如果集合元素是Map，则比对键和值是否相同，相同则返回<br>
-	 * 如果为普通Bean，则通过反射比对元素字段名对应的字段值是否相同，相同则返回<br>
-	 * 如果给定字段值参数是{@code null} 且元素对象中的字段值也为{@code null}则认为相同
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合，集合元素可以是Bean或者Map
-	 * @param fieldName  集合元素对象的字段名或map的键
-	 * @param fieldValue 集合元素对象的字段值或map的值
-	 * @return 满足条件的第一个元素
-	 * @since 3.1.0
-	 */
-	public static <T> T getFirstByField(final Iterable<T> collection, final String fieldName, final Object fieldValue) {
-		return getFirst(collection, t -> {
-			if (t instanceof Map) {
-				final Map<?, ?> map = (Map<?, ?>) t;
-				final Object value = map.get(fieldName);
-				return ObjUtil.equals(value, fieldValue);
-			}
-
-			// 普通Bean
-			final Object value = FieldUtil.getFieldValue(t, fieldName);
-			return ObjUtil.equals(value, fieldValue);
-		});
 	}
 
 	/**
@@ -1372,7 +1315,7 @@ public class CollUtil {
 		return indexList;
 	}
 
-	// ---------------------------------------------------------------------- zip
+	// region ----- zip
 
 	/**
 	 * 映射键值（参考Python的zip()函数）<br>
@@ -1441,6 +1384,7 @@ public class CollUtil {
 
 		return map;
 	}
+	// endregion
 
 	/**
 	 * 将集合转换为排序后的TreeSet
@@ -1551,6 +1495,7 @@ public class CollUtil {
 		return MapUtil.toMapList(listMap);
 	}
 
+	// region ----- addAll
 	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
@@ -1687,6 +1632,75 @@ public class CollUtil {
 		}
 		return collection;
 	}
+	// endregion
+
+	// region ----- get
+	/**
+	 * 获取集合的第一个元素，如果集合为空（null或者空集合），返回{@code null}
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @return 第一个元素，为空返回{@code null}
+	 */
+	public static <T> T getFirst(final Iterable<T> iterable) {
+		if (iterable instanceof List) {
+			final List<T> list = (List<T>) iterable;
+			return CollUtil.isEmpty(list) ? null : list.get(0);
+		}
+		return IterUtil.getFirst(IterUtil.getIter(iterable));
+	}
+
+	/**
+	 * 获取集合的第一个非空元素
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @return 第一个元素
+	 * @since 5.7.2
+	 */
+	public static <T> T getFirstNoneNull(final Iterable<T> iterable) {
+		return IterUtil.getFirstNoneNull(IterUtil.getIter(iterable));
+	}
+
+	/**
+	 * 查找第一个匹配元素对象
+	 *
+	 * @param <T>        集合元素类型
+	 * @param collection 集合
+	 * @param predicate  过滤器，满足过滤条件的第一个元素将被返回
+	 * @return 满足过滤条件的第一个元素
+	 * @since 3.1.0
+	 */
+	public static <T> T getFirst(final Iterable<T> collection, final Predicate<T> predicate) {
+		return IterUtil.getFirst(IterUtil.getIter(collection), predicate);
+	}
+
+	/**
+	 * 查找第一个匹配元素对象<br>
+	 * 如果集合元素是Map，则比对键和值是否相同，相同则返回<br>
+	 * 如果为普通Bean，则通过反射比对元素字段名对应的字段值是否相同，相同则返回<br>
+	 * 如果给定字段值参数是{@code null} 且元素对象中的字段值也为{@code null}则认为相同
+	 *
+	 * @param <T>        集合元素类型
+	 * @param collection 集合，集合元素可以是Bean或者Map
+	 * @param fieldName  集合元素对象的字段名或map的键
+	 * @param fieldValue 集合元素对象的字段值或map的值
+	 * @return 满足条件的第一个元素
+	 * @since 3.1.0
+	 */
+	public static <T> T getFirstByField(final Iterable<T> collection, final String fieldName, final Object fieldValue) {
+		return getFirst(collection, t -> {
+			if (t instanceof Map) {
+				final Map<?, ?> map = (Map<?, ?>) t;
+				final Object value = map.get(fieldName);
+				return ObjUtil.equals(value, fieldValue);
+			}
+
+			// 普通Bean
+			final Object value = FieldUtil.getFieldValue(t, fieldName);
+			return ObjUtil.equals(value, fieldValue);
+		});
+	}
 
 	/**
 	 * 获取集合的最后一个元素
@@ -1771,8 +1785,9 @@ public class CollUtil {
 		}
 		return result;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------- sort
+	// region ----- sort
 
 	/**
 	 * 将多个集合排序并显示不同的段落（分页）<br>
@@ -1947,8 +1962,9 @@ public class CollUtil {
 		});
 		return list;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------- forEach
+	// region ----- forEach
 
 	/**
 	 * 循环遍历 {@link Iterable}，使用{@link SerBiConsumer} 接受遍历的每条数据，并针对每条数据做处理
@@ -1973,14 +1989,7 @@ public class CollUtil {
 	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(final Iterator<T> iterator, final SerBiConsumer<Integer, T> consumer) {
-		if (iterator == null) {
-			return;
-		}
-		int index = 0;
-		while (iterator.hasNext()) {
-			consumer.accept(index, iterator.next());
-			index++;
-		}
+		IterUtil.forEach(iterator, consumer);
 	}
 
 	/**
@@ -2009,18 +2018,14 @@ public class CollUtil {
 	 * @param <V>        Value类型
 	 * @param map        {@link Map}
 	 * @param kvConsumer {@link SerConsumer3} 遍历的每条数据处理器
+	 * @see MapUtil#forEach(Map, SerConsumer3)
 	 */
 	public static <K, V> void forEach(final Map<K, V> map, final SerConsumer3<Integer, K, V> kvConsumer) {
-		if (map == null) {
-			return;
-		}
-		int index = 0;
-		for (final Entry<K, V> entry : map.entrySet()) {
-			kvConsumer.accept(index, entry.getKey(), entry.getValue());
-			index++;
-		}
+		MapUtil.forEach(map, kvConsumer);
 	}
+	// endregion
 
+	// region ----- group
 	/**
 	 * 分组，按照{@link Hash32}接口定义的hash算法，集合中的元素放入hash值对应的子列表中
 	 *
@@ -2104,6 +2109,7 @@ public class CollUtil {
 			}
 		});
 	}
+	// endregion
 
 	/**
 	 * 获取指定Map列表中所有的Key

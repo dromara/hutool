@@ -28,11 +28,13 @@ import java.util.LinkedHashMap;
  * 缺点：不灵活，不能保证最常用的对象总是被保留
  * </p>
  *
+ * <p>由于使用LinkedHashMap，并发读也有问题，因此只能使用悲观锁，不能使用读写锁</p>
+ *
  * @param <K> 键类型
  * @param <V> 值类型
  * @author Looly
  */
-public class FIFOCache<K, V> extends StampedCache<K, V> {
+public class FIFOCache<K, V> extends ReentrantCache<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/**
