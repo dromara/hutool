@@ -173,9 +173,7 @@ public class DateBetween implements Serializable {
 
 		endCal.set(Calendar.YEAR, beginCal.get(Calendar.YEAR));
 		final long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
-		if (between < 0) {
-			return result - 1;
-		}
+		return between < 0 ? result - 1 : result;
 	}
 
 	/**

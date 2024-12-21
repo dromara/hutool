@@ -910,7 +910,7 @@ public class IterUtil {
 	 * @param iterator {@link Iterator}
 	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(final Iterator<T> iterator, final SerBiConsumer<Integer, T> consumer) {
+	public static <T> void indexForEach(final Iterator<T> iterator, final SerBiConsumer<Integer, T> consumer) {
 		if (iterator == null) {
 			return;
 		}

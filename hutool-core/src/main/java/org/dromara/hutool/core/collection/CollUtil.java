@@ -1989,7 +1989,7 @@ public class CollUtil {
 	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(final Iterator<T> iterator, final SerBiConsumer<Integer, T> consumer) {
-		IterUtil.forEach(iterator, consumer);
+		IterUtil.indexForEach(iterator, consumer);
 	}
 
 	/**

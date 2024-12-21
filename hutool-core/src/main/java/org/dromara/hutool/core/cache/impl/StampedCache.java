@@ -111,7 +111,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V> {
 	 * <pre>
 	 *     1. 读取时无写入，不冲突，直接获取值
 	 *     2. 读取时无写入，但是乐观读时触发了并发异常，此时获取同步锁，获取新值
-	 *     4. 读取时有写入，此时获取同步锁，获取新值
+	 *     3. 读取时有写入，此时获取同步锁，获取新值
 	 * </pre>
 	 *
 	 * @param key                键

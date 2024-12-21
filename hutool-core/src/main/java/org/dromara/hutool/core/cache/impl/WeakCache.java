@@ -22,6 +22,8 @@ import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.ref.Ref;
 import org.dromara.hutool.core.map.reference.WeakConcurrentMap;
 
+import java.util.WeakHashMap;
+
 /**
  * 弱引用缓存<br>
  * 对于一个给定的键，其映射的存在并不阻止垃圾回收器对该键的丢弃，这就使该键成为可终止的，被终止，然后被回收。<br>
@@ -42,7 +44,7 @@ public class WeakCache<K, V> extends TimedCache<K, V>{
 	 * @param timeout 超时时常，单位毫秒，-1或0表示无限制
 	 */
 	public WeakCache(final long timeout) {
-		super(timeout, new WeakConcurrentMap<>());
+		super(timeout, new WeakHashMap<>());
 	}
 
 	@Override

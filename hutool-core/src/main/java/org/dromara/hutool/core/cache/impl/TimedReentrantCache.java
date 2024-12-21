@@ -17,23 +17,23 @@
 package org.dromara.hutool.core.cache.impl;
 
 import org.dromara.hutool.core.cache.GlobalPruneTimer;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
 /**
  * 定时缓存<br>
- * 此缓存没有容量限制，对象只有在过期后才会被移除<br>
- * 此缓存采用读写乐观锁，用于可脏读的场景，不能使用LinkedHashMap
+ * 此缓存没有容量限制，对象只有在过期后才会被移除
  *
  * @author Looly
  *
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public class TimedCache<K, V> extends StampedCache<K, V> {
+public class TimedReentrantCache<K, V> extends ReentrantCache<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/** 正在执行的定时任务 */
@@ -44,7 +44,7 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	 *
 	 * @param timeout 超时（过期）时长，单位毫秒
 	 */
-	public TimedCache(final long timeout) {
+	public TimedReentrantCache(final long timeout) {
 		this(timeout, new HashMap<>());
 	}
 
@@ -54,10 +54,10 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	 * @param timeout 过期时长
 	 * @param map 存储缓存对象的map
 	 */
-	public TimedCache(final long timeout, final Map<Mutable<K>, CacheObj<K, V>> map) {
+	public TimedReentrantCache(final long timeout, final Map<Mutable<K>, CacheObj<K, V>> map) {
 		this.capacity = 0;
 		this.timeout = timeout;
-		this.cacheMap = Assert.isNotInstanceOf(LinkedHashMap.class, map);
+		this.cacheMap = map;
 	}
 
 	// ---------------------------------------------------------------- prune
@@ -89,7 +89,7 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	 * @param delay 间隔时长，单位毫秒
 	 * @return this
 	 */
-	public TimedCache<K, V> schedulePrune(final long delay) {
+	public TimedReentrantCache<K, V> schedulePrune(final long delay) {
 		this.pruneJobFuture = GlobalPruneTimer.INSTANCE.schedule(this::prune, delay);
 		return this;
 	}
