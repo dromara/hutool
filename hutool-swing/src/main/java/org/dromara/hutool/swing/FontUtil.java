@@ -46,6 +46,17 @@ public class FontUtil {
 	}
 
 	/**
+	 * 注册字体到系统<br>
+	 * 此方法用于将字体文件注册到系统，之后即可在字体名称列表中看到此字体
+	 *
+	 * @param font 字体
+	 */
+	public static void registerFont(final Font font) {
+		final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge.registerFont(font);
+	}
+
+	/**
 	 * 创建默认字体
 	 *
 	 * @return 默认字体
