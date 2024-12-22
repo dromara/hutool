@@ -142,7 +142,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>2.0.9</version>
+			<version>1.7.36</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

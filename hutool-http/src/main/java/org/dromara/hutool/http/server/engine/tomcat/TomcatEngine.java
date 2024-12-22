@@ -24,11 +24,15 @@ import org.apache.catalina.connector.Response;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.valves.ValveBase;
 import org.apache.coyote.http11.Http11NioProtocol;
+import org.apache.tomcat.util.net.SSLHostConfig;
+import org.apache.tomcat.util.net.SSLHostConfigCertificate;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.server.ServerConfig;
 import org.dromara.hutool.http.server.engine.AbstractServerEngine;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * Tomcat引擎实现
@@ -88,20 +92,18 @@ public class TomcatEngine extends AbstractServerEngine {
 		tomcat.setHostname(config.getHost());
 		tomcat.setBaseDir(config.getRoot());
 
-		initConnector(tomcat);
+		tomcat.setConnector(createConnector());
 		initContext(tomcat);
-
-		// TODO 配置支持HTTPS
 
 		this.tomcat = tomcat;
 	}
 
 	/**
-	 * 初始化Connector
+	 * 创建Connector
 	 *
-	 * @param tomcat Tomcat
+	 * @return Connector
 	 */
-	private void initConnector(final Tomcat tomcat) {
+	private Connector createConnector() {
 		final ServerConfig config = this.config;
 		final Http11NioProtocol protocol = new Http11NioProtocol();
 		final int maxHeaderSize = config.getMaxHeaderSize();
@@ -120,7 +122,21 @@ public class TomcatEngine extends AbstractServerEngine {
 			connector.setMaxPostSize(maxBodySize);
 		}
 
-		tomcat.setConnector(connector);
+		// SSL配置
+		final SSLContext sslContext = config.getSslContext();
+		if(null != sslContext){
+			final SSLHostConfig sslHostConfig = new SSLHostConfig();
+			final SSLHostConfigCertificate sslHostConfigCertificate =
+				new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.Type.RSA);
+			sslHostConfigCertificate.setSslContext(new JSSESSLContext(sslContext));
+			sslHostConfig.addCertificate(sslHostConfigCertificate);
+			connector.addSslHostConfig(sslHostConfig);
+			connector.setScheme("https");
+			connector.setSecure(true);
+			connector.setPort(config.getPort());
+		}
+
+		return connector;
 	}
 
 	/**
