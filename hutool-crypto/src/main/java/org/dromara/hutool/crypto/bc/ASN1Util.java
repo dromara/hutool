@@ -16,17 +16,13 @@
 
 package org.dromara.hutool.crypto.bc;
 
-import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1Object;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.BERSequence;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.util.ASN1Dump;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.X500NameBuilder;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.crypto.CryptoException;
 
 import java.io.IOException;
@@ -118,5 +114,28 @@ public class ASN1Util {
 	 */
 	public static String getDumpStr(final InputStream in) {
 		return ASN1Dump.dumpAsString(decode(in));
+	}
+
+	/**
+	 * 生成X500Name信息
+	 *
+	 * @param C  Country Name (国家代号),eg: CN
+	 * @param ST State or Province Name (洲或者省份),eg: Beijing
+	 * @param L  Locality Name (城市名),eg: Beijing
+	 * @param O  Organization Name (可以是公司名称),
+	 * @param OU Organizational Unit Name (可以是单位部门名称)
+	 * @param CN Common Name (服务器ip或者域名),eg: 192.168.30.71 or www.baidu.com
+	 * @return X500Name
+	 */
+	public static X500Name createX500Name(final String C, final String ST, final String L,
+										  final String O, final String OU, final String CN) {
+		return new X500NameBuilder()
+			.addRDN(BCStyle.C, C)
+			.addRDN(BCStyle.ST, ST)
+			.addRDN(BCStyle.L, L)
+			.addRDN(BCStyle.O, O)
+			.addRDN(BCStyle.OU, OU)
+			.addRDN(BCStyle.CN, CN)
+			.build();
 	}
 }

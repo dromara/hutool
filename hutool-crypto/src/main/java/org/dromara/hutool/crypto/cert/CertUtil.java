@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.crypto;
+package org.dromara.hutool.crypto.cert;
 
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.crypto.CryptoException;
+import org.dromara.hutool.crypto.KeyStoreUtil;
 import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 
 import java.io.File;

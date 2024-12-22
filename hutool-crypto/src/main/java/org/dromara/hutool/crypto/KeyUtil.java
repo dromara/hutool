@@ -26,6 +26,7 @@ import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import org.dromara.hutool.crypto.bc.ECKeyUtil;
 import org.dromara.hutool.crypto.bc.SM2Constant;
+import org.dromara.hutool.crypto.cert.CertUtil;
 import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
 
