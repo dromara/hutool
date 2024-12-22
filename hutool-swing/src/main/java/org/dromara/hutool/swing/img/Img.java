@@ -24,6 +24,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.swing.FontUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;

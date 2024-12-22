@@ -17,6 +17,7 @@
 package org.dromara.hutool.swing.img;
 
 import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.swing.FontUtil;
 import org.dromara.hutool.swing.img.color.ColorUtil;
 
 import java.awt.*;

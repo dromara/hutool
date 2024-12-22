@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.swing.img;
+package org.dromara.hutool.swing;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.io.IORuntimeException;

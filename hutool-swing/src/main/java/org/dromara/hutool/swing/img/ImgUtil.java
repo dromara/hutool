@@ -28,6 +28,7 @@ import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.swing.FontUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;

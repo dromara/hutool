@@ -16,6 +16,7 @@
 
 package org.dromara.hutool.swing.img;
 
+import org.dromara.hutool.swing.FontUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
