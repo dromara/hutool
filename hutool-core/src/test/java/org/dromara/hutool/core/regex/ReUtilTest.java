@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.regex;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.regex.PatternPool;
-import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

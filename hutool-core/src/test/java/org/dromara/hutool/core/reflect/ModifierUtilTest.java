@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.ModifierType;
-import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledForJreRange;

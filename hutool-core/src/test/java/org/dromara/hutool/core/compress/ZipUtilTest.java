@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.compress;
 
-import org.dromara.hutool.core.compress.ZipReader;
-import org.dromara.hutool.core.compress.ZipUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.ByteUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

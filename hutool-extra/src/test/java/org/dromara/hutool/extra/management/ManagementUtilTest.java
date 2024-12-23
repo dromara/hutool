@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-public class SystemUtilTest {
+public class ManagementUtilTest {
 
 	@Test
 	@Disabled
