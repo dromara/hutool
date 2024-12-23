@@ -36,7 +36,7 @@
 		<Automatic-Module-Name>org.dromara.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.4.1</velocity.version>
-		<beetl.version>3.17.0.RELEASE</beetl.version>
+		<beetl.version>3.19.0.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.33</freemarker.version>
 		<enjoy.version>5.2.2</enjoy.version>
