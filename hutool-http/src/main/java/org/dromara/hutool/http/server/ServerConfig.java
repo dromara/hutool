@@ -16,7 +16,10 @@
 
 package org.dromara.hutool.http.server;
 
+import org.dromara.hutool.core.net.ssl.SSLContextUtil;
+
 import javax.net.ssl.SSLContext;
+import java.security.KeyStore;
 
 /**
  * 服务器配置
@@ -113,6 +116,18 @@ public class ServerConfig {
 	 */
 	public SSLContext getSslContext() {
 		return sslContext;
+	}
+
+	/**
+	 * 设置证书库<br>
+	 * 此方法和{@link #setSslContext(SSLContext)}互斥
+	 *
+	 * @param keyStore 证书库
+	 * @param passwd 密码
+	 * @return this
+	 */
+	public ServerConfig setKeystore(final KeyStore keyStore, final char[] passwd) {
+		return setSslContext(SSLContextUtil.createSSLContext(keyStore, passwd));
 	}
 
 	/**

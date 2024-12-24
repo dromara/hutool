@@ -24,10 +24,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.*;
 
 
 /**
@@ -51,6 +48,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	private KeyManager[] keyManagers;
 	private TrustManager[] trustManagers;
 	private SecureRandom secureRandom;
+	private Provider provider;
 
 
 	/**
@@ -115,6 +113,17 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	}
 
 	/**
+	 * 设置 Provider
+	 *
+	 * @param provider Provider，{@code null}表示使用默认或全局Provider
+	 * @return this
+	 */
+	public SSLContextBuilder setProvider(final Provider provider) {
+		this.provider = provider;
+		return this;
+	}
+
+	/**
 	 * 构建{@link SSLContext}
 	 *
 	 * @return {@link SSLContext}
@@ -133,7 +142,8 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 * @since 5.7.22
 	 */
 	public SSLContext buildChecked() throws NoSuchAlgorithmException, KeyManagementException {
-		final SSLContext sslContext = SSLContext.getInstance(protocol);
+		final SSLContext sslContext = null != this.provider ?
+			SSLContext.getInstance(protocol, provider) : SSLContext.getInstance(protocol);
 		sslContext.init(this.keyManagers, this.trustManagers, this.secureRandom);
 		return sslContext;
 	}

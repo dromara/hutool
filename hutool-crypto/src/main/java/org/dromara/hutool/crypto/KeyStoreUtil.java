@@ -17,7 +17,9 @@
 package org.dromara.hutool.crypto;
 
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 
 import java.io.File;
@@ -35,11 +37,12 @@ import java.security.Provider;
 public class KeyStoreUtil {
 
 	/**
-	 * Java密钥库(Java Key Store，JKS)KEY_STORE
+	 * Java密钥库(Java Key Store，JKS)KEY_STORE，Java 平台特有的密钥库格式<br>
+	 * JKS 密钥库可以用 Java 的 keytool 工具进行管理。
 	 */
 	public static final String TYPE_JKS = "JKS";
 	/**
-	 * jceks
+	 * JCEKS（Java Cryptography Extension Key Store）
 	 */
 	public static final String TYPE_JCEKS = "jceks";
 	/**
@@ -98,6 +101,31 @@ public class KeyStoreUtil {
 	 */
 	public static KeyStore readPKCS12KeyStore(final InputStream in, final char[] password) {
 		return readKeyStore(TYPE_PKCS12, in, password);
+	}
+
+	/**
+	 * 读取KeyStore文件<br>
+	 * KeyStore文件用于数字证书的密钥对保存<br>
+	 * 证书类型根据扩展名自动判断，规则如下：
+	 * <pre>
+	 *     .jks .keystore -> JKS
+	 *      .p12 .pfx等其它 -> PKCS12
+	 * </pre>
+	 *
+	 * @param keyFile  证书文件
+	 * @param password 密码，null表示无密码
+	 * @return {@link KeyStore}
+	 * @since 6.0.0
+	 */
+	public static KeyStore readKeyStore(final File keyFile, final char[] password) {
+		final String suffix = FileNameUtil.getSuffix(keyFile);
+		final String type;
+		if(StrUtil.equalsIgnoreCase(suffix, "jks") || StrUtil.equalsIgnoreCase(suffix, "keystore")){
+			type = TYPE_JKS;
+		}else{
+			type = TYPE_PKCS12;
+		}
+		return readKeyStore(type, keyFile, password);
 	}
 
 	/**

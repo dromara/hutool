@@ -71,13 +71,33 @@ public class KeyManagerUtil {
 	}
 
 	/**
+	 * 从KeyStore中获取{@link KeyManagerFactory}
+	 *
+	 * @param keyStore  KeyStore
+	 * @param password  密码
+	 * @param algorithm 算法，{@code null}表示默认算法，如SunX509
+	 * @param provider  算法提供者，{@code null}使用JDK默认
+	 * @return {@link KeyManager}列表
+	 */
+	public static KeyManagerFactory getKeyManagerFactory(final KeyStore keyStore, final char[] password,
+														 final String algorithm, final Provider provider) {
+		final KeyManagerFactory keyManagerFactory = getKeyManagerFactory(algorithm, provider);
+		try {
+			keyManagerFactory.init(keyStore, password);
+		} catch (final KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+			throw new HutoolException(e);
+		}
+		return keyManagerFactory;
+	}
+
+	/**
 	 * 从KeyStore中获取{@link KeyManager}列表
 	 *
 	 * @param keyStore  KeyStore
 	 * @param password  密码
 	 * @return {@link KeyManager}列表
 	 */
-	public static KeyManager[] getDefaultKeyManagers(final KeyStore keyStore, final char[] password) {
+	public static KeyManager[] getKeyManagers(final KeyStore keyStore, final char[] password) {
 		return getKeyManagers(keyStore, password, null, null);
 	}
 
@@ -90,13 +110,8 @@ public class KeyManagerUtil {
 	 * @param provider  算法提供者，{@code null}使用JDK默认
 	 * @return {@link KeyManager}列表
 	 */
-	public static KeyManager[] getKeyManagers(final KeyStore keyStore, final char[] password, final String algorithm, final Provider provider) {
-		final KeyManagerFactory keyManagerFactory = getKeyManagerFactory(algorithm, provider);
-		try {
-			keyManagerFactory.init(keyStore, password);
-		} catch (final KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-			throw new HutoolException(e);
-		}
-		return keyManagerFactory.getKeyManagers();
+	public static KeyManager[] getKeyManagers(final KeyStore keyStore, final char[] password,
+											  final String algorithm, final Provider provider) {
+		return getKeyManagerFactory(keyStore, password, algorithm, provider).getKeyManagers();
 	}
 }

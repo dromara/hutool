@@ -75,7 +75,8 @@ public class TrustManagerUtil {
 	 * @return {@link X509TrustManager} or {@code null}
 	 * @since 6.0.0
 	 */
-	public static X509TrustManager getTrustManager(final KeyStore keyStore, final String algorithm, final Provider provider) {
+	public static X509TrustManager getTrustManager(final KeyStore keyStore, final String algorithm,
+												   final Provider provider) {
 		final TrustManager[] tms = getTrustManagers(keyStore, algorithm, provider);
 		for (final TrustManager tm : tms) {
 			if (tm instanceof X509TrustManager) {
@@ -94,7 +95,19 @@ public class TrustManagerUtil {
 	 * @since 6.0.0
 	 */
 	public static TrustManager[] getDefaultTrustManagers() {
-		return getTrustManagers(null, null, null);
+		return getTrustManagers(null);
+	}
+
+	/**
+	 * 获取指定的{@link TrustManager}<br>
+	 * 此方法主要用于获取自签证书的{@link TrustManager}
+	 *
+	 * @param keyStore  {@link KeyStore}
+	 * @return {@link TrustManager} or {@code null}
+	 * @since 6.0.0
+	 */
+	public static TrustManager[] getTrustManagers(final KeyStore keyStore) {
+		return getTrustManagers(keyStore, null, null);
 	}
 
 	/**
@@ -107,7 +120,22 @@ public class TrustManagerUtil {
 	 * @return {@link TrustManager} or {@code null}
 	 * @since 6.0.0
 	 */
-	public static TrustManager[] getTrustManagers(final KeyStore keyStore, String algorithm, final Provider provider) {
+	public static TrustManager[] getTrustManagers(final KeyStore keyStore, final String algorithm,
+												  final Provider provider) {
+		return getTrustManagerFactory(keyStore, algorithm, provider).getTrustManagers();
+	}
+
+	/**
+	 * 获取指定的{@link TrustManagerFactory}
+	 *
+	 * @param keyStore  {@link KeyStore}
+	 * @param algorithm 算法名称，如"SunX509"，{@code null}表示默认SunX509
+	 * @param provider  算法提供者，如bc，{@code null}表示默认SunJSSE
+	 * @return {@link TrustManager} or {@code null}
+	 * @since 6.0.0
+	 */
+	public static TrustManagerFactory getTrustManagerFactory(final KeyStore keyStore, String algorithm,
+															 final Provider provider) {
 		final TrustManagerFactory tmf;
 
 		if(StrUtil.isEmpty(algorithm)){
@@ -128,6 +156,6 @@ public class TrustManagerUtil {
 			throw new HutoolException(e);
 		}
 
-		return tmf.getTrustManagers();
+		return tmf;
 	}
 }

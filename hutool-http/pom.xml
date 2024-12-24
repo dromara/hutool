@@ -56,6 +56,12 @@
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.dromara.hutool</groupId>
+			<artifactId>hutool-crypto</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- webservice SOAP， 从javaEE变成jakartaEE（javax.xml.soap） Jakarta XML SOAP(jakarta.xml.soap) -->
 		<dependency>
 			<groupId>jakarta.xml.soap</groupId>

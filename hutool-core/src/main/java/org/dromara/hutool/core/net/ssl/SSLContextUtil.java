@@ -22,6 +22,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -86,6 +87,33 @@ public class SSLContextUtil {
 		return createSSLContext(protocol,
 			keyManager == null ? null : new KeyManager[]{keyManager},
 			trustManager == null ? null : new TrustManager[]{trustManager});
+	}
+
+	/**
+	 * 创建和初始化{@link SSLContext}
+	 *
+	 * @param keyStore KeyStore
+	 * @param password 密码
+	 * @return {@link SSLContext}
+	 * @throws IORuntimeException 包装 GeneralSecurityException异常
+	 */
+	public static SSLContext createSSLContext(final KeyStore keyStore, final char[] password) throws IORuntimeException {
+		return createSSLContext(
+			KeyManagerUtil.getKeyManagers(keyStore, password),
+			TrustManagerUtil.getTrustManagers(keyStore)
+		);
+	}
+
+	/**
+	 * 创建和初始化{@link SSLContext}
+	 *
+	 * @param keyManagers   密钥管理器,{@code null}表示默认
+	 * @param trustManagers 信任管理器, {@code null}表示默认
+	 * @return {@link SSLContext}
+	 * @throws IORuntimeException 包装 GeneralSecurityException异常
+	 */
+	public static SSLContext createSSLContext(final KeyManager[] keyManagers, final TrustManager[] trustManagers) throws IORuntimeException {
+		return createSSLContext(null, keyManagers, trustManagers);
 	}
 
 	/**

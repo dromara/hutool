@@ -30,6 +30,7 @@ import java.security.Provider;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
 /**
  * 数字证书{@link Certificate}相关工具类
@@ -140,5 +141,36 @@ public class CertUtil {
 			throw new CryptoException(e);
 		}
 		return factory;
+	}
+
+	/**
+	 * 判断一个证书是否是自签名的，即证书由自己签发。
+	 * @param cert 证书
+	 * @return true表示自签名的，false表示非自签名的
+	 */
+	public static boolean isSelfSigned(final X509Certificate cert) {
+		return isSignedBy(cert, cert);
+	}
+
+	/**
+	 * 验证一个证书是否由另一个证书签发。<br>
+	 * 来自：sun.security.tools.KeyStoreUtil
+	 *
+	 * @param end 需要验证的终端证书
+	 * @param ca  用于验证的CA证书
+	 * @return 如果终端证书由CA证书签发，则返回true，否则返回false
+	 */
+	public static boolean isSignedBy(final X509Certificate end, final X509Certificate ca) {
+		// 检查CA证书的主题和终端证书的颁发者是否相同
+		if (!ca.getSubjectX500Principal().equals(end.getIssuerX500Principal())) {
+			return false;
+		}
+		try {
+			// 使用CA证书的公钥验证终端证书
+			end.verify(ca.getPublicKey());
+			return true;
+		} catch (final Exception e) {
+			return false;
+		}
 	}
 }

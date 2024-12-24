@@ -125,18 +125,32 @@ public class TomcatEngine extends AbstractServerEngine {
 		// SSL配置
 		final SSLContext sslContext = config.getSslContext();
 		if(null != sslContext){
-			final SSLHostConfig sslHostConfig = new SSLHostConfig();
-			final SSLHostConfigCertificate sslHostConfigCertificate =
-				new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.Type.RSA);
-			sslHostConfigCertificate.setSslContext(new JSSESSLContext(sslContext));
-			sslHostConfig.addCertificate(sslHostConfigCertificate);
-			connector.addSslHostConfig(sslHostConfig);
+			protocol.setSSLEnabled(true);
+			protocol.setSecure(true);
+			protocol.addSslHostConfig(createSSLHostConfig(sslContext));
+
 			connector.setScheme("https");
-			connector.setSecure(true);
 			connector.setPort(config.getPort());
 		}
 
 		return connector;
+	}
+
+	/**
+	 * 创建SSL HostConfig
+	 *
+	 * @param sslContext SSLContext
+	 * @return SSL HostConfig
+	 */
+	private static SSLHostConfig createSSLHostConfig(final SSLContext sslContext) {
+		final SSLHostConfig sslHostConfig = new SSLHostConfig();
+
+		final SSLHostConfigCertificate sslHostConfigCertificate =
+			new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.Type.RSA);
+		sslHostConfigCertificate.setSslContext(new JSSESSLContext(sslContext));
+
+		sslHostConfig.addCertificate(sslHostConfigCertificate);
+		return sslHostConfig;
 	}
 
 	/**
