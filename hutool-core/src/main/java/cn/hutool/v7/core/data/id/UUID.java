@@ -88,7 +88,7 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	private static final AtomicLong lastV7time = new AtomicLong(0);
-	private static final long NANOS_PER_MILLI = 1_000_000;
+	private static final AtomicLong counter = new AtomicLong(0);
 
 	/**
 	 * 16位ID值
@@ -222,19 +222,31 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	private static long[] getV7Time() {
-		final long nano = System.nanoTime();
-		long milli = nano / NANOS_PER_MILLI;
-		long seq = (nano - milli * NANOS_PER_MILLI) >> 8;
+		long milli = System.currentTimeMillis();
+		// 使用RFC 9562 §6.2 Method 1: 12-bit counter, 在同一毫秒内递增
+		long seq;
+		final long last = lastV7time.get();
+		final long lastMilli = last >> 12;
+		
+		if (milli == lastMilli) {
+			// 同一毫秒内，计数器递增
+			seq = (counter.incrementAndGet()) & 0xfff;
+		} else {
+			// 不同毫秒，计数器重置
+			seq = 0;
+			counter.set(0);
+		}
+		
 		long now = (milli << 12) + seq;
 
 		while (true) {
-			final long last = lastV7time.get();
-			if (now <= last) {
-				now = last + 1;
+			final long currentLast = lastV7time.get();
+			if (now <= currentLast) {
+				now = currentLast + 1;
 				milli = now >> 12;
 				seq = now & 0xfff;
 			}
-			if (lastV7time.compareAndSet(last, now)) {
+			if (lastV7time.compareAndSet(currentLast, now)) {
 				return new long[]{milli, seq};
 			}
 		}
