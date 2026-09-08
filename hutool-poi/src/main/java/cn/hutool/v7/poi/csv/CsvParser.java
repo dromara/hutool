@@ -257,6 +257,10 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 					lineNo++;
 					inComment = false;
 				}
+
+				// pr#4321@Github 记录注释行的换行符，避免将 CRLF 中的 LF 误认为空行
+				preChar = c;
+
 				// 跳过注释行中的任何字符
 				continue;
 			}
