@@ -179,8 +179,8 @@ public class JschSftp extends AbstractFtp {
 			if (!channel.isConnected()) {
 				channel.connect((int) Math.max(this.ftpConfig.getConnector().getTimeout(), 0));
 			}
-			channel.setFilenameEncoding(this.ftpConfig.getCharset().toString());
-		} catch (final JSchException | SftpException e) {
+			channel.setFilenameEncoding(this.ftpConfig.getCharset());
+		} catch (final JSchException e) {
 			throw new SshException(e);
 		}
 	}

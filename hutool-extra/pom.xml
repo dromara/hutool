@@ -40,12 +40,12 @@
 		<beetl.version>3.21.2.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.34</freemarker.version>
-		<enjoy.version>5.2.5</enjoy.version>
+		<enjoy.version>5.3.0</enjoy.version>
 		<thymeleaf.version>3.1.5.RELEASE</thymeleaf.version>
 		<jte.version>3.2.4</jte.version>
 		<!-- 保持2.1.10，关联的antlr4与Beetl有兼容问题 -->
 		<jetbrick-template.version>2.1.10</jetbrick-template.version>
-		<pebble.version>4.1.1</pebble.version>
+		<pebble.version>4.1.2</pebble.version>
 		<wit-core.version>2.6.0</wit-core.version>
 
 		<!-- mail versions -->
@@ -53,23 +53,26 @@
 		<jakarta.mail.version>2.0.5</jakarta.mail.version>
 
 		<!-- ssh versions -->
-		<jsch.version>2.28.2</jsch.version>
+		<jsch.version>2.28.7</jsch.version>
 		<sshj.version>0.40.0</sshj.version>
 		<sshd.version>2.17.1</sshd.version>
 		<ganymed-ssh2.version>262</ganymed-ssh2.version>
 
 		<net.version>3.13.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
-		<spring-boot.version>4.0.6</spring-boot.version>
-		<oshi.version>7.1.0</oshi.version>
-		<byte-buddy.version>1.18.8</byte-buddy.version>
+		<spring-boot.version>4.1.1</spring-boot.version>
+		<oshi.version>7.6.1</oshi.version>
+		<byte-buddy.version>1.18.13</byte-buddy.version>
+		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
+		<hibernate-validator.version>9.1.3.Final</hibernate-validator.version>
+		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<commons-compress.version>1.28.0</commons-compress.version>
 		<smartcn.version>8.11.4</smartcn.version>
-		<jaxb-runtime.version>4.0.8</jaxb-runtime.version>
+		<jaxb-runtime.version>4.0.9</jaxb-runtime.version>
 
 		<!-- mq client versions -->
 		<kafka.version>4.2.0</kafka.version>
-		<rabbitmq.version>5.30.0</rabbitmq.version>
+		<rabbitmq.version>5.35.0</rabbitmq.version>
 		<rocketmq.version>5.5.0</rocketmq.version>
 		<activemq.version>6.2.5</activemq.version>
 		<mica.version>2.6.3</mica.version>
@@ -465,14 +468,14 @@
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.1.1</version>
+			<version>${jakarta.validation-api.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>9.1.0.Final</version>
+			<version>${hibernate-validator.version}</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -484,7 +487,7 @@
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.el</artifactId>
-			<version>4.0.2</version>
+			<version>${jakarta.el.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- 验证工具可选依赖 end -->

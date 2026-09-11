@@ -16,6 +16,7 @@
 
 package cn.hutool.v7.extra.ssh.engine.jsch;
 
+import cn.hutool.v7.core.util.ByteUtil;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -48,7 +49,7 @@ public class JschUtil {
 			throw new SshException(e);
 		}
 
-		session.setPassword(connector.getPassword());
+		session.setPassword(ByteUtil.toUtf8Bytes(connector.getPassword()));
 		// 设置第一次登录的时候提示，可选值：(ask | yes | no)
 		session.setConfig("StrictHostKeyChecking", "no");
 

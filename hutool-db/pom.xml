@@ -35,23 +35,23 @@
 	<properties>
 		<Automatic-Module-Name>cn.hutool.v7.db</Automatic-Module-Name>
 		<!-- versions -->
-		<c3p0.version>0.14.1</c3p0.version>
+		<c3p0.version>0.14.2</c3p0.version>
 		<dbcp2.version>2.14.0</dbcp2.version>
-		<tomcat-jdbc.version>11.0.22</tomcat-jdbc.version>
+		<tomcat-jdbc.version>11.0.25</tomcat-jdbc.version>
 		<druid.version>1.2.28</druid.version>
-		<hikariCP.version>7.0.2</hikariCP.version>
-		<beecp.version>5.2.2</beecp.version>
+		<hikariCP.version>7.1.0</hikariCP.version>
+		<beecp.version>5.2.3</beecp.version>
 
 		<!-- driver versions -->
-		<sqlite.version>3.53.1.0</sqlite.version>
+		<sqlite.version>3.53.4.0</sqlite.version>
 		<hsqldb.version>2.7.4</hsqldb.version>
 		<postgresql.version>42.7.13</postgresql.version>
-		<ngdbc.version>2.28.7</ngdbc.version>
-		<ojdbc8.version>23.26.1.0.0</ojdbc8.version>
-		<oceanbase.version>2.4.16</oceanbase.version>
+		<ngdbc.version>2.29.11</ngdbc.version>
+		<ojdbc8.version>23.26.3.0.0</ojdbc8.version>
+		<oceanbase.version>2.4.19</oceanbase.version>
 		<DmJdbcDriver18.version>8.1.3.140</DmJdbcDriver18.version>
 		<mysql.version>9.7.0</mysql.version>
-		<h2.version>2.4.240</h2.version>
+		<h2.version>2.5.250</h2.version>
 	</properties>
 
 	<dependencies>

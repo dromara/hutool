@@ -69,7 +69,7 @@ public class Connector {
 	private String host;
 	private int port;
 	private String user = "root";
-	private String password;
+		private String password;
 	private long timeout;
 
 	/**
