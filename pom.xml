@@ -228,6 +228,8 @@
 				</executions>
 				<configuration>
 					<encoding>UTF-8</encoding>
+					<charset>UTF-8</charset>
+					<docencoding>UTF-8</docencoding>
 					<source>${compile.version}</source>
 					<release>${compile.version}</release>
 					<failOnError>false</failOnError>
